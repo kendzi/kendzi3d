@@ -1,0 +1,63 @@
+[road]
+
+	highway
+		*
+		footway
+		
+	surface
+		unpaved
+
+
+[tree]
+	natural
+		tree
+		
+	type
+		broad_leafed
+		conifer
+		* (unknown)
+	
+	height
+
+
+[building]
+	building
+		*
+		
+	building:roof:shape
+		flat
+		pitched
+		gable
+		
+	building:roof:orientation
+		across
+		along
+		
+	building:facade:material
+		plaster
+		* (unknown)
+	
+	building:roof:angle
+	
+	height
+	min_height
+	
+	building:levels
+	building:min_level
+	
+	
+	
+
+[water]
+	natural
+		water
+		
+	landuse
+		reservoir
+
+
+[fence]
+	barrier
+		fence
+		
+	height

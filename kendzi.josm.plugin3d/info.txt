@@ -1,0 +1,80 @@
+>> perspective <<
+http://www.songho.ca/opengl/gl_transform.html
+
+>> blending <<
+ Red Book, Chapter 7 about Blending
+http://fly.srk.fer.hr/~unreal/theredbook/chapter07.html
+http://www.allegro.cc/forums/thread/587562/613774#target
+
+>> JOGL <<
+http://michael-bien.com/mbien/entry/jogl_2_opengl_profiles_explained
+
+background: http://www.felixgers.de/teaching/jogl/textureAsBackground.html
+
+
+>> JOSM Plugins wiki <<
+http://josm.openstreetmap.de/wiki/Plugins
+
+
+>> open gl <<
+http://nehe.gamedev.net/
+http://glprogramming.com/red/chapter02.html#name13
+
+http://www.opengl.org/wiki/Common_Mistakes
+http://www.felixgers.de/teaching/jogl/textureMipmapping.html
+http://gregs-blog.com/category/opengl/
+
+
+
+//light
+http://www.opengl.org/resources/features/KilgardTechniques/oglpitfall/
+
+// jogl2 setup
+https://sites.google.com/site/justinscsstuff/jogl-tutorial-1
+
+http://www.c-sharpcorner.com/UploadFile/jeradus/OpenGLBasics11172005014307AM/OpenGLBasics.aspx
+
+http://fly.cc.fer.hr/~unreal/theredbook/chapter05.html
+
+http://en.wikipedia.org/wiki/Transformation_matrix
+
+aliasing:
+http://www.java-tips.org/other-api-tips/jogl/how-to-draw-anti-aliased-lines-in-jogl.html
+http://www.java-tips.org/other-api-tips/jogl/how-to-use-multisampling-to-draw-anti-aliased-geometric-primi.html
+
+!!!
+http://fivedots.coe.psu.ac.th/~ad/jg2/
+
+// light
+http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=07
+http://cse.csusb.edu/tongyu/courses/cs520/notes/texture.php
+
+
+/****/
+To make JOSM use the plugins from the Eclipse workspace instead of the
+.jar files from the plugin directory, I created a run configuration for
+JOSM (with main class org.openstreetmap.josm.gui.MainApplication) and
+added all plugin projects to "User Entries" with the "Add Projects" button.
+
+// geometria
+http://www.algorytm.org/geometria-obliczeniowa/
+
+
+// buildings
+http://wiki.openstreetmap.org/wiki/Proposed_features/Building
+http://wiki.openstreetmap.org/wiki/Proposed_features/Building_attributes
+
+[jogl @ eclipse RCP]
+http://wadeawalker.wordpress.com/2010/10/24/tutorial-creating-native-binary-executables-for-multi-platform-java-apps-with-opengl-and-eclipse-rcp/
+
+
+http://www.ctbuh.org/TallBuildings/HeightStatistics/HeightCalculator/tabid/1007/language/en-US/Default.aspx
+
+treas
+http://scotchtapeworm3d.wordpress.com/2010/10/06/tutorial-realistic-medium-poly-tree/
+
+github:
+http://www.r-bloggers.com/getting-started-with-git-egit-eclipse-and-github-version-control-for-r-projects/
+http://wiki.eclipse.org/EGit/User_Guide/Getting_Started
+http://wiki.eclipse.org/EGit/User_Guide#Create_Repository_at_GitHub
+

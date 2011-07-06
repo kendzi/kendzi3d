@@ -1,0 +1,32 @@
+
+[current]
+
+
+[2011-06-22]
+ - support for roof type 2.5
+ - ground textures from JOSM editor
+ - misspell in length
+ - measurement fix for roofs types: 2.0, 2.1 
+ 
+ 
+[2011-06-08]
+ - support for roofs types: 2.2, 2.4
+ - change in openGl init parms.
+ - opening and closing 3d window 
+
+[2011-06-02]
+- some bug fix
+- some clean up
+- icons
+- camera move
+- initial support for dormer type: a
+- initial support for roofs types: 0.0, 0.1, 0.2, 0.3, 0.4, 1.0, 1.1, 2.0, 2.1, 2.3
+- initial support for roofs with dormers
+
+[2011-04-13]
+- add support to linux
+- build number
+- bugs fix
+
+[TODO]
+- create 'real' perspective for 3d
