@@ -34,6 +34,9 @@ public class PhotoParmPanel extends JPanel {
     private JTextField angleWithtText;
     private JTextField angleHeigthText;
 
+
+    public final static boolean showPhotoPanel = false;
+
     public PhotoParmPanel() {
         createLayout();
     }

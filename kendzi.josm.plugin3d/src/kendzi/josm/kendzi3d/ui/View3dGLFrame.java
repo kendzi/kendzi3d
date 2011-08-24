@@ -97,9 +97,9 @@ public class View3dGLFrame extends Frame implements WindowListener {
         pack();
         setVisible(true);
 
-        initPhotoFrame();
-
-        this.photoParmPanel.addCameraChangeListener(this.canvasListener);
+        if (PhotoParmPanel.showPhotoPanel) {
+            initPhotoFrame();
+        }
     }
 
     private void initPhotoFrame() {
@@ -110,6 +110,7 @@ public class View3dGLFrame extends Frame implements WindowListener {
         photoFrame.pack();
         photoFrame.setVisible(true);
 //        photoParmPanel.add
+        this.photoParmPanel.addCameraChangeListener(this.canvasListener);
     }
 
     /** Make canvas panel.

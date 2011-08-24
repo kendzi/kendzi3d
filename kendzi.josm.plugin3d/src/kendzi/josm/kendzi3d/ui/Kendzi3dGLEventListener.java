@@ -23,7 +23,6 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
-import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
@@ -124,7 +123,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         this.renderJosm = new RenderJOSM();
 
-        this.ground  = new StyledTitleGround();
+        this.ground  = new Ground();
 
         this.axisLabels = new AxisLabels();
 
