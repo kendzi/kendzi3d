@@ -67,8 +67,6 @@ public class RoofType4_0 extends RectangleRoofType{
             double pRecHeight,
             double pRecWidth,
             Integer prefixParameter,
-            List<Double> heights,
-            List<Double> sizeB,
             Map<MeasurementKey, Measurement> pMeasurements,
             RoofTextureData pRoofTextureData
             ) {

@@ -45,12 +45,11 @@ public class RoofType1_0 extends RoofType1_1 {
             double pSizeA,
             double pSizeB,
             Integer prefixParameter,
-            List<Double> heights, List<Double> sizeB,
             Map<MeasurementKey, Measurement> pMeasurements,
             RoofTextureData pRoofTextureData
             ) {
 
-        Double h1 = getSize(0, heights, 1d);
+        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
 
         return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, 0, h1, 0, pRoofTextureData);
     }

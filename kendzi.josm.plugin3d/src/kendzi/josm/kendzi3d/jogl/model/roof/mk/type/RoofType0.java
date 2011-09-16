@@ -9,21 +9,28 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.factory.FaceFactory;
-import kendzi.jogl.model.factory.FaceFactory.FaceType;
+import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
+import kendzi.jogl.model.geometry.Material;
+import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.math.geometry.Plane3d;
+import kendzi.math.geometry.line.LinePoints2d;
+import kendzi.math.geometry.polygon.MultiPolygonList2d;
+import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.SplitPolygon;
+import kendzi.math.geometry.polygon.split.SplitPolygons;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +45,6 @@ public abstract class RoofType0 extends RectangleRoofType {
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofType0.class);
 
-
     /**
      * @return roof type.
      */
@@ -49,249 +55,205 @@ public abstract class RoofType0 extends RectangleRoofType {
         return false;
     }
 
-    @Override
-    public RoofTypeOutput buildRectangleRoof(List<Point2d> borderList,
-            Point2d[] rectangleContur,
-            double scaleA ,
-            double scaleB,
-            double sizeA,
-            double sizeB,
-            Integer prefixParameter, List<Double> heights, List<Double> sizesB,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData
-            ) {
+    /**
+     * @param pBorderList
+     * @param pScaleA
+     * @param pScaleB
+     * @param pRecHeight
+     * @param pRecWidth
+     * @param pRectangleContur
+     * @param h1
+     * @param h2
+     * @param l1
+     * @param l2
+     * @param l3
+     * @param l4
+     * @param type
+     * @param pRoofTextureData
+     * @return
+     */
+    protected RoofTypeOutput build(
+           List<Point2d> pBorderList,
+           double pScaleA,
+           double pScaleB,
+           double pRecHeight,
+           double pRecWidth,
+           Point2d[] pRectangleContur,
+           double h1,
+           double h2,
+           double l1,
+           double l2,
+           double l3,
+           double l4,
+           int type,
+           RoofTextureData pRoofTextureData) {
 
 
-        int type = getType();
+       ModelFactory model = ModelFactory.modelBuilder();
+       MeshFactory meshBorder = model.addMesh("roof_border");
+       MeshFactory meshRoof = model.addMesh("roof_top");
 
-        // %
-        Double B1 = getSize(0, sizesB, null);
-        Double B2 = getSize(1, sizesB, null);
-        Double B3 = getSize(2, sizesB, null);
-        Double B4 = getSize(3, sizesB, null);
+       //XXX move it
+       TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
+       TextureData roofTexture = pRoofTextureData.getRoofTexture();
+       Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+       Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
+       // XXX move material
+       int facadeMaterialIndex = model.addMaterial(facadeMaterial);
+       int roofMaterialIndex = model.addMaterial(roofMaterial);
 
-        Double H1 = getSize(0, heights, 0d);
-        Double H2 = getSize(1, heights, 1d);
+       meshBorder.materialID = facadeMaterialIndex;
+       meshBorder.hasTexture = true;
 
-        if (type == 0) {
-            //
-            B1 = 0d;
-            B2 = 0d;
-            B3 = 0d;
-            B4 = 0d;
+       meshRoof.materialID = roofMaterialIndex;
+       meshRoof.hasTexture = true;
 
-            return build(scaleA, scaleB, rectangleContur, B1, B2, B3, B4, H1, H2, pRoofTextureData);
+       // first calc BASEE
 
-        } else if (type == 1) {
-            B1 = getSize(0, sizesB, 0.3d);
-            B2 = 0d;
-            B3 = 0d;
-            B4 = 0d;
+       PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-//            if (B1 == null) {
-//                B1 = 0.3d;
-//            }
-            return build(scaleA, scaleB, rectangleContur, B1, B2, B3, B4, H1, H2, pRoofTextureData);
-        } else if (type == 2) {
-            B1 = getSize(0, sizesB, 0.3d);
-            B2 = getSize(1, sizesB, B1);
-
-            B3 = 0d;
-            B4 = 0d;
-
-            return build(scaleA, scaleB, rectangleContur, B1, B2, B3, B4, H1, H2, pRoofTextureData);
-
-        } else if (type == 3) {
-            B1 = getSize(0, sizesB, 0.3d);
-            B2 = getSize(1, sizesB, B1);
-            B3 = getSize(2, sizesB, B2);
-
-            B4 = 0d;
-
-            return build(scaleA, scaleB, rectangleContur, B1, B2, B3, B4, H1, H2, pRoofTextureData);
-
-        } else if (type == 4) {
-            B1 = getSize(0, sizesB, 0.3d);
-            B2 = getSize(1, sizesB, B1);
-            B3 = getSize(2, sizesB, B2);
-            B4 = getSize(3, sizesB, B3);
-            return build(scaleA, scaleB, rectangleContur, B1, B2, B3, B4, H1, H2, pRoofTextureData);
-        }
-        return null;
-    }
-
-    private RoofTypeOutput build(double scaleA, double scaleB, Point2d[] rectangleContur, double b1, double b2, double b3, double b4, double h1, double h2, RoofTextureData pRoofTextureData) {
-
-        ModelFactory model = ModelFactory.modelBuilder();
-        MeshFactory border = model.addMesh("border1");
-        MeshFactory top = model.addMesh("top1");
-//        MeshFactory mf = new MeshFactory();
-        int ph01 = border.addVertex(new Point3d(0, 0, -1));
-        int ph02 = border.addVertex(new Point3d(0, 0, 0));
-        int ph03 = border.addVertex(new Point3d(1, 0, 0));
-        int ph04 = border.addVertex(new Point3d(1, 0, -1));
-
-        int n0 = border.addNormal(new Vector3d(0, 1, 0));
-
-        int n1 = border.addNormal(new Vector3d(-1, 0, 0));
-        int n2 = border.addNormal(new Vector3d(0, 0, -1));
-        int n3 = border.addNormal(new Vector3d(1, 0, 0));
-        int n4 = border.addNormal(new Vector3d(0, 0, 1));
-
-        int ph11 = border.addVertex(new Point3d(0, h1, -1));
-        int ph12 = border.addVertex(new Point3d(0, h1, 0));
-        int ph13 = border.addVertex(new Point3d(1, h1, 0));
-        int ph14 = border.addVertex(new Point3d(1, h1, -1));
-
-        FaceFactory border1 = border.addFace(FaceType.QUAD_STRIP);
-        border1.addVertIndex(ph01);
-        border1.addVertIndex(ph11);
-        border1.addVertIndex(ph02);
-        border1.addVertIndex(ph12);
-
-        border1.addNormalIndex(n1);
-        border1.addNormalIndex(n1);
-        border1.addNormalIndex(n1);
-        border1.addNormalIndex(n1);
+       MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
+       Point3d planeRightTopPoint =  new Point3d(
+             0 ,
+             h1,
+             0);
 
 
-        border1.addVertIndex(ph02);
-        border1.addVertIndex(ph12);
-        border1.addVertIndex(ph03);
-        border1.addVertIndex(ph13);
+       Vector3d nt = new Vector3d(0, 1  , 0);
 
-        border1.addNormalIndex(n2);
-        border1.addNormalIndex(n2);
-        border1.addNormalIndex(n2);
-        border1.addNormalIndex(n2);
+       Plane3d planeTop = new Plane3d(
+             planeRightTopPoint,
+             nt);
 
-        border1.addVertIndex(ph03);
-        border1.addVertIndex(ph13);
-        border1.addVertIndex(ph04);
-        border1.addVertIndex(ph14);
-
-        border1.addNormalIndex(n3);
-        border1.addNormalIndex(n3);
-        border1.addNormalIndex(n3);
-        border1.addNormalIndex(n3);
+       Vector3d roofTopLineVector = new Vector3d(
+             -pRecWidth,
+             0,
+             0);
 
 
-        border1.addVertIndex(ph04);
-        border1.addVertIndex(ph14);
-        border1.addVertIndex(ph01);
-        border1.addVertIndex(ph11);
+       Point3d planeRightCenterPoint =  new Point3d(
+               0 ,
+               h1 + h2,
+               0);
 
-        border1.addNormalIndex(n4);
-        border1.addNormalIndex(n4);
-        border1.addNormalIndex(n4);
-        border1.addNormalIndex(n4);
-
-        // XXX
-        top.normals = border.normals;
-        //XXX
-        top.vertices = border.vertices;
-
-        FaceFactory top1 = top.addFace(FaceType.QUADS);
-        top1.addVertIndex(ph11);
-        top1.addVertIndex(ph12);
-        top1.addVertIndex(ph13);
-        top1.addVertIndex(ph14);
-
-        top1.addNormalIndex(n0);
-        top1.addNormalIndex(n0);
-        top1.addNormalIndex(n0);
-        top1.addNormalIndex(n0);
-
-        if (h2 != 0d) {
-
-            MeshFactory border2 = model.addMesh("border2");
-            MeshFactory top2 = model.addMesh("top2");
-            // MeshFactory mf = new MeshFactory();
-            int ph21 = border2.addVertex(new Point3d(b1, h1, -(1 - b4)));
-            int ph22 = border2.addVertex(new Point3d(b1, h1, -(b2)));
-            int ph23 = border2.addVertex(new Point3d(1 - b3, h1, -(b2)));
-            int ph24 = border2.addVertex(new Point3d(1 - b3, h1, -(1 - b4)));
-
-             int n20 = border2.addNormal(new Vector3d(0, 1, 0));
-//
-            int n21 = border2.addNormal(new Vector3d(-1, 0, 0));
-            int n22 = border2.addNormal(new Vector3d(0, 0, -1));
-            int n23 = border2.addNormal(new Vector3d(1, 0, 0));
-            int n24 = border2.addNormal(new Vector3d(0, 0, 1));
-
-            int ph31 = border2.addVertex(new Point3d(b1, h1 + h2, -(1 - b4)));
-            int ph32 = border2.addVertex(new Point3d(b1, h1 + h2, -(b2)));
-            int ph33 = border2.addVertex(new Point3d(1 - b3, h1 + h2, -(b2)));
-            int ph34 = border2.addVertex(new Point3d(1 - b3, h1 + h2, -(1 - b4)));
-
-            FaceFactory border1Face = border2.addFace(FaceType.QUAD_STRIP);
-            border1Face.addVertIndex(ph21);
-            border1Face.addVertIndex(ph31);
-            border1Face.addVertIndex(ph22);
-            border1Face.addVertIndex(ph32);
-
-            border1Face.addNormalIndex(n21);
-            border1Face.addNormalIndex(n21);
-            border1Face.addNormalIndex(n21);
-            border1Face.addNormalIndex(n21);
-
-
-            border1Face.addVertIndex(ph22);
-            border1Face.addVertIndex(ph32);
-            border1Face.addVertIndex(ph23);
-            border1Face.addVertIndex(ph33);
-
-            border1Face.addNormalIndex(n22);
-            border1Face.addNormalIndex(n22);
-            border1Face.addNormalIndex(n22);
-            border1Face.addNormalIndex(n22);
-
-            border1Face.addVertIndex(ph23);
-            border1Face.addVertIndex(ph33);
-            border1Face.addVertIndex(ph24);
-            border1Face.addVertIndex(ph34);
-
-            border1Face.addNormalIndex(n23);
-            border1Face.addNormalIndex(n23);
-            border1Face.addNormalIndex(n23);
-            border1Face.addNormalIndex(n23);
-
-
-            border1Face.addVertIndex(ph24);
-            border1Face.addVertIndex(ph34);
-            border1Face.addVertIndex(ph21);
-            border1Face.addVertIndex(ph31);
-
-            border1Face.addNormalIndex(n24);
-            border1Face.addNormalIndex(n24);
-            border1Face.addNormalIndex(n24);
-            border1Face.addNormalIndex(n24);
-
-            // XXX
-            top2.normals = border2.normals;
-            //XXX
-            top2.vertices = border2.vertices;
-
-            FaceFactory top1Face = top2.addFace(FaceType.QUADS);
-            top1Face.addVertIndex(ph31);
-            top1Face.addVertIndex(ph32);
-            top1Face.addVertIndex(ph33);
-            top1Face.addVertIndex(ph34);
-
-            top1Face.addNormalIndex(n20);
-            top1Face.addNormalIndex(n20);
-            top1Face.addNormalIndex(n20);
-            top1Face.addNormalIndex(n20);
+       Plane3d planeCenter = new Plane3d(
+               planeRightCenterPoint,
+               nt);
 
 
 
-        }
+       RoofTypeUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
 
-        RoofTypeOutput rto = new RoofTypeOutput();
-        rto.setHeight(h1 + h2);
+       List<Double> borderHeights = calcHeightList(pBorderList, h1);
 
-        rto.setModel(model);
 
-        return rto;
-    }
+       ////******************
+
+       RoofTypeUtil.makeRoofBorderMesh(
+               pBorderList,
+               borderHeights,
+               meshBorder,
+               facadeTexture
+               );
+
+
+       /// NOW UPPER PART
+
+       if (type >= 1) {
+
+           LinePoints2d bLine = new LinePoints2d(new Point2d(0, l1), new Point2d(pRecWidth, l1));
+
+
+           SplitPolygon middleSplit = PolygonSplitUtil.splitPolygon(borderPolygon, bLine);
+
+
+           MultiPolygonList2d centerMP = middleSplit.getTopMultiPolygons();
+
+
+           if (type >= 2) {
+               LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2, pRecHeight));
+
+
+               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, rLine);
+
+               centerMP = topSplit.getTopMultiPolygons();
+
+           }
+
+           if (type >= 3) {
+
+               LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0, pRecHeight - l3));
+
+
+               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, tLine);
+
+               centerMP = topSplit.getTopMultiPolygons();
+
+           }
+
+           if (type >= 4) {
+
+               LinePoints2d tLine = new LinePoints2d(new Point2d(l4, pRecHeight), new Point2d(l4, 0));
+
+
+               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, tLine);
+
+               centerMP = topSplit.getTopMultiPolygons();
+
+           }
+
+           RoofTypeUtil.addPolygonToRoofMesh(meshRoof, centerMP, planeCenter, roofTopLineVector, roofTexture);
+
+           for (PolygonList2d polygon : centerMP.getPolygons()) {
+
+               List<Point2d> centerPolygonPoints = polygon.getPoints();
+
+               List<Double> centerHeights = calcHeightList(centerPolygonPoints, h1 + h2);
+
+
+               RoofTypeUtil.makeRoofBorderMesh(
+                       centerPolygonPoints,
+                       h1,
+                       centerHeights,
+                       meshBorder,
+                       facadeTexture
+                       );
+
+           }
+
+       }
+
+
+
+
+
+       RoofTypeOutput rto = new RoofTypeOutput();
+       rto.setHeight(h1 + h2);
+
+       rto.setModel(model);
+
+       RoofHooksSpace [] rhs = null;
+//           buildRectRoofHooksSpace(
+//                   pRectangleContur,
+//                   new PolygonPlane(bottomMP, planeBottom),
+//                   null,
+//                   new PolygonPlane(topMP, planeTop),
+//                   null
+//                 );
+
+       rto.setRoofHooksSpaces(rhs);
+
+       return rto;
+   }
+
+   private List<Double> calcHeightList(
+           List<Point2d> pSplitBorder, double height) {
+
+       List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
+       for (Point2d point : pSplitBorder) {
+          borderHeights.add(height);
+       }
+
+       return borderHeights;
+   }
 }

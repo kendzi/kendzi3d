@@ -236,7 +236,7 @@ public class MkRoofJOGL implements GLEventListener {
 
         this.modelRender = ModelRender.getInstance();
 
-        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, heights, sizeB, null, rtd);
+        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, null, rtd);
 
         this.model = output.getModel();
         this.model.useLight = true;

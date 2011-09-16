@@ -116,17 +116,17 @@ public class DormerRoof extends Roof {
         String type = this.way.get("3dr:type");
         String dormer = this.way.get("3dr:dormer");
 
-        String dormerWidth = this.way.get("3dr:dormer:width");
-        String dormerHeight = this.way.get("3dr:dormer:heightX");
-        String dormerLenght = this.way.get("3dr:dormer:lenghtX");
+//        String dormerWidth = this.way.get("3dr:dormer:width");
+//        String dormerHeight = this.way.get("3dr:dormer:heightX");
+//        String dormerLenght = this.way.get("3dr:dormer:lenghtX");
 
         Map<MeasurementKey, Measurement> measurements = parseMeasurements(this.way);
 
 
 
-        List<Double> heights = toDouble(getList(this.way, "3dr:height"));
-
-        List<Double> sizeB = toDouble(getList(this.way, "3dr:lenght"));
+//        List<Double> heights = toDouble(getList(this.way, "3dr:height"));
+//
+//        List<Double> sizeB = toDouble(getList(this.way, "3dr:lenght"));
 
         RoofTextureData rtd = new RoofTextureData();
         rtd.setFacadeTextrure(getFasadeTexture());
@@ -134,8 +134,8 @@ public class DormerRoof extends Roof {
 
 
 
-        RoofOutput roofOutput = DormerRoofBuilder.build(this.list.get(0), this.list, type, dormer, this.height, heights,
-                sizeB, measurements, rtd);
+        RoofOutput roofOutput = DormerRoofBuilder.build(this.list.get(0), this.list, type, dormer, this.height,
+                measurements, rtd);
 
         this.debug = roofOutput.getDebug();
 

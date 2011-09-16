@@ -42,7 +42,7 @@ public abstract class RectangleRoofType implements RoofType {
 
     @Override
     public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-            List<Double> heights, List<Double> sizesB, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
 
         List<Point2d> graham = Graham.grahamScan(border);
         Point2d[] rectangleContur = RectangleUtil.findRectangleContur(graham);
@@ -89,7 +89,7 @@ public abstract class RectangleRoofType implements RoofType {
 
 
         RoofTypeOutput buildRectangleRoof = buildRectangleRoof(border, rectangleContur, scaleA, scaleB, recHeight, recWidth, prefixParameter,
-                heights, sizesB, pMeasurements, pRoofTextureData);
+                pMeasurements, pRoofTextureData);
 
 
 
@@ -183,7 +183,7 @@ public abstract class RectangleRoofType implements RoofType {
      * @return
      */
     public abstract RoofTypeOutput buildRectangleRoof(List<Point2d> border, Point2d[] rectangleContur, double scaleA, double scaleB,
-            double sizeA, double sizeB2, Integer prefixParameter, List<Double> heights, List<Double> sizesB, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
+            double sizeA, double sizeB2, Integer prefixParameter, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
 
     private Point2d[] findStartPoint(Point2d pStartPoint, Point2d[] pRectangleContur) {
         int minI = 0;

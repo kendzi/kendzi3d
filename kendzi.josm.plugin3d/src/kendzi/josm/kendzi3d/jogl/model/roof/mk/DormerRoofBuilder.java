@@ -83,10 +83,6 @@ public class DormerRoofBuilder {
      * @param pType roof type
      * @param pDormer dormer type
      * @param height roof maximal height. Taken from building
-     * @deprecated
-     * @param heights roof heights
-     * @deprecated
-     * @param sizeB roof lenghts
      * @param pMeasurements measurements
      * @param pRoofTextureData texture data
      * @return roof model
@@ -97,8 +93,6 @@ public class DormerRoofBuilder {
             List<Point2d> pRoofPolygon,
             String pType,
             String pDormer, double height,
-            List<Double> heights,
-            List<Double> sizeB,
             Map<MeasurementKey, Measurement> pMeasurements,
             RoofTextureData pRoofTextureData
             ) {
@@ -115,7 +109,7 @@ public class DormerRoofBuilder {
 
         List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
 
-        RoofTypeOutput rto = roofType.buildRoof(pStartPoint, polygon, prefixParameter, height, heights, sizeB, pMeasurements, pRoofTextureData);
+        RoofTypeOutput rto = roofType.buildRoof(pStartPoint, polygon, prefixParameter, height, pMeasurements, pRoofTextureData);
 
         List<RoofDormerTypeOutput> roofExtensionsList = RoofExtensionsBuilder.build(rto.getRoofHooksSpaces(), roofExtensions, pMeasurements, pRoofTextureData);
 

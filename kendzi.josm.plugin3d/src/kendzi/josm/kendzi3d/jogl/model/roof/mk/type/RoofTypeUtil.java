@@ -112,7 +112,6 @@ public class RoofTypeUtil {
         }
     }
 
-
     /** Make roof border mesh. It is wall under roof.
      * @param borderSplit
      * @param borderHeights
@@ -126,6 +125,48 @@ public class RoofTypeUtil {
             MeshFactory pMeshBorder,
             TextureData facadeTexture) {
 
+        makeRoofBorderMesh(borderSplit, 0, borderHeights, pMeshBorder, facadeTexture);
+    }
+
+    /** Make roof border mesh. It is wall under roof.
+     * @param borderSplit
+     * @param minHeight
+     * @param borderHeights
+     * @param pMeshBorder border mesh
+     * @param facadeTexture
+     */
+    public static void makeRoofBorderMesh(
+
+            List<Point2d> borderSplit ,
+            double minHeight,
+            List<Double> borderHeights,
+            MeshFactory pMeshBorder,
+            TextureData facadeTexture) {
+
+
+        List<Double> borderMinHeights = new ArrayList<Double>(borderHeights.size());
+        Double min = new Double(minHeight);
+        for (int i =0; i< borderHeights.size(); i++) {
+            // XXX do it without list!
+            borderMinHeights.add(min);
+        }
+        makeRoofBorderMesh(borderSplit, borderMinHeights, borderHeights, pMeshBorder, facadeTexture);
+    }
+
+    /** Make roof border mesh. It is wall under roof.
+     * @param borderSplit
+     * @param borderHeights
+     * @param pMeshBorder border mesh
+     * @param facadeTexture
+     */
+    public static void makeRoofBorderMesh(
+
+            List<Point2d> borderSplit ,
+            List<Double> borderMinHeights,
+            List<Double> borderHeights,
+            MeshFactory pMeshBorder,
+            TextureData facadeTexture) {
+
 
 
         boolean isCounterClockwise = false;
@@ -134,6 +175,7 @@ public class RoofTypeUtil {
         }
 
         List<Double> heights = borderHeights;
+        List<Double> minHeights = borderMinHeights;
 
 
         List<Point2d> pBorderExtanded = borderSplit;
@@ -156,12 +198,15 @@ public class RoofTypeUtil {
             double height1 = heights.get(index1);
             double height2 = heights.get(index2);
 
+            double minHeight1 = minHeights.get(index1);
+            double minHeight2 = minHeights.get(index2);
+
 
             int point1HightIndex = cachePointIndex(point1, index1, height1, topPointsIndex, pMeshBorder);
             int point2HightIndex = cachePointIndex(point2, index2, height2, topPointsIndex, pMeshBorder);
 
-            int point1BottomIndex = cachePointIndex(point1, index1, 0, bottomPointsIndex, pMeshBorder);
-            int point2BottomIndex = cachePointIndex(point2, index2, 0, bottomPointsIndex, pMeshBorder);
+            int point1BottomIndex = cachePointIndex(point1, index1, minHeight1, bottomPointsIndex, pMeshBorder);
+            int point2BottomIndex = cachePointIndex(point2, index2, minHeight2, bottomPointsIndex, pMeshBorder);
 
             Vector3d n = new Vector3d(-(point2.y - point1.y), 0, -(point2.x - point1.x));
             n.normalize();
@@ -176,9 +221,9 @@ public class RoofTypeUtil {
             double uEnd = uLast + point1.distance(point2) / facadeTexture.getLenght();
             uLast = uEnd;
 
-            int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(uBegin  , 0));
+            int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(uBegin  , minHeight1  / facadeTexture.getHeight()));
             int tc_0_v = pMeshBorder.addTextCoord(new TextCoord(uBegin  , height1 / facadeTexture.getHeight()));
-            int tc_u_0 = pMeshBorder.addTextCoord(new TextCoord(uEnd  , 0));
+            int tc_u_0 = pMeshBorder.addTextCoord(new TextCoord(uEnd  , minHeight2 / facadeTexture.getHeight()));
             int tc_u_v = pMeshBorder.addTextCoord(new TextCoord(uEnd  , height2 / facadeTexture.getHeight()));
 
 

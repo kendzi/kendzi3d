@@ -16,6 +16,11 @@ public class MultiPolygonList2d {
 
     private Set<PolygonList2d> polygons;
 
+    public MultiPolygonList2d(PolygonList2d pPolygon) {
+        this();
+        this.polygons.add(pPolygon);
+    }
+
     public MultiPolygonList2d(Set<PolygonList2d> pPolygons) {
         this.polygons = pPolygons;
     }

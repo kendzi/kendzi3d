@@ -25,5 +25,5 @@ public interface RoofType {
 
     public boolean isPrefixParameter();
 
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height, List<Double> heights, List<Double> sizeB, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
+    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
 }
