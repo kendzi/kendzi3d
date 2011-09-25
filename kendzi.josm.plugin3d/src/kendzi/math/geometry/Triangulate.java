@@ -65,7 +65,7 @@ public class Triangulate {
 	 * InsideTriangle decides if a point P is Inside of the triangle defined by
 	 * A, B, C.
 	 */
-	boolean insideTriangle(double Ax, double Ay, double Bx, double By,
+	static boolean insideTriangle(double Ax, double Ay, double Bx, double By,
 			double Cx, double Cy, double Px, double Py)
 
 	{
@@ -92,7 +92,7 @@ public class Triangulate {
 		return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
 	};
 
-	boolean snip(List<Point2d> contour, int u, int v, int w, int n,/* ??? */
+	static boolean snip(List<Point2d> contour, int u, int v, int w, int n,/* ??? */
 	int[] V) {
 		int p;
 		double Ax, Ay, Bx, By, Cx, Cy, Px, Py;
@@ -128,13 +128,13 @@ public class Triangulate {
 
 
 
-	public List<Point2d> removeClosePoints(List<Point2d> points) {
+	public static List<Point2d> removeClosePoints(List<Point2d> points) {
 	    // XXX change to point2d !
 	    return removeClosePoints(points, EPSILON);
 	}
 
 
-	public List<Point2d> removeClosePoints(List<Point2d> points,
+	public static List<Point2d> removeClosePoints(List<Point2d> points,
 			double epsilon) {
 	    // XXX change to point2d
 		ArrayList<Point2d> ret = new ArrayList<Point2d>();
@@ -183,7 +183,18 @@ public class Triangulate {
 		return ret;
 	}
 
-	public boolean process(List<Point2d> contour,
+
+
+
+	public static List<Point2d> process(List<Point2d> contour) {
+
+        List<Point2d> result = new ArrayList<Point2d>();
+        process(contour, result);
+
+        return result;
+	}
+
+	public static boolean process(List<Point2d> contour,
 			List<Point2d> result) {
 		/* allocate and initialize list of Vertices in polygon */
 

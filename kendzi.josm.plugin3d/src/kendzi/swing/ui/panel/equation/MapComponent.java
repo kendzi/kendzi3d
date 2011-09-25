@@ -47,10 +47,10 @@ public class MapComponent extends EquationDisplay implements MapChangeListener {
 
 
 	public MapComponent( ) {
-		super(0.0, 0.0,
-              -3.1, 3.1, -3.1, 3.1,
-              2, 2,
-              2, 2,
+		super(75.0, 75.0,
+              40.1, 110.1, 40.1, 110.1,
+              10, 2,
+              10, 2,
               true);
 
 
@@ -368,4 +368,11 @@ public class MapComponent extends EquationDisplay implements MapChangeListener {
 	public void addLayer(EquationLayer map) {
 		mapLayer.add(map);
 	}
+
+    public void setParms(
+            double originX, double originY,
+            double minX, double maxX,
+            double minY, double maxY) {
+        setParms(originX, originY, minX, maxX, minY, maxY, this.majorX, this.minorX, this.majorY, this.minorY);
+    }
 }

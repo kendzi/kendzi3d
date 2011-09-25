@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.vecmath.Point2d;
 
+import kendzi.math.geometry.polygon.PolygonList2d;
+
 public class SkeletonTestUi extends Applet {
     /**
 	 *
@@ -130,10 +132,20 @@ public class SkeletonTestUi extends Applet {
     public void setupResults(Skeleton.Output ret) {
         this.drawableObjects.clear();
 
-        for (List<Point2d> list : ret.faces) {
+//        for (List<Point2d> list : ret.faces) {
+//
+//            Polygon polygon = new Polygon();
+//            for (Point2d point : list) {
+//                polygon.addPoint((int) point.x, (int) point.y);
+//            }
+//
+//            this.drawableObjects.add(polygon);
+//        }
+
+        for (PolygonList2d list : ret.faces2) {
 
             Polygon polygon = new Polygon();
-            for (Point2d point : list) {
+            for (Point2d point : list.getPoints()) {
                 polygon.addPoint((int) point.x, (int) point.y);
             }
 

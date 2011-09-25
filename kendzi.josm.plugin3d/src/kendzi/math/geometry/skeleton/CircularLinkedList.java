@@ -26,6 +26,16 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
     private E header = null; //new E(null, null, null);
     private int size = 0;
 
+    @Override
+    public int hashCode() {
+        return (header !=null ? header.hashCode() : 0 ) + size;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (this == obj);
+        }
+
     /**
      * Constructs an empty list.
      */

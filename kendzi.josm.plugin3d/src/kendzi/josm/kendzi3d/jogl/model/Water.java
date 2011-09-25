@@ -29,7 +29,7 @@ public class Water extends AbstractModel {
 
 	List<Point2d> list;
 	private Way way;
-	private ArrayList<Point2d> waterList;
+	private List<Point2d> waterList;
 
 	public Water(Way way, Perspective3D pres) {
 		super(way, pres);
@@ -53,11 +53,10 @@ public class Water extends AbstractModel {
 
 		this.list = pointList;
 
-		waterList = new ArrayList<Point2d>();
 
-		Triangulate t = new Triangulate();
-		List<Point2d> cleanPointList = t.removeClosePoints(pointList);
-		t.process(cleanPointList, waterList);
+
+		List<Point2d> cleanPointList = Triangulate.removeClosePoints(pointList);
+		waterList = Triangulate.process(cleanPointList);
 
 
 		this.buildModel = true;

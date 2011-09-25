@@ -20,6 +20,9 @@ import org.ejml.data.SimpleMatrix;
 
 public class RoofTypeOutput {
 
+    /**
+     * XXX this should by changed!
+     */
     List<Point3d> rectangle;
 
     ModelFactory model;
@@ -28,10 +31,7 @@ public class RoofTypeOutput {
 
     double height;
 
-//    double [] transformationMatrix = new double [9];
     SimpleMatrix transformationMatrix;
-
-
 
     /**
      * @return the height
@@ -102,8 +102,4 @@ public class RoofTypeOutput {
     public void setRectangle(List<Point3d> rectangle) {
         this.rectangle = rectangle;
     }
-
-
-
-
 }

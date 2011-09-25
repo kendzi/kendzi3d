@@ -65,12 +65,12 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     private static final Color COLOR_MAJOR_GRID = Color.GRAY.brighter();
     private static final Color COLOR_MINOR_GRID = new Color(220, 220, 220);
     private static final Color COLOR_AXIS = Color.BLACK;
-    
+
     private static final float STROKE_AXIS = 1.2f;
     private static final float STROKE_GRID = 1.0f;
-    
+
     private static final float COEFF_ZOOM = 1.1f;
-    
+
     private List<DrawableEquation> equations;
 
     protected double minX;
@@ -78,45 +78,45 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     protected double minY;
     protected double maxY;
 
-    private double originX;
-    private double originY;
+    protected double originX;
+    protected double originY;
 
-    private double majorX;
-    private int minorX;
-    private double majorY;
-    private int minorY;
-    
+    protected double majorX;
+    protected int minorX;
+    protected double majorY;
+    protected int minorY;
+
     private double oldWidth;
     private double oldHeight;
 
     private boolean sameRatio;
-    
+
     /**
 	 * @uml.property  name="drawText"
 	 */
     private boolean drawText = true;
-    
+
     private Point dragStart;
-    
+
     private NumberFormat formatter;
     /**
 	 * @uml.property  name="zoomHandler"
-	 * @uml.associationEnd  
+	 * @uml.associationEnd
 	 */
     private ZoomHandler zoomHandler;
     /**
 	 * @uml.property  name="resizeHandler"
-	 * @uml.associationEnd  
+	 * @uml.associationEnd
 	 */
     private ComponentResizeHandler resizeHandler;
     /**
 	 * @uml.property  name="panMotionHandler"
-	 * @uml.associationEnd  
+	 * @uml.associationEnd
 	 */
     private PanMotionHandler panMotionHandler;
     /**
 	 * @uml.property  name="panHandler"
-	 * @uml.associationEnd  
+	 * @uml.associationEnd
 	 */
     private PanHandler panHandler;
     private double startMinX;
@@ -143,18 +143,18 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                            double minY, double maxY,
                            double majorX, int minorX,
                            double majorY, int minorY, boolean sameRatio) {
-        
+
     	setParms(originX, originY, minX, maxX, minY, maxY, majorX, minorX, majorY, minorY);
-        
-        
+
+
         this.equations = new LinkedList<DrawableEquation>();
-        
+
         this.formatter = NumberFormat.getInstance();
         this.formatter.setMaximumFractionDigits(2);
-        
+
         this.oldWidth = getWidth();
         this.oldHeight = getHeight();
-        
+
         panHandler = new PanHandler();
         addMouseListener(panHandler);
         panMotionHandler = new PanMotionHandler();
@@ -166,14 +166,14 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
         this.sameRatio = sameRatio;
     }
-    
+
     public void setParms(
     		double originX, double originY,
             double minX, double maxX,
             double minY, double maxY,
             double majorX, int minorX,
             double majorY, int minorY) {
-    	
+
     	if (originX < minX || originX > maxX) {
             throw new IllegalArgumentException("originX must be between minX and maxX");
         }
@@ -181,27 +181,27 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         if (minY >= maxY) {
             throw new IllegalArgumentException("minY must be < to maxY");
         }
-        
+
         if (originY < minY || originY > maxY) {
             throw new IllegalArgumentException("originY must be between minY and maxY");
         }
-        
+
         if (minorX <= 0) {
             throw new IllegalArgumentException("minorX must be > 0");
         }
-        
+
         if (minorY <= 0) {
             throw new IllegalArgumentException("minorY must be > 0");
         }
-        
+
         if (majorX <= 0.0) {
             throw new IllegalArgumentException("majorX must be > 0.0");
         }
-        
+
         if (majorY <= 0.0) {
             throw new IllegalArgumentException("majorY must be > 0.0");
         }
-        
+
         this.originX = originX;
         this.originY = originY;
 
@@ -218,13 +218,13 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         this.startWidth = getWidth();
         this.startHeight = getHeight();
 
-        
+
         this.majorX = majorX;
         this.minorX = minorX;
         this.majorY = majorY;
         this.minorY = minorY;
     }
-    
+
     @Override
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled) {
@@ -241,7 +241,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             }
         }
     }
-    
+
     /**
 	 * @return
 	 * @uml.property  name="drawText"
@@ -265,7 +265,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             repaint();
         }
     }
-    
+
     public void removeEquation(AbstractEquation equation) {
         if (equation != null) {
             DrawableEquation toRemove = null;
@@ -275,7 +275,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                     break;
                 }
             }
-            
+
             if (toRemove != null) {
                 equation.removePropertyChangeListener(this);
                 equations.remove(toRemove);
@@ -289,27 +289,28 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         return new Dimension(400, 400);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
-    
+
     public double yPositionToPixel(double position) {
-        double height = (double) getHeight();
+        double height = getHeight();
         return height - ((position - minY) * height / (maxY - minY));
     }
 
     public double xPositionToPixel(double position) {
-        return (position - minX) * (double) getWidth() / (maxX - minX);
+        return (position - minX) * getWidth() / (maxX - minX);
     }
-    
+
     public double xPixelToPosition(double pixel) {
         double axisV = xPositionToPixel(originX);
-        return (pixel - axisV) * (maxX - minX) / (double) getWidth();
+        return (pixel - axisV) * (maxX - minX) / getWidth();
     }
-    
+
     public double yPixelToPosition(double pixel) {
         double axisH = yPositionToPixel(originY);
-        return (getHeight() - pixel - axisH) * (maxY - minY) / (double) getHeight();
+        return (getHeight() - pixel - axisH) * (maxY - minY) / getHeight();
     }
 
     @Override
@@ -317,19 +318,19 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         if (!isVisible()) {
             return;
         }
-        
+
         Graphics2D g2 = (Graphics2D) g;
         setupGraphics(g2);
 
         paintBackground(g2);
 //        drawGrid(g2);
 //        drawAxis(g2);
-//        
+//
 //        drawEquations(g2);
-        
+
         paintInformation(g2);
     }
-    
+
     protected void paintInformation(Graphics2D g2) {
     }
 
@@ -343,16 +344,16 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     private void drawEquation(Graphics2D g2, AbstractEquation equation) {
         float x = 0.0f;
         float y = (float) yPositionToPixel(equation.compute(xPixelToPosition(0.0)));
-        
+
         GeneralPath path = new GeneralPath();
         path.moveTo(x, y);
-        
+
         for (x = 0.0f; x < getWidth(); x += 1.0f) {
             double position = xPixelToPosition(x);
             y = (float) yPositionToPixel(equation.compute(position));
             path.lineTo(x, y);
         }
-        
+
         g2.draw(path);
     }
 
@@ -366,10 +367,10 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             drawVerticalLabels(g2);
             drawHorizontalLabels(g2);
         }
-        
+
         g2.setStroke(stroke);
     }
-    
+
     private void drawHorizontalLabels(Graphics2D g2) {
         double axisV = xPositionToPixel(originX);
 
@@ -378,32 +379,32 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             int position = (int) yPositionToPixel(y);
             g2.drawString(formatter.format(y), (int) axisV + 5, position);
         }
-        
+
         for (double y = originY - majorY; y > minY - majorY; y -= majorY) {
             int position = (int) yPositionToPixel(y);
             g2.drawString(formatter.format(y), (int) axisV + 5, position);
         }
     }
-    
+
     private void drawHorizontalGrid(Graphics2D g2) {
         double minorSpacing = majorY / minorY;
         double axisV = xPositionToPixel(originX);
-        
+
         Stroke gridStroke = new BasicStroke(STROKE_GRID);
         Stroke axisStroke = new BasicStroke(STROKE_AXIS);
-        
+
         for (double y = originY + majorY; y < maxY + majorY; y += majorY) {
             g2.setStroke(gridStroke);
             g2.setColor(COLOR_MINOR_GRID);
             for (int i = 0; i < minorY; i++) {
                 int position = (int) yPositionToPixel(y - i * minorSpacing);
-                g2.drawLine(0, position, getWidth(), position);    
+                g2.drawLine(0, position, getWidth(), position);
             }
 
             int position = (int) yPositionToPixel(y);
             g2.setColor(COLOR_MAJOR_GRID);
             g2.drawLine(0, position, getWidth(), position);
-            
+
             g2.setStroke(axisStroke);
             g2.setColor(COLOR_AXIS);
             g2.drawLine((int) axisV - 3, position, (int) axisV + 3, position);
@@ -414,13 +415,13 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             g2.setColor(COLOR_MINOR_GRID);
             for (int i = 0; i < minorY; i++) {
                 int position = (int) yPositionToPixel(y + i * minorSpacing);
-                g2.drawLine(0, position, getWidth(), position);    
+                g2.drawLine(0, position, getWidth(), position);
             }
 
             int position = (int) yPositionToPixel(y);
             g2.setColor(COLOR_MAJOR_GRID);
             g2.drawLine(0, position, getWidth(), position);
-            
+
             g2.setStroke(axisStroke);
             g2.setColor(COLOR_AXIS);
             g2.drawLine((int) axisV - 3, position, (int) axisV + 3, position);
@@ -430,7 +431,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     private void drawVerticalLabels(Graphics2D g2) {
         double axisH = yPositionToPixel(originY);
         FontMetrics metrics = g2.getFontMetrics();
-        
+
         g2.setColor(COLOR_AXIS);
 
         for (double x = originX + majorX; x < maxX + majorX; x += majorX) {
@@ -443,20 +444,20 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             g2.drawString(formatter.format(x), position, (int) axisH + metrics.getHeight());
         }
     }
-    
+
     private void drawVerticalGrid(Graphics2D g2) {
         double minorSpacing = majorX / minorX;
         double axisH = yPositionToPixel(originY);
-        
+
         Stroke gridStroke = new BasicStroke(STROKE_GRID);
         Stroke axisStroke = new BasicStroke(STROKE_AXIS);
-        
+
         for (double x = originX + majorX; x < maxX + majorX; x += majorX) {
             g2.setStroke(gridStroke);
             g2.setColor(COLOR_MINOR_GRID);
             for (int i = 0; i < minorX; i++) {
                 int position = (int) xPositionToPixel(x - i * minorSpacing);
-                g2.drawLine(position, 0, position, getHeight());    
+                g2.drawLine(position, 0, position, getHeight());
             }
 
             int position = (int) xPositionToPixel(x);
@@ -473,13 +474,13 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             g2.setColor(COLOR_MINOR_GRID);
             for (int i = 0; i < minorX; i++) {
                 int position = (int) xPositionToPixel(x + i * minorSpacing);
-                g2.drawLine(position, 0, position, getHeight());    
+                g2.drawLine(position, 0, position, getHeight());
             }
 
             int position = (int) xPositionToPixel(x);
             g2.setColor(COLOR_MAJOR_GRID);
             g2.drawLine(position, 0, position, getHeight());
-            
+
             g2.setStroke(axisStroke);
             g2.setColor(COLOR_AXIS);
             g2.drawLine(position, (int) axisH - 3, position, (int) axisH + 3);
@@ -489,17 +490,17 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     public void drawAxis(Graphics2D g2) {
         double axisH = yPositionToPixel(originY);
         double axisV = xPositionToPixel(originX);
-        
+
         g2.setColor(COLOR_AXIS);
         Stroke stroke = g2.getStroke();
         g2.setStroke(new BasicStroke(STROKE_AXIS));
-        
+
         g2.drawLine(0, (int) axisH, getWidth(), (int) axisH);
         g2.drawLine((int) axisV, 0, (int) axisV, getHeight());
-        
+
         FontMetrics metrics = g2.getFontMetrics();
         g2.drawString(formatter.format(0.0), (int) axisV + 5, (int) axisH + metrics.getHeight());
-        
+
         g2.setStroke(stroke);
     }
 
@@ -517,35 +518,36 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 	 * @author  kendzi
 	 */
     private class DrawableEquation {
-       
+
         private AbstractEquation equation;
-        
+
         private Color color;
 
         DrawableEquation(AbstractEquation equation, Color color) {
             this.equation = equation;
             this.color = color;
         }
-        
-       
+
+
         AbstractEquation getEquation() {
             return equation;
         }
-        
-        
+
+
         Color getColor() {
             return color;
         }
     }
-    
+
     private class ZoomHandler implements MouseWheelListener {
+        @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             double distanceX = maxX - minX;
             double distanceY = maxY - minY;
-            
+
             double cursorX = minX + distanceX / 2.0;
             double cursorY = minY + distanceY / 2.0;
-            
+
             int rotation = e.getWheelRotation();
             if (rotation < 0) {
                 distanceX /= COEFF_ZOOM;
@@ -554,7 +556,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                 distanceX *= COEFF_ZOOM;
                 distanceY *= COEFF_ZOOM;
             }
-            
+
             minX = cursorX - distanceX / 2.0;
             maxX = cursorX + distanceX / 2.0;
             minY = cursorY - distanceY / 2.0;
@@ -563,14 +565,14 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             repaint();
         }
     }
-    
+
     private class PanHandler extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             dragStart = e.getPoint();
         }
     }
-    
+
     private class ComponentResizeHandler extends ComponentAdapter {
 
 		@Override
@@ -620,12 +622,12 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
 
 			}
-			
+
 			if (( oldWidth == 0) || (oldHeight == 0)) {
 				oldWidth = width;
 				oldHeight = height;
 			}
-			
+
 			double distanceX = (maxX - minX) * (width/oldWidth);
             double distanceY = (maxY - minY) * (height/oldHeight);
 
@@ -636,22 +638,22 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
             double cursorX = minX + distanceX / 2.0;
             double cursorY = maxY - distanceY / 2.0;
-			
+
             minX = cursorX - distanceX / 2.0;
             maxX = cursorX + distanceX / 2.0;
             minY = cursorY - distanceY / 2.0;
             maxY = cursorY + distanceY / 2.0;
-            
+
             oldWidth = width;
 			oldHeight = height;
 
 
             repaint();
-			
-			
+
+
 		}
-    	
-    	
+
+
     }
 
     private class PanMotionHandler extends MouseMotionAdapter {
@@ -668,7 +670,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                        yPixelToPosition(dragStart.getY());
             minY -= distance;
             maxY -= distance;
-            
+
             repaint();
             dragStart = dragEnd;
         }

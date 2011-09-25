@@ -12,6 +12,7 @@ package kendzi.math.geometry.skeleton;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
+import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
 
 /** Math ray. Defined by point and vector.
@@ -31,6 +32,27 @@ public class Ray2d extends LineParametric2d {
 //        U = pV;
 //    }
 
+    public static Point2d collide(Ray2d ray, LineLinear2d line) {
 
+        Point2d collide = LineLinear2d.collide(ray.getLinearForm(), line);
+        if (collide == null) {
+            return null;
+        }
+
+        // Portably there is better way to do this.
+        // this is from graphical .
+
+        Vector2d collideVector = new Vector2d(collide);
+        collideVector.sub(ray.A);
+
+        double dot = ray.U.dot(collideVector);
+
+        if (dot < 0) {
+            return null;
+        }
+
+        return collide;
+
+    }
 
 }

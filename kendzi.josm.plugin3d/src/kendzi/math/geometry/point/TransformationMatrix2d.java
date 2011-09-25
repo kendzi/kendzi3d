@@ -9,6 +9,9 @@
 
 package kendzi.math.geometry.point;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
@@ -169,5 +172,37 @@ public class TransformationMatrix2d {
         SimpleMatrix mult = pSimpleMatrix.mult(sm);
 
         return new Vector2d(mult.get(0), mult.get(1));
+    }
+
+    /** Transform list of points using transformation matrix.
+     * @param pList list of points
+     * @param transformLocal transformation matrix
+     * @return  transformed list of points
+     */
+    public static List<Point2d> transformList(List<Point2d> pList, SimpleMatrix transformLocal) {
+
+        List<Point2d> list = new ArrayList<Point2d>(pList.size());
+        for (Point2d p : pList) {
+           Point2d transformed = TransformationMatrix2d.transform(p, transformLocal);
+           list.add(transformed);
+        }
+        return list;
+    }
+
+    /** Transform array of points using transformation matrix.
+     * @param pList array of points
+     * @param transformLocal transformation matrix
+     * @return  transformed array of points
+     */
+    public static Point2d[] transformArray(Point2d[] pList, SimpleMatrix transformLocal) {
+
+        Point2d [] list = new Point2d[pList.length];
+        int i = 0;
+        for (Point2d p : pList) {
+           Point2d transformed = TransformationMatrix2d.transform(p, transformLocal);
+           list[i] = transformed;
+           i++;
+        }
+        return list;
     }
 }

@@ -23,8 +23,6 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementParserUtil;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
@@ -32,13 +30,9 @@ import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 
-import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
 
-public abstract class RectangleRoofType implements RoofType {
-
-    /** Log. */
-    private static final Logger log = Logger.getLogger(RectangleRoofType.class);
+public abstract class RectangleRoofType extends AbstractRoofType implements RoofType {
 
     @Override
     public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
@@ -81,24 +75,15 @@ public abstract class RectangleRoofType implements RoofType {
                     + pow(rectangleContur[0].y - rectangleContur[1].y));
         }
 
-
-        border = transformToLocalCord(border, newStartPoint.x, newStartPoint.y, alpha, scaleA, scaleB);
-        rectangleContur = transformToLocalCord(rectangleContur, newStartPoint.x, newStartPoint.y, alpha, scaleA,
-                scaleB);
-
+        SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, scaleA, scaleB);
+        border = TransformationMatrix2d.transformList(border, transformLocal);
+        rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
 
         RoofTypeOutput buildRectangleRoof = buildRectangleRoof(border, rectangleContur, scaleA, scaleB, recHeight, recWidth, prefixParameter,
                 pMeasurements, pRoofTextureData);
 
-
-
-        SimpleMatrix scale = TransformationMatrix3d.scaleA(scaleA, 1, scaleB);
-        SimpleMatrix transf = TransformationMatrix3d.tranA(
-                newStartPoint.x, height - buildRectangleRoof.getHeight(), -newStartPoint.y);
-        SimpleMatrix rot = TransformationMatrix3d.rotYA(alpha);
-        //XXX test me
-        SimpleMatrix tr = transf.mult(rot).mult(scale);
+        SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, scaleA, scaleB);
 
         buildRectangleRoof.setTransformationMatrix(tr);
 
@@ -115,57 +100,51 @@ public abstract class RectangleRoofType implements RoofType {
 
 
 
+    /**
+     * @param startPoint
+     * @param height
+     * @param alpha
+     * @param scaleA
+     * @param scaleB
+     * @return
+     */
+    private SimpleMatrix transformToGlobalMatrix(Point2d startPoint, double height, double alpha, double scaleA,
+            double scaleB) {
+        SimpleMatrix scale = TransformationMatrix3d.scaleA(scaleA, 1, scaleB);
+        SimpleMatrix transf = TransformationMatrix3d.tranA(
+                startPoint.x, height, -startPoint.y);
+        SimpleMatrix rot = TransformationMatrix3d.rotYA(alpha);
+        //XXX test me
+        SimpleMatrix tr = transf.mult(rot).mult(scale);
+        return tr;
+    }
+
+
+
     protected boolean normalizeAB() {
         return true;
     }
 
     /**
-     * @param pList
-     * @param newStartPoint
+     * @param x
+     * @param y
      * @param alpha
      * @param sizeA
      * @param sizeB
+     * @return
      */
-    public List<Point2d> transformToLocalCord(List<Point2d> pList, double x, double y, double alpha, double sizeA,
-            double sizeB) {
+    private SimpleMatrix trandformToLocalMatrix(double x, double y, double alpha, double sizeA, double sizeB) {
         SimpleMatrix scaleLocal = TransformationMatrix2d.scaleA(1 / sizeA, 1 / sizeB);
         SimpleMatrix transfLocal = TransformationMatrix2d.tranA(
                 -x, -y);
         SimpleMatrix rotLocal = TransformationMatrix2d.rotZA(-alpha);
         //XXX test me
         SimpleMatrix transformLocal = scaleLocal.mult(rotLocal).mult(transfLocal);
-
-        List<Point2d> list = new ArrayList<Point2d>();
-        for (Point2d p : pList) {
-           Point2d transformed = TransformationMatrix2d.transform(p, transformLocal);
-           list.add(transformed);
-        }
-        return list;
-    }
-
-    private Point2d[] transformToLocalCord(Point2d[] pList, double x, double y, double alpha, double sizeA,
-            double sizeB) {
-
-        SimpleMatrix scaleLocal = TransformationMatrix2d.scaleA(1 / sizeA, 1 / sizeB);
-        SimpleMatrix transfLocal = TransformationMatrix2d.tranA(
-                -x, -y);
-        SimpleMatrix rotLocal = TransformationMatrix2d.rotZA(-alpha);
-        //XXX test me
-        SimpleMatrix transformLocal = scaleLocal.mult(rotLocal).mult(transfLocal);
-
-        Point2d [] list = new Point2d[pList.length];
-        int i = 0;
-        for (Point2d p : pList) {
-           Point2d transformed = TransformationMatrix2d.transform(p, transformLocal);
-           list[i] = transformed;
-           i++;
-        }
-        return list;
+        return transformLocal;
     }
 
 
     private double pow(double d) {
-
         return d * d;
     }
 
@@ -202,153 +181,6 @@ public abstract class RectangleRoofType implements RoofType {
         }
         return ret;
     }
-
-    /**
-     * Get size parameter.
-     *
-     * @param i index
-     * @param pList list of parameters
-     * @param defaultSize default value
-     * @return size
-     */
-    @Deprecated
-    Double getSize(int i, List<Double> pList, Double defaultSize) {
-        if (i < 0) {
-            return defaultSize;
-        }
-        if (pList.size() - 1 < i) {
-            return defaultSize;
-        }
-        Double ret = pList.get(i);
-        if (ret == null) {
-            return defaultSize;
-        }
-        return ret;
-    }
-
-    public double getLenghtMetersPersent(
-            Map<MeasurementKey, Measurement> pMeasurements,
-            MeasurementKey pMeasurementKey,
-            double maxLenght,
-            double pDefaultValue) {
-
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
-
-        if (measurement == null) {
-            return pDefaultValue;
-        }
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.PERCENT)) {
-            return measurement.getValue() * maxLenght / 100d;
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
-            return pDefaultValue;
-        }
-    }
-
-    public double getHeightMeters(Map<MeasurementKey, Measurement> pMeasurements, MeasurementKey pMeasurementKey, double pDefaultValue) {
-
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
-
-        if (measurement == null) {
-            return pDefaultValue;
-        }
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
-            return pDefaultValue;
-        }
-    }
-
-    /** Default value is in meters!
-     * @param pMeasurements
-     * @param pMeasurementKey
-     * @param pAngleHeight
-     * @param pAngleDepth
-     * @param pMetersDefaultValue
-     * @return
-     */
-    public double getHeightMetersDegrees(
-            Map<MeasurementKey, Measurement> pMeasurements,
-            MeasurementKey pMeasurementKey,
-            double pAngleHeight,
-            double pAngleDepth,
-            double pMetersDefaultValue) {
-
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
-
-        if (measurement == null) {
-            return pMetersDefaultValue;
-        }
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
-            return pMetersDefaultValue;
-        }
-    }
-    /** Default value is in degrees!
-     * @param pMeasurements
-     * @param pMeasurementKey
-     * @param pAngleHeight
-     * @param pAngleDepth
-     * @param pAngleDegreesDefaultValue
-     * @return
-     */
-    public double getHeightDegreesMeters(
-            Map<MeasurementKey, Measurement> pMeasurements,
-            MeasurementKey pMeasurementKey,
-            double pAngleHeight,
-            double pAngleDepth,
-            double pAngleDegreesDefaultValue) {
-
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
-
-        if (measurement == null) {
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(pAngleDegreesDefaultValue));
-        }
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(pAngleDegreesDefaultValue));
-        }
-    }
-
-    private Measurement getMeasurement(MeasurementKey pDormerWidth1, Map<MeasurementKey, Measurement> pMeasurements) {
-        if (pMeasurements == null) {
-            return null;
-        }
-        return pMeasurements.get(pDormerWidth1);
-    }
-
-    boolean isUnit(Measurement pMeasurement, MeasurementUnit pMeasurementUnit) {
-        if (pMeasurement == null) {
-            return false;
-        }
-        if (pMeasurementUnit.equals(pMeasurement.getUnit())) {
-            return true;
-        }
-        return false;
-    }
-
-
-
-
 
     /**
      * @param pRectangleContur rectangle

@@ -96,6 +96,9 @@ public class LineLinear2d {
     }
 
 
+
+
+
     /** Determinate if point is under line.
      * <img src="doc-files/LineLinear2d_point.png">
      * @param pPoint point

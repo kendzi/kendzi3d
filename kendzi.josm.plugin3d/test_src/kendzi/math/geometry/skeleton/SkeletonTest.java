@@ -17,6 +17,10 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.vecmath.Point2d;
 
+import kendzi.math.geometry.debug.DebugDisplay;
+import kendzi.math.geometry.debug.DebugLayer;
+import kendzi.math.geometry.debug.DisplayPolygon;
+import kendzi.math.geometry.debug.DisplaySkeletonOut;
 import kendzi.math.geometry.skeleton.Skeleton.Output;
 import kendzi.swing.ui.panel.equation.EquationDisplay;
 import kendzi.swing.ui.panel.equation.EquationLayer;
@@ -26,8 +30,226 @@ import org.junit.Test;
 
 public class SkeletonTest {
 
+    DebugLayer dv = DebugDisplay.getDebugDisplay().getDebugLayer();
+
+
+    @Test
+    public void skeletonTest5() {
+
+        dv.clear();
+
+        List<Point2d> polygon = new ArrayList<Point2d>();
+
+
+        polygon.add(new Point2d(-2,0));
+        polygon.add(new Point2d(-1, -1));
+        polygon.add(new Point2d(0, 0));
+        polygon.add(new Point2d(1, -1));
+        polygon.add(new Point2d(2, 0));
+        polygon.add(new Point2d(1, 1));
+        polygon.add(new Point2d(-1, 1));
+
+        dv.addDebug(new DisplayPolygon(polygon));
+
+        Output sk = Skeleton.sk(polygon);
+
+        System.out.println(sk);
+
+
+        dv.addDebug(new DisplayPolygon(polygon));
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+
+        DebugDisplay.getDebugDisplay().block();
+
+
+//        showResult2(polygon, sk);
+
+    }
+
+
+    @Test
+    public void skeletonTest6() {
+
+        dv.clear();
+
+        List<Point2d> inner = new ArrayList<Point2d>();
+
+
+        inner.add(new Point2d(-1,1));
+        inner.add(new Point2d(1, 1));
+        inner.add(new Point2d(1, -1));
+        inner.add(new Point2d(0, -1));
+        inner.add(new Point2d(0, 0));
+
+        List<Point2d> outer = new ArrayList<Point2d>();
+        outer.add(new Point2d(-2, -2));
+        outer.add(new Point2d(2, -2));
+        outer.add(new Point2d(2, 2));
+        outer.add(new Point2d(-2, 2));
+
+
+        List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
+        innerList.add(inner);
+
+//        polygon.add(new Point2d(1, 1));
+//        polygon.add(new Point2d(-1, 1));
+
+        dv.addDebug(new DisplayPolygon(outer));
+        dv.addDebug(new DisplayPolygon(inner));
+
+        Output sk = Skeleton.sk(outer, innerList);
+
+        System.out.println(sk);
+
+
+        dv.addDebug(new DisplayPolygon(inner));
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+
+        DebugDisplay.getDebugDisplay().block();
+
+
+//        showResult2(polygon, sk);
+
+    }
+    @Test
+    public void skeletonTest6_1() {
+
+        dv.clear();
+
+        List<Point2d> inner = new ArrayList<Point2d>();
+
+
+        inner.add(new Point2d(-1,1));
+        inner.add(new Point2d(1, 1));
+        inner.add(new Point2d(1, -1));
+        inner.add(new Point2d(0, -1));
+        inner.add(new Point2d(0, 0));
+
+        List<Point2d> outer = new ArrayList<Point2d>();
+        outer.add(new Point2d(-2, -2));
+        outer.add(new Point2d(2, -2));
+        outer.add(new Point2d(2, 2));
+        outer.add(new Point2d(-2, 2));
+
+
+        List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
+        innerList.add(inner);
+
+//        polygon.add(new Point2d(1, 1));
+//        polygon.add(new Point2d(-1, 1));
+
+        dv.addDebug(new DisplayPolygon(outer));
+        dv.addDebug(new DisplayPolygon(inner));
+
+        Output sk = Skeleton.sk(outer, innerList);
+
+        System.out.println(sk);
+
+
+        dv.addDebug(new DisplayPolygon(inner));
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+
+        DebugDisplay.getDebugDisplay().block();
+
+
+//        showResult2(polygon, sk);
+
+    }
+
+    @Test
+    public void skeletonTest6_9() {
+
+        dv.clear();
+
+        List<Point2d> inner = new ArrayList<Point2d>();
+
+//
+//        inner.add(new Point2d(-1,1));
+//        inner.add(new Point2d(1, 1));
+//        inner.add(new Point2d(1, -1));
+//        inner.add(new Point2d(-1, -1));
+//        inner.add(new Point2d(-2, 0));
+
+        inner.add(new Point2d(119,158));
+        inner.add(new Point2d(259, 159));
+        inner.add(new Point2d(248, 63));
+        inner.add(new Point2d(126, 60));
+        inner.add(new Point2d(90, 106));
+
+//        List<Point2d> outer = new ArrayList<Point2d>();
+//        outer.add(new Point2d(-2, -2));
+//        outer.add(new Point2d(2, -2));
+//        outer.add(new Point2d(2, 2));
+//        outer.add(new Point2d(-2, 2));
+//
+//
+//        List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
+//        innerList.add(inner);
+
+//        polygon.add(new Point2d(1, 1));
+//        polygon.add(new Point2d(-1, 1));
+
+//        dv.addDebug(new DisplayPolygon(outer));
+        dv.addDebug(new DisplayPolygon(inner));
+
+        Output sk = Skeleton.sk(inner);
+
+        System.out.println(sk);
+
+
+        dv.addDebug(new DisplayPolygon(inner));
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+
+        DebugDisplay.getDebugDisplay().block();
+
+
+//        showResult2(polygon, sk);
+
+    }
+
+    @Test
+    public void skeletonTest7() {
+
+        dv.clear();
+
+        List<Point2d> polygon = new ArrayList<Point2d>();
+
+        polygon.add(new Point2d(0, 0));
+        polygon.add(new Point2d(0, -1));
+        polygon.add(new Point2d(1, -1));
+        polygon.add(new Point2d(1, 1));
+        polygon.add(new Point2d(-1,1));
+
+        dv.addDebug(new DisplayPolygon(polygon));
+
+        Output sk = Skeleton.sk(polygon);
+
+        System.out.println(sk);
+
+
+        dv.addDebug(new DisplayPolygon(polygon));
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+
+        DebugDisplay.getDebugDisplay().block();
+
+
+//        showResult2(polygon, sk);
+
+    }
+
     @Test
     public void circularAddTest() {
+
+//        DebugLayer dv = createDebugView();
+
+        DebugLayer dv = DebugDisplay.getDebugDisplay().getDebugLayer();
+        dv.clear();
+
         List<Point2d> polygon = new ArrayList<Point2d>();
 
 
@@ -40,7 +262,13 @@ public class SkeletonTest {
 
         System.out.println(sk);
 
-        showResult(polygon, sk);
+        dv.addDebug("border", new DisplayPolygon(polygon));
+
+        dv.addDebug(new DisplaySkeletonOut(sk));
+
+        DebugDisplay.getDebugDisplay().block();
+
+       // showResult2(polygon, sk);
 
     }
     public void circularAddTest2() {
@@ -102,6 +330,38 @@ public class SkeletonTest {
         frame.setModal(true);
         frame.setVisible(true);
     }
+
+    DebugLayer createDebugView() {
+//        DebugLayer ret1 = null;
+        DebugLayer ret = new DebugLayer();
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+//                new UiFrame().setVisible(true);
+            DebugLayer ret = new DebugLayer();
+
+            MapComponent mc = new MapComponent();
+            mc.addLayer(ret);
+
+            JDialog frame = new JDialog();
+            frame.add(mc);
+            frame.pack();
+            frame.setSize(600, 600);
+    //
+    //
+    ////        ui.repaint();
+    //
+            frame.setModal(false);
+            frame.setVisible(true);
+
+//             ret1 = ret;
+            }
+        });
+
+        return ret;
+    }
+
     /**
      * @param polygon
      * @param sk

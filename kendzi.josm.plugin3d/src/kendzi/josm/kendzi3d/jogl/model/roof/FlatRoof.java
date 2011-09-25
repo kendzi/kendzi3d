@@ -35,7 +35,7 @@ public class FlatRoof extends Roof {
      * List of roof triangles.
      * FIXME use model.
      */
-    private ArrayList<Point2d> roofList;
+    private List<Point2d> roofList;
 
 
 
@@ -74,10 +74,10 @@ public class FlatRoof extends Roof {
         //FIXME use model.
         this.roofList = new ArrayList<Point2d>();
 
-        Triangulate t = new Triangulate();
+
         // pointList.remove(pointList.size()-1);
-        List<Point2d> cleanPointList = t.removeClosePoints(this.list);
-        t.process(cleanPointList, this.roofList);
+        List<Point2d> cleanPointList = Triangulate.removeClosePoints(this.list);
+        this.roofList = Triangulate.process(cleanPointList);
 
 
     }
