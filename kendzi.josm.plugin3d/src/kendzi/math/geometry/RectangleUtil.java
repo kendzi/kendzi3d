@@ -97,7 +97,7 @@ public class RectangleUtil {
 			int maxLenghtIndex = -1;
 
 			double kat = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-			log.info(Math.toDegrees(kat));
+//			log.info(Math.toDegrees(kat));
 			int maxHeightIndex = -1;
 
 			for (int j = 0; j < plist.size(); j++) {

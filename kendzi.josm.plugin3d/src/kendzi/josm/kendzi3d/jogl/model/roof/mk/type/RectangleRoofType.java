@@ -28,7 +28,6 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
-import kendzi.math.geometry.polygon.MultiPolygonList2d;
 
 import org.ejml.data.SimpleMatrix;
 
@@ -230,62 +229,36 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
      */
     private PolygonRoofHooksSpace buildRecHookSpace(int pEdge, Point2d[] pRectangleContur, PolygonPlane pPolygonPlane) {
 
-        if (pPolygonPlane == null) {
-            return null;
-        }
+
 
         Vector2d v1 = new Vector2d(pRectangleContur[(pEdge + 1) % 4]);
         v1.sub(pRectangleContur[pEdge]);
 
+        return buildRecHookSpace(pRectangleContur[pEdge], v1, pPolygonPlane);
+    }
+
+    /** Build roof hook space for rectangle edge.
+     * @param pEdge rectangle edge number XXX
+     * @param pRectangleContur rectangle XXX
+     * @param pPolygonPlane polygon and plane defining height connected with rectangle edge
+     * @return roof hook space
+     */
+    public static PolygonRoofHooksSpace buildRecHookSpace(Point2d p1, Vector2d v1, PolygonPlane pPolygonPlane) {
+
+        if (pPolygonPlane == null) {
+            return null;
+        }
 
         Plane3d plane = new Plane3d(pPolygonPlane.getPlane().getPoint(), pPolygonPlane.getPlane().getNormal());
 
         PolygonRoofHooksSpace rrhs1 = new PolygonRoofHooksSpace(
-                        pRectangleContur[pEdge],
+                        p1,
                         v1,
                         pPolygonPlane.getPolygon(),
                         plane);
         return rrhs1;
     }
 
-    class PolygonPlane {
 
-        private MultiPolygonList2d polygon;
-
-        private Plane3d plane;
-
-        public PolygonPlane(MultiPolygonList2d polygon, Plane3d plane) {
-            super();
-            this.polygon = polygon;
-            this.plane = plane;
-        }
-
-        /**
-         * @return the polygon
-         */
-        public MultiPolygonList2d getPolygon() {
-            return polygon;
-        }
-        /**
-         * @param polygon the polygon to set
-         */
-        public void setPolygon(MultiPolygonList2d polygon) {
-            this.polygon = polygon;
-        }
-        /**
-         * @return the plane
-         */
-        public Plane3d getPlane() {
-            return plane;
-        }
-        /**
-         * @param plane the plane to set
-         */
-        public void setPlane(Plane3d plane) {
-            this.plane = plane;
-        }
-
-
-    }
 
 }

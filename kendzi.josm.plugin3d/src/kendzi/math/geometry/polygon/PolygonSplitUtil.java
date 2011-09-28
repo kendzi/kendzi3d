@@ -171,7 +171,7 @@ public class PolygonSplitUtil {
             //          double d1 = matrix_det(roofLine.getP1(), roofLine.getP2(), pp1);
             double d2 = matrix_det(pRoofLine.getP1(), pRoofLine.getP2(), pp2);
             double d3 = matrix_det(pRoofLine.getP1(), pRoofLine.getP2(), p3);
-            log.warn("d2 = " + d2);
+            //log.warn("d2 = " + d2);
 
             if (equalZero(d2)) {
                 if (equalZero(d3)) {

@@ -9,7 +9,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 
 import org.apache.log4j.Logger;
 
-public class AbstractRoofType {
+public abstract class AbstractRoofType implements RoofType{
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RectangleRoofType.class);

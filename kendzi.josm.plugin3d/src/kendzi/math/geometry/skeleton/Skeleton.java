@@ -10,7 +10,6 @@
 
 package kendzi.math.geometry.skeleton;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,22 +24,18 @@ import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 
 import kendzi.math.geometry.Algebra;
-import kendzi.math.geometry.debug.DebugDisplay;
-import kendzi.math.geometry.debug.DebugLayer;
-import kendzi.math.geometry.debug.DisplayLineParametric2d;
-import kendzi.math.geometry.debug.DisplayLineSegment2d;
-import kendzi.math.geometry.debug.DisplayPoints;
 import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
+import kendzi.math.geometry.line.LinePoints2d;
+import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.skeleton.debug.DisplayEventQueue;
-import kendzi.math.geometry.skeleton.debug.DisplayFaceNode;
-import kendzi.math.geometry.skeleton.debug.DisplayLav2;
+import kendzi.math.geometry.skeleton.debug.DV;
 
 public class Skeleton {
 
-    static DebugLayer dv = DebugDisplay.getDebugDisplay().getDebugLayer();
+    private static final double SPLIT_EPSILON = 1E-10;
+//    static DebugLayer dv = DebugDisplay.getDebugDisplay().getDebugLayer();
 
 
     public static Output sk(List<Point2d> pBorder) {
@@ -49,13 +44,13 @@ public class Skeleton {
 
     public static Output sk(List<Point2d> pBorder, List<List<Point2d>> innerList) {
 
-        dv.clear();
+        DV.clear();
 
         PriorityQueue<IntersectEntry> queue = new PriorityQueue<IntersectEntry>(3, distanseComparator);
 
         Set<CircularList<VertexEntry2>> sLav = new HashSet<CircularList<VertexEntry2>>();
 
-        Set<FaceQueue> faces = new HashSet<FaceQueue>();
+        List<FaceQueue> faces = new ArrayList<FaceQueue>();
 
         Output output = new Output();
 
@@ -64,11 +59,11 @@ public class Skeleton {
 
 
 
-        prepareData(pBorder, queue, sLav, faces);
+        prepareBisectors(pBorder, queue, sLav, faces);
 
         if (innerList != null) {
             for (List<Point2d> inner : innerList) {
-                prepareData(inner, queue, sLav, faces);
+                prepareBisectors(inner, queue, sLav, faces);
             }
         }
 
@@ -83,15 +78,15 @@ public class Skeleton {
 
                 computeIntersections(v_i, queue);
 
-                dv.addDebug(new DisplayEventQueue(queue));
+                DV.debug(queue);
 
             }
 
-            dv.addDebug(new DisplayEventQueue(queue));
-            dv.addDebug(new DisplayLav2(lav, Color.ORANGE.darker().darker()));
+            DV.debug(queue);
+            DV.debug(lav);
         }
 
-        dv.addDebug(new DisplayEventQueue(queue));
+        DV.debug(queue);
 //        dv.addDebug(new DisplayLAV(LAV, Color.ORANGE));
 
 
@@ -101,24 +96,22 @@ public class Skeleton {
 
         while (!queue.isEmpty()) {
 
-            dv.addDebug(new DisplayEventQueue(queue));
-           // dv.addDebug(new DisplayLAV(LAV, Color.ORANGE));
-//            dv.addDebug(new DisplayLav2(lav, Color.ORANGE.darker().darker()));
+            DV.debug(queue);
 
-            for (CircularList l : sLav) {
-                dv.addDebug(new DisplayLav2(l, Color.ORANGE.darker().darker()));
+            for (CircularList<VertexEntry2> l : sLav) {
+                DV.debug(l);
             }
 
             for (FaceQueue f : faces) {
-                dv.addDebug(new DisplayFaceNode(f, Color.pink.darker()));
+                DV.debug(f);
             }
 
             // a
             IntersectEntry I = queue.poll();
 
-            dv.addDebug(new DisplayPoints(I.v));
+            DV.debug(I);
 
-            System.out.println(I);
+//            System.out.println(I);
 //            System.out.println("I: " + I.v + " distance: " +  I.distance + " Va: " + I.Va.v+ " Vb: " + I.Vb.v);
             //dv.addDebug(new DisplayLineParametric2d(I.v.bisector));
 
@@ -134,11 +127,15 @@ public class Skeleton {
         }
 
         for (FaceQueue f : faces) {
-            dv.addDebug(new DisplayFaceNode(f, Color.pink.darker()));
+            DV.debug(f);
 
         }
 
         addFacesToOutput(faces, output);
+
+
+        DV.debug(pBorder);
+        DV.debug(output);
 
         return output;
     }
@@ -149,8 +146,8 @@ public class Skeleton {
      * @param sLav
      * @param faces
      */
-    public static void prepareData(List<Point2d> pBorder, PriorityQueue<IntersectEntry> queue,
-            Set<CircularList<VertexEntry2>> sLav, Set<FaceQueue> faces) {
+    private static void prepareBisectors(List<Point2d> pBorder, PriorityQueue<IntersectEntry> queue,
+            Set<CircularList<VertexEntry2>> sLav, List<FaceQueue> faces) {
         CircularList<VertexEntry2> lav = new CircularList<Skeleton.VertexEntry2>();
         sLav.add(lav);
 
@@ -180,13 +177,8 @@ public class Skeleton {
         for (VertexEntry2 v_i : lav) {
             v_i.e_a = (EdgeEntry) v_i.e_b.previous;
         }
-//        lav.first.
 
-
-//        dv.addDebug(new DisplayLAV(LAV, Color.ORANGE));
-
-        dv.addDebug(new DisplayLav2(lav, Color.ORANGE.darker()));
-
+        DV.debug(lav);
 
 
 
@@ -202,19 +194,21 @@ public class Skeleton {
             v.e_a.bisectorNext = v.bisector2;
             v.e_b.bisectorPrevious = v.bisector2;
 
-            dv.addDebug(new DisplayLineParametric2d(v.bisector));
+            DV.debug(v.bisector);
 
 
 
-            FaceQueue leftFace = new FaceQueue();
-            leftFace.border = true;
+            FaceQueue rightFace = new FaceQueue();
+            rightFace.border = true;
+            rightFace.edge = v.e_b;
+
 //            leftFace = new CircularList<Skeleton.FaceNode>();
             FaceNode fn = new FaceNode();
             fn.v = v;
-            leftFace.addFirst(fn);
-            v.leftFace = fn;
+            rightFace.addFirst(fn);
+            v.rightFace = fn;
 
-            faces.add(leftFace);
+            faces.add(rightFace);
 
 //            CircularList<Skeleton.FaceNode> rightFace = new CircularList<Skeleton.FaceNode>();
 //            fn = new FaceNode();
@@ -230,22 +224,23 @@ public class Skeleton {
         /* new */
         for (VertexEntry2 v : lav) {
 
-            VertexEntry2 next = (VertexEntry2) v.next;
+            VertexEntry2 next = (VertexEntry2) v.previous;
 
-            FaceNode leftFace = next.leftFace;
+            FaceNode rightFace = next.rightFace;
 
             FaceNode fn = new FaceNode();
             fn.v = v;
-            leftFace.addPush(fn);
-            v.rightFace = fn;
+            rightFace.addPush(fn);
+            v.leftFace = fn;
         }
 
 
 
     }
 
-    private static void addFacesToOutput(Set<FaceQueue> faces, Output output) {
+    private static void addFacesToOutput(List<FaceQueue> faces, Output output) {
 //        output.faces2 = new A
+
         for (FaceQueue face : faces) {
             if (face.size > 0) {
                 List<Point2d> faceList = new ArrayList<Point2d>();
@@ -255,9 +250,14 @@ public class Skeleton {
                     output.distance.put(fn.v.v, fn.v.distance);
                 }
 
-                output.faces2.add(new PolygonList2d(faceList));
+                PolygonList2d polygon = new PolygonList2d(faceList);
+
+                output.faces2.add(polygon);
+                output.edges.put(polygon, new LineSegment2d(face.edge.p1, face.edge.p2));
+
             }
         }
+
     }
 
     private static void addOutputFace(Output output, IntersectEntry i, VertexEntry2 va, VertexEntry2 vb) {
@@ -266,49 +266,44 @@ public class Skeleton {
 
     private static void addOutputFace(Output output, Point2d v, VertexEntry2 va, VertexEntry2 vb) {
 
-        try {
-            dv.addDebug(new DisplayPoints(v));
-            dv.addDebug(new DisplayPoints(va.v));
-            dv.addDebug(new DisplayPoints(vb.v));
+//        System.out.println("depricated");
+        return;
 
-        List<Point2d> edge = new ArrayList<Point2d>();
-
-        List<Point2d> leftEdge = new ArrayList<Point2d>();
-        if (!v.equals(va.v)) {
-            leftEdge.add(va.v);
-        }
-
-
-        boolean lewa = true;
-
-        boolean split;
-
-        findFaceEdge(va, lewa, leftEdge);
-
-
-
-
-
-
-
-
-        for (int j = leftEdge.size() - 1; j >= 0; j--) {
-            edge.add(leftEdge.get(j));
-        }
- //       dv.addDebug(new DisplayPoints(v_i.v));
-        edge.add(v);
-
-        if (!v.equals(vb.v)) {
-            edge.add(vb.v);
-        }
-
-        findFaceEdge(vb, false, edge);
-
-        output.faces.add(edge);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            dv.addDebug(new DisplayPoints(v));
+//            dv.addDebug(new DisplayPoints(va.v));
+//            dv.addDebug(new DisplayPoints(vb.v));
+//
+//            List<Point2d> edge = new ArrayList<Point2d>();
+//
+//            List<Point2d> leftEdge = new ArrayList<Point2d>();
+//            if (!v.equals(va.v)) {
+//                leftEdge.add(va.v);
+//            }
+//
+//            boolean lewa = true;
+//
+//            boolean split;
+//
+//            findFaceEdge(va, lewa, leftEdge);
+//
+//            for (int j = leftEdge.size() - 1; j >= 0; j--) {
+//                edge.add(leftEdge.get(j));
+//            }
+//            // dv.addDebug(new DisplayPoints(v_i.v));
+//            edge.add(v);
+//
+//            if (!v.equals(vb.v)) {
+//                edge.add(vb.v);
+//            }
+//
+//            findFaceEdge(vb, false, edge);
+//
+//            output.faces.add(edge);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -370,84 +365,13 @@ public class Skeleton {
         }
     }
     private static void addOutputFace(Output output, IntersectEntry i, VertexEntry2 va) {
-        // only sysout
-        System.out.println("adding edge on split event!: " + i.v);
 
+//        System.out.println("adding edge on split event!: " + i.v);
     }
-
-    private static void calcBisection(VertexEntry2 v_i, VertexEntry2 v_ip1, PriorityQueue<IntersectEntry> queue) {
-        Ray2d b_i = v_i.bisector;
-        Ray2d b_ip1 = v_ip1.bisector;
-        EdgeEntry e_i = v_i.e_b;
-
-        EdgeEvent I = new EdgeEvent();
-        Point2d intersect = RayUtil.intersectRays2d(b_i, b_ip1, null, null);
-
-        if (v_i.v.equals(intersect)
-                || v_ip1.v.equals(intersect)) {
-            // skip the same points
-            return;
-        }
-
-        if (intersect != null) {
-            I.v = intersect;
-
-//            I.e_im1 = v_i.e_im1;
-//            I.e_i = v_ip1.e_i;
-            I.distance = calcDistance(intersect, e_i);
-
-            I.Va = v_i;
-            I.Vb = v_ip1;
-
-            I.eventType = EventType.EDGE_EVENT;
-
-            queue.add(I);
-   //                quare.add(I);
-        }
-    }
-
-    private static void calcBisection2(VertexEntry2 v_i, VertexEntry2 v_ip1, PriorityQueue<IntersectEntry> queue) {
-
-        LineLinear2d b_i = v_i.bisector2;
-        LineLinear2d b_ip1 = v_ip1.bisector2;
-
-        EdgeEntry e_i = v_i.e_b;
-        LineLinear2d edgeLine = e_i.lineLinear2d;
-
-        EdgeEvent I = new EdgeEvent();
-
-        Point2d intersect = b_i.collide(b_ip1);
-
-        if (v_i.v.equals(intersect)
-                || v_ip1.v.equals(intersect)) {
-            // skip the same points
-            return;
-        }
-// XXX FIXME odkomentowac bug !
-//        if (edgeLine.pointIsUnder(v_i.v)) {
-//            return;
-//        }
-
-        if (intersect != null) {
-            I.v = intersect;
-
-            I.distance = calcDistance(intersect, e_i);
-
-            I.Va = v_i;
-            I.Vb = v_ip1;
-
-            I.eventType = EventType.EDGE_EVENT;
-
-            queue.add(I);
-        }
-    }
-
 
 
 
     private static void computeIntersections(VertexEntry2 v_i, PriorityQueue<IntersectEntry> queue) {
-
-        EdgeEntry e_i = v_i.e_b;
 
         VertexEntry2 v_ip1 = (VertexEntry2) v_i.next();
         VertexEntry2 v_im1 = (VertexEntry2) v_i.previous();
@@ -455,18 +379,18 @@ public class Skeleton {
         Point2d intersectionBisectors1 = computeIntersectionBisectors(v_i, v_ip1);
         Point2d intersectionBisectors2 = computeIntersectionBisectors(v_im1, v_i);
 
-        dv.addDebug(new DisplayPoints(v_i.v));
+        DV.debug(v_i.v);
 
         Oposite oposite = calcOpositePointB(v_i);
 
         Point2d B = oposite.B;
 
         if (B != null) {
-            dv.addDebug(new DisplayLineSegment2d(oposite.edge.p1, oposite.edge.p2, Color.GRAY));
+            DV.debug(new LineSegment2d(oposite.edge.p1, oposite.edge.p2));
         }
 
 
-        int nirest = choseNirest(v_i.v, intersectionBisectors1, intersectionBisectors2, B);
+        int nirest = chooseNearest(v_i.v, intersectionBisectors1, intersectionBisectors2, B);
 
         switch (nirest) {
         case 1: {
@@ -500,7 +424,7 @@ public class Skeleton {
 
             I.v = B;
             I.V = v_i;
-            I.distance = calcDistance(B, oposite.edge);
+            I.distance = calcDistance(B, oposite.edge) + SPLIT_EPSILON;
             I.opositeEdge = oposite.edge;
 
             queue.add(I);
@@ -509,7 +433,14 @@ public class Skeleton {
         }
     }
 
-    private static int choseNirest(Point2d v, Point2d p1, Point2d p2, Point2d p3) {
+    /**
+     * @param v vertex
+     * @param p1 intersection point 1
+     * @param p2 intersection point 2
+     * @param p3 opposite point 3
+     * @return nearest point
+     */
+    private static int chooseNearest(Point2d v, Point2d p1, Point2d p2, Point2d p3) {
 
         if (p1 == null && p2 == null && p3 == null) {
             return -1;
@@ -526,7 +457,8 @@ public class Skeleton {
             distance2 = v.distanceSquared(p2);
         }
         if (p3 != null) {
-            distance3 = v.distanceSquared(p3);
+            // for split event add epsilon to prefer edge events
+            distance3 = v.distanceSquared(p3) + SPLIT_EPSILON;
         }
 
         if (distance1 <= distance2 && distance1 <= distance3) {
@@ -538,6 +470,11 @@ public class Skeleton {
         }
     }
 
+    /**
+     * Point and edge for split events.
+     *
+     * @author Tomasz Kêdziora (Kendzi)
+     */
     public static class Oposite {
 
         private Oposite(Point2d b, EdgeEntry edge) {
@@ -579,9 +516,6 @@ public class Skeleton {
         VertexEntry2 v_ip1 = (VertexEntry2) v_i.next();
         VertexEntry2 v_im1 = (VertexEntry2) v_i.previous();
 
-        VertexEntry2 v1 = v_ip1;
-        VertexEntry2 v2 = (VertexEntry2) v1.next();
-
         if (v_i.e_b.equals(v_i.e_a) ) {
             throw new RuntimeException("???");
         }
@@ -590,7 +524,7 @@ public class Skeleton {
 
 
         while (!e_i.equals(v_i.e_a)) {
-            dv.addDebug(new DisplayLineSegment2d(e_i.p1, e_i.p2, Color.GRAY));
+            DV.debug(new LineSegment2d(e_i.p1, e_i.p2));
 
             LineLinear2d edge = e_i.getLineLinear();
 
@@ -604,67 +538,104 @@ public class Skeleton {
             }
 
 //            compute the coordinates of the candidate point Bi
-
-            Vector2d vLine_m1 = new Vector2d(v_i.v);
-            vLine_m1.sub(v_im1.v);
-            vLine_m1.normalize();
-
-            LineLinear2d l_a = new LineLinear2d(v_i.v, v_im1.v);
-
-
-
-            LineLinear2d opositeLineLinear = e_i.getLineLinear();
-
-            Vector2d bisector1 = calcVectorBisector(vLine_m1, e_i.norm);
-            Point2d collide1 = l_a.collide(opositeLineLinear);
-
-            if (collide1 == null) {
-//                check should be performed to exclude the case when one of the line segments starting at V is
-//                parallel to ei.
-
-
-                e_i = (EdgeEntry) e_i.next;
-                continue;
+            Point2d B1 = calcB(v_i, v_i, v_im1, e_i);
+            Point2d B2 = calcB(v_i, v_ip1, v_i, e_i);
+//            //XXX remove
+//            if (B1 == null) {
+//                e_i = (EdgeEntry) e_i.next;
+//                continue;
+//            }
+            if (B1 == null && B2 != null) {
+                System.out.println("Ups test me!!");
             }
 
-            LineLinear2d bisector1Line = (new LineParametric2d(collide1, bisector1)).getLinearForm();
 
-
-//            compute the coordinates of the candidate point Bi as the intersection between the bisector at V and
-//            the axis of the angle between one of the edges starting at V and the tested line segment ei
-            Point2d Bb = v_i.bisector2.collide(bisector1Line);
-
-            if (Bb == null) {
-
-                e_i = (EdgeEntry) e_i.next;
-                continue;
-            }
-
-            ///
-            if (!isPointOnRay(v_i.bisector, Bb)) {
-                e_i = (EdgeEntry) e_i.next;
-                continue;
-            }
-
-            if (e_i.bisectorPrevious.pointInFront(Bb)
-                    && e_i.bisectorNext.pointInBack(Bb)) {
-
-                bList.add(Bb);
-
-                double distance = v_i.v.distanceSquared(Bb);
+            if (B1 != null) {
+                bList.add(B1);
+                double distance = v_i.v.distanceSquared(B1);
                 if (distance < candidateDistance) {
-                    candidateB = Bb;
+                    candidateB = B1;
                     candidateDistance = distance;
                     candidateEdge = e_i;
                 }
-
             }
+            if (B2 != null) {
+                bList.add(B2);
+                double distance = v_i.v.distanceSquared(B2);
+                if (distance < candidateDistance) {
+                    candidateB = B2;
+                    candidateDistance = distance;
+                    candidateEdge = e_i;
+                }
+            }
+
+
 
             e_i = (EdgeEntry) e_i.next;
 
         }
 
         return new Oposite(candidateB, candidateEdge);
+    }
+
+    private static Point2d calcB(VertexEntry2 v, VertexEntry2 v_i, VertexEntry2 v_im1, EdgeEntry e_i) {
+
+
+//        Simple intersection test between the bisector starting at V and the whole line containing the
+//        currently tested line segment ei rejects the line segments laying "behind" the vertex V .
+
+        LinePoints2d edge = new LinePoints2d(e_i.p1, e_i.p2);
+        if (!edge.inFront(v.v)) {
+            return null;
+        }
+
+
+        Vector2d vLine_m1 = new Vector2d(v_i.v);
+        vLine_m1.sub(v_im1.v);
+        vLine_m1.normalize();
+
+        LineLinear2d l_a = new LineLinear2d(v_i.v, v_im1.v);
+
+
+
+        LineLinear2d opositeLineLinear = e_i.getLineLinear();
+
+        Vector2d bisector1 = calcVectorBisector(vLine_m1, e_i.norm);
+        Point2d collide1 = l_a.collide(opositeLineLinear);
+
+        if (collide1 == null) {
+//            check should be performed to exclude the case when one of the line segments starting at V is
+//            parallel to ei.
+
+
+            return null;
+        }
+
+        LineLinear2d bisector1Line = (new LineParametric2d(collide1, bisector1)).getLinearForm();
+
+
+//        compute the coordinates of the candidate point Bi as the intersection between the bisector at V and
+//        the axis of the angle between one of the edges starting at V and the tested line segment ei
+        Point2d Bb = v.bisector2.collide(bisector1Line);
+
+        if (Bb == null) {
+            return null;
+//            e_i = (EdgeEntry) e_i.next;
+//            continue;
+        }
+
+        ///
+        if (!isPointOnRay(v.bisector, Bb)) {
+            return null;
+
+        }
+
+        if (e_i.bisectorPrevious.pointInFront(Bb)
+                && e_i.bisectorNext.pointInBack(Bb)) {
+            return Bb;
+        }
+        return null;
+
     }
 
     /** Test if point is laying on direction of ray.
@@ -712,7 +683,13 @@ public class Skeleton {
         return null;
     }
 
-    public static void splitEvent(SplitEvent I, Output output, Set<CircularList<VertexEntry2>> sLav, PriorityQueue<IntersectEntry> queue) {
+    /**
+     * @param I
+     * @param output
+     * @param sLav
+     * @param queue
+     */
+    private static void splitEvent(SplitEvent I, Output output, Set<CircularList<VertexEntry2>> sLav, PriorityQueue<IntersectEntry> queue) {
         // b
         VertexEntry2 va = I.V;
 //        VertexEntry vb = I.Vb;
@@ -746,7 +723,7 @@ public class Skeleton {
 //        }
 
         //d
-        System.out.println("skeleton V_aI and V_bI             Va: " + va.v + " I: " + I.v);
+//        System.out.println("skeleton V_aI and V_bI             Va: " + va.v + " I: " + I.v);
         addOutputFace(output, I, va);
 
         //e
@@ -839,7 +816,7 @@ public class Skeleton {
 
 
         VertexEntry2 v = I.V;
-        CircularList lav = v.list();
+        CircularList<CircularNode> lav = v.list();
 
         int sizeLav = lav.size();
 
@@ -875,16 +852,17 @@ public class Skeleton {
         sLav.add(newLawA);
         sLav.add(newLawB);
 
-        dv.addDebug(new DisplayLav2(newLawA, Color.ORANGE.darker().darker()));
-        dv.addDebug(new DisplayLav2(newLawB, Color.ORANGE.darker().darker()));
+
+        DV.debug(newLawA);
+        DV.debug(newLawB);
 
 
         v1.bisector = calcBisector(v1.v, v1.e_a, v1.e_b);
         v1.bisector2 =  v1.bisector.getLinearForm();
-        dv.addDebug(new DisplayLineParametric2d(v1.bisector));
+        DV.debug(v1.bisector);
         v2.bisector = calcBisector(v2.v, v2.e_a, v2.e_b);
         v2.bisector2 =  v2.bisector.getLinearForm();
-        dv.addDebug(new DisplayLineParametric2d(v2.bisector));
+        DV.debug(v2.bisector);
         computeIntersections(v1, queue);
         computeIntersections(v2, queue);
 
@@ -912,6 +890,10 @@ public class Skeleton {
             // TODO ?
             return;
         }
+        if (!va.list().equals(vb.list())) {
+            //XXX
+            return;
+        }
 //        while (va.shrinks != null) {
 //            va = va.shrinks;
 //        }
@@ -926,15 +908,15 @@ public class Skeleton {
             // special case
             // the colision point is in queue allredy
             // so we don't calc it, only draw sceleton edges.
-
             addOutputFace(output, I, va, vb);
             processed = true;
+            throw new RuntimeException("TODO ? myby delede if ?");
            // continue;
 
 
         } else  if (vb.equals(va.previous().previous())) {
             VertexEntry2 vc = (VertexEntry2) va.previous();
-            System.out.println("skeleton V_aI, V_bI and V_cI,      Va: " + va.v + " I: " + I.v + " Vb: " + vb.v + " Vc: " + vc.v);
+//            System.out.println("skeleton V_aI, V_bI and V_cI,      Va: " + va.v + " I: " + I.v + " Vb: " + vb.v + " Vc: " + vc.v);
 
             VertexEntry2 center = new VertexEntry2();
             center.v = I.v;
@@ -943,7 +925,7 @@ public class Skeleton {
             addOutputFace(output, I, va, vb);
             addOutputFace(output, I, vc, va);
             addOutputFace(output, I, vb, vc);
-            System.out.println("---- end ?");
+//            System.out.println("---- end ?");
 
             addFaceBack(center, va, vb );
             addFaceBack(center, vc, va );
@@ -957,7 +939,7 @@ public class Skeleton {
         } else {
 
             //d
-            System.out.println("skeleton V_aI and V_bI             Va: " + va.v + " I: " + I.v + " Vb: " + vb.v);
+//            System.out.println("skeleton V_aI and V_bI             Va: " + va.v + " I: " + I.v + " Vb: " + vb.v);
             addOutputFace(output, I, va, vb);
         }
         //e
@@ -995,31 +977,25 @@ public class Skeleton {
         if (processed) {
             // ???
             //TESTME
-            System.out.println(" point was processed before skiping: " + newVertex.v);
+//            System.out.println(" point was processed before skiping: " + newVertex.v);
             return;
         }
         newVertex.bisector = calcBisector(newVertex.v, newVertex.e_a, newVertex.e_b);
         newVertex.bisector2 = newVertex.bisector.getLinearForm();
             //calcBisector2(newVertex.v, newVertex.e_a, newVertex.e_b);
 
-        dv.addDebug(new DisplayLineParametric2d(newVertex.bisector));
-        {
+        DV.debug(newVertex.bisector);
 
-            VertexEntry2 v_i = newVertex;
-            VertexEntry2 v_ip1 = (VertexEntry2) newVertex.next();
-            VertexEntry2 v_im1 = (VertexEntry2) newVertex.previous();
 
-//            calcBisection(newVertex, queue);
-            calcBisection2(v_im1, v_i, queue);
-            calcBisection2(v_i, v_ip1, queue);
-        }
+        VertexEntry2 v_i = newVertex;
+
+
+
+        computeIntersections(v_i, queue);
+
+
+
     }
-
-
-//   private static void addFace(VertexEntry2 newVertex, VertexEntry2 va, VertexEntry2 vb) {
-//
-//
-//   }
 
     private static void addFaceBack(VertexEntry2 newVertex, VertexEntry2 va, VertexEntry2 vb) {
      // back face
@@ -1031,61 +1007,41 @@ public class Skeleton {
         addFace(fn);
     }
 
-       private static void addFaces(VertexEntry2 newVertex, VertexEntry2 va, VertexEntry2 vb) {
-       { // faces
+    private static void addFaces(VertexEntry2 newVertex, VertexEntry2 va, VertexEntry2 vb) {
+        // faces
 
-           addFaceBack(newVertex, va, vb);
+        addFaceBack(newVertex, va, vb);
 
+        // left face
+        FaceNode fn = new FaceNode();
+        fn.v = newVertex;
+        va.leftFace.addPush(fn);
+        newVertex.leftFace = fn;
 
-           // left face
-           FaceNode fn = new FaceNode();
-           fn.v = newVertex;
-           va.leftFace.addPush(fn);
-           newVertex.leftFace = fn;
-
-           // right face
-           fn = new FaceNode();
-           fn.v = newVertex;
-           vb.rightFace.addPush(fn);
-           newVertex.rightFace = fn;
-       }
+        // right face
+        fn = new FaceNode();
+        fn.v = newVertex;
+        vb.rightFace.addPush(fn);
+        newVertex.rightFace = fn;
 
     }
 
-private static void addFace(FaceNode fn) {
-
-        dv.addDebug(new DisplayFaceNode(fn, Color.red));
-
+    private static void addFace(FaceNode fn) {
+        DV.debug(fn);
     }
 
-private static void connectList(FaceNode rightFace, FaceNode leftFace) {
+    private static void connectList(FaceNode rightFace, FaceNode leftFace) {
 
-    dv.addDebug(new DisplayFaceNode((FaceQueue)rightFace.list(), Color.pink.darker()));
-    dv.addDebug(new DisplayFaceNode((FaceQueue)leftFace.list(), Color.pink.darker()));
+        DV.debug((FaceQueue) rightFace.list());
+        DV.debug((FaceQueue) rightFace.list());
 
-    if (((FaceQueue) leftFace.list()).border) {
-        leftFace.addQueue(rightFace);
-    }
-    rightFace.addQueue(leftFace);
-
-
-//        leftFace.list()
-//
-//       int size = leftFace.list().size();
-//
-//       FaceNode current = leftFace;
-//       for (int i = 0; i < size; i++) {
-//           current = (FaceNode) current.next;
-//
-//           current.remove();
-//
-//           rightFace.addNext(current);
-//
-//       }
-
+        if (((FaceQueue) leftFace.list()).border) {
+            leftFace.addQueue(rightFace);
+        }
+        rightFace.addQueue(leftFace);
     }
 
-private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEntry2 vb) {
+    private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEntry2 vb) {
         VertexEntry2 newVertex = new VertexEntry2();
         newVertex.v = I.v;
         newVertex.distance = I.distance;
@@ -1096,20 +1052,11 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
         I.Va.shrinks = newVertex;
         I.Vb.shrinks = newVertex;
 
-
-
         va.addNext(newVertex);
-//        lav.addBefore(newVertex, va);
+        // lav.addBefore(newVertex, va);
 
         newVertex.e_a = va.e_a;
         newVertex.e_b = vb.e_b;
-
-
-
-
-
-
-
 
         return newVertex;
     }
@@ -1140,9 +1087,11 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
 
     /**
      * Computes the distance between this point and point p1.
+     * @param p0
      *
      * @param p1
      *            the other point
+     * @return
      */
     private static double distance(Tuple2d p0, Tuple2d p1) {
         double dx, dy;
@@ -1209,7 +1158,7 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
         VertexEntry2 parentVa;
         VertexEntry2 parentVb;
 
-        boolean processed;
+        public boolean processed;
 
         VertexEntry2 shrinks;
 
@@ -1261,6 +1210,7 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
 
     public static class FaceQueue extends PathQueue<FaceNode> {
         boolean border;
+        EdgeEntry edge;
 
         /**
          * @return the border
@@ -1275,20 +1225,33 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
         public void setBorder(boolean border) {
             this.border = border;
         }
+
+        /**
+         * @return the edge
+         */
+        public EdgeEntry getEdge() {
+            return edge;
+        }
+
+        /**
+         * @param edge the edge to set
+         */
+        public void setEdge(EdgeEntry edge) {
+            this.edge = edge;
+        }
     }
 
     public static class FaceNode extends PathQueueNode {
         public VertexEntry2 v;
         boolean border;
         String name;
-
     }
 
-    private static class EdgeEvent extends IntersectEntry{
+    public static class EdgeEvent extends IntersectEntry{
         public Ray2d bisector;
 
-        VertexEntry2 Va;
-        VertexEntry2 Vb;
+        public VertexEntry2 Va;
+        public VertexEntry2 Vb;
 
         EdgeEvent() {
             super();
@@ -1314,7 +1277,7 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
      */
     public  static class SplitEvent extends IntersectEntry{
         public EdgeEntry opositeEdge;
-        VertexEntry2 V;
+        public VertexEntry2 V;
 
 
         SplitEvent() {
@@ -1357,8 +1320,8 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
      *
      */
     public static class EdgeEntry extends CircularNode{
-        Point2d p1;
-        Point2d p2;
+        public Point2d p1;
+        public Point2d p2;
 
 //        EdgeEntry next;
 //        EdgeEntry previous;
@@ -1413,12 +1376,89 @@ private static VertexEntry2 newEdgeVertex(EdgeEvent I, VertexEntry2 va, VertexEn
         sk(polygon);
     }
 
+    /**
+     * Output of Skeleton algorithm.
+     *
+     * @author Tomasz Kêdziora (Kendzi)
+     */
     public static class Output {
-        public List<List<Point2d>> faces = new ArrayList<List<Point2d>>();
 
-        public List<PolygonList2d> faces2 = new ArrayList<PolygonList2d>();
+        /**
+         * Edges of polygon.
+         */
+        private Map<PolygonList2d, LineSegment2d> edges = new HashMap<PolygonList2d, LineSegment2d>();
 
-        public Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
+        /**
+         * Faces generated by Skeleton algorithm.
+         */
+        private List<List<Point2d>> faces = new ArrayList<List<Point2d>>();
+
+        /**
+         * Faces generated by Skeleton algorithm.
+         */
+        private List<PolygonList2d> faces2 = new ArrayList<PolygonList2d>();
+
+        /**
+         * Distance points from edges.
+         */
+        private Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
+
+        /**
+         * @return the edges
+         */
+        public Map<PolygonList2d, LineSegment2d> getEdges() {
+            return edges;
+        }
+
+        /**
+         * @param edges the edges to set
+         */
+        public void setEdges(Map<PolygonList2d, LineSegment2d> edges) {
+            this.edges = edges;
+        }
+
+        /**
+         * @return the faces
+         */
+        public List<List<Point2d>> getFaces() {
+            return faces;
+        }
+
+        /**
+         * @param faces the faces to set
+         */
+        public void setFaces(List<List<Point2d>> faces) {
+            this.faces = faces;
+        }
+
+        /**
+         * @return the faces2
+         */
+        public List<PolygonList2d> getFaces2() {
+            return faces2;
+        }
+
+        /**
+         * @param faces2 the faces2 to set
+         */
+        public void setFaces2(List<PolygonList2d> faces2) {
+            this.faces2 = faces2;
+        }
+
+        /**
+         * @return the distance
+         */
+        public Map<Point2d, Double> getDistance() {
+            return distance;
+        }
+
+        /**
+         * @param distance the distance to set
+         */
+        public void setDistance(Map<Point2d, Double> distance) {
+            this.distance = distance;
+        }
+
     }
 
 }

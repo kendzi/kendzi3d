@@ -22,8 +22,8 @@ public class DisplayEventQueue extends DisplayObject {
 
     private PriorityQueue<IntersectEntry> points;
 
-    private Color color;
-    private Color color2;
+    public final static Color EDGE_COLOR = Color.PINK;
+    public final static Color SPLIT_COLOR = new Color(127, 0, 255);
 
 
     /**
@@ -33,8 +33,7 @@ public class DisplayEventQueue extends DisplayObject {
     public DisplayEventQueue(PriorityQueue<IntersectEntry> polygon) {
         super();
         this.points = polygon;
-        this.color = Color.PINK;
-        this.color2 = new Color(127, 0, 255);
+
     }
 
     @Override
@@ -84,9 +83,9 @@ public class DisplayEventQueue extends DisplayObject {
 
             if (e instanceof Skeleton.SplitEvent) {
 
-                g2d.setColor(color2);
+                g2d.setColor(SPLIT_COLOR);
             } else {
-                g2d.setColor(color);
+                g2d.setColor(EDGE_COLOR);
             }
             g2d.fillOval(-10 + x, -10 + y, 20, 20);
         }

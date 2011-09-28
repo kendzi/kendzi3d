@@ -142,7 +142,7 @@ public class SkeletonTestUi extends Applet {
 //            this.drawableObjects.add(polygon);
 //        }
 
-        for (PolygonList2d list : ret.faces2) {
+        for (PolygonList2d list : ret.getFaces2()) {
 
             Polygon polygon = new Polygon();
             for (Point2d point : list.getPoints()) {

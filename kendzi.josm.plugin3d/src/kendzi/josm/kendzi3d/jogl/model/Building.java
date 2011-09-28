@@ -134,7 +134,7 @@ public class Building extends AbstractModel {
             double y = pPerspective.calcY(node.getEastNorth().getY());
 
             this.list.add(new Point2d(x, y));
-            log.info("d x: " + x + " y: " + y);
+            //log.info("d x: " + x + " y: " + y);
         }
 
         if (0.0f < Triangulate.area(this.list)) {

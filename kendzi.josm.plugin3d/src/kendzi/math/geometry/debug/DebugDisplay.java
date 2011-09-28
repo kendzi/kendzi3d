@@ -37,15 +37,20 @@ public class DebugDisplay {
         return mc;
     }
 
-    private void createDebugFrame(DebugLayer debugLayer) {
+    private void createDebugFrame(final DebugLayer debugLayer) {
+
+        mc = new MapComponent();
+        mc.addLayer(debugLayer);
+
 
 //        java.awt.EventQueue.invokeLater(new Runnable() {
+
+
+//        class PrimeThread extends Thread {
 //
 //            @Override
 //            public void run() {
 
-                mc = new MapComponent();
-                mc.addLayer(debugLayer);
 
                 DebugDisplay.this.frame = new JDialog();
                 DebugDisplay.this.frame.add(mc);
@@ -58,6 +63,13 @@ public class DebugDisplay {
                 DebugDisplay.this.frame.setVisible(true);
 
 //            }
+//        }
+//
+//        PrimeThread p = new PrimeThread();
+//        p.setDaemon(true);
+//        p.setPriority(Thread.MAX_PRIORITY );
+//        p.start();
+
 //        });
 
     }

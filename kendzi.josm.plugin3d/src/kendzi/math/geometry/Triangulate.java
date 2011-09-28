@@ -225,6 +225,7 @@ public class Triangulate {
 			/* if we loop, it is probably a non-simple polygon */
 			if (0 >= (count--)) {
 				// ** Triangulate: ERROR - probable bad polygon!
+			    logBadPolygon(contour);
 				return false;
 			}
 
@@ -269,7 +270,16 @@ public class Triangulate {
 		return true;
 	}
 
-	public List<Integer> processIndex(List<Point2d> pContour
+	private static void logBadPolygon(List<Point2d> contour) {
+	    String msg = " Bad polygon triangulation faild: \n";
+	    for (Point2d point2d : contour) {
+	        msg += "points.add(new Point2d("+point2d.x+", " + point2d.y+"); \n";
+        }
+
+        log.error(msg);
+    }
+
+    public List<Integer> processIndex(List<Point2d> pContour
 			) {
 
 
@@ -325,6 +335,7 @@ public class Triangulate {
 				// ** Triangulate: ERROR - probable bad polygon!
 			//XXX	throw new RuntimeException(" Triangulate: ERROR - probable bad polygon!");
 				//FIXME
+			    logBadPolygon(contour);
 				return null;
 //				return false;
 			}

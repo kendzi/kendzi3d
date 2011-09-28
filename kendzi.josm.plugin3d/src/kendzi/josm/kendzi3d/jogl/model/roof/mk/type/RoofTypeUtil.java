@@ -73,7 +73,13 @@ public class RoofTypeUtil {
             List<Integer> trianglePoly = t.processIndex(poly);
 
             if (trianglePoly == null) {
-                log.error("trianglePoly: == null");
+                log.error("******* trianglePoly: == null");
+                trianglePoly = trianglePolytriangulateSweeped(poly);
+            }
+
+            if (trianglePoly == null) {
+
+                log.error("******* trianglePoly: == null");
                 continue;
             }
 
@@ -110,6 +116,35 @@ public class RoofTypeUtil {
                 face.addCoordIndex(tci);
             }
         }
+    }
+
+    private static List<Integer> trianglePolytriangulateSweeped(List<Point2d> poly) {
+
+        int size = poly.size();
+
+        List<Point2d> polySweeped = new ArrayList<Point2d>();
+        for (Point2d point2d : poly) {
+            polySweeped.add(new Point2d(point2d.x + 0.3 + Double.MIN_VALUE, point2d.y+0.3+Double.MIN_VALUE));
+        }
+
+        //sweep
+        polySweeped.add(polySweeped.remove(0));
+
+
+        Triangulate t = new Triangulate();
+        List<Integer> trianglePoly = t.processIndex(poly);
+
+        if (trianglePoly == null) {
+            return null;
+        }
+
+        List<Integer> ret = new ArrayList<Integer>();
+        for (Integer integer : trianglePoly) {
+            // sweep back
+            ret.add((integer + 1) % size);
+        }
+
+        return ret;
     }
 
     /** Make roof border mesh. It is wall under roof.

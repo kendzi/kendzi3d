@@ -101,7 +101,7 @@ public final class ValidationUtil {
                         } else {
                             continue;
                         }
-                    } else if (mesh.texCoords.length < face.vertIndex.length) {
+                    } else if (face.coordIndex.length > face.vertIndex.length) {
 
                         ret.add(faceDescription("less texCoords indexs then vertex indexs", pModel, mi, fi));
                         if (pRepair) {
@@ -146,7 +146,7 @@ public final class ValidationUtil {
 
                     if (mesh.hasTexture) {
                         int textureIndex = face.coordIndex[vi];
-                        if (mesh.texCoords.length >= textureIndex) {
+                        if (mesh.texCoords.length < textureIndex) {
                             ret.add(faceVertexDescription(
                                     "textureIndex index biger then size of texCoords array in model: "
                                             + mesh.texCoords.length, pModel, mi, fi, vi));

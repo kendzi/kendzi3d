@@ -128,7 +128,7 @@ public class GableRoof extends Roof {
 
             angle = Math.toRadians(java.lang.Double.parseDouble(this.way.get("building:roof:angle")));
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 

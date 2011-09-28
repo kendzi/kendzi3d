@@ -40,7 +40,7 @@ public class DisplaySkeletonOut extends DisplayObject {
 //        if (this.drawableObjects == null) {
 //            this.drawableObjects = new ArrayList<Polygon>();
 
-            for (List<Point2d> list : this.skeletonOut.faces) {
+            for (List<Point2d> list : this.skeletonOut.getFaces()) {
 
                 Polygon polygon = new Polygon();
                 for (Point2d point : list) {
@@ -68,7 +68,7 @@ public class DisplaySkeletonOut extends DisplayObject {
 
 
 
-            for (PolygonList2d list : this.skeletonOut.faces2) {
+            for (PolygonList2d list : this.skeletonOut.getFaces2()) {
 
                 Polygon polygon = new Polygon();
                 for (Point2d point : list.getPoints()) {
