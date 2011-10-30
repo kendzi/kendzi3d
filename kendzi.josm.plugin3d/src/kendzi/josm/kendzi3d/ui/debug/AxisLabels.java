@@ -19,7 +19,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 /**
  * Creates axis labels.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class AxisLabels {

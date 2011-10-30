@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 /**
  * Roof type 2.4.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class RoofType2_4 extends RoofType2_3{

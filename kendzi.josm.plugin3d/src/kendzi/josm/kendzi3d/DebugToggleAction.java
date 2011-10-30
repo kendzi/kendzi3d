@@ -24,7 +24,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 /**
  * Debug toggle action.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class DebugToggleAction extends JosmAction {

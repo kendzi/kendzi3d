@@ -26,7 +26,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 /**
  * Enable/disable display texture on ground toggle action.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class GroundToggleAction extends JosmAction {

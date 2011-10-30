@@ -93,7 +93,7 @@ public class View3dGLFrame extends Frame implements WindowListener {
 
 
 
-
+//        WindowsWGLGraphicsConfigurationFactory
         pack();
         setVisible(true);
 
@@ -185,25 +185,53 @@ public class View3dGLFrame extends Frame implements WindowListener {
 
     private Canvas makeCanvas2(JPanel render) {
 
+        log.info("is set debug for GraphicsConfiguration: " + com.jogamp.opengl.impl.Debug.debug("GraphicsConfiguration"));
+
         //create a profile, in this case OpenGL 2 or later
         GLProfile profile = GLProfile.get(GLProfile.GL2);
 
         //configure context
         GLCapabilities capabilities = new GLCapabilities(profile);
+
+        String zbuffer = System.getProperty("kendzi3d.opengl.zbuffer");
+        log.info("user zbuffer: " + zbuffer);
+
         // setup z-buffer
-        capabilities.setDepthBits(16);
+        if (zbuffer == null) {
+            // Default use 16
+            capabilities.setDepthBits(16);
+        } else if (!"default".equals(zbuffer)) {
+            capabilities.setDepthBits(Integer.parseInt(zbuffer));
+        }
 
-        // for anti-aliasing
-        capabilities.setSampleBuffers(true);
-        capabilities.setNumSamples(2);
+        String sampleBuffers = System.getProperty("kendzi3d.opengl.sampleBuffers");
+        log.info("user sampleBuffers: " + sampleBuffers);
 
+        if (sampleBuffers == null) {
+            capabilities.setSampleBuffers(true);
+        } else if ("true".equals(sampleBuffers)) {
+            capabilities.setSampleBuffers(true);
+        } else if ("false".equals(sampleBuffers)) {
+            capabilities.setSampleBuffers(false);
+        }
+
+        String sampleBuffersNum = System.getProperty("kendzi3d.opengl.sampleBuffersNum");
+        log.info("user sampleBuffersNum: " + sampleBuffersNum);
+
+        if (sampleBuffersNum == null) {
+            capabilities.setNumSamples(2);
+        } else if (!"default".equals(sampleBuffersNum)) {
+            capabilities.setNumSamples(Integer.parseInt(sampleBuffersNum));
+        }
+
+        log.info("GLCapabilities: " + capabilities);
         //initialize a GLDrawable of your choice
         GLCanvas canvas = new GLCanvas(capabilities);
 
 
         canvas.addGLEventListener(this.canvasListener);
 
-
+//        WindowsWGLGraphicsConfigurationFactory
 
         this.animator = new Animator(canvas);
 //        animator.set

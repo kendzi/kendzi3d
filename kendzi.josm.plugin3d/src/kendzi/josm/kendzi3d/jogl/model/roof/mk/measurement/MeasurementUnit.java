@@ -10,7 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement;
 
 /**
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public enum MeasurementUnit {

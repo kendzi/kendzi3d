@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 /**
  * Draws 3d.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {

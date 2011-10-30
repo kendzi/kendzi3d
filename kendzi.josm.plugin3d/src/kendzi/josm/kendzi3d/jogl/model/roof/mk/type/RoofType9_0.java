@@ -48,7 +48,7 @@ import org.ejml.data.SimpleMatrix;
 /**
  * Roof type 9.0.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class RoofType9_0 extends AbstractRoofType {

@@ -22,7 +22,7 @@ import kendzi.math.geometry.point.PointUtil;
 /**
  * Simple camera move animator.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class SimpleMoveAnimator implements Camera {
@@ -95,7 +95,7 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Speed directions.
      *
-     * @author Tomasz Kêdziora (Kendzi)
+     * @author Tomasz KÄ™dziora (Kendzi)
      *
      */
     private enum Speeds {
@@ -105,7 +105,7 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Speeds directional data.
      *
-     * @author Tomasz Kêdziora (Kendzi)
+     * @author Tomasz KÄ™dziora (Kendzi)
      *
      */
     private class SpeedData {

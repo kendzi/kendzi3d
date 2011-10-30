@@ -306,4 +306,52 @@
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
+	
+	
+    <target name="publish_osm.pl" depends="">
+    	<tstamp>
+			<format property="date" pattern="yyyy-MM-dd" locale="pl" />
+			<format property="time" pattern="HH:mm:ss" locale="pl" />
+		</tstamp>
+    	
+    	<property file="/bin/osm.properties"/>
+    	
+
+        <property name="osm.keyfile.loc" location="${osm.keyfile}"/>
+    	
+    	
+
+        <echo>${osm.username} ${osm.passphrase} ${osm.keyfile}</echo>
+    	
+    	<sshexec host="openstreetmap.pl"
+    		
+    		username="${osm.username}"
+    		keyfile="${osm.keyfile}"
+    		passphrase="${osm.passphrase}"
+    		command="mkdir -p /home/kendzi/Kendzi3d/snapshot/${date}"    		
+    		trust="true"
+    	/>
+    	
+    	<scp remoteTodir="${osm.username}@openstreetmap.pl:/home/kendzi/Kendzi3d/snapshot/${date}"
+    		keyfile="${osm.keyfile}"
+    		passphrase="${osm.passphrase}"
+    	  	trust="yes"
+    	  	sftp="false"
+    		verbose="true"
+    		>    		
+    	    <fileset file="${plugin.jar}"/>    
+    	</scp>
+    	
+    	<sshexec host="openstreetmap.pl"
+    	    		
+    		username="${osm.username}"
+    		keyfile="${osm.keyfile}"
+    		passphrase="${osm.passphrase}"
+    		command="ln -s -f -T /home/kendzi/Kendzi3d/snapshot/${date} /home/kendzi/Kendzi3d/snapshot/current"    		
+    		trust="true"
+    	/>
+    	
+    	
+    		
+    </target>
 </project>

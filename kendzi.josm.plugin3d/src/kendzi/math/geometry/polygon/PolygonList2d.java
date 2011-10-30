@@ -25,7 +25,7 @@ import kendzi.math.geometry.polygon.split.SplitPolygons;
  * Polygon is [XXX anty cloak wise]!
  *
  *
- * @author Tomasz Kêdziora (kendzi)
+ * @author Tomasz KÄ™dziora (kendzi)
  *
  */
 public class PolygonList2d {

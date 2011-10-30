@@ -15,7 +15,7 @@ import javax.vecmath.Vector3d;
 /**
  * Camera position and angle.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public interface Camera {

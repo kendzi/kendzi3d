@@ -2,26 +2,26 @@ Kendzi3D plugin, wersja rozwojowa.
 
 *** Licencja
 
-Te oprogramowanie to jest dostarczone tak jak jest BEZ ¯ADNEJ GWARANCJI. U¿ywasz go na w³asne ryzyko. Uruchamiaj¹c ponosisz pe³n¹ odpowiedzialnoœæ za skutki dzia³ania lub nie dzia³ania tego programu.
+Te oprogramowanie to jest dostarczone tak jak jest BEZ Å»ADNEJ GWARANCJI. UÅ¼ywasz go na wÅ‚asne ryzyko. UruchamiajÄ…c ponosisz peÅ‚nÄ… odpowiedzialnoÅ›Ä‡ za skutki dziaÅ‚ania lub nie dziaÅ‚ania tego programu.
 
-Program jest wydany na licencji BSD v3. Szczegó³y w pliku BSDv3.txt
-Niektóre Ÿród³a, grafiki, modele mog¹ byæ wydane na innych licencjach. Wrazie w¹tpliwoœci pytaæ.
+Program jest wydany na licencji BSD v3. SzczegÃ³Å‚y w pliku BSDv3.txt
+NiektÃ³re ÅºrÃ³dÅ‚a, grafiki, modele mogÄ… byÄ‡ wydane na innych licencjach. Wrazie wÄ…tpliwoÅ›ci pytaÄ‡.
 
 
 *** Instalacja
 
 Windows:
- 1. utwórz katalog:
+ 1. utwÃ³rz katalog:
       C:\josm_dev\plugins
- 2. œci¹gnij plugin Kendzi3d.jar do utworzonego katalogu: 
+ 2. Å›ciÄ…gnij plugin Kendzi3d.jar do utworzonego katalogu: 
       http://www.openstreetmap.pl/kendzi/Kendzi3d/snapshot/*/Kendzi3d.jar
- 3. usuñ katalog 
+ 3. usuÅ„ katalog 
       C:\josm_dev\plugins\Kendzi3d
- 4. uruchom JOSM u¿ywaj¹c nowego katalogu domowego. Otwórz cmd (Windows+R) i uruchom komende:
+ 4. uruchom JOSM uÅ¼ywajÄ…c nowego katalogu domowego. OtwÃ³rz cmd (Windows+R) i uruchom komende:
       java -Djosm.home=c:\josm_dev\ -jar josm-tested.jar
- 5. wybierz plugin w oknie konfiguracji pluginów
-      Edycja>Ustawienia>Plugins(zak³adka)>Kendzi3d(na liœcie)
- 6. zrestartuj JOSM. Uruchom go t¹ sam¹ komend¹ co poprzednio.
+ 5. wybierz plugin w oknie konfiguracji pluginÃ³w
+      Edycja>Ustawienia>Plugins(zakÅ‚adka)>Kendzi3d(na liÅ›cie)
+ 6. zrestartuj JOSM. Uruchom go tÄ… samÄ… komendÄ… co poprzednio.
 
 
 Linux:

@@ -25,7 +25,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 /**
  * Texture filter toggle action.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class TextureFilterToggleAction extends JosmAction {

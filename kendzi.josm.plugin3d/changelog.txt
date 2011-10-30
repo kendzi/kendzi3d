@@ -1,5 +1,8 @@
 
 [current]
+
+[2011-10-27]
+- added startup parameters: kendzi3d.opengl.sampleBuffersNum=2..., kendzi3d.opengl.sampleBuffers=true|false, kendzi3d.opengl.zbuffer=16|24 
 - support for roof type 2.6, 2.7, 2.8, 2.9, 4.0, 9.0
 - bug fix roof type 0.0, 0.1, 0.2, 0.3, 0.4
 

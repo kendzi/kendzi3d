@@ -17,7 +17,7 @@ import kendzi.swing.ui.panel.equation.EquationDisplay;
 
 /**
  *
- * @author Tomasz Kêdziroa (kendzi)
+ * @author Tomasz KÄ™dziora (kendzi)
  */
 public class DisplayLineParametric2d extends DisplayObject {
 

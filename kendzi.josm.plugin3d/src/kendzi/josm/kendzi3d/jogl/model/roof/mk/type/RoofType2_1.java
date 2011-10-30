@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
 /**
  * Roof type 2.1.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class RoofType2_1 extends RectangleRoofType{

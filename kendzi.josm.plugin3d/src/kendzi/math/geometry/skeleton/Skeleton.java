@@ -473,7 +473,7 @@ public class Skeleton {
     /**
      * Point and edge for split events.
      *
-     * @author Tomasz Kêdziora (Kendzi)
+     * @author Tomasz KÄ™dziora (Kendzi)
      */
     public static class Oposite {
 
@@ -1379,7 +1379,7 @@ public class Skeleton {
     /**
      * Output of Skeleton algorithm.
      *
-     * @author Tomasz Kêdziora (Kendzi)
+     * @author Tomasz KÄ™dziora (Kendzi)
      */
     public static class Output {
 

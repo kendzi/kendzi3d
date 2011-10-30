@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 /**
  * Roof type 1.1.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class RoofType1_1 extends RectangleRoofType{

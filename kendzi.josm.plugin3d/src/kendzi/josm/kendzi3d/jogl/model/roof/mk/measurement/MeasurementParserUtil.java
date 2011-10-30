@@ -12,7 +12,7 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement;
 import org.apache.log4j.Logger;
 
 /**
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class MeasurementParserUtil {

@@ -1,0 +1,27 @@
+
+
+*** Run josm from command line with extra parameter
+
+Start > Run (or Win-R)
+write: cmd
+press ok
+
+open directory where you have josm.jar
+cd path/to/josm.jar
+
+run JOSM:
+java -jar josm.jar -Djogl.debug.GraphicsConfiguration=true
+
+copy and send console output
+
+
+*** Try to change opengl parameters:
+try to run with
+-Dkendzi3d.opengl.zbuffer=24
+-Dkendzi3d.opengl.zbuffer=off
+or / and
+-Dkendzi3d.opengl.sampleBuffers=def
+
+
+
+

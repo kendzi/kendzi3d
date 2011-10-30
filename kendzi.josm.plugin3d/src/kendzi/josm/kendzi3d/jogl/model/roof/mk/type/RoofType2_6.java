@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 /**
  * Roof type 2.6.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class RoofType2_6 extends RoofType2_7 {

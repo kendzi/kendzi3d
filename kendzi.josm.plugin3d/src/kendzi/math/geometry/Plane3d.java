@@ -17,7 +17,7 @@ import javax.vecmath.Vector3d;
  *
  * @see "http://en.wikipedia.org/wiki/Plane_(geometry)"
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  */
 public class Plane3d {
 

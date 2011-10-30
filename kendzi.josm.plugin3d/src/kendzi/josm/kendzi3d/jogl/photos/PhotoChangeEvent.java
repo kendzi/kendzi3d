@@ -12,7 +12,7 @@ package kendzi.josm.kendzi3d.jogl.photos;
 /**
  *
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  *
  */
 public class PhotoChangeEvent extends CameraChangeEvent {

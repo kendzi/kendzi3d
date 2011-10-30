@@ -14,7 +14,7 @@ import javax.vecmath.Point3d;
 /**
  * Bounds of model. Minimal border, maximal border, radius and center.
  *
- * @author Tomasz Kêdziora (Kendzi)
+ * @author Tomasz KÄ™dziora (Kendzi)
  */
 public class Bounds {
     /**
