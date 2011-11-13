@@ -27,11 +27,11 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.PolygonRoofHooksSpace;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
 import kendzi.math.geometry.Algebra;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LineSegment2d;
@@ -67,28 +67,31 @@ public class RoofType9_0 extends AbstractRoofType {
     }
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+    public RoofTypeOutput buildRoof(
+            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData) {
+
+//            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
+//            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
-        border = TransformationMatrix2d.transformList(border, transformLocal);
+        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
 
         // rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
         Double h1 = null;
         Double angle = null;
-        Measurement measurement = pMeasurements.get(MeasurementKey.HEIGHT_1);
+        Measurement measurement = pRoof.getMeasurements().get(MeasurementKey.HEIGHT_1);
         if (isUnit(measurement, MeasurementUnit.DEGREES)) {
 //            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
             angle = measurement.getValue();
         } else {
-            h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
+            h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         }
 
 
 
-        RoofTypeOutput rto = build(border, h1, angle, 0, 0, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, pRoofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -171,7 +174,16 @@ public class RoofType9_0 extends AbstractRoofType {
 
         rto.setModel(model);
 
-        rto.setRoofHooksSpaces(polygonRoofHooksSpace.toArray(new RoofHooksSpace [polygonRoofHooksSpace.size()]));
+
+      //FIXME
+        //TODO
+        //XXX
+        // !!!
+        rto.setRoofHooksSpaces(null);
+
+//        rto.setRoofHooksSpaces(
+//                polygonRoofHooksSpace.toArray(
+//                        new RoofHooksSpace [polygonRoofHooksSpace.size()]));
 
         rto.setRectangle(findRectangle(pBorderList, 0));
 

@@ -10,14 +10,12 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Point2d;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
 
 public interface RoofType {
 
@@ -25,5 +23,5 @@ public interface RoofType {
 
     public boolean isPrefixParameter();
 
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
+    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData);
 }

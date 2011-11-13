@@ -31,8 +31,8 @@ import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.GableRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.PolygonRoofHooksSpace;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.math.geometry.Plane3d;
@@ -236,10 +236,30 @@ public class RoofType2_1 extends RectangleRoofType{
         List<List<Point2d>> polygonTop = indexesToList(borderExtanded, polygonsRight);
         List<List<Point2d>> polygonBottom = indexesToList(borderExtanded, polygonsLeft);
 
-        RoofHooksSpace [] rhs = buildRoofHooksSpace(polygonTop, polygonBottom,
-                roofLineDistance1, roofLineDistance2, pRectangleContur, plane1, plane2);
+        //FIXME
+        //TODO
+        //XXX
+        // !!!
+        rto.setRoofHooksSpaces(null);
+//        RectangleRoofHooksSpaces rhs =
+//                buildRoofHooksSpace(
+//                        polygonTop,
+//                        polygonBottom,
+//                        roofLineDistance1,
+//                        roofLineDistance2,
+//                        pRectangleContur,
+//                        plane1,
+//                        plane2);
 
-        rto.setRoofHooksSpaces(rhs);
+//        RectangleRoofHooksSpaces rhs =
+//                buildRectRoofHooksSpace(
+//                        pRectangleContur,
+//                        new PolygonPlane(mpb, planeBottom),
+//                        null,
+//                        new PolygonPlane(mpt, planeTop),
+//                        null
+//                      );
+
 
         return rto;
     }

@@ -7,13 +7,16 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer;
+package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space;
+
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHookPoint;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 
 import org.ejml.data.SimpleMatrix;
 
 public interface RoofHooksSpace {
 
-    RoofHookPoint [] getRoofHookPoints(int number);
+    RoofHookPoint [] getRoofHookPoints(int number, DormerRow dormerRow, int dormerRowNum);
 
     SimpleMatrix getTransformationMatrix();
 

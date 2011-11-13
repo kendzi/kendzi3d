@@ -12,7 +12,6 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.vecmath.Point2d;
@@ -24,8 +23,7 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.validation.ValidationUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_1;
@@ -55,7 +53,7 @@ public class DormerRoofBuilder {
     /** Log. */
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
 
-    private static RoofType [] roofTypes = {
+    static RoofType [] roofTypes = {
         new RoofType0_0(),
         new RoofType0_1(),
         new RoofType0_2(),
@@ -78,43 +76,46 @@ public class DormerRoofBuilder {
         new RoofType9_0()
     };
 
+
+
     /**
      * Dormer roof builder.
      *
-     * @param pStartPoint starting point of roof polygon
-     * @param pRoofPolygon roof polygon
-     * @param pType roof type
-     * @param pDormer dormer type
+     * @param roof roof model
      * @param height roof maximal height. Taken from building
-     * @param pMeasurements measurements
      * @param pRoofTextureData texture data
      * @return roof model
      */
-    @Deprecated
     public static RoofOutput build(
-            Point2d pStartPoint,
-            List<Point2d> pRoofPolygon,
-            String pType,
-            String pDormer, double height,
-            Map<MeasurementKey, Measurement> pMeasurements,
+            DormerRoof roof,
+
+            double height,
+
             RoofTextureData pRoofTextureData
             ) {
 
-        List<Point2d> polygon = cleanPolygon(pRoofPolygon);
 
-        RoofType roofType = getRoofType(pType);
+        List<Point2d> polygon = cleanPolygon(roof.getBuilding().getPoints());
 
-        Integer prefixParameter = null;
+        Point2d startPoint = polygon.get(0);
 
-        if (roofType.isPrefixParameter()) {
-            prefixParameter = getPrefixParameter(pType);
-        }
+        RoofType roofType = roof.getRoofType();
 
-        List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
+        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, pRoofTextureData);
 
-        RoofTypeOutput rto = roofType.buildRoof(pStartPoint, polygon, prefixParameter, height, pMeasurements, pRoofTextureData);
 
-        List<RoofDormerTypeOutput> roofExtensionsList = RoofExtensionsBuilder.build(rto.getRoofHooksSpaces(), roofExtensions, pMeasurements, pRoofTextureData);
+//        List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
+
+//        getPrepareDormers(roof);
+
+        List<RoofDormerTypeOutput> roofExtensionsList =
+                DormerTypeBuilder.build(
+                        rto.getRoofHooksSpaces(),
+
+                        roof,
+
+                        roof.getMeasurements(),
+                        pRoofTextureData);
 
 
 
@@ -130,6 +131,59 @@ public class DormerRoofBuilder {
 
         return out;
     }
+
+//    /**
+//     * Dormer roof builder.
+//     *
+//     * @param pStartPoint starting point of roof polygon
+//     * @param pRoofPolygon roof polygon
+//     * @param pType roof type
+//     * @param pDormer dormer type
+//     * @param height roof maximal height. Taken from building
+//     * @param pMeasurements measurements
+//     * @param pRoofTextureData texture data
+//     * @return roof model
+//     */
+//    @Deprecated
+//    public static RoofOutput build(
+//            Point2d pStartPoint,
+//            List<Point2d> pRoofPolygon,
+//            String pType,
+//            String pDormer, double height,
+//            Map<MeasurementKey, Measurement> pMeasurements,
+//            RoofTextureData pRoofTextureData
+//            ) {
+//
+//        List<Point2d> polygon = cleanPolygon(pRoofPolygon);
+//
+//        RoofType roofType = getRoofType(pType);
+//
+//        Integer prefixParameter = null;
+//
+//        if (roofType.isPrefixParameter()) {
+//            prefixParameter = getPrefixParameter(pType);
+//        }
+//
+//        List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
+//
+//        RoofTypeOutput rto = roofType.buildRoof(pStartPoint, polygon, prefixParameter, height, pMeasurements, pRoofTextureData);
+//
+//        List<RoofDormerTypeOutput> roofExtensionsList = DormerTypeBuilder.build(rto.getRoofHooksSpaces(), roofExtensions, pMeasurements, pRoofTextureData);
+//
+//
+//
+//        Model model = buildModel(rto, roofExtensionsList);
+//
+//        RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList);
+//
+//
+//        RoofOutput out = new RoofOutput();
+//        out.setModel(model);
+//        out.setHeight(rto.getHeight());
+//        out.setDebug(debug);
+//
+//        return out;
+//    }
 
     /**
      * Remove last point if it is the same as first.
@@ -257,6 +311,9 @@ public class DormerRoofBuilder {
         }
 
         for (RoofDormerTypeOutput e : roofExtensionsList) {
+            if (e == null) {
+                continue;
+            }
 //            SimpleMatrix roofMatrix = e.getTransformationMatrix().mult(rto.getTransformationMatrix());
             SimpleMatrix roofMatrix = rto.getTransformationMatrix().mult(e.getTransformationMatrix());
 //            SimpleMatrix roofMatrix = e.getTransformationMatrix();
@@ -315,6 +372,7 @@ public class DormerRoofBuilder {
 
     }
 
+    @Deprecated
     private static RoofType getRoofType(String pKey) {
         if (pKey == null) {
             return null;

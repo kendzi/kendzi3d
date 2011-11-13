@@ -19,28 +19,42 @@ import javax.vecmath.Vector2d;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.PolygonRoofHooksSpace;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
 import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
+import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
 import org.ejml.data.SimpleMatrix;
 
 public abstract class RectangleRoofType extends AbstractRoofType implements RoofType {
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+    public RoofTypeOutput buildRoof(
+            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData) {
 
-        List<Point2d> graham = Graham.grahamScan(border);
+//            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
+//            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+
+
+        /**/
+        List<Point2d> graham = Graham.grahamScan(pPolygon);
         Point2d[] rectangleContur = RectangleUtil.findRectangleContur(graham);
 
         rectangleContur = findStartPoint(pStartPoint, rectangleContur);
+
+        /**/
+
+        if (pRoof.getDirection() != null) {
+            rectangleContur = calcRectangle(pPolygon, pRoof.getDirection());
+        }
 
         Point2d newStartPoint = rectangleContur[0];
 
@@ -75,12 +89,12 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
         }
 
         SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, scaleA, scaleB);
-        border = TransformationMatrix2d.transformList(border, transformLocal);
+        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
         rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
 
-        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(border, rectangleContur, scaleA, scaleB, recHeight, recWidth, prefixParameter,
-                pMeasurements, pRoofTextureData);
+        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(pPolygon, rectangleContur, scaleA, scaleB, recHeight, recWidth, pRoof.getRoofTypeParameter(),
+                pRoof.getMeasurements(), pRoofTextureData);
 
         SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, scaleA, scaleB);
 
@@ -95,6 +109,34 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
 
         return buildRectangleRoof;
 
+    }
+
+
+
+    private Point2d[] calcRectangle(List<Point2d> pPolygon, Vector2d pDirection) {
+        RectanglePointVector2d contur = RectangleUtil.findRectangleContur(new PolygonList2d(pPolygon),  pDirection);
+
+
+        Point2d p1 = contur.getPoint();
+        Point2d p2 = new Point2d(contur.getVector());
+        p2.scaleAdd(contur.getWidth(), contur.getPoint());
+
+        Vector2d ort = new Vector2d(-contur.getVector().y * contur.getHeight(), contur.getVector().x * contur.getHeight());
+
+        Point2d p3 = new Point2d(p2);
+        p3.add(ort);
+
+        Point2d p4 = new Point2d(p1);
+        p4.add(ort);
+
+
+        Point2d[] ret = new Point2d[4];
+        ret[0] = p1;
+        ret[1] = p2;
+        ret[2] = p3;
+        ret[3] = p4;
+
+        return ret;
     }
 
 
@@ -183,42 +225,44 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
 
     /**
      * @param pRectangleContur rectangle
-     * @param pP1 1 polygon and plane defining height connected with rectangle edge 1
-     * @param pP2 2 polygon and plane defining height connected with rectangle edge 2
-     * @param pP3 3 polygon and plane defining height connected with rectangle edge 3
-     * @param pP4 4 polygon and plane defining height connected with rectangle edge 4
+     * @param pFrontPlane 1 polygon and plane defining height connected with rectangle edge 1
+     * @param pLeftPlane 2 polygon and plane defining height connected with rectangle edge 2
+     * @param pBackPlane 3 polygon and plane defining height connected with rectangle edge 3
+     * @param pRightPlane 4 polygon and plane defining height connected with rectangle edge 4
      * @return rectangle roof hooks space
      */
-    protected RoofHooksSpace [] buildRectRoofHooksSpace(
+    protected RectangleRoofHooksSpaces buildRectRoofHooksSpace(
             Point2d[] pRectangleContur,
-            PolygonPlane pP1,
-            PolygonPlane pP2,
-            PolygonPlane pP3,
-            PolygonPlane pP4
+            PolygonPlane pFrontPlane,
+            PolygonPlane pLeftPlane,
+            PolygonPlane pBackPlane,
+            PolygonPlane pRightPlane
             ) {
 
-        List<RoofHooksSpace> ret = new ArrayList<RoofHooksSpace>();
-        if (pP1 != null) {
-            PolygonRoofHooksSpace rrhs = buildRecHookSpace(0, pRectangleContur, pP1);
-            ret.add(rrhs);
+        RectangleRoofHooksSpaces ret = new RectangleRoofHooksSpaces();
+
+//        List<RoofHooksSpace> ret = new ArrayList<RoofHooksSpace>();
+        if (pFrontPlane != null) {
+            PolygonRoofHooksSpace rrhs = buildRecHookSpace(0, pRectangleContur, pFrontPlane);
+            ret.setFrontSpace(rrhs);
         }
 
-        if (pP2 != null) {
-            PolygonRoofHooksSpace rrhs = buildRecHookSpace(1, pRectangleContur, pP2);
-            ret.add(rrhs);
+        if (pLeftPlane != null) {
+            PolygonRoofHooksSpace rrhs = buildRecHookSpace(1, pRectangleContur, pLeftPlane);
+            ret.setRightSpace(rrhs);
         }
 
-        if (pP3 != null) {
-            PolygonRoofHooksSpace rrhs = buildRecHookSpace(2, pRectangleContur, pP3);
-            ret.add(rrhs);
+        if (pBackPlane != null) {
+            PolygonRoofHooksSpace rrhs = buildRecHookSpace(2, pRectangleContur, pBackPlane);
+            ret.setBackSpace(rrhs);
         }
 
-        if (pP4 != null) {
-            PolygonRoofHooksSpace rrhs = buildRecHookSpace(3, pRectangleContur, pP4);
-            ret.add(rrhs);
+        if (pRightPlane != null) {
+            PolygonRoofHooksSpace rrhs = buildRecHookSpace(3, pRectangleContur, pRightPlane);
+            ret.setLeftSpace(rrhs);
         }
 
-        return ret.toArray(new RoofHooksSpace[ret.size()]);
+        return ret;
     }
 
     /** Build roof hook space for rectangle edge.

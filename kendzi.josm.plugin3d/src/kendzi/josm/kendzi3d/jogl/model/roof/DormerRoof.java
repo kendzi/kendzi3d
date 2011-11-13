@@ -13,13 +13,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.media.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
@@ -28,14 +28,14 @@ import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementParserUtil;
+import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -113,15 +113,30 @@ public class DormerRoof extends Roof {
     @Override
     public void buildModel() {
 
-        String type = this.way.get("3dr:type");
-        String dormer = this.way.get("3dr:dormer");
+        Map<String, String> keys = this.way.getKeys();
+
+        String type = keys.get("3dr:type");
+        String dormer = keys.get("3dr:dormers");
 
 //        String dormerWidth = this.way.get("3dr:dormer:width");
 //        String dormerHeight = this.way.get("3dr:dormer:heightX");
 //        String dormerLenght = this.way.get("3dr:dormer:lenghtX");
 
-        Map<MeasurementKey, Measurement> measurements = parseMeasurements(this.way);
+        kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof roof
+        = new  kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof();
 
+        roof.setBuilding(new PolygonList2d(this.list));
+        roof.setRoofType(Parser.parseRoofType(type));
+        roof.setDormers(Parser.parseMultipleDormers(dormer));
+
+        roof.setDormersFront(Parser.parseSiteDormers("front",keys));
+        roof.setDormersLeft(Parser.parseSiteDormers("left",keys));
+        roof.setDormersBack(Parser.parseSiteDormers("back",keys));
+        roof.setDormersRight(Parser.parseSiteDormers("right",keys));
+
+        roof.setMeasurements(Parser.parseMeasurements(keys));
+
+        roof.setDirection(findDirection(this.way));
 
 
 //        List<Double> heights = toDouble(getList(this.way, "3dr:height"));
@@ -134,8 +149,12 @@ public class DormerRoof extends Roof {
 
 
 
-        RoofOutput roofOutput = DormerRoofBuilder.build(this.list.get(0), this.list, type, dormer, this.height,
-                measurements, rtd);
+
+
+        RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
+
+//        RoofOutput roofOutput = DormerRoofBuilder.build(this.list.get(0), this.list, type, dormer, this.height,
+//                measurements, rtd);
 
         this.debug = roofOutput.getDebug();
 
@@ -146,24 +165,48 @@ public class DormerRoof extends Roof {
 
 
 
-    /**
-     * Take measurements from way.
-     * @param pWay way
-     * @return measurements
-     */
-    private Map<MeasurementKey, Measurement> parseMeasurements(Way pWay) {
 
-        Map<MeasurementKey, Measurement> ret = new HashMap<MeasurementKey, Measurement>();
 
-        for (MeasurementKey key : MeasurementKey.values()) {
 
-            String value = pWay.get(key.getKey());
-            Measurement measurement = MeasurementParserUtil.parse(value);
 
-            ret.put(key, measurement);
+
+    private Vector2d findDirection(Way pWay) {
+
+        Point2d directionBegin = findPoint("3dr:direction", "begin", pWay);
+        if (directionBegin == null) {
+            directionBegin = this.perspective.calcPoint(pWay.getNode(0));
         }
 
-        return ret;
+        Point2d directionEnd = findPoint("3dr:direction", "end", pWay);
+
+        // XXX add support for relations
+
+        if (directionBegin != null && directionEnd != null) {
+            Vector2d direction = new Vector2d(directionEnd);
+            direction.sub(directionBegin);
+            return direction;
+        }
+
+        return null;
+    }
+
+
+
+
+    private Point2d findPoint(String pKey, String pValue, Way pWay) {
+
+        for (int i = 0; i < pWay.getNodesCount(); i++) {
+
+            Node node = pWay.getNode(i);
+            if (pValue.equals(node.get(pKey))) {
+                return this.perspective.calcPoint(node);
+            }
+
+//          double dx = this.x - this.perspective.calcX(node.getEastNorth().getX());
+//          double dy = this.y - this.perspective.calcY(node.getEastNorth().getY());
+
+        }
+        return null;
     }
 
 

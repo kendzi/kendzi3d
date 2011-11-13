@@ -40,18 +40,19 @@ public class RoofType1_0 extends RoofType1_1 {
     @Override
     public RoofTypeOutput buildRectangleRoof(List<Point2d> border,
             Point2d[] rectangleContur,
-            double scaleA,
-            double scaleB,
-            double pSizeA,
-            double pSizeB,
+            double pScaleA,
+            double pScaleB,
+            double pRecHeight,
+            double pRecWidth,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
             RoofTextureData pRoofTextureData
             ) {
 
-        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
+//        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
+        Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_2, 0, pRecHeight, 20d);
 
-        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, 0, h1, 0, pRoofTextureData);
+        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, 0, h1, 0, pRoofTextureData);
     }
 
 }

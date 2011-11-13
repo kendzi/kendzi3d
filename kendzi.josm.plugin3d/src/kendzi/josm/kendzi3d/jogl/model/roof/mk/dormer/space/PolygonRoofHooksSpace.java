@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer;
+package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHookPoint;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
@@ -90,7 +92,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
     }
 
     @Override
-    public RoofHookPoint[] getRoofHookPoints(int pNumber) {
+    public RoofHookPoint[] getRoofHookPoints(int pNumber, DormerRow dormerRow, int dormerRowNum) {
         Vector2d v = new Vector2d(this.v1);
 
         MinMax polygonMinMaxY = findMinMaxY(this.polygon);
@@ -110,14 +112,16 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
             MinMax minMaxY =
                 limitZToPolygon(p.x);
 
-            double z = minMaxY.getMin();
+            double z = calcRowPosition(minMaxY, dormerRow,  dormerRowNum);
+
+//            double z = minMaxY.getMin();
 
             double y = this.plane.calcYOfPlane(p.x, -z);
 
 
             Point3d pp = new Point3d(p.x, y, -z);
 
-            double b = minMaxY.getMax() - minMaxY.getMin();
+            double b = minMaxY.getMax() - z;//(minMaxY.getMax() - minMaxY.getMin()) - z;
 
             RoofHookPoint hook = new RoofHookPoint(pp, Math.toRadians(0), b, Math.toRadians(0));
 
@@ -126,6 +130,11 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
 
         return ret;
 
+    }
+
+    private double calcRowPosition(MinMax minMaxY, DormerRow dormerRow, int dormerRowNum) {
+        double row = (dormerRow.getRowNum() - 1) / (double) dormerRowNum;
+        return minMaxY.getMin() + (minMaxY.getMax() - minMaxY.getMin()) * row ;
     }
 
 //    /**

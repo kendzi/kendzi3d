@@ -13,7 +13,12 @@ import java.util.List;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Tuple2d;
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
+import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
 import org.apache.log4j.Logger;
 
@@ -67,7 +72,60 @@ public class RectangleUtil {
 	}
 
 
+	public static RectanglePointVector2d findRectangleContur(PolygonList2d pPolygon, Vector2d pDirection) {
 
+	    List<Point2d> points = pPolygon.getPoints();
+
+	    Vector2d vector = new Vector2d(pDirection);
+	    vector.normalize();
+
+	    Vector2d ortagonal = new Vector2d(-vector.y, vector.x);
+
+	    double minVector = Double.MAX_VALUE;
+	    double maxVector = -Double.MAX_VALUE;
+	    double minOrtagonal = Double.MAX_VALUE;
+	    double maxOrtagonal = -Double.MAX_VALUE;
+
+	    for (Point2d point : points) {
+
+	        double dot = dot(vector, point);
+	        if (dot < minVector) {
+	            minVector = dot;
+	        }
+	        if (dot > maxVector) {
+	            maxVector = dot;
+	        }
+
+	        dot = dot(ortagonal, point);
+	        if (dot < minOrtagonal) {
+	            minOrtagonal = dot;
+	        }
+	        if (dot > maxOrtagonal) {
+	            maxOrtagonal = dot;
+	        }
+
+	    }
+
+	    double height = maxOrtagonal - minOrtagonal;
+	    double width = maxVector - minVector;
+
+	    Point2d point = new Point2d(
+	                vector.x * minVector + ortagonal.x * minOrtagonal,
+	                vector.y * minVector + ortagonal.y * minOrtagonal
+	            );
+
+	    return new RectanglePointVector2d(width, height, point, vector, true);
+	}
+
+	/**
+	 * Computes the dot product of the this vector and vector v1.
+	 * @param v vector
+	 * @param v1 the other vector (or if point vector starting ad origin and end in point)
+	 * @return dot product
+	 */
+	public final static double dot(Vector2d v, Tuple2d v1) {
+	    return (v.x*v1.x + v.y*v1.y);
+	}
 
 	/** Finds minimal area rectangle containing set of points.
 	 *

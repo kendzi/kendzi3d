@@ -23,10 +23,12 @@ import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementParserUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 
 import org.apache.log4j.Logger;
@@ -38,8 +40,8 @@ public class RoofDormerTypeA implements RoofDormerType {
     private static final Logger log = Logger.getLogger(RoofDormerTypeA.class);
 
     @Override
-    public Character getPrefixKey() {
-        return 'a';
+    public DormerType getType() {
+        return DormerType.A;
     }
 
     @Override

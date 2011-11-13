@@ -24,7 +24,7 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.math.geometry.Plane3d;
@@ -284,7 +284,7 @@ public class RoofType2_7 extends RectangleRoofType{
 
         rto.setModel(model);
 
-        RoofHooksSpace [] rhs =
+        RectangleRoofHooksSpaces rhs =
             buildRectRoofHooksSpace(
                     pRectangleContur,
                     new PolygonPlane(middleMP, planeBottom),

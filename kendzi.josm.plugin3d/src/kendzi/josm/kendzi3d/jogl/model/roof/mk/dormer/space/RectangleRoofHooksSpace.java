@@ -7,13 +7,15 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer;
+package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHookPoint;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
@@ -56,7 +58,8 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
     }
 
     @Override
-    public RoofHookPoint[] getRoofHookPoints(int pNumber) {
+    public RoofHookPoint[] getRoofHookPoints(int pNumber, DormerRow dormerRow, int dormerRowNum) {
+
         Vector2d v = new Vector2d(this.v1);
 
 
@@ -97,5 +100,6 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
     public SimpleMatrix getTransformationMatrix() {
         return this.transformationMatrix;
     }
+
 
 }

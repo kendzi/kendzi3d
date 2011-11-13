@@ -17,10 +17,26 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
 
+import org.apache.log4j.Logger;
 
-public interface RoofDormerType {
+public class RoofDormerTypeEmpty implements RoofDormerType {
 
-    public DormerType getType();
+    /** Log. */
+    private static final Logger log = Logger.getLogger(RoofDormerTypeEmpty.class);
 
-    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
+    @Override
+    public DormerType getType() {
+        return DormerType.EMPTY;
+    }
+
+    @Override
+    public RoofDormerTypeOutput buildRoof(
+            RoofHookPoint pRoofHookPoint,
+            RoofHooksSpace space,
+            Map<MeasurementKey, Measurement> pMeasurements,
+            RoofTextureData pRoofTextureData) {
+
+
+        return null;
+    }
 }

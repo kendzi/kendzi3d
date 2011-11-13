@@ -24,7 +24,7 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.math.geometry.Plane3d;
@@ -62,8 +62,8 @@ public class RoofType4_0 extends RectangleRoofType{
     public RoofTypeOutput buildRectangleRoof(
             List<Point2d> border,
             Point2d[] rectangleContur,
-            double scaleA,
-            double scaleB,
+            double pScaleA,
+            double pScaleB,
             double pRecHeight,
             double pRecWidth,
             Integer prefixParameter,
@@ -81,7 +81,7 @@ public class RoofType4_0 extends RectangleRoofType{
 
 
 
-        return build(border, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, pRoofTextureData);
+        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, pRoofTextureData);
 
     }
 
@@ -185,12 +185,12 @@ public class RoofType4_0 extends RectangleRoofType{
         MultiPolygonList2d bottomMiddleMP = bottomSplit.getTopMultiPolygons();
 
 
-        Point3d plameLeftBottomPoint =  new Point3d(
+        Point3d planeLeftBottomPoint =  new Point3d(
                 leftBottomPoint.x ,
                 h2,
                 -leftBottomPoint.y);
 
-        Point3d planeRighttopPoint =  new Point3d(
+        Point3d planeRightTopPoint =  new Point3d(
                 rightTopPoint.x ,
                 h2,
                 -rightTopPoint.y);
@@ -198,20 +198,20 @@ public class RoofType4_0 extends RectangleRoofType{
 
 
         Plane3d planeBottom = new Plane3d(
-                plameLeftBottomPoint,
+                planeLeftBottomPoint,
                 nb);
 
         Plane3d planeMiddleBottom = new Plane3d(
-                plameLeftBottomPoint,
+                planeLeftBottomPoint,
                 nmb);
 
         Plane3d planeTop = new Plane3d(
-                planeRighttopPoint,
+                planeRightTopPoint,
                 nt);
 
 
         Plane3d planeMiddleTop = new Plane3d(
-                planeRighttopPoint,
+                planeRightTopPoint,
                 nmt);
 
 
@@ -262,7 +262,7 @@ public class RoofType4_0 extends RectangleRoofType{
 
         rto.setModel(model);
 
-        RoofHooksSpace [] rhs =
+        RectangleRoofHooksSpaces rhs =
             buildRectRoofHooksSpace(
                     pRectangleContur,
                     new PolygonPlane(bottomMP, planeBottom),

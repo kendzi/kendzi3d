@@ -23,7 +23,7 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHooksSpace;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -241,7 +241,7 @@ public abstract class RoofType0 extends RectangleRoofType {
 //                   null
 //                 );
 
-       rto.setRoofHooksSpaces(rhs);
+       rto.setRoofHooksSpaces(null);
 
        return rto;
    }
