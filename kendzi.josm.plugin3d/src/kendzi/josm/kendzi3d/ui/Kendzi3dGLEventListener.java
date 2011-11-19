@@ -253,6 +253,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         // Enable VSync
         gl.setSwapInterval(1);
 
+
+
         // Setup the drawing area and shading mode
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -277,6 +279,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
         this.renderJosm.init(gl);
+
+
 
     }
 

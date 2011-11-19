@@ -1,6 +1,23 @@
 
 [current]
 
+[2011-11-19]
+- support for dormer type B
+- support for roof type word alias as 3dr:type=flat|gabled|gambrel|half hipped|hipped|pitched|pyramidal|skillion
+- building:part=yes
+
+- initial support for colors. They can't be mix with tags: building:facade:material, building:roof:material. Color list: http://download.oracle.com/javase/6/docs/api/java/awt/Color.html
+	- building:facade:color 
+	- building:roof:color
+
+[2011-11-13]
+- multi row dormers: 3dr.dormers.front.row1 
+- dormers for wall split by dot: 3dr.dormers=aa.aa
+- direction of roof as node tag: 3dr.direction=begin|end
+- empty dormer type: '-'
+- places for dormers on rectangular roofs: 3dr.dormers.front, 3dr.dormers.back, 3dr.dormers.left, 3dr.dormers.right
+- clean up
+
 [2011-10-27]
 - added startup parameters: kendzi3d.opengl.sampleBuffersNum=2..., kendzi3d.opengl.sampleBuffers=true|false, kendzi3d.opengl.zbuffer=16|24 
 - support for roof type 2.6, 2.7, 2.8, 2.9, 4.0, 9.0

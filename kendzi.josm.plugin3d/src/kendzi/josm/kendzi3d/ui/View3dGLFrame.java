@@ -27,7 +27,8 @@ import kendzi.josm.kendzi3d.jogl.photos.PhotoParmPanel;
 
 import org.apache.log4j.Logger;
 
-import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 
 // Based on TourGL.java by Andrew Davison
 
@@ -61,7 +62,7 @@ public class View3dGLFrame extends Frame implements WindowListener {
         }
     };
 
-    private Animator animator;
+    private AnimatorBase animator;
 
 
     public View3dGLFrame() {
@@ -231,10 +232,11 @@ public class View3dGLFrame extends Frame implements WindowListener {
 
         canvas.addGLEventListener(this.canvasListener);
 
-//        WindowsWGLGraphicsConfigurationFactory
+        this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
+//        this.animator = new Animator(canvas);
+//        ((Animator) this.animator).setRunAsFastAsPossible(true);
 
-        this.animator = new Animator(canvas);
-//        animator.set
+
 //        this.addWindowListener(new WindowAdapter() {
 //
 //
@@ -310,11 +312,15 @@ public class View3dGLFrame extends Frame implements WindowListener {
 //        View3dGLFrame.this.setVisible(false);
 //        this.dispose();
 
+        if (View3dGLFrame.this.animator.isStarted()) {
+            View3dGLFrame.this.animator.stop();
+        }
+
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                View3dGLFrame.this.animator.stop();
+
                 View3dGLFrame.this.setVisible(false);
                 View3dGLFrame.this.dispose();
             }

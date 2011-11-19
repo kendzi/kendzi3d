@@ -199,17 +199,52 @@ public class Building extends AbstractModel {
     public TextureData getFacadeTexture() {
 
         String facadeMaterial = this.way.get("building:facade:material");
+        String facadeColor = this.way.get("building:facade:color");
 
-        String facadeTextureFile = MetadataCacheService.getPropertites(
-                "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
+        if (!isBlankOrNull(facadeMaterial) || isBlankOrNull(facadeColor)) {
 
-        double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
-                "buildings.building_facade_material_{0}.texture.lenght", 1d, facadeMaterial);
-        double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
-                "buildings.building_facade_material_{0}.texture.height", 1d, facadeMaterial);
+            String facadeTextureFile = MetadataCacheService.getPropertites(
+                    "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
 
-        return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+                    "buildings.building_facade_material_{0}.texture.lenght", 1d, facadeMaterial);
+            double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
+                    "buildings.building_facade_material_{0}.texture.height", 1d, facadeMaterial);
 
+            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+
+        } else {
+
+            String facadeColorFile = "#c=" + facadeColor;
+//            String facadeColorFile = MetadataCacheService.getPropertites(
+//                    "buildings.building_facade_color_{0}.texture.file", null, facadeColor);
+//
+//            if (isBlankOrNull(facadeColorFile)) {
+//                facadeColorFile = MetadataCacheService.getPropertites(
+//                        "buildings.building_facade_color_unknown.texture.file", null);
+//            }
+//
+//            double facadeColorLenght = MetadataCacheService.getPropertitesDouble(
+//                    "buildings.building_facade_color_{0}.texture.lenght", 1d, facadeColor);
+//            double facadeColorHeight = MetadataCacheService.getPropertitesDouble(
+//                    "buildings.building_facade_color_{0}.texture.height", 1d, facadeColor);
+//
+//            return new TextureData(facadeColorFile, facadeColorLenght, facadeColorHeight);
+            return new TextureData(facadeColorFile, 1d, 1d);
+
+        }
+    }
+
+    public static boolean isBlankOrNull(String pString) {
+        if (pString == null) {
+            return true;
+        }
+
+        if (!"".equals(pString.trim())) {
+            return false;
+        }
+
+        return true;
     }
 
 

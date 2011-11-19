@@ -40,8 +40,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.service.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -236,12 +234,13 @@ public class MkRoofJOGL implements GLEventListener {
 
         this.modelRender = ModelRender.getInstance();
 
-        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, null, rtd);
-
-        this.model = output.getModel();
-        this.model.useLight = true;
-
-        this.modelWall = buildWalls(border, 0, height - output.getHeight());
+        //FIXME
+//        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, null, rtd);
+        //FIXME
+//        this.model = output.getModel();
+//        this.model.useLight = true;
+////FIXME
+//        this.modelWall = buildWalls(border, 0, height - output.getHeight());
 
     }
 

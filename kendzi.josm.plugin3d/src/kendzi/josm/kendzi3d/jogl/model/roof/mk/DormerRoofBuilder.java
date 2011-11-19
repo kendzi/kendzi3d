@@ -44,6 +44,14 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_8;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_9;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeFlat;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 
 import org.apache.log4j.Logger;
@@ -54,13 +62,26 @@ public class DormerRoofBuilder {
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
 
     static RoofType [] roofTypes = {
+        // word alias for types
+        new RoofTypeFlat(),
+        new RoofTypeGabled(),
+        new RoofTypeGambrel(),
+        new RoofTypeHalfHipped(),
+        new RoofTypeHipped(),
+        new RoofTypePitched(),
+        new RoofTypePyramidal(),
+        new RoofTypeSkillion(),
+
+        // normal types
         new RoofType0_0(),
         new RoofType0_1(),
         new RoofType0_2(),
         new RoofType0_3(),
         new RoofType0_4(),
+
         new RoofType1_0(),
         new RoofType1_1(),
+
         new RoofType2_0(),
         new RoofType2_1(),
         new RoofType2_2(),
@@ -71,6 +92,7 @@ public class DormerRoofBuilder {
         new RoofType2_7(),
         new RoofType2_9(),
         new RoofType2_8(),
+
         new RoofType4_0(),
 
         new RoofType9_0()

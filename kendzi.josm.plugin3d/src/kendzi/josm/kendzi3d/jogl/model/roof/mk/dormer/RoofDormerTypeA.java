@@ -34,7 +34,12 @@ import kendzi.math.geometry.point.TransformationMatrix3d;
 import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
 
-public class RoofDormerTypeA implements RoofDormerType {
+/**
+ * Dormer type A.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
+public class RoofDormerTypeA extends AbstractRoofDormerType {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofDormerTypeA.class);
@@ -57,8 +62,9 @@ public class RoofDormerTypeA implements RoofDormerType {
         TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
         TextureData roofTexture = pRoofTextureData.getRoofTexture();
 
-        double width1 = getWidth1(pMeasurements);
-        double height1 = getHeight1(pMeasurements);
+        double width1 = getWidth(MeasurementKey.DORMER_WIDTH_1, pMeasurements, 1.5d);
+        double height1 = getHeight(MeasurementKey.DORMER_HEIGHT_1, pMeasurements, 1.5d);
+
 
         // XXX
         double depth = pRoofHookPoint.getDepth();
@@ -68,52 +74,9 @@ public class RoofDormerTypeA implements RoofDormerType {
         return buildMesh(pRoofHookPoint, space, out, facadeTexture, roofTexture, width1, height1, depth, height2);
     }
 
-    private double getWidth1(Map<MeasurementKey, Measurement> pMeasurements) {
-
-
-        Measurement measurement = getMeasurement(MeasurementKey.DORMER_WIDTH_1, pMeasurements);
-
-        if (measurement == null) {
-            return 1.5;
-        }
-
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(MeasurementKey.DORMER_WIDTH_1, measurement));
-            return 1.5;
-        }
-    }
-
-    private Measurement getMeasurement(MeasurementKey pDormerWidth1, Map<MeasurementKey, Measurement> pMeasurements) {
-        if (pMeasurements == null) {
-            return null;
-        }
-        return pMeasurements.get(pDormerWidth1);
-    }
-
-    private double getHeight1(Map<MeasurementKey, Measurement> pMeasurements) {
-
-        Measurement measurement = getMeasurement(MeasurementKey.DORMER_HEIGHT_1, pMeasurements);
-
-        if (measurement == null) {
-            return 1.5;
-        }
-        if (isUnit(measurement, MeasurementUnit.METERS)) {
-            return measurement.getValue();
-        } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
-            return measurement.getValue();
-        } else {
-            log.error(MeasurementParserUtil.getErrorMessage(MeasurementKey.DORMER_WIDTH_1, measurement));
-            return 1.5;
-        }
-    }
-
     private double getHeight2(Map<MeasurementKey, Measurement> pMeasurements, double height1, double depth) {
-
-        Measurement measurement = getMeasurement(MeasurementKey.DORMER_HEIGHT_2, pMeasurements);
+     // XXX move to util
+        Measurement measurement = RoofDormerTypeB.getMeasurement(MeasurementKey.DORMER_HEIGHT_2, pMeasurements);
 
         if (measurement == null) {
             return height1 + depth * Math.tan(Math.toRadians(10));
@@ -130,20 +93,8 @@ public class RoofDormerTypeA implements RoofDormerType {
         }
     }
 
-    boolean isUnit(Measurement pMeasurement, MeasurementUnit pMeasurementUnit) {
-        if (pMeasurement == null) {
-            return false;
-        }
-        if (pMeasurementUnit.equals(pMeasurement.getUnit())) {
-            return true;
-        }
-        return false;
-    }
-
-
-
     private RoofDormerTypeOutput buildMesh(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
-            RoofDormerTypeOutput out, TextureData facadeTexture, TextureData roofTexture, double s1, double h1,
+            RoofDormerTypeOutput out, TextureData facadeTexture, TextureData roofTexture, double width1, double h1,
             double d, double h2) {
 
         int facadeMaterialIndex = RoofTextureData.FACADE_TEXTRURE_INDEX;
@@ -151,24 +102,24 @@ public class RoofDormerTypeA implements RoofDormerType {
 
         double v1 = (h1 / facadeTexture.getHeight());
         double v2 = (h2 / facadeTexture.getHeight());
-        double u1 = (s1 / facadeTexture.getLenght());
+        double u1 = (width1 / facadeTexture.getLenght());
         double u2 = (d / facadeTexture.getLenght());
 
         MeshFactory border = MeshFactory.meshBuilder("border");
         border.materialID = facadeMaterialIndex;
         border.hasTexture = true;
 
-        int b01 = border.addVertex(new Point3d(-0.5 * s1, 0, 0));
-        int b11 = border.addVertex(new Point3d(-0.5 * s1, h1, 0));
+        int b01 = border.addVertex(new Point3d(-0.5 * width1, 0, 0));
+        int b11 = border.addVertex(new Point3d(-0.5 * width1, h1, 0));
 
-        int b02 = border.addVertex(new Point3d(0.5 * s1, 0, 0));
-        int b12 = border.addVertex(new Point3d(0.5 * s1, h1, 0));
+        int b02 = border.addVertex(new Point3d(0.5 * width1, 0, 0));
+        int b12 = border.addVertex(new Point3d(0.5 * width1, h1, 0));
 
-        int b03 = border.addVertex(new Point3d(0.5 * s1, 0, -d));
-        int b13 = border.addVertex(new Point3d(0.5 * s1, h2, -d));
+        int b03 = border.addVertex(new Point3d(0.5 * width1, 0, -d));
+        int b13 = border.addVertex(new Point3d(0.5 * width1, h2, -d));
 
-        int b04 = border.addVertex(new Point3d(-0.5 * s1, 0, -d));
-        int b14 = border.addVertex(new Point3d(-0.5 * s1, h2, -d));
+        int b04 = border.addVertex(new Point3d(-0.5 * width1, 0, -d));
+        int b14 = border.addVertex(new Point3d(-0.5 * width1, h2, -d));
 
         int nb1 = border.addNormal(new Vector3d(0, 0, 1));
         int nb2 = border.addNormal(new Vector3d(1, 0, 0));
@@ -229,14 +180,14 @@ public class RoofDormerTypeA implements RoofDormerType {
 
 
 //        top
-        MeshFactory top = MeshFactory.meshBuilder("border");
+        MeshFactory top = MeshFactory.meshBuilder("top");
         top.materialID = topMaterialIndex;
         top.hasTexture = true;
 
-        Point3d p1 = new Point3d(-0.5 * s1, h1, 0);
-        Point3d p2 = new Point3d(0.5 * s1, h1, 0);
-        Point3d p3 = new Point3d(0.5 * s1, h2, -d);
-        Point3d p4 = new Point3d(-0.5 * s1, h2, -d);
+        Point3d p1 = new Point3d(-0.5 * width1, h1, 0);
+        Point3d p2 = new Point3d(0.5 * width1, h1, 0);
+        Point3d p3 = new Point3d(0.5 * width1, h2, -d);
+        Point3d p4 = new Point3d(-0.5 * width1, h2, -d);
 
         int t1 = top.addVertex(p1);
         int t2 = top.addVertex(p2);

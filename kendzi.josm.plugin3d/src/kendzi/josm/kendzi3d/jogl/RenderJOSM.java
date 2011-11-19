@@ -138,7 +138,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public RenderJOSM() {
         try {
             // XXX move to layer builder
-            this.buildings = SearchCompiler.compile("(building=*)", false, false);
+            this.buildings = SearchCompiler.compile("(building=*) | (building\\:part=yes)", false, false);
             this.roadsMatcher = SearchCompiler.compile("(highway=*)", false, false);
             this.treesMatcher = SearchCompiler.compile("(natural=tree)", false, false);
             this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)", false,

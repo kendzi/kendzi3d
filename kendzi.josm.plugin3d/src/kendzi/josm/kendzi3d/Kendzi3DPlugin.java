@@ -33,6 +33,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -89,9 +90,12 @@ public class Kendzi3DPlugin extends Plugin {
             e.printStackTrace();
         }
 
+        // where is spring ?!
         // init rest of services
         TextureCacheService.initTextureCache(getPluginDir());
         MetadataCacheService.initMetadataCache(getPluginDir());
+
+        TextureCacheService.addTextureBuilder(new ColorTextureBuilder());
 
         refreshMenu();
 

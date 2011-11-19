@@ -12,7 +12,9 @@ package kendzi.josm.kendzi3d.service;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.media.opengl.GL2;
@@ -41,6 +43,8 @@ public class TextureCacheService {
     private String textureDir = null;
 
     private boolean filter;
+
+    private List<TextureBuilder> textureBuilderList = new ArrayList<TextureBuilder>();
 
 
     /** Set texture filter.
@@ -94,6 +98,14 @@ public class TextureCacheService {
      */
     public static void clearTextures() {
         textureCache.clear();
+    }
+
+    /**
+     * Add texture builder.
+     * @param pTextureBuilder texture builder
+     */
+    public static void addTextureBuilder(TextureBuilder pTextureBuilder) {
+        textureCache.textureBuilderList.add(pTextureBuilder);
     }
 
  	public TextureCacheService(String pTexDir) {
@@ -160,13 +172,27 @@ public class TextureCacheService {
     public Texture get(String pName) {
         Texture texture = this.cache.get(pName);
         if (texture == null) {
+
             texture = loadTexture(pName, this.filter);
-            this.cache.put(pName, texture);
+
+            if (texture == null && pName != null && this.textureBuilderList != null) {
+                //builders
+
+                for (TextureBuilder tb : this.textureBuilderList) {
+                    if (pName.startsWith(tb.getBuilderPrefix())) {
+                        texture = tb.buildTexture(pName);
+                        if (texture != null) {
+                            break;
+                        }
+                    }
+                }
+            }
 
             if (texture == null) {
                 texture = loadTexture(TEXTURES_UNDEFINED_PNG, this.filter);
-                this.cache.put(pName, texture);
             }
+
+            this.cache.put(pName, texture);
 
         }
         return texture;
@@ -304,5 +330,21 @@ public class TextureCacheService {
      */
     public void setFilter(boolean filter) {
         this.filter = filter;
+    }
+
+
+    /**
+     * @return the textureBuilderList
+     */
+    public List<TextureBuilder> getTextureBuilderList() {
+        return textureBuilderList;
+    }
+
+
+    /**
+     * @param textureBuilderList the textureBuilderList to set
+     */
+    public void setTextureBuilderList(List<TextureBuilder> textureBuilderList) {
+        this.textureBuilderList = textureBuilderList;
     }
 }

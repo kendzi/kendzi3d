@@ -110,17 +110,27 @@ public abstract class Roof extends AbstractModel {
      */
     protected TextureData getRoofTexture() {
 
-        String facadeMaterial = this.way.get("building:roof:material");
+        String roofMaterial = this.way.get("building:roof:material");
 
-        String facadeTextureFile = MetadataCacheService.getPropertites(
-                "buildings.building_roof_material_{0}.texture.file", null, facadeMaterial);
+        String roofColor = this.way.get("building:roof:color");
 
-        double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
-                "buildings.building_roof_material_{0}.texture.lenght", 1d, facadeMaterial);
-        double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
-                "buildings.building_roof_material_{0}.texture.height", 1d, facadeMaterial);
+        if (!Building.isBlankOrNull(roofMaterial) || Building.isBlankOrNull(roofColor)) {
 
-        return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+            String facadeTextureFile = MetadataCacheService.getPropertites(
+                    "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);
+
+            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+                    "buildings.building_roof_material_{0}.texture.lenght", 1d, roofMaterial);
+            double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
+                    "buildings.building_roof_material_{0}.texture.height", 1d, roofMaterial);
+
+            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+
+        } else {
+
+            String facadeColorFile = "#c=" + roofColor;
+            return new TextureData(facadeColorFile, 1d, 1d);
+        }
     }
 
     protected TextureData getFasadeTexture() {
