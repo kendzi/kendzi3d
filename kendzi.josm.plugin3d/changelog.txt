@@ -1,5 +1,6 @@
 
 [current]
+- tree models for type: unknown|broad_leaved|conifer
 
 [2011-11-19]
 - support for dormer type B

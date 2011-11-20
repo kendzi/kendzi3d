@@ -86,8 +86,8 @@ public class Tree extends AbstractModel implements DLODSuport {
 //        this.verts = verts;
 //
 //        this.treeText = TextureCacheService.getTextureFromDir("tree_unknown.png");
-//        if ("broad_leafed".equals(this.node.get("type"))) {
-//            this.treeText = TextureCacheService.getTexture("tree_broad_leafed.png");
+//        if ("broad_leaved".equals(this.node.get("type"))) {
+//            this.treeText = TextureCacheService.getTexture("tree_broad_leaved.png");
 //        } else if ("conifer".equals(this.node.get("type"))) {
 //            this.treeText = TextureCacheService.getTexture("tree_conifer.png");
 //        }
@@ -162,6 +162,13 @@ public class Tree extends AbstractModel implements DLODSuport {
     @Override
     public void buildModel(LOD pLod) {
 
+        this.type = this.node.get("type");
+        if (this.type == null) {
+            this.type = "unknown";
+        }
+        this.genus = this.node.get("genus");
+        this.species = this.node.get("species");
+
         double height = getHeight(this.node);
 
         Model model = null;
@@ -194,7 +201,7 @@ public class Tree extends AbstractModel implements DLODSuport {
 
 //        if (LOD.LOD3.equals(pLod)) {
 //
-//            MetadataCacheService.getModel("models/obj/broad_leafed")
+//            MetadataCacheService.getModel("models/obj/broad_leaved")
 //            MetadataCacheService.getModel("models/obj/tree3.obj")
 //
 //        }
@@ -236,7 +243,7 @@ public class Tree extends AbstractModel implements DLODSuport {
 
         String spacesModel = MetadataCacheService.getPropertites("models.trees.species." + this.species + "." + pLod + ".model", null);
         String genusModel = MetadataCacheService.getPropertites("models.trees.genus." + this.genus + "." + pLod + ".model", null);
-        String typeModel = MetadataCacheService.getPropertites("models.trees.type." + this.type + "." + pLod + ".model", null);
+        String typeModel = MetadataCacheService.getPropertites("models.trees.type." + unknown(this.type) + "." + pLod + ".model", null);
 
         // XXX add StringUtil
         if (spacesModel != null) {
@@ -269,6 +276,13 @@ public class Tree extends AbstractModel implements DLODSuport {
 
     }
 
+    private String unknown(String pStr) {
+        if (pStr == null) {
+            return "unknown";
+        }
+        return pStr;
+    }
+
     /**
      * Finds height for tree. Order of finding is:
      * - node attribute
@@ -288,7 +302,7 @@ public class Tree extends AbstractModel implements DLODSuport {
 
         Double spacesHeight = MetadataCacheService.getPropertitesDouble("models.trees.species." + this.species + ".height", null);
         Double genusHeight = MetadataCacheService.getPropertitesDouble("models.trees.genus." + this.genus + ".height", null);
-        Double typeHeight = MetadataCacheService.getPropertitesDouble("models.trees.type." + this.type + ".height", null);
+        Double typeHeight = MetadataCacheService.getPropertitesDouble("models.trees.type." + unknown(this.type) + ".height", null);
          MetadataCacheService.getPropertitesDouble("models.trees." + this.type + ".height", null);
 
         // XXX add StringUtil
@@ -371,8 +385,8 @@ public class Tree extends AbstractModel implements DLODSuport {
 //        this.verts = verts;
 //
 //        this.treeText = TextureCacheService.getTextureFromDir("tree_unknown.png");
-//        if ("broad_leafed".equals(this.node.get("type"))) {
-//            this.treeText = TextureCacheService.getTexture("tree_broad_leafed.png");
+//        if ("broad_leaved".equals(this.node.get("type"))) {
+//            this.treeText = TextureCacheService.getTexture("tree_broad_leaved.png");
 //        } else if ("conifer".equals(this.node.get("type"))) {
 //            this.treeText = TextureCacheService.getTexture("tree_conifer.png");
 //        }
@@ -400,8 +414,8 @@ public class Tree extends AbstractModel implements DLODSuport {
 
 
 //        String textFile = "/textures/tree_unknown.png";
-//        if ("broad_leafed".equals(this.node.get("type"))) {
-//            textFile = "/textures/tree_broad_leafed.png";
+//        if ("broad_leaved".equals(this.node.get("type"))) {
+//            textFile = "/textures/tree_broad_leaved.png";
 //        } else if ("conifer".equals(this.node.get("type"))) {
 //            textFile = "/textures/tree_conifer.png";
 //        }
@@ -443,7 +457,7 @@ public class Tree extends AbstractModel implements DLODSuport {
             gl.glPushMatrix();
             gl.glTranslated(this.x, 0, -this.y);
 
-
+            gl.glEnable(GL2.GL_NORMALIZE);
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
 
             if (model2 instanceof FlatModel) {
@@ -457,6 +471,7 @@ public class Tree extends AbstractModel implements DLODSuport {
                 this.modelRenderer.render(gl, model2);
 
             }
+            gl.glDisable(GL2.GL_NORMALIZE);
 
 
 

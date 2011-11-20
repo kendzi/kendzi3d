@@ -75,11 +75,19 @@ public class WaveFrontLoader implements iLoader {
     private String lastLineToProcess;
     private BoundsFactory boundsFactory;
 
+    private List<Point3d> vertexList = new ArrayList<Point3d>();
+
+    private List<TextCoord> texCoordsList = new ArrayList<TextCoord>();
+
+    private List<Vector3d> vectorList = new ArrayList<Vector3d>();
+
     @Override
     public Model load(String path) throws ModelLoadException {
         this.boundsFactory = new BoundsFactory();
         this.model = new Model(path);
         Mesh mesh = null;
+
+
 
         this.baseDir = "";
         path = path.replaceAll("\\\\", "/");
@@ -139,8 +147,9 @@ public class WaveFrontLoader implements iLoader {
                         mesh = new Mesh();
                     }
 
-                    mesh.vertices = (Point3d[]) getPoints(VERTEX_DATA, line, br);
-                    mesh.numOfVerts = mesh.vertices.length;
+                    this.vertexList.addAll(getPoints1(line, br));
+//                    mesh.vertices = (Point3d[]) getPoints(VERTEX_DATA, line, br);
+//                    mesh.numOfVerts = mesh.vertices.length;
                 }
 
                 if (lineIs(TEXTURE_DATA, line)) {
@@ -148,9 +157,10 @@ public class WaveFrontLoader implements iLoader {
                         mesh = new Mesh();
                     }
 
-                    mesh.texCoords = getTexCoords(TEXTURE_DATA, line, br);
+                    this.texCoordsList.addAll(getTexCoords1(line, br));
+//                    mesh.texCoords = getTexCoords(TEXTURE_DATA, line, br);
                     mesh.hasTexture = true;
-                    mesh.numTexCoords = mesh.texCoords.length;
+//                    mesh.numTexCoords = mesh.texCoords.length;
                 }
 
                 if (lineIs(NORMAL_DATA, line)) {
@@ -158,10 +168,12 @@ public class WaveFrontLoader implements iLoader {
                         mesh = new Mesh();
                     }
 
-                    Vector3d [] normals = (Vector3d []) getPoints(NORMAL_DATA, line, br);
-                    if (!this.rebildNormals) {
-                        mesh.normals = normals;
-                    }
+                    this.vectorList.addAll(getNormals(line, br));
+
+//                    Vector3d [] normals = (Vector3d []) getPoints(NORMAL_DATA, line, br);
+//                    if (!this.rebildNormals) {
+//                        mesh.normals = normals;
+//                    }
                 }
 
                 if (lineIs(FACE_DATA, line)) {
@@ -215,6 +227,19 @@ public class WaveFrontLoader implements iLoader {
 
         mesh = null;
 
+        Point3d[] vertexArray = this.vertexList.toArray(new Point3d [0]);
+        TextCoord[] texCoordsArray = this.texCoordsList.toArray(new TextCoord [0]);
+        Vector3d[] vectorArray = this.vectorList.toArray(new Vector3d [0]);
+
+        for (Mesh m : this.model.mesh) {
+            m.vertices = vertexArray;
+            m.numOfVerts = vertexArray.length;
+            m.texCoords = texCoordsArray;
+//            m.numOfTextCord = texCoordsArray.length;
+            m.normals = vectorArray;
+//            m.numOf= vertexArray.length;
+        }
+
         for (int i = 0; i < this.model.getNumberOfMaterials(); i++) {
             Material material = this.model.getMaterial(i);
             if (material.strFile != null) {
@@ -257,6 +282,85 @@ public class WaveFrontLoader implements iLoader {
 
     private boolean lineIs(String type, String line) {
         return line.startsWith(type);
+    }
+
+    private List<Point3d> getPoints1(String currLine, BufferedReader br) throws IOException {
+        List<Point3d> points = new ArrayList<Point3d>();
+
+        String prefix = VERTEX_DATA;
+
+        // we've already read in the first line (currLine)
+        // so go ahead and parse it
+
+        points.add(parsePoint(currLine));
+
+
+        // parse through the rest of the points
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            if (!lineIs(prefix, line)) {
+                this.lastLineToProcess = line;
+                break;
+            }
+
+            Point3d point = parsePoint(line);
+            // Calculate the bounds for the entire model
+            this.boundsFactory.addPoint(point);
+            points.add(point);
+
+        }
+
+//        if (isVertices) {
+//            // Calculate the center of the model
+//            this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
+//            this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
+//            this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
+//        }
+
+        // return the points
+
+
+        return points;
+
+    }
+
+    private List<Vector3d> getNormals(String currLine, BufferedReader br) throws IOException {
+
+        String prefix =NORMAL_DATA;
+
+        List<Vector3d> points = new ArrayList<Vector3d>();
+
+        // we've already read in the first line (currLine)
+        // so go ahead and parse it
+
+            points.add(parseVector(currLine));
+
+
+        // parse through the rest of the points
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            if (!lineIs(prefix, line)) {
+                this.lastLineToProcess = line;
+                break;
+            }
+
+
+                Vector3d point = parseVector(line);
+                points.add(point);
+
+        }
+
+//        if (isVertices) {
+//            // Calculate the center of the model
+//            this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
+//            this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
+//            this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
+//        }
+
+        // return the points
+
+            return points;
+
     }
 
     private Tuple3d[] getPoints(String prefix, String currLine, BufferedReader br) throws IOException {
@@ -342,6 +446,39 @@ public class WaveFrontLoader implements iLoader {
         // return the texture coordinates
         TextCoord [] values = new TextCoord[texCoords.size()];
         return texCoords.toArray(values);
+    }
+
+    private List<TextCoord> getTexCoords1(String currLine, BufferedReader br) throws IOException {
+
+        String prefix = TEXTURE_DATA;
+        List<TextCoord> texCoords = new ArrayList<TextCoord>();
+
+        String [] s = currLine.split("\\s+");
+        TextCoord texCoord = new TextCoord();
+        texCoord.u = Float.parseFloat(s[1]);
+        texCoord.v = Float.parseFloat(s[2]);
+
+        texCoords.add(texCoord);
+
+        // parse through the rest of the points
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            if (!lineIs(prefix, line)) {
+                this.lastLineToProcess = line;
+                break;
+            }
+
+            s = line.split("\\s+");
+
+            texCoord = new TextCoord();
+            texCoord.u = Float.parseFloat(s[1]);
+            texCoord.v = Float.parseFloat(s[2]);
+
+            texCoords.add(texCoord);
+        }
+
+        // return the texture coordinates
+        return texCoords;
     }
 
 //    String markAndRead(BufferedReader br) {

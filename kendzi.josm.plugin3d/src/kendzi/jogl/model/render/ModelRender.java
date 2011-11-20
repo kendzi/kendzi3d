@@ -67,7 +67,7 @@ public class ModelRender {
 
     private void draw(GL2 gl, Model model) {
 
-
+        boolean materialChanged = true;
 
 //        if (this.textures == null) {
 //            //FIXME
@@ -125,7 +125,9 @@ public class ModelRender {
                 for (fi = 0; fi < mesh.face.length; fi++) {
                     Face face = mesh.face[fi];
 
-                    setupMaterials(gl, model, mesh, face);
+                    boolean setupMaterials = setupMaterials(materialChanged, gl, model, mesh, face);
+
+                    materialChanged = materialChanged || setupMaterials;
 
                     gl.glBegin(face.type);
 
@@ -178,7 +180,9 @@ public class ModelRender {
 
             gl.glColor3f(1.0f, 1.0f, 1.0f);
 
-            setDefaultMaterial(gl);
+            if (materialChanged) {
+                setDefaultMaterial(gl);
+            }
 
         } catch (RuntimeException e) {
             throw new RuntimeException(
@@ -404,13 +408,16 @@ public class ModelRender {
         }
     }
 
-    private void setupMaterials(GL2 pGl, Model pModel, Mesh mesh, Face face) {
+    private boolean setupMaterials(boolean materialChanged, GL2 pGl, Model pModel, Mesh mesh, Face face) {
 
 
         // If the object has a texture, then do nothing till later...else
         // apply the material property to it.
        if (mesh.hasTexture) {
                 // nothing
+           if (materialChanged) {
+               setDefaultMaterial(pGl);
+           }
 
             // Has no texture but has a material instead and this material is
             // the FACES material, and not the OBJECTS material ID as being used
@@ -433,8 +440,11 @@ public class ModelRender {
                 Material material = pModel.getMaterial(face.materialID);
 
                 setupMaterial(pGl, material);
+
+                return true;
             }
         }
+       return false;
 
     }
 
