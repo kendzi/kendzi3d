@@ -11,12 +11,35 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementParserUtil
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 
 public class Parser {
 
 
+    public static RoofTypeAliasEnum parseRoofShape(String pName) {
+
+        if (pName == null) {
+            return null;
+        }
+
+        String name = pName.trim().toLowerCase();
+        name = name.replaceAll("-", " ");
+        name = name.replaceAll("_", " ");
+
+
+        for (RoofTypeAliasEnum type : RoofTypeAliasEnum.values()) {
+            if (type.getKey().equals(name)) {
+                return type;
+            }
+        }
+        return null;
+
+    }
 
     public static RoofType parseRoofType(String pKey) {
+        // FIXME it should return roof shape enum not roof builder class!
+
         if (pKey == null) {
             return null;
         }
@@ -29,27 +52,12 @@ public class Parser {
     }
 
     public static List<List<DormerType>> parseMultipleDormers(String pKey) {
-//        if (pKey == null) {
-//            return null;
-//        }
-//        for (RoofType rt : DormerRoofBuilder.roofTypes) {
-//            if (pKey.startsWith(rt.getPrefixKey())) {
-//                return rt;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    private static List<char[]> getRoofExtensions(String pKey, String prefixKey, Integer prefixParameter) {
 
         List<List<DormerType>> ret = new ArrayList<List<DormerType>>();
 
         if (pKey == null) {
             return ret;
         }
-
-
-//        List<char[]> ret = new ArrayList<char[]>();
 
         String[] split = pKey.split("\\.");
 
@@ -160,6 +168,19 @@ public class Parser {
         // TODO Auto-generated method stub
         return null;
 
+    }
+
+    public static BuildingRoofOrientation parseOrientation(Map<String, String> pKeys) {
+        try {
+            String key = pKeys.get("building:roof:orientation");
+            if (key == null) {
+                return null;
+            }
+            return BuildingRoofOrientation.valueOf(key);
+        } catch (java.lang.IllegalArgumentException e) {
+            //
+        }
+        return null;
     }
 
 

@@ -1,6 +1,17 @@
 
 [current]
-- tree models for type: unknown|broad_leaved|conifer
+- water fix
+- roof type 2.2 fix
+- support for tag building:color
+- support for tag roof:color
+- support for alias in tag building:roof:shape 
+- support for alias in tag roof:shape
+
+- support for height, min_height in [m], [ft], [feet]
+- support for tag est_height (i don't like it)
+- support for tag building:roof:orientation=along|across
+- support for tag direction on buildings
+- tree models for type: unknown|broad_leafed|conifer
 
 [2011-11-19]
 - support for dormer type B

@@ -23,7 +23,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpac
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
@@ -38,21 +39,32 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData) {
+            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofTextureData pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
 
+        Point2d[] rectangleContur = null;
 
-        /**/
-        List<Point2d> graham = Graham.grahamScan(pPolygon);
-        Point2d[] rectangleContur = RectangleUtil.findRectangleContur(graham);
+        if (pRoof.getDirection() == null) {
+            /**/
 
-        rectangleContur = findStartPoint(pStartPoint, rectangleContur);
+            List<Point2d> graham = Graham.grahamScan(pPolygon);
 
-        /**/
+            rectangleContur = RectangleUtil.findRectangleContur(graham);
+            rectangleContur = findStartPoint(pStartPoint, rectangleContur);
 
-        if (pRoof.getDirection() != null) {
+            if (pRoof.getOrientation() == null) {
+                //
+            } else {
+                // TODO
+                rectangleContur = findOrientation(pRoof.getOrientation(), rectangleContur);
+
+            }
+
+            /**/
+
+        } else {
             rectangleContur = calcRectangle(pPolygon, pRoof.getDirection());
         }
 
@@ -110,6 +122,8 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
         return buildRectangleRoof;
 
     }
+
+
 
 
 
@@ -197,10 +211,9 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
      * @param sizeB2
      * @param sizeA
      * @param prefixParameter
-     * @param heights
-     * @param sizesB
+     * @param pMeasurements
      * @param pRoofTextureData
-     * @return
+     * @return build roof
      */
     public abstract RoofTypeOutput buildRectangleRoof(List<Point2d> border, Point2d[] rectangleContur, double scaleA, double scaleB,
             double sizeA, double sizeB2, Integer prefixParameter, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
@@ -216,12 +229,50 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
             }
         }
 
+        return swapRectangle(pRectangleContur, minI);
+    }
+
+
+
+
+
+    /**
+     * @param pRectangleContur
+     * @param pSwap
+     * @return
+     */
+    public Point2d[] swapRectangle(Point2d[] pRectangleContur, int pSwap) {
         Point2d[] ret = new Point2d[4];
         for (int i = 0; i < 4; i++) {
-            ret[i] = pRectangleContur[(i + minI) % 4];
+            ret[i] = pRectangleContur[(i + pSwap) % 4];
         }
         return ret;
     }
+
+
+    private Point2d[] findOrientation(BuildingRoofOrientation orientation, Point2d[] pRectangleContur) {
+        if (orientation == null) {
+            return pRectangleContur;
+        }
+
+        Point2d p1 = pRectangleContur[0];
+        Point2d p2 = pRectangleContur[1];
+        Point2d p3 = pRectangleContur[2];
+
+        boolean along = p1.distanceSquared(p2) > p2.distanceSquared(p3);
+
+        if (BuildingRoofOrientation.along.equals(orientation)) {
+            if (!along) {
+                return swapRectangle(pRectangleContur, 1);
+            }
+        } else if (BuildingRoofOrientation.across.equals(orientation)) {
+            if (along) {
+                return swapRectangle(pRectangleContur, 1);
+            }
+        }
+        return pRectangleContur;
+    }
+
 
     /**
      * @param pRectangleContur rectangle

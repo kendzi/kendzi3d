@@ -21,7 +21,7 @@ public class RoofTypeGabled extends RoofType2_0 {
 
     @Override
     public String getPrefixKey() {
-        return "gabled";
+        return RoofTypeAliasEnum.GABLED.getKey();
     }
 
 }

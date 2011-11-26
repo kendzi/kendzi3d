@@ -31,7 +31,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpac
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.math.geometry.Algebra;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LineSegment2d;
@@ -68,7 +68,7 @@ public class RoofType9_0 extends AbstractRoofType {
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData) {
+            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofTextureData pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {

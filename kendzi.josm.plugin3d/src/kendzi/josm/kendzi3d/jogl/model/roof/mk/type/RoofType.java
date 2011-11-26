@@ -15,7 +15,7 @@ import javax.vecmath.Point2d;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
 public interface RoofType {
 
@@ -23,5 +23,5 @@ public interface RoofType {
 
     public boolean isPrefixParameter();
 
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> pPolygon, DormerRoof pRoof, double height, RoofTextureData pRoofTextureData);
+    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofTextureData pRoofTextureData);
 }

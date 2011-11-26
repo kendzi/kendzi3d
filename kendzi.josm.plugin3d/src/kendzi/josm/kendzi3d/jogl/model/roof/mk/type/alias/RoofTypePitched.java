@@ -21,7 +21,7 @@ public class RoofTypePitched extends RoofType1_0 {
 
     @Override
     public String getPrefixKey() {
-        return "pitched";
+        return RoofTypeAliasEnum.PITCHED.getKey();
     }
 
 }

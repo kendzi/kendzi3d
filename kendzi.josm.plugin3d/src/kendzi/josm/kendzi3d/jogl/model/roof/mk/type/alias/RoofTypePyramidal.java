@@ -21,7 +21,7 @@ public class RoofTypePyramidal extends RoofType2_5 {
 
     @Override
     public String getPrefixKey() {
-        return "pyramidal";
+        return RoofTypeAliasEnum.PYRAMIDAL.getKey();
     }
 
 }

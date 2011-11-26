@@ -46,6 +46,8 @@ public class RoofType2_3 extends RectangleRoofType{
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofType2_3.class);
 
+    private static final double EPSILON = 0.001;
+
     @Override
     public String getPrefixKey() {
         return "2.3";
@@ -75,9 +77,9 @@ public class RoofType2_3 extends RectangleRoofType{
 
 //        Double h2 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_2, 1.5d);
 
-        Double b1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pSizeA, pSizeA /2d);
-        Double b2 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_2, pSizeB, pSizeB /4d);
-        Double b3 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_3, pSizeA, pSizeA /2d);
+        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pSizeA, pSizeA /2d);
+        Double l2 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_2, pSizeB, pSizeB /4d);
+        Double l3 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_3, pSizeA, pSizeA /2d);
 
         if (h2 > h1) {
             throw new RuntimeException("bad parameters: h1 is biger then h2");
@@ -86,7 +88,7 @@ public class RoofType2_3 extends RectangleRoofType{
         boolean skipLeft = getSkipLeft();
 
         return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur,
-                h1, h2, b1, b2, b3, skipLeft, pRoofTextureData);
+                h1, h2, l1, l2, l3, skipLeft, pRoofTextureData);
 
     }
 
@@ -117,6 +119,10 @@ public class RoofType2_3 extends RectangleRoofType{
      * @param pRectangleContur
      * @param h1
      * @param h2
+     * @param l1
+     * @param l2
+     * @param b3
+     * @param skipLeft
      * @param h3
      * @param pRoofTextureData
      * @return
@@ -130,8 +136,8 @@ public class RoofType2_3 extends RectangleRoofType{
             Point2d[] pRectangleContur,
             double h1,
             double h2,
-            double b1,
-            double b2,
+            double l1,
+            double l2,
             double b3,
             boolean skipLeft,
             RoofTextureData pRoofTextureData) {
@@ -156,21 +162,33 @@ public class RoofType2_3 extends RectangleRoofType{
         meshRoof.materialID = roofMaterialIndex;
         meshRoof.hasTexture = true;
 
-        double sizeB1 = b1;
-        double sizeB2 = b2;
-        double sizeB3 = b3;
+//        double l1 = l1;
+//        double l2 = l2;
+//        double sizeB3 = b3;
 
-        double sizeB1Oposit = pRecHeight - sizeB1;
+        // for numerical errors
+        if (l1 < EPSILON) {
+            l1 -= 1;
+        }
+
+        if (pRecHeight - l1 < EPSILON) {
+            l1 += 1;
+        }
+
+
+
+
+        double sizeB1Oposit = pRecHeight - l1;
 
         LinePoints2d middleLine = new LinePoints2d(
-                new Point2d(0, sizeB1), new Point2d(pRecWidth, sizeB1));
+                new Point2d(0, l1), new Point2d(pRecWidth, l1));
 
 
 
         Vector3d normalTop = new Vector3d(0, sizeB1Oposit,  -h1);
         normalTop.normalize();
 
-        Vector3d normalBottom = new Vector3d(0, sizeB1, h1);
+        Vector3d normalBottom = new Vector3d(0, l1, h1);
         normalBottom.normalize();
 
         Point3d planePoint =  new Point3d(
@@ -186,19 +204,19 @@ public class RoofType2_3 extends RectangleRoofType{
         double leftBottomY = -planeBottom.calcZOfPlane(0, h2);
 
         Point2d leftTop = new Point2d(0, leftTopY);
-        Point2d leftCenter = new Point2d(sizeB2, sizeB1);
+        Point2d leftCenter = new Point2d(l2, l1);
         Point2d leftBottom = new Point2d(0, leftBottomY);
 
         if (skipLeft) {
             // draw only on right site
 
             leftTop = new Point2d(-0.01, pRecHeight);
-            leftCenter = new Point2d(-0.01, sizeB1);
+            leftCenter = new Point2d(-0.01, l1);
             leftBottom = new Point2d(-0.01, 0);
         }
 
         Point2d rightTop = new Point2d(pRecWidth, leftTopY);
-        Point2d rightCenter = new Point2d(pRecWidth - sizeB2, sizeB1);
+        Point2d rightCenter = new Point2d(pRecWidth - l2, l1);
         Point2d rightBottom = new Point2d(pRecWidth, leftBottomY);
 
 
@@ -215,15 +233,23 @@ public class RoofType2_3 extends RectangleRoofType{
 
 
         double leftHeight = planeBottom.calcYOfPlane(leftBottom.x, -leftBottom.y);
+        if (l1 < 0.5 * pRecHeight) {
+            leftHeight = planeTop.calcYOfPlane(leftTop.x, -leftTop.y);
+            // only for numerical errors for lenght1 == 0 or == pRecHeight
+        }
         double rightHeight = planeBottom.calcYOfPlane(rightBottom.x, -rightBottom.y);
+        if (l1 < 0.5 * pRecHeight) {
+            // only for numerical errors for lenght1 == 0 or == pRecHeight
+            rightHeight = planeTop.calcYOfPlane(rightTop.x, -rightTop.y);
+        }
 
         Plane3d planeLeft = new Plane3d(
                 new Point3d(leftCenter.x, h1, -leftCenter.y),
-                new Vector3d(-(h1 - leftHeight),  sizeB2, 0));
+                new Vector3d(-(h1 - leftHeight),  l2, 0));
 
         Plane3d planeRight = new Plane3d(
                 new Point3d(rightCenter.x, h1, -rightCenter.y),
-                new Vector3d(-(rightHeight - h1), sizeB2, 0));
+                new Vector3d(-(rightHeight - h1), l2, 0));
 
         ////******************
         List<Point2d> border = new ArrayList<Point2d>();

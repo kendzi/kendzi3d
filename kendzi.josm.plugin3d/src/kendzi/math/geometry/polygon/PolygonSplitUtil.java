@@ -234,6 +234,10 @@ public class PolygonSplitUtil {
 
         }
 
+        if (polygon == null) {
+            return;
+        }
+
         Point2d firsPoint = pBorderExtanded.get((pFirstChange) % eSize);
         double detFirsPoint = matrix_det(pRoofLine.getP1(), pRoofLine.getP2(), firsPoint);
         if (equalZero(detFirsPoint)) {

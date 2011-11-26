@@ -23,7 +23,7 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.validation.ValidationUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_1;
@@ -57,6 +57,12 @@ import kendzi.math.geometry.point.TransformationMatrix3d;
 import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
 
+
+/**
+ * Dormer roof builder.
+ *
+ * @author Tomasz Kędziora (kendzi)
+ */
 public class DormerRoofBuilder {
     /** Log. */
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
@@ -109,7 +115,7 @@ public class DormerRoofBuilder {
      * @return roof model
      */
     public static RoofOutput build(
-            DormerRoof roof,
+            DormerRoofModel roof,
 
             double height,
 
@@ -124,11 +130,6 @@ public class DormerRoofBuilder {
         RoofType roofType = roof.getRoofType();
 
         RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, pRoofTextureData);
-
-
-//        List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
-
-//        getPrepareDormers(roof);
 
         List<RoofDormerTypeOutput> roofExtensionsList =
                 DormerTypeBuilder.build(
@@ -153,59 +154,6 @@ public class DormerRoofBuilder {
 
         return out;
     }
-
-//    /**
-//     * Dormer roof builder.
-//     *
-//     * @param pStartPoint starting point of roof polygon
-//     * @param pRoofPolygon roof polygon
-//     * @param pType roof type
-//     * @param pDormer dormer type
-//     * @param height roof maximal height. Taken from building
-//     * @param pMeasurements measurements
-//     * @param pRoofTextureData texture data
-//     * @return roof model
-//     */
-//    @Deprecated
-//    public static RoofOutput build(
-//            Point2d pStartPoint,
-//            List<Point2d> pRoofPolygon,
-//            String pType,
-//            String pDormer, double height,
-//            Map<MeasurementKey, Measurement> pMeasurements,
-//            RoofTextureData pRoofTextureData
-//            ) {
-//
-//        List<Point2d> polygon = cleanPolygon(pRoofPolygon);
-//
-//        RoofType roofType = getRoofType(pType);
-//
-//        Integer prefixParameter = null;
-//
-//        if (roofType.isPrefixParameter()) {
-//            prefixParameter = getPrefixParameter(pType);
-//        }
-//
-//        List<char []> roofExtensions = getRoofExtensions(pType, roofType.getPrefixKey(), prefixParameter);
-//
-//        RoofTypeOutput rto = roofType.buildRoof(pStartPoint, polygon, prefixParameter, height, pMeasurements, pRoofTextureData);
-//
-//        List<RoofDormerTypeOutput> roofExtensionsList = DormerTypeBuilder.build(rto.getRoofHooksSpaces(), roofExtensions, pMeasurements, pRoofTextureData);
-//
-//
-//
-//        Model model = buildModel(rto, roofExtensionsList);
-//
-//        RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList);
-//
-//
-//        RoofOutput out = new RoofOutput();
-//        out.setModel(model);
-//        out.setHeight(rto.getHeight());
-//        out.setDebug(debug);
-//
-//        return out;
-//    }
 
     /**
      * Remove last point if it is the same as first.
@@ -355,56 +303,4 @@ public class DormerRoofBuilder {
 
         return model;
     }
-
-    private static List<char[]> getRoofExtensions(String pKey, String prefixKey, Integer prefixParameter) {
-
-        if (pKey == null) {
-            return null;
-        }
-
-        int start = prefixKey == null ? 0 : prefixKey.length() + 1;
-
-        if (prefixParameter != null) {
-            if (prefixParameter < 10) {
-                start = start + 2;
-            } else {
-                start = start + 3;
-            }
-        }
-
-        if (pKey.length() < start) {
-            return null;
-        }
-
-        String ext = pKey.substring(start);
-        List<char[]> ret = new ArrayList<char[]>();
-
-        String[] split = ext.split("\\.");
-        for (String border : split) {
-            char[] c = border.toCharArray();
-            ret.add(c);
-        }
-        return ret;
-
-    }
-
-    private static Integer getPrefixParameter(String pKey) {
-        // TODO Auto-generated method stub
-        return null;
-
-    }
-
-    @Deprecated
-    private static RoofType getRoofType(String pKey) {
-        if (pKey == null) {
-            return null;
-        }
-        for (RoofType rt : roofTypes) {
-            if (pKey.startsWith(rt.getPrefixKey())) {
-                return rt;
-            }
-        }
-        return null;
-    }
-
 }

@@ -29,10 +29,8 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
-import kendzi.josm.kendzi3d.jogl.model.roof.FlatRoof;
-import kendzi.josm.kendzi3d.jogl.model.roof.GableRoof;
-import kendzi.josm.kendzi3d.jogl.model.roof.HipRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
+import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.math.geometry.Triangulate;
 
@@ -177,20 +175,27 @@ public class Building extends AbstractModel {
         this.minHeight = minHeightAttr;
         this.levels = levelsAttr;
         this.minLevels = minlevelsAttr;
+//
+//        String shape = pWay.get("building:roof:shape");
+//        if ("flat".equals(shape)) {
+//            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
+//        } else if ("pitched".equals(shape)) {
+//            this.roof = new GableRoof(this, this.list, pWay, pPerspective, true);
+//        } else if ("gable".equals(shape)) {
+//            this.roof = new GableRoof(this, this.list, pWay, pPerspective, false);
+//        } else if ("hip".equals(shape)) {
+//            this.roof = new HipRoof(this, this.list, pWay, pPerspective);
+//        } else if ("3dr".equals(shape)) {
+//            this.roof = new DormerRoof(this, this.list, pWay, pPerspective);
+//        } else {
+//            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
+//        }
 
-        String shape = pWay.get("building:roof:shape");
-        if ("flat".equals(shape)) {
-            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
-        } else if ("pitched".equals(shape)) {
-            this.roof = new GableRoof(this, this.list, pWay, pPerspective, true);
-        } else if ("gable".equals(shape)) {
-            this.roof = new GableRoof(this, this.list, pWay, pPerspective, false);
-        } else if ("hip".equals(shape)) {
-            this.roof = new HipRoof(this, this.list, pWay, pPerspective);
-        } else if ("3dr".equals(shape)) {
+        String tag3dr = pWay.get("3dr:type");
+        if (!isBlankOrNull(tag3dr)) {
             this.roof = new DormerRoof(this, this.list, pWay, pPerspective);
         } else {
-            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
+            this.roof = new ShapeRoof(this, this.list, pWay, pPerspective);
         }
 
         this.modelRender = ModelRender.getInstance();
@@ -200,6 +205,9 @@ public class Building extends AbstractModel {
 
         String facadeMaterial = this.way.get("building:facade:material");
         String facadeColor = this.way.get("building:facade:color");
+        if (isBlankOrNull(facadeColor)) {
+            facadeColor = this.way.get("building:color");
+        }
 
         if (!isBlankOrNull(facadeMaterial) || isBlankOrNull(facadeColor)) {
 

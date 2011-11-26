@@ -21,7 +21,7 @@ public class RoofTypeFlat extends RoofType0_0 {
 
     @Override
     public String getPrefixKey() {
-        return "flat";
+        return RoofTypeAliasEnum.FLAT.getKey();
     }
 
 }

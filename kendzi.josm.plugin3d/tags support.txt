@@ -13,7 +13,7 @@
 		tree
 		
 	type
-		broad_leaved
+		broad_leafed
 		conifer
 		* (unknown)
 	

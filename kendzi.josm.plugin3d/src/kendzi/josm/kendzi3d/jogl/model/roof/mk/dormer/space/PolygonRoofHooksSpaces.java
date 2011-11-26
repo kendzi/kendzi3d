@@ -13,7 +13,7 @@ import java.util.List;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
 
 public class PolygonRoofHooksSpaces implements RoofHooksSpaces {
@@ -25,7 +25,7 @@ public class PolygonRoofHooksSpaces implements RoofHooksSpaces {
     }
 
     @Override
-    public List<RoofDormerTypeOutput> buildDormers(DormerRoof pRoof, RoofTextureData pRoofTextureData) {
+    public List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofTextureData pRoofTextureData) {
         // TODO Auto-generated method stub
         return null;
     }

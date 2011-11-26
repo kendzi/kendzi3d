@@ -21,7 +21,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
 public class DormerTypeBuilder {
 
@@ -33,7 +33,7 @@ public class DormerTypeBuilder {
 
     public static List<RoofDormerTypeOutput> build(
             RoofHooksSpaces pRoofHooksSpaces,
-            DormerRoof roof,
+            DormerRoofModel roof,
             Map<MeasurementKey, Measurement> pMeasurements,
             RoofTextureData pRoofTextureData) {
 

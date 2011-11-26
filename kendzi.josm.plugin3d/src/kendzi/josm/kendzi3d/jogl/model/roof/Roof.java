@@ -113,6 +113,12 @@ public abstract class Roof extends AbstractModel {
         String roofMaterial = this.way.get("building:roof:material");
 
         String roofColor = this.way.get("building:roof:color");
+        if (Building.isBlankOrNull(roofColor)) {
+            roofColor = this.way.get("roof:color");
+        }
+        if (Building.isBlankOrNull(roofColor)) {
+            roofColor = this.way.get("roof:colour");
+        }
 
         if (!Building.isBlankOrNull(roofMaterial) || Building.isBlankOrNull(roofColor)) {
 

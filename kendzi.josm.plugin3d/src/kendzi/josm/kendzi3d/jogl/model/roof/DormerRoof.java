@@ -32,6 +32,9 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.util.Direction;
+import kendzi.josm.kendzi3d.util.DirectionParserUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
@@ -73,7 +76,7 @@ public class DormerRoof extends Roof {
 
 
 
-    private RoofDebugOut debug;
+    protected RoofDebugOut debug;
 
 
     private List<Point3d> biggerRec;
@@ -115,46 +118,15 @@ public class DormerRoof extends Roof {
 
         Map<String, String> keys = this.way.getKeys();
 
-        String type = keys.get("3dr:type");
-        String dormer = keys.get("3dr:dormers");
+        DormerRoofModel roof = parseDormerRoof(keys);
 
-//        String dormerWidth = this.way.get("3dr:dormer:width");
-//        String dormerHeight = this.way.get("3dr:dormer:heightX");
-//        String dormerLenght = this.way.get("3dr:dormer:lenghtX");
-
-        kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof roof
-        = new  kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoof();
-
-        roof.setBuilding(new PolygonList2d(this.list));
-        roof.setRoofType(Parser.parseRoofType(type));
-        roof.setDormers(Parser.parseMultipleDormers(dormer));
-
-        roof.setDormersFront(Parser.parseSiteDormers("front",keys));
-        roof.setDormersLeft(Parser.parseSiteDormers("left",keys));
-        roof.setDormersBack(Parser.parseSiteDormers("back",keys));
-        roof.setDormersRight(Parser.parseSiteDormers("right",keys));
-
-        roof.setMeasurements(Parser.parseMeasurements(keys));
-
-        roof.setDirection(findDirection(this.way));
-
-
-//        List<Double> heights = toDouble(getList(this.way, "3dr:height"));
-//
-//        List<Double> sizeB = toDouble(getList(this.way, "3dr:lenght"));
 
         RoofTextureData rtd = new RoofTextureData();
         rtd.setFacadeTextrure(getFasadeTexture());
         rtd.setRoofTexture(getRoofTexture());
 
 
-
-
-
         RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
-
-//        RoofOutput roofOutput = DormerRoofBuilder.build(this.list.get(0), this.list, type, dormer, this.height,
-//                measurements, rtd);
 
         this.debug = roofOutput.getDebug();
 
@@ -166,21 +138,70 @@ public class DormerRoof extends Roof {
 
 
 
+    /**
+     * @param keys
+     * @return
+     */
+    public DormerRoofModel parseDormerRoof(Map<String, String> keys) {
+        String type = keys.get("3dr:type");
+        String dormer = keys.get("3dr:dormers");
 
+        DormerRoofModel roof
+        = new  DormerRoofModel();
 
+        roof.setBuilding(new PolygonList2d(this.list));
+        roof.setRoofType(Parser.parseRoofType(type));
 
+        roof.setDormers(Parser.parseMultipleDormers(dormer));
+        roof.setDormersFront(Parser.parseSiteDormers("front",keys));
+        roof.setDormersLeft(Parser.parseSiteDormers("left",keys));
+        roof.setDormersBack(Parser.parseSiteDormers("back",keys));
+        roof.setDormersRight(Parser.parseSiteDormers("right",keys));
 
-    private Vector2d findDirection(Way pWay) {
+        roof.setMeasurements(Parser.parseMeasurements(keys));
 
-        Point2d directionBegin = findPoint("3dr:direction", "begin", pWay);
-        if (directionBegin == null) {
-            directionBegin = this.perspective.calcPoint(pWay.getNode(0));
+        roof.setDirection(findDirection(this.way, this.perspective));
+        roof.setOrientation(Parser.parseOrientation(keys));
+        return roof;
+    }
+
+    private static Vector2d findDirection(Way pWay, Perspective3D pPerspective) {
+        Vector2d ret = null;
+
+        ret = findDirectionByRelation(pWay);
+        if (ret != null) {
+            return ret;
         }
 
-        Point2d directionEnd = findPoint("3dr:direction", "end", pWay);
+        ret = findDirectionByPoints(pWay, pPerspective);
+        if (ret != null) {
+            return ret;
+        }
 
+        ret = findDirectionByDirectionTag(pWay);
+        if (ret != null) {
+            return ret;
+        }
+
+        return null;
+    }
+
+
+    private static Vector2d findDirectionByRelation(Way pWay) {
+        // TODO
         // XXX add support for relations
+        return null;
+    }
 
+    private static Vector2d findDirectionByPoints(Way pWay, Perspective3D pPerspective) {
+        Point2d directionBegin = findPoint("3dr:direction", "begin", pWay, pPerspective);
+        if (directionBegin == null) {
+            directionBegin = pPerspective.calcPoint(pWay.getNode(0));
+        }
+
+
+
+        Point2d directionEnd = findPoint("3dr:direction", "end", pWay, pPerspective);
         if (directionBegin != null && directionEnd != null) {
             Vector2d direction = new Vector2d(directionEnd);
             direction.sub(directionBegin);
@@ -190,53 +211,27 @@ public class DormerRoof extends Roof {
         return null;
     }
 
-
-
-
-    private Point2d findPoint(String pKey, String pValue, Way pWay) {
-
-        for (int i = 0; i < pWay.getNodesCount(); i++) {
-
-            Node node = pWay.getNode(i);
-            if (pValue.equals(node.get(pKey))) {
-                return this.perspective.calcPoint(node);
-            }
-
-//          double dx = this.x - this.perspective.calcX(node.getEastNorth().getX());
-//          double dy = this.y - this.perspective.calcY(node.getEastNorth().getY());
-
+    static private Vector2d findDirectionByDirectionTag(Way pWay) {
+        String directionValue = pWay.get("direction");
+        Direction direction = DirectionParserUtil.parse(directionValue);
+        if (direction != null) {
+            return direction.getVector();
         }
         return null;
     }
 
 
 
+    private static Point2d findPoint(String pKey, String pValue, Way pWay, Perspective3D pPerspective) {
 
-    private List<Double> toDouble(List<String> strList) {
-        List<Double> ret = new ArrayList<Double>();
-        for (String string : strList) {
-            Double number = null;
-            try {
-                // FIXME !!!!!!!!!!
-                number = Double.parseDouble(string);
-            } catch (Exception e) {
-                log.error("error parsing double: " + string, e);
+        for (int i = 0; i < pWay.getNodesCount(); i++) {
+
+            Node node = pWay.getNode(i);
+            if (pValue.equals(node.get(pKey))) {
+                return pPerspective.calcPoint(node);
             }
-            ret.add(number);
         }
-        return ret;
-    }
-
-
-
-
-    private List<String> getList(Way way, String string) {
-        List<String> ret = new ArrayList<String>();
-
-        for (int i = 1; i < 10; i++) {
-            ret.add(way.get(string + i));
-        }
-        return ret;
+        return null;
     }
 
 

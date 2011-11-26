@@ -21,7 +21,7 @@ public class RoofTypeSkillion extends RoofType1_0 {
 
     @Override
     public String getPrefixKey() {
-        return "skillion";
+        return RoofTypeAliasEnum.SKILLION.getKey();
     }
 
 }

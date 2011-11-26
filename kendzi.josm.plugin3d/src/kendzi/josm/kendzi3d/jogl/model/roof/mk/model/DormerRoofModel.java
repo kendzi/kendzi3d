@@ -8,13 +8,15 @@ import javax.vecmath.Vector2d;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
+import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
-public class DormerRoof {
+public class DormerRoofModel {
 
     PolygonList2d building;
 
     // Roof Type
+    // FIXME it should contain roof shape enum not roof builder class!
     RoofType roofType;
 
     Integer roofTypeParameter;
@@ -23,6 +25,13 @@ public class DormerRoof {
 
     // direction
     Vector2d direction;
+
+    /**
+     * Only for simple buildings.
+     * Should not be used!
+     */
+    BuildingRoofOrientation orientation;
+
 //    Point2d directionBegin;
 //
 //    Point2d directionEnd;
@@ -30,11 +39,9 @@ public class DormerRoof {
     // dormers
     //- as relations?
 
-    // XXX enum
     //- as string
     List<List<DormerType>> dormers;
 
-    // XXX enum
     //- as rectangle
     Map<DormerRow,List<DormerType>> dormersFront;
     Map<DormerRow,List<DormerType>> dormersRight;
@@ -145,7 +152,7 @@ public class DormerRoof {
      * @return the dormers
      */
     public List<List<DormerType>> getDormers() {
-        return dormers;
+        return this.dormers;
     }
 
 
@@ -161,7 +168,7 @@ public class DormerRoof {
      * @return the dormersFront
      */
     public Map<DormerRow, List<DormerType>> getDormersFront() {
-        return dormersFront;
+        return this.dormersFront;
     }
 
 
@@ -177,7 +184,7 @@ public class DormerRoof {
      * @return the dormersRight
      */
     public Map<DormerRow, List<DormerType>> getDormersRight() {
-        return dormersRight;
+        return this.dormersRight;
     }
 
 
@@ -193,7 +200,7 @@ public class DormerRoof {
      * @return the dormersBack
      */
     public Map<DormerRow, List<DormerType>> getDormersBack() {
-        return dormersBack;
+        return this.dormersBack;
     }
 
 
@@ -209,7 +216,7 @@ public class DormerRoof {
      * @return the dormersLeft
      */
     public Map<DormerRow, List<DormerType>> getDormersLeft() {
-        return dormersLeft;
+        return this.dormersLeft;
     }
 
 
@@ -218,6 +225,22 @@ public class DormerRoof {
      */
     public void setDormersLeft(Map<DormerRow, List<DormerType>> dormersLeft) {
         this.dormersLeft = dormersLeft;
+    }
+
+
+    /**
+     * @return the orientation
+     */
+    public BuildingRoofOrientation getOrientation() {
+        return this.orientation;
+    }
+
+
+    /**
+     * @param orientation the orientation to set
+     */
+    public void setOrientation(BuildingRoofOrientation orientation) {
+        this.orientation = orientation;
     }
 
 

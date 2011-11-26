@@ -21,7 +21,7 @@ public class RoofTypeGambrel extends RoofType4_0 {
 
     @Override
     public String getPrefixKey() {
-        return "gambrel";
+        return RoofTypeAliasEnum.GAMBREL.getKey();
     }
 
 }
