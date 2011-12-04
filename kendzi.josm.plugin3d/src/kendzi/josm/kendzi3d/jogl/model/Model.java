@@ -19,6 +19,7 @@ import kendzi.josm.kendzi3d.jogl.Camera;
  */
 public interface Model {
 
+
     /** test if model is in camera visible range.
      * @param pCamraX camera x coordinate
      * @param pCamraY camera y coordinate

@@ -31,7 +31,9 @@ import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
 import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
+import kendzi.josm.kendzi3d.jogl.model.tmp.RelationHeightClone;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.Triangulate;
 
 import org.apache.log4j.Logger;
@@ -114,6 +116,11 @@ public class Building extends AbstractModel {
      * Way.
      */
     private Way way;
+
+    /**
+     * Height cloner.
+     */
+    private List<RelationHeightClone> heightClone;
 
     /** Constructor for building.
      * @param pWay way describing building
@@ -244,15 +251,7 @@ public class Building extends AbstractModel {
     }
 
     public static boolean isBlankOrNull(String pString) {
-        if (pString == null) {
-            return true;
-        }
-
-        if (!"".equals(pString.trim())) {
-            return false;
-        }
-
-        return true;
+        return StringUtil.isBlankOrNull(pString);
     }
 
 
@@ -374,6 +373,8 @@ public class Building extends AbstractModel {
         this.model.setUseTexture(true);
 
         this.buildModel = true;
+
+        this.heightClone = RelationHeightClone.buildHeightClone(this.way);
     }
 
     @Override
@@ -384,6 +385,22 @@ public class Building extends AbstractModel {
         this.modelRender.render(pGl, this.model);
 
         this.roof.draw(pGl, pCamera);
+
+
+        for (RelationHeightClone cloner : this.heightClone) {
+            for (Double height : cloner) {
+
+                pGl.glPushMatrix();
+                pGl.glTranslated(0, height, 0);
+
+                this.modelRender.render(pGl, this.model);
+
+                this.roof.draw(pGl, pCamera);
+
+                pGl.glPopMatrix();
+
+            }
+        }
     }
 
 

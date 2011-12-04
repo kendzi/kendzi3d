@@ -27,6 +27,7 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import net.java.joglutils.model.ModelLoadException;
 
@@ -35,13 +36,12 @@ import org.openstreetmap.josm.data.osm.Node;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
-public class Tree extends AbstractModel implements DLODSuport {
+public class Tree extends AbstractPointModel implements DLODSuport {
 
 
     private Texture treeText;
     float[] verts;
 
-    Node node;
     private Model model;
     private ModelRender modelRenderer;
     private double modelScaleHeight;
@@ -53,10 +53,10 @@ public class Tree extends AbstractModel implements DLODSuport {
     private boolean isFlat;
     Vector3d scale;
 
-    public Tree(Node node, Perspective3D pers) {
-        super(node, pers);
+    public Tree(Node node, Perspective3D pPerspective3D) {
+        super(node, pPerspective3D);
 
-        this.node = node;
+
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
@@ -455,7 +455,7 @@ public class Tree extends AbstractModel implements DLODSuport {
         if (model2 != null) {
 
             gl.glPushMatrix();
-            gl.glTranslated(this.x, 0, -this.y);
+            gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
 
             gl.glEnable(GL2.GL_NORMALIZE);
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
@@ -487,29 +487,6 @@ public class Tree extends AbstractModel implements DLODSuport {
     @Override
     public void draw(GL2 gl, Camera camera) {
         draw(gl, camera, LOD.LOD1);
-
-        if (true) {
-            return;
-        }
-
-        // Render the model
-
-        gl.glPushMatrix();
-        gl.glTranslated(this.x, 0, -this.y);
-
-        gl.glPushMatrix();
-        gl.glScaled(this.modelScaleWidht, this.modelScaleHeight, this.modelScaleWidht);
-        this.modelRenderer.render(gl, this.model);
-        gl.glPopMatrix();
-
-
-
-        gl.glRotatef(-1 * ((float) Math.toDegrees(-camera.getAngle().y) + 90.0f), 0, 1, 0);
-        // rotate in the opposite direction to the camera
-
-        drawFlatTree(gl, this.verts, this.treeText);
-        gl.glPopMatrix();
-
     }
 
     /*

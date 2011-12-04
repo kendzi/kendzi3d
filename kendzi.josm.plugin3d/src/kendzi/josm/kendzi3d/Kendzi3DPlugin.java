@@ -526,7 +526,7 @@ public class Kendzi3DPlugin extends Plugin {
 
                     Kendzi3DPlugin.this.ogl.getCanvasListener().getRenderJosm().processDatasetEvent(null);
 
-                    Kendzi3DPlugin.this.ogl.getCanvasListener().setCamPos(0, 0);
+                   // Kendzi3DPlugin.this.ogl.getCanvasListener().setCamPos(0, 0);
                 }
             }
 

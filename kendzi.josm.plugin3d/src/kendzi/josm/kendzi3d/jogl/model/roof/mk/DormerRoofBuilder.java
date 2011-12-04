@@ -70,13 +70,13 @@ public class DormerRoofBuilder {
     static RoofType [] roofTypes = {
         // word alias for types
         new RoofTypeFlat(),
+        new RoofTypePitched(),
+        new RoofTypeSkillion(),
         new RoofTypeGabled(),
         new RoofTypeGambrel(),
         new RoofTypeHalfHipped(),
         new RoofTypeHipped(),
-        new RoofTypePitched(),
         new RoofTypePyramidal(),
-        new RoofTypeSkillion(),
 
         // normal types
         new RoofType0_0(),

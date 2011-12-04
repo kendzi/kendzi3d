@@ -1,0 +1,343 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
+
+package kendzi.josm.kendzi3d.jogl.model;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.media.opengl.GL2;
+import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
+import kendzi.jogl.model.factory.FaceFactory;
+import kendzi.jogl.model.factory.FaceFactory.FaceType;
+import kendzi.jogl.model.factory.MaterialFactory;
+import kendzi.jogl.model.factory.MeshFactory;
+import kendzi.jogl.model.factory.ModelFactory;
+import kendzi.jogl.model.geometry.Material;
+import kendzi.jogl.model.geometry.Model;
+import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractRelationModel;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.util.StringUtil;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+
+/**
+ * Fence for shapes defined as relation.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
+public class FenceRelation extends AbstractRelationModel {
+
+    /** Log. */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(FenceRelation.class);
+
+    private static final java.lang.Double FENCE_HEIGHT = 1d;
+
+    /**
+     * Hight.
+     */
+    private double hight;
+
+    /**
+     * Min height.
+     */
+    private double minHeight;
+
+    /**
+     * Model of building.
+     */
+    private Model model;
+
+    /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
+
+    private List<Point2d> points;
+
+    private List<Double> heights;
+
+    private List<Node> nodes;
+
+
+    /**
+     * Fence constructor.
+     *
+     * @param pRelation way
+     * @param pers Perspective
+     */
+    public FenceRelation(Relation pRelation, Perspective3D pers) {
+        super(pRelation, pers);
+
+        List<Double> heights = new ArrayList<Double>();
+        List<Node> nodes = new ArrayList<Node>();
+        for (int i = 0; i < pRelation.getMembersCount(); i++) {
+            RelationMember member = pRelation.getMember(i);
+
+            Node node = member.getNode();
+            String role = member.getRole();
+
+            if (node != null) {
+                nodes.add(node);
+
+                Double parseHeight = ModelUtil.parseHeight(role, 0d);
+                heights.add(parseHeight);
+            }
+        }
+
+        calcModelCenter(nodes);
+
+        List<Point2d> points = new ArrayList<Point2d>();
+        for (Node node : nodes) {
+            Point2d point2d = toModelFrame(node);
+            points.add(point2d);
+        }
+
+        this.nodes = nodes;
+        this.points = points;
+        this.heights = heights;
+        this.modelRender = ModelRender.getInstance();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getOsmPrimitives()
+     */
+    @Override
+    public Set<OsmPrimitive> getOsmPrimitives() {
+
+        HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+
+        set.addAll(this.nodes);
+
+        return set;
+    }
+
+
+    @Override
+    public void buildModel() {
+
+        if (!(this.points.size() > 1)) {
+            return;
+        }
+
+        String fenceType = getFenceType(this.relation);
+
+        double fenceHeight = MetadataCacheService.getPropertitesDouble(
+                "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
+
+        this.hight = ModelUtil.getHeight(this.relation, fenceHeight);
+
+        this.minHeight = ModelUtil.getMinHeight(this.relation, 0d);
+
+
+        ModelFactory modelBuilder = ModelFactory.modelBuilder();
+        MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
+
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation);
+        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+
+        int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
+
+        meshBorder.materialID = facadeMaterialIndex;
+        meshBorder.hasTexture = true;
+
+
+        buildWallModel(this.points, this.heights, this.minHeight, this.hight, 0, meshBorder, facadeTexture);
+
+        this.model = modelBuilder.toModel();
+        this.model.setUseLight(true);
+        this.model.setUseTexture(true);
+
+        this.buildModel = true;
+
+
+    }
+
+    /** Build wall model.
+     *  XXX move to util.
+     * @param pPoints wall points
+     * @param pHeights wall node height
+     * @param pMinHeight wall min height
+     * @param pHeight wall height
+     * @param pWidth wall width
+     * @param pMeshBorder mesh
+     * @param pWallTexture texture
+     */
+    public static void buildWallModel(
+            List<Point2d> pPoints,
+            List<Double> pHeights,
+            double pMinHeight,
+            double pHeight,
+            double pWidth,
+            MeshFactory pMeshBorder, TextureData pWallTexture
+
+        ) {
+        FaceFactory faceRight = pMeshBorder.addFace(FaceType.QUADS);
+        FaceFactory faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+
+        Point2d start = pPoints.get(0);
+        Double startHeight = getHeight(0, pHeights);
+
+        int startMi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pMinHeight, -start.y));
+        int startHi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pHeight, -start.y));
+
+        TextCoord bm = new TextCoord(0, 0);
+        TextCoord bh = new TextCoord(0, 1);
+
+        int bmi = pMeshBorder.addTextCoord(bm);
+        int bhi = pMeshBorder.addTextCoord(bh);
+
+        for (int i = 1; i < pPoints.size(); i++) {
+            Point2d end = pPoints.get(i);
+            Double endHeight = getHeight(i, pHeights);
+
+
+            int endMi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pMinHeight, -end.y));
+            int endHi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pHeight, -end.y));
+
+            Vector3d normal = new Vector3d((end.y - start.y), 0, (end.x - start.x));
+            normal.normalize();
+
+            int n1i = pMeshBorder.addNormal(normal);
+
+            Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
+
+            int n2i = pMeshBorder.addNormal(normal2);
+
+
+
+            double dist = start.distance(end);
+            double uvEnd = (int) (dist / pWallTexture.getLenght());
+
+            TextCoord em = new TextCoord(uvEnd, 0);
+            TextCoord eh = new TextCoord(uvEnd, 1);
+
+            int emi = pMeshBorder.addTextCoord(em);
+            int ehi = pMeshBorder.addTextCoord(eh);
+
+
+            faceRight.addVert(startHi, bhi, n1i);
+            faceRight.addVert(startMi, bmi, n1i);
+            faceRight.addVert(endMi, emi, n1i);
+            faceRight.addVert(endHi, ehi, n1i);
+
+            faceLeft.addVert(startMi, emi, n2i);
+            faceLeft.addVert(startHi, ehi, n2i);
+            faceLeft.addVert(endHi, bhi, n2i);
+            faceLeft.addVert(endMi, bmi, n2i);
+
+            // new start point.
+            start = end;
+
+            startMi = endMi;
+            startHi = endHi;
+        }
+    }
+
+
+    private static Double getHeight(int i, List<Double> heights2) {
+        if (heights2 == null) {
+            return 0d;
+        }
+        return heights2.get(i);
+    }
+
+    /** Gets fence texture data.
+     * @param fenceType fence type
+     * @param pOsmPrimitive primitive
+     * @return texture data
+     */
+    public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive) {
+
+        String facadeColor = pOsmPrimitive.get("fence:color");
+
+        if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
+
+            String facadeTextureFile = MetadataCacheService.getPropertites(
+                    "barrier.fence_{0}.texture.file", null, fenceType);
+
+            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+                    "barrier.fence_{0}.texture.lenght", 1d, fenceType);
+            double facadeTextureHeight = 1d;
+
+            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+
+        } else {
+
+            String facadeColorFile = "#c=" + facadeColor;
+
+            return new TextureData(facadeColorFile, 1d, 1d);
+        }
+    }
+
+
+    /** Gets Fence type.
+     * @param pOsmPrimitive osm primitive
+     * @return fence type
+     */
+    public static String getFenceType(OsmPrimitive pOsmPrimitive) {
+        String fenceType = pOsmPrimitive.get("fence:type");
+        if (StringUtil.isBlankOrNull(fenceType)) {
+            fenceType = pOsmPrimitive.get("fence_type");
+        }
+        return fenceType;
+    }
+
+
+
+    @Override
+    public void draw(GL2 pGl, Camera pCamera) {
+
+
+        // do not draw the transparent parts of the texture
+        pGl.glEnable(GL2.GL_BLEND);
+        pGl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+        // don't show source alpha parts in the destination
+
+        // determine which areas of the polygon are to be rendered
+        pGl.glEnable(GL2.GL_ALPHA_TEST);
+        pGl.glAlphaFunc(GL2.GL_GREATER, 0); // only render if alpha > 0
+
+        // replace the quad colours with the texture
+        //      gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
+        pGl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+
+
+
+
+        pGl.glEnable(GL2.GL_CULL_FACE);
+
+        pGl.glPushMatrix();
+        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+
+        //pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
+
+        this.modelRender.render(pGl, this.model);
+
+        pGl.glPopMatrix();
+
+        pGl.glDisable(GL2.GL_CULL_FACE);
+    }
+}

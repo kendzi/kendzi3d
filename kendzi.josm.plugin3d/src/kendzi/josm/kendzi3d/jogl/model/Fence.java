@@ -17,11 +17,13 @@ import java.util.List;
 import javax.media.opengl.GL2;
 
 import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.math.geometry.Normal;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -31,25 +33,40 @@ public class Fence extends AbstractModel {
     /** Log. */
     private static final Logger log = Logger.getLogger(Fence.class);
 
+    private static final java.lang.Double FENCE_HEIGHT = 1d;
+
     Texture tex;
 
     List<Point2D.Double> list = new ArrayList<Point2D.Double>();
-    float hight = 1;
+
+    private double hight;
+    private double minHeight;
+
     private Way way;
 
     float uvEnd [];
     double normal [][];
     float[] lightPos;
 
-    public Fence(Way way, Perspective3D pers, float[] lightPos) {
-        super(way, pers);
-        this.way = way;
+    public Fence(Relation relation, Perspective3D pers, float[] lightPos) {
+//        super(node, pers)
+//        this.perspective = pPerspective;
+//        calcModelCenter(way);
+//        calcModelRadius(way);
+    }
+
+
+    public Fence(Way pWay, Perspective3D pers, float[] lightPos) {
+        super(pWay, pers);
+        this.way = pWay;
         this.lightPos = lightPos;
 
         this.list = new ArrayList<Point2D.Double>();
 
-        for (int i = 0; i < way.getNodesCount(); i++) {
-            Node node = way.getNode(i);
+        //FIXME this should be rewrite using model and modleRedner class see Water class!!!
+
+        for (int i = 0; i < pWay.getNodesCount(); i++) {
+            Node node = pWay.getNode(i);
 
             double x = pers.calcX(node.getEastNorth().getX());
             double y = pers.calcY(node.getEastNorth().getY());
@@ -60,11 +77,18 @@ public class Fence extends AbstractModel {
 
         this.tex = TextureCacheService.getTextureFromDir("fence_undefined.png");
 
+
+
+        this.hight = ModelUtil.getHeight(pWay, FENCE_HEIGHT);
+        this.minHeight = ModelUtil.getMinHeight(pWay, 0d);
     }
 
 
     @Override
+    @Deprecated
     public void buildModel() {
+
+        //FIXME this should be rewrite using model and modleRedner class see Water class!!!
 
         double textureLenght = 2.0;
 
@@ -132,8 +156,23 @@ public class Fence extends AbstractModel {
         this.buildModel = true;
     }
 
+
+    public void draw2(GL2 gl, Camera camera) {
+
+
+    }
+
     @Override
+    @Deprecated
     public void draw(GL2 gl, Camera camera) {
+
+
+//    glEnable(GL_CULL_FACE);
+//        You can specify to cull front or back by using the following ( default is GL_BACK):
+//            glCullFace(GL_FRONT /* or GL_BACK or even GL_FRONT_AND_BACK */);
+//    glDisable(GL_CULL_FACE);
+
+        //FIXME this should be rewrite using model and modleRedner class see Water class!!!
 
         //		gl.glDisable(GL2.GL_LIGHTING);
         gl.glEnable(GL2.GL_LIGHTING);
@@ -199,7 +238,7 @@ public class Fence extends AbstractModel {
                 //				XXX stosowac float!
                 //				gl.glTexCoord2f (tc.left(), tc.top());
                 gl.glTexCoord2f(0, 1f);
-                gl.glVertex3d( last.getX(), 0.0f,  -last.getY());
+                gl.glVertex3d( last.getX(), this.minHeight,  -last.getY());
 
                 gl.glTexCoord2f(0, 0.0f);
                 gl.glVertex3d( last.getX(), this.hight, -last.getY());
@@ -209,7 +248,7 @@ public class Fence extends AbstractModel {
                 gl.glTexCoord2f(this.uvEnd[i], 0f);
                 gl.glVertex3d( p.getX(), this.hight, -p.getY());
                 gl.glTexCoord2f(this.uvEnd[i], 1f);
-                gl.glVertex3d( p.getX(), 0.0f,  -p.getY());
+                gl.glVertex3d( p.getX(), this.minHeight,  -p.getY());
 
                 last = p;
             }

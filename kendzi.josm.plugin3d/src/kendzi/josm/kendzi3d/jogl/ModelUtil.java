@@ -57,7 +57,7 @@ public final class ModelUtil {
 
     }
 
-    private static Double parseHeight(String pHeightStr, Double pDefault) {
+    public static Double parseHeight(String pHeightStr, Double pDefault) {
 
         if (pHeightStr == null) {
             return pDefault;

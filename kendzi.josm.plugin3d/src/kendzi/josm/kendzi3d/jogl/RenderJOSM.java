@@ -23,9 +23,11 @@ import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
+import kendzi.josm.kendzi3d.jogl.layer.Layer;
+import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.DLODSuport;
-import kendzi.josm.kendzi3d.jogl.model.Fence;
 import kendzi.josm.kendzi3d.jogl.model.LOD;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
@@ -95,6 +97,17 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      */
     private Perspective3D pers;
 
+
+    /**
+     * Perspective used by OpenGl. Transforming coordinates from EastNorth to OpenGl .
+     */
+    private static Perspective3D perspective3D;
+
+    public static Perspective3D getPerspective3D() {
+        return perspective3D;
+    }
+
+
 //    /**
 //     * X Offset of coordinate system used by openGl.
 //     */
@@ -126,6 +139,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * Center point of world.
      */
     private EastNorth center;
+    private List<Layer> layerList = new ArrayList<Layer>();
 
 
     public Perspective3D getPerspective() {
@@ -143,7 +157,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             this.treesMatcher = SearchCompiler.compile("(natural=tree)", false, false);
             this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false,
                     false);
-            this.fenceMatcher = SearchCompiler.compile("barrier=fence", false,
+            this.fenceMatcher = SearchCompiler.compile("barrier=fence | (type=3dr barrier=fence)", false,
                     false);
         } catch (ParseError e) {
             this.buildings = new SearchCompiler.Never();
@@ -159,6 +173,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         this.pers = new Perspective3D(1, 0, 0);
 
+
+        this.layerList.add(new TreeLayer());
+        this.layerList.add(new FenceLayer());
     }
 
     public void init(GL2 gl) {
@@ -180,37 +197,52 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         }
 
         for (Model r : this.modelList) {
-            if (r.isError()) {
-                drawError(r, gl, camera);
-                continue;
+            drawModel(r, gl, camera);
+        }
+
+        for (Layer layer : this.layerList ) {
+            List<Model> models = layer.getModels();
+            for (Model r : models) {
+                drawModel(r, gl, camera);
             }
+        }
+    }
+    /**
+     * @param r
+     * @param gl
+     * @param camera
+     */
+    public void drawModel(Model r, GL2 gl, Camera camera) {
+        if (r.isError()) {
+            drawError(r, gl, camera);
+            return;
+        }
 
 //            r.isInCamraRange(pCamraX, pCamraY, pCamraRange)
-            try {
+        try {
 
-                if (r instanceof DLODSuport) {
-                    DLODSuport lodModel = ((DLODSuport) r);
-                    LOD pLod = getLods(lodModel, camera);
-                    if (!lodModel.isModelBuild(pLod)) {
-                        lodModel.buildModel(pLod);
-                    }
-
-                    lodModel.draw(gl, camera, pLod);
-
-                } else {
-                        if (!r.isBuildModel()) {
-                            r.buildModel();
-                        }
-
-                        r.draw(gl, camera);
-
+            if (r instanceof DLODSuport) {
+                DLODSuport lodModel = ((DLODSuport) r);
+                LOD pLod = getLods(lodModel, camera);
+                if (!lodModel.isModelBuild(pLod)) {
+                    lodModel.buildModel(pLod);
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                r.setError(true);
-                drawError(r, gl, camera);
+                lodModel.draw(gl, camera, pLod);
+
+            } else {
+                    if (!r.isBuildModel()) {
+                        r.buildModel();
+                    }
+
+                    r.draw(gl, camera);
+
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.setError(true);
+            drawError(r, gl, camera);
         }
     }
 
@@ -341,6 +373,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         this.modelList.clear();
 
+        for (Layer layer : this.layerList ) {
+            layer.clear();
+        }
+
 //        System.out.println(this.pers.calcX(this.centerX));
 //        System.out.println(this.pers.calcX(0.2751230166333761));
 //        System.out.println(this.pers.calcX(0.27512260124501414));
@@ -349,12 +385,27 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         for (Node node : dataset.getNodes()) {
 
+            if (node.isDeleted()) {
+                continue;
+            }
+
             if (this.treesMatcher.match(node)) {
 
                 this.modelList.add(new Tree(node, this.pers));
             }
+            // layers
+            for (Layer layer : this.layerList ) {
+                if (layer.getNodeMatcher() != null && layer.getNodeMatcher().match(node)) {
+                    layer.addModel(node, this.pers);
+                }
+            }
         }
         for (Way way : dataset.getWays()) {
+
+            if (way.isDeleted()) {
+                continue;
+            }
+
             if (this.buildings.match(way)) {
 
                 this.modelList.add(new Building(way, this.pers));
@@ -370,7 +421,34 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             }
             if (this.fenceMatcher.match(way)) {
 
-                this.modelList.add(new Fence(way, this.pers, this.lightPos));
+             //   this.modelList.add(new Fence(way, this.pers, this.lightPos));
+            }
+
+            // layers
+            for (Layer layer : this.layerList ) {
+                if (layer.getWayMatcher() != null && layer.getWayMatcher().match(way)) {
+                    layer.addModel(way, this.pers);
+                }
+            }
+
+        }
+
+        for (org.openstreetmap.josm.data.osm.Relation relation : dataset.getRelations()) {
+
+            if (relation.isDeleted()) {
+                continue;
+            }
+
+            if (this.fenceMatcher.match(relation)) {
+
+               // this.modelList.add(new Fence(relation, this.pers, this.lightPos));
+            }
+
+            // layers
+            for (Layer layer : this.layerList) {
+                if (layer.getRelationMatcher() != null && layer.getRelationMatcher().match(relation)) {
+                    layer.addModel(relation, this.pers);
+                }
             }
 
         }
@@ -388,6 +466,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         this.pers = new Perspective3D(scale, center.getX(), center.getY());
     }
+
+
 
     @Override
     public void processDatasetEvent(AbstractDatasetChangedEvent pEvent) {

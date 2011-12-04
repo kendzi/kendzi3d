@@ -1,5 +1,14 @@
 
 [current]
+
+[2011-12-03]
+- support for relation clone:height for tags barrier and building
+- support for tag barrier:part=fence
+- support for tag fence:type=balustrade
+
+- tags height, min_height for fence
+
+[2011-11-26]
 - water fix
 - roof type 2.2 fix
 - support for tag building:color

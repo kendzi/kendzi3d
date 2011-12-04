@@ -9,7 +9,17 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.vecmath.Point2d;
+
+import kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame;
+import kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame;
+import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
+
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 
@@ -18,19 +28,36 @@ import org.openstreetmap.josm.data.osm.Way;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public abstract class AbstractModel implements Model {
+public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, OsmPrimitiveRender {
+
 
     protected double x;
+
     protected double y;
+
     protected double radius;
     protected Perspective3D perspective;
     protected boolean buildModel;
+
+
+//    protected double globalX;
+//    protected double globalY;
+//
+//    private double openGlX;
+//    private double openGlY;
+
+
 
     /**
      * If error occurred.
      */
     protected boolean error;
 
+    public AbstractModel(Perspective3D pPerspective) {
+        this.perspective = pPerspective;
+    }
+
+    @Deprecated
     public AbstractModel(Node node, Perspective3D pers) {
         this.perspective = pers;
 
@@ -40,13 +67,18 @@ public abstract class AbstractModel implements Model {
         this.radius = 1.0;
     }
 
+    @Deprecated
     public AbstractModel(Way way, Perspective3D pPerspective) {
         this.perspective = pPerspective;
         calcModelCenter(way);
         calcModelRadius(way);
     }
 
-    /** Calculate model gravity center.
+    public AbstractModel() {
+
+    }
+
+    /** Calculate model center.
      * @param way list of points
      */
     protected void calcModelCenter(Way way) {
@@ -66,7 +98,25 @@ public abstract class AbstractModel implements Model {
         this.y = centerY / way.getNodesCount();
     }
 
-    /** Calculate max distance from gravity center do all of points.
+    /** Calculate model center.
+     * @param pNodes list of points
+     */
+    protected void calcModelCenter(List<Node> pNodes) {
+        double centerX = 0;
+        double centerY = 0;
+        for (Node node : pNodes) {
+            double x = this.perspective.calcX(node.getEastNorth().getX());
+            double y = this.perspective.calcY(node.getEastNorth().getY());
+
+            centerX += x;
+            centerY += y;
+        }
+
+        this.x = centerX / pNodes.size();
+        this.y = centerY / pNodes.size();
+    }
+
+    /** Calculate max distance from center do all of points.
      * @param way list of points
      */
     protected void calcModelRadius(Way way) {
@@ -150,5 +200,101 @@ public abstract class AbstractModel implements Model {
     }
 
 
+
+
+
+
+    /* (non-Javadoc)
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalX()
+     */
+    @Override
+    public double getGlobalX() {
+        return this.x;
+    }
+
+    /* (non-Javadoc)
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalY()
+     */
+    @Override
+    public double getGlobalY() {
+        return this.y;
+    }
+
+//    /* (non-Javadoc)
+//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#getOpenGlX()
+//     */
+//    @Override
+//    public double getOpenGlX() {
+//        return this.openGlX;
+//    }
+//
+//
+//    /* (non-Javadoc)
+//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#getOpenGlY()
+//     */
+//    @Override
+//    public double getOpenGlY() {
+//        return this.openGlY;
+//    }
+//
+//
+//    /* (non-Javadoc)
+//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#setOpenGlX(double)
+//     */
+//    @Override
+//    public void setOpenGlX(double pX) {
+//        this.openGlX = pX;
+//        this.x = pX;
+//    }
+//
+//
+//    /* (non-Javadoc)
+//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#setOpenGlY(double)
+//     */
+//    @Override
+//    public void setOpenGlY(double pY) {
+//        this.openGlY = pY;
+//        this.y = pY;
+//    }
+
+    /* (non-Javadoc)
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrameX(double)
+     */
+    @Override
+    public double toModelFrameX(double x) {
+        return this.perspective.calcY(x) - getGlobalX();
+    }
+
+    /* (non-Javadoc)
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrameY(double)
+     */
+    @Override
+    public double toModelFrameY(double y) {
+        return this.perspective.calcY(y) - getGlobalY();
+    }
+
+
+    /* (non-Javadoc)
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrame(javax.vecmath.Point2d)
+     */
+    @Override
+    public Point2d toModelFrame(Node pNode) {
+        Point2d calcPoint = this.perspective.calcPoint(pNode);
+        calcPoint.x -= getGlobalX();
+        calcPoint.y -= getGlobalY();
+        return calcPoint;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender#getOsmPrimitives()
+     */
+    @Override
+    public Set<OsmPrimitive> getOsmPrimitives() {
+        // TODO Auto-generated method stub
+        // FIXME remove form abstract!
+        return null;
+    }
 
 }

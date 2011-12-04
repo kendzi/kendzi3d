@@ -33,6 +33,7 @@ public class Perspective3D {
 		this.scale = scale;
 		this.centerX = centerX;
 		this.centerY = centerY;
+		System.out.println("**************-----> " + scale);
 	}
 
 	public double calcX(double x) {
