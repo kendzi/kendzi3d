@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.josm.kendzi3d;
+package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.swing.ButtonModel;
 
+import kendzi.josm.kendzi3d.Kendzi3DPlugin;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;

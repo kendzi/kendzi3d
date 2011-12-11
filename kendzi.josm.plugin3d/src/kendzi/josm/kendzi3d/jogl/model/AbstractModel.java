@@ -14,8 +14,8 @@ import java.util.Set;
 
 import javax.vecmath.Point2d;
 
-import kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame;
-import kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame;
+import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
+import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -220,42 +220,6 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
         return this.y;
     }
 
-//    /* (non-Javadoc)
-//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#getOpenGlX()
-//     */
-//    @Override
-//    public double getOpenGlX() {
-//        return this.openGlX;
-//    }
-//
-//
-//    /* (non-Javadoc)
-//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#getOpenGlY()
-//     */
-//    @Override
-//    public double getOpenGlY() {
-//        return this.openGlY;
-//    }
-//
-//
-//    /* (non-Javadoc)
-//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#setOpenGlX(double)
-//     */
-//    @Override
-//    public void setOpenGlX(double pX) {
-//        this.openGlX = pX;
-//        this.x = pX;
-//    }
-//
-//
-//    /* (non-Javadoc)
-//     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OpenGLFrame#setOpenGlY(double)
-//     */
-//    @Override
-//    public void setOpenGlY(double pY) {
-//        this.openGlY = pY;
-//        this.y = pY;
-//    }
 
     /* (non-Javadoc)
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrameX(double)
@@ -294,7 +258,7 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
     public Set<OsmPrimitive> getOsmPrimitives() {
         // TODO Auto-generated method stub
         // FIXME remove form abstract!
-        return null;
+        throw new RuntimeException("TODO");
     }
 
 }

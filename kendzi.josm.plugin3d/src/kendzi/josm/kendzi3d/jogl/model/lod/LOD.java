@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.jogl.model.lod;
 
 public enum LOD {
     LOD1,

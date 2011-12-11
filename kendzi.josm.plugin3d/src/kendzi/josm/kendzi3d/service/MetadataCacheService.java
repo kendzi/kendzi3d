@@ -20,7 +20,13 @@ import java.util.Properties;
 import kendzi.josm.kendzi3d.metadata.ModelMetadata;
 import kendzi.josm.kendzi3d.metadata.TextureMetadata;
 
+import org.apache.log4j.Logger;
+
 public class MetadataCacheService {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(MetadataCacheService.class);
+
 
 //    private static MetadataCache metadataCache = null;
     private static String metadataDir = null;
@@ -42,14 +48,25 @@ public class MetadataCacheService {
 
     }
 
+
+
     /**
      * Read textures properties.
      */
-    private static void loadMetadataProperties() {
+    public static void loadMetadataProperties() {
         metadataProperties = new Properties();
-        String fileName = "/resources/metadata.properties";
+
+        loadFile("/resources/metadata.properties");
+
+        loadFile("/textures/wikimetadata.properties");
+    }
+
+    /**
+     * @param pFileName
+     */
+    public static void loadFile(String pFileName) {
         try {
-            File f = new File(metadataDir, fileName);
+            File f = new File(metadataDir, pFileName);
             if (f.exists()) {
                 FileInputStream in = new FileInputStream(f);
                 metadataProperties.load(in);
@@ -60,7 +77,7 @@ public class MetadataCacheService {
             e.printStackTrace();
         }
         try {
-            URL fileUrl = MetadataCacheService.class.getResource(fileName);
+            URL fileUrl = MetadataCacheService.class.getResource(pFileName);
 
             metadataProperties.load(fileUrl.openStream());
 

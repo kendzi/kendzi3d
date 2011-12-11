@@ -27,6 +27,8 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
+import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import net.java.joglutils.model.ModelLoadException;

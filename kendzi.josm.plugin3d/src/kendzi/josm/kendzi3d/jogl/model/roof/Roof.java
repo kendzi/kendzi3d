@@ -22,6 +22,7 @@ import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -113,14 +114,14 @@ public abstract class Roof extends AbstractModel {
         String roofMaterial = this.way.get("building:roof:material");
 
         String roofColor = this.way.get("building:roof:color");
-        if (Building.isBlankOrNull(roofColor)) {
+        if (StringUtil.isBlankOrNull(roofColor)) {
             roofColor = this.way.get("roof:color");
         }
-        if (Building.isBlankOrNull(roofColor)) {
+        if (StringUtil.isBlankOrNull(roofColor)) {
             roofColor = this.way.get("roof:colour");
         }
 
-        if (!Building.isBlankOrNull(roofMaterial) || Building.isBlankOrNull(roofColor)) {
+        if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {
 
             String facadeTextureFile = MetadataCacheService.getPropertites(
                     "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);

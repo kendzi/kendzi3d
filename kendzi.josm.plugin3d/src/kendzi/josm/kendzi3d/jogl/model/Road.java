@@ -36,9 +36,12 @@ import org.openstreetmap.josm.data.osm.Way;
 /**
  * Represent road.
  *
+ * This class require lot of clean up!
+ *
  * @author Tomasz Kedziora (Kendzi)
  *
  */
+@Deprecated
 public class Road extends AbstractModel {
 
     /** Log. */
@@ -334,7 +337,7 @@ public class Road extends AbstractModel {
          * @return the file
          */
         public String getFile() {
-            return file;
+            return this.file;
         }
 
         /**
@@ -348,7 +351,7 @@ public class Road extends AbstractModel {
          * @return the lenght
          */
         public double getLenght() {
-            return lenght;
+            return this.lenght;
         }
 
         /**

@@ -33,10 +33,16 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import kendzi.josm.kendzi3d.action.AutostartToggleAction;
+import kendzi.josm.kendzi3d.action.DebugToggleAction;
+import kendzi.josm.kendzi3d.action.GroundToggleAction;
+import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
+import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.View3dGLFrame;
 
@@ -45,8 +51,6 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-
-import test.TestRener;
 
 public class Kendzi3DPlugin extends Plugin {
 
@@ -94,12 +98,22 @@ public class Kendzi3DPlugin extends Plugin {
         // init rest of services
         TextureCacheService.initTextureCache(getPluginDir());
         MetadataCacheService.initMetadataCache(getPluginDir());
+        WikiTextureLoaderService.init(getPluginDir());
 
         TextureCacheService.addTextureBuilder(new ColorTextureBuilder());
 
         refreshMenu();
+        // System.out.println("****************************************************************");
+        // System.out.println(Main.pref.get("kendzi3d.autostart1"));
+        // System.out.println(Main.pref.get("kendzi3d.autostart"));
 
-        openJOGLWindow();
+        if (!Boolean.FALSE.equals(
+                Main.pref.getBoolean(
+                        AutostartToggleAction.KENDZI_3D_AUTOSTART, true))) {
+//            Main.pref.put("kendzi3d.autostart", "true");
+//            Main.pref.put("kendzi3d.autostart", "false");
+            openJOGLWindow();
+        }
     }
 
     @Override
@@ -474,23 +488,33 @@ public class Kendzi3DPlugin extends Plugin {
 
         }));
 
-        this.view3dJMenu.add(
-                new JMenuItem(
-                        new JosmAction(tr("Test imb"), "stock_3d-effects24", tr("Test imb"), null, false) {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               TestRener t = new TestRener();
-               try {
-                t.test();
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+        AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
+        if (autostartToggleAction.canDebug()) {
+            final JCheckBoxMenuItem action = new JCheckBoxMenuItem(autostartToggleAction);
 
-            }
+            this.view3dJMenu.add(action);
+            action.setAccelerator(autostartToggleAction.getShortcut().getKeyStroke());
+            autostartToggleAction.addButtonModel(action.getModel());
+        }
 
-        }));
+//        this.view3dJMenu.add(
+//                new JMenuItem(
+//                        new JosmAction(tr("Test imb"), "stock_3d-effects24", tr("Test imb"), null, false) {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//               TestRener t = new TestRener();
+//               try {
+//                t.test();
+//            } catch (IOException e1) {
+//                // TODO Auto-generated catch block
+//                e1.printStackTrace();
+//            }
+//
+//            }
+//
+//        }));
 
         this.view3dJMenu.add(new JMenuItem(
                 new JosmAction(tr("Move camera"), "1306318146_build__24", tr("Move camera"), null, false) {
@@ -511,9 +535,9 @@ public class Kendzi3DPlugin extends Plugin {
 
         this.view3dJMenu.add(new JMenuItem(
                 new JosmAction(
-                        tr("Rebuild models, textures and wold offset"),
+                        tr("Clean up"),
                         "1306318208_rebuild__24",
-                        tr("Rebuild Models And Wold Offset"),
+                        tr("Rebuild models, textures and wold offset"),
                         null,
                         false) {
 
@@ -562,6 +586,19 @@ public class Kendzi3DPlugin extends Plugin {
             debug.setAccelerator(filterToggleAction.getShortcut().getKeyStroke());
             filterToggleAction.addButtonModel(debug.getModel());
         }
+
+        // -- debug toggle action
+        WikiTextureLoaderAction wikiTextureLoaderAction = new WikiTextureLoaderAction();
+        if (wikiTextureLoaderAction.canDebug()) {
+            final JMenuItem debug = new JMenuItem(wikiTextureLoaderAction);
+            this.view3dJMenu.addSeparator();
+            this.view3dJMenu.add(debug);
+            debug.setAccelerator(wikiTextureLoaderAction.getShortcut().getKeyStroke());
+            wikiTextureLoaderAction.addButtonModel(debug.getModel());
+        }
+
+
+
 
 
 

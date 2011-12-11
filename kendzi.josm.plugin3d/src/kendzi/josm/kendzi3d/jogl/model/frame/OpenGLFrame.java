@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.jogl.model.tmp;
+package kendzi.josm.kendzi3d.jogl.model.frame;
 
 
 /**

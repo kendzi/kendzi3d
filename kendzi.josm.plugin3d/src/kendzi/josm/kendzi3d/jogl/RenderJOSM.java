@@ -25,15 +25,17 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
+import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
+import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.model.Building;
-import kendzi.josm.kendzi3d.jogl.model.DLODSuport;
-import kendzi.josm.kendzi3d.jogl.model.LOD;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.Road;
 import kendzi.josm.kendzi3d.jogl.model.Tree;
 import kendzi.josm.kendzi3d.jogl.model.Water;
+import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
+import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -174,6 +176,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(1, 0, 0);
 
 
+        this.layerList.add(new RoadLayer());
+        this.layerList.add(new WaterLayer());
         this.layerList.add(new TreeLayer());
         this.layerList.add(new FenceLayer());
     }

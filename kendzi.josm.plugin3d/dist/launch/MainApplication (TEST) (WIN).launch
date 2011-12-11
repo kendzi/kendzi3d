@@ -24,5 +24,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.openstreetmap.josm.gui.MainApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;c:\josm_dev\test.osm&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="JOSM"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djosm.home=c:\josm_dev\&#13;&#10;-Dsun.java2d.noddraw=true&#13;&#10;-Djogl.debug.GraphicsConfiguration=true&#13;&#10;-Dkendzi3d.opengl.sampleBuffers=true111&#13;&#10;-Dkendzi3d.opengl.zbuffer=16"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djosm.home=c:\josm_dev\&#13;&#10;-Dsun.java2d.noddraw=true&#13;&#10;-Djogl.debug.GraphicsConfiguration=true&#13;&#10;-Dkendzi3d.opengl.sampleBuffers=true&#13;&#10;-Dkendzi3d.opengl.zbuffer=16"/>
 </launchConfiguration>

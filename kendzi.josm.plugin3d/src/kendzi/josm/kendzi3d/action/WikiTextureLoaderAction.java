@@ -7,27 +7,35 @@
  *
  */
 
-package kendzi.josm.kendzi3d;
+
+package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonModel;
+import javax.swing.JOptionPane;
 
-import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 /**
- * Debug toggle action.
+ * Texture filter toggle action.
  *
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class DebugToggleAction extends JosmAction {
+public class WikiTextureLoaderAction extends JosmAction {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(WikiTextureLoaderAction.class);
 
     /**
      * Button models.
@@ -40,20 +48,18 @@ public class DebugToggleAction extends JosmAction {
     /**
      * Constructor of debug toggle action.
      */
-    public DebugToggleAction() {
+    public WikiTextureLoaderAction() {
         super(
-                tr("Debug View"),
-                "1306318261_debugger__24",
-                tr("Enable/disable display debug information"),
+                tr("Load textures from wiki"),
+                "1323558253_wikipedia-icon_24",
+                tr("Load textures from wiki"),
 //                Shortcut.registerShortcut("menu:view:wireframe", tr("Toggle Wireframe view"),KeyEvent.VK_W, Shortcut.GROUP_MENU),
                 null,
                 true /* register shortcut */
         );
         this.selected = true;
-        // Main.pref.getBoolean("draw.wireframe", false);
+//            Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
-
-        setDebugMode(this.selected);
     }
 
     /**
@@ -90,23 +96,62 @@ public class DebugToggleAction extends JosmAction {
      *
      */
     protected void toggleSelectedState() {
+
+
+
+//        TextureCacheService.clearTextures();
+
+
         this.selected = !this.selected;
 //        Main.pref.put("draw.wireframe", this.selected);
         notifySelectedState();
 
-        setDebugMode(this.selected);
+
+        loadFromWiki();
     }
 
     /**
-     * @param pEnable enable debug
+     *
      */
-    private void setDebugMode(boolean pEnable) {
+    public void loadFromWiki() {
+        List<String> errors = null;
+        try {
+            errors = WikiTextureLoaderService.getInstance().load();
+        } catch (MalformedURLException e) {
+            log.error(e);
+            showError(e);
+        } catch (IOException e) {
+            log.error(e);
+            showError(e);
+        }
 
-        ModelRender render = ModelRender.getInstance();
-        render.setDebugging(pEnable);
-        render.setDrawEdges(pEnable);
-        render.setDrawNormals(pEnable);
+        if (errors != null && !errors.isEmpty()) {
 
+            StringBuffer sb = new StringBuffer();
+            for (String err: errors ) {
+                sb.append(err);
+                sb.append("\n");
+            }
+
+            JOptionPane.showMessageDialog(null,
+                    tr("Error downloding textures from urls: ") + "\n" + sb,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    tr("Downloded textures from wiki to path: ") + "\n"
+                            + WikiTextureLoaderService.getInstance().getTexturesPath() ,
+                    "Info",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void showError(Exception e) {
+      //custom title, error icon
+        JOptionPane.showMessageDialog(null,
+            "Error downloding textures from wiki: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
     }
 
     @Override

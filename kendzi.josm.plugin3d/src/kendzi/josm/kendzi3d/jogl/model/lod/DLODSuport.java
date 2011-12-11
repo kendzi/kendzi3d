@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.jogl.model.lod;
 
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;

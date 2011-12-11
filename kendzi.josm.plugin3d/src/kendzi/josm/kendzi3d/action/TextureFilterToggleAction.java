@@ -8,7 +8,7 @@
  */
 
 
-package kendzi.josm.kendzi3d;
+package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 

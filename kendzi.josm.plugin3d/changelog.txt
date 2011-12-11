@@ -1,5 +1,8 @@
 
 [current]
+- download textures from wiki page: http://wiki.openstreetmap.org/wiki/Kendzi3d/textures
+- enable/disable autostart
+
 
 [2011-12-03]
 - support for relation clone:height for tags barrier and building

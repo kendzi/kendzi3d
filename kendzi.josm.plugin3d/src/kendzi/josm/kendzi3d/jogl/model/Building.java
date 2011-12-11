@@ -15,6 +15,7 @@ import java.util.List;
 import javax.media.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.FaceFactory;
@@ -28,13 +29,14 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
 import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
-import kendzi.josm.kendzi3d.jogl.model.tmp.RelationHeightClone;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.Triangulate;
+import kendzi.math.geometry.point.Vector2dUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
@@ -48,6 +50,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public class Building extends AbstractModel {
 
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Building.class);
 
     /**
@@ -120,7 +123,14 @@ public class Building extends AbstractModel {
     /**
      * Height cloner.
      */
-    private List<RelationHeightClone> heightClone;
+    private List<RelationCloneHeight> cloneHeight;
+
+    /**
+     * Windows and entrances.
+     */
+    private List<WindowEntrances> windowEntrances;
+
+    private List<WindowEntrancesModel> windowsEnterencsModels;
 
     /** Constructor for building.
      * @param pWay way describing building
@@ -199,7 +209,7 @@ public class Building extends AbstractModel {
 //        }
 
         String tag3dr = pWay.get("3dr:type");
-        if (!isBlankOrNull(tag3dr)) {
+        if (!StringUtil.isBlankOrNull(tag3dr)) {
             this.roof = new DormerRoof(this, this.list, pWay, pPerspective);
         } else {
             this.roof = new ShapeRoof(this, this.list, pWay, pPerspective);
@@ -208,15 +218,18 @@ public class Building extends AbstractModel {
         this.modelRender = ModelRender.getInstance();
     }
 
+    /** Gets facade texture.
+     * @return facade texture
+     */
     public TextureData getFacadeTexture() {
 
         String facadeMaterial = this.way.get("building:facade:material");
         String facadeColor = this.way.get("building:facade:color");
-        if (isBlankOrNull(facadeColor)) {
+        if (StringUtil.isBlankOrNull(facadeColor)) {
             facadeColor = this.way.get("building:color");
         }
 
-        if (!isBlankOrNull(facadeMaterial) || isBlankOrNull(facadeColor)) {
+        if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
 
             String facadeTextureFile = MetadataCacheService.getPropertites(
                     "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
@@ -234,7 +247,7 @@ public class Building extends AbstractModel {
 //            String facadeColorFile = MetadataCacheService.getPropertites(
 //                    "buildings.building_facade_color_{0}.texture.file", null, facadeColor);
 //
-//            if (isBlankOrNull(facadeColorFile)) {
+//            if (StringUtil.isBlankOrNull(facadeColorFile)) {
 //                facadeColorFile = MetadataCacheService.getPropertites(
 //                        "buildings.building_facade_color_unknown.texture.file", null);
 //            }
@@ -250,14 +263,13 @@ public class Building extends AbstractModel {
         }
     }
 
-    public static boolean isBlankOrNull(String pString) {
-        return StringUtil.isBlankOrNull(pString);
-    }
-
-
 
     @Override
     public void buildModel() {
+
+        this.windowEntrances = findWindowsEnterencs();
+
+        this.windowsEnterencsModels = buildWindowsEnterencs(this.windowEntrances);
 
         TextureData facadeTexture = getFacadeTexture();
         Material facadeMaterial =  MaterialFactory.createTextureMaterial(facadeTexture.getFile());
@@ -374,8 +386,384 @@ public class Building extends AbstractModel {
 
         this.buildModel = true;
 
-        this.heightClone = RelationHeightClone.buildHeightClone(this.way);
+        this.cloneHeight = RelationCloneHeight.buildHeightClone(this.way);
     }
+
+    private  List<WindowEntrances> findWindowsEnterencs() {
+
+        List<WindowEntrances> windowEntrances = new ArrayList<WindowEntrances>();
+
+
+        for (int i = 0; i < this.way.getNodesCount(); i++) {
+            Node node = this.way.getNode(i);
+            if ("entrance".equals(node.get("building"))) {
+                Entrances entrance = new Entrances();
+
+                Point2d p = this.list.get(i);
+                Vector2d direction = findWindowDirection(this.list, i);
+
+                entrance.setPoint(p);
+                entrance.setDirection(direction);
+                entrance.setCloneHeight(RelationCloneHeight.buildHeightClone(node));
+
+                entrance.setHeight(ModelUtil.getHeight(node,  entrance.getHeight()));
+                entrance.setMinHeight(ModelUtil.getMinHeight(node,  entrance.getMinHeight()));
+
+                windowEntrances.add(entrance);
+            }
+
+            if ("window".equals(node.get("building"))) {
+                Window entrance = new Window();
+                Point2d p = this.list.get(i);
+                Vector2d direction = findWindowDirection(this.list, i);
+
+
+                entrance.setPoint(p);
+                entrance.setDirection(direction);
+                entrance.setCloneHeight(RelationCloneHeight.buildHeightClone(node));
+
+                entrance.setHeight(ModelUtil.getHeight(node,  entrance.getHeight()));
+                entrance.setMinHeight(ModelUtil.getMinHeight(node,  entrance.getMinHeight()));
+
+                windowEntrances.add(entrance);
+            }
+
+        }
+
+        return windowEntrances;
+    }
+
+    /**
+     * Only Mock for windows. They are build as boxes on top of building.
+     * In future windows should be cut out from building model!
+     *
+     *  This method should change in future!
+     *
+     * @return
+     */
+    private  List<WindowEntrancesModel> buildWindowsEnterencs(List<WindowEntrances> pWindowEntrancesList) {
+
+        List<WindowEntrancesModel> ret = new ArrayList<WindowEntrancesModel>();
+        for (WindowEntrances we : pWindowEntrancesList) {
+
+            ModelFactory modelBuilder = ModelFactory.modelBuilder();
+            MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
+
+            TextureData facadeTexture = getWindowsTexture(this.way);
+            Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+
+            int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
+
+            meshBorder.materialID = facadeMaterialIndex;
+            meshBorder.hasTexture = true;
+
+
+            buildBoxModel(we.getPoint(), we.getDirection(), we.getHeight(), we.getMinHeight(),
+                    1d, 0.2d, meshBorder, facadeTexture);
+
+
+            Model model = modelBuilder.toModel();
+            model.setUseLight(true);
+            model.setUseTexture(true);
+
+            WindowEntrancesModel wem = new WindowEntrancesModel();
+            wem.setModel(model);
+            wem.setCloneHeight(we.getCloneHeight());
+
+
+            ret.add(wem);
+        }
+        return ret;
+
+
+
+    }
+
+    private TextureData getWindowsTexture(Way way2) {
+        // TODO
+        TextureData facadeTexture = new  TextureData("#c=#303030", 1d, 1d);
+        return facadeTexture;
+    }
+
+    private void buildBoxModel(Point2d point, Vector2d direction,
+            double height2, double minHeight2, double width, double depth,
+            MeshFactory pMeshBorder, TextureData facadeTexture) {
+
+        Vector2d widthVector = new Vector2d(-direction.y, direction.x);
+        widthVector.scale(width);
+
+        Vector2d depthVector = new Vector2d(direction);
+        depthVector.scale(depth);
+
+
+        // left down front
+        Point3d ldf = new Point3d(
+                point.x - widthVector.x + depthVector.x, minHeight2, -(point.y - widthVector.y + depthVector.y));
+        // right down front
+        Point3d rdf = new Point3d(
+                point.x + widthVector.x + depthVector.x, minHeight2, -(point.y + widthVector.y + depthVector.y));
+        // left up front
+        Point3d luf = new Point3d(
+                point.x - widthVector.x + depthVector.x, height2, -(point.y - widthVector.y + depthVector.y));
+        // right up front
+        Point3d ruf = new Point3d(
+                point.x + widthVector.x + depthVector.x, height2, -(point.y + widthVector.y + depthVector.y));
+
+        // left down back
+        Point3d ldb = new Point3d(
+                point.x - widthVector.x - depthVector.x, minHeight2, -(point.y - widthVector.y - depthVector.y));
+        // right down back
+        Point3d rdb = new Point3d(
+                point.x + widthVector.x - depthVector.x, minHeight2, -(point.y + widthVector.y - depthVector.y));
+        // left up back
+        Point3d lub = new Point3d(
+                point.x - widthVector.x - depthVector.x, height2, -(point.y - widthVector.y - depthVector.y));
+        // right up back
+        Point3d rub = new Point3d(
+                point.x + widthVector.x - depthVector.x, height2, -(point.y + widthVector.y - depthVector.y));
+
+
+        int ldfi = pMeshBorder.addVertex(ldf);
+        int rdfi = pMeshBorder.addVertex(rdf);
+        int lufi = pMeshBorder.addVertex(luf);
+        int rufi = pMeshBorder.addVertex(ruf);
+        int ldbi = pMeshBorder.addVertex(ldb);
+        int rdbi = pMeshBorder.addVertex(rdb);
+        int lubi = pMeshBorder.addVertex(lub);
+        int rubi = pMeshBorder.addVertex(rub);
+
+        // front normal
+        Vector3d fn = new Vector3d(direction.x, 0, -direction.y);
+        // back normal
+        Vector3d bn = new Vector3d(-direction.x, 0, direction.y);
+
+        // left normal
+        Vector3d ln = new Vector3d(direction.y, 0, -direction.x);
+        // right normal
+        Vector3d rn = new Vector3d( -direction.y, 0, direction.x);
+
+        // down normal
+        Vector3d dn = new Vector3d(0, -1d, 0);
+        // up normal
+        Vector3d un = new Vector3d(0, 1d, 0);
+
+        int fni = pMeshBorder.addNormal(fn);
+        int bni = pMeshBorder.addNormal(bn);
+        int lni = pMeshBorder.addNormal(ln);
+        int rni = pMeshBorder.addNormal(rn);
+        int dni = pMeshBorder.addNormal(dn);
+        int uni = pMeshBorder.addNormal(un);
+
+        // left down
+        TextCoord ld = new TextCoord(0d, 0d);
+        TextCoord lu = new TextCoord(0d, 1d);
+        TextCoord rd = new TextCoord(1d, 0d);
+        TextCoord ru = new TextCoord(1d, 1d);
+
+        int ldi = pMeshBorder.addTextCoord(ld);
+        int lui = pMeshBorder.addTextCoord(lu);
+        int rdi = pMeshBorder.addTextCoord(rd);
+        int rui = pMeshBorder.addTextCoord(ru);
+
+
+        FaceFactory faceFront = pMeshBorder.addFace(FaceType.QUADS);
+        faceFront.addVert(ldfi, ldi, fni);
+        faceFront.addVert(rdfi, rdi, fni);
+        faceFront.addVert(rufi, rui, fni);
+        faceFront.addVert(lufi, lui, fni);
+
+        FaceFactory faceBack = pMeshBorder.addFace(FaceType.QUADS);
+        faceBack.addVert(ldbi, ldi, bni);
+        faceBack.addVert(rdbi, rdi, bni);
+        faceBack.addVert(rubi, rui, bni);
+        faceBack.addVert(lubi, lui, bni);
+
+        FaceFactory faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+        faceLeft.addVert(ldbi, ldi, lni);
+        faceLeft.addVert(ldfi, rdi, lni);
+        faceLeft.addVert(lufi, rui, lni);
+        faceLeft.addVert(lubi, lui, lni);
+
+        FaceFactory faceRight = pMeshBorder.addFace(FaceType.QUADS);
+        faceRight.addVert(rdfi, ldi, rni);
+        faceRight.addVert(rdbi, rdi, rni);
+        faceRight.addVert(rubi, rui, rni);
+        faceRight.addVert(rufi, lui, rni);
+
+        FaceFactory faceUp = pMeshBorder.addFace(FaceType.QUADS);
+        faceUp.addVert(lufi, ldi, uni);
+        faceUp.addVert(rufi, rdi, uni);
+        faceUp.addVert(rubi, rui, uni);
+        faceUp.addVert(lubi, lui, uni);
+
+        FaceFactory faceDown = pMeshBorder.addFace(FaceType.QUADS);
+        faceDown.addVert(ldbi, ldi, dni);
+        faceDown.addVert(rdbi, rdi, dni);
+        faceDown.addVert(rdfi, rui, dni);
+        faceDown.addVert(ldfi, lui, dni);
+
+
+
+
+
+
+
+    }
+
+    /**
+     * Only Mock for windows. They are build as boxes on top of building.
+     * In future windows should be cut out from building model!
+     *
+     * @author Tomasz Kędziora (Kendzi)
+     */
+    class WindowEntrancesModel {
+        /**
+         * Model.
+         */
+        Model model;
+
+        /**
+         * Height cloner.
+         */
+        private List<RelationCloneHeight> cloneHeight;
+
+        /**
+         * @return the model
+         */
+        public Model getModel() {
+            return model;
+        }
+
+        /**
+         * @param model the model to set
+         */
+        public void setModel(Model model) {
+            this.model = model;
+        }
+
+        /**
+         * @return the cloneHeight
+         */
+        public List<RelationCloneHeight> getCloneHeight() {
+            return cloneHeight;
+        }
+
+        /**
+         * @param cloneHeight the cloneHeight to set
+         */
+        public void setCloneHeight(List<RelationCloneHeight> cloneHeight) {
+            this.cloneHeight = cloneHeight;
+        }
+
+    }
+
+
+    private Vector2d findWindowDirection(List<Point2d> list, int i) {
+
+        Point2d p = list.get(i);
+        Point2d pm1 = list.get((i + 1) % list.size());
+        Point2d pp1 = list.get((i - 1 + list.size()) % list.size());
+
+        Vector2d v1 = new Vector2d(p);
+        v1.sub(pm1);
+        Vector2d v2 = new Vector2d(pp1);
+        v2.sub(p);
+
+        Vector2d bisector = Vector2dUtil.bisector(v1, v2);
+        bisector.normalize();
+
+        return bisector;
+    }
+
+    class Window extends WindowEntrances {
+        public Window() {
+            super();
+            this.minHeight = 1;
+        }
+
+    }
+
+    class Entrances extends WindowEntrances {
+
+    }
+
+    class WindowEntrances {
+        Point2d point;
+
+        double minHeight = 0;
+
+        double height = 2;
+
+        Vector2d direction;
+
+        /**
+         * Height cloner.
+         */
+        private List<RelationCloneHeight> cloneHeight;
+
+        /**
+         * @return the point
+         */
+        public Point2d getPoint() {
+            return this.point;
+        }
+        /**
+         * @param point the point to set
+         */
+        public void setPoint(Point2d point) {
+            this.point = point;
+        }
+        /**
+         * @return the cloneHeight
+         */
+        public List<RelationCloneHeight> getCloneHeight() {
+            return cloneHeight;
+        }
+        /**
+         * @param cloneHeight the cloneHeight to set
+         */
+        public void setCloneHeight(List<RelationCloneHeight> cloneHeight) {
+            this.cloneHeight = cloneHeight;
+        }
+        /**
+         * @return the minHeight
+         */
+        public double getMinHeight() {
+            return minHeight;
+        }
+        /**
+         * @param minHeight the minHeight to set
+         */
+        public void setMinHeight(double minHeight) {
+            this.minHeight = minHeight;
+        }
+        /**
+         * @return the height
+         */
+        public double getHeight() {
+            return height;
+        }
+        /**
+         * @param height the height to set
+         */
+        public void setHeight(double height) {
+            this.height = height;
+        }
+        /**
+         * @return the direction
+         */
+        public Vector2d getDirection() {
+            return direction;
+        }
+        /**
+         * @param direction the direction to set
+         */
+        public void setDirection(Vector2d direction) {
+            this.direction = direction;
+        }
+    }
+
+
 
     @Override
     public void draw(GL2 pGl, Camera pCamera) {
@@ -387,7 +775,7 @@ public class Building extends AbstractModel {
         this.roof.draw(pGl, pCamera);
 
 
-        for (RelationHeightClone cloner : this.heightClone) {
+        for (RelationCloneHeight cloner : this.cloneHeight) {
             for (Double height : cloner) {
 
                 pGl.glPushMatrix();
@@ -400,6 +788,28 @@ public class Building extends AbstractModel {
                 pGl.glPopMatrix();
 
             }
+        }
+
+        for (WindowEntrancesModel wem : this.windowsEnterencsModels) {
+
+            List<RelationCloneHeight> cloneHeight2 = wem.getCloneHeight();
+
+
+            this.modelRender.render(pGl, wem.getModel());
+
+            for (RelationCloneHeight cloner : cloneHeight2) {
+                for (Double height : cloner) {
+
+                    pGl.glPushMatrix();
+                    pGl.glTranslated(0, height, 0);
+
+                    this.modelRender.render(pGl, wem.getModel());
+
+                    pGl.glPopMatrix();
+
+                }
+            }
+
         }
     }
 

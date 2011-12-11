@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.jogl.model.tmp;
+package kendzi.josm.kendzi3d.jogl.model.clone;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,9 +8,8 @@ import kendzi.josm.kendzi3d.jogl.ModelUtil;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
 
-public class RelationHeightClone implements java.lang.Iterable<Double> {
+public class RelationCloneHeight implements java.lang.Iterable<Double> {
 
     private double offset = 0;
 
@@ -18,19 +17,19 @@ public class RelationHeightClone implements java.lang.Iterable<Double> {
 
     private double every = 0;
 
-    public static List<RelationHeightClone> buildHeightClone(Way pWay) {
-        List<RelationHeightClone> ret = new ArrayList<RelationHeightClone>();
+    public static List<RelationCloneHeight> buildHeightClone(OsmPrimitive pOsmPrimitive) {
+        List<RelationCloneHeight> ret = new ArrayList<RelationCloneHeight>();
 
-        if (pWay == null) {
+        if (pOsmPrimitive == null) {
             return ret;
         }
 
-        for (OsmPrimitive op : pWay.getReferrers()) {
+        for (OsmPrimitive op : pOsmPrimitive.getReferrers()) {
             if (op instanceof Relation) {
                 Relation r = (Relation) op;
 
                 if ("clone:height".equals(op.get("type"))) {
-                    RelationHeightClone clone2 = parseHeightClone(r);
+                    RelationCloneHeight clone2 = parseHeightClone(r);
 
                     if (clone2 != null) {
                         ret.add(clone2);
@@ -51,12 +50,12 @@ public class RelationHeightClone implements java.lang.Iterable<Double> {
         return ret;
     }
 
-    private static RelationHeightClone parseHeightClone(Relation pRelation) {
+    private static RelationCloneHeight parseHeightClone(Relation pRelation) {
         if (pRelation == null) {
             return null;
         }
 
-        RelationHeightClone clone = new RelationHeightClone();
+        RelationCloneHeight clone = new RelationCloneHeight();
         clone.setOffset(
                 ModelUtil.parseHeight(pRelation.get("offset"), 0d));
 
@@ -124,7 +123,7 @@ public class RelationHeightClone implements java.lang.Iterable<Double> {
 
             @Override
             public boolean hasNext() {
-                return this.loop < RelationHeightClone.this.repeat;
+                return this.loop < RelationCloneHeight.this.repeat;
             }
 
             @Override
@@ -133,7 +132,7 @@ public class RelationHeightClone implements java.lang.Iterable<Double> {
                     return null;
                 }
                 this.loop++;
-                return this.loop * RelationHeightClone.this.every + RelationHeightClone.this.offset ;
+                return this.loop * RelationCloneHeight.this.every + RelationCloneHeight.this.offset ;
             }
 
             @Override

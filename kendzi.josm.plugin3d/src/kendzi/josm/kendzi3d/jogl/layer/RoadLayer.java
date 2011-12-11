@@ -12,10 +12,9 @@ package kendzi.josm.kendzi3d.jogl.layer;
 import java.util.ArrayList;
 import java.util.List;
 
-import kendzi.josm.kendzi3d.jogl.model.Fence;
-import kendzi.josm.kendzi3d.jogl.model.FenceRelation;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.Road;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -25,11 +24,11 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class FenceLayer implements Layer {
+public class RoadLayer implements Layer {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FenceLayer.class);
+    private static final Logger log = Logger.getLogger(RoadLayer.class);
 
     /**
      * List of layer models.
@@ -37,20 +36,14 @@ public class FenceLayer implements Layer {
     private List<Model> modelList = new ArrayList<Model>();
 
 
-    private Match fenceMatcher;
-    private Match fenceRelationMatcher;
+    private Match roadMatcher;
+
 
     {
         try {
-            this.fenceMatcher = SearchCompiler.compile("(barrier=fence) | (barrier\\:part=fence)", false, false);
-        } catch (ParseError e) {
-            this.fenceMatcher = new SearchCompiler.Never();
-            log.error(e);
-        }
-        try {
-           this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
-        } catch (ParseError e) {
-            this.fenceMatcher = new SearchCompiler.Never();
+            this.roadMatcher = SearchCompiler.compile("(highway=*)", false, false);
+       } catch (ParseError e) {
+            this.roadMatcher = new SearchCompiler.Never();
             log.error(e);
         }
 
@@ -64,12 +57,12 @@ public class FenceLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.fenceMatcher;
+        return this.roadMatcher;
     }
 
     @Override
     public Match getRelationMatcher() {
-        return this.fenceRelationMatcher;
+        return null;
     }
 
     @Override
@@ -84,19 +77,17 @@ public class FenceLayer implements Layer {
 
     @Override
     public void addModel(Node node, Perspective3D pPerspective3D) {
-//        this.modelList.add(new Tree(node, pPerspective3D));
-//        this.modelList.add(new Tree(node, pPerspective3D));
-
+        //
     }
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Fence(way, pPerspective3D));
+        this.modelList.add(new Road(way, pPerspective3D));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new FenceRelation(relation, pPerspective3D));
+        //
     }
 
     @Override

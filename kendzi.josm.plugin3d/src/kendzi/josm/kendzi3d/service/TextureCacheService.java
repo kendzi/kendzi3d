@@ -28,13 +28,13 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class TextureCacheService {
 
+    /** Log. */
+    private static final Logger log = Logger.getLogger(TextureCacheService.class);
+
     /**
      * Undefined texture.
      */
     public static final String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
-
-    /** Log. */
-    private static final Logger log = Logger.getLogger(TextureCacheService.class);
 
     private static TextureCacheService textureCache = null;
 
