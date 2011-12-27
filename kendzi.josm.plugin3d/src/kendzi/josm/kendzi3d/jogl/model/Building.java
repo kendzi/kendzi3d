@@ -33,6 +33,7 @@ import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
 import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
+import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.Triangulate;
@@ -47,7 +48,7 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  * @author Tomasz Kedziora (Kendzi)
  */
-public class Building extends AbstractModel {
+public class Building extends AbstractWayModel {
 
     /** Log. */
     @SuppressWarnings("unused")
@@ -72,7 +73,7 @@ public class Building extends AbstractModel {
 
 
 
-    List<Point2d> list = new ArrayList<Point2d>();
+
 
     boolean isCounterClockwise;
 
@@ -116,11 +117,6 @@ public class Building extends AbstractModel {
 
 
     /**
-     * Way.
-     */
-    private Way way;
-
-    /**
      * Height cloner.
      */
     private List<RelationCloneHeight> cloneHeight;
@@ -138,21 +134,8 @@ public class Building extends AbstractModel {
      */
     public Building(Way pWay, Perspective3D pPerspective) {
         super(pWay, pPerspective);
-        this.way = pWay;
 
-        this.list = new ArrayList<Point2d>();
-
-        for (int i = 0; i < pWay.getNodesCount(); i++) {
-            Node node = pWay.getNode(i);
-
-            double x = pPerspective.calcX(node.getEastNorth().getX());
-            double y = pPerspective.calcY(node.getEastNorth().getY());
-
-            this.list.add(new Point2d(x, y));
-            //log.info("d x: " + x + " y: " + y);
-        }
-
-        if (0.0f < Triangulate.area(this.list)) {
+        if (0.0f < Triangulate.area(this.points)) {
             this.isCounterClockwise = true;
         }
 
@@ -210,9 +193,9 @@ public class Building extends AbstractModel {
 
         String tag3dr = pWay.get("3dr:type");
         if (!StringUtil.isBlankOrNull(tag3dr)) {
-            this.roof = new DormerRoof(this, this.list, pWay, pPerspective);
+            this.roof = new DormerRoof(this, this.points, pWay, pPerspective);
         } else {
-            this.roof = new ShapeRoof(this, this.list, pWay, pPerspective);
+            this.roof = new ShapeRoof(this, this.points, pWay, pPerspective);
         }
 
         this.modelRender = ModelRender.getInstance();
@@ -224,9 +207,16 @@ public class Building extends AbstractModel {
     public TextureData getFacadeTexture() {
 
         String facadeMaterial = this.way.get("building:facade:material");
+
         String facadeColor = this.way.get("building:facade:color");
         if (StringUtil.isBlankOrNull(facadeColor)) {
+            facadeColor = this.way.get("building:facade:colour");
+        }
+        if (StringUtil.isBlankOrNull(facadeColor)) {
             facadeColor = this.way.get("building:color");
+        }
+        if (StringUtil.isBlankOrNull(facadeColor)) {
+            facadeColor = this.way.get("building:colour");
         }
 
         if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
@@ -275,17 +265,17 @@ public class Building extends AbstractModel {
         Material facadeMaterial =  MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
 
-        Vector3d [] normals = new Vector3d[this.list.size()];
+        Vector3d [] normals = new Vector3d[this.points.size()];
 
-        if (this.list.size() > 0) {
+        if (this.points.size() > 0) {
 
-            Point2d beginPoint = this.list.get(0);
-            for (int i = 1; i < this.list.size(); i++) {
+            Point2d beginPoint = this.points.get(0);
+            for (int i = 1; i < this.points.size(); i++) {
 
                 // Point2d start = border.get(i);
                 // Point2d stop = border.get((i + 1) % size);
 
-                Point2d endPoint = this.list.get(i);
+                Point2d endPoint = this.points.get(i);
 
 //                Vector3d norm = Normal.calcNormalNorm2(
 //                        beginPoint.getX(), 0.0f, beginPoint.getY(),
@@ -344,15 +334,15 @@ public class Building extends AbstractModel {
             meshWalls.addNormal(n);
         }
 
-        if (this.list.size() > 0) {
+        if (this.points.size() > 0) {
 
             double vEnd = (int) (this.buildingHeight / facadeTexture.getHeight());
 
-            Point2d beginPoint = this.list.get(0);
+            Point2d beginPoint = this.points.get(0);
 
-            for (int i = 1; i < this.list.size(); i++) {
+            for (int i = 1; i < this.points.size(); i++) {
 
-                Point2d endPoint = this.list.get(i);
+                Point2d endPoint = this.points.get(i);
 
                 int n = meshWalls.addNormal(normals[i - 1]);
 
@@ -399,8 +389,8 @@ public class Building extends AbstractModel {
             if ("entrance".equals(node.get("building"))) {
                 Entrances entrance = new Entrances();
 
-                Point2d p = this.list.get(i);
-                Vector2d direction = findWindowDirection(this.list, i);
+                Point2d p = this.points.get(i);
+                Vector2d direction = findWindowDirection(this.points, i);
 
                 entrance.setPoint(p);
                 entrance.setDirection(direction);
@@ -414,8 +404,8 @@ public class Building extends AbstractModel {
 
             if ("window".equals(node.get("building"))) {
                 Window entrance = new Window();
-                Point2d p = this.list.get(i);
-                Vector2d direction = findWindowDirection(this.list, i);
+                Point2d p = this.points.get(i);
+                Vector2d direction = findWindowDirection(this.points, i);
 
 
                 entrance.setPoint(p);
@@ -438,6 +428,8 @@ public class Building extends AbstractModel {
      * In future windows should be cut out from building model!
      *
      *  This method should change in future!
+     *
+     * @param pWindowEntrancesList
      *
      * @return
      */
@@ -631,7 +623,7 @@ public class Building extends AbstractModel {
          * @return the model
          */
         public Model getModel() {
-            return model;
+            return this.model;
         }
 
         /**
@@ -645,7 +637,7 @@ public class Building extends AbstractModel {
          * @return the cloneHeight
          */
         public List<RelationCloneHeight> getCloneHeight() {
-            return cloneHeight;
+            return this.cloneHeight;
         }
 
         /**
@@ -717,7 +709,7 @@ public class Building extends AbstractModel {
          * @return the cloneHeight
          */
         public List<RelationCloneHeight> getCloneHeight() {
-            return cloneHeight;
+            return this.cloneHeight;
         }
         /**
          * @param cloneHeight the cloneHeight to set
@@ -729,7 +721,7 @@ public class Building extends AbstractModel {
          * @return the minHeight
          */
         public double getMinHeight() {
-            return minHeight;
+            return this.minHeight;
         }
         /**
          * @param minHeight the minHeight to set
@@ -741,7 +733,7 @@ public class Building extends AbstractModel {
          * @return the height
          */
         public double getHeight() {
-            return height;
+            return this.height;
         }
         /**
          * @param height the height to set
@@ -753,7 +745,7 @@ public class Building extends AbstractModel {
          * @return the direction
          */
         public Vector2d getDirection() {
-            return direction;
+            return this.direction;
         }
         /**
          * @param direction the direction to set
@@ -767,6 +759,11 @@ public class Building extends AbstractModel {
 
     @Override
     public void draw(GL2 pGl, Camera pCamera) {
+
+        pGl.glPushMatrix();
+
+        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+
 
         pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
 
@@ -809,11 +806,15 @@ public class Building extends AbstractModel {
 
                 }
             }
-
         }
+
+        pGl.glPopMatrix();
     }
 
 
+    /** Building height.
+     * @return height
+     */
     public double getHeight() {
         return this.height;
     }

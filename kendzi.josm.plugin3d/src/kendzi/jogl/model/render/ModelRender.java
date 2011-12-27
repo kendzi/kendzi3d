@@ -9,6 +9,7 @@
 
 package kendzi.jogl.model.render;
 
+import java.awt.Color;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -32,6 +33,8 @@ public class ModelRender {
     /** Log. */
     private static final Logger log = Logger.getLogger(ModelRender.class);
 
+    private static final Material TEXTURE_MATERIAL = getDefaultMaterial();
+
     private static ModelRender instance = new ModelRender();
     private HashMap<Integer, Texture> textures;
     private boolean debugging = true;
@@ -39,11 +42,24 @@ public class ModelRender {
     private boolean drawEdges;
     private boolean drawNormals;
 
+    private Material lastSetMaterial;
+
+    private int vertexCount;
+    private int faceCount;
+
     public ModelRender() {
     }
 
     public static ModelRender getInstance() {
         return instance;
+    }
+
+    public int getFaceCount() {
+        return this.faceCount;
+    }
+
+    public void resetFaceCount() {
+       this.faceCount = 0;
     }
 
 
@@ -67,7 +83,7 @@ public class ModelRender {
 
     private void draw(GL2 gl, Model model) {
 
-        boolean materialChanged = true;
+//        boolean materialChanged = true;
 
 //        if (this.textures == null) {
 //            //FIXME
@@ -122,12 +138,20 @@ public class ModelRender {
                     useTextureDisabled = true;
                 }
 
+                this.faceCount += mesh.face.length;
+
                 for (fi = 0; fi < mesh.face.length; fi++) {
                     Face face = mesh.face[fi];
 
-                    boolean setupMaterials = setupMaterials(materialChanged, gl, model, mesh, face);
+                    Material faceMaterial = getFaceMaterial(model, mesh, face);
+//                    materialchanged = isMaterialChanged(faceMaterial, lastMaterial)
+                    if (isMaterialChanged(faceMaterial, this.lastSetMaterial)) {
+                //        setupMaterial(gl, faceMaterial);
+                    }
 
-                    materialChanged = materialChanged || setupMaterials;
+//                    boolean setupMaterials = setupMaterials(materialChanged, gl, model, mesh, face);
+
+//                    materialChanged = materialChanged || setupMaterials;
 
                     gl.glBegin(face.type);
 
@@ -180,9 +204,9 @@ public class ModelRender {
 
             gl.glColor3f(1.0f, 1.0f, 1.0f);
 
-            if (materialChanged) {
-                setDefaultMaterial(gl);
-            }
+//            if (materialChanged) {
+//                setDefaultMaterial(gl);
+//            }
 
         } catch (RuntimeException e) {
             throw new RuntimeException(
@@ -408,6 +432,31 @@ public class ModelRender {
         }
     }
 
+
+
+    private Material getFaceMaterial(Model pModel, Mesh mesh, Face face) {
+        if (mesh.hasTexture) {
+            return TEXTURE_MATERIAL;
+        }
+        if (face.materialID < pModel.getNumberOfMaterials()) {
+            return pModel.getMaterial(face.materialID);
+        }
+        return null;
+    }
+
+    private boolean isMaterialChanged(Material material, Material lastMaterial) {
+        return material == null || material.equals(lastMaterial);
+    }
+
+    private void setupMaterials(Material material, GL2 pGl) {
+//        if (TEXTURE_MATERIAL.equals(material)) {
+//            setDefaultMaterial(pGl);
+//            return;
+//        }
+
+        setupMaterial(pGl, material);
+    }
+
     private boolean setupMaterials(boolean materialChanged, GL2 pGl, Model pModel, Mesh mesh, Face face) {
 
 
@@ -458,6 +507,19 @@ public class ModelRender {
         pGl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, new float[] {0.0f, 0.0f, 0.0f, 1.0f}, 0);
     }
 
+    public static Material getDefaultMaterial() {
+
+        Material m = new Material();
+        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+        m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+        //FIXME don't setup materials after each rendered model !!!
+        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+        m.shininess = 0.0f;
+        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        return m;
+    }
+
     private void setupMaterial(GL2 pGl, Material material) {
         float[] rgba = new float[4];
 
@@ -476,6 +538,8 @@ public class ModelRender {
         if (material.emissive != null) {
             pGl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, material.emissive.getRGBComponents(rgba), 0);
         }
+
+        this.lastSetMaterial = material;
     }
 
     private Texture getTexture(int materialId, Model model) {
@@ -564,7 +628,7 @@ public class ModelRender {
      * @return the drawEdges
      */
     public boolean isDrawEdges() {
-        return drawEdges;
+        return this.drawEdges;
     }
 
     /**
@@ -578,7 +642,7 @@ public class ModelRender {
      * @return the drawNormals
      */
     public boolean isDrawNormals() {
-        return drawNormals;
+        return this.drawNormals;
     }
 
     /**
@@ -592,7 +656,7 @@ public class ModelRender {
      * @return the debugging
      */
     public boolean isDebugging() {
-        return debugging;
+        return this.debugging;
     }
 
     /**

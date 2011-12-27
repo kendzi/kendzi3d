@@ -150,22 +150,26 @@ public class Fence extends AbstractWayModel {
 
         //pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
 
-        this.modelRender.render(pGl, this.model);
+        try {
+            this.modelRender.render(pGl, this.model);
 
-        for (RelationCloneHeight cloner : this.heightClone) {
-            for (Double height : cloner) {
+            for (RelationCloneHeight cloner : this.heightClone) {
+                for (Double height : cloner) {
 
-                pGl.glPushMatrix();
-                pGl.glTranslated(0, height, 0);
+                    pGl.glPushMatrix();
+                    pGl.glTranslated(0, height, 0);
 
-                this.modelRender.render(pGl, this.model);
-                pGl.glPopMatrix();
+                    this.modelRender.render(pGl, this.model);
+                    pGl.glPopMatrix();
 
+                }
             }
+
+        } finally {
+
+            pGl.glPopMatrix();
+
+            pGl.glDisable(GL2.GL_CULL_FACE);
         }
-
-        pGl.glPopMatrix();
-
-        pGl.glDisable(GL2.GL_CULL_FACE);
     }
 }

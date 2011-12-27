@@ -22,6 +22,7 @@ import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
+import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -115,8 +116,12 @@ public class WikiTextureLoaderAction extends JosmAction {
      */
     public void loadFromWiki() {
         List<String> errors = null;
+        String timestamp = null;
         try {
-            errors = WikiTextureLoaderService.getInstance().load();
+            LoadRet load = WikiTextureLoaderService.getInstance().load();
+            errors = load.getErrors();
+            timestamp = load.getTimestamp();
+
         } catch (MalformedURLException e) {
             log.error(e);
             showError(e);
@@ -139,7 +144,7 @@ public class WikiTextureLoaderAction extends JosmAction {
                     JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null,
-                    tr("Downloded textures from wiki to path: ") + "\n"
+                    tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
                             + WikiTextureLoaderService.getInstance().getTexturesPath() ,
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);

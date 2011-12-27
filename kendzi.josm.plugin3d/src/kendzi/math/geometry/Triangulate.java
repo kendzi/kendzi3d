@@ -43,7 +43,7 @@ public class Triangulate {
 
 		for (int p = n - 1, q = 0; q < n; p = q++) {
 			A += contour.get(p).getX() * contour.get(q).getY()
-			- contour.get(q).getX() * contour.get(p).getY();
+			        - contour.get(q).getX() * contour.get(p).getY();
 		}
 		return A * 0.5f;
 	}

@@ -9,6 +9,8 @@
 
 package kendzi.josm.kendzi3d.jogl;
 
+import kendzi.josm.kendzi3d.util.StringUtil;
+
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -113,6 +115,19 @@ public final class ModelUtil {
             }
         }
         return he;
+    }
+
+    public static Integer parseInteger(String pStr, Integer pDefault) {
+        if (StringUtil.isBlankOrNull(pStr)) {
+            return pDefault;
+        }
+
+        try {
+            return Integer.parseInt(pStr);
+        } catch (Exception e) {
+            //
+        }
+        return pDefault;
     }
 
 }

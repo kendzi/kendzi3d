@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.jogl.model.trees;
 
 import java.util.EnumMap;
 
@@ -27,6 +27,7 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
@@ -34,6 +35,7 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import net.java.joglutils.model.ModelLoadException;
 
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
@@ -72,90 +74,6 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     @Override
     public void buildModel() {
 
-
-//        int lod = 3;
-//
-//        double treeHeight = ModelUtil.getHeight(this.node, 10d);
-//
-//
-//        float treeWidth = (float) (treeHeight / 2.0);
-//
-//        // tree model
-//        float[] verts = { -treeWidth / 2, 0, 0, treeWidth / 2, 0, 0, treeWidth / 2, (float) treeHeight, 0,
-//                -treeWidth / 2, (float) treeHeight, 0 };
-//
-//
-//        this.verts = verts;
-//
-//        this.treeText = TextureCacheService.getTextureFromDir("tree_unknown.png");
-//        if ("broad_leafed".equals(this.node.get("type"))) {
-//            this.treeText = TextureCacheService.getTexture("tree_broad_leafed.png");
-//        } else if ("conifer".equals(this.node.get("type"))) {
-//            this.treeText = TextureCacheService.getTexture("tree_conifer.png");
-//        }
-//
-        this.type = this.node.get("type");
-        if (this.type == null) {
-            this.type = "unknown";
-        }
-        this.genus = this.node.get("genus");
-        this.species = this.node.get("species");
-//
-//        //        this.x = this.perspective.calcX(this.node.getEastNorth().getX());
-//        //        this.y = this.perspective.calcY(this.node.getEastNorth().getY());
-//
-//
-
-//
-//
-//        try {
-////                        this.model2 = ModelCache.loadModel("models/obj/penguin.obj");
-////            this.model2 = ModelCache.loadModel("models/obj/tree1.obj");
-//            this.model = ModelCache.loadModel("models/obj/tree3.obj");
-////            this.model2 = ModelCache.loadModel("models/obj/box.obj");
-//        } catch (ModelLoadException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//        // When loading the model, adjust the center to the boundary center
-//        //        this.model2.centerModelOnPosition(true);
-//        this.model.useLigth = true;
-////        this.model.setUseTexture(true);
-////        this.model.drawNormals = true;
-////        this.model.drawEdges = true;
-//
-//        setAmbientColor(this.model);
-//
-//        // Render the bounding box of the entire model
-//        //        this.model2.setRenderModelBounds(false);
-//
-//        // Render the bounding boxes for all of the objects of the model
-//        //        this.model2.setRenderObjectBounds(false);
-//
-//        // Make the model unit size
-//        //        this.model2.setUnitizeSize(true);
-//
-//        // Get the radius of the model to use for lighting and view presetting
-//        double radius = this.model.getBounds().radius;
-//
-//
-//        Bounds bounds = this.model.getBounds();
-//
-//        double modelHeight = bounds.max.y;
-//        double modelWidht = Math.max(bounds.max.x - bounds.min.x, bounds.max.z - bounds.min.z);
-//
-//        this.modelScaleHeight = treeHeight / modelHeight;
-//
-//        this.modelScaleWidht = this.modelScaleHeight;
-
-
-        // Get an instance of the display list renderer a renderer
-        // this.modelRenderer = DisplayListRenderer.getInstance();
-        this.modelRenderer = ModelRender.getInstance();
-        // Turn on debugging
-        // this.modelRenderer.debug(true);
-
         buildModel(LOD.LOD1);
 
         this.buildModel = true;
@@ -171,7 +89,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         this.genus = this.node.get("genus");
         this.species = this.node.get("species");
 
-        double height = getHeight(this.node);
+        double height = getHeight(this.node, this.species, this.genus, this.type);
 
         Model model = null;
 
@@ -197,7 +115,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //
 //        }
 
-        model = findSimpleModel(pLod);
+        model = findSimpleModel(this.species, this.genus, this.type, pLod);
 
         setupScale(model, height);
 
@@ -236,16 +154,20 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * - genus
      * - type
      *
+     * @param species tree specius
+     * @param genus  tree genus
+     * @param type  tree type
+     * @param pLod  lod level
      *
-     * @return
+     * @return model
      */
-    private Model findSimpleModel(LOD pLod) {
+    public static Model findSimpleModel(String species, String genus, String type, LOD pLod) {
         // let go
         String model = null;
 
-        String spacesModel = MetadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, this.species, "" + pLod);
-        String genusModel = MetadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, this.genus, "" + pLod);
-        String typeModel = MetadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, this.type, "" + pLod);
+        String spacesModel = MetadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, species, "" + pLod);
+        String genusModel = MetadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, genus, "" + pLod);
+        String typeModel = MetadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, type, "" + pLod);
 
         // XXX add StringUtil
         if (spacesModel != null) {
@@ -267,18 +189,20 @@ public class Tree extends AbstractPointModel implements DLODSuport {
                 // XXX
                 e.printStackTrace();
             }
-        } else {
-            //"#flat"
-            // XXX
-            this.isFlat = true;
-            return buildFlatModel();
         }
+
+//         else {
+//            //"#flat"
+//            // XXX
+//            this.isFlat = true;
+//            return buildFlatModel();
+//        }
 
         return null;
 
     }
 
-    private String unknown(String pStr) {
+    private static String unknown(String pStr) {
         if (pStr == null) {
             return "unknown";
         }
@@ -295,17 +219,17 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      *
      * @return
      */
-    private double getHeight(Node node) {
+    public static double getHeight(OsmPrimitive node, String species, String genus, String type) {
         // let go
 
         Double height = 1d;
 
         Double nodeHeight = ModelUtil.getHeight(node, null);
 
-        Double spacesHeight = MetadataCacheService.getPropertitesDouble("models.trees.species." + this.species + ".height", null);
-        Double genusHeight = MetadataCacheService.getPropertitesDouble("models.trees.genus." + this.genus + ".height", null);
-        Double typeHeight = MetadataCacheService.getPropertitesDouble("models.trees.type." + unknown(this.type) + ".height", null);
-         MetadataCacheService.getPropertitesDouble("models.trees." + this.type + ".height", null);
+        Double spacesHeight = MetadataCacheService.getPropertitesDouble("models.trees.species." + species + ".height", null);
+        Double genusHeight = MetadataCacheService.getPropertitesDouble("models.trees.genus." + genus + ".height", null);
+        Double typeHeight = MetadataCacheService.getPropertitesDouble("models.trees.type." + unknown(type) + ".height", null);
+         MetadataCacheService.getPropertitesDouble("models.trees." + type + ".height", null);
 
         // XXX add StringUtil
         if (nodeHeight != null) {
@@ -441,14 +365,11 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         return false;
     }
 
-    private void setAmbientColor(Model model22) {
-        for (int i = 0; i < model22.getNumberOfMaterials(); i++) {
-            Material material = model22.getMaterial(i);
-//            material.diffuseColor
+    private static void setAmbientColor(Model pModel) {
+        for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
+            Material material = pModel.getMaterial(i);
             material.ambientColor = material.diffuseColor;
-//                new Color(102, 102, 102);
         }
-
     }
 
     @Override
@@ -550,7 +471,8 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         if (enableLightsAtEnd) {
             gl.glEnable(GL2.GL_LIGHTING);
         }
-    } // end of drawScreen()
+    }
+
     /*
      * A screen is a transparent quadrilateral which only shows the
      * non-transparent parts of the texture. Lighting is disabled. The screen is

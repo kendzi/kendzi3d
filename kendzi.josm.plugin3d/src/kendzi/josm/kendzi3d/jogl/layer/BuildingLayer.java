@@ -12,11 +12,9 @@ package kendzi.josm.kendzi3d.jogl.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.jogl.model.trees.Forest;
-import kendzi.josm.kendzi3d.jogl.model.trees.Tree;
-import kendzi.josm.kendzi3d.jogl.model.trees.TreeRow;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -26,11 +24,15 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class TreeLayer implements Layer {
+/**
+ * Layer for buildings
+ * @author Tomasz Kędziora (Kendzi)
+ */
+public class BuildingLayer implements Layer {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TreeLayer.class);
+    private static final Logger log = Logger.getLogger(BuildingLayer.class);
 
     /**
      * List of layer models.
@@ -38,35 +40,28 @@ public class TreeLayer implements Layer {
     private List<Model> modelList = new ArrayList<Model>();
 
 
-    private Match treesMatcher;
-    private Match treesWayMatcher;
+    private Match buildingMatcher;
 
     {
         try {
-            this.treesMatcher = SearchCompiler.compile("(natural=tree)", false, false);
-        } catch (ParseError e) {
-            this.treesMatcher = new SearchCompiler.Never();
-            e.printStackTrace();
-        }
-        try {
-            this.treesWayMatcher = SearchCompiler.compile("(natural=tree_row | natural=wood | landuse=forest)", false, false);
-        } catch (ParseError e) {
-            this.treesWayMatcher = new SearchCompiler.Never();
-            e.printStackTrace();
-        }
+            this.buildingMatcher = SearchCompiler.compile("(building=*) | (building\\:part=yes)", false, false);
 
+        } catch (ParseError e) {
+            this.buildingMatcher = new SearchCompiler.Never();
+            log.error(e);
+        }
 
     }
 
     @Override
     public
     Match getNodeMatcher() {
-        return this.treesMatcher;
+        return null;
     }
 
     @Override
     public Match getWayMatcher() {
-        return this.treesWayMatcher;
+        return this.buildingMatcher;
     }
 
     @Override
@@ -85,22 +80,17 @@ public class TreeLayer implements Layer {
     }
 
     @Override
-    public void addModel(Node pNode, Perspective3D pPerspective3D) {
-        this.modelList.add(new Tree(pNode, pPerspective3D));
-
+    public void addModel(Node node, Perspective3D pPerspective3D) {
+        //
     }
 
     @Override
-    public void addModel(Way pWay, Perspective3D pPerspective3D) {
-        if ("tree_row".equals(pWay.get("natural"))) {
-            this.modelList.add(new TreeRow(pWay, pPerspective3D));
-        } else {
-            this.modelList.add(new Forest(pWay, pPerspective3D));
-        }
+    public void addModel(Way way, Perspective3D pPerspective3D) {
+        this.modelList.add(new Building(way, pPerspective3D));
     }
 
     @Override
-    public void addModel(Relation pRelation, Perspective3D pPerspective3D) {
+    public void addModel(Relation relation, Perspective3D pPerspective3D) {
         //
     }
 

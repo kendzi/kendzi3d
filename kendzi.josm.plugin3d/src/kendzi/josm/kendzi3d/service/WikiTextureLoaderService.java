@@ -82,20 +82,22 @@ public class WikiTextureLoaderService {
      * @throws MalformedURLException error
      * @throws IOException error
      */
-    public List<String> load() throws MalformedURLException, IOException {
+    public LoadRet load() throws MalformedURLException, IOException {
 
-        List<String> errors = new ArrayList<String>();
+        LoadRet ret = new LoadRet();
 
         StringBuffer sb = readWikiStream();
         log.debug(sb);
 
-        String parseXmlFile = parseXmlFile(null);
-        log.debug(parseXmlFile);
+        WikiRet wikiRet = parseXmlFile(null);
+        ret.setTimestamp(wikiRet.getTimestamp());
+        log.debug(wikiRet.getText());
 
-        List<WikiTextures> wikiTextures = parseWikiTextures(parseXmlFile);
+
+        List<WikiTextures> wikiTextures = parseWikiTextures(wikiRet.getText());
 
         List<String> downloadErrors = downloadTexturesFiles(wikiTextures);
-        errors.addAll(downloadErrors);
+        ret.getErrors().addAll(downloadErrors);
 
         Properties properties = createProperties(wikiTextures);
 
@@ -107,7 +109,46 @@ public class WikiTextureLoaderService {
 
         TextureCacheService.clearTextures();
 
-        return errors;
+        return ret;
+    }
+
+    public class LoadRet {
+
+        List<String> errors;
+        String timestamp;
+
+
+
+        /** Constructor.
+         */
+        public LoadRet() {
+            this.errors = new ArrayList<String>();
+        }
+
+        /**
+         * @return the errors
+         */
+        public List<String> getErrors() {
+            return errors;
+        }
+        /**
+         * @param errors the errors to set
+         */
+        public void setErrors(List<String> errors) {
+            this.errors = errors;
+        }
+        /**
+         * @return the timestamp
+         */
+        public String getTimestamp() {
+            return timestamp;
+        }
+        /**
+         * @param timestamp the timestamp to set
+         */
+        public void setTimestamp(String timestamp) {
+            this.timestamp = timestamp;
+        }
     }
 
     private void saveProperties(Properties prop) throws FileNotFoundException, IOException {
@@ -335,7 +376,9 @@ public class WikiTextureLoaderService {
     }
 
 
-    private static String parseXmlFile(String string) {
+    private static WikiRet parseXmlFile(String string) {
+
+        WikiRet ret = new WikiRet();
 
         // get the factory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -360,7 +403,20 @@ public class WikiTextureLoaderService {
 
                     // get the employee element
                     Element el = (Element) nl.item(0);
-                    return el.getTextContent();
+                    ret.setText(el.getTextContent());
+                }
+            }
+
+            // get a nodelist of elements
+            nl = docEle.getElementsByTagName("timestamp");
+
+            if (nl != null && nl.getLength() > 0) {
+                // for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.getLength() > 0) {
+
+                    // get the employee element
+                    Element el = (Element) nl.item(0);
+                    ret.setTimestamp(el.getTextContent());
                 }
             }
 
@@ -371,7 +427,37 @@ public class WikiTextureLoaderService {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        return string;
+        return ret;
+    }
+
+    static class WikiRet {
+        String text;
+        String timestamp;
+        /**
+         * @return the text
+         */
+        public String getText() {
+            return text;
+        }
+        /**
+         * @param text the text to set
+         */
+        public void setText(String text) {
+            this.text = text;
+        }
+        /**
+         * @return the timestamp
+         */
+        public String getTimestamp() {
+            return timestamp;
+        }
+        /**
+         * @param timestamp the timestamp to set
+         */
+        public void setTimestamp(String timestamp) {
+            this.timestamp = timestamp;
+        }
+
     }
 
     private static StringBuffer readWikiStream() throws MalformedURLException, IOException {

@@ -13,21 +13,26 @@ import java.util.ArrayList;
 
 import javax.vecmath.Point2d;
 
-public class ttt {
+/**
+ * Polygon util.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
+public class PolygonUtil {
 
     /**
+     * Test if point is inside polygon
      * @see "http://en.wikipedia.org/wiki/Point_in_polygon"
      * @see "http://en.wikipedia.org/wiki/Even-odd_rule"
      * @see "http://paulbourke.net/geometry/insidepoly/"
-     * @param point
-     * @param polygon
-     * @return
+     * @param point point to test
+     * @param polygon polygon
+     * @return is point inside polygon
      */
-    boolean isInside(Point2d point, PolygonList2d polygon) {
+    public static boolean isInside(Point2d point, PolygonList2d polygon) {
         // PointType & point, PolygonType & polygon
         int numpoints = polygon.getPoints().size();
-        int X = 0;
-        int Y = 1;
+
         if (numpoints < 3) {
             return false;
         }
@@ -76,6 +81,52 @@ public class ttt {
         }
 
         return oddNodes;
+    }
+
+    /**
+     *  Minimal values in polygon. Minimal coordinates of bounding box.
+     *
+     * @param pPolygon polygon
+     * @return minimal values
+     */
+    public static Point2d minBound(PolygonList2d pPolygon) {
+
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+
+        for (Point2d p : pPolygon.getPoints()) {
+            if (p.x < minX) {
+                minX = p.x;
+            }
+            if (p.y < minY) {
+                minY = p.y;
+            }
+        }
+
+        return new Point2d(minX, minY);
+    }
+
+    /**
+     *  Maximal values in polygon. Maximal coordinates of bounding box.
+     *
+     * @param pPolygon polygon
+     * @return maximal values
+     */
+    public static Point2d maxBound(PolygonList2d pPolygon) {
+
+        double maxX = -Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+
+        for (Point2d p : pPolygon.getPoints()) {
+            if (p.x > maxX) {
+                maxX = p.x;
+            }
+            if (p.y > maxY) {
+                maxY = p.y;
+            }
+        }
+
+        return new Point2d(maxX, maxY);
     }
 
 }

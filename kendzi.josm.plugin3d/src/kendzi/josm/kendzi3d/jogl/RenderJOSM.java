@@ -23,24 +23,18 @@ import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
-import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.jogl.model.Road;
-import kendzi.josm.kendzi3d.jogl.model.Tree;
-import kendzi.josm.kendzi3d.jogl.model.Water;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
-import org.openstreetmap.josm.actions.search.SearchCompiler.ParseError;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -64,30 +58,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      */
     private List<Model> modelList = new ArrayList<Model>();
 
-    /**
-     * Matcher for building layer. XXX move to layers.
-     */
-    private Match buildings;
 
-    /**
-     * Matcher for roads layer. XXX move to layers.
-     */
-    private Match roadsMatcher;
-
-    /**
-     * Matcher for trees layer. XXX move to layers.
-     */
-    private Match treesMatcher;
-
-    /**
-     * Matcher for water layer. XXX move to layers.
-     */
-    private Match waterMatcher;
-
-    /**
-     * Matcher for fence layer. XXX move to layers.
-     */
-    private Match fenceMatcher;
 
     /**
      * Request for rebuildin models.
@@ -152,19 +123,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     }
 
     public RenderJOSM() {
-        try {
-            // XXX move to layer builder
-            this.buildings = SearchCompiler.compile("(building=*) | (building\\:part=yes)", false, false);
-            this.roadsMatcher = SearchCompiler.compile("(highway=*)", false, false);
-            this.treesMatcher = SearchCompiler.compile("(natural=tree)", false, false);
-            this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false,
-                    false);
-            this.fenceMatcher = SearchCompiler.compile("barrier=fence | (type=3dr barrier=fence)", false,
-                    false);
-        } catch (ParseError e) {
-            this.buildings = new SearchCompiler.Never();
-            e.printStackTrace();
-        }
+
 
         DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this),
                 FireMode.IMMEDIATELY);
@@ -176,6 +135,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(1, 0, 0);
 
 
+        this.layerList.add(new BuildingLayer());
         this.layerList.add(new RoadLayer());
         this.layerList.add(new WaterLayer());
         this.layerList.add(new TreeLayer());
@@ -339,6 +299,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
 
     private LOD getLods(DLODSuport r, Camera camera) {
+        return getLods(r.getPoint(), camera.getPoint());
+    }
+
+    public static LOD getLods(Point3d point, Point3d camera) {
         // XXX only temporary !
         double lod1 = 20 * 20;
         double lod2 = 100 * 100;
@@ -346,12 +310,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         double lod4 = 1000 * 1000;
 //        double lod5 = 1000 * 1000;
 
-        //XXX temporary
-        Point3d point = r.getPoint();
-        Point3d c = camera.getPoint();
-        double dx = c.x - point.x;
-        double dy = c.y - point.y;
-        double dz = c.z - point.z;
+//        //XXX temporary
+//        Point3d point = r.getPoint();
+//        Point3d c = camera.getPoint();
+        double dx = camera.x - point.x;
+        double dy = camera.y - point.y;
+        double dz = camera.z - point.z;
 
         double distance = dx * dx  + dy * dy + dz * dz;
 
@@ -381,22 +345,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             layer.clear();
         }
 
-//        System.out.println(this.pers.calcX(this.centerX));
-//        System.out.println(this.pers.calcX(0.2751230166333761));
-//        System.out.println(this.pers.calcX(0.27512260124501414));
-//        System.out.println(this.pers.calcX(0.2751235175428715));
-
-
         for (Node node : dataset.getNodes()) {
 
             if (node.isDeleted()) {
                 continue;
             }
 
-            if (this.treesMatcher.match(node)) {
-
-                this.modelList.add(new Tree(node, this.pers));
-            }
             // layers
             for (Layer layer : this.layerList ) {
                 if (layer.getNodeMatcher() != null && layer.getNodeMatcher().match(node)) {
@@ -404,28 +358,11 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 }
             }
         }
+
         for (Way way : dataset.getWays()) {
 
             if (way.isDeleted()) {
                 continue;
-            }
-
-            if (this.buildings.match(way)) {
-
-                this.modelList.add(new Building(way, this.pers));
-            }
-            if (this.roadsMatcher.match(way)) {
-
-                this.modelList.add(new Road(way, this.pers));
-            }
-
-            if (this.waterMatcher.match(way)) {
-
-                this.modelList.add(new Water(way, this.pers));
-            }
-            if (this.fenceMatcher.match(way)) {
-
-             //   this.modelList.add(new Fence(way, this.pers, this.lightPos));
             }
 
             // layers
@@ -434,7 +371,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                     layer.addModel(way, this.pers);
                 }
             }
-
         }
 
         for (org.openstreetmap.josm.data.osm.Relation relation : dataset.getRelations()) {
@@ -443,18 +379,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 continue;
             }
 
-            if (this.fenceMatcher.match(relation)) {
-
-               // this.modelList.add(new Fence(relation, this.pers, this.lightPos));
-            }
-
             // layers
             for (Layer layer : this.layerList) {
                 if (layer.getRelationMatcher() != null && layer.getRelationMatcher().match(relation)) {
                     layer.addModel(relation, this.pers);
                 }
             }
-
         }
     }
 

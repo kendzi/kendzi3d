@@ -139,6 +139,9 @@ public class FenceRelation extends AbstractRelationModel {
     public void buildModel() {
 
         if (!(this.points.size() > 1)) {
+            //FIXME
+            this.model = new Model();
+            this.buildModel = true;
             return;
         }
 
@@ -332,12 +335,14 @@ public class FenceRelation extends AbstractRelationModel {
         pGl.glPushMatrix();
         pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
 
-        //pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
+        try {
 
-        this.modelRender.render(pGl, this.model);
+            this.modelRender.render(pGl, this.model);
+        } finally {
 
-        pGl.glPopMatrix();
+            pGl.glPopMatrix();
 
-        pGl.glDisable(GL2.GL_CULL_FACE);
+            pGl.glDisable(GL2.GL_CULL_FACE);
+        }
     }
 }
