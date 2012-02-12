@@ -28,6 +28,8 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
 
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -39,6 +41,9 @@ import org.openstreetmap.josm.data.osm.Way;
 public class TreeRow extends AbstractWayModel implements DLODSuport {
 
     private static final double EPSILON = 0.001;
+
+    ModelCacheService modelCacheService;
+    MetadataCacheService metadataCacheService;
 
     /**
      * Renderer of model.
@@ -61,14 +66,19 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
      * @param pWay way
      * @param pPerspective3D perspective
      */
-    public TreeRow(Way pWay, Perspective3D pPerspective3D) {
+    public TreeRow(Way pWay, Perspective3D pPerspective3D,
+            ModelRender pModelRender,
+            ModelCacheService modelCacheService,
+            MetadataCacheService metadataCacheService) {
         super(pWay, pPerspective3D);
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
         this.scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
+        this.modelCacheService = modelCacheService;
+        this.metadataCacheService = metadataCacheService;
     }
 
     @Override
@@ -89,11 +99,11 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
         this.genus = this.way.get("genus");
         this.species = this.way.get("species");
 
-        double height = Tree.getHeight(this.way, this.species, this.genus, this.type);
+        double height = Tree.getHeight(this.way, this.species, this.genus, this.type, metadataCacheService);
 
         Model model = null;
 
-        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod);
+        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
 
         setupScale(model, height);
 

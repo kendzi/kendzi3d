@@ -12,11 +12,14 @@ package kendzi.josm.kendzi3d.jogl.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.trees.Forest;
 import kendzi.josm.kendzi3d.jogl.model.trees.Tree;
 import kendzi.josm.kendzi3d.jogl.model.trees.TreeRow;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -25,6 +28,8 @@ import org.openstreetmap.josm.actions.search.SearchCompiler.ParseError;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+
+import com.google.inject.Inject;
 
 public class TreeLayer implements Layer {
 
@@ -37,6 +42,17 @@ public class TreeLayer implements Layer {
      */
     private List<Model> modelList = new ArrayList<Model>();
 
+    /**
+     * Model renderer.
+     */
+    @Inject
+    private ModelRender modelRender;
+
+    @Inject
+    private ModelCacheService modelCacheService;
+
+    @Inject
+    private MetadataCacheService metadataCacheService;
 
     private Match treesMatcher;
     private Match treesWayMatcher;
@@ -86,16 +102,16 @@ public class TreeLayer implements Layer {
 
     @Override
     public void addModel(Node pNode, Perspective3D pPerspective3D) {
-        this.modelList.add(new Tree(pNode, pPerspective3D));
+        this.modelList.add(new Tree(pNode, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
 
     }
 
     @Override
     public void addModel(Way pWay, Perspective3D pPerspective3D) {
         if ("tree_row".equals(pWay.get("natural"))) {
-            this.modelList.add(new TreeRow(pWay, pPerspective3D));
+            this.modelList.add(new TreeRow(pWay, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
         } else {
-            this.modelList.add(new Forest(pWay, pPerspective3D));
+            this.modelList.add(new Forest(pWay, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
         }
     }
 
@@ -107,6 +123,20 @@ public class TreeLayer implements Layer {
     @Override
     public void clear() {
         this.modelList.clear();
+    }
+
+    /**
+     * @return the modelRender
+     */
+    public ModelRender getModelRender() {
+        return modelRender;
+    }
+
+    /**
+     * @param modelRender the modelRender to set
+     */
+    public void setModelRender(ModelRender modelRender) {
+        this.modelRender = modelRender;
     }
 
 }

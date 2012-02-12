@@ -12,6 +12,7 @@ package kendzi.josm.kendzi3d.jogl.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.Water;
@@ -24,6 +25,8 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
+import com.google.inject.Inject;
+
 public class WaterLayer implements Layer {
 
     /** Log. */
@@ -34,6 +37,11 @@ public class WaterLayer implements Layer {
      */
     private List<Model> modelList = new ArrayList<Model>();
 
+    /**
+     * Model renderer.
+     */
+    @Inject
+    private ModelRender modelRender;
 
     private Match waterMatcher;
 
@@ -80,7 +88,7 @@ public class WaterLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Water(way, pPerspective3D));
+        this.modelList.add(new Water(way, pPerspective3D, this.modelRender));
     }
 
     @Override
@@ -91,6 +99,20 @@ public class WaterLayer implements Layer {
     @Override
     public void clear() {
         this.modelList.clear();
+    }
+
+    /**
+     * @return the modelRender
+     */
+    public ModelRender getModelRender() {
+        return modelRender;
+    }
+
+    /**
+     * @param modelRender the modelRender to set
+     */
+    public void setModelRender(ModelRender modelRender) {
+        this.modelRender = modelRender;
     }
 
 }

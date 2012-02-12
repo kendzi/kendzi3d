@@ -87,9 +87,10 @@ public class DormerRoof extends Roof {
      * @param pList list of building walls
      * @param pWay way
      * @param pPerspective perspective
+     * @param pModelRender
      */
-    public DormerRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective) {
-        super(pBuilding, pList, pWay, pPerspective);
+    public DormerRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
+        super(pBuilding, pList, pWay, pPerspective, pModelRender);
 
 
         //
@@ -107,7 +108,7 @@ public class DormerRoof extends Roof {
         //        height = ModelUtil.getHeight(pWay, 1);
         this.height = pBuilding.getHeight();
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
     }
 
 

@@ -26,6 +26,7 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
+import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
@@ -34,7 +35,9 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -49,6 +52,9 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.projection.Projection;
 
 public class RenderJOSM implements DataSetListenerAdapter.Listener {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(RenderJOSM.class);
 
     private static final double NOWE_KRAMSKO_CENTER_X = 0.275119242;
     private static final double NOWE_KRAMSKO_CENTER_Y = 1.070152217;
@@ -125,6 +131,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public RenderJOSM() {
 
 
+        // FIXME
         DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this),
                 FireMode.IMMEDIATELY);
 
@@ -135,6 +142,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(1, 0, 0);
 
 
+        this.layerList.add(new PointModelsLayer());
         this.layerList.add(new BuildingLayer());
         this.layerList.add(new RoadLayer());
         this.layerList.add(new WaterLayer());
@@ -146,7 +154,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
 //        gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
 
-        this.modelRender = ModelRender.getInstance();
+//        this.modelRender = ModelRender.getInstance();
 
     }
 
@@ -332,8 +340,13 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     }
 
+    public DataSet getDataSet() {
+        return this.dataSet;
+//        return Main.main.getCurrentDataSet();
+    }
+
     public void rebuildData() {
-        DataSet dataset = Main.main.getCurrentDataSet();
+        DataSet dataset = getDataSet();
 
         if (dataset == null) {
             return;
@@ -401,6 +414,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(scale, center.getX(), center.getY());
     }
 
+    DataSet dataSet = null;
 
 
     @Override
@@ -412,70 +426,29 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             this.center = Main.map.mapView.getCenter();
         }
 
+        if (pEvent != null) {
+            this.dataSet = pEvent.getDataset();
+        }
+
         if (pEvent instanceof DataChangedEvent) {
             AbstractDatasetChangedEvent dce = pEvent;
 
-            double maxX = -Double.MAX_VALUE;
-            double minX = Double.MAX_VALUE;
 
-            double maxY = -Double.MAX_VALUE;
-            double minY = Double.MAX_VALUE;
 
-            DataSet dataset = dce.getDataset();
+            try {
+            if (Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().equals(this.dataSet)) {
+//                log.info("TESTTTT !!!!!!!!!!!!!!!!!!!! bad data set ?");
+            }
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
 
-            if (dataset != null) {
-                if (dataset.dataSources.size() > 0) {
-                    // it is dataset connected with OSM. Get bounds.
-                    for (DataSource source : dataset.dataSources) {
-                        // create area from data bounds
-                        LatLon min = source.bounds.getMin();
-                        LatLon max = source.bounds.getMax();
 
-                        if (minX > min.getX()) {
-                            minX = min.getX();
-                        }
-                        if (minY > min.getY()) {
-                            minY = min.getY();
-                        }
-                        if (maxX < max.getX()) {
-                            maxX = max.getX();
-                        }
-                        if (maxY < max.getY()) {
-                            maxY = max.getY();
-                        }
-                    }
-                } else {
-                    // it is newly created dataset not connected with OSM
-                    for (Node n : dataset.getNodes()) {
-                     // create area from data bounds
-                        LatLon cord = n.getCoor();
-
-                        if (cord == null) {
-                            continue;
-                        }
-
-                        if (minX > cord.getX()) {
-                            minX = cord.getX();
-                        }
-                        if (minY > cord.getY()) {
-                            minY = cord.getY();
-                        }
-                        if (maxX < cord.getX()) {
-                            maxX = cord.getX();
-                        }
-                        if (maxY < cord.getY()) {
-                            maxY = cord.getY();
-                        }
-                    }
-
-                }
+            if (this.dataSet != null) {
 
                 Projection proj = Main.getProjection();
 
-                this.center = proj.latlon2eastNorth(new LatLon(
-                        (maxY + minY) / 2d,
-                        (maxX + minX) / 2d
-                    ));
+                this.center = centerFromDataSet(this.dataSet, proj);
 
             } else {
                 this.center = new EastNorth(0, 0);
@@ -485,6 +458,111 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         setupPerspective3D(this.center);
 
         this.datasetChanged = true;
+    }
+
+
+
+    public static Bounds boundsFromDataSet(DataSet dataset) {
+        // XXX move to util
+
+        Bounds bounds = null;
+        for (Bounds b : dataset.getDataSourceBounds()) {
+            if (bounds == null) {
+                bounds = new Bounds(b);
+            } else {
+                bounds.extend(b.getMax());
+                bounds.extend(b.getMin());
+            }
+        }
+
+        return bounds;
+
+    }
+
+    private EastNorth centerFromDataSet(DataSet dataset, Projection proj) {
+
+        double maxX = -Double.MAX_VALUE;
+        double minX = Double.MAX_VALUE;
+
+        double maxY = -Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+
+        if (dataset.dataSources.size() > 0) {
+            // it is dataset connected with OSM. Get bounds.
+            for (DataSource source : dataset.dataSources) {
+                // create area from data bounds
+                LatLon min = source.bounds.getMin();
+                LatLon max = source.bounds.getMax();
+
+                if (minX > min.getX()) {
+                    minX = min.getX();
+                }
+                if (minY > min.getY()) {
+                    minY = min.getY();
+                }
+                if (maxX < max.getX()) {
+                    maxX = max.getX();
+                }
+                if (maxY < max.getY()) {
+                    maxY = max.getY();
+                }
+            }
+        } else {
+            // it is newly created dataset not connected with OSM
+            for (Node n : dataset.getNodes()) {
+             // create area from data bounds
+                LatLon cord = n.getCoor();
+
+                if (cord == null) {
+                    continue;
+                }
+
+                if (minX > cord.getX()) {
+                    minX = cord.getX();
+                }
+                if (minY > cord.getY()) {
+                    minY = cord.getY();
+                }
+                if (maxX < cord.getX()) {
+                    maxX = cord.getX();
+                }
+                if (maxY < cord.getY()) {
+                    maxY = cord.getY();
+                }
+            }
+
+        }
+
+
+
+        return proj.latlon2eastNorth(new LatLon(
+                (maxY + minY) / 2d,
+                (maxX + minX) / 2d
+            ));
+    }
+    /**
+     * @return the modelRender
+     */
+    public ModelRender getModelRender() {
+        return modelRender;
+    }
+    /**
+     * @param modelRender the modelRender to set
+     */
+    public void setModelRender(ModelRender modelRender) {
+        this.modelRender = modelRender;
+    }
+    /**
+     * @return the layerList
+     */
+    public List<Layer> getLayerList() {
+        return layerList;
+    }
+    /**
+     * @param layerList the layerList to set
+     */
+    public void setLayerList(List<Layer> layerList) {
+        this.layerList = layerList;
     }
 
 

@@ -21,6 +21,8 @@ import java.util.List;
 import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
+import kendzi.josm.kendzi3d.context.ApplicationContext;
+import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
 
@@ -111,6 +113,13 @@ public class WikiTextureLoaderAction extends JosmAction {
         loadFromWiki();
     }
 
+    private WikiTextureLoaderService getWikiTextureLoaderService() {
+
+        ApplicationContext context = ApplicationContextFactory.getContext();
+        // XXX rewrite with injections?
+        return (WikiTextureLoaderService) context.getBean("wikiTextureLoaderService");
+    }
+
     /**
      *
      */
@@ -118,7 +127,7 @@ public class WikiTextureLoaderAction extends JosmAction {
         List<String> errors = null;
         String timestamp = null;
         try {
-            LoadRet load = WikiTextureLoaderService.getInstance().load();
+            LoadRet load = getWikiTextureLoaderService().load();
             errors = load.getErrors();
             timestamp = load.getTimestamp();
 
@@ -145,7 +154,7 @@ public class WikiTextureLoaderAction extends JosmAction {
         } else {
             JOptionPane.showMessageDialog(null,
                     tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
-                            + WikiTextureLoaderService.getInstance().getTexturesPath() ,
+                            + getWikiTextureLoaderService().getTexturesPath() ,
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
         }

@@ -14,6 +14,7 @@ import java.awt.Graphics2D;
 
 import javax.media.opengl.GL2;
 
+import kendzi.josm.kendzi3d.context.ApplicationContextUtil;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -67,6 +68,8 @@ public class StyledTitleGround extends Ground {
      */
     private int titleFrameCount;
 
+    // FIXME
+    private TextureCacheService textureCacheService = ApplicationContextUtil.getTextureCacheService();
 
     @Override
     public void draw(GL2 pGl , Camera pCamera, Perspective3D pPerspective3d) {
@@ -121,7 +124,7 @@ public class StyledTitleGround extends Ground {
 
         Texture texture = null;
 
-        if (!TextureCacheService.isTexture(textName)) {
+        if (!this.textureCacheService.isTexture(textName)) {
             if (this.titleFrameCount == 0) {
             // if title don't  exist we create it
             // but only one tile per frame
@@ -141,7 +144,7 @@ public class StyledTitleGround extends Ground {
 
                 texture = bi.getTexture();
 
-                TextureCacheService.setTexture(textName, texture);
+                this.textureCacheService.setTexture(textName, texture);
 
                 long t = (System.currentTimeMillis() - t1);
 
@@ -153,11 +156,11 @@ public class StyledTitleGround extends Ground {
                 }
 
             } else {
-                texture = TextureCacheService.getTexture(TextureCacheService.TEXTURES_UNDEFINED_PNG);
+                texture = this.textureCacheService.getTexture(TextureCacheService.TEXTURES_UNDEFINED_PNG);
             }
 
         } else {
-            texture = TextureCacheService.getTexture(textName);
+            texture = this.textureCacheService.getTexture(textName);
         }
 
         pGl.glEnable(GL2.GL_LIGHTING);

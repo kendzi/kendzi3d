@@ -74,10 +74,10 @@ public class Fence extends AbstractWayModel {
      * @param pWay way
      * @param pers Perspective
      */
-    public Fence(Way pWay, Perspective3D pers) {
+    public Fence(Way pWay, Perspective3D pers, ModelRender pModelRender) {
         super(pWay, pers);
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
     }
 
 
@@ -90,7 +90,9 @@ public class Fence extends AbstractWayModel {
 
         String fenceType = FenceRelation.getFenceType(this.way);
 
-        double fenceHeight = MetadataCacheService.getPropertitesDouble(
+        MetadataCacheService metadataCacheService = getMetadataCacheService();
+
+        double fenceHeight = metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         this.hight = ModelUtil.getHeight(this.way, fenceHeight);
@@ -101,7 +103,7 @@ public class Fence extends AbstractWayModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way);
+        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, metadataCacheService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);

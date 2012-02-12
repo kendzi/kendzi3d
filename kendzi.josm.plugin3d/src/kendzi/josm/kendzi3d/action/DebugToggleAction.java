@@ -37,6 +37,7 @@ public class DebugToggleAction extends JosmAction {
     // Java 6
     private boolean selected;
 
+    private ModelRender modelRender;
     /**
      * Constructor of debug toggle action.
      */
@@ -53,6 +54,10 @@ public class DebugToggleAction extends JosmAction {
         // Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
 
+//        setDebugMode(this.selected);
+    }
+
+    public void init() {
         setDebugMode(this.selected);
     }
 
@@ -102,10 +107,9 @@ public class DebugToggleAction extends JosmAction {
      */
     private void setDebugMode(boolean pEnable) {
 
-        ModelRender render = ModelRender.getInstance();
-        render.setDebugging(pEnable);
-        render.setDrawEdges(pEnable);
-        render.setDrawNormals(pEnable);
+        this.modelRender.setDebugging(pEnable);
+        this.modelRender.setDrawEdges(pEnable);
+        this.modelRender.setDrawNormals(pEnable);
 
     }
 
@@ -131,5 +135,19 @@ public class DebugToggleAction extends JosmAction {
      */
     public boolean canDebug() {
         return true;
+    }
+
+    /**
+     * @return the modelRender
+     */
+    public ModelRender getModelRender() {
+        return this.modelRender;
+    }
+
+    /**
+     * @param modelRender the modelRender to set
+     */
+    public void setModelRender(ModelRender modelRender) {
+        this.modelRender = modelRender;
     }
 }

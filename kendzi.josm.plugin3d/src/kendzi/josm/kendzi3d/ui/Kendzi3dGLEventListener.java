@@ -34,6 +34,8 @@ import kendzi.math.geometry.point.PointUtil;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 /**
  * Draws 3d.
  *
@@ -43,6 +45,7 @@ import org.apache.log4j.Logger;
 public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {
 
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Kendzi3dGLEventListener.class);
 
 
@@ -70,11 +73,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Model renderer.
      */
+    @Inject
     private ModelRender modelRender;
 
     /**
-     * Temporary. Renderer of josm opengl object.
+     * Renderer of josm opengl object.
      */
+    @Inject
     private RenderJOSM renderJosm;
 
     /**
@@ -113,15 +118,14 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Photos as layer in 3d.
      */
-    private PhotoRenderer photoRenderer = new PhotoRenderer();
+    @Inject
+    private PhotoRenderer photoRenderer;
 
 
     /**
      * Default constructor.
      */
     public Kendzi3dGLEventListener() {
-
-        this.renderJosm = new RenderJOSM();
 
         this.ground  = new Ground();
 
@@ -275,7 +279,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
 
 
-        this.modelRender = ModelRender.getInstance();
+//        this.modelRender = ModelRender.getInstance();
 
 
         this.renderJosm.init(gl);
@@ -509,14 +513,50 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
 
+    /**
+     * @param renderJosm the renderJosm to set
+     */
+    public void setRenderJosm(RenderJOSM renderJosm) {
+        this.renderJosm = renderJosm;
+    }
 
 
 
 
+    /**
+     * @return the modelRender
+     */
+    public ModelRender getModelRender() {
+        return modelRender;
+    }
 
-//    @Override
-//    public void dispatchCameraChange(CameraChangeListener cameraChangeEvent) {
-//        // TODO Auto-generated method stub
-//
-//    }
+
+
+
+    /**
+     * @param modelRender the modelRender to set
+     */
+    public void setModelRender(ModelRender modelRender) {
+        this.modelRender = modelRender;
+    }
+
+
+
+
+    /**
+     * @return the photoRenderer
+     */
+    public PhotoRenderer getPhotoRenderer() {
+        return photoRenderer;
+    }
+
+
+
+
+    /**
+     * @param photoRenderer the photoRenderer to set
+     */
+    public void setPhotoRenderer(PhotoRenderer photoRenderer) {
+        this.photoRenderer = photoRenderer;
+    }
 }

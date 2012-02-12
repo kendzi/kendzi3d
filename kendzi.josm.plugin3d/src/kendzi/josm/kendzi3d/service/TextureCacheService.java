@@ -22,6 +22,7 @@ import javax.media.opengl.GLProfile;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
@@ -32,15 +33,21 @@ public class TextureCacheService {
     private static final Logger log = Logger.getLogger(TextureCacheService.class);
 
     /**
+     * File url reciver service.
+     */
+    @Inject
+    UrlReciverService fileUrlReciverService;
+
+    /**
      * Undefined texture.
      */
     public static final String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
 
-    private static TextureCacheService textureCache = null;
+//    private static TextureCacheService textureCache = null;
 
     private Map<String, Texture> cache = new HashMap<String, Texture>();
 
-    private String textureDir = null;
+//    private String textureDir = null;
 
     private boolean filter;
 
@@ -50,23 +57,23 @@ public class TextureCacheService {
     /** Set texture filter.
      * @param pEnabled enabled
      */
-    public static void setTextureFilter(boolean pEnabled) {
-        if (textureCache.filter != pEnabled) {
-            textureCache.filter = pEnabled;
-            textureCache.clear();
+    public void setTextureFilter(boolean pEnabled) {
+        if (this.filter != pEnabled) {
+            this.filter = pEnabled;
+            this.clear();
         }
     }
 
 
-    /**
-     * Initialize texture cache. It need plugin dir to load external textures.
-     *
-     * @param pTexDir
-     *            plugin dir where are external textures
-     */
-    public static void initTextureCache(String pTexDir) {
-        textureCache = new TextureCacheService(pTexDir);
-    }
+//    /**
+//     * Initialize texture cache. It need plugin dir to load external textures.
+//     *
+//     * @param pTexDir
+//     *            plugin dir where are external textures
+//     */
+//    public static void initTextureCache(String pTexDir) {
+//        textureCache = new TextureCacheService();
+//    }
 
     /**
      * Get texture from cache or load it to cache.
@@ -77,8 +84,8 @@ public class TextureCacheService {
      *            2. from resources from jar in dir {PLUGIN_JAR}/ <br>
      * @return texture
      */
-    public static Texture getTexture(String pName) {
-        return textureCache.get(pName);
+    public Texture getTexture(String pName) {
+        return this.get(pName);
     }
     /**
      * Get texture from cache or load it to cache.
@@ -89,27 +96,37 @@ public class TextureCacheService {
      *            2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
      * @return texture
      */
-    public static Texture getTextureFromDir(String pName) {
-        return textureCache.get("/textures/" + pName);
+    public Texture getTextureFromDir(String pName) {
+        return this.get("/textures/" + pName);
     }
 
     /**
      * Clean up all textures from cache.
      */
-    public static void clearTextures() {
-        textureCache.clear();
+    public void clearTextures() {
+        this.clear();
     }
 
     /**
      * Add texture builder.
      * @param pTextureBuilder texture builder
      */
-    public static void addTextureBuilder(TextureBuilder pTextureBuilder) {
-        textureCache.textureBuilderList.add(pTextureBuilder);
+    public void addTextureBuilder(TextureBuilder pTextureBuilder) {
+        this.textureBuilderList.add(pTextureBuilder);
     }
 
- 	public TextureCacheService(String pTexDir) {
-        this.textureDir = pTexDir;
+// 	public TextureCacheService(String pTexDir) {
+//        this.textureDir = pTexDir;
+//    }
+
+    /**
+     * DONT use Only for test!!
+     * @throws IOException
+     *
+     * @depricated
+     */
+    public void setTexture(String pName, BufferedImage pImg) throws IOException {
+        this.addTexture(pName, pImg, this.filter);
     }
 
     /**
@@ -118,18 +135,8 @@ public class TextureCacheService {
      *
      * @depricated
      */
-    public static void setTexture(String pName, BufferedImage pImg) throws IOException {
-        textureCache.addTexture(pName, pImg, textureCache.filter);
-    }
-
-    /**
-     * DONT use Only for test!!
-     * @throws IOException
-     *
-     * @depricated
-     */
-    public static void setTexture(String pName, Texture pImg) {
-        textureCache.addTexture(pName, pImg, textureCache.filter);
+    public void setTexture(String pName, Texture pImg) {
+        this.addTexture(pName, pImg, this.filter);
     }
 
 
@@ -137,8 +144,8 @@ public class TextureCacheService {
      * @param pName name of texture
      * @return if texture exist
      */
-    public static boolean isTexture(String pName) {
-        return textureCache.isText(pName);
+    public boolean isTexture(String pName) {
+        return this.isText(pName);
     }
 
 
@@ -243,12 +250,12 @@ public class TextureCacheService {
 
     }
 
-    public static Texture loadTexture(String pName, boolean filter) {
+    public Texture loadTexture(String pName, boolean filter) {
 
         // String fileName = pName;
 
 //        URL textUrl = FileUrlReciverService.getResourceUrl(pName);
-        URL textUrl = FileUrlReciverService.reciveFileUrl(pName);
+        URL textUrl = this.fileUrlReciverService.reciveFileUrl(pName);
         Texture tex = null;
         try {
             tex = TextureIO.newTexture(textUrl, filter, null);
@@ -322,7 +329,7 @@ public class TextureCacheService {
      * @return the filter
      */
     public boolean isFilter() {
-        return filter;
+        return this.filter;
     }
 
     /**
@@ -337,7 +344,7 @@ public class TextureCacheService {
      * @return the textureBuilderList
      */
     public List<TextureBuilder> getTextureBuilderList() {
-        return textureBuilderList;
+        return this.textureBuilderList;
     }
 
 
@@ -346,5 +353,21 @@ public class TextureCacheService {
      */
     public void setTextureBuilderList(List<TextureBuilder> textureBuilderList) {
         this.textureBuilderList = textureBuilderList;
+    }
+
+
+    /**
+     * @return the fileUrlReciverService
+     */
+    public UrlReciverService getFileUrlReciverService() {
+        return this.fileUrlReciverService;
+    }
+
+
+    /**
+     * @param fileUrlReciverService the fileUrlReciverService to set
+     */
+    public void setFileUrlReciverService(UrlReciverService fileUrlReciverService) {
+        this.fileUrlReciverService = fileUrlReciverService;
     }
 }

@@ -33,9 +33,13 @@ import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
+import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
 
 public abstract class RectangleRoofType extends AbstractRoofType implements RoofType {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(RectangleRoofType.class);
 
     @Override
     public RoofTypeOutput buildRoof(
@@ -75,7 +79,7 @@ public abstract class RectangleRoofType extends AbstractRoofType implements Roof
                 rectangleContur[1].y - rectangleContur[0].y,
                 rectangleContur[1].x - rectangleContur[0].x);
         //XXX
-        System.out.println(Math.toDegrees(alpha));
+        log.info(Math.toDegrees(alpha));
 
         boolean normalizeAB = normalizeAB();
 

@@ -7,51 +7,58 @@
  *
  */
 
-package kendzi.josm.kendzi3d.service;
+package kendzi.josm.kendzi3d.service.impl;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
+import kendzi.josm.kendzi3d.service.UrlReciverService;
+
+import com.google.inject.Inject;
 
 /**
  * Receive files stored locally in resources and plugin directory.
  *
  * @author Tomasz Kedziora (Kendzi)
  */
-public final class FileUrlReciverService {
+public final class FileUrlReciverService implements UrlReciverService {
 
     /**
      * Plugin directory.
      */
-    private static String pluginDir;
+    private final String pluginDir;
 
-    /**
-     * Utility classes should not have a public or default constructor.
-     */
-    private FileUrlReciverService() {
-        //
+
+    @Inject
+    FileUrlReciverService(@Kendzi3dPluginDirectory String pPluginDir) {
+        this.pluginDir = pPluginDir;
     }
+//    /**
+//     * Constructor.
+//     */
+//    public FileUrlReciverService() {
+//        //
+//    }
 
+//    /**
+//     * Setup plugin directory.
+//     * @param pPluginDir plugin directory
+//     */
+//    public static void initFileReciver(String pPluginDir) {
+//        pluginDir = pPluginDir;
+//    }
     /**
-     * Setup plugin directory.
-     * @param pPluginDir plugin directory
-     */
-    public static void initFileReciver(String pPluginDir) {
-        pluginDir = pPluginDir;
-    }
-    /**
-     * Try to get file URL. It is looking at:<br>
-     * 1. directory: {PLUGIN_DIR_NAME}/ <br>
-     * 2. resources from jar in directory: {PLUGIN_JAR}/ <br>
+     * {@inheritDoc}
      *
-     *
-     * @param pFileName file name
-     * @return file url
+     * @see kendzi.josm.kendzi3d.service.UrlReciverService#reciveFileUrl(java.lang.String)
      */
-    public static URL reciveFileUrl(String pFileName) {
+    @Override
+    public URL reciveFileUrl(String pFileName) {
 
-        File f = new File(pluginDir, pFileName);
-
+        File f = new File(this.pluginDir, pFileName);
+        System.out.println("reciveFileUrl" + f.getAbsoluteFile());
         if (f.exists()) {
             try {
                 return f.toURI().toURL();
@@ -62,7 +69,6 @@ public final class FileUrlReciverService {
 
         return getResourceUrl(pFileName);
     }
-
 
     /**
      * Try to find URL of file in resources. In some reason getClass().getResource(...) can't find file if it is in jar
@@ -118,4 +124,21 @@ public final class FileUrlReciverService {
 
         return result;
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.service.UrlReciverService#getPluginDir()
+     */
+    @Override
+    public String getPluginDir() {
+        return this.pluginDir;
+    }
+
+//    /**
+//     * @param pluginDir the pluginDir to set
+//     */
+//    public void setPluginDir(String pluginDir) {
+//        this.pluginDir = pluginDir;
+//    }
 }

@@ -86,7 +86,7 @@ public class FenceRelation extends AbstractRelationModel {
      * @param pRelation way
      * @param pers Perspective
      */
-    public FenceRelation(Relation pRelation, Perspective3D pers) {
+    public FenceRelation(Relation pRelation, Perspective3D pers, ModelRender pModelRender) {
         super(pRelation, pers);
 
         List<Double> heights = new ArrayList<Double>();
@@ -116,7 +116,7 @@ public class FenceRelation extends AbstractRelationModel {
         this.nodes = nodes;
         this.points = points;
         this.heights = heights;
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
     }
 
     /**
@@ -147,7 +147,9 @@ public class FenceRelation extends AbstractRelationModel {
 
         String fenceType = getFenceType(this.relation);
 
-        double fenceHeight = MetadataCacheService.getPropertitesDouble(
+        MetadataCacheService metadataCacheService = getMetadataCacheService();
+
+        double fenceHeight = metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         this.hight = ModelUtil.getHeight(this.relation, fenceHeight);
@@ -158,7 +160,7 @@ public class FenceRelation extends AbstractRelationModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation);
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, getMetadataCacheService());
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
@@ -272,16 +274,16 @@ public class FenceRelation extends AbstractRelationModel {
      * @param pOsmPrimitive primitive
      * @return texture data
      */
-    public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive) {
+    public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive, MetadataCacheService metadataCacheService) {
 
         String facadeColor = pOsmPrimitive.get("fence:color");
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String facadeTextureFile = MetadataCacheService.getPropertites(
+            String facadeTextureFile = metadataCacheService.getPropertites(
                     "barrier.fence_{0}.texture.file", null, fenceType);
 
-            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
                     "barrier.fence_{0}.texture.lenght", 1d, fenceType);
             double facadeTextureHeight = 1d;
 

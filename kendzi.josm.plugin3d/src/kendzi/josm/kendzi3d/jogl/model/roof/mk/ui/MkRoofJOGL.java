@@ -41,8 +41,6 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
-import kendzi.josm.kendzi3d.service.FileUrlReciverService;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.math.geometry.Normal;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.point.PointUtil;
@@ -129,8 +127,8 @@ public class MkRoofJOGL implements GLEventListener {
 
 
 
-        TextureCacheService.initTextureCache(".");
-        FileUrlReciverService.initFileReciver(".");
+//        TextureCacheService.initTextureCache(".");
+//        FileUrlReciverService.initFileReciver(".");
 
         MkRoofJOGL sj = new MkRoofJOGL();
         canvas.addGLEventListener(sj);
@@ -396,7 +394,7 @@ public class MkRoofJOGL implements GLEventListener {
         }
 
 //        String versionStr = gl.glGetString( GL2.GL_VERSION );
-//        System.out.println( "GL version:"+versionStr );
+//        log.info( "GL version:"+versionStr );
 
         drawFloor(gl);
 

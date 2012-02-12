@@ -18,6 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.google.inject.Inject;
 
 /**
  * Downloads and setup textures and metadata from wiki page.
@@ -36,45 +39,33 @@ public class WikiTextureLoaderService {
     /** Log. */
     private static final Logger log = Logger.getLogger(WikiTextureLoaderService.class);
 
+    /**
+     * Plugin directory.
+     */
+    @Inject @Kendzi3dPluginDirectory
+    private String pluginDir;
 
+    /**
+     * Metadata cache service.
+     */
+    @Inject
+    MetadataCacheService metadataCacheService;
+
+    /**
+     * Texture cache service
+     */
+    @Inject
+    TextureCacheService textureCacheService;
     /**
      * Wiki page with textures and metadata.
      */
     private final static String wikiUrl = "http://wiki.openstreetmap.org/wiki/Special:Export/Kendzi3d/textures";
 
     /**
-     * Plugin directory.
+     * Constructor.
      */
-    private String directory;
-
-    /**
-     * Service instance.
-     */
-    static WikiTextureLoaderService wikiTextureLoaderService = null;
-
-    /**
-     * Initialize texture WikiTextureLoaderService.
-     *
-     * @param pDir plugin directory
-     */
-    public static void init(String pDir) {
-        wikiTextureLoaderService = new WikiTextureLoaderService(pDir);
-    }
-
-    /**
-     * Gets service instance.
-     * @return service instance
-     */
-    public static WikiTextureLoaderService getInstance() {
-
-        return wikiTextureLoaderService;
-    }
-
-    /** Constructor.
-     * @param pDir plugin directory
-     */
-    public WikiTextureLoaderService(String pDir) {
-        this.directory = pDir;
+    public WikiTextureLoaderService() {
+        //
     }
 
     /** Downloads and setup textures and metadata from wiki page.
@@ -104,13 +95,15 @@ public class WikiTextureLoaderService {
         if (properties != null) {
 
             saveProperties(properties);
-            MetadataCacheService.loadMetadataProperties();
+
+            this.metadataCacheService.loadMetadataProperties();
         }
 
-        TextureCacheService.clearTextures();
+        this.textureCacheService.clearTextures();
 
         return ret;
     }
+
 
     public class LoadRet {
 
@@ -129,7 +122,7 @@ public class WikiTextureLoaderService {
          * @return the errors
          */
         public List<String> getErrors() {
-            return errors;
+            return this.errors;
         }
         /**
          * @param errors the errors to set
@@ -141,7 +134,7 @@ public class WikiTextureLoaderService {
          * @return the timestamp
          */
         public String getTimestamp() {
-            return timestamp;
+            return this.timestamp;
         }
         /**
          * @param timestamp the timestamp to set
@@ -437,7 +430,7 @@ public class WikiTextureLoaderService {
          * @return the text
          */
         public String getText() {
-            return text;
+            return this.text;
         }
         /**
          * @param text the text to set
@@ -449,7 +442,7 @@ public class WikiTextureLoaderService {
          * @return the timestamp
          */
         public String getTimestamp() {
-            return timestamp;
+            return this.timestamp;
         }
         /**
          * @param timestamp the timestamp to set
@@ -485,7 +478,42 @@ public class WikiTextureLoaderService {
      * @return path for textures
      */
     public String getTexturesPath() {
-        return this.directory + File.separator + "textures";
+        return this.pluginDir + File.separator + "textures";
+    }
+
+    /**
+     * @return the pluginDir
+     */
+    public String getPluginDir() {
+        return this.pluginDir;
+    }
+
+    /**
+     * @param pluginDir the pluginDir to set
+     */
+    public void setPluginDir(String pluginDir) {
+        this.pluginDir = pluginDir;
+    }
+
+    /**
+     * @return the textureCacheService
+     */
+    public TextureCacheService getTextureCacheService() {
+        return this.textureCacheService;
+    }
+
+    /**
+     * @param textureCacheService the textureCacheService to set
+     */
+    public void setTextureCacheService(TextureCacheService textureCacheService) {
+        this.textureCacheService = textureCacheService;
+    }
+
+    /**
+     * @param metadataCacheService the metadataCacheService to set
+     */
+    public void setMetadataCacheService(MetadataCacheService metadataCacheService) {
+        this.metadataCacheService = metadataCacheService;
     }
 
 }

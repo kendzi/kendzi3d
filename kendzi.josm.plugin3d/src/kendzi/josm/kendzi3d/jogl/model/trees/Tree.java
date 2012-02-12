@@ -15,7 +15,6 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.ModelCache;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -32,6 +31,7 @@ import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
 import net.java.joglutils.model.ModelLoadException;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -43,21 +43,29 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 public class Tree extends AbstractPointModel implements DLODSuport {
 
 
-    private Texture treeText;
+    ModelCacheService modelCacheService;
+    MetadataCacheService metadataCacheService;
+
+//    private Texture treeText;
     float[] verts;
 
-    private Model model;
+//    private Model model;
     private ModelRender modelRenderer;
-    private double modelScaleHeight;
-    private double modelScaleWidht;
+//    private double modelScaleHeight;
+//    private double modelScaleWidht;
     private EnumMap<LOD, Model> modelLod;
     private String type;
     private String genus;
     private String species;
-    private boolean isFlat;
+//    private boolean isFlat;
     Vector3d scale;
 
-    public Tree(Node node, Perspective3D pPerspective3D) {
+    public Tree(Node node, Perspective3D pPerspective3D,
+            ModelRender pModelRender,
+            ModelCacheService modelCacheService,
+            MetadataCacheService metadataCacheService
+        ) {
+
         super(node, pPerspective3D);
 
 
@@ -66,7 +74,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         this.scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRenderer = ModelRender.getInstance();
+        this.modelRenderer = pModelRender;
 
 
     }
@@ -89,7 +97,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         this.genus = this.node.get("genus");
         this.species = this.node.get("species");
 
-        double height = getHeight(this.node, this.species, this.genus, this.type);
+        double height = getHeight(this.node, this.species, this.genus, this.type, getMetadataCacheService());
 
         Model model = null;
 
@@ -115,7 +123,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //
 //        }
 
-        model = findSimpleModel(this.species, this.genus, this.type, pLod);
+        model = findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
 
         setupScale(model, height);
 
@@ -161,13 +169,16 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      *
      * @return model
      */
-    public static Model findSimpleModel(String species, String genus, String type, LOD pLod) {
+    public static Model findSimpleModel(String species, String genus, String type, LOD pLod,
+            MetadataCacheService metadataCacheService, ModelCacheService modelCacheService) {
         // let go
         String model = null;
 
-        String spacesModel = MetadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, species, "" + pLod);
-        String genusModel = MetadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, genus, "" + pLod);
-        String typeModel = MetadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, type, "" + pLod);
+
+        String spacesModel = metadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, species, "" + pLod);
+        String genusModel = metadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, genus, "" + pLod);
+        String typeModel = metadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, type, "" + pLod);
+        String unknownModel = metadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, null, "" + pLod);
 
         // XXX add StringUtil
         if (spacesModel != null) {
@@ -176,11 +187,13 @@ public class Tree extends AbstractPointModel implements DLODSuport {
             model = genusModel;
         } else if (typeModel != null) {
             model = typeModel;
+        } else {
+            model = unknownModel;
         }
 
         if (model != null && !"#flat".equals(model)) {
             try {
-                Model loadModel = ModelCache.loadModel(model);
+                Model loadModel = modelCacheService.loadModel(model);
                 loadModel.useLight = true;
                 setAmbientColor(loadModel);
                 return loadModel;
@@ -215,21 +228,26 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * - species
      * - genus
      * - type
+     * @param node
+     * @param species
+     * @param genus
+     * @param type
      *
      *
      * @return
      */
-    public static double getHeight(OsmPrimitive node, String species, String genus, String type) {
+    public static double getHeight(OsmPrimitive node, String species, String genus, String type, MetadataCacheService metadataCacheService) {
         // let go
 
         Double height = 1d;
 
         Double nodeHeight = ModelUtil.getHeight(node, null);
 
-        Double spacesHeight = MetadataCacheService.getPropertitesDouble("models.trees.species." + species + ".height", null);
-        Double genusHeight = MetadataCacheService.getPropertitesDouble("models.trees.genus." + genus + ".height", null);
-        Double typeHeight = MetadataCacheService.getPropertitesDouble("models.trees.type." + unknown(type) + ".height", null);
-         MetadataCacheService.getPropertitesDouble("models.trees." + type + ".height", null);
+        Double spacesHeight = metadataCacheService.getPropertitesDouble("models.trees.species.{0}.height", null, species);
+        Double genusHeight = metadataCacheService.getPropertitesDouble("models.trees.genus.{0}.height", null, genus);
+        Double typeHeight = metadataCacheService.getPropertitesDouble("models.trees.type.{0}.height", null, type);
+        Double unknownHeight = metadataCacheService.getPropertitesDouble("models.trees.type.{0}.height", null, (String) null);
+
 
         // XXX add StringUtil
         if (nodeHeight != null) {
@@ -240,6 +258,12 @@ public class Tree extends AbstractPointModel implements DLODSuport {
             height = genusHeight;
         } else if (typeHeight != null) {
             height = typeHeight;
+        } else {
+            height = unknownHeight;
+        }
+
+        if (height == null){
+            height = 1d;
         }
 
         return height;
@@ -324,9 +348,11 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         String textFile = "/textures/tree_unknown.png";
 
-        String spacesText = MetadataCacheService.getPropertites("models.trees.species." + this.species + ".flat.texture", null);
-        String genusText = MetadataCacheService.getPropertites("models.trees.genus." + this.genus + ".flat.texture", null);
-        String typeText = MetadataCacheService.getPropertites("models.trees.type." + this.type + ".flat.texture", null);
+        MetadataCacheService metadataCacheService = getMetadataCacheService();
+
+        String spacesText = metadataCacheService.getPropertites("models.trees.species." + this.species + ".flat.texture", null);
+        String genusText = metadataCacheService.getPropertites("models.trees.genus." + this.genus + ".flat.texture", null);
+        String typeText = metadataCacheService.getPropertites("models.trees.type." + this.type + ".flat.texture", null);
 
         // XXX add StringUtil
         if (spacesText != null) {

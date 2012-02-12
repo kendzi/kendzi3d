@@ -25,6 +25,7 @@ import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
@@ -35,7 +36,7 @@ public class ModelRender {
 
     private static final Material TEXTURE_MATERIAL = getDefaultMaterial();
 
-    private static ModelRender instance = new ModelRender();
+//    private static ModelRender instance = new ModelRender();
     private HashMap<Integer, Texture> textures;
     private boolean debugging = true;
 
@@ -47,12 +48,15 @@ public class ModelRender {
     private int vertexCount;
     private int faceCount;
 
+    @Inject
+    private TextureCacheService textureCacheService;
+
     public ModelRender() {
     }
 
-    public static ModelRender getInstance() {
-        return instance;
-    }
+//    public static ModelRender getInstance() {
+//        return instance;
+//    }
 
     public int getFaceCount() {
         return this.faceCount;
@@ -100,7 +104,8 @@ public class ModelRender {
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
 
-                if (mesh.hasTexture && getTexture(mesh.materialID, model) != null) {
+                boolean meshUseTexture = mesh.hasTexture && getTexture(mesh.materialID, model) != null;
+                if (meshUseTexture) {
                     if (model.useTexture && useTextureDisabled) {
                         // if model is using textures only in some mesh
                         gl.glEnable(GL2.GL_TEXTURE_2D);
@@ -187,7 +192,7 @@ public class ModelRender {
 
 
 
-                if (mesh.hasTexture) {
+                if (meshUseTexture) {
                     Texture t = getTexture(mesh.materialID, model);
                     //this.textures.get(mesh.materialID);// .get(mesh.materialID);
                     if (t != null) {
@@ -549,9 +554,9 @@ public class ModelRender {
 //                log.info("        Material:  " + model.getMaterial(materialId).strFile);
 //            }
 
-            return TextureCacheService.getTexture(model.getMaterial(materialId).strFile);
+            return this.textureCacheService.getTexture(model.getMaterial(materialId).strFile);
         }
-        return TextureCacheService.getTexture("/textures/undefined.png");
+        return this.textureCacheService.getTexture("/textures/undefined.png");
     }
 
 
@@ -569,7 +574,7 @@ public class ModelRender {
 //
 //            if (model.getMaterial(i).strFile != null) {
 //                if (this.isDebugging) {
-//                    System.out.print("        Material:  " + subFileName + model.getMaterial(i).strFile);
+//                    log.info("        Material:  " + subFileName + model.getMaterial(i).strFile);
 //                }
 //
 //
@@ -664,5 +669,19 @@ public class ModelRender {
      */
     public void setDebugging(boolean debugging) {
         this.debugging = debugging;
+    }
+
+    /**
+     * @return the textureCacheService
+     */
+    public TextureCacheService getTextureCacheService() {
+        return this.textureCacheService;
+    }
+
+    /**
+     * @param textureCacheService the textureCacheService to set
+     */
+    public void setTextureCacheService(TextureCacheService textureCacheService) {
+        this.textureCacheService = textureCacheService;
     }
 }

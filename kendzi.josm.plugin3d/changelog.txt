@@ -1,5 +1,14 @@
-
 [current]
+
+
+[2012-02-12]
+- support for title renderer
+- custom models layer
+- clean up
+- dependency injections - guice
+
+
+[2011-12-27]
 
 - tag natural=wood, landuse=forest + tree="number of trees in area, max 1000"
 - tag nature=tree_row + tree="number of trees in row"

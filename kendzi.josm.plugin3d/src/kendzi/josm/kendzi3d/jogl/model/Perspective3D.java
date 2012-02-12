@@ -11,6 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import javax.vecmath.Point2d;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -25,6 +26,9 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public class Perspective3D {
 
+    /** Log. */
+    private static final Logger log = Logger.getLogger(Perspective3D.class);
+
 	private double scale;
 	private double centerX;
 	private double centerY;
@@ -33,7 +37,7 @@ public class Perspective3D {
 		this.scale = scale;
 		this.centerX = centerX;
 		this.centerY = centerY;
-		System.out.println("**************-----> " + scale);
+		log.info("**************-----> " + scale);
 	}
 
 	public double calcX(double x) {
@@ -46,7 +50,11 @@ public class Perspective3D {
 
 	public Point2d calcPoint(Node node) {
 		EastNorth eastNorth = node.getEastNorth();
-		return new Point2d(calcX(eastNorth.getX()), calcY(eastNorth.getY()));
+		return calcPoint(eastNorth);
+	}
+
+	public Point2d calcPoint(EastNorth eastNorth) {
+	    return new Point2d(calcX(eastNorth.getX()), calcY(eastNorth.getY()));
 	}
 
 	@Override

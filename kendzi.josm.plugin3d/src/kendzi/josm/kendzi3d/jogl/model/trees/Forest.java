@@ -33,10 +33,13 @@ import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -45,6 +48,12 @@ import org.openstreetmap.josm.data.osm.Way;
  * @author Tomasz Kedziora (Kendzi)
  */
 public class Forest extends AbstractWayModel {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(Forest.class);
+
+    ModelCacheService modelCacheService;
+    MetadataCacheService metadataCacheService;
 
     private static final double EPSILON = 0.001;
 
@@ -71,14 +80,19 @@ public class Forest extends AbstractWayModel {
      * @param pWay way
      * @param pPerspective3D perspective
      */
-    public Forest(Way pWay, Perspective3D pPerspective3D) {
+    public Forest(Way pWay, Perspective3D pPerspective3D,
+            ModelRender pModelRender,
+            ModelCacheService modelCacheService,
+            MetadataCacheService metadataCacheService) {
         super(pWay, pPerspective3D);
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
         this.scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
+        this.modelCacheService = modelCacheService;
+        this.metadataCacheService = metadataCacheService;
     }
 
     @Override
@@ -102,11 +116,11 @@ public class Forest extends AbstractWayModel {
         this.genus = this.way.get("genus");
         this.species = this.way.get("species");
 
-        double height = Tree.getHeight(this.way, this.species, this.genus, this.type);
+        double height = Tree.getHeight(this.way, this.species, this.genus, this.type, metadataCacheService);
 
         Model model = null;
 
-        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod);
+        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
 
         setupScale(model, height);
 
@@ -119,7 +133,7 @@ public class Forest extends AbstractWayModel {
         if (this.hookPoints == null) {
             this.hookPoints = calsHookPoints(this.points, this.numOfTrees);
 
-            System.out.println("***** num of tree: " + this.hookPoints.size());
+            log.info("***** num of tree: " + this.hookPoints.size());
 
             double CLUSTER_SIZE = 50;
 
@@ -490,7 +504,7 @@ public class Forest extends AbstractWayModel {
 //            glEnd();
         this.modelRender.resetFaceCount();
         this.modelRender.render(gl, model2);
-        System.out.println("***> face count: " + this.modelRender.getFaceCount() );
+        log.info("***> face count: " + this.modelRender.getFaceCount() );
 
         gl.glEndList();
 

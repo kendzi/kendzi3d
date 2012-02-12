@@ -18,9 +18,13 @@ import java.util.List;
 
 import javax.swing.ButtonModel;
 
+import kendzi.josm.kendzi3d.context.ApplicationContext;
+import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.openstreetmap.josm.actions.JosmAction;
+
+import com.google.inject.Inject;
 
 /**
  * Texture filter toggle action.
@@ -29,6 +33,9 @@ import org.openstreetmap.josm.actions.JosmAction;
  *
  */
 public class TextureFilterToggleAction extends JosmAction {
+
+
+    private TextureCacheService textureCacheService;
 
     /**
      * Button models.
@@ -41,7 +48,8 @@ public class TextureFilterToggleAction extends JosmAction {
     /**
      * Constructor of debug toggle action.
      */
-    public TextureFilterToggleAction() {
+    @Inject
+    public TextureFilterToggleAction(TextureCacheService textureCacheService) {
         super(
                 tr("Texture filter"),
                 "1306318261_debugger__24",
@@ -53,6 +61,8 @@ public class TextureFilterToggleAction extends JosmAction {
         this.selected = true;
 //            Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
+
+        this.textureCacheService = textureCacheService;
 
         setTextureFilter(this.selected);
     }
@@ -102,8 +112,19 @@ public class TextureFilterToggleAction extends JosmAction {
      * @param pEnable enable filter
      */
     private void setTextureFilter(boolean pEnable) {
-        TextureCacheService.setTextureFilter(pEnable);
+//        getTextureCacheService().setTextureFilter(pEnable);
+        textureCacheService.setTextureFilter(pEnable);
     }
+
+
+    private TextureCacheService getTextureCacheService() {
+
+        ApplicationContext context = ApplicationContextFactory.getContext();
+        // XXX rewrite with injections?
+        return (TextureCacheService) context.getBean("textureCacheService");
+    }
+
+
 
     @Override
     public void actionPerformed(ActionEvent pE) {

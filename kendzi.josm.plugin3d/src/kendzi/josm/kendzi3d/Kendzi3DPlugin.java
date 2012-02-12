@@ -30,11 +30,11 @@ import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
 import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
-import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
-import kendzi.josm.kendzi3d.service.FileUrlReciverService;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
+import kendzi.josm.kendzi3d.context.ApplicationContextUtil;
+import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
+import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.View3dGLFrame;
 
@@ -42,6 +42,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
 
@@ -67,8 +70,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     public Kendzi3DPlugin(PluginInformation pInfo) {
         super(pInfo);
 
-        // requre to set up before library are loaded
-        FileUrlReciverService.initFileReciver(getPluginDir());
+
+
+//        // requre to set up before library are loaded
+//        FileUrlReciverService.initFileReciver(getPluginDir());
 
         try {
             loadLibrary();
@@ -76,15 +81,21 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             e.printStackTrace();
         }
 
+        Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDir()));
+
+        ApplicationContextFactory.initContext(getPluginDir());
+
+
+
         // where is spring ?!
         // init rest of services
-        TextureCacheService.initTextureCache(getPluginDir());
-        MetadataCacheService.initMetadataCache(getPluginDir());
-        WikiTextureLoaderService.init(getPluginDir());
+//        TextureCacheService.initTextureCache(getPluginDir());
+//        MetadataCacheService.initMetadataCache(getPluginDir());
+//        WikiTextureLoaderService.init(getPluginDir());
 
-        TextureCacheService.addTextureBuilder(new ColorTextureBuilder());
+//        TextureCacheService.addTextureBuilder(new ColorTextureBuilder());
 
-        refreshMenu();
+        refreshMenu(injector);
         // System.out.println("****************************************************************");
         // System.out.println(Main.pref.get("kendzi3d.autostart1"));
         // System.out.println(Main.pref.get("kendzi3d.autostart"));
@@ -94,7 +105,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
                         AutostartToggleAction.KENDZI_3D_AUTOSTART, true))) {
 //            Main.pref.put("kendzi3d.autostart", "true");
 //            Main.pref.put("kendzi3d.autostart", "false");
-            openJOGLWindow();
+            openJOGLWindow(injector);
         }
     }
 
@@ -217,8 +228,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
      * Refreshing menu.
+     * @param injector
      */
-    public void refreshMenu() {
+    public void refreshMenu(final Injector injector) {
         MainMenu menu = Main.main.menu;
 
         System.err.println("3d test");
@@ -243,7 +255,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
                 //				super(tr("3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false);
                 putValue("toolbar", "3dView_run");
 
-                openJOGLWindow();
+                openJOGLWindow(injector);
 
             }
 
@@ -285,10 +297,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
                 if (Kendzi3DPlugin.this.ogl != null) {
                     // XXX add event, and rethink
-                    double x = Kendzi3DPlugin.this.ogl.getCanvasListener().getRenderJosm().getPerspective().calcX(Main.map.mapView.getCenter().getX());
-                    double y = Kendzi3DPlugin.this.ogl.getCanvasListener().getRenderJosm().getPerspective().calcY(Main.map.mapView.getCenter().getY());
+                    double x = ApplicationContextUtil.getRenderJosm().getPerspective().calcX(Main.map.mapView.getCenter().getX());
+                    double y = ApplicationContextUtil.getRenderJosm().getPerspective().calcY(Main.map.mapView.getCenter().getY());
 
-                    Kendzi3DPlugin.this.ogl.getCanvasListener().setCamPos(x, y);
+                    ApplicationContextUtil.getKendzi3dGLEventListener().setCamPos(x, y);
                 }
             }
 
@@ -307,11 +319,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
                 if (Kendzi3DPlugin.this.ogl != null) {
                     // XXX add event
-                    TextureCacheService.clearTextures();
+                    ApplicationContextUtil.getTextureCacheService().clearTextures();
 
-                    Kendzi3DPlugin.this.ogl.getCanvasListener().getRenderJosm().processDatasetEvent(null);
-
-                   // Kendzi3DPlugin.this.ogl.getCanvasListener().setCamPos(0, 0);
+                    ApplicationContextUtil.getRenderJosm().processDatasetEvent(null);
                 }
             }
 
@@ -330,6 +340,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         // -- debug toggle action
         DebugToggleAction debugToggleAction = new DebugToggleAction();
+        debugToggleAction.setModelRender(ApplicationContextUtil.getModelRender());
         if (debugToggleAction.canDebug()) {
             final JCheckBoxMenuItem debug = new JCheckBoxMenuItem(debugToggleAction);
             this.view3dJMenu.addSeparator();
@@ -338,8 +349,11 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             debugToggleAction.addButtonModel(debug.getModel());
         }
 
+        System.out.println(injector.getInstance(TextureCacheService.class));
+
         // -- debug toggle action
-        TextureFilterToggleAction filterToggleAction = new TextureFilterToggleAction();
+        TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
+//        TextureFilterToggleAction filterToggleAction = new TextureFilterToggleAction();
         if (filterToggleAction.canDebug()) {
             final JCheckBoxMenuItem debug = new JCheckBoxMenuItem(filterToggleAction);
             this.view3dJMenu.addSeparator();
@@ -392,16 +406,28 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         }
     }
 
-    private void openJOGLWindow() {
+
+
+
+    private void openJOGLWindow(Injector injector) {
         if (this.ogl == null || !this.ogl.isDisplayable()) {
 
-            this.ogl = new View3dGLFrame();
 
-            this.ogl.setVisible(true);
+            View3dGLFrame frame = new View3dGLFrame();
+//            frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
+            frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
+
+            frame.initUI();
+
+            frame.setVisible(true);
+
+            this.ogl = frame;
         }
 //        else {
 //            this.ogl.resume();
 //            this.ogl.setVisible(true);
 //        }
     }
+
+
 }

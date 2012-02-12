@@ -27,7 +27,7 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
-import kendzi.josm.kendzi3d.service.FileUrlReciverService;
+import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.math.geometry.Normal;
 import net.java.joglutils.model.ModelLoadException;
 
@@ -42,6 +42,12 @@ public class WaveFrontLoader implements iLoader {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(WaveFrontLoader.class);
+
+
+    //  = ApplicationContextUtil.getFileUrlReciverService();
+    UrlReciverService urlReciverService;
+
+
 
     public static final String VERTEX_DATA = "v ";
     public static final String NORMAL_DATA = "vn ";
@@ -66,8 +72,11 @@ public class WaveFrontLoader implements iLoader {
 //    private Point3d center = new Point3d(0.0f, 0.0f, 0.0f);
     private String baseDir = null;
 
-    /** Creates a new instance of myWaveFrontLoader. */
-    public WaveFrontLoader() {
+
+    /** Creates a new instance of myWaveFrontLoader.
+     * @param urlReciverService */
+    public WaveFrontLoader(UrlReciverService urlReciverService) {
+        this.urlReciverService = urlReciverService;
     }
 
     int numComments = 0;
@@ -100,7 +109,7 @@ public class WaveFrontLoader implements iLoader {
         try {
 
 //            stream = ResourceRetriever.getResourceAsInputStream(model.getSource());
-           URL modelURL = FileUrlReciverService.reciveFileUrl(this.model.getSource());
+           URL modelURL = this.urlReciverService.reciveFileUrl(this.model.getSource());
 
            if (modelURL != null) {
                stream = modelURL.openStream();
@@ -653,7 +662,7 @@ public class WaveFrontLoader implements iLoader {
         Material mat = new Material();
         InputStream stream = null;
         try {
-            URL materialURL = FileUrlReciverService.reciveFileUrl(this.baseDir + s[1]);
+            URL materialURL = this.urlReciverService.reciveFileUrl(this.baseDir + s[1]);
             stream = materialURL.openStream();
 
 //            stream = ResourceRetriever.getResourceAsInputStream(this.baseDir + s[1]);
@@ -681,7 +690,10 @@ public class WaveFrontLoader implements iLoader {
         for(int i = 0; i < this.model.getNumberOfMaterials(); i++){
             Material mat = this.model.getMaterial(i);
 
-            if(mat.strName.equals(s[1])){
+            if(
+               (mat.strName != null && mat.strName.equals(s[1]))
+               || (mat.strName == null && (s.length < 2 || s[1] == null))
+                    ){
                 materialID = i;
                 if(mat.strFile != null) {
                     hasTexture = true;
@@ -715,7 +727,9 @@ public class WaveFrontLoader implements iLoader {
                     }
 
                     mat = new Material();
-                    mat.strName = parts[1];
+                    if (parts.length > 1) {
+                        mat.strName = parts[1];
+                    }
                     mat.textureId = texId++;
 
                 } else if (parts[0].equals("Ks")) {
@@ -763,7 +777,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     public static void main(String[] args) {
-        WaveFrontLoader loader = new WaveFrontLoader();
+        WaveFrontLoader loader = new WaveFrontLoader(null);
         try {
             loader.load("C:\\dane_tomekk\\eclipse\\workspace2\\kendzi.josm.kendzi3d\\models\\obj\\tree1.obj");
             //loader.load("C:\\Documents and Settings\\RodgersGB\\My Documents\\Projects\\JOGLUTILS\\src\\net\\java\\joglutils\\examples\\models\\obj\\penguin.obj");

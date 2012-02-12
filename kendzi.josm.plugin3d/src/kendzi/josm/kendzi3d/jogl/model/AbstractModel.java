@@ -14,9 +14,12 @@ import java.util.Set;
 
 import javax.vecmath.Point2d;
 
+import kendzi.josm.kendzi3d.context.ApplicationContext;
+import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
 import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -259,6 +262,12 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
         // TODO Auto-generated method stub
         // FIXME remove form abstract!
         throw new RuntimeException("TODO");
+    }
+
+    protected MetadataCacheService getMetadataCacheService() {
+        ApplicationContext context = ApplicationContextFactory.getContext();
+        // XXX rewrite with injections?
+        return (MetadataCacheService) context.getBean("metadataCacheService");
     }
 
 }

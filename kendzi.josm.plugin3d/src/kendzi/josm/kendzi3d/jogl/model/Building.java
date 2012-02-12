@@ -132,7 +132,7 @@ public class Building extends AbstractWayModel {
      * @param pWay way describing building
      * @param pPerspective perspective3
      */
-    public Building(Way pWay, Perspective3D pPerspective) {
+    public Building(Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
         super(pWay, pPerspective);
 
         if (0.0f < Triangulate.area(this.points)) {
@@ -193,12 +193,12 @@ public class Building extends AbstractWayModel {
 
         String tag3dr = pWay.get("3dr:type");
         if (!StringUtil.isBlankOrNull(tag3dr)) {
-            this.roof = new DormerRoof(this, this.points, pWay, pPerspective);
+            this.roof = new DormerRoof(this, this.points, pWay, pPerspective, pModelRender);
         } else {
-            this.roof = new ShapeRoof(this, this.points, pWay, pPerspective);
+            this.roof = new ShapeRoof(this, this.points, pWay, pPerspective, pModelRender);
         }
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
     }
 
     /** Gets facade texture.
@@ -221,12 +221,14 @@ public class Building extends AbstractWayModel {
 
         if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String facadeTextureFile = MetadataCacheService.getPropertites(
+            MetadataCacheService metadataCacheService = getMetadataCacheService();
+
+            String facadeTextureFile = metadataCacheService.getPropertites(
                     "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
 
-            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
                     "buildings.building_facade_material_{0}.texture.lenght", 1d, facadeMaterial);
-            double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
+            double facadeTextureHeight = metadataCacheService.getPropertitesDouble(
                     "buildings.building_facade_material_{0}.texture.height", 1d, facadeMaterial);
 
             return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);

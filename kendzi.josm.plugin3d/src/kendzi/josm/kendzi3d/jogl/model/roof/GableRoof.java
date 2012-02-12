@@ -12,37 +12,21 @@ package kendzi.josm.kendzi3d.jogl.model.roof;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.model.Building;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
-import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.Triangulate;
-import kendzi.math.geometry.line.LinePoints2d;
-import kendzi.math.geometry.point.PointUtil;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Represent gable roof.
@@ -50,182 +34,12 @@ import org.openstreetmap.josm.data.osm.Way;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public class GableRoof extends Roof {
+public class GableRoof {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(GableRoof.class);
 
 
-    private static final String BUILDING_ROOF_RIDGE = "building:roof:ridge";
-    private static final String BUILDING_ROOF_ORIENTATION_ACROSS = "across";
-    @SuppressWarnings("unused")
-    private static final String BUILDING_ROOF_ORIENTATION_ALONG = "along";
-    private static final String BUILDING_ROOF_ORIENTATION = "building:roof:orientation";
-
-
-    private Point2d[] contur;
-
-    ModelRender modelRender;
-    kendzi.jogl.model.geometry.Model model;
-    private boolean pitched;
-
-    //    private Vector3d [] wallNormals;
-
-
-    /** Create model of gable roof.
-     * @param pBuilding building of roof
-     * @param pList list of wall points
-     * @param pWay way which define building
-     * @param pPers 3d perspective
-     * @param pPitched if pitched roof
-     */
-    public GableRoof(Building pBuilding, List<Point2d> pList, Way pWay,
-            Perspective3D pPers, boolean pPitched) {
-        super(pBuilding, pList, pWay, pPers);
-
-        log.info("test log4j");
-
-        this.modelRender = ModelRender.getInstance();
-
-        this.pitched = pPitched;
-    }
-
-    /**
-     * Build model of the roof.
-     */
-    @Override
-    public void buildModel() {
-        List<Point2d> graham = Graham.grahamScan(this.list);
-
-        this.contur = RectangleUtil.longerSideFirst(RectangleUtil.findRectangleContur(graham));
-
-        ModelFactory modelBuilder = ModelFactory.modelBuilder();
-
-        TextureData roofTexture = getRoofTexture();
-        TextureData fasadeTexture = getFasadeTexture();
-
-        int mi = modelBuilder.addMaterial(MaterialFactory.createTextureMaterial(roofTexture.getFile()));
-        int mi2 = modelBuilder.addMaterial(MaterialFactory.emptyMaterial());
-
-        MeshFactory meshBorder = modelBuilder.addMesh("roof_border");
-//        MeshFactory meshBorder = new MeshFactory();
-        MeshFactory meshRoof = modelBuilder.addMesh("roof_top");
-
-        if (BUILDING_ROOF_ORIENTATION_ACROSS.equals(this.way.get(BUILDING_ROOF_ORIENTATION))) {
-            this.contur = RectangleUtil.swapOnePoint(this.contur);
-        }
-
-        LinePoints2d roofLine = findTopRoofLine(this.pitched);
-
-        boolean isCounterClockwise = false;
-        if (0.0f < Triangulate.area(this.list)) {
-            isCounterClockwise = true;
-        }
-
-        double angle = Math.toRadians(30);
-
-        try {
-
-            angle = Math.toRadians(java.lang.Double.parseDouble(this.way.get("building:roof:angle")));
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-
-        double roofLineAngle = Math.atan2(
-                roofLine.getP2().y - roofLine.getP1().y,
-                roofLine.getP2().x - roofLine.getP1().x);
-
-System.out.println(Math.toDegrees(roofLineAngle));
-
-        Vector3d roofLineVector3 = new Vector3d(1, 0, 0);
-
-        Vector3d rotateC3d = PointUtil.rotateZ3d(roofLineVector3, -angle + Math.toRadians(90));
-
-        Vector3d n1 = PointUtil.rotateY3d(rotateC3d, -(-roofLineAngle + Math.toRadians(90)));
-
-        Vector3d n2 = PointUtil.rotateY3d(rotateC3d, -(-roofLineAngle - Math.toRadians(180) + Math.toRadians(90)));
-
-        Point3d planePoint =  new Point3d(
-                (roofLine.getP1().x) ,
-                this.height,
-                -(roofLine.getP1().y));
-
-        Plane3d plane1 = new Plane3d(planePoint, n1);
-        Plane3d plane2 = new Plane3d(planePoint, n2);
-
-        Vector3d planeNorm1 = n1;
-        Vector3d planeNorm2 = n2;
-
-        List<Point2d> border = new ArrayList<Point2d>();
-
-        List<java.lang.Double> heightList = new ArrayList<java.lang.Double>();
-
-
-
-        ////******************
-        List<Point2d> borderExtanded = new ArrayList<Point2d>();
-
-
-        {
-
-            for (Point2d ppp : this.list) {
-                border.add(new Point2d(ppp.x, ppp.y));
-            }
-            if (border.get(border.size() - 1).equals(border.get(0))) {
-                border.remove(border.size() - 1);
-            }
-
-            List<List<Integer>> polygonsLeft = new ArrayList<List<Integer>>();
-            List<List<Integer>> polygonsRight = new ArrayList<List<Integer>>();
-
-            PolygonSplitUtil.splitPolygonByLine(roofLine, border, borderExtanded, polygonsLeft, polygonsRight);
-
-            for (Point2d p : borderExtanded) {
-                double height = calcHeight(p, planePoint, planeNorm1, planeNorm2);
-                heightList.add(height);
-            }
-
-            this.minHeight = findRoofMinHeight(heightList);
-
-            addVertexToRoofMesh(meshRoof, borderExtanded, heightList);
-
-            Vector3d roofLineVector = new Vector3d(
-                    roofLine.getP2().x - roofLine.getP1().x,
-                    0,
-                    -(roofLine.getP2().y - roofLine.getP1().y)
-            );
-
-
-            addPolygonToRoofMesh(meshRoof, borderExtanded, polygonsRight, plane2, roofLineVector, roofTexture);
-            addPolygonToRoofMesh(meshRoof, borderExtanded, polygonsLeft, plane1, roofLineVector, roofTexture);
-
-            meshRoof.materialID = mi;
-            meshRoof.hasTexture = true;
-
-
-        }
-        ////******************
-
-
-        makeRoofBorderMesh(
-                border,
-                borderExtanded,
-                meshBorder,
-                this.minHeight,
-                heightList,
-                this.wallNormals,
-                fasadeTexture);
-
-        meshBorder.materialID = mi2;
-        meshBorder.hasTexture = false;
-
-
-
-        this.model = modelBuilder.toModel();
-        this.model.setUseLight(true);
-        this.model.setUseTexture(true);
-    }
 
 
 
@@ -360,84 +174,6 @@ System.out.println(Math.toDegrees(roofLineAngle));
         return TextCordFactory.calcFlatSurfaceUV(point3d, pPlaneNormal, pRoofLineVector, pRoofLinePoint, roofTexture);
     }
 
-    /** Finds top roof line.
-     * @param pPitched
-     * @return top roof line
-     */
-    private LinePoints2d findTopRoofLine(boolean pPitched) {
-
-        Way ridgeWay = null;
-
-        ref: for (OsmPrimitive op : this.way.getReferrers()) {
-            if (op instanceof Relation) {
-                Relation r = (Relation) op;
-                // XXX this relation is only proposal!
-                if ("building".equals(op.get("type"))) {
-                    for (RelationMember rm : r.getMembers()) {
-                        if ("building:roof:ridge".equals(rm.getRole())
-                                && rm.isWay()) {
-                            ridgeWay = rm.getWay();
-                            break ref;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (ridgeWay != null &&  ridgeWay.getNodesCount() > 1) {
-            // roof line defined in relation
-
-            return new LinePoints2d(
-                    this.perspective.calcPoint(ridgeWay.getNode(0)),
-                    this.perspective.calcPoint(ridgeWay.getNode(1)));
-        }
-
-        int point = 0;
-        Point2d p1 = null;
-        Point2d p2 = null;
-        for (Node node : this.way.getNodes()) {
-            // old way
-            if ("yes".equals(node.get(BUILDING_ROOF_RIDGE))) {
-                if (point == 0) {
-                    p1 = this.perspective.calcPoint(node);
-                } else if (point == 1) {
-                    p2 = this.perspective.calcPoint(node);
-                } else {
-                    log.error("too mach points");
-                }
-                point++;
-            }
-        }
-        if (point > 1) {
-            return new LinePoints2d(p1, p2);
-        }
-        if (pPitched) {
-            Point2d l1 = new Point2d(
-                    (this.contur[1].x),
-                    (this.contur[1].y));
-
-            Point2d l2 = new Point2d(
-                    (this.contur[0].x) ,
-                    (this.contur[0].y));
-
-            return new LinePoints2d(l1, l2);
-
-
-        }
-
-        // gable
-        Point2d l1 = new Point2d(
-                (this.contur[3].x + this.contur[0].x) / 2.0,
-                (this.contur[3].y + this.contur[0].y) / 2.0);
-
-        Point2d l2 = new Point2d(
-                (this.contur[1].x + this.contur[2].x) / 2.0,
-                (this.contur[1].y + this.contur[2].y) / 2.0);
-
-        return new LinePoints2d(l1, l2);
-
-
-    }
 
     /** Make roof border mesh. It is wall under roof.
      * @param pBorder walls polygon
@@ -552,14 +288,5 @@ System.out.println(Math.toDegrees(roofLineAngle));
 
 
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see kendzi.josm.kendzi3d.jogl.model.Model#draw(javax.media.opengl.GL2, kendzi.josm.kendzi3d.jogl.Camera)
-     */
-    @Override
-    public void draw(GL2 pGl, Camera pCamera) {
-        this.modelRender.render(pGl, this.model);
-    }
 
 }

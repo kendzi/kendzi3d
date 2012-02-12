@@ -9,8 +9,6 @@
 
 package kendzi.josm.kendzi3d.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -22,38 +20,45 @@ import kendzi.josm.kendzi3d.metadata.TextureMetadata;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 public class MetadataCacheService {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(MetadataCacheService.class);
 
+    /**
+     * File url reciver service.
+     */
+    @Inject
+    private UrlReciverService fileUrlReciverService;
 
 //    private static MetadataCache metadataCache = null;
-    private static String metadataDir = null;
-    private static Map<String, TextureMetadata> cacheTexture = new HashMap<String, TextureMetadata>();
-    private static Map<String, ModelMetadata> cacheModel = new HashMap<String, ModelMetadata>();
-    private static Properties metadataProperties;
+//    private static String metadataDir = null;
+    private Map<String, TextureMetadata> cacheTexture = new HashMap<String, TextureMetadata>();
+    private Map<String, ModelMetadata> cacheModel = new HashMap<String, ModelMetadata>();
+    private Properties metadataProperties;
 
-    /**
-     * Initialize Metadata cache. It need plugin dir to load external files.
-     *
-     * @param pMetadataDir
-     *            plugin dir where are external files
-     */
-    public static void initMetadataCache(String pMetadataDir) {
-
-        metadataDir = pMetadataDir;
-
-        loadMetadataProperties();
-
-    }
+//    /**
+//     * Initialize Metadata cache. It need plugin dir to load external files.
+//     *
+//     * @param pMetadataDir
+//     *            plugin dir where are external files
+//     */
+//    public static void initMetadataCache(String pMetadataDir) {
+//
+//        metadataDir = pMetadataDir;
+//
+//        loadMetadataProperties();
+//
+//    }
 
 
 
     /**
      * Read textures properties.
      */
-    public static void loadMetadataProperties() {
+    public void loadMetadataProperties() {
         metadataProperties = new Properties();
 
         loadFile("/resources/metadata.properties");
@@ -64,33 +69,22 @@ public class MetadataCacheService {
     /**
      * @param pFileName
      */
-    public static void loadFile(String pFileName) {
-        try {
-            File f = new File(metadataDir, pFileName);
-            if (f.exists()) {
-                FileInputStream in = new FileInputStream(f);
-                metadataProperties.load(in);
-            }
+    public void loadFile(String pFileName) {
 
-        } catch (Exception e) {
-            // XXX
-            e.printStackTrace();
-        }
         try {
-            URL fileUrl = MetadataCacheService.class.getResource(pFileName);
+            URL fileUrl = this.fileUrlReciverService.reciveFileUrl(pFileName);
 
             metadataProperties.load(fileUrl.openStream());
 
         } catch (Exception e) {
-            // XXX
-            e.printStackTrace();
+            log.error("error loading metadata file: " + pFileName, e);
         }
     }
 
     /**
      * Clean up all textures from cache.
      */
-    public static void clear() {
+    public void clear() {
         cacheModel.clear();
         cacheTexture.clear();
         loadMetadataProperties();
@@ -101,7 +95,7 @@ public class MetadataCacheService {
      * @param pId name of texture, "textures." prefix is added.
      * @return metadata of texture
      */
-    public static TextureMetadata getTexture(String pId) {
+    public TextureMetadata getTexture(String pId) {
         String key = "textures." + pId;
         TextureMetadata textureMetadata = cacheTexture.get(key);
         if (textureMetadata == null) {
@@ -116,7 +110,7 @@ public class MetadataCacheService {
      * @param pId of model
      * @return metadata of model
      */
-    public static ModelMetadata getModel(String pId) {
+    public ModelMetadata getModel(String pId) {
         String key = "models." + pId;
         ModelMetadata modelMetadata = cacheModel.get(key);
         if (modelMetadata == null) {
@@ -130,7 +124,7 @@ public class MetadataCacheService {
      * @param pName name of texture
      * @return metadata of texture
      */
-    private static TextureMetadata loadTextureMetadata(String pName) {
+    private TextureMetadata loadTextureMetadata(String pName) {
         TextureMetadata textureMetadata = new TextureMetadata();
 
         textureMetadata.setSizeU(parseDouble(pName + ".sizeU", 1d));
@@ -146,7 +140,7 @@ public class MetadataCacheService {
      * @param pName name of texture
      * @return metadata of texture
      */
-    private static ModelMetadata loadModelMetadata(String pName) {
+    private ModelMetadata loadModelMetadata(String pName) {
         ModelMetadata modelMetadata = new ModelMetadata();
         modelMetadata.setFile(
                 metadataProperties.getProperty(pName + ".file", null));
@@ -162,7 +156,7 @@ public class MetadataCacheService {
      * @param pDefaultValue default value
      * @return double value
      */
-    private static Double parseDouble(String pKey, Double pDefaultValue) {
+    private Double parseDouble(String pKey, Double pDefaultValue) {
         Double value = null;
         try {
             String property = metadataProperties.getProperty(pKey, null);
@@ -179,19 +173,19 @@ public class MetadataCacheService {
         return value;
     }
 
-    public static Double getPropertitesDouble(String pKey, Double pDefaultValue) {
+    public Double getPropertitesDouble(String pKey, Double pDefaultValue) {
         return parseDouble(pKey, pDefaultValue);
     }
 
-    public static String getPropertites(String pKey, String pDefaultValue) {
+    public String getPropertites(String pKey, String pDefaultValue) {
         return metadataProperties.getProperty(pKey, pDefaultValue);
     }
 
-    public static String getPropertites(String pPattern, String pDefaultValue, String ... pKeyParts) {
+    public String getPropertites(String pPattern, String pDefaultValue, String ... pKeyParts) {
         return getPropertites(pPattern, pDefaultValue, true, pKeyParts);
     }
 
-    public static String getPropertites(String pPattern, String pDefaultValue, boolean pTakeUnknown, String ... pKeyParts) {
+    public String getPropertites(String pPattern, String pDefaultValue, boolean pTakeUnknown, String ... pKeyParts) {
 
         if (pTakeUnknown && pKeyParts != null) {
             for (int i = 0; i < pKeyParts.length; i++) {
@@ -208,11 +202,11 @@ public class MetadataCacheService {
         return metadataProperties.getProperty(key, pDefaultValue);
     }
 
-    public static Double getPropertitesDouble(String pPattern, Double pDefaultValue, String ... pKeyParts) {
+    public Double getPropertitesDouble(String pPattern, Double pDefaultValue, String ... pKeyParts) {
         return getPropertitesDouble(pPattern, pDefaultValue, true, pKeyParts);
     }
 
-    public static Double getPropertitesDouble(String pPattern, Double pDefaultValue, boolean pTakeUnknown, String ... pKeyParts) {
+    public Double getPropertitesDouble(String pPattern, Double pDefaultValue, boolean pTakeUnknown, String ... pKeyParts) {
 
         if (pTakeUnknown && pKeyParts != null) {
             for (int i = 0; i < pKeyParts.length; i++) {
@@ -227,6 +221,24 @@ public class MetadataCacheService {
                 pPattern, (Object []) pKeyParts);
 
         return parseDouble(key, pDefaultValue);
+    }
+
+
+
+    /**
+     * @return the fileUrlReciverService
+     */
+    public UrlReciverService getFileUrlReciverService() {
+        return fileUrlReciverService;
+    }
+
+
+
+    /**
+     * @param fileUrlReciverService the fileUrlReciverService to set
+     */
+    public void setFileUrlReciverService(UrlReciverService fileUrlReciverService) {
+        this.fileUrlReciverService = fileUrlReciverService;
     }
 
 }

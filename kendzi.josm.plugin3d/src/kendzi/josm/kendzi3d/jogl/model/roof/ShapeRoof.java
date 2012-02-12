@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.vecmath.Point2d;
 
+import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
@@ -42,8 +43,8 @@ public class ShapeRoof extends DormerRoof {
      * @param pWay way
      * @param pPerspective perspective
      */
-    public ShapeRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective) {
-        super(pBuilding, pList, pWay, pPerspective);
+    public ShapeRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
+        super(pBuilding, pList, pWay, pPerspective, pModelRender);
     }
 
 

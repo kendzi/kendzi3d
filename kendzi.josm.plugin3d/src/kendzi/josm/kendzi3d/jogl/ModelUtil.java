@@ -66,7 +66,7 @@ public final class ModelUtil {
         }
 
         String heightStr = pHeightStr.trim().toLowerCase();
-        heightStr.replaceAll(",", ".");
+        heightStr = heightStr.replaceAll(",", ".");
 
         try {
             if (heightStr.endsWith("m")) {

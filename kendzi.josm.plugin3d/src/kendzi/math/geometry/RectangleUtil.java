@@ -191,7 +191,7 @@ public class RectangleUtil {
 			double area = maxHeight * (maxLenght - minLenght);
 
 			if (area < minArea) {
-				log.info("znaleziono mniejsze pole i: " + i
+				log.debug("znaleziono mniejsze pole i: " + i
 						+ " area: " + area);
 				minArea = area;
 

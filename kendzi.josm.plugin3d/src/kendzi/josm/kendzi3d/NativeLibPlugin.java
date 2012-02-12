@@ -1,7 +1,10 @@
 package kendzi.josm.kendzi3d;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,8 +14,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import kendzi.josm.kendzi3d.service.FileUrlReciverService;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -44,6 +45,23 @@ public abstract class NativeLibPlugin extends Plugin {
     }
 
 
+    private InputStream getPluginProperties(String pFileName) {
+
+        String pluginDir = getPluginDir();
+
+        File f = new File(pluginDir, pFileName);
+
+        if (f.exists()) {
+            try {
+                return new FileInputStream(f);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return getClass().getResourceAsStream(pFileName);
+    }
+
     /**
      * Plugin is loaded dynamically so we need to load required jars and native library.
      *
@@ -68,9 +86,11 @@ public abstract class NativeLibPlugin extends Plugin {
         // If resources are available load properties from plugin directory
         if (this.pluginProperties == null || this.pluginProperties.isEmpty()) {
             this.pluginProperties = new Properties();
-            URL pluginPropertiesUrl = FileUrlReciverService.reciveFileUrl("/resources/" + PLUGINPROPERTIES_FILENAME);
-            this.pluginProperties.load(pluginPropertiesUrl.openStream());
+//            URL pluginPropertiesUrl = FileUrlReciverService.reciveFileUrl("/resources/" + PLUGINPROPERTIES_FILENAME);
+//            this.pluginProperties.load(pluginPropertiesUrl.openStream());
 
+            InputStream is = getPluginProperties("/resources/" + PLUGINPROPERTIES_FILENAME);
+            this.pluginProperties.load(is);
         }
 
 

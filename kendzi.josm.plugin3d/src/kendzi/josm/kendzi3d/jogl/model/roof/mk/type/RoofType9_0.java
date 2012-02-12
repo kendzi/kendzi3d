@@ -124,11 +124,11 @@ public class RoofType9_0 extends AbstractRoofType {
         meshRoof.materialID = roofMaterialIndex;
         meshRoof.hasTexture = true;
 
-        System.out.println("** TO TEST IN JUNIT TEST: **");
+        log.info("** TO TEST IN JUNIT TEST: **");
         for (Point2d p : pBorderList) {
-            System.out.println("polygon.add(new Point2d("+p.x+",  "+p.y+"));");
+            log.info("polygon.add(new Point2d("+p.x+",  "+p.y+"));");
         }
-        System.out.println("****");
+        log.info("****");
 
         Output sk = Skeleton.sk(pBorderList);
 

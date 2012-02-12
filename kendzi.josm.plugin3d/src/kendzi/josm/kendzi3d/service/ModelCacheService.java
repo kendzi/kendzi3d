@@ -7,7 +7,7 @@
  *
  */
 
-package kendzi.jogl.model;
+package kendzi.josm.kendzi3d.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,18 +16,24 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.loader.LoaderFactory;
 import net.java.joglutils.model.ModelLoadException;
 
-public class ModelCache {
-    private static Map<String, Model> modelCache = new HashMap<String, Model>();
+import com.google.inject.Inject;
 
-    public static Model getModel(String pId) {
-        return modelCache.get(pId);
+public class ModelCacheService {
+
+    @Inject
+    UrlReciverService urlReciverService;
+
+    private Map<String, Model> modelCache = new HashMap<String, Model>();
+
+    public Model getModel(String pId) {
+        return this.modelCache.get(pId);
     }
 
-    public static Model loadModel(String pId) throws ModelLoadException {
-        Model model = modelCache.get(pId);
+    public Model loadModel(String pId) throws ModelLoadException {
+        Model model = this.modelCache.get(pId);
         if (model == null) {
-            model = LoaderFactory.load(pId);
-            modelCache.put(pId, model);
+            model = LoaderFactory.load(pId, urlReciverService);
+            this.modelCache.put(pId, model);
         }
         if (model == null) {
             throw new ModelLoadException("can't find model id: " + pId);

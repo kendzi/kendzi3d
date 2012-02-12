@@ -9,11 +9,6 @@ import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.media.nativewindow.Capabilities;
-import javax.media.nativewindow.GraphicsConfigurationFactory;
-import javax.media.nativewindow.awt.AWTGraphicsConfiguration;
-import javax.media.nativewindow.awt.AWTGraphicsDevice;
-import javax.media.nativewindow.awt.AWTGraphicsScreen;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
@@ -27,6 +22,7 @@ import kendzi.josm.kendzi3d.jogl.photos.PhotoParmPanel;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -53,54 +49,59 @@ public class View3dGLFrame extends Frame implements WindowListener {
 
     private PhotoParmPanel photoParmPanel;
 
-    Kendzi3dGLEventListener canvasListener = new Kendzi3dGLEventListener() {
-
-        @Override
-        void displayStats(long pTime, int pFps) {
-            setTimeSpent(pTime);
-            setFps(pFps);
-        }
-    };
+    @Inject
+    Kendzi3dGLEventListener canvasListener;
+//    = new Kendzi3dGLEventListener() {
+//
+//        @Override
+//        void displayStats(long pTime, int pFps) {
+//            setTimeSpent(pTime);
+//            setFps(pFps);
+//        }
+//    };
 
     private AnimatorBase animator;
 
 
     public View3dGLFrame() {
         super("Kendzi 3D");
+    }
 
-//        Container c = getContentPane();
-        Container c = this;
-        c.setLayout(new BorderLayout());
-        c.add(makeRenderPanel(), BorderLayout.CENTER);
+    public void initUI() {
 
-        JPanel ctrls = new JPanel(); // a row of text fields
-        ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
+//      Container c = getContentPane();
+      Container c = this;
+      c.setLayout(new BorderLayout());
+      c.add(makeRenderPanel(), BorderLayout.CENTER);
 
-        this.shapesLeftTF = new JTextField("Test");
-        this.shapesLeftTF.setEditable(false);
-        ctrls.add(this.shapesLeftTF);
+      JPanel ctrls = new JPanel(); // a row of text fields
+      ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
 
-        this.jtfTime = new JTextField("Time Spent: 0 secs");
-        this.jtfTime.setEditable(false);
-        ctrls.add(this.jtfTime);
+      this.shapesLeftTF = new JTextField("Test");
+      this.shapesLeftTF.setEditable(false);
+      ctrls.add(this.shapesLeftTF);
 
-        c.add(ctrls, BorderLayout.SOUTH);
+      this.jtfTime = new JTextField("Time Spent: 0 secs");
+      this.jtfTime.setEditable(false);
+      ctrls.add(this.jtfTime);
 
-        addWindowListener(this);
-//        getWindowListeners();
+      c.add(ctrls, BorderLayout.SOUTH);
 
-//        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-//        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+      addWindowListener(this);
+//      getWindowListeners();
+
+//      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+//      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 
 
-//        WindowsWGLGraphicsConfigurationFactory
-        pack();
-        setVisible(true);
+//      WindowsWGLGraphicsConfigurationFactory
+      pack();
+      setVisible(true);
 
-        if (PhotoParmPanel.showPhotoPanel) {
-            initPhotoFrame();
-        }
+      if (PhotoParmPanel.showPhotoPanel) {
+          initPhotoFrame();
+      }
     }
 
     private void initPhotoFrame() {
@@ -125,7 +126,7 @@ public class View3dGLFrame extends Frame implements WindowListener {
         // XXX
         renderPane.setSize(640, 480);
 
-        this.canvas = makeCanvas2(renderPane);
+        this.canvas = makeCanvas(renderPane);
 //        renderPane.add("Center", this.canvas);
 
         renderPane.add(this.canvas);
@@ -149,42 +150,9 @@ public class View3dGLFrame extends Frame implements WindowListener {
 //        });
 
         return renderPane;
-    } // end of makeRenderPanel()
+    }
 
-    private View3dCanvasGL makeCanvas(long period) {
-
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
-
-        // get a configuration suitable for an AWT Canvas (for TourCanvasGL)
-        GLCapabilities caps = new GLCapabilities(profile);
-
-        // setup z-buffer
-        caps.setDepthBits(16);
-
-        // for anti-aliasing
-        caps.setSampleBuffers(true);
-        caps.setNumSamples(2);
-
-        Capabilities cap = new Capabilities();
-        //		cap.set
-
-
-        AWTGraphicsScreen screen = (AWTGraphicsScreen) AWTGraphicsScreen.createDefault();
-        //		AWTGraphicsConfiguration awtConfig = (AWTGraphicsConfiguration) GraphicsConfigurationFactory
-        //				.getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(
-        //						caps, null, screen);
-        AWTGraphicsConfiguration awtConfig = (AWTGraphicsConfiguration) GraphicsConfigurationFactory
-        .getFactory(AWTGraphicsDevice.class).chooseGraphicsConfiguration(
-                caps, caps, null, screen);
-
-        if (log.isDebugEnabled()) {
-            log.debug("screean awtConfig: \n" + awtConfig);
-            log.debug("screean caps: \n" + caps);
-        }
-        return new View3dCanvasGL(this, period, PWIDTH, PHEIGHT, awtConfig, caps);
-    } // end of makeCanvas()
-
-    private Canvas makeCanvas2(JPanel render) {
+    private Canvas makeCanvas(JPanel render) {
 
         log.info("is set debug for GraphicsConfiguration: " + com.jogamp.opengl.impl.Debug.debug("GraphicsConfiguration"));
 
@@ -194,41 +162,10 @@ public class View3dGLFrame extends Frame implements WindowListener {
         //configure context
         GLCapabilities capabilities = new GLCapabilities(profile);
 
-        String zbuffer = System.getProperty("kendzi3d.opengl.zbuffer");
-        log.info("user zbuffer: " + zbuffer);
+        setUpCapabilities(capabilities);
 
-        // setup z-buffer
-        if (zbuffer == null) {
-            // Default use 16
-            capabilities.setDepthBits(16);
-        } else if (!"default".equals(zbuffer)) {
-            capabilities.setDepthBits(Integer.parseInt(zbuffer));
-        }
-
-        String sampleBuffers = System.getProperty("kendzi3d.opengl.sampleBuffers");
-        log.info("user sampleBuffers: " + sampleBuffers);
-
-        if (sampleBuffers == null) {
-            capabilities.setSampleBuffers(true);
-        } else if ("true".equals(sampleBuffers)) {
-            capabilities.setSampleBuffers(true);
-        } else if ("false".equals(sampleBuffers)) {
-            capabilities.setSampleBuffers(false);
-        }
-
-        String sampleBuffersNum = System.getProperty("kendzi3d.opengl.sampleBuffersNum");
-        log.info("user sampleBuffersNum: " + sampleBuffersNum);
-
-        if (sampleBuffersNum == null) {
-            capabilities.setNumSamples(2);
-        } else if (!"default".equals(sampleBuffersNum)) {
-            capabilities.setNumSamples(Integer.parseInt(sampleBuffersNum));
-        }
-
-        log.info("GLCapabilities: " + capabilities);
         //initialize a GLDrawable of your choice
         GLCanvas canvas = new GLCanvas(capabilities);
-
 
         canvas.addGLEventListener(this.canvasListener);
 
@@ -267,6 +204,41 @@ public class View3dGLFrame extends Frame implements WindowListener {
 
 
         return canvas;
+    }
+
+    private void setUpCapabilities(GLCapabilities capabilities) {
+        String zbuffer = System.getProperty("kendzi3d.opengl.zbuffer");
+        log.info("user zbuffer: " + zbuffer);
+
+        // setup z-buffer
+        if (zbuffer == null) {
+            // Default use 16
+            capabilities.setDepthBits(16);
+        } else if (!"default".equals(zbuffer)) {
+            capabilities.setDepthBits(Integer.parseInt(zbuffer));
+        }
+
+        String sampleBuffers = System.getProperty("kendzi3d.opengl.sampleBuffers");
+        log.info("user sampleBuffers: " + sampleBuffers);
+
+        if (sampleBuffers == null) {
+            capabilities.setSampleBuffers(true);
+        } else if ("true".equals(sampleBuffers)) {
+            capabilities.setSampleBuffers(true);
+        } else if ("false".equals(sampleBuffers)) {
+            capabilities.setSampleBuffers(false);
+        }
+
+        String sampleBuffersNum = System.getProperty("kendzi3d.opengl.sampleBuffersNum");
+        log.info("user sampleBuffersNum: " + sampleBuffersNum);
+
+        if (sampleBuffersNum == null) {
+            capabilities.setNumSamples(2);
+        } else if (!"default".equals(sampleBuffersNum)) {
+            capabilities.setNumSamples(Integer.parseInt(sampleBuffersNum));
+        }
+
+        log.info("GLCapabilities: " + capabilities);
     }
 
     /** Display time spent.
@@ -370,12 +342,6 @@ public class View3dGLFrame extends Frame implements WindowListener {
     public void windowOpened(WindowEvent e) {
     }
 
-    // -----------------------------------------
-
-    public static void main(String[] args) {
-
-        new View3dGLFrame();
-    }
 
     public RenderJOSM getRenderJosm() {
 
@@ -395,6 +361,12 @@ public class View3dGLFrame extends Frame implements WindowListener {
 //        canvas.setFocusable(true);
 //        canvas.requestFocus();
         this.setVisible(true);
+    }
+    /**
+     * @param canvasListener the canvasListener to set
+     */
+    public void setCanvasListener(Kendzi3dGLEventListener canvasListener) {
+        this.canvasListener = canvasListener;
     }
 
 }

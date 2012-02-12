@@ -53,7 +53,7 @@ public abstract class Roof extends AbstractModel {
      * @param pPers 3d perspective
      */
     public Roof(Building pBuilding, List<Point2d> pList, Way pWay,
-            Perspective3D pPers) {
+            Perspective3D pPers, ModelRender pModelRender) {
         super(pWay, pPers);
 
         this.building = pBuilding;
@@ -63,7 +63,7 @@ public abstract class Roof extends AbstractModel {
         this.height = pBuilding.getHeight();
         this.minHeight = this.height;
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
     }
 
     /** Set walls normal vectors.
@@ -106,6 +106,8 @@ public abstract class Roof extends AbstractModel {
     }
 
 
+
+
     /** Get roof texture.
      * @return roof texture
      */
@@ -126,12 +128,14 @@ public abstract class Roof extends AbstractModel {
 
         if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {
 
-            String facadeTextureFile = MetadataCacheService.getPropertites(
+            MetadataCacheService metadataCacheService = getMetadataCacheService();
+
+            String facadeTextureFile = metadataCacheService.getPropertites(
                     "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);
 
-            double facadeTextureLenght = MetadataCacheService.getPropertitesDouble(
+            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
                     "buildings.building_roof_material_{0}.texture.lenght", 1d, roofMaterial);
-            double facadeTextureHeight = MetadataCacheService.getPropertitesDouble(
+            double facadeTextureHeight = metadataCacheService.getPropertitesDouble(
                     "buildings.building_roof_material_{0}.texture.height", 1d, roofMaterial);
 
             return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);

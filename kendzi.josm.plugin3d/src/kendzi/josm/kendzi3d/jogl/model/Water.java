@@ -55,10 +55,10 @@ public class Water extends AbstractWayModel {
 	 * @param way way represent water
 	 * @param pPerspective3D perspective
 	 */
-	public Water(Way way, Perspective3D pPerspective3D) {
+	public Water(Way way, Perspective3D pPerspective3D, ModelRender pModelRender) {
 		super(way, pPerspective3D);
 
-        this.modelRender = ModelRender.getInstance();
+        this.modelRender = pModelRender;
 	}
 
 	@Override

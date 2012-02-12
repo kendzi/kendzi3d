@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 
+import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
@@ -35,6 +36,10 @@ public class PhotoRenderer {
     private PhotoCache photoCache;
 
     private boolean enabled;
+
+
+    @Inject
+    private TextureCacheService textureCacheService;// = ApplicationContextUtil.getTextureCacheService();
 
 //    Ground(Perspective3D pers) {
 //        this.pers = pers;
@@ -66,7 +71,7 @@ public class PhotoRenderer {
 
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName!= null) {
-            Texture texture = TextureCacheService.getTexture(textureName);
+            Texture texture = this.textureCacheService.getTexture(textureName);
 
 //            // switch to texture mode and push a new matrix on the stack
 //            gl.glMatrixMode(GL2.GL_TEXTURE);
@@ -160,9 +165,9 @@ public class PhotoRenderer {
         gl.glPopMatrix();
 
         if (textureName!= null) {
-            Texture texture = TextureCacheService.getTexture(textureName);
+            Texture texture = this.textureCacheService.getTexture(textureName);
 
-            Texture t = TextureCacheService.getTexture(textureName);
+            Texture t = this.textureCacheService.getTexture(textureName);
             //this.textures.get(mesh.materialID);// .get(mesh.materialID);
             if (t != null) {
                 t.disable();
@@ -248,6 +253,20 @@ public class PhotoRenderer {
      */
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    /**
+     * @return the textureCacheService
+     */
+    public TextureCacheService getTextureCacheService() {
+        return textureCacheService;
+    }
+
+    /**
+     * @param textureCacheService the textureCacheService to set
+     */
+    public void setTextureCacheService(TextureCacheService textureCacheService) {
+        this.textureCacheService = textureCacheService;
     }
 
 }

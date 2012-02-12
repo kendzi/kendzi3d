@@ -9,9 +9,10 @@
 
 package kendzi.jogl.model.loader;
 
-import net.java.joglutils.model.ModelLoadException;
 import kendzi.jogl.model.geometry.Model;
- 
+import kendzi.josm.kendzi3d.service.UrlReciverService;
+import net.java.joglutils.model.ModelLoadException;
+
 /**
  *
  * @author Brian Wood
@@ -20,28 +21,28 @@ public class LoaderFactory {
     private static final int FILETYPE_UNKNOWN =    -1;
     private static final int FILETYPE_3DS  =	    1;
     private static final int FILETYPE_OBJ  =	    2;
-    
-    public static Model load(String source) throws ModelLoadException {
-        iLoader loader = getLoader(source);
+
+    public static Model load(String source, UrlReciverService urlReciverService) throws ModelLoadException {
+        iLoader loader = getLoader(source, urlReciverService);
         if (loader == null)
             return null;
-        
+
         return loader.load(source);
     }
-    
-    private static iLoader getLoader(String path) {
+
+    private static iLoader getLoader(String path, UrlReciverService urlReciverService) {
         switch(determineFiletype(path)) {
             case FILETYPE_3DS:
 //                return new MaxLoader();
 
             case FILETYPE_OBJ:
-                return new WaveFrontLoader();
-                
+                return new WaveFrontLoader(urlReciverService);
+
             default:
                 return null;
         }
     }
-    
+
     /**
      * Parses the file suffix to determine what file format the model is in.
      *
@@ -50,13 +51,13 @@ public class LoaderFactory {
      */
     private static int determineFiletype(String path) {
 	int type = FILETYPE_UNKNOWN;
-	String tokens[] = path.split("\\.");	
-	
+	String tokens[] = path.split("\\.");
+
 	if(tokens[tokens.length - 1].equals("3ds"))
 	    type = FILETYPE_3DS;
 	else if(tokens[tokens.length - 1].equals("obj"))
 	    type = FILETYPE_OBJ;
-	    
+
 	return type;
     }
 }
