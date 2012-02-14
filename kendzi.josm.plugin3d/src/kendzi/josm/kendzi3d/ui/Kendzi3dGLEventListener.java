@@ -10,6 +10,8 @@
 package kendzi.josm.kendzi3d.ui;
 
 import java.awt.Canvas;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -30,6 +32,8 @@ import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
+import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
+import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import kendzi.math.geometry.point.PointUtil;
 
 import org.apache.log4j.Logger;
@@ -120,6 +124,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     @Inject
     private PhotoRenderer photoRenderer;
+
+
+    private List<FpsListener> fpsChangeListenerList = new ArrayList<FpsListener>();
 
 
     /**
@@ -221,24 +228,26 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Counts fps. Save last result to variable fps.
      */
-    public void countFps() {
+    protected void countFps() {
         long timeMillis = System.currentTimeMillis();
         if (timeMillis - this.fpsTimeStamp > 1000) {
             this.fpsTimeStamp = timeMillis;
             this.fps = this.fpsCount;
             this.fpsCount = 0;
-//            System.out.println("fps: " + this.fps);
 
             this.timeSpend = (timeMillis - this.startTimeStamp) / 1000l;
 
-            displayStats(this.timeSpend, this.fps);
+            dispatchFpsChange(this.timeSpend, this.fps);
         }
 
         this.fpsCount++;
     }
 
-    void displayStats(long pTime, int pFps) {
-        System.out.println("fps: " + pFps + " time: " + pTime);
+    protected void dispatchFpsChange(long pTime, int pFps) {
+
+        FpsChangeEvent fpsChangeEvent = new FpsChangeEvent(pFps, pTime);
+
+        dispatchFpsChange(fpsChangeEvent);
     }
 
     @Override
@@ -316,10 +325,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
 
-    /** Add listener for camera move.
+    /** Register listener for camera move.
      * @param pCanvas canvas for listener
      */
-    public void addMoveListener(Canvas pCanvas) {
+    public void registerMoveListener(Canvas pCanvas) {
         pCanvas.addKeyListener(this.cameraMoveListener);
 
         pCanvas.addMouseMotionListener(this.cameraMoveListener);
@@ -353,49 +362,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         float [] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
         pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
-
-
-//        gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
-
-//        float [] lmodel_ambient = { 1f, 1f, 1f, 1.0f };
-//        gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
-    }
-
-
-    /**
-     * Switch to 2D viewing (an orthographic projection).
-     * @param gl
-     */
-    private void begin2D(GL2 gl) {
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glPushMatrix(); // save projection settings
-        gl.glLoadIdentity();
-        double panelWidth = 800;
-        double panelHeight = 800;
-        gl.glOrtho(0.0f, panelWidth, panelHeight, 0.0f, -1.0f, 1.0f);
-        // left, right, bottom, top, near, far
-
-        /*
-         * In an orthographic projection, the y-axis runs from the bottom-left,
-         * upwards. This is reversed back to the more familiar top-left,
-         * downwards, by switching the the top and bottom values in glOrtho().
-         */
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glPushMatrix(); // save model view settings
-        gl.glLoadIdentity();
-        gl.glDisable(GL2.GL_DEPTH_TEST);
-    }
-
-    /**
-     * switch back to 3D viewing.
-     * @param gl
-     */
-    private void end2D(GL2 gl) {
-        gl.glEnable(GL2.GL_DEPTH_TEST);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glPopMatrix(); // restore previous projection settings
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glPopMatrix(); // restore previous model view settings
     }
 
     /**
@@ -445,7 +411,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * @param pCamPosY y coordinate
      * @param pCamPosZ z coordinate
      */
-    private void setCamPos(double pCamPosX, double pCamPosY, double pCamPosZ) {
+    public void setCamPos(double pCamPosX, double pCamPosY, double pCamPosZ) {
 
         this.simpleMoveAnimator.setPoint(pCamPosX, pCamPosY, pCamPosZ);
     }
@@ -527,7 +493,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return modelRender;
+        return this.modelRender;
     }
 
 
@@ -547,7 +513,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * @return the photoRenderer
      */
     public PhotoRenderer getPhotoRenderer() {
-        return photoRenderer;
+        return this.photoRenderer;
     }
 
 
@@ -558,5 +524,21 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     public void setPhotoRenderer(PhotoRenderer photoRenderer) {
         this.photoRenderer = photoRenderer;
+    }
+
+
+
+    public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
+        for (FpsListener fl : fpsChangeListenerList) {
+            fl.dispatchFpsChange(fpsChangeEvent);
+        }
+    }
+
+    public void addFpsChangeListener(FpsListener pFpsListener) {
+        this.fpsChangeListenerList.add(pFpsListener);
+    }
+
+    public void removeFpsChangeListener(FpsListener pFpsListener) {
+        this.fpsChangeListenerList.remove(pFpsListener);
     }
 }

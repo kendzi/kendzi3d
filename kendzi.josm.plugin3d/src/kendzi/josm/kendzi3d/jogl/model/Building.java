@@ -71,14 +71,19 @@ public class Building extends AbstractWayModel {
      */
     private static final double BUILDING_LEVELS_DEFAULT = 1;
 
+    /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
 
-
-
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
 
     boolean isCounterClockwise;
 
     private Roof roof;
-
 
     private double buildingHeight;
 
@@ -92,7 +97,6 @@ public class Building extends AbstractWayModel {
      */
     private Double minHeight;
 
-
     /**
      * Number of building levels.
      */
@@ -103,18 +107,10 @@ public class Building extends AbstractWayModel {
      */
     private double minLevels;
 
-
     /**
      * Model of building.
      */
     private Model model;
-
-
-    /**
-     * Renderer of model.
-     */
-    private ModelRender modelRender;
-
 
     /**
      * Height cloner.
@@ -128,11 +124,16 @@ public class Building extends AbstractWayModel {
 
     private List<WindowEntrancesModel> windowsEnterencsModels;
 
-    /** Constructor for building.
+    /**
+     * Constructor for building.
+     *
      * @param pWay way describing building
      * @param pPerspective perspective3
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public Building(Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
+    public Building(Way pWay, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
         super(pWay, pPerspective);
 
         if (0.0f < Triangulate.area(this.points)) {
@@ -193,12 +194,13 @@ public class Building extends AbstractWayModel {
 
         String tag3dr = pWay.get("3dr:type");
         if (!StringUtil.isBlankOrNull(tag3dr)) {
-            this.roof = new DormerRoof(this, this.points, pWay, pPerspective, pModelRender);
+            this.roof = new DormerRoof(this, pWay, pPerspective, pModelRender, pMetadataCacheService);
         } else {
-            this.roof = new ShapeRoof(this, this.points, pWay, pPerspective, pModelRender);
+            this.roof = new ShapeRoof(this, pWay, pPerspective, pModelRender, pMetadataCacheService);
         }
 
         this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
     }
 
     /** Gets facade texture.
@@ -220,8 +222,6 @@ public class Building extends AbstractWayModel {
         }
 
         if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
-
-            MetadataCacheService metadataCacheService = getMetadataCacheService();
 
             String facadeTextureFile = metadataCacheService.getPropertites(
                     "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);

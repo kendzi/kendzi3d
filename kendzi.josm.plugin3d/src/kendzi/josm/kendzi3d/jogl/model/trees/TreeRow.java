@@ -42,13 +42,20 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
 
     private static final double EPSILON = 0.001;
 
-    ModelCacheService modelCacheService;
-    MetadataCacheService metadataCacheService;
-
     /**
      * Renderer of model.
      */
     private ModelRender modelRender;
+
+    /**
+     * Model cache service
+     */
+    private ModelCacheService modelCacheService;
+
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
 
     private EnumMap<LOD, Model> modelLod;
 

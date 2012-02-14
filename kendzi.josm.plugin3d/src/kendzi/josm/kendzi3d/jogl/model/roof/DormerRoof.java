@@ -33,6 +33,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.Direction;
 import kendzi.josm.kendzi3d.util.DirectionParserUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
@@ -87,10 +88,12 @@ public class DormerRoof extends Roof {
      * @param pList list of building walls
      * @param pWay way
      * @param pPerspective perspective
-     * @param pModelRender
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public DormerRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
-        super(pBuilding, pList, pWay, pPerspective, pModelRender);
+    public DormerRoof(Building pBuilding, Way pWay, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+        super(pBuilding, pWay, pPerspective, pModelRender, pMetadataCacheService);
 
 
         //
@@ -150,7 +153,7 @@ public class DormerRoof extends Roof {
         DormerRoofModel roof
         = new  DormerRoofModel();
 
-        roof.setBuilding(new PolygonList2d(this.list));
+        roof.setBuilding(new PolygonList2d(this.points));
         roof.setRoofType(Parser.parseRoofType(type));
 
         roof.setDormers(Parser.parseMultipleDormers(dormer));
@@ -272,7 +275,7 @@ public class DormerRoof extends Roof {
                 drawAxisText(pGl, ("rec point " + (i + 1)), point3d.x, point3d.y, point3d.z);
             }
 
-            Point2d point2d = this.list.get(0);
+            Point2d point2d = this.points.get(0);
 
             float[] rgba = new float[4];
             // green

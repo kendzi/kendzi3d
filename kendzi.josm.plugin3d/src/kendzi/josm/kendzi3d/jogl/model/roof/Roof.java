@@ -9,24 +9,21 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof;
 
-import java.util.List;
-
 import javax.media.opengl.GL2;
-import javax.vecmath.Point2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.TextureData;
+import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Way;
 
-public abstract class Roof extends AbstractModel {
+public abstract class Roof extends AbstractWayModel {
 
     private static final String BUILDING_ROOF_RIDGE = "building:roof:ridge";
     private static final String BUILDING_ROOF_ORIENTATION_ACROSS = "across";
@@ -34,36 +31,47 @@ public abstract class Roof extends AbstractModel {
     private static final String BUILDING_ROOF_ORIENTATION = "building:roof:orientation";
     private static final double EPSILON = 1E-10;
     private static final double EPSILON_SQRT = EPSILON * EPSILON;
+
+    /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
+
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
+
     protected double height;
     protected Building building;
-    protected List<Point2d> list;
 
-    ModelRender modelRender;
     kendzi.jogl.model.geometry.Model model;
 
     protected Vector3d [] wallNormals;
     protected Way way;
     protected double minHeight;
-    //    private Perspective3D pers;
 
-    /** Create model of XXX roof.
+    /** Create model of roof.
      * @param pBuilding building of roof
-     * @param pList list of wall points
      * @param pWay way which define building
      * @param pPers 3d perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public Roof(Building pBuilding, List<Point2d> pList, Way pWay,
-            Perspective3D pPers, ModelRender pModelRender) {
+    public Roof(Building pBuilding, Way pWay,
+            Perspective3D pPers,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
         super(pWay, pPers);
 
         this.building = pBuilding;
-        this.list = pList;
+
         this.way = pWay;
 
         this.height = pBuilding.getHeight();
         this.minHeight = this.height;
 
         this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
     }
 
     /** Set walls normal vectors.
@@ -128,14 +136,12 @@ public abstract class Roof extends AbstractModel {
 
         if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {
 
-            MetadataCacheService metadataCacheService = getMetadataCacheService();
-
-            String facadeTextureFile = metadataCacheService.getPropertites(
+            String facadeTextureFile = this.metadataCacheService.getPropertites(
                     "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);
 
-            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
+            double facadeTextureLenght = this.metadataCacheService.getPropertitesDouble(
                     "buildings.building_roof_material_{0}.texture.lenght", 1d, roofMaterial);
-            double facadeTextureHeight = metadataCacheService.getPropertitesDouble(
+            double facadeTextureHeight = this.metadataCacheService.getPropertitesDouble(
                     "buildings.building_roof_material_{0}.texture.height", 1d, roofMaterial);
 
             return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);

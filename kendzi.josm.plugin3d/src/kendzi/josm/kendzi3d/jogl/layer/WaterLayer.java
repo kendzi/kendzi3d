@@ -27,6 +27,11 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+/**
+ * Layer for water.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class WaterLayer implements Layer {
 
     /** Log. */
@@ -105,7 +110,7 @@ public class WaterLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return modelRender;
+        return this.modelRender;
     }
 
     /**

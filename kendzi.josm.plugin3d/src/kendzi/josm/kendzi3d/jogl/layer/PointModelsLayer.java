@@ -228,6 +228,9 @@ public class PointModelsLayer implements Layer {
         return d;
     }
 
+    /**
+     * Initialize layer.
+     */
     public void init() {
         this.pointModelsList = new ArrayList<PointModelConf>();
         try {

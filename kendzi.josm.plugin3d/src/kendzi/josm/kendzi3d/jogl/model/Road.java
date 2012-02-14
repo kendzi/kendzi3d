@@ -53,6 +53,16 @@ public class Road extends AbstractModel {
 	 */
 	private static final double DEFAULT_ROAD_WIDTH = 6.0f;
 
+	 /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
+
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
+
     /**
      * List of road points.
      */
@@ -78,10 +88,6 @@ public class Road extends AbstractModel {
 	 */
 	private Way way;
 
-	/**
-     * Renderer of model.
-     */
-    private ModelRender modelRender;
 
     /**
      * Model of road.
@@ -93,12 +99,16 @@ public class Road extends AbstractModel {
      *
      * @param pWay way
      * @param pPerspective perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public Road(Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
+    public Road(Way pWay, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
         super(pWay, pPerspective);
         this.way = pWay;
 
         this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
     }
 
 	@Override
@@ -284,15 +294,13 @@ public class Road extends AbstractModel {
 
         String file = null;
 
-        MetadataCacheService metadataCacheService = getMetadataCacheService();
-
-        String highwayTexture = metadataCacheService.getPropertites(
+        String highwayTexture = this.metadataCacheService.getPropertites(
                 "roads.highway_" + highway + ".texture.file", null);
-        Double highwayTextureLenght = metadataCacheService.getPropertitesDouble(
+        Double highwayTextureLenght = this.metadataCacheService.getPropertitesDouble(
                 "roads.highway_" + highway + ".texture.lenght", 1d);
-        String surfaceTexture = metadataCacheService.getPropertites(
+        String surfaceTexture = this.metadataCacheService.getPropertites(
                 "roads.surface_" + surface + ".texture.file", null);
-        Double surfaceTextureLenght = metadataCacheService.getPropertitesDouble(
+        Double surfaceTextureLenght = this.metadataCacheService.getPropertitesDouble(
                 "roads.surface_" + surface + ".texture.lenght", 1d);
 
         double lenght = 1;
@@ -401,9 +409,7 @@ public class Road extends AbstractModel {
             }
         }
 
-        MetadataCacheService metadataCacheService = getMetadataCacheService();
-
-	    Double paramWidth = metadataCacheService.getPropertitesDouble(
+	    Double paramWidth = this.metadataCacheService.getPropertitesDouble(
                 "roads.highway_" + highway + ".width", DEFAULT_ROAD_WIDTH);
 
 

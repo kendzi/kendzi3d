@@ -54,6 +54,16 @@ public class FenceRelation extends AbstractRelationModel {
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 
     /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
+
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
+
+    /**
      * Hight.
      */
     private double hight;
@@ -68,11 +78,6 @@ public class FenceRelation extends AbstractRelationModel {
      */
     private Model model;
 
-    /**
-     * Renderer of model.
-     */
-    private ModelRender modelRender;
-
     private List<Point2d> points;
 
     private List<Double> heights;
@@ -85,8 +90,11 @@ public class FenceRelation extends AbstractRelationModel {
      *
      * @param pRelation way
      * @param pers Perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public FenceRelation(Relation pRelation, Perspective3D pers, ModelRender pModelRender) {
+    public FenceRelation(Relation pRelation, Perspective3D pers,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
         super(pRelation, pers);
 
         List<Double> heights = new ArrayList<Double>();
@@ -117,6 +125,7 @@ public class FenceRelation extends AbstractRelationModel {
         this.points = points;
         this.heights = heights;
         this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
     }
 
     /**
@@ -147,8 +156,6 @@ public class FenceRelation extends AbstractRelationModel {
 
         String fenceType = getFenceType(this.relation);
 
-        MetadataCacheService metadataCacheService = getMetadataCacheService();
-
         double fenceHeight = metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
@@ -160,7 +167,7 @@ public class FenceRelation extends AbstractRelationModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, getMetadataCacheService());
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, metadataCacheService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);

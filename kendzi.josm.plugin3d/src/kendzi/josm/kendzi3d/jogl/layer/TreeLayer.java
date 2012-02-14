@@ -31,6 +31,11 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+/**
+ * Layer for trees.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class TreeLayer implements Layer {
 
     /** Log. */
@@ -38,21 +43,27 @@ public class TreeLayer implements Layer {
     private static final Logger log = Logger.getLogger(TreeLayer.class);
 
     /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
-
-    /**
      * Model renderer.
      */
     @Inject
     private ModelRender modelRender;
 
+    /**
+     * model cache service.
+     */
     @Inject
     private ModelCacheService modelCacheService;
 
+    /**
+     * Metadata cache service.
+     */
     @Inject
     private MetadataCacheService metadataCacheService;
+
+    /**
+     * List of layer models.
+     */
+    private List<Model> modelList = new ArrayList<Model>();
 
     private Match treesMatcher;
     private Match treesWayMatcher;
@@ -102,7 +113,8 @@ public class TreeLayer implements Layer {
 
     @Override
     public void addModel(Node pNode, Perspective3D pPerspective3D) {
-        this.modelList.add(new Tree(pNode, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
+        this.modelList.add(new Tree(pNode, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.modelCacheService));
 
     }
 
@@ -129,7 +141,7 @@ public class TreeLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return modelRender;
+        return this.modelRender;
     }
 
     /**

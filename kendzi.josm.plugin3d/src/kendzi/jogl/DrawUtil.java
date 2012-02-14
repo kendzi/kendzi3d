@@ -81,4 +81,45 @@ public class DrawUtil {
         gl.glVertex3f(x + 1.0f, 0.0f, z);
         gl.glVertex3f(x, 0.0f, z);
     }
+
+    /**
+     * Switch to 2D viewing (an orthographic projection).
+     * @param gl
+     */
+    public void begin2D(GL2 gl) {
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        // save projection settings
+        gl.glPushMatrix();
+        gl.glLoadIdentity();
+        double panelWidth = 800;
+        double panelHeight = 800;
+        gl.glOrtho(0.0f, panelWidth, panelHeight, 0.0f, -1.0f, 1.0f);
+        // left, right, bottom, top, near, far
+
+        /*
+         * In an orthographic projection, the y-axis runs from the bottom-left,
+         * upwards. This is reversed back to the more familiar top-left,
+         * downwards, by switching the the top and bottom values in glOrtho().
+         */
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        // save model view settings
+        gl.glPushMatrix();
+        gl.glLoadIdentity();
+        gl.glDisable(GL2.GL_DEPTH_TEST);
+    }
+
+    /**
+     * switch back to 3D viewing.
+     * @param gl
+     */
+    public void end2D(GL2 gl) {
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        // restore previous projection settings
+        gl.glPopMatrix();
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        // restore previous model view settings
+        gl.glPopMatrix();
+    }
 }
+

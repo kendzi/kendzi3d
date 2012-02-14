@@ -56,6 +56,10 @@ public class Fence extends AbstractWayModel {
      */
     private Model model;
 
+    /**
+     * Height cloner.
+     */
+    private List<RelationCloneHeight> heightClone;
 
     /**
      * Renderer of model.
@@ -63,21 +67,24 @@ public class Fence extends AbstractWayModel {
     private ModelRender modelRender;
 
     /**
-     * Height cloner.
+     * Metadata cache service.
      */
-    private List<RelationCloneHeight> heightClone;
-
+    private MetadataCacheService metadataCacheService;
 
     /**
      * Fence constructor.
      *
      * @param pWay way
-     * @param pers Perspective
+     * @param pPerspective3D perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public Fence(Way pWay, Perspective3D pers, ModelRender pModelRender) {
-        super(pWay, pers);
+    public Fence(Way pWay, Perspective3D pPerspective3D,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+        super(pWay, pPerspective3D);
 
         this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
     }
 
 
@@ -89,8 +96,6 @@ public class Fence extends AbstractWayModel {
         }
 
         String fenceType = FenceRelation.getFenceType(this.way);
-
-        MetadataCacheService metadataCacheService = getMetadataCacheService();
 
         double fenceHeight = metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);

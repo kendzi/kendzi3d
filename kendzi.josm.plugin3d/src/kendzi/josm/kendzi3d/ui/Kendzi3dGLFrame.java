@@ -17,8 +17,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoParmPanel;
+import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
+import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 
 import org.apache.log4j.Logger;
 
@@ -26,26 +27,45 @@ import com.google.inject.Inject;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 
-// Based on TourGL.java by Andrew Davison
-
-public class View3dGLFrame extends Frame implements WindowListener {
+/**
+ * Main application window. Display 3d view, panel with menu and layers.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
+public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListener {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(View3dGLFrame.class);
+    private static final Logger log = Logger.getLogger(Kendzi3dGLFrame.class);
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Panel default width.
+     */
+    private static final int DEF_WIDTH = 512;
 
-    private static final int PWIDTH = 512; // size of panel
-    private static final int PHEIGHT = 512;
+    /**
+     * Panel default height.
+     */
+    private static final int DEF_HEIGHT = 512;
 
+    /**
+     * Canvas.
+     */
+    private Canvas canvas;
 
-    public Canvas canvas;
-    private JTextField shapesLeftTF; // displays no. of shapes left
-    private JTextField jtfTime; // displays time spent in game
+    /**
+     * Display fps.
+     */
+    private JTextField jTFFps;
+
+    /**
+     * Display 3d run time.
+     */
+    private JTextField jTFTime;
 
     private PhotoParmPanel photoParmPanel;
 
@@ -60,13 +80,22 @@ public class View3dGLFrame extends Frame implements WindowListener {
 //        }
 //    };
 
+    /**
+     * 3d view animator.
+     */
     private AnimatorBase animator;
 
 
-    public View3dGLFrame() {
+    /**
+     * Constructor.
+     */
+    public Kendzi3dGLFrame() {
         super("Kendzi 3D");
     }
 
+    /**
+     * Init ui after bean is created.
+     */
     public void initUI() {
 
 //      Container c = getContentPane();
@@ -77,25 +106,20 @@ public class View3dGLFrame extends Frame implements WindowListener {
       JPanel ctrls = new JPanel(); // a row of text fields
       ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
 
-      this.shapesLeftTF = new JTextField("Test");
-      this.shapesLeftTF.setEditable(false);
-      ctrls.add(this.shapesLeftTF);
+      this.jTFFps = new JTextField("Fps: unknown");
+      this.jTFFps.setEditable(false);
+      ctrls.add(this.jTFFps);
 
-      this.jtfTime = new JTextField("Time Spent: 0 secs");
-      this.jtfTime.setEditable(false);
-      ctrls.add(this.jtfTime);
+      this.jTFTime = new JTextField("Time Spent: 0 secs");
+      this.jTFTime.setEditable(false);
+      ctrls.add(this.jTFTime);
 
       c.add(ctrls, BorderLayout.SOUTH);
 
       addWindowListener(this);
-//      getWindowListeners();
 
 //      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-//      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-
-
-//      WindowsWGLGraphicsConfigurationFactory
       pack();
       setVisible(true);
 
@@ -111,18 +135,20 @@ public class View3dGLFrame extends Frame implements WindowListener {
         photoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         photoFrame.pack();
         photoFrame.setVisible(true);
-//        photoParmPanel.add
+
         this.photoParmPanel.addCameraChangeListener(this.canvasListener);
     }
 
-    /** Make canvas panel.
-     * @return
+    /**
+     * Make canvas panel.
+     *
+     * @return panel with canvas
      */
     private JPanel makeRenderPanel() {
         JPanel renderPane = new JPanel();
         renderPane.setLayout(new BorderLayout());
         renderPane.setOpaque(false);
-        renderPane.setPreferredSize(new Dimension(PWIDTH, PHEIGHT));
+        renderPane.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
         // XXX
         renderPane.setSize(640, 480);
 
@@ -170,30 +196,9 @@ public class View3dGLFrame extends Frame implements WindowListener {
         canvas.addGLEventListener(this.canvasListener);
 
         this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
-//        this.animator = new Animator(canvas);
-//        ((Animator) this.animator).setRunAsFastAsPossible(true);
 
-
-//        this.addWindowListener(new WindowAdapter() {
-//
-//
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                // Run this on another thread than the AWT event queue to
-//                // make sure the call to Animator.stop() completes before
-//                // exiting
-//                new Thread(new Runnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        View3dGLFrame.this.animator.stop();
-//                        System.exit(0);
-//                    }
-//                }).start();
-//            }
-//        });
-
-        this.canvasListener.addMoveListener(canvas);
+        this.canvasListener.registerMoveListener(canvas);
+        this.canvasListener.addFpsChangeListener(this);
 
         // Center frame
 //        render.setLocationRelativeTo(null);
@@ -202,10 +207,16 @@ public class View3dGLFrame extends Frame implements WindowListener {
         canvas.setFocusable(true);
         canvas.requestFocus();
 
-
         return canvas;
     }
 
+
+
+    /**
+     * Set up openGL capabilities.
+     *
+     * @param capabilities openGL capabilities
+     */
     private void setUpCapabilities(GLCapabilities capabilities) {
         String zbuffer = System.getProperty("kendzi3d.opengl.zbuffer");
         log.info("user zbuffer: " + zbuffer);
@@ -245,14 +256,14 @@ public class View3dGLFrame extends Frame implements WindowListener {
      * @param pTime time
      */
     public void setTimeSpent(long pTime) {
-        this.jtfTime.setText("Time Spent: " + pTime + " secs");
+        this.jTFTime.setText("Time Spent: " + pTime + " secs");
     }
 
     /** Display fps.
      * @param pFps fps
      */
     public void setFps(int pFps) {
-        this.shapesLeftTF.setText("Fps: " + pFps);
+        this.jTFFps.setText("Fps: " + pFps);
     }
 
     // ----------------- window listener methods -------------
@@ -284,68 +295,32 @@ public class View3dGLFrame extends Frame implements WindowListener {
 //        View3dGLFrame.this.setVisible(false);
 //        this.dispose();
 
-        if (View3dGLFrame.this.animator.isStarted()) {
-            View3dGLFrame.this.animator.stop();
+        if (Kendzi3dGLFrame.this.animator.isStarted()) {
+            Kendzi3dGLFrame.this.animator.stop();
         }
+
+        this.canvasListener.removeFpsChangeListener(this);
 
         new Thread(new Runnable() {
 
             @Override
             public void run() {
 
-                View3dGLFrame.this.setVisible(false);
-                View3dGLFrame.this.dispose();
+                Kendzi3dGLFrame.this.setVisible(false);
+                Kendzi3dGLFrame.this.dispose();
             }
         }).start();
 
-        //e.consume();
-//        e.getID()
-//        e.
-      //  this.setVisible(false);
-
-//        this.canvas.stopGame();
-
-       // this.animator.pause();
-
-        // Run this on another thread than the AWT event queue to
-        // make sure the call to Animator.stop() completes before
-        // exiting
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                View3dGLFrame.this.setVisible(false);
-//                View3dGLFrame.this.animator.stop();
-//                if (View3dGLFrame.this.isDisplayable()) {
-//                    View3dGLFrame.this.dispose();
-//                }
-//            }
-//        }).start();
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-//        // Run this on another thread than the AWT event queue to
-//        // make sure the call to Animator.stop() completes before
-//        // exiting
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-////                View3dGLFrame.this.animator.stop();
-//                View3dGLFrame.this.setVisible(false);
-//            }
-//        }).start();
+        //
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-    }
-
-
-    public RenderJOSM getRenderJosm() {
-
-        return this.canvasListener.getRenderJosm();
+        //
     }
 
     /**
@@ -355,18 +330,20 @@ public class View3dGLFrame extends Frame implements WindowListener {
         return this.canvasListener;
     }
 
-    public void resume() {
-        //this.animator.resume();
-
-//        canvas.setFocusable(true);
-//        canvas.requestFocus();
-        this.setVisible(true);
-    }
     /**
      * @param canvasListener the canvasListener to set
      */
     public void setCanvasListener(Kendzi3dGLEventListener canvasListener) {
         this.canvasListener = canvasListener;
+    }
+
+    @Override
+    public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
+
+        if (fpsChangeEvent != null) {
+            setFps(fpsChangeEvent.getFps());
+            setTimeSpent(fpsChangeEvent.getTime());
+        }
     }
 
 }

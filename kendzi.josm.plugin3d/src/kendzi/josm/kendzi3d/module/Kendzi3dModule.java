@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.action.DebugToggleAction;
-import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
@@ -24,6 +22,7 @@ import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
+import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -69,9 +68,9 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(PhotoRenderer.class);
 
-        bind(Kendzi3dGLEventListener.class);
+        bind(Kendzi3dGLEventListener.class).in(Singleton.class);
 
-        bind(TextureFilterToggleAction.class);
+        bind(Kendzi3dGLFrame.class);
 
         // /*
         // * Similarly, this binding tells Guice that when CreditCardProcessor is used in
@@ -90,14 +89,6 @@ public class Kendzi3dModule extends AbstractModule {
     }
 
     @Provides
-    DebugToggleAction provideDebugToggleAction(ModelRender pModelRender) {
-        DebugToggleAction debugToggleAction = new DebugToggleAction();
-        debugToggleAction.setModelRender(pModelRender);
-        debugToggleAction.init();
-        return debugToggleAction;
-    }
-
-    @Provides
     PointModelsLayer providePointModelsLayer(
             UrlReciverService pUrlReciverService,
             ModelRender pModelRender,
@@ -112,7 +103,7 @@ public class Kendzi3dModule extends AbstractModule {
         return pointModelsLayer;
     }
 
-    @Provides
+    @Provides @Singleton
     RenderJOSM provideRenderJOSM(
             ModelRender pModelRender,
             PointModelsLayer pointModelsLayer,

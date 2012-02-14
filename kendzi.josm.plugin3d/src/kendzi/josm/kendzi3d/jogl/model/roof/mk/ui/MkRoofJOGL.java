@@ -229,8 +229,8 @@ public class MkRoofJOGL implements GLEventListener {
         rtd.setFacadeTextrure(new TextureData("/textures/building_facade_plaster.png", 4, 2));
         rtd.setRoofTexture(new TextureData("/textures/building_roof_material_roofTiles.png", 3, 3));
 
-
-        this.modelRender = ModelRender.getInstance();
+      //FIXME
+        this.modelRender = null;//ModelRender.getInstance();
 
         //FIXME
 //        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, null, rtd);

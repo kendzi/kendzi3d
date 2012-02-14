@@ -40,19 +40,30 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
+/**
+ * Tree for nodes.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class Tree extends AbstractPointModel implements DLODSuport {
 
+    /**
+     * Renderer of model.
+     */
+    private ModelRender modelRender;
 
-    ModelCacheService modelCacheService;
-    MetadataCacheService metadataCacheService;
+    /**
+     * Model cache service
+     */
+    private ModelCacheService modelCacheService;
 
-//    private Texture treeText;
+    /**
+     * Metadata cache service.
+     */
+    private MetadataCacheService metadataCacheService;
+
     float[] verts;
 
-//    private Model model;
-    private ModelRender modelRenderer;
-//    private double modelScaleHeight;
-//    private double modelScaleWidht;
     private EnumMap<LOD, Model> modelLod;
     private String type;
     private String genus;
@@ -60,10 +71,17 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //    private boolean isFlat;
     Vector3d scale;
 
+    /**
+     * @param node node
+     * @param pPerspective3D perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
+     * @param pModelCacheService model cache service
+     */
     public Tree(Node node, Perspective3D pPerspective3D,
             ModelRender pModelRender,
-            ModelCacheService modelCacheService,
-            MetadataCacheService metadataCacheService
+            MetadataCacheService pMetadataCacheService,
+            ModelCacheService pModelCacheService
         ) {
 
         super(node, pPerspective3D);
@@ -74,8 +92,9 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         this.scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRenderer = pModelRender;
-
+        this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
+        this.modelCacheService = pModelCacheService;
 
     }
 
@@ -97,7 +116,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         this.genus = this.node.get("genus");
         this.species = this.node.get("species");
 
-        double height = getHeight(this.node, this.species, this.genus, this.type, getMetadataCacheService());
+        double height = getHeight(this.node, this.species, this.genus, this.type, this.metadataCacheService);
 
         Model model = null;
 
@@ -123,7 +142,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //
 //        }
 
-        model = findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
+        model = findSimpleModel(this.species, this.genus, this.type, pLod, this.metadataCacheService, this.modelCacheService);
 
         setupScale(model, height);
 
@@ -166,6 +185,8 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * @param genus  tree genus
      * @param type  tree type
      * @param pLod  lod level
+     * @param metadataCacheService
+     * @param modelCacheService
      *
      * @return model
      */
@@ -215,12 +236,6 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
     }
 
-    private static String unknown(String pStr) {
-        if (pStr == null) {
-            return "unknown";
-        }
-        return pStr;
-    }
 
     /**
      * Finds height for tree. Order of finding is:
@@ -232,9 +247,9 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * @param species
      * @param genus
      * @param type
+     * @param metadataCacheService
      *
-     *
-     * @return
+     * @return height
      */
     public static double getHeight(OsmPrimitive node, String species, String genus, String type, MetadataCacheService metadataCacheService) {
         // let go
@@ -348,11 +363,9 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         String textFile = "/textures/tree_unknown.png";
 
-        MetadataCacheService metadataCacheService = getMetadataCacheService();
-
-        String spacesText = metadataCacheService.getPropertites("models.trees.species." + this.species + ".flat.texture", null);
-        String genusText = metadataCacheService.getPropertites("models.trees.genus." + this.genus + ".flat.texture", null);
-        String typeText = metadataCacheService.getPropertites("models.trees.type." + this.type + ".flat.texture", null);
+        String spacesText = this.metadataCacheService.getPropertites("models.trees.species." + this.species + ".flat.texture", null);
+        String genusText = this.metadataCacheService.getPropertites("models.trees.genus." + this.genus + ".flat.texture", null);
+        String typeText = this.metadataCacheService.getPropertites("models.trees.type." + this.type + ".flat.texture", null);
 
         // XXX add StringUtil
         if (spacesText != null) {
@@ -417,7 +430,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
                 drawFlatTree(gl, model2);
 
             } else {
-                this.modelRenderer.render(gl, model2);
+                this.modelRender.render(gl, model2);
 
             }
             gl.glDisable(GL2.GL_NORMALIZE);
@@ -469,7 +482,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         // replace the quad colours with the texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 
-        this.modelRenderer.render(gl, model2);
+        this.modelRender.render(gl, model2);
 
 //        TextureCoords tc = tex.getImageTexCoords();
 //

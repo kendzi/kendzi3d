@@ -17,6 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.Fence;
 import kendzi.josm.kendzi3d.jogl.model.FenceRelation;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -28,22 +29,32 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+/**
+ * Layer for fence.
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class FenceLayer implements Layer {
 
     /** Log. */
-    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(FenceLayer.class);
-
-    /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
 
     /**
      * Model renderer.
      */
     @Inject
     private ModelRender modelRender;
+
+    /**
+     * Metadata cache service.
+     */
+    @Inject
+    private MetadataCacheService metadataCacheService;
+
+    /**
+     * List of layer models.
+     */
+    private List<Model> modelList = new ArrayList<Model>();
 
     private Match fenceMatcher;
     private Match fenceRelationMatcher;
@@ -99,12 +110,12 @@ public class FenceLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Fence(way, pPerspective3D, this.modelRender));
+        this.modelList.add(new Fence(way, pPerspective3D, this.modelRender, this.metadataCacheService));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new FenceRelation(relation, pPerspective3D, this.modelRender));
+        this.modelList.add(new FenceRelation(relation, pPerspective3D, this.modelRender, this.metadataCacheService));
     }
 
     @Override
@@ -116,7 +127,7 @@ public class FenceLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return modelRender;
+        return this.modelRender;
     }
 
     /**

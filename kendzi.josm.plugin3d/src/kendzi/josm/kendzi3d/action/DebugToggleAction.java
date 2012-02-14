@@ -21,6 +21,8 @@ import kendzi.jogl.model.render.ModelRender;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
+import com.google.inject.Inject;
+
 /**
  * Debug toggle action.
  *
@@ -37,27 +39,29 @@ public class DebugToggleAction extends JosmAction {
     // Java 6
     private boolean selected;
 
+    /**
+     * Model render.
+     */
     private ModelRender modelRender;
+
     /**
      * Constructor of debug toggle action.
      */
-    public DebugToggleAction() {
+    @Inject
+    public DebugToggleAction(ModelRender pModelRender) {
         super(
                 tr("Debug View"),
                 "1306318261_debugger__24",
                 tr("Enable/disable display debug information"),
-//                Shortcut.registerShortcut("menu:view:wireframe", tr("Toggle Wireframe view"),KeyEvent.VK_W, Shortcut.GROUP_MENU),
                 null,
-                true /* register shortcut */
+                false
         );
+
         this.selected = true;
+        this.modelRender = pModelRender;
         // Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
 
-//        setDebugMode(this.selected);
-    }
-
-    public void init() {
         setDebugMode(this.selected);
     }
 
@@ -123,31 +127,10 @@ public class DebugToggleAction extends JosmAction {
 //        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
 
-    /** Is selected.
-     * @return selected
-     */
-    public boolean isSelected() {
-        return this.selected;
-    }
-
     /** If can be in debug mode.
      * @return debug mode
      */
     public boolean canDebug() {
         return true;
-    }
-
-    /**
-     * @return the modelRender
-     */
-    public ModelRender getModelRender() {
-        return this.modelRender;
-    }
-
-    /**
-     * @param modelRender the modelRender to set
-     */
-    public void setModelRender(ModelRender modelRender) {
-        this.modelRender = modelRender;
     }
 }

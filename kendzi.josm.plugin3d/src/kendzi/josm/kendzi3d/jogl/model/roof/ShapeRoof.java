@@ -9,10 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof;
 
-import java.util.List;
 import java.util.Map;
-
-import javax.vecmath.Point2d;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.Building;
@@ -23,6 +20,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Way;
@@ -39,12 +37,14 @@ public class ShapeRoof extends DormerRoof {
 
     /** Flat Roof.
      * @param pBuilding building
-     * @param pList list of building walls
      * @param pWay way
      * @param pPerspective perspective
+     * @param pModelRender model render
+     * @param pMetadataCacheService metadata cache service
      */
-    public ShapeRoof(Building pBuilding, List<Point2d> pList, Way pWay, Perspective3D pPerspective, ModelRender pModelRender) {
-        super(pBuilding, pList, pWay, pPerspective, pModelRender);
+    public ShapeRoof(Building pBuilding, Way pWay, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+        super(pBuilding, pWay, pPerspective, pModelRender, pMetadataCacheService);
     }
 
 

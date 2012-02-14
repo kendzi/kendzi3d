@@ -15,19 +15,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
-import kendzi.josm.kendzi3d.context.ApplicationContext;
-import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
+
+import com.google.inject.Inject;
 
 /**
  * Texture filter toggle action.
@@ -41,83 +39,30 @@ public class WikiTextureLoaderAction extends JosmAction {
     private static final Logger log = Logger.getLogger(WikiTextureLoaderAction.class);
 
     /**
-     * Button models.
+     *
      */
-    private final List<ButtonModel> buttonModels = new ArrayList<ButtonModel>();
-    //FIXME: replace with property Action.SELECTED_KEY when migrating to
-    // Java 6
-    private boolean selected;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor of debug toggle action.
+     * Wiki texture loader service.
      */
-    public WikiTextureLoaderAction() {
+    private WikiTextureLoaderService wikiTextureLoaderService;
+
+    /**
+     * Constructor of wiki texture loader toggle action.
+     * @param pWikiTextureLoaderService wiki texture loader service
+     */
+    @Inject
+    public WikiTextureLoaderAction(WikiTextureLoaderService pWikiTextureLoaderService) {
         super(
                 tr("Load textures from wiki"),
                 "1323558253_wikipedia-icon_24",
                 tr("Load textures from wiki"),
-//                Shortcut.registerShortcut("menu:view:wireframe", tr("Toggle Wireframe view"),KeyEvent.VK_W, Shortcut.GROUP_MENU),
                 null,
-                true /* register shortcut */
+                false
         );
-        this.selected = true;
-//            Main.pref.getBoolean("draw.wireframe", false);
-        notifySelectedState();
-    }
 
-    /**
-     * @param pModel button model
-     */
-    public void addButtonModel(ButtonModel pModel) {
-        if (pModel != null && !this.buttonModels.contains(pModel)) {
-            this.buttonModels.add(pModel);
-            pModel.setSelected(this.selected);
-        }
-    }
-
-    /**
-     * @param pModel button model
-     */
-    public void removeButtonModel(ButtonModel pModel) {
-        if (pModel != null && this.buttonModels.contains(pModel)) {
-            this.buttonModels.remove(pModel);
-        }
-    }
-
-    /**
-     *
-     */
-    protected void notifySelectedState() {
-        for (ButtonModel model : this.buttonModels) {
-            if (model.isSelected() != this.selected) {
-                model.setSelected(this.selected);
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    protected void toggleSelectedState() {
-
-
-
-//        TextureCacheService.clearTextures();
-
-
-        this.selected = !this.selected;
-//        Main.pref.put("draw.wireframe", this.selected);
-        notifySelectedState();
-
-
-        loadFromWiki();
-    }
-
-    private WikiTextureLoaderService getWikiTextureLoaderService() {
-
-        ApplicationContext context = ApplicationContextFactory.getContext();
-        // XXX rewrite with injections?
-        return (WikiTextureLoaderService) context.getBean("wikiTextureLoaderService");
+        this.wikiTextureLoaderService = pWikiTextureLoaderService;
     }
 
     /**
@@ -127,7 +72,7 @@ public class WikiTextureLoaderAction extends JosmAction {
         List<String> errors = null;
         String timestamp = null;
         try {
-            LoadRet load = getWikiTextureLoaderService().load();
+            LoadRet load = this.wikiTextureLoaderService.load();
             errors = load.getErrors();
             timestamp = load.getTimestamp();
 
@@ -154,7 +99,7 @@ public class WikiTextureLoaderAction extends JosmAction {
         } else {
             JOptionPane.showMessageDialog(null,
                     tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
-                            + getWikiTextureLoaderService().getTexturesPath() ,
+                            + this.wikiTextureLoaderService.getTexturesPath() ,
                     "Info",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -170,25 +115,11 @@ public class WikiTextureLoaderAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent pE) {
-        toggleSelectedState();
+        loadFromWiki();
     }
 
     @Override
     protected void updateEnabledState() {
 //        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
-    }
-
-    /** Is selected.
-     * @return selected
-     */
-    public boolean isSelected() {
-        return this.selected;
-    }
-
-    /** If can be in debug mode.
-     * @return debug mode
-     */
-    public boolean canDebug() {
-        return true;
     }
 }

@@ -22,6 +22,13 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 
+/**
+ * Store metadata for 3d object like default height, textures.
+ * Metadata are stored in propertis files.
+ *
+ * @author Tomasz Kędziora (kendzi)
+ *
+ */
 public class MetadataCacheService {
 
     /** Log. */
@@ -30,36 +37,38 @@ public class MetadataCacheService {
     /**
      * File url reciver service.
      */
-    @Inject
-    private UrlReciverService fileUrlReciverService;
+    private UrlReciverService urlReciverService;
 
-//    private static MetadataCache metadataCache = null;
-//    private static String metadataDir = null;
     private Map<String, TextureMetadata> cacheTexture = new HashMap<String, TextureMetadata>();
+
     private Map<String, ModelMetadata> cacheModel = new HashMap<String, ModelMetadata>();
+
     private Properties metadataProperties;
 
-//    /**
-//     * Initialize Metadata cache. It need plugin dir to load external files.
-//     *
-//     * @param pMetadataDir
-//     *            plugin dir where are external files
-//     */
-//    public static void initMetadataCache(String pMetadataDir) {
-//
-//        metadataDir = pMetadataDir;
-//
-//        loadMetadataProperties();
-//
-//    }
+    /**
+     * Constructor.
+     *
+     * @param pUrlReciverService url reciver service
+     */
+    @Inject
+    private MetadataCacheService(UrlReciverService pUrlReciverService) {
+        this.urlReciverService = pUrlReciverService;
 
+        init();
+    }
 
+    /**
+     * Init metadata cache service.
+     */
+    public void init() {
+        loadMetadataProperties();
+    }
 
     /**
      * Read textures properties.
      */
     public void loadMetadataProperties() {
-        metadataProperties = new Properties();
+        this.metadataProperties = new Properties();
 
         loadFile("/resources/metadata.properties");
 
@@ -72,9 +81,9 @@ public class MetadataCacheService {
     public void loadFile(String pFileName) {
 
         try {
-            URL fileUrl = this.fileUrlReciverService.reciveFileUrl(pFileName);
+            URL fileUrl = this.urlReciverService.reciveFileUrl(pFileName);
 
-            metadataProperties.load(fileUrl.openStream());
+            this.metadataProperties.load(fileUrl.openStream());
 
         } catch (Exception e) {
             log.error("error loading metadata file: " + pFileName, e);
@@ -85,8 +94,8 @@ public class MetadataCacheService {
      * Clean up all textures from cache.
      */
     public void clear() {
-        cacheModel.clear();
-        cacheTexture.clear();
+        this.cacheModel.clear();
+        this.cacheTexture.clear();
         loadMetadataProperties();
     }
 
@@ -97,10 +106,10 @@ public class MetadataCacheService {
      */
     public TextureMetadata getTexture(String pId) {
         String key = "textures." + pId;
-        TextureMetadata textureMetadata = cacheTexture.get(key);
+        TextureMetadata textureMetadata = this.cacheTexture.get(key);
         if (textureMetadata == null) {
             textureMetadata = loadTextureMetadata(key);
-            cacheTexture.put(key, textureMetadata);
+            this.cacheTexture.put(key, textureMetadata);
         }
         return textureMetadata;
     }
@@ -112,10 +121,10 @@ public class MetadataCacheService {
      */
     public ModelMetadata getModel(String pId) {
         String key = "models." + pId;
-        ModelMetadata modelMetadata = cacheModel.get(key);
+        ModelMetadata modelMetadata = this.cacheModel.get(key);
         if (modelMetadata == null) {
             modelMetadata = loadModelMetadata(key);
-            cacheModel.put(key, modelMetadata);
+            this.cacheModel.put(key, modelMetadata);
         }
         return modelMetadata;
     }
@@ -130,7 +139,7 @@ public class MetadataCacheService {
         textureMetadata.setSizeU(parseDouble(pName + ".sizeU", 1d));
         textureMetadata.setSizeV(parseDouble(pName + ".sizeV", 1d));
         textureMetadata.setFile(
-                metadataProperties.getProperty(pName + ".file", null));
+                this.metadataProperties.getProperty(pName + ".file", null));
 
         //TODO
         return textureMetadata;
@@ -143,7 +152,7 @@ public class MetadataCacheService {
     private ModelMetadata loadModelMetadata(String pName) {
         ModelMetadata modelMetadata = new ModelMetadata();
         modelMetadata.setFile(
-                metadataProperties.getProperty(pName + ".file", null));
+                this.metadataProperties.getProperty(pName + ".file", null));
 
 
 
@@ -159,7 +168,7 @@ public class MetadataCacheService {
     private Double parseDouble(String pKey, Double pDefaultValue) {
         Double value = null;
         try {
-            String property = metadataProperties.getProperty(pKey, null);
+            String property = this.metadataProperties.getProperty(pKey, null);
             if (property != null) {
                 value = Double.valueOf(property);
             }
@@ -178,7 +187,7 @@ public class MetadataCacheService {
     }
 
     public String getPropertites(String pKey, String pDefaultValue) {
-        return metadataProperties.getProperty(pKey, pDefaultValue);
+        return this.metadataProperties.getProperty(pKey, pDefaultValue);
     }
 
     public String getPropertites(String pPattern, String pDefaultValue, String ... pKeyParts) {
@@ -199,7 +208,7 @@ public class MetadataCacheService {
         String key = MessageFormat.format(
                 pPattern, (Object []) pKeyParts);
 
-        return metadataProperties.getProperty(key, pDefaultValue);
+        return this.metadataProperties.getProperty(key, pDefaultValue);
     }
 
     public Double getPropertitesDouble(String pPattern, Double pDefaultValue, String ... pKeyParts) {
@@ -229,7 +238,7 @@ public class MetadataCacheService {
      * @return the fileUrlReciverService
      */
     public UrlReciverService getFileUrlReciverService() {
-        return fileUrlReciverService;
+        return this.urlReciverService;
     }
 
 
@@ -238,7 +247,7 @@ public class MetadataCacheService {
      * @param fileUrlReciverService the fileUrlReciverService to set
      */
     public void setFileUrlReciverService(UrlReciverService fileUrlReciverService) {
-        this.fileUrlReciverService = fileUrlReciverService;
+        this.urlReciverService = fileUrlReciverService;
     }
 
 }

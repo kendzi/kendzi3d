@@ -17,12 +17,13 @@ import java.util.List;
 
 import javax.swing.ButtonModel;
 
-import kendzi.josm.kendzi3d.Kendzi3DPlugin;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 
 import org.openstreetmap.josm.actions.JosmAction;
+
+import com.google.inject.Inject;
 
 /**
  * Enable/disable display texture on ground toggle action.
@@ -33,6 +34,11 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class GroundToggleAction extends JosmAction {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Button models.
      */
     private final List<ButtonModel> buttonModels = new ArrayList<ButtonModel>();
@@ -40,23 +46,25 @@ public class GroundToggleAction extends JosmAction {
     // Java 6
     private boolean selected;
 
-    private Kendzi3DPlugin kendzi3DPlugin;
+    private Kendzi3dGLEventListener kendzi3dGLEventListener;
 
     /**
-     * Constructor of debug toggle action.
+     * Constructor of ground toggle action.
+     *
+     * @param pKendzi3dGLEventListener
      */
-    public GroundToggleAction(Kendzi3DPlugin kendzi3dPlugin) {
+    @Inject
+    public GroundToggleAction(Kendzi3dGLEventListener pKendzi3dGLEventListener) {
         super(
                 tr("Textured Ground"),
                 "1306318261_debugger__24",
                 tr("Enable/disable display texture on ground"),
-//                Shortcut.registerShortcut("menu:view:wireframe", tr("Toggle Wireframe view"),KeyEvent.VK_W, Shortcut.GROUP_MENU),
                 null,
-                true /* register shortcut */
+                false /* register shortcut */
         );
         this.selected = false;
 
-        this.kendzi3DPlugin = kendzi3dPlugin;
+        this.kendzi3dGLEventListener = kendzi3dGLEventListener;
 
         // Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
@@ -111,12 +119,11 @@ public class GroundToggleAction extends JosmAction {
      */
     private void setDebugMode(boolean pEnable) {
 
-        Kendzi3dGLEventListener canvasListener = this.kendzi3DPlugin.getCanvasListener();
-        if (canvasListener != null) {
+        if (kendzi3dGLEventListener != null) {
             if (pEnable) {
-                canvasListener.setGround(new StyledTitleGround());
+                kendzi3dGLEventListener.setGround(new StyledTitleGround());
             } else {
-                canvasListener.setGround(new Ground());
+                kendzi3dGLEventListener.setGround(new Ground());
             }
         }
     }
