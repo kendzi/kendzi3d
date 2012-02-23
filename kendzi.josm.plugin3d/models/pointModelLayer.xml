@@ -1,10 +1,10 @@
 <pointModels>
-	<pointModel matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+	<pointModel id="1" matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="0.154" />
-	<pointModel matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+	<pointModel id="2" matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="scaleHeight(0.0154,20)" />
-	<pointModel matcher="(power_source=wind3)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+	<pointModel id="3" matcher="(power_source=wind3)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="scaleHeight(0.0154,20)" />
-	<pointModel matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+	<pointModel id="4" matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="normalHeight(0.8,20)" />
 </pointModels> 

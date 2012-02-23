@@ -12,6 +12,7 @@ package kendzi.josm.kendzi3d;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -27,6 +28,7 @@ import java.util.Properties;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+
 
 /**
  * Implements loaders for native library for JOGL.
@@ -293,4 +295,139 @@ public abstract class NativeLibPlugin extends Plugin {
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void copy(String from, String to) throws FileNotFoundException, IOException {
+        try {
+            System.out.println("copying file from jar: " + from + " to: " + to);
+            makeDirs(to);
+
+            URL url = getClass().getResource(from);
+            System.out.println("url to res: " + (url == null ? null : url.toString()));
+
+            String pluginDirName = getPluginDir();
+            File pluginDir = new File(pluginDirName);
+            if (!pluginDir.exists()) {
+                pluginDir.mkdirs();
+            }
+            FileOutputStream out = new FileOutputStream(new File(pluginDirName, to));
+            InputStream in = getResourceAsStream(from);
+            //            InputStream in = getClass().getResourceAsStream(from);
+            byte[] buffer = new byte[8192];
+            long l = 0;
+            for (int len = in.read(buffer); len > 0; len = in.read(buffer)) {
+                out.write(buffer, 0, len);
+                l = l + len;
+            }
+            in.close();
+            out.close();
+            System.out.println("end of copying bytes: " + l + " from file: " + from);
+
+
+            System.out.println(this.getClass().getResource(""));
+            System.out.println(this.getClass().getResource("/"));
+
+        } catch (java.lang.NullPointerException e) {
+            // for debbuging and testing I don't care.
+            e.printStackTrace();
+
+        } catch (Exception e) {
+            // for debbuging and testing I don't care.
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Make all sub directories.
+     * @param pFileName file which require directory
+     */
+    private void makeDirs(String pFileName) {
+
+        String pluginDirName = getPluginDir();
+        File pluginDir = new File(pluginDirName);
+        if (!pluginDir.exists()) {
+            pluginDir.mkdirs();
+        }
+        File dir = new File(pluginDirName, pFileName).getParentFile();
+        if (!dir.exists()) {
+            System.out.println("Dir don't exist. Creatin new dir: " + dir.getAbsolutePath());
+            dir.mkdirs();
+        }
+    }
+
+    /**
+     * Returns an input stream for reading the specified resource.
+     *
+     * <p> The search order is described in the documentation for {@link
+     * #getResource(String)}.  </p>
+     *
+     * @param  pName
+     *         The resource name
+     *
+     * @return  An input stream for reading the resource, or <tt>null</tt>
+     *          if the resource could not be found
+     *
+     * @since  1.1
+     */
+    public InputStream getResourceAsStream(String pName) {
+        URL url = getResourceUrl(pName);
+        try {
+            return url != null ? url.openStream() : null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Try to find URL of file in resources. In some reason getClass().getResource(...) can't find file if it is in jar
+     * and file in sub dir. So at this location it work fine: /res/file but if file is deeper like this: /res/dir/file
+     * url returned by getResource is bad. It is possible that it is bug in URLClassLoader or ClassLoader require some
+     * strange configuration. This function is overround for this bug.
+     *
+     * Function require resource name to be taken from root.
+     *
+     * @param pResName
+     *            started from "/" of jar or project in eclipse
+     * @return url to resource
+     */
+    public static URL getResourceUrl(String pResName) {
+        // FIXME make util with FileUrlReciverService.getResourceUrl(...)
+
+        URL resource = NativeLibPlugin.class.getResource("");
+//        log.info("resource: " + resource);
+
+        String resUrl = resource.toString();
+        if (resUrl.startsWith("jar:")) {
+            // if we are in jar
+            try {
+                String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
+//                log.info("new url: " + newURL);
+                return new URL(newURL);
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        } else {
+            // if we run from eclipse ide
+            URL res = NativeLibPlugin.class.getResource(pResName);
+            if (res != null) {
+                return res;
+            }
+        }
+
+        // if it is not from root
+        //THIS MAGICALLY WORK:
+
+        // When the string was not a valid URL, try to load it as a resource using
+        // an anonymous class in the tree.
+        Object objectpart = new Object() { };
+        Class classpart = objectpart.getClass();
+        ClassLoader loaderpart = classpart.getClassLoader();
+        URL result = loaderpart.getResource(pResName);
+
+        return result;
+    }
+
 }

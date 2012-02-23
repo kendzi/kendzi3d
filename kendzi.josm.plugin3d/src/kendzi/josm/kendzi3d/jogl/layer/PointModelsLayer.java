@@ -9,7 +9,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +17,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.josm.kendzi3d.service.impl.PointModelDataChange;
+import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.util.expression.ModelScaleContext;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
@@ -37,13 +39,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.inject.Inject;
+
 /**
  * Layer allow loading custom models.
  *
  * @author Tomasz Kędziora (kendzi)
  *
  */
-public class PointModelsLayer implements Layer {
+public class PointModelsLayer implements Layer, PointModelDataChange {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(PointModelsLayer.class);
@@ -70,11 +74,24 @@ public class PointModelsLayer implements Layer {
     //@Inject
     private UrlReciverService urlReciverService;
 
+    //@Inject
+    private PointModelService pointModelService;
+
     /**
      * Constructor.
      */
-    public PointModelsLayer() {
-//        init();
+    @Inject
+    public PointModelsLayer(
+            ModelRender modelRender,
+            ModelCacheService modelCacheService,
+            UrlReciverService urlReciverService,
+            PointModelService pointModelService
+            ) {
+        this.modelRender = modelRender;
+        this.modelCacheService = modelCacheService;
+        this.pointModelService = pointModelService;
+
+        init();
     }
 
     /**
@@ -232,18 +249,57 @@ public class PointModelsLayer implements Layer {
      * Initialize layer.
      */
     public void init() {
-        this.pointModelsList = new ArrayList<PointModelConf>();
-        try {
 
-            URL pointModelConf = this.urlReciverService.reciveFileUrl("/models/pointModelLayer.xml");
+        this.pointModelService.addPointModelDataChangeListener(this);
 
-            // XXX ?!@
-            List<PointModelConf> parseXmlFile = parseXmlFile(pointModelConf.toString());
+        loadData();
 
-            this.pointModelsList = parseXmlFile;
-        } catch (Exception e) {
-            log.error(e,e);
+//        // XXX remove !
+//        this.pointModelsList = new ArrayList<PointModelConf>();
+//        try {
+//
+//            URL pointModelConf = this.urlReciverService.receiveFileUrl("/models/pointModelLayer.xml");
+//
+//            // XXX ?!@
+//            List<PointModelConf> parseXmlFile = parseXmlFile(pointModelConf.toString());
+//
+//            this.pointModelsList = parseXmlFile;
+//        } catch (Exception e) {
+//            log.error(e,e);
+//        }
+    }
+
+    private void loadData() {
+        List<PointModelConf> pointModelsList = new ArrayList<PointModelsLayer.PointModelConf>();
+        for (PointModel pointModel : this.pointModelService.findAll()) {
+            try {
+                PointModelConf pmc = convert(pointModel);
+                pointModelsList.add(pmc);
+            } catch (Exception e) {
+                log.error(e, e);
+            }
         }
+
+        this.pointModelsList = pointModelsList;
+    }
+
+    private PointModelConf convert(PointModel pointModel) throws Exception {
+
+        PointModelConf pm = new PointModelConf();
+        pm.setModel(pointModel.getModel());
+        pm.setMatcher(SearchCompiler.compile(pointModel.getMatcher(), false, false));
+
+        pm.setTranslate(
+                new Vector3d(
+                        pointModel.getTranslateX(),
+                        pointModel.getTranslateY(),
+                        pointModel.getTranslateZ()));
+
+        String scale = pointModel.getScale();
+
+        pm.setScale(SimpleDoubleExpressionParser.compile(scale, new ModelScaleContext()));
+
+        return pm;
     }
 
     /**
@@ -377,6 +433,18 @@ public class PointModelsLayer implements Layer {
      */
     public void setUrlReciverService(UrlReciverService urlReciverService) {
         this.urlReciverService = urlReciverService;
+    }
+
+    /**
+     * @param pointModelService the pointModelService to set
+     */
+    public void setPointModelService(PointModelService pointModelService) {
+        this.pointModelService = pointModelService;
+    }
+
+    @Override
+    public void firePointModelDataChange() {
+        loadData();
     }
 
 }

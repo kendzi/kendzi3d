@@ -23,13 +23,7 @@ import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
-import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
-import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
-import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
-import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
-import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
@@ -131,7 +125,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public RenderJOSM() {
 
 
-        // FIXME
+        // FIXME TODO XXX
         DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this),
                 FireMode.IMMEDIATELY);
 
@@ -142,12 +136,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(1, 0, 0);
 
 
-        this.layerList.add(new PointModelsLayer());
-        this.layerList.add(new BuildingLayer());
-        this.layerList.add(new RoadLayer());
-        this.layerList.add(new WaterLayer());
-        this.layerList.add(new TreeLayer());
-        this.layerList.add(new FenceLayer());
+//        this.layerList.add(new PointModelsLayer());
+//        this.layerList.add(new BuildingLayer());
+//        this.layerList.add(new RoadLayer());
+//        this.layerList.add(new WaterLayer());
+//        this.layerList.add(new TreeLayer());
+//        this.layerList.add(new FenceLayer());
     }
 
     public void init(GL2 gl) {

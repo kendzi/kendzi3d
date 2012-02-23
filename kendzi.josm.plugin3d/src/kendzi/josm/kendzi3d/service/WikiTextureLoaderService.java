@@ -99,7 +99,7 @@ public class WikiTextureLoaderService {
             this.metadataCacheService.loadMetadataProperties();
         }
 
-        this.textureCacheService.clearTextures();
+        this.textureCacheService.clear();
 
         return ret;
     }

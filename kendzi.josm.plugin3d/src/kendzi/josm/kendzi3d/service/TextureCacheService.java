@@ -101,13 +101,6 @@ public class TextureCacheService {
     }
 
     /**
-     * Clean up all textures from cache.
-     */
-    public void clearTextures() {
-        this.clear();
-    }
-
-    /**
      * Add texture builder.
      * @param pTextureBuilder texture builder
      */
@@ -255,13 +248,16 @@ public class TextureCacheService {
         // String fileName = pName;
 
 //        URL textUrl = FileUrlReciverService.getResourceUrl(pName);
-        URL textUrl = this.fileUrlReciverService.reciveFileUrl(pName);
+        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        if (textUrl == null) {
+            log.info("No file to load: " + pName);
+            return null;
+        }
         Texture tex = null;
         try {
             tex = TextureIO.newTexture(textUrl, filter, null);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error loading texture: " + pName + " texture url: " + textUrl);
+            log.error("Error loading texture: " + pName + " texture url: " + textUrl, e);
         }
 
 //

@@ -27,11 +27,18 @@ public interface UrlReciverService {
      * @param pFileName file name
      * @return file url
      */
-    public abstract URL reciveFileUrl(String pFileName);
+    URL receiveFileUrl(String pFileName);
+
+    /**
+     * Receive url from directory: {PLUGIN_DIR_NAME}
+     * @param pFileName file name
+     * @return file url
+     */
+    URL receivePluginDirUrl(String pFileName);
 
     /**
      * @return the pluginDir
      */
-    public abstract String getPluginDir();
+    String getPluginDir();
 
 }

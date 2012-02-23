@@ -25,12 +25,14 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
+import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
+import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
@@ -52,6 +54,23 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Kendzi3dGLEventListener.class);
 
+    /**
+     * Model renderer.
+     */
+    @Inject
+    private ModelRender modelRender;
+
+    /**
+     * Renderer of josm opengl object.
+     */
+    @Inject
+    private RenderJOSM renderJosm;
+
+    /**
+     * Texture cache service.
+     */
+    @Inject
+    private TextureCacheService textureCacheService;
 
     /**
      * Position of sun. XXX
@@ -74,17 +93,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     private AxisLabels axisLabels;
 
-    /**
-     * Model renderer.
-     */
-    @Inject
-    private ModelRender modelRender;
 
-    /**
-     * Renderer of josm opengl object.
-     */
-    @Inject
-    private RenderJOSM renderJosm;
 
     /**
      * Ground.
@@ -134,7 +143,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     public Kendzi3dGLEventListener() {
 
-        this.ground  = new Ground();
+        setGroundType(false);
 
         this.axisLabels = new AxisLabels();
 
@@ -436,24 +445,15 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         gl.glEnable(GL2.GL_LIGHTING);
     }
 
-
-
-
     /**
-     * @return the ground
+     * @param ground type of the ground to set
      */
-    public Ground getGround() {
-        return this.ground;
-    }
-
-
-
-
-    /**
-     * @param ground the ground to set
-     */
-    public void setGround(Ground ground) {
-        this.ground = ground;
+    public void setGroundType(boolean pType) {
+        if (pType) {
+            this.ground = new StyledTitleGround(this.textureCacheService);
+        } else {
+            this.ground = new Ground();
+        }
     }
 
 
@@ -529,7 +529,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
     public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
-        for (FpsListener fl : fpsChangeListenerList) {
+        for (FpsListener fl : this.fpsChangeListenerList) {
             fl.dispatchFpsChange(fpsChangeEvent);
         }
     }

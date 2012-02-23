@@ -81,7 +81,7 @@ public class MetadataCacheService {
     public void loadFile(String pFileName) {
 
         try {
-            URL fileUrl = this.urlReciverService.reciveFileUrl(pFileName);
+            URL fileUrl = this.urlReciverService.receiveFileUrl(pFileName);
 
             this.metadataProperties.load(fileUrl.openStream());
 

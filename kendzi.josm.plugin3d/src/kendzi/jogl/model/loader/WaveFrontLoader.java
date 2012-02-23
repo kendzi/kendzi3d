@@ -109,7 +109,7 @@ public class WaveFrontLoader implements iLoader {
         try {
 
 //            stream = ResourceRetriever.getResourceAsInputStream(model.getSource());
-           URL modelURL = this.urlReciverService.reciveFileUrl(this.model.getSource());
+           URL modelURL = this.urlReciverService.receiveFileUrl(this.model.getSource());
 
            if (modelURL != null) {
                stream = modelURL.openStream();
@@ -662,7 +662,7 @@ public class WaveFrontLoader implements iLoader {
         Material mat = new Material();
         InputStream stream = null;
         try {
-            URL materialURL = this.urlReciverService.reciveFileUrl(this.baseDir + s[1]);
+            URL materialURL = this.urlReciverService.receiveFileUrl(this.baseDir + s[1]);
             stream = materialURL.openStream();
 
 //            stream = ResourceRetriever.getResourceAsInputStream(this.baseDir + s[1]);

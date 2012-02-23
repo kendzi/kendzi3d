@@ -34,6 +34,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.math.geometry.Algebra;
 import kendzi.math.geometry.Plane3d;
+import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
@@ -123,6 +124,18 @@ public class RoofType9_0 extends AbstractRoofType {
 
         meshRoof.materialID = roofMaterialIndex;
         meshRoof.hasTexture = true;
+
+        // XXX temporary ?
+        if (0.0f > Triangulate.area(pBorderList)) {
+
+            List<Point2d> list = new ArrayList<Point2d>();
+
+            for (int i = pBorderList.size() - 1; i >= 0; i--) {
+                list.add(pBorderList.get(i));
+            }
+            pBorderList = list;
+        }
+
 
         log.info("** TO TEST IN JUNIT TEST: **");
         for (Point2d p : pBorderList) {

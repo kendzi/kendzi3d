@@ -18,8 +18,6 @@ import java.util.List;
 
 import javax.swing.ButtonModel;
 
-import kendzi.josm.kendzi3d.context.ApplicationContext;
-import kendzi.josm.kendzi3d.context.ApplicationContextFactory;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -34,13 +32,16 @@ import com.google.inject.Inject;
  */
 public class TextureFilterToggleAction extends JosmAction {
 
-
-    private TextureCacheService textureCacheService;
-
     /**
      * Button models.
      */
     private final List<ButtonModel> buttonModels = new ArrayList<ButtonModel>();
+
+    /**
+     * Texture cache service.
+     */
+    private TextureCacheService textureCacheService;
+
     //FIXME: replace with property Action.SELECTED_KEY when migrating to
     // Java 6
     private boolean selected;
@@ -113,16 +114,12 @@ public class TextureFilterToggleAction extends JosmAction {
      */
     private void setTextureFilter(boolean pEnable) {
 //        getTextureCacheService().setTextureFilter(pEnable);
-        textureCacheService.setTextureFilter(pEnable);
+        this.textureCacheService.setTextureFilter(pEnable);
+        this.textureCacheService.clear();
     }
 
 
-    private TextureCacheService getTextureCacheService() {
 
-        ApplicationContext context = ApplicationContextFactory.getContext();
-        // XXX rewrite with injections?
-        return (TextureCacheService) context.getBean("textureCacheService");
-    }
 
 
 

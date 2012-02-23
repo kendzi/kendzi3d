@@ -14,7 +14,6 @@ import java.awt.Graphics2D;
 
 import javax.media.opengl.GL2;
 
-import kendzi.josm.kendzi3d.context.ApplicationContextUtil;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -34,24 +33,28 @@ import com.jogamp.opengl.util.texture.Texture;
 
 public class StyledTitleGround extends Ground {
 
-
     /** Log. */
     private static final Logger log = Logger.getLogger(StyledTitleGround.class);
 
     /**
      * Title size in meters.
      */
-    static final double TITLE_LENGTH = 500;
+    private static final double TITLE_LENGTH = 500;
 
     /**
      * Half size of title.
      */
-    static final double TITLE_HALF_LENGTH = TITLE_LENGTH / 2d;
+    private static final double TITLE_HALF_LENGTH = TITLE_LENGTH / 2d;
 
     /**
      * Title image size in pixels.
      */
     private static final int TITLE_IMAGE_SIZE = 512;
+
+    /**
+     * Texture cache service.
+     */
+    private TextureCacheService textureCacheService;
 
     /**
      * Total title generation time.
@@ -68,8 +71,15 @@ public class StyledTitleGround extends Ground {
      */
     private int titleFrameCount;
 
-    // FIXME
-    private TextureCacheService textureCacheService = ApplicationContextUtil.getTextureCacheService();
+    /** Constructor.
+     * @param textureCacheService texture cache service
+     */
+    public StyledTitleGround(TextureCacheService textureCacheService) {
+        super();
+        this.textureCacheService = textureCacheService;
+    }
+
+
 
     @Override
     public void draw(GL2 pGl , Camera pCamera, Perspective3D pPerspective3d) {

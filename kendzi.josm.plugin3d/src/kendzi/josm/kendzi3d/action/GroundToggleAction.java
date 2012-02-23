@@ -17,8 +17,6 @@ import java.util.List;
 
 import javax.swing.ButtonModel;
 
-import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
-import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -64,7 +62,7 @@ public class GroundToggleAction extends JosmAction {
         );
         this.selected = false;
 
-        this.kendzi3dGLEventListener = kendzi3dGLEventListener;
+        this.kendzi3dGLEventListener = pKendzi3dGLEventListener;
 
         // Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
@@ -119,13 +117,8 @@ public class GroundToggleAction extends JosmAction {
      */
     private void setDebugMode(boolean pEnable) {
 
-        if (kendzi3dGLEventListener != null) {
-            if (pEnable) {
-                kendzi3dGLEventListener.setGround(new StyledTitleGround());
-            } else {
-                kendzi3dGLEventListener.setGround(new Ground());
-            }
-        }
+        this.kendzi3dGLEventListener.setGroundType(pEnable);
+
     }
 
     @Override

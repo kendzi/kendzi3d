@@ -16,6 +16,8 @@ import java.net.URL;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 
 /**
@@ -24,6 +26,9 @@ import com.google.inject.Inject;
  * @author Tomasz Kedziora (Kendzi)
  */
 public final class FileUrlReciverService implements UrlReciverService {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(FileUrlReciverService.class);
 
     /**
      * Plugin directory.
@@ -52,22 +57,34 @@ public final class FileUrlReciverService implements UrlReciverService {
     /**
      * {@inheritDoc}
      *
-     * @see kendzi.josm.kendzi3d.service.UrlReciverService#reciveFileUrl(java.lang.String)
+     * @see kendzi.josm.kendzi3d.service.UrlReciverService#receiveFileUrl(java.lang.String)
      */
     @Override
-    public URL reciveFileUrl(String pFileName) {
+    public URL receiveFileUrl(String pFileName) {
 
+        URL url = receivePluginDirUrl(pFileName);
+        if (url != null) {
+            return url;
+        }
+
+        return getResourceUrl(pFileName);
+    }
+
+    /**
+     * @param pFileName
+     */
+    @Override
+    public URL receivePluginDirUrl(String pFileName) {
         File f = new File(this.pluginDir, pFileName);
         System.out.println("reciveFileUrl" + f.getAbsoluteFile());
         if (f.exists()) {
             try {
                 return f.toURI().toURL();
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                log.error("error reciving URL for: " + pFileName, e);
             }
         }
-
-        return getResourceUrl(pFileName);
+        return null;
     }
 
     /**

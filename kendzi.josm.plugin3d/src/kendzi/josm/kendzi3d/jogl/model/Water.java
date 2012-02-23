@@ -106,7 +106,17 @@ public class Water extends AbstractWayModel {
 	@Override
 	public void draw(GL2 pGl, Camera camera) {
 
-        this.modelRender.render(pGl, this.model);
+	    pGl.glPushMatrix();
+        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+
+        //pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
+
+        try {
+            this.modelRender.render(pGl, this.model);
+
+        } finally {
+            pGl.glPopMatrix();
+        }
 	}
 
 }

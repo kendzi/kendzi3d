@@ -48,6 +48,9 @@ public class ModelRender {
     private int vertexCount;
     private int faceCount;
 
+    /**
+     * Texture cache service.
+     */
     @Inject
     private TextureCacheService textureCacheService;
 

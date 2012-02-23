@@ -16,18 +16,20 @@ import java.awt.event.ActionEvent;
 
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.impl.PointModelService;
+import kendzi.josm.kendzi3d.ui.pointModel.PointModelListFrame;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
 
 /**
- * Clean up action.
+ * Point model list action.
  *
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class CleanUpAction extends JosmAction {
+public class PointModelListAction extends JosmAction {
 
     /**
      *
@@ -44,6 +46,10 @@ public class CleanUpAction extends JosmAction {
      */
     private TextureCacheService textureCacheService;
 
+    /**
+     * Point model service.
+     */
+    private PointModelService pointModelService;
 
     /**
      * Constructor.
@@ -51,17 +57,21 @@ public class CleanUpAction extends JosmAction {
      * @param textureCacheService
      */
     @Inject
-    public CleanUpAction(RenderJOSM renderJosm, TextureCacheService textureCacheService) {
+    public PointModelListAction(
+            RenderJOSM renderJosm,
+            TextureCacheService textureCacheService,
+            PointModelService pPointModelService) {
         super(
-                tr("Clean up"),
+                tr("List of models"),
                 "1306318208_rebuild__24",
-                tr("Rebuild models, textures and wold offset"),
+                tr("Models defined in point model layer"),
                 null,
                 false
         );
 
         this.renderJosm = renderJosm;
         this.textureCacheService = textureCacheService;
+        this.pointModelService = pPointModelService;
     }
 
     @Override
@@ -71,6 +81,14 @@ public class CleanUpAction extends JosmAction {
 
         // XXX add event
         this.renderJosm.processDatasetEvent(null);
+
+
+        PointModelListFrame frame = new PointModelListFrame();
+        frame.setPointModelService(this.pointModelService);
+        frame.loadTableData();
+        frame.setVisible(true);
+
+
     }
 
     @Override

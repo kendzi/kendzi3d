@@ -16,11 +16,11 @@ import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
+import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 
@@ -52,14 +52,17 @@ public class Kendzi3dModule extends AbstractModule {
 
 //        bind(ColorTextureBuilder.class);
 
-        bind(MetadataCacheService.class);
+        bind(MetadataCacheService.class).in(Singleton.class);
 
-        bind(WikiTextureLoaderService.class);
+        bind(WikiTextureLoaderService.class).in(Singleton.class);
+
+        bind(PointModelService.class).in(Singleton.class);
 
         bind(ModelRender.class).in(Singleton.class);
 
 //        bind(PointModelsLayer.class);
 
+        bind(PointModelsLayer.class);
         bind(BuildingLayer.class);
         bind(RoadLayer.class);
         bind(WaterLayer.class);
@@ -80,7 +83,7 @@ public class Kendzi3dModule extends AbstractModule {
 
     }
 
-    @Provides
+    @Provides @Singleton
     TextureCacheService provideTextureCacheService(UrlReciverService pUrlReciverService) {
         TextureCacheService textureCacheService = new TextureCacheService();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
@@ -88,20 +91,20 @@ public class Kendzi3dModule extends AbstractModule {
         return textureCacheService;
     }
 
-    @Provides
-    PointModelsLayer providePointModelsLayer(
-            UrlReciverService pUrlReciverService,
-            ModelRender pModelRender,
-            ModelCacheService modelCacheService) {
-
-        PointModelsLayer pointModelsLayer = new PointModelsLayer();
-        pointModelsLayer.setUrlReciverService(pUrlReciverService);
-        pointModelsLayer.setModelRender(pModelRender);
-        pointModelsLayer.setModelCacheService(modelCacheService);
-        pointModelsLayer.init();
-
-        return pointModelsLayer;
-    }
+//    @Provides
+//    PointModelsLayer providePointModelsLayer(
+//            UrlReciverService pUrlReciverService,
+//            ModelRender pModelRender,
+//            ModelCacheService modelCacheService) {
+//
+//        PointModelsLayer pointModelsLayer = new PointModelsLayer();
+//        pointModelsLayer.setUrlReciverService(pUrlReciverService);
+//        pointModelsLayer.setModelRender(pModelRender);
+//        pointModelsLayer.setModelCacheService(modelCacheService);
+//        pointModelsLayer.init();
+//
+//        return pointModelsLayer;
+//    }
 
     @Provides @Singleton
     RenderJOSM provideRenderJOSM(
