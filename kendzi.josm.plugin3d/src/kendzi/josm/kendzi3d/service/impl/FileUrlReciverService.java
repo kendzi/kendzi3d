@@ -36,8 +36,13 @@ public final class FileUrlReciverService implements UrlReciverService {
     private final String pluginDir;
 
 
+    /** Constructor.
+     * @param pPluginDir location of resources
+     *
+     * XXX rename to JoglPluginUrlReciverService
+     */
     @Inject
-    FileUrlReciverService(@Kendzi3dPluginDirectory String pPluginDir) {
+    public FileUrlReciverService(@Kendzi3dPluginDirectory String pPluginDir) {
         this.pluginDir = pPluginDir;
     }
 //    /**

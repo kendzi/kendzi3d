@@ -15,7 +15,6 @@ import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL2;
@@ -38,9 +37,6 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.math.geometry.Normal;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.point.PointUtil;
@@ -53,22 +49,16 @@ import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  */
-public class MkRoofJOGL implements GLEventListener {
+public class BaseJoglFrame implements GLEventListener {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(MkRoofJOGL.class);
+    private static final Logger log = Logger.getLogger(BaseJoglFrame.class);
 
 
     /**
      * Position of sun. XXX
      */
     private float [] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
-
-    /**
-     * Renderer of model.
-     */
-    private ModelRender modelRender;
-
 
     /** XXX
      * Font for axis.
@@ -90,48 +80,30 @@ public class MkRoofJOGL implements GLEventListener {
      */
     private final static int FLOOR_LEN = 50;
 
-    /**
-     * Model of roof.
-     */
-    private Model model;
-
     private SimpleMoveAnimator simpleMoveAnimator = new SimpleMoveAnimator();
 
     CameraMoveListener cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
 
-    private Model modelWall;
-
     public static void main(String[] args) {
+
+        BaseJoglFrame sj = new BaseJoglFrame();
+
+        sj.initUi();
+
+    }
+
+
+    /**
+     * @param frame
+     * @param sj
+     */
+    public void initUi() {
         Frame frame = new Frame("Simple JOGL Application");
 
+        GLCanvas canvas = createCanvas();
 
-
-      //create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
-
-        //configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
-
-        // setup z-buffer
-        capabilities.setDepthBits(16);
-
-        // for anti-aliasing
-        capabilities.setSampleBuffers(true);
-        capabilities.setNumSamples(2);
-
-        //initialize a GLDrawable of your choice
-        GLCanvas canvas = new GLCanvas(capabilities);
-
-//        GLCanvas canvas = new GLCanvas();
-
-
-
-//        TextureCacheService.initTextureCache(".");
-//        FileUrlReciverService.initFileReciver(".");
-
-        MkRoofJOGL sj = new MkRoofJOGL();
-        canvas.addGLEventListener(sj);
+        canvas.addGLEventListener(this);
         frame.add(canvas);
         frame.setSize(640, 480);
         final Animator animator = new Animator(canvas);
@@ -153,7 +125,7 @@ public class MkRoofJOGL implements GLEventListener {
             }
         });
 
-        addSimpleMover(canvas, sj);
+        addSimpleMover(canvas, this);
 
         // Center frame
         frame.setLocationRelativeTo(null);
@@ -163,7 +135,29 @@ public class MkRoofJOGL implements GLEventListener {
         canvas.requestFocus();
     }
 
-    private static void addSimpleMover(GLCanvas canvas, final MkRoofJOGL sj) {
+    /**
+     * @return
+     */
+    public static GLCanvas createCanvas() {
+        //create a profile, in this case OpenGL 2 or later
+        GLProfile profile = GLProfile.get(GLProfile.GL2);
+
+        //configure context
+        GLCapabilities capabilities = new GLCapabilities(profile);
+
+        // setup z-buffer
+        capabilities.setDepthBits(16);
+
+        // for anti-aliasing
+        capabilities.setSampleBuffers(true);
+        capabilities.setNumSamples(2);
+
+        //initialize a GLDrawable of your choice
+        GLCanvas canvas = new GLCanvas(capabilities);
+        return canvas;
+    }
+
+    private static void addSimpleMover(GLCanvas canvas, final BaseJoglFrame sj) {
         canvas.addKeyListener(sj.cameraMoveListener);
 
         canvas.addMouseMotionListener(sj.cameraMoveListener);
@@ -200,48 +194,10 @@ public class MkRoofJOGL implements GLEventListener {
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
 
-        List<Point2d> border = new ArrayList<Point2d>();
-//        border.add(new Point2d(0, 3));
-//        border.add(new Point2d(0, -3));
-//        border.add(new Point2d(3, 0));
-//        border.add(new Point2d(5, 2));
-        border.add(new Point2d(0, 3));
-        border.add(new Point2d(0, -3));
-        border.add(new Point2d(4, -1));
-        border.add(new Point2d(5, 2));
-//        border.add(new Point2d(0, 3));
-//        border.add(new Point2d(0, -3));
-//        border.add(new Point2d(3, 0));
-//        border.add(new Point2d(5, 2));
-
-        border.add(border.get(0));
-
-        Point2d pStartPoint = border.get(0);
-        String pKey = "2.3.aaa.aa";
-        String dormer = "aa.aaa";
-        List<Double> heights = new ArrayList<Double>();
-        heights.add(2d);
-        heights.add(1d);
-        List<Double> sizeB = new ArrayList<Double>();
-        double height = 5;
-
-        RoofTextureData rtd = new RoofTextureData();
-        rtd.setFacadeTextrure(new TextureData("/textures/building_facade_plaster.png", 4, 2));
-        rtd.setRoofTexture(new TextureData("/textures/building_roof_material_roofTiles.png", 3, 3));
-
-      //FIXME
-        this.modelRender = null;//ModelRender.getInstance();
-
-        //FIXME
-//        RoofOutput output = DormerRoofBuilder.build(pStartPoint, border, pKey, dormer, height, null, rtd);
-        //FIXME
-//        this.model = output.getModel();
-//        this.model.useLight = true;
-////FIXME
-//        this.modelWall = buildWalls(border, 0, height - output.getHeight());
 
     }
 
+    @Deprecated
     private Model buildWalls( List<Point2d> border, double minHeight, double height) {
         double facadeTextureLenght = 4;
         double facadeTextureHeight = 2;
@@ -329,14 +285,6 @@ public class MkRoofJOGL implements GLEventListener {
             height = 1;
         }
         final float h = (float) width / (float) height;
-//        gl.glViewport(0, 0, width, height);
-//        gl.glMatrixMode(GL2.GL_PROJECTION);
-//        gl.glLoadIdentity();
-//        glu.gluPerspective(45.0f, h, 1.0, 20.0);
-//        gl.glMatrixMode(GL2.GL_MODELVIEW);
-//        gl.glLoadIdentity();
-
-
 
         gl.glViewport(0, 0, width, height); // size of drawing area
 
@@ -360,19 +308,6 @@ public class MkRoofJOGL implements GLEventListener {
      // _direction_
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
 
-
-//        // Clear the drawing area
-//        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-//
-//
-//
-//
-//        // Reset the current matrix to the "identity"
-//        gl.glLoadIdentity();
-//
-//        gl.glMatrixMode(GL2.GL_MODELVIEW);
-//        gl.glLoadIdentity();
-
         // clear colour and depth buffers
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -385,13 +320,6 @@ public class MkRoofJOGL implements GLEventListener {
 
         gl.glEnable(GL2.GL_MULTISAMPLE);
 
-        if (this.model != null) {
-            this.modelRender.render(gl, this.model);
-        }
-
-        if (this.modelWall != null) {
-            this.modelRender.render(gl, this.modelWall);
-        }
 
 //        String versionStr = gl.glGetString( GL2.GL_VERSION );
 //        log.info( "GL version:"+versionStr );
