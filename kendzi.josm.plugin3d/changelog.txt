@@ -1,5 +1,10 @@
 [current]
 
+[2012-03-13]
+- wood different tree heights
+- 3d menu by Alt-D
+- custom model layer configuration
+- models clean up
 
 [2012-02-23]
 - custom layer ui configuration
@@ -12,7 +17,6 @@
 - custom models layer
 - clean up
 - dependency injections - guice
-
 
 [2011-12-27]
 - tag natural=wood, landuse=forest + tree="number of trees in area, max 1000"

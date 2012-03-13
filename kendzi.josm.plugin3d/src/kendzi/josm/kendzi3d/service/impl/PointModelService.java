@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,8 +67,8 @@ public class PointModelService {
 
 
     //    private List<PointModel> pointModelsInternalList;
-    private Map<Long, PointModel> pointModelsUserMap = new HashMap<Long, PointModel>();
-    private Map<Long, PointModel> pointModelsInternalMap = new HashMap<Long, PointModel>();
+    private Map<Long, PointModel> pointModelsUserMap = new LinkedHashMap<Long, PointModel>();
+    private Map<Long, PointModel> pointModelsInternalMap = new LinkedHashMap<Long, PointModel>();
 
 //    private List<PointModel> pointModelsList;
 
@@ -94,7 +94,7 @@ public class PointModelService {
         this.pointModelsUserMap.remove(id);
     }
 
-    public void save(PointModel pPointModel) {
+    public void saveOrUpdate(PointModel pPointModel) {
 
         if (pPointModel.getId() == null) {
             pPointModel.setId(genId());
@@ -290,6 +290,14 @@ public class PointModelService {
                 unmarshaller.unmarshal(url);
 
         return c.getValue().getPointModel();
+    }
+
+
+    /**
+     * @return the urlReciverService
+     */
+    public UrlReciverService getUrlReciverService() {
+        return urlReciverService;
     }
 
 

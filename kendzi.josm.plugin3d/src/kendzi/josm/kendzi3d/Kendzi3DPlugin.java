@@ -114,7 +114,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         System.err.println("3d test");
         if (this.view3dJMenu == null) {
-            this.view3dJMenu = menu.addMenu("3D", KeyEvent.VK_W, menu.defaultMenuPos,
+            this.view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.defaultMenuPos,
                     ht("/Plugin/WMS"));
         } else {
             this.view3dJMenu.removeAll();

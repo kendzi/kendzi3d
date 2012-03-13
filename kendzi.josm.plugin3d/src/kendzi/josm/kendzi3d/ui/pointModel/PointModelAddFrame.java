@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.ui.pointModel;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -17,25 +16,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
-import kendzi.josm.kendzi3d.service.impl.PointModelService;
-import kendzi.josm.kendzi3d.util.StringUtil;
-
 public class PointModelAddFrame extends JDialog {
 
-    //@Inject
-    private PointModelService pointModelService;
-
     private JPanel contentPane;
-    private JTextField txtId;
-    private JTextField txtModel;
-    private JTextField txtFilter;
-    private JTextField txtScale;
+    protected JTextField txtId;
+    protected JTextField txtModel;
+    protected JTextField txtFilter;
+    protected JTextField txtScale;
 
-    private JTextField txtTranslatex;
-    private JTextField txtTranslatey;
-    private JTextField txtTranslatez;
-    private JTextField txtMatcher;
+    protected JTextField txtTranslatex;
+    protected JTextField txtTranslatey;
+    protected JTextField txtTranslatez;
+    protected JTextField txtMatcher;
 
     /**
      * Launch the application.
@@ -68,17 +60,17 @@ public class PointModelAddFrame extends JDialog {
         JPanel panelTitle = new JPanel();
         contentPane.add(panelTitle, BorderLayout.NORTH);
 
-        JLabel lblModel_1 = new JLabel("Model for node");
+        JLabel lblModel_1 = new JLabel("Model configuration");
         lblModel_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
         panelTitle.add(lblModel_1);
 
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.CENTER);
         GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[]{68, 133, 0, 0, 0};
-        gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-        gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panel.columnWidths = new int[] { 68, 133, 0, 0, 0 };
+        gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        gbl_panel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
 
         JLabel label = new JLabel("Id");
@@ -130,31 +122,36 @@ public class PointModelAddFrame extends JDialog {
         gbc_lblModel.gridy = 2;
         panel.add(lblModel, gbc_lblModel);
 
-                        txtModel = new JTextField();
-                        GridBagConstraints gbc_txtModel = new GridBagConstraints();
-                        gbc_txtModel.fill = GridBagConstraints.HORIZONTAL;
-                        gbc_txtModel.insets = new Insets(0, 0, 5, 5);
-                        gbc_txtModel.gridx = 1;
-                        gbc_txtModel.gridy = 2;
-                        panel.add(txtModel, gbc_txtModel);
-                        txtModel.setText("/models/test.obj");
-                        txtModel.setColumns(10);
+        txtModel = new JTextField();
+        GridBagConstraints gbc_txtModel = new GridBagConstraints();
+        gbc_txtModel.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txtModel.insets = new Insets(0, 0, 5, 5);
+        gbc_txtModel.gridx = 1;
+        gbc_txtModel.gridy = 2;
+        panel.add(txtModel, gbc_txtModel);
+        txtModel.setText("/models/test.obj");
+        txtModel.setColumns(10);
 
-                JButton btnDict = new JButton("Dict");
-                btnDict.setEnabled(false);
-                GridBagConstraints gbc_btnDict = new GridBagConstraints();
-                gbc_btnDict.insets = new Insets(0, 0, 5, 5);
-                gbc_btnDict.gridx = 2;
-                gbc_btnDict.gridy = 2;
-                panel.add(btnDict, gbc_btnDict);
+        JButton btnDict = new JButton("Dict");
+        btnDict.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dictAction();
+            }
+        });
+        GridBagConstraints gbc_btnDict = new GridBagConstraints();
+        gbc_btnDict.insets = new Insets(0, 0, 5, 5);
+        gbc_btnDict.gridx = 2;
+        gbc_btnDict.gridy = 2;
+        panel.add(btnDict, gbc_btnDict);
 
-                JButton btnImport = new JButton("Import");
-                btnImport.setEnabled(false);
-                GridBagConstraints gbc_btnImport = new GridBagConstraints();
-                gbc_btnImport.insets = new Insets(0, 0, 5, 0);
-                gbc_btnImport.gridx = 3;
-                gbc_btnImport.gridy = 2;
-                panel.add(btnImport, gbc_btnImport);
+        JButton btnImport = new JButton("Import");
+        btnImport.setEnabled(false);
+        GridBagConstraints gbc_btnImport = new GridBagConstraints();
+        gbc_btnImport.insets = new Insets(0, 0, 5, 0);
+        gbc_btnImport.gridx = 3;
+        gbc_btnImport.gridy = 2;
+        panel.add(btnImport, gbc_btnImport);
 
         JLabel lblFilter = new JLabel("Filter");
         lblFilter.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -186,7 +183,7 @@ public class PointModelAddFrame extends JDialog {
         panel.add(lblScale, gbc_lblScale);
 
         txtScale = new JTextField();
-        txtScale.setText("normHeight(1,1)");
+        txtScale.setText("normalHeight(1,1)");
         GridBagConstraints gbc_txtScale = new GridBagConstraints();
         gbc_txtScale.gridwidth = 3;
         gbc_txtScale.insets = new Insets(0, 0, 5, 0);
@@ -263,17 +260,7 @@ public class PointModelAddFrame extends JDialog {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 1. validate
-                // 2. save
-                // 3. refresh & dispose
-
-                if (validateData()) {
-
-                    PointModel pointModel = save();
-                    pointModelService.save(pointModel);
-
-                    dispose();
-                }
+                saveAction();
             }
         });
         panelButtons.add(btnSave);
@@ -288,112 +275,11 @@ public class PointModelAddFrame extends JDialog {
         panelButtons.add(btnCancel);
     }
 
-
-    public boolean validateData() {
-        boolean valid = true;
-        valid &= validateTextString(txtMatcher);
-        valid &= validateTextString(txtModel);
-        valid &= validateTextString(txtFilter);
-        valid &= validateTextString(txtScale);
-
-        valid &= validateTextEmptyDouble(txtTranslatex);
-        valid &= validateTextEmptyDouble(txtTranslatey);
-        valid &= validateTextEmptyDouble(txtTranslatez);
-        return valid;
+    protected void dictAction() {
+        //
     }
 
-    private boolean validateTextString(JTextField pJTextField) {
-
-        boolean valid = !StringUtil.isBlankOrNull(pJTextField.getText());
-        setComponentError(pJTextField, !valid);
-        return valid;
-
+    protected void saveAction() {
+        //
     }
-
-    private boolean validateTextEmptyDouble(JTextField pJTextField) {
-        boolean valid = isEmptyDouble(pJTextField.getText());
-        setComponentError(pJTextField, !valid);
-        return valid;
-
-    }
-
-    private void setComponentError(JTextField pJTextField, boolean b) {
-        if (b) {
-            pJTextField.setBackground(Color.red.brighter());
-        } else {
-            pJTextField.setBackground(null);
-        }
-    }
-
-    void load(Long id) {
-        PointModel pointModel = pointModelService.load(id);
-        load(pointModel);
-
-    }
-    void load(PointModel pPointModel ) {
-        PointModel pm = pPointModel;
-
-        txtId.setText("" + pm.getId());
-        txtMatcher.setText(pm.getMatcher());
-        txtModel.setText(pm.getModel());
-        txtScale.setText(pm.getScale());
-        txtTranslatex.setText(formatNumber(pm.getTranslateX()));
-        txtTranslatey.setText(formatNumber(pm.getTranslateY()));
-        txtTranslatez.setText(formatNumber(pm.getTranslateZ()));
-    }
-
-    String formatNumber(Number num) {
-        if (num  == null) {
-            return "";
-        }
-        return "" + num;
-    }
-
-    PointModel save() {
-
-        PointModel pm = new PointModel();
-        pm.setId(null);
-        pm.setMatcher(txtMatcher.getText());
-        pm.setModel(txtModel.getText());
-        pm.setScale(txtScale.getText());
-        pm.setTranslateX(parseDouble(txtTranslatex.getText()));
-        pm.setTranslateY(parseDouble(txtTranslatey.getText()));
-        pm.setTranslateZ(parseDouble(txtTranslatez.getText()));
-
-        return pm;
-    }
-
-    Double parseDouble(String pStr) {
-        if (StringUtil.isBlankOrNull(pStr)) {
-            return null;
-        }
-        try {
-            return Double.parseDouble(pStr);
-        } catch (Exception e) {
-            //
-        }
-        return null;
-
-    }
-
-//    validateTextEmptyDouble()
-
-    boolean isEmptyDouble(String pStr) {
-        if (StringUtil.isBlankOrNull(pStr)) {
-            return true;
-        }
-        return isDouble(pStr);
-    }
-
-    boolean isDouble(String pStr) {
-        return parseDouble(pStr) != null;
-    }
-
-    /**
-     * @param pointModelService the pointModelService to set
-     */
-    public void setPointModelService(PointModelService pointModelService) {
-        this.pointModelService = pointModelService;
-    }
-
 }

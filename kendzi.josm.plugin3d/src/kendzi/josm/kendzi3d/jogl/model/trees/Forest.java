@@ -74,7 +74,7 @@ public class Forest extends AbstractWayModel {
 
     private Integer numOfTrees;
 
-    private  List<Cluster> clusterHook;
+    private List<HeightCluster> clusterHook;
 
     /**
      * @param pWay way
@@ -141,11 +141,32 @@ public class Forest extends AbstractWayModel {
 
             this.clusterHook = calcClusterHooks(
                     this.hookPoints, minBound, CLUSTER_SIZE,
-                    Cluster.class);
+                    HeightCluster.class);
+
+            calcHeight(this.clusterHook);
+
         }
 
     }
 
+    private void calcHeight(List<HeightCluster> clusterHooks) {
+
+        for (HeightCluster heightCluster : clusterHooks) {
+            List<Point2d> hook = heightCluster.getHook();
+
+            double [] heights = new double[hook.size()];
+            for (int i = 0; i < hook.size(); i++) {
+                heights[i] = randHeight();
+            }
+            heightCluster.setHeight(heights);
+        }
+    }
+
+    private double randHeight() {
+        Random randomNumberGenerator = new Random();
+
+        return randomNumberGenerator.nextDouble() / 2d + 0.5;
+    }
 
 
     private <T extends Cluster> ArrayList<T> calcClusterHooks(
@@ -228,6 +249,26 @@ public class Forest extends AbstractWayModel {
 
         return ret;
     }
+
+    static class HeightCluster extends Cluster {
+        double [] height;
+
+        /**
+         * @return the height
+         */
+        public double[] getHeight() {
+            return height;
+        }
+
+        /**
+         * @param height the height to set
+         */
+        public void setHeight(double[] height) {
+            this.height = height;
+        }
+
+    }
+
     static class Cluster {
         List<Point2d> hook;
         Point3d center;
@@ -529,7 +570,7 @@ public class Forest extends AbstractWayModel {
                 camera.getPoint().z + this.getGlobalY()
                 );
 
-        for (Cluster c : this.clusterHook) {
+        for (HeightCluster c : this.clusterHook) {
 
             gl.glPushMatrix();
 
@@ -541,6 +582,7 @@ public class Forest extends AbstractWayModel {
 
             LOD lod = RenderJOSM.getLods(c.getCenter(), localCamera);
             List<Point2d> hookPoints = c.getHook();
+            double[] heights = c.getHeight();
 
             Model model2 = this.modelLod.get(lod);
 
@@ -555,18 +597,22 @@ public class Forest extends AbstractWayModel {
 
                 gl.glEnable(GL2.GL_NORMALIZE);
 
+                int i = 0;
                 for (Point2d hook : hookPoints) {
+
+                    double height = heights[i];
 
                     gl.glPushMatrix();
 
                     gl.glTranslated(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
 
-                    gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
+                    gl.glScaled(this.scale.x * height, this.scale.y * height, this.scale.z * height);
 
 //                    this.modelRender.render(gl, model2);
                     gl.glCallList(dl);
 
                     gl.glPopMatrix();
+                    i++;
                 }
 
                 gl.glDisable(GL2.GL_NORMALIZE);

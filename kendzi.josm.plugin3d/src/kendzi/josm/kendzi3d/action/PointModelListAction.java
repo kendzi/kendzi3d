@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
-import kendzi.josm.kendzi3d.ui.pointModel.PointModelListFrame;
+import kendzi.josm.kendzi3d.ui.pointModel.action.PointModelListFrameAction;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
@@ -83,7 +83,7 @@ public class PointModelListAction extends JosmAction {
         this.renderJosm.processDatasetEvent(null);
 
 
-        PointModelListFrame frame = new PointModelListFrame();
+        PointModelListFrameAction frame = new PointModelListFrameAction();
         frame.setPointModelService(this.pointModelService);
         frame.loadTableData();
         frame.setVisible(true);
