@@ -36,6 +36,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.Direction;
 import kendzi.josm.kendzi3d.util.DirectionParserUtil;
+import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
@@ -216,7 +217,12 @@ public class DormerRoof extends Roof {
     }
 
     static private Vector2d findDirectionByDirectionTag(Way pWay) {
-        String directionValue = pWay.get("direction");
+        // XXX roof:direction
+        String directionValue = pWay.get("roof:direction");
+        if(StringUtil.isBlankOrNull(directionValue)) {
+            directionValue = pWay.get("direction");
+        }
+//        directionValue = pWay.get("direction");
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
             return direction.getVector();

@@ -1,4 +1,7 @@
 [current]
+- solid boolean - walls with holes
+- mac support?
+- roof presets
 
 [2012-03-13]
 - wood different tree heights

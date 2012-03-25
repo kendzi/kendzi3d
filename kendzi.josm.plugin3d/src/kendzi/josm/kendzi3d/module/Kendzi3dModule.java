@@ -11,6 +11,7 @@ import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
+import kendzi.josm.kendzi3d.jogl.layer.WallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
@@ -68,6 +69,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(WaterLayer.class);
         bind(TreeLayer.class);
         bind(FenceLayer.class);
+        bind(WallLayer.class);
 
         bind(PhotoRenderer.class);
 
@@ -114,7 +116,8 @@ public class Kendzi3dModule extends AbstractModule {
             RoadLayer roadLayer,
             WaterLayer waterLayer,
             TreeLayer treeLayer,
-            FenceLayer fenceLayer
+            FenceLayer fenceLayer,
+            WallLayer wallLayer
 
     ) {
 
@@ -146,6 +149,7 @@ public class Kendzi3dModule extends AbstractModule {
         layerList.add(waterLayer);
         layerList.add(treeLayer);
         layerList.add(fenceLayer);
+        layerList.add(wallLayer);
 
         RenderJOSM renderJOSM = new RenderJOSM();
         renderJOSM.setModelRender(pModelRender);

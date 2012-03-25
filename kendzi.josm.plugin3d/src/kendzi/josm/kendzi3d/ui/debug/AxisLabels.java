@@ -37,12 +37,12 @@ public class AxisLabels {
     /**
      * Font for axis.
      */
-    private Font font = new Font("SansSerif", Font.BOLD, 24);
+    private Font font;
 
     /**
      * Text renderer for axis labels.
      */
-    private TextRenderer axisLabelRenderer = new TextRenderer(this.font);
+    private TextRenderer axisLabelRenderer;
 
     /**
      * Length of x axis labels.
@@ -78,6 +78,11 @@ public class AxisLabels {
         this.lenghtZ = pLenghtZ;
     }
 
+    public void init() {
+
+        this.font = new Font("SansSerif", Font.BOLD, 24);
+        this.axisLabelRenderer = new TextRenderer(this.font);
+    }
 
     /**
      * Place numbers along the x- and z-axes at the integer positions.

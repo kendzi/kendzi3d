@@ -299,7 +299,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 //        this.modelRender = ModelRender.getInstance();
 
-
+        this.axisLabels.init();
         this.renderJosm.init(gl);
 
 

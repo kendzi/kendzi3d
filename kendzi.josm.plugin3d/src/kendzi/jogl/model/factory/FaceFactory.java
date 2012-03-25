@@ -20,6 +20,8 @@ public class FaceFactory {
 	public List<Integer> coordIndex = new ArrayList<Integer>();
 	public List<Integer> normalIndex = new ArrayList<Integer>();
 
+	public int count;
+
 	int textIndex ;
 	public FaceType type;
 
@@ -88,6 +90,7 @@ public class FaceFactory {
 
 		this.normalIndex.add(normalIndex);
 
+		count++;
 	}
 
 	public void setTextIndex(int textIndex) {
