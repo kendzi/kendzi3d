@@ -137,7 +137,7 @@ are supplied, then "values" will be treated as "display_values" and translated i
             <label text="Edit roof shape" />
             <space />
             
-            <combo key="buildinf:roof:shape" text="Type" values="flat,skillion,gabled,half_hipped,hipped,pyramidal,saltbox,double_saltbox,corner_saltbox,triple_saltbox,quadruple_saltbox,gambrel,mansard,helm,round,half_round,dome,three_aisled,crosspitched,five_aisled,sawtooth,trapeze,gabled_row,round_row,wave" default="" delete_if_empty="true" />
+            <combo key="building:roof:shape" text="Type" values="flat,skillion,gabled,half_hipped,hipped,pyramidal,saltbox,double_saltbox,corner_saltbox,triple_saltbox,quadruple_saltbox,gambrel,mansard,helm,round,half_round,dome,three_aisled,crosspitched,five_aisled,sawtooth,trapeze,gabled_row,round_row,wave" default="" delete_if_empty="true" />
             <optional>
                 <text key="angle" text="angle" default="" delete_if_empty="true" />
                 <combo key="building:roof:orientation" text="orientation" values="along,across" default="" delete_if_empty="true" />
