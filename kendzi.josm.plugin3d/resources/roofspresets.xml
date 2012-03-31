@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<presets xmlns="http://josm.openstreetmap.de/tagging-preset-1.0">
+<presets xmlns="http://josm.openstreetmap.de/tagging-preset-1.0" >
 <!--
     Pics have been derived from
     http://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_Deutschland (german street sign SVGs)
@@ -105,55 +105,112 @@ are supplied, then "values" will be treated as "display_values" and translated i
 -->
  
   
-     <group name="Roofs" >
+     <group name="3D" >
      <!-- icon="presets/way_unclassified.png" -->
-        <item name="3dr"   type="way">
-            <link href="http://wiki.openstreetmap.org/wiki/Roof_table"
-                  />
-            <label text="Edit roof type" />
-            <space />
+     	<item name="Simple 3D Buildings" type="relation,closedway">
+     		<link href="http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings" />
+     		<label text="A part of building for 3D rendering"/>
+			<combo text="Building part" key="building:part" values="yes" required="true" default="yes"/>
+     		
+     		
+	     	<optional>
+	     		<label text="Only if building part is the building outline in same time"/>	     		
+				<combo text="Building outline" key="building" values="yes" default="" delete_if_empty="true"/>
+				
+				<space/>
+				<label text="Height of building is measured from ground to higest point of roof (without eg. antenna)"/>							
+				<text text="Building height" key="height"/>
+				
+				<space/>
+				<combo text="Roof shape" key="roof:shape" values="flat,gabled,hipped,half-hipped,pyramidal,gambrel,mansard,dome">
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg</short_description>
+					
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg</short_description>
+					<short_description>img:http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg</short_description>
+				</combo>
+				<combo text="Roof orientation" key="roof:orientation" values="along,across" delete_if_empty="true"/>
+				
+				<space/>				
+				<label text="Use only one height OR angle!" />
+				<text text="Roof height" key="roof:height"/>				
+                <text text="Roof angle" key="roof:angle"/>
+				
+				<space/>				
+				<text text="Building levels (non-roof)" key="building:levels"/>
+				<text text="Roof levels" key="roof:levels"/>
+								
+				<space/>
+				<text text="Wall colour" key="building:colour"/>
+				<!-- we need to agree some values!!! -->
+				<combo text="Wall material" key="building:material" values="plaster,brick,???" delete_if_empty="true"/>
+				<text text="Roof colour" key="roof:colour"/>
+				<!-- we need to agree some values!!! -->
+				<combo text="Roof material" key="roof:material" values="roofTiles,roofingFelt,???" delete_if_empty="true"/>
+				
+     		</optional>     		
+     	</item>
+     
+        <item name="Roof 3dr" type="relation,closedway">
+            <link href="http://wiki.openstreetmap.org/wiki/Roof_table" />
             
-            <combo key="3dr:type" text="Type" values="0.0,1.0,2.0,2.3,2.4,2.5,3.0,3.1,3.2,3.3,3.4,4.0,4.1,4.3,5.0,5.2,5.6,6.0,6.2,6.3,9.0" default="" delete_if_empty="true" />
+            <label text="A part of a building for 3D rendering"/>
+			<combo text="building:part" key="building:part" values="yes" required="true" default="yes"/>
+            <space />
+            <label text="Edit roof type" />
+            
+            <combo key="3dr:type" text="Type" values="0.0,1.0,2.0,2.3,2.4,2.5,3.0,3.1,3.2,3.3,3.4,4.0,4.1,4.3,5.0,5.2,5.6,6.0,6.2,6.3,9.0" default="" required="true" />
             <optional>
                 <text key="3dr:height1" text="3dr:height1" default="" delete_if_empty="true" />
                	<text key="3dr:lenght1" text="3dr:lenght1" default="" delete_if_empty="true" />
-                
-                 <combo key="building:roof:orientation" text="orientation" values="along,across" default="" delete_if_empty="true" />
+               	<text key="3dr:height2" text="3dr:height2" default="" delete_if_empty="true" />
+               	<text key="3dr:lenght2" text="3dr:lenght2" default="" delete_if_empty="true" />
+               	
+               	<label text="Mark roof direction using tags: 3dr:direction=begin|end on outline nodes"/>                
+                <combo text="Roof orientation" key="roof:orientation" values="along,across" default="" delete_if_empty="true" />
             </optional>
-            <!--  
-             <key key="highway" value="track" />
              
-           
-            <optional>
-                <text key="name" text="name" default="" delete_if_empty="true" />
-               
-                
-            </optional>-->
         </item>
         
-         <item name="shape"  type="way">
-            <link href="http://wiki.openstreetmap.org/wiki/Roof_table"
-                  />
-            <label text="Edit roof shape" />
-            <space />
+        <item name="Roof shape" type="relation,closedway">
+      		<link href="http://wiki.openstreetmap.org/wiki/Roof_table" />
             
-            <combo key="building:roof:shape" text="Type" values="flat,skillion,gabled,half_hipped,hipped,pyramidal,saltbox,double_saltbox,corner_saltbox,triple_saltbox,quadruple_saltbox,gambrel,mansard,helm,round,half_round,dome,three_aisled,crosspitched,five_aisled,sawtooth,trapeze,gabled_row,round_row,wave" default="" delete_if_empty="true" />
-            <optional>
-                <text key="angle" text="angle" default="" delete_if_empty="true" />
-                <combo key="building:roof:orientation" text="orientation" values="along,across" default="" delete_if_empty="true" />
-           
-                 
+            <label text="A part of a building for 3D rendering"/>
+			<combo text="building:part" key="building:part" values="yes" required="true" default="yes"/>
+            
+            <space />            
+            <label text="Edit roof shape" />            
+            <combo text="Roof shape" key="roof:shape" values="flat,skillion,gabled,half-hipped,hipped,pyramidal,saltbox,double_saltbox,corner_saltbox,triple_saltbox,quadruple_saltbox,gambrel,mansard,helm,round,half_round,dome,three_aisled,crosspitched,five_aisled,sawtooth,trapeze,gabled_row,round_row,wave,onion" default="" delete_if_empty="true" />
+
+            <optional>				
+				<label text="Use only one roof height OR angle!"/>
+				<text text="Roof height" key="roof:height"/>				
+                <text text="Roof angle" key="roof:angle"/>                
+		    	<combo text="Roof orientation" key="roof:orientation" values="along,across" delete_if_empty="true"/>    
+		    	
             </optional>
-            <!--  
-             <key key="highway" value="track" />
+       </item>
+       <item name="Roof lines" type="relation,closedway">
+       		<link href="http://wiki.openstreetmap.org/wiki/User:Aschilli/ProposedRoofLines" />
             
-           
-            <optional>
-                <text key="name" text="name" default="" delete_if_empty="true" />
-               
-                
-            </optional> -->
-        </item>
+       		<label text="TODO"/>
+       </item>
        
+       <item name="test"   type="way">
+         <combo key="sac_scale" text="SAC Scale" values="hiking,mountain_hiking,demanding_mountain_hiking,alpine_hiking,demanding_alpine_hiking,difficult_alpine_hiking" default="" delete_if_empty="true" display_values="T1 - hiking trail,T2 - mountain hiking trail,T3 - difficult\, exposed hiking trail,T4 - difficult\, exposed\, steep alpine trail,T5 - difficult alpine trail with climbing,T6 - hazardous alpine trail with climbing">
+			  <short_description>img:presets/path.png</short_description>
+			  <short_description>img:http://www.openstreetmap.org/assets/osm_logo-caccd6371f095ca973c373b8e2014896.png</short_description>
+			  <short_description>exposed sites may be secured with ropes or chains, possible need to use hands for balance. Partly exposed sites with fall hazard, scree, pathless jagged rocks</short_description>
+			  <short_description>sometimes need for hand use to get ahead. Terrain quite exposed, precarious grassy acclivities, jagged rocks, facile snow-free glaciers.</short_description>
+			  <short_description>single plainly climbing up to second grade. Exposed, demanding terrain, jagged rocks, few dangerous glacier and snow</short_description>
+			  <short_description>climbing up to second grade. Often very exposed, precarious jagged rocks, glacier with danger to slip and fall</short_description>
+			</combo>
+       </item>
     </group>
+    
+     
 </presets>
