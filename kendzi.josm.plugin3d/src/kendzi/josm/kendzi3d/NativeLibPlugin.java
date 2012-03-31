@@ -177,6 +177,9 @@ public abstract class NativeLibPlugin extends Plugin {
             os = "windows";
         } else if (os != null && os.startsWith("Linux")) {
             os = "linux";
+        } else if (os != null && os.startsWith("Mac OS X")) {
+            os = "macosx";
+            arch = "universal";
         } else {
             throw new RuntimeException("unknown OS: " + os
                     + ", OS is not supported. Change OS "
