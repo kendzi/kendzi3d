@@ -106,26 +106,33 @@ are supplied, then "values" will be treated as "display_values" and translated i
 -->
  
   
-     <group name="3D" >
+     <group name="3D" icon="http://openstreetmap.pl/kendzi/preset/3d_icon_24.png" >
     	<!-- icon="presets/way_unclassified.png" -->
      	
-     	<item name="Simple 3D Buildings" type="relation,closedway">
+     	<item name="Simple 3D buildings" type="relation,closedway" icon="http://openstreetmap.pl/kendzi/preset/3d_simple_icon_32.png" >
      		<link href="http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings" />
-     		<label text="A part of building for 3D rendering"/>
-			<combo text="Building part" key="building:part" values="yes" required="true" default="yes"/>
+     		<label text="&lt;html&gt;&lt;i&gt;A part of building for 3D rendering&lt;/i&gt;&lt;/html&gt;"/>
+			<combo text="Building part" key="building:part" required="true" default="yes">
+				<list_entry value="yes" icon="http://openstreetmap.pl/kendzi/preset/yes_32.png"  />
+			</combo>
      		
      		
 	     	<optional>
-	     		<label text="Only if building part is the building outline in same time"/>	     		
-				<combo text="Building outline" key="building" values="yes" default="" delete_if_empty="true"/>
+				<label text="&lt;html&gt;&lt;b&gt;Building&lt;/b&gt;&lt;/html&gt;"/>	     	
+	     		<label text="&lt;html&gt;&lt;i&gt;Only if building part is the building outline in same time&lt;/i&gt;&lt;/html&gt;"/>	     		
+				<combo text="Building outline" key="building" default="" delete_if_empty="true">
+					<list_entry value="yes" icon="http://openstreetmap.pl/kendzi/preset/yes_32.png"  />
+				</combo>
 				
 				<space/>
-				<label text="Height of building is measured from ground to higest point of roof (without eg. antenna)"/>							
+				<label text="&lt;html&gt;&lt;b&gt;Height&lt;/b&gt;&lt;/html&gt;"/>							
+				<label text="&lt;html&gt;&lt;i&gt;It is measured from ground to higest point of roof without eg. antenna&lt;/i&gt;&lt;/html&gt;"/>							
 				<text text="Building height" key="height"/>
-				<label text="Height below the building structure"/>							
+				<label text="&lt;html&gt;&lt;i&gt;Height below the building structure&lt;/i&gt;&lt;/html&gt;"/>							
 				<text text="Building min height" key="min_height"/>
 				
-				<space/>
+				<space/>				
+				<label text="&lt;html&gt;&lt;b&gt;Roof&lt;/b&gt;&lt;/html&gt;"/>
 				<combo text="Roof shape" key="roof:shape">
 					<list_entry value="flat" icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg"/>
 					<list_entry value="gabled" icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg"/>
@@ -136,11 +143,7 @@ are supplied, then "values" will be treated as "display_values" and translated i
 					<list_entry value="mansard"  display_value="mansard" icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg"/>
 					<list_entry value="dome"  display_value="dome" icon="http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg" />	
 					
-					
-					
-					
-				</combo>
-				
+				</combo>				
 				
 				<combo text="Roof orientation" key="roof:orientation" delete_if_empty="true">					
 					<list_entry value="along" icon="http://openstreetmap.pl/kendzi/preset/along.png" short_description="to the longest side of the building"/>
@@ -148,19 +151,25 @@ are supplied, then "values" will be treated as "display_values" and translated i
 				</combo>
 				
 				<space/>				
-				<label text="Use only one height OR angle!" />
+				<label text="&lt;html&gt;&lt;i&gt;Use only one height &lt;b&gt;OR&lt;/b&gt; angle!&lt;/i&gt;" />
 				<text text="Roof height" key="roof:height"/>				
                 <text text="Roof angle" key="roof:angle"/>
 				
-				<space/>				
+				<space/>
+				<label text="&lt;html&gt;&lt;b&gt;Levels&lt;/b&gt;&lt;/html&gt;"/>
 				<text text="Building levels (non-roof)" key="building:levels"/>
 				<text text="Building min levels (non-roof)" key="building:min_level"/>
 				<text text="Roof levels" key="roof:levels"/>
 								
 				<space/>
+				<label text="&lt;html&gt;&lt;b&gt;Colors and materials&lt;/b&gt;&lt;/html&gt;"/>
 				<text text="Wall colour" key="building:colour"/>
 				<!-- we need to agree some values!!! -->
-				<combo text="Wall material" key="building:material" values="plaster,brick,???" delete_if_empty="true"/>
+				<combo text="Wall material" key="building:material" delete_if_empty="true">
+					<list_entry value="plaster" display_value="plaster" icon="http://openstreetmap.pl/kendzi/preset/material_plaster_64.png" />
+					<list_entry value="brick" display_value="brick" icon="http://openstreetmap.pl/kendzi/preset/material_brick_64.png" />
+					<list_entry value="???" />
+				</combo>
 				<text text="Roof colour" key="roof:colour"/>
 				<!-- we need to agree some values!!! -->
 				<combo text="Roof material" key="roof:material" values="roofTiles,roofingFelt,???" delete_if_empty="true"/>
@@ -168,47 +177,90 @@ are supplied, then "values" will be treated as "display_values" and translated i
      		</optional>     		
      	</item>
        
-        <item name="Building colors and materials" type="relation,closedway">
-       		<text text="Wall colour" key="building:colour"/>
+        <item name="Colors and materials" type="relation,closedway"  icon="http://openstreetmap.pl/kendzi/preset/building_colors_32.png" >
+       		<text text="Wall colour" key="building:colour"></text>
 			<!-- we need to agree some values!!! -->
-			<combo text="Wall material" key="building:material" values="plaster,brick,???" delete_if_empty="true"/>
+			<combo text="Wall material" key="building:material" delete_if_empty="true">
+				<list_entry value="plaster" display_value="plaster" icon="http://openstreetmap.pl/kendzi/preset/material_plaster_64.png" />
+				<list_entry value="brick" display_value="brick" icon="http://openstreetmap.pl/kendzi/preset/material_brick_64.png" ></list_entry>
+				<list_entry value="???" />
+			</combo>
 			<text text="Roof colour" key="roof:colour"/>
 			<!-- we need to agree some values!!! -->
 			<combo text="Roof material" key="roof:material" values="roofTiles,roofingFelt,???" delete_if_empty="true"/>
         </item>
         
-        <item name="Roof 3dr" type="relation,closedway">
+        <item name="Roof 3dr" type="relation,closedway" icon="http://openstreetmap.pl/kendzi/preset/roof_icon_red_32.png" >
             <link href="http://wiki.openstreetmap.org/wiki/Roof_table" />
             
-            <label text="A part of a building for 3D rendering"/>
-			<combo text="Building part" key="building:part" values="yes" required="true" default="yes"/>
+            <label text="&lt;html&gt;&lt;i&gt;A part of a building for 3D rendering&lt;/i&gt;&lt;/html&gt;"/>
+			<combo text="Building part" key="building:part" required="true" default="yes">
+				<list_entry value="yes" icon="http://openstreetmap.pl/kendzi/preset/yes_32.png"  />
+			</combo>
             
             <space />
-            <label text="Roof type" />
-            
-            <combo key="3dr:type" text="Type" values="0.0,1.0,2.0,2.3,2.4,2.5,3.0,3.1,3.2,3.3,3.4,4.0,4.1,4.3,5.0,5.2,5.6,6.0,6.2,6.3,9.0" required="true" />
+            <combo key="3dr:type" text="&lt;html&gt;&lt;b&gt;Roof type&lt;/b&gt;&lt;/html&gt;" required="true" >
+            	<list_entry value="0.0" short_description="flat" 		icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg" />
+            	<list_entry value="0.1"  />
+            	<list_entry value="0.2"  />
+            	<list_entry value="0.3"  />
+				<list_entry value="1.0" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof1_0.jpg"   />
+				<list_entry value="1.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof1_1.jpg"   />
+				<list_entry value="2.0" short_description="gabled" 		icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg" />
+				<list_entry value="2.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof2_1.jpg" />
+				<list_entry value="2.2" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof2_2.jpg" />
+				<list_entry value="2.3" short_description="hipped"  	icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg" />
+				<list_entry value="2.4" short_description="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg" />
+				<list_entry value="2.5" short_description="pyramidal"  	icon="http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg" />
+				<list_entry value="3.0"  />
+				<list_entry value="3.1"  />
+				<list_entry value="3.2"  />
+				<list_entry value="3.3"  />
+				<list_entry value="3.4"  />
+				<list_entry value="4.0" short_description="gambrel" 	icon="http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg" />
+				<list_entry value="4.1"  />
+				<list_entry value="4.2" short_description="mansard" 	icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg" />
+				<list_entry value="4.3"  />
+				<list_entry value="5.0"  />
+				<list_entry value="5.2"  />
+				<list_entry value="5.6" short_description="dome" 		icon="http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg" />
+				<list_entry value="6.0"  />
+				<list_entry value="6.2"  />
+				<list_entry value="6.3"  />
+				<list_entry value="9.0"  />
+									
+            </combo> 
+                        
             <optional>
-            	<combo text="Building outline" key="building" values="yes" default="" delete_if_empty="true"/>
-            	
-                <text key="3dr:height1" text="3dr:height1" default="" delete_if_empty="true" />
-               	<text key="3dr:lenght1" text="3dr:lenght1" default="" delete_if_empty="true" />
-               	<text key="3dr:height2" text="3dr:height2" default="" delete_if_empty="true" />
-               	<text key="3dr:lenght2" text="3dr:lenght2" default="" delete_if_empty="true" />
-               	
+            	<label text="&lt;html&gt;&lt;i&gt;Only if building part is the building outline in same time&lt;/i&gt;&lt;/html&gt;"/>	     		
+				<combo text="Building outline" key="building" default="" delete_if_empty="true">
+            		<list_entry value="yes" icon="http://openstreetmap.pl/kendzi/preset/yes_32.png"  />
+				</combo>
+				
             	<space />
-               	<label text="Mark roof direction using tags: 3dr:direction=begin|end on outline nodes"/>                
+               	<label text="&lt;html&gt;&lt;i&gt;Mark roof direction using tags: &lt;b&gt;3dr:direction=begin|end&lt;/b&gt; on outline nodes&lt;/i&gt;&lt;/html&gt;"/>                
                 <combo text="Roof orientation" key="roof:orientation" delete_if_empty="true">
 					<list_entry value="along" icon="http://openstreetmap.pl/kendzi/preset/along.png" short_description="to the longest side of the building"/>
 					<list_entry value="across" icon="http://openstreetmap.pl/kendzi/preset/across.png" short_description="to the longest side of the building"/>										
 				</combo>
+            	
+            	<space />
+                <text key="3dr:height1" text="First height" default="" delete_if_empty="true" />
+               	<text key="3dr:lenght1" text="First lenght" default="" delete_if_empty="true" />
+               	<text key="3dr:height2" text="Second height" default="" delete_if_empty="true" />
+               	<text key="3dr:lenght2" text="Second lenght" default="" delete_if_empty="true" />
+               	
+            	
             </optional>             
         </item>
         
-        <item name="Roof shape" type="relation,closedway">
+        <item name="Roof shape" type="relation,closedway" icon="http://openstreetmap.pl/kendzi/preset/roof_icon_blue_32.png" >
       		<link href="http://wiki.openstreetmap.org/wiki/Roof_table" />
             
             <label text="A part of a building for 3D rendering"/>
-			<combo text="Building part" key="building:part" values="yes" required="true" default="yes"/>
+			<combo text="Building part" key="building:part" required="true" default="yes">
+				<list_entry value="yes" icon="http://openstreetmap.pl/kendzi/preset/yes_32.png"  />
+			</combo>
             
             <space />            
             <label text="Edit roof shape" />            
@@ -225,13 +277,13 @@ are supplied, then "values" will be treated as "display_values" and translated i
 
             </optional>
        </item>
-       <item name="Roof lines" type="relation,closedway">
+       <item name="Roof lines" type="relation,closedway" icon="http://openstreetmap.pl/kendzi/preset/roof_icon_yellow_32.png" >
        		<link href="http://wiki.openstreetmap.org/wiki/User:Aschilli/ProposedRoofLines" />
             	
        		<label text="TODO"/>
        </item>
      
-       
+       <!-- 
        <item name="test"   type="way">
          <combo key="sac_scale" text="SAC Scale" values="hiking,mountain_hiking,demanding_mountain_hiking,alpine_hiking,demanding_alpine_hiking,difficult_alpine_hiking" default="" delete_if_empty="true" display_values="T1 - hiking trail,T2 - mountain hiking trail,T3 - difficult\, exposed hiking trail,T4 - difficult\, exposed\, steep alpine trail,T5 - difficult alpine trail with climbing,T6 - hazardous alpine trail with climbing">
 			  <short_description>img:presets/path.png</short_description>
@@ -257,6 +309,7 @@ are supplied, then "values" will be treated as "display_values" and translated i
 				<list_entry value="Bridge"  icon="http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg"  />
 			</combo>
        </item>
+        -->
     </group>
     
      
