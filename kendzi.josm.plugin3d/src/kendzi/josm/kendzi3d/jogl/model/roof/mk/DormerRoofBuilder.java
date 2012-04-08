@@ -52,6 +52,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.mock.RoofType8_0;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 
 import org.apache.log4j.Logger;
@@ -100,6 +101,8 @@ public class DormerRoofBuilder {
         new RoofType2_8(),
 
         new RoofType4_0(),
+
+        new RoofType8_0(),
 
         new RoofType9_0()
     };

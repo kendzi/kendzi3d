@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.kendzi3d.org"
+	xmlns="http://www.kendzi3d.org"
+	
+	elementFormDefault="qualified"
+	>
+<!--     xmlns:jxb="http://java.sun.com/xml/ns/jaxb" -->
+<!--     jxb:version="2.0"> -->
+
+			
+	<xs:element name="textureLibrary" type="TextureLibrary"/>
+	
+	<xs:complexType name="TextureLibrary">		
+		<xs:sequence>
+    		<xs:element name="textureSet" type="TextureSet" minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    	<xs:attribute name="author" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="TextureSet">			
+		<xs:sequence>
+    		<xs:element name="textureData" type="TextureData" minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>		
+		<xs:attribute name="key" type="xs:string"/>	
+	</xs:complexType>
+	
+	<xs:complexType name="TextureData">
+	
+		<xs:attribute name="fileKey" type="xs:string"/>
+		
+		<xs:attribute name="height" type="xs:double"/>
+		<xs:attribute name="width" type="xs:double"/>
+  
+    </xs:complexType>
+</xs:schema>

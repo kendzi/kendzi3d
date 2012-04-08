@@ -277,12 +277,11 @@ public class PointModelService {
     public static List<PointModel> loadXml(URL url) throws JAXBException, FileNotFoundException {
 
         JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
-        Marshaller marshaller=jaxbContext.
-                createMarshaller();
 
-//        File file = new File("c:/jaxb2example.xml");
-        marshaller.setProperty("jaxb.formatted.output", true);
-        marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+//        Marshaller marshaller=jaxbContext.createMarshaller();
+////        File file = new File("c:/jaxb2example.xml");
+//        marshaller.setProperty("jaxb.formatted.output", true);
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
         Unmarshaller unmarshaller =
                 jaxbContext.createUnmarshaller();

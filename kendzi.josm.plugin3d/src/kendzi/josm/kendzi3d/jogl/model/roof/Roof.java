@@ -10,15 +10,15 @@
 package kendzi.josm.kendzi3d.jogl.model.roof;
 
 import javax.media.opengl.GL2;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Way;
@@ -42,29 +42,38 @@ public abstract class Roof extends AbstractWayModel {
      */
     private MetadataCacheService metadataCacheService;
 
+    /**
+     * Texture library service.
+     */
+    private TextureLibraryService textureLibraryService;
+
+    private TextureData fasadeTexture;
+
     protected double height;
     protected Building building;
 
     kendzi.jogl.model.geometry.Model model;
 
-    protected Vector3d [] wallNormals;
     protected Way way;
     protected double minHeight;
 
     /** Create model of roof.
      * @param pBuilding building of roof
+     * @param pFasadeTexture facade texture
      * @param pWay way which define building
      * @param pPers 3d perspective
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
+     * @param pTextureLibraryService texture library service.
      */
-    public Roof(Building pBuilding, Way pWay,
+    public Roof(Building pBuilding, TextureData pFasadeTexture, Way pWay,
             Perspective3D pPers,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryService pTextureLibraryService) {
         super(pWay, pPers);
 
         this.building = pBuilding;
-
+        this.fasadeTexture = pFasadeTexture;
         this.way = pWay;
 
         this.height = pBuilding.getHeight();
@@ -72,13 +81,7 @@ public abstract class Roof extends AbstractWayModel {
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
-    }
-
-    /** Set walls normal vectors.
-     * @param pWallNormals walls normal vectors
-     */
-    public void setWallNormals(Vector3d [] pWallNormals) {
-        this.wallNormals = pWallNormals;
+        this.textureLibraryService = pTextureLibraryService;
     }
 
     /**
@@ -136,15 +139,18 @@ public abstract class Roof extends AbstractWayModel {
 
         if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {
 
-            String facadeTextureFile = this.metadataCacheService.getPropertites(
-                    "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);
-
-            double facadeTextureLenght = this.metadataCacheService.getPropertitesDouble(
-                    "buildings.building_roof_material_{0}.texture.lenght", 1d, roofMaterial);
-            double facadeTextureHeight = this.metadataCacheService.getPropertitesDouble(
-                    "buildings.building_roof_material_{0}.texture.height", 1d, roofMaterial);
-
-            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+            String textureKey = this.textureLibraryService.getKey("buildings.roof_{0}", roofMaterial);
+            return this.textureLibraryService.getTextureDefault(textureKey);
+//
+//            String facadeTextureFile = this.metadataCacheService.getPropertites(
+//                    "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);
+//
+//            double facadeTextureLenght = this.metadataCacheService.getPropertitesDouble(
+//                    "buildings.building_roof_material_{0}.texture.lenght", 1d, roofMaterial);
+//            double facadeTextureHeight = this.metadataCacheService.getPropertitesDouble(
+//                    "buildings.building_roof_material_{0}.texture.height", 1d, roofMaterial);
+//
+//            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
 
         } else {
 
@@ -154,7 +160,7 @@ public abstract class Roof extends AbstractWayModel {
     }
 
     protected TextureData getFasadeTexture() {
-        return this.building.getFacadeTexture();
+        return fasadeTexture;
     }
 
 

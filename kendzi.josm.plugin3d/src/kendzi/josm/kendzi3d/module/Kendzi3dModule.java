@@ -18,6 +18,7 @@ import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
@@ -46,22 +47,17 @@ public class Kendzi3dModule extends AbstractModule {
         bindConstant().annotatedWith(Kendzi3dPluginDirectory.class).to(this.pluginDirectory);
 
         /*
-         * This tells Guice that whenever it sees a dependency on a TransactionLog, it should satisfy the dependency
-         * using a DatabaseTransactionLog.
+         * This tells Guice that whenever it sees a dependency on a UrlReciverService, it should satisfy the dependency
+         * using a FileUrlReciverService.
          */
         bind(UrlReciverService.class).to(FileUrlReciverService.class);
 
-//        bind(ColorTextureBuilder.class);
-
         bind(MetadataCacheService.class).in(Singleton.class);
-
         bind(WikiTextureLoaderService.class).in(Singleton.class);
-
         bind(PointModelService.class).in(Singleton.class);
+        bind(TextureLibraryService.class).in(Singleton.class);
 
         bind(ModelRender.class).in(Singleton.class);
-
-//        bind(PointModelsLayer.class);
 
         bind(PointModelsLayer.class);
         bind(BuildingLayer.class);

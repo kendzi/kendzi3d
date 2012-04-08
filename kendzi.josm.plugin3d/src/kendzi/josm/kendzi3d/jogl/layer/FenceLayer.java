@@ -18,6 +18,7 @@ import kendzi.josm.kendzi3d.jogl.model.FenceRelation;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -50,6 +51,13 @@ public class FenceLayer implements Layer {
      */
     @Inject
     private MetadataCacheService metadataCacheService;
+
+    /**
+     * Texture library service.
+     */
+    @Inject
+    private TextureLibraryService textureLibraryService;
+
 
     /**
      * List of layer models.
@@ -110,12 +118,16 @@ public class FenceLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Fence(way, pPerspective3D, this.modelRender, this.metadataCacheService));
+        this.modelList.add(new Fence(
+                way, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryService));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new FenceRelation(relation, pPerspective3D, this.modelRender, this.metadataCacheService));
+        this.modelList.add(new FenceRelation(
+                relation, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryService));
     }
 
     @Override

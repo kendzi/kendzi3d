@@ -28,10 +28,12 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractRelationModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -64,6 +66,11 @@ public class FenceRelation extends AbstractRelationModel {
     private MetadataCacheService metadataCacheService;
 
     /**
+     * Texture library service.
+     */
+    private TextureLibraryService textureLibraryService;
+
+    /**
      * Hight.
      */
     private double hight;
@@ -92,9 +99,12 @@ public class FenceRelation extends AbstractRelationModel {
      * @param pers Perspective
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
+     * @param pTextureLibraryService texture library service
      */
     public FenceRelation(Relation pRelation, Perspective3D pers,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryService pTextureLibraryService) {
+
         super(pRelation, pers);
 
         List<Double> heights = new ArrayList<Double>();
@@ -126,6 +136,7 @@ public class FenceRelation extends AbstractRelationModel {
         this.heights = heights;
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
+        this.textureLibraryService = pTextureLibraryService;
     }
 
     /**
@@ -167,7 +178,7 @@ public class FenceRelation extends AbstractRelationModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, metadataCacheService);
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
@@ -279,22 +290,27 @@ public class FenceRelation extends AbstractRelationModel {
     /** Gets fence texture data.
      * @param fenceType fence type
      * @param pOsmPrimitive primitive
+     * @param textureLibraryService texture library service
      * @return texture data
      */
-    public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive, MetadataCacheService metadataCacheService) {
+    public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive,
+            TextureLibraryService textureLibraryService) {
 
         String facadeColor = pOsmPrimitive.get("fence:color");
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String facadeTextureFile = metadataCacheService.getPropertites(
-                    "barrier.fence_{0}.texture.file", null, fenceType);
+            String textureKey = textureLibraryService.getKey("barrier.fence_{0}", fenceType);
+            return textureLibraryService.getTextureDefault(textureKey);
 
-            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
-                    "barrier.fence_{0}.texture.lenght", 1d, fenceType);
-            double facadeTextureHeight = 1d;
-
-            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+//            String facadeTextureFile = metadataCacheService.getPropertites(
+//                    "barrier.fence_{0}.texture.file", null, fenceType);
+//
+//            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
+//                    "barrier.fence_{0}.texture.lenght", 1d, fenceType);
+//            double facadeTextureHeight = 1d;
+//
+//            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
 
         } else {
 

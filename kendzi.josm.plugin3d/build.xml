@@ -66,6 +66,8 @@
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+			<src path="src"/>
+       	    <src path="src_xsd"/>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         	<classpath>

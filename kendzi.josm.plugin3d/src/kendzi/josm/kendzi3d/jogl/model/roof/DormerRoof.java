@@ -24,6 +24,7 @@ import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
@@ -34,6 +35,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.Direction;
 import kendzi.josm.kendzi3d.util.DirectionParserUtil;
 import kendzi.josm.kendzi3d.util.StringUtil;
@@ -53,6 +55,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 public class DormerRoof extends Roof {
 
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(DormerRoof.class);
 
 
@@ -86,15 +89,17 @@ public class DormerRoof extends Roof {
 
     /** Flat Roof.
      * @param pBuilding building
-     * @param pList list of building walls
+     * @param pFasadeTexture facade texture
      * @param pWay way
      * @param pPerspective perspective
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
+     * @param pTextureLibraryService  texture library service
      */
-    public DormerRoof(Building pBuilding, Way pWay, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
-        super(pBuilding, pWay, pPerspective, pModelRender, pMetadataCacheService);
+    public DormerRoof(Building pBuilding, TextureData pFasadeTexture, Way pWay, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService, TextureLibraryService pTextureLibraryService) {
+        super(pBuilding, pFasadeTexture, pWay, pPerspective, pModelRender, pMetadataCacheService,
+                pTextureLibraryService);
 
 
         //

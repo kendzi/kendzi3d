@@ -27,6 +27,7 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
@@ -35,6 +36,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
 import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.point.Vector2dUtil;
@@ -81,6 +83,11 @@ public class Building extends AbstractWayModel {
      */
     private MetadataCacheService metadataCacheService;
 
+    /**
+     * Texture library service.
+     */
+    private TextureLibraryService textureLibraryService;
+
     boolean isCounterClockwise;
 
     private Roof roof;
@@ -124,6 +131,8 @@ public class Building extends AbstractWayModel {
 
     private List<WindowEntrancesModel> windowsEnterencsModels;
 
+    private TextureData facadeTexture;
+
     /**
      * Constructor for building.
      *
@@ -131,10 +140,19 @@ public class Building extends AbstractWayModel {
      * @param pPerspective perspective3
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
+     * @param pTextureLibraryService texture library service
      */
     public Building(Way pWay, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryService pTextureLibraryService) {
         super(pWay, pPerspective);
+
+        this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
+        this.textureLibraryService = pTextureLibraryService;
+
+        this.facadeTexture = getFacadeTexture();
+
 
         if (0.0f < Triangulate.area(this.points)) {
             this.isCounterClockwise = true;
@@ -176,31 +194,16 @@ public class Building extends AbstractWayModel {
         this.minHeight = minHeightAttr;
         this.levels = levelsAttr;
         this.minLevels = minlevelsAttr;
-//
-//        String shape = pWay.get("building:roof:shape");
-//        if ("flat".equals(shape)) {
-//            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
-//        } else if ("pitched".equals(shape)) {
-//            this.roof = new GableRoof(this, this.list, pWay, pPerspective, true);
-//        } else if ("gable".equals(shape)) {
-//            this.roof = new GableRoof(this, this.list, pWay, pPerspective, false);
-//        } else if ("hip".equals(shape)) {
-//            this.roof = new HipRoof(this, this.list, pWay, pPerspective);
-//        } else if ("3dr".equals(shape)) {
-//            this.roof = new DormerRoof(this, this.list, pWay, pPerspective);
-//        } else {
-//            this.roof = new FlatRoof(this, this.list, pWay, pPerspective);
-//        }
+
 
         String tag3dr = pWay.get("3dr:type");
         if (!StringUtil.isBlankOrNull(tag3dr)) {
-            this.roof = new DormerRoof(this, pWay, pPerspective, pModelRender, pMetadataCacheService);
+            this.roof = new DormerRoof(this, this.facadeTexture, pWay, pPerspective, pModelRender, pMetadataCacheService, pTextureLibraryService);
         } else {
-            this.roof = new ShapeRoof(this, pWay, pPerspective, pModelRender, pMetadataCacheService);
+            this.roof = new ShapeRoof(this, this.facadeTexture, pWay, pPerspective, pModelRender, pMetadataCacheService, pTextureLibraryService);
         }
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
+
     }
 
     /** Gets facade texture.
@@ -208,7 +211,13 @@ public class Building extends AbstractWayModel {
      */
     public TextureData getFacadeTexture() {
 
-        String facadeMaterial = this.way.get("building:facade:material");
+        String facadeMaterial = this.way.get("building:material");
+        if (StringUtil.isBlankOrNull(facadeMaterial)) {
+            facadeMaterial = this.way.get("building:facade:material");
+        }
+        if (StringUtil.isBlankOrNull(facadeMaterial)) {
+            facadeMaterial = this.way.get("facade:material");
+        }
 
         String facadeColor = this.way.get("building:facade:color");
         if (StringUtil.isBlankOrNull(facadeColor)) {
@@ -223,17 +232,21 @@ public class Building extends AbstractWayModel {
 
         if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String facadeTextureFile = metadataCacheService.getPropertites(
-                    "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
+            String textureKey = this.textureLibraryService.getKey("buildings.facade_{0}", facadeMaterial);
+            return this.textureLibraryService.getTextureDefault(textureKey);
 
-            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
-                    "buildings.building_facade_material_{0}.texture.lenght", 1d, facadeMaterial);
-            double facadeTextureHeight = metadataCacheService.getPropertitesDouble(
-                    "buildings.building_facade_material_{0}.texture.height", 1d, facadeMaterial);
-
-            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
+//            String facadeTextureFile = metadataCacheService.getPropertites(
+//                    "buildings.building_facade_material_{0}.texture.file", null, facadeMaterial);
+//
+//            double facadeTextureLenght = metadataCacheService.getPropertitesDouble(
+//                    "buildings.building_facade_material_{0}.texture.lenght", 1d, facadeMaterial);
+//            double facadeTextureHeight = metadataCacheService.getPropertitesDouble(
+//                    "buildings.building_facade_material_{0}.texture.height", 1d, facadeMaterial);
+//
+//            return new TextureData(facadeTextureFile, facadeTextureLenght, facadeTextureHeight);
 
         } else {
+            //XXX this will be change in future ...
 
             String facadeColorFile = "#c=" + facadeColor;
 //            String facadeColorFile = MetadataCacheService.getPropertites(
@@ -263,8 +276,6 @@ public class Building extends AbstractWayModel {
 
         this.windowsEnterencsModels = buildWindowsEnterencs(this.windowEntrances);
 
-        TextureData facadeTexture = getFacadeTexture();
-        Material facadeMaterial =  MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
 
         Vector3d [] normals = new Vector3d[this.points.size()];
@@ -315,11 +326,12 @@ public class Building extends AbstractWayModel {
             }
         }
 
-        this.roof.setWallNormals(normals);
         this.roof.buildModel();
 
-        //        this.buildingHeight = this.height - this.roof.getRoofHeight();
         this.buildingHeight = this.roof.getMinHeight();
+
+
+        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();

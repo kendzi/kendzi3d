@@ -19,11 +19,13 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Way;
@@ -72,19 +74,27 @@ public class Fence extends AbstractWayModel {
     private MetadataCacheService metadataCacheService;
 
     /**
+     * Texture library service.
+     */
+    private TextureLibraryService textureLibraryService;
+
+    /**
      * Fence constructor.
      *
      * @param pWay way
      * @param pPerspective3D perspective
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
+     * @param pTextureLibraryService texture library service
      */
     public Fence(Way pWay, Perspective3D pPerspective3D,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryService pTextureLibraryService) {
         super(pWay, pPerspective3D);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
+        this.textureLibraryService = pTextureLibraryService;
     }
 
 
@@ -97,7 +107,7 @@ public class Fence extends AbstractWayModel {
 
         String fenceType = FenceRelation.getFenceType(this.way);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble(
+        double fenceHeight = this.metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         this.hight = ModelUtil.getHeight(this.way, fenceHeight);
@@ -108,7 +118,7 @@ public class Fence extends AbstractWayModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, metadataCacheService);
+        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);

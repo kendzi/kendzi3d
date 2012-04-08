@@ -81,7 +81,7 @@ public final class FileUrlReciverService implements UrlReciverService {
     @Override
     public URL receivePluginDirUrl(String pFileName) {
         File f = new File(this.pluginDir, pFileName);
-        System.out.println("reciveFileUrl" + f.getAbsoluteFile());
+        System.out.println("reciveFileUrl: " + f.getAbsoluteFile());
         if (f.exists()) {
             try {
                 return f.toURI().toURL();

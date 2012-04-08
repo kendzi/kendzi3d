@@ -17,6 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -54,6 +55,12 @@ public class BuildingLayer implements Layer {
      */
     @Inject
     private MetadataCacheService metadataCacheService;
+
+    /**
+     * Texture library service.
+     */
+    @Inject
+    TextureLibraryService textureLibraryService;
 
     private Match buildingMatcher;
 
@@ -101,7 +108,8 @@ public class BuildingLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Building(way, pPerspective3D, this.modelRender, this.metadataCacheService));
+        this.modelList.add(new Building(way, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryService));
     }
 
     @Override

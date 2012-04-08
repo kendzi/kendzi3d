@@ -9,7 +9,7 @@ import javax.vecmath.Point2d;
 
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;

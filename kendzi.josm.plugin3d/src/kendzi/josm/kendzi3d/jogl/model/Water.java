@@ -19,6 +19,7 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeUtil;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;

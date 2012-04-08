@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.xml.bind.JAXBException;
 
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
@@ -80,6 +81,9 @@ public class WikiTextureLoaderAction extends JosmAction {
             log.error(e);
             showError(e);
         } catch (IOException e) {
+            log.error(e);
+            showError(e);
+        } catch (JAXBException e) {
             log.error(e);
             showError(e);
         }

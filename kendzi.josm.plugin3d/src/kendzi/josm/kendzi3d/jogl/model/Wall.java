@@ -28,11 +28,13 @@ import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.math.geometry.Bool.CSG;
 import kendzi.math.geometry.Bool.CSG.Polygon;
 import kendzi.math.geometry.Bool.CSG.Vector;
@@ -89,6 +91,11 @@ public class Wall extends AbstractWayModel {
     private MetadataCacheService metadataCacheService;
 
     /**
+     * Texture library service.
+     */
+    private TextureLibraryService textureLibraryService;
+
+    /**
      * Fence constructor.
      *
      * @param pWay way
@@ -97,11 +104,14 @@ public class Wall extends AbstractWayModel {
      * @param pMetadataCacheService metadata cache service
      */
     public Wall(Way pWay, Perspective3D pPerspective3D,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService) {
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryService pTextureLibraryService) {
+
         super(pWay, pPerspective3D);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
+        this.textureLibraryService = pTextureLibraryService;
     }
 
 
@@ -127,7 +137,7 @@ public class Wall extends AbstractWayModel {
         MeshFactory testMesh = modelBuilder.addMesh("test");
         //MeshFactory meshBorder = modelBuilder.addMesh("box");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.metadataCacheService);
+        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);

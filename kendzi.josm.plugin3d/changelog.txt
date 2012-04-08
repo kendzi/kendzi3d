@@ -1,4 +1,10 @@
 [current]
+- new textures from wiki
+- new configuration supporting different textures for material 
+- fix wiki texture configuration for new texture configuration
+- mock for roof type 8.0  
+
+[2012-04-08]
 - solid boolean - walls with holes
 - mac support?
 - roof presets

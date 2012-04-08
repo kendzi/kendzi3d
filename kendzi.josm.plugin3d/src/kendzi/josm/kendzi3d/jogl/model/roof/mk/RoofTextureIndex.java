@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
+import kendzi.josm.kendzi3d.dto.TextureData;
 
 @Deprecated
 public class RoofTextureIndex {

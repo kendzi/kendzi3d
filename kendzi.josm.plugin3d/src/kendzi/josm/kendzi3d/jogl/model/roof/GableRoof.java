@@ -21,7 +21,7 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.Triangulate;

@@ -21,7 +21,7 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
-import kendzi.josm.kendzi3d.jogl.model.TextureData;
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;

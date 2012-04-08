@@ -11,13 +11,20 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import kendzi.josm.kendzi3d.dto.xsd.TextureData;
+import kendzi.josm.kendzi3d.dto.xsd.TextureLibrary;
+import kendzi.josm.kendzi3d.dto.xsd.TextureSet;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
@@ -56,6 +63,13 @@ public class WikiTextureLoaderService {
      */
     @Inject
     TextureCacheService textureCacheService;
+
+    /**
+     * Texture library service.
+     */
+    @Inject
+    private TextureLibraryService textureLibraryService;
+
     /**
      * Wiki page with textures and metadata.
      */
@@ -72,8 +86,9 @@ public class WikiTextureLoaderService {
      * @return list of errors
      * @throws MalformedURLException error
      * @throws IOException error
+     * @throws JAXBException
      */
-    public LoadRet load() throws MalformedURLException, IOException {
+    public LoadRet load() throws MalformedURLException, IOException, JAXBException {
 
         LoadRet ret = new LoadRet();
 
@@ -89,20 +104,25 @@ public class WikiTextureLoaderService {
 
         List<String> downloadErrors = downloadTexturesFiles(wikiTextures);
         ret.getErrors().addAll(downloadErrors);
-
-        Properties properties = createProperties(wikiTextures);
-
-        if (properties != null) {
-
-            saveProperties(properties);
-
-            this.metadataCacheService.loadMetadataProperties();
+        {
+            // old
+            createAndSaveTextureProperties(wikiTextures);
         }
-
+        {
+            // new
+            createAndSaveWikiTextureLiblary(wikiTextures);
+        }
         this.textureCacheService.clear();
+        this.metadataCacheService.clear();
+        this.textureLibraryService.clear();
 
         return ret;
     }
+
+
+
+
+
 
 
     public class LoadRet {
@@ -159,20 +179,104 @@ public class WikiTextureLoaderService {
             String key = wt.getKey();
 
             prop.setProperty(key + ".texture.file", "/textures/" +  wt.getFileKey());
-            prop.setProperty(key + ".texture.height", blankOnNull(wt.getHeight()));
-            prop.setProperty(key + ".texture.lenght", blankOnNull(wt.getLenght()));
-            prop.setProperty(key + ".texture.url", blankOnNull(wt.getFileUrl()));
+            prop.setProperty(key + ".texture.height", StringUtil.blankOnNull(wt.getHeight()));
+            prop.setProperty(key + ".texture.lenght", StringUtil.blankOnNull(wt.getLenght()));
+            prop.setProperty(key + ".texture.url", StringUtil.blankOnNull(wt.getFileUrl()));
         }
 
         return prop;
     }
 
-    static String blankOnNull(String pStr) {
-        if (pStr == null) {
-            return "";
-        }
-        return pStr;
+    private void createAndSaveWikiTextureLiblary(List<WikiTextures> wikiTextures) throws FileNotFoundException, JAXBException {
+        TextureLibrary textureLiblary = createWikiTextureLiblary(wikiTextures);
+
+        File textureFile = new File(this.pluginDir + TextureLibraryService.TEXTURE_LIBRARY_WIKI_XML);
+//              "/wikimetadata.properties");
+
+        TextureLibraryService.saveXml(textureFile, textureLiblary);
+
+//        private void saveProperties(Properties prop) throws FileNotFoundException, IOException {
+//
+//            File textureProp = new File(getTexturesPath() +
+//                    "/wikimetadata.properties");
+//
+//            prop.store(new FileOutputStream(textureProp), null);
+//
+//        }
     }
+
+    private TextureLibrary createWikiTextureLiblary(List<WikiTextures> wikiTextures) {
+
+        Map<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>> textureMap = new HashMap<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>>();
+
+        for (WikiTextures wt : wikiTextures) {
+            String key = wt.getKey();
+
+            kendzi.josm.kendzi3d.dto.xsd.TextureData td = new kendzi.josm.kendzi3d.dto.xsd.TextureData();
+
+            td.setFileKey("/textures/" +  wt.getFileKey());
+            td.setHeight(StringUtil.parseDouble(wt.getHeight()));
+            td.setWidth(StringUtil.parseDouble(wt.getLenght()));
+
+            // wt.getFileUrl()
+
+            addTextureToMap(key, td, textureMap);
+        }
+
+        List<String> sortedKeys = asSortedList(textureMap.keySet());
+
+        TextureLibrary tl = new TextureLibrary();
+        for (String key : sortedKeys) {
+            ArrayList<TextureData> textureArray = textureMap.get(key);
+
+            TextureSet ts = new TextureSet();
+
+            ts.setKey(key);
+            ts.getTextureData().addAll(textureArray);
+
+            tl.getTextureSet().add(ts);
+        }
+
+        return tl;
+
+    }
+
+    public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+      List<T> list = new ArrayList<T>(c);
+      java.util.Collections.sort(list);
+      return list;
+    }
+
+    private void addTextureToMap(String key, kendzi.josm.kendzi3d.dto.xsd.TextureData data,
+            Map<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>> textureMap) {
+        ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData> set = textureMap.get(key);
+
+        if (set == null) {
+            set = new ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>();
+            textureMap.put(key, set);
+        }
+
+        set.add(data);
+    }
+
+    /**
+     * @param wikiTextures
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void createAndSaveTextureProperties(List<WikiTextures> wikiTextures) throws FileNotFoundException,
+            IOException {
+        Properties properties = createProperties(wikiTextures);
+
+        if (properties != null) {
+
+            saveProperties(properties);
+
+            this.metadataCacheService.loadMetadataProperties();
+        }
+    }
+
+
 
     private List<String> downloadTexturesFiles(List<WikiTextures> parseWiki) throws FileNotFoundException, IOException {
 
