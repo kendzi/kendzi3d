@@ -213,6 +213,17 @@
     <!--
     ************************** Publishing the plugin *********************************** 
     -->
+	<target name="publish-local-ftp-dir" depends="dist">
+		
+	    <property name="local-ftp-dir" location="d:/projekty/osmWeb/Kendzi3d/snapshot"/>
+	
+		<copy file="${plugin.jar}" todir="${local-ftp-dir}/current"/>
+        <mkdir dir="${local-ftp-dir}/${build.number}"/>
+		<copy file="${plugin.jar}" todir="${local-ftp-dir}/${build.number}"/>
+				
+	</target>
+	
+    	
     <!--
         ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
         ** property ${coreversion.info.entry.revision}

@@ -5,7 +5,7 @@
 	targetNamespace="http://www.kendzi3d.org"
 	xmlns="http://www.kendzi3d.org"
 	
-	elementFormDefault="qualified"
+	elementFormDefault="unqualified"
 	>
 <!--     xmlns:jxb="http://java.sun.com/xml/ns/jaxb" -->
 <!--     jxb:version="2.0"> -->

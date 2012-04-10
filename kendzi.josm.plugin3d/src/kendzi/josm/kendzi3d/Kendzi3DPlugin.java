@@ -24,6 +24,7 @@ import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
+import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
 import kendzi.josm.kendzi3d.action.PointModelListAction;
 import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
@@ -202,6 +203,13 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         final JMenuItem wikiTextureLoaderItem = new JMenuItem(wikiTextureLoaderAction);
         this.view3dJMenu.add(wikiTextureLoaderItem);
         wikiTextureLoaderItem.setAccelerator(wikiTextureLoaderAction.getShortcut().getKeyStroke());
+
+        LoadTextureLibraryAction loadTextureLibraryAction = injector.getInstance(LoadTextureLibraryAction.class);
+        final JMenuItem loadTextureLibraryItem = new JMenuItem(loadTextureLibraryAction);
+        this.view3dJMenu.add(loadTextureLibraryItem);
+        loadTextureLibraryItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
+
+
 
         this.view3dJMenu.addSeparator();
 

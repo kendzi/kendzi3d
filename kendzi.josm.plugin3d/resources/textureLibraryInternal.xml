@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<textureLibrary 
-	xmlns="http://www.kendzi3d.org" 
+<ns2:textureLibrary 
+	xmlns:ns2="http://www.kendzi3d.org"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.kendzi3d.org xsd/TextureLibrary.xsd"
 	
 	author="Tomasz Kędziora (Kendzi)"
 	>
+<!-- 	xmlns="http://www.kendzi3d.org"  -->
+<!-- 	<ns2:textureLibrary xmlns:ns2="http://www.kendzi3d.org"> -->
 	
 	
 	<!-- Buildings -->
@@ -14,6 +16,9 @@
 	</textureSet>
 	<textureSet key="buildings.facade_plaster">
 		<textureData fileKey="/textures/building_facade_plaster.png" height="2.0" width="2.0"/>
+		<textureData fileKey="/textures/pd/MarekPutz0001.jpg" height="0.3" width="0.3"/>
+		<textureData fileKey="/textures/pd/MarekWall0002.jpg" height="1" width="1"/>
+		<textureData fileKey="/textures/pd/MarekWall0003.jpg" height="1" width="1"/>
 	</textureSet>
 	<textureSet key="buildings.facade_brick">
 		<textureData fileKey="/textures/building_facade_brick.png" height="0.3" width="0.5"/>
@@ -32,6 +37,13 @@
 	</textureSet>
 	<textureSet key="buildings.roof_roofTiles">
 		<textureData fileKey="/textures/building_roof_material_roofTiles.png" height="3" width="3"/>
+		
+		
+		<textureData fileKey="/textures/pd/Frankfurter_Pfanne_rot.png" height="1.5" width="1.5"/>
+		<textureData fileKey="/textures/pd/Flachdachpfanne_anthrazit.png" height="1.5" width="1.5"/>
+		<textureData fileKey="/textures/pd/MarekTile0001.jpg" height="0.75" width="0.75"/>
+		<textureData fileKey="/textures/pd/MarekTile0002.jpg" height="0.75" width="0.75"/>
+		<textureData fileKey="/textures/pd/MarekTile0003.jpg" height="0.40" width="0.40"/>
 	</textureSet>
 	<textureSet key="buildings.roof_roofingFelt">
 		<textureData fileKey="/textures/building_roof_material_roofingFelt.png" height="2" width="2"/>
@@ -46,4 +58,4 @@
 	</textureSet>
 
 
-</textureLibrary>
+</ns2:textureLibrary>

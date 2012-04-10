@@ -3,6 +3,7 @@ package kendzi.josm.kendzi3d.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public class TextureLibraryService {
     private UrlReciverService urlReciverService;
 
     private Random randomNumberGenerator = new Random();
+
+    private File userTextureLibraryFile = null;
 
     /** Constructor.
      * @param urlReciverService url reciver service
@@ -131,6 +134,15 @@ public class TextureLibraryService {
         } catch (Exception e) {
             log.error(e,e);
         }
+
+        try {
+            // load wiki
+            loadUserFile(userTextureLibraryFile);
+        } catch (Exception e) {
+            log.error(e,e);
+        }
+
+
         System.out.println("load text libr: " + (System.currentTimeMillis() - t1));
         System.out.println("tst2");
     }
@@ -141,7 +153,11 @@ public class TextureLibraryService {
 
         URL pointModelConf = this.urlReciverService.receiveFileUrl(pUrl);
 
-        List<TextureSet> pointModelsInternalList = loadXml(pointModelConf);
+        loadUrl(pointModelConf);
+    }
+
+    private void loadUrl(URL pUrl) throws JAXBException, FileNotFoundException {
+        List<TextureSet> pointModelsInternalList = loadXml(pUrl);
 
         for (TextureSet p : pointModelsInternalList) {
 
@@ -151,6 +167,14 @@ public class TextureLibraryService {
                 addTexture(p.getKey(), td2);
             }
         }
+    }
+
+    public void loadUserFile(File file) throws FileNotFoundException, JAXBException, MalformedURLException {
+//        this.textureMap.clear();
+
+        URL pointModelConf = file.toURI().toURL();
+
+        loadUrl(pointModelConf);
     }
 
     private TextureData convert(kendzi.josm.kendzi3d.dto.xsd.TextureData td) {
@@ -203,6 +227,7 @@ public class TextureLibraryService {
 
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+//        marshaller.setProperty( Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, Boolean.TRUE);
 
 
         ObjectFactory factory=new ObjectFactory();

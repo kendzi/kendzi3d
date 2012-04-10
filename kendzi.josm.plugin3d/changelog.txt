@@ -1,4 +1,7 @@
 [current]
+- fix to texture library xml format
+
+[2012-04-09]
 - new textures from wiki
 - new configuration supporting different textures for material 
 - fix wiki texture configuration for new texture configuration

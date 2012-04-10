@@ -78,13 +78,13 @@ public class WikiTextureLoaderAction extends JosmAction {
             timestamp = load.getTimestamp();
 
         } catch (MalformedURLException e) {
-            log.error(e);
+            log.error(e, e);
             showError(e);
         } catch (IOException e) {
-            log.error(e);
+            log.error(e, e);
             showError(e);
         } catch (JAXBException e) {
-            log.error(e);
+            log.error(e, e);
             showError(e);
         }
 
