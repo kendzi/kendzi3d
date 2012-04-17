@@ -429,6 +429,8 @@ public class Building extends AbstractWayModel {
                 entrance.setHeight(ModelUtil.getHeight(node,  entrance.getHeight()));
                 entrance.setMinHeight(ModelUtil.getMinHeight(node,  entrance.getMinHeight()));
 
+                entrance.setWidth(ModelUtil.parseHeight(node.get("width"),  entrance.getWidth()));
+
                 windowEntrances.add(entrance);
             }
 
@@ -464,8 +466,9 @@ public class Building extends AbstractWayModel {
             meshBorder.hasTexture = true;
 
 
+
             buildBoxModel(we.getPoint(), we.getDirection(), we.getHeight(), we.getMinHeight(),
-                    1d, 0.2d, meshBorder, facadeTexture);
+                    we.getWidth(), 0.2d, meshBorder, facadeTexture);
 
 
             Model model = modelBuilder.toModel();
@@ -487,8 +490,12 @@ public class Building extends AbstractWayModel {
 
     private TextureData getWindowsTexture(Way way2) {
         // TODO
-        TextureData facadeTexture = new  TextureData("#c=#303030", 1d, 1d);
-        return facadeTexture;
+//        TextureData facadeTexture = new  TextureData("#c=#303030", 1d, 1d);
+//        TextureData facadeTexture = new  TextureData("#c=#303030", 1d, 1d);
+//        return facadeTexture;
+
+        String textureKey = this.textureLibraryService.getKey("buildings.window");
+        return this.textureLibraryService.getTextureDefault(textureKey);
     }
 
     private void buildBoxModel(Point2d point, Vector2d direction,
@@ -685,6 +692,12 @@ public class Building extends AbstractWayModel {
         public Window() {
             super();
             this.minHeight = 1;
+
+            double height = 1.5;
+            this.height = this.minHeight + height;
+
+            this.width = 1.8;
+            //this.
         }
 
     }
@@ -699,6 +712,8 @@ public class Building extends AbstractWayModel {
         double minHeight = 0;
 
         double height = 2;
+
+        double width = 1d;
 
         Vector2d direction;
 
@@ -766,6 +781,18 @@ public class Building extends AbstractWayModel {
          */
         public void setDirection(Vector2d direction) {
             this.direction = direction;
+        }
+        /**
+         * @return the width
+         */
+        public double getWidth() {
+            return width;
+        }
+        /**
+         * @param width the width to set
+         */
+        public void setWidth(double width) {
+            this.width = width;
         }
     }
 

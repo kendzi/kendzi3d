@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBException;
 
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService.UrlTextureLibrary;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -83,7 +84,21 @@ public class LoadTextureLibraryAction extends JosmAction {
                 File file = this.fc.getSelectedFile();
                 //This is where a real application would open the file.
                 log.info("Opening: " + file.getName());
-                this.textureLibraryService.loadUserFile(file);
+
+                UrlTextureLibrary urlTextureLibrary = new UrlTextureLibrary();
+                urlTextureLibrary.setUrl(file.toURI().toURL());
+
+                int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "Owerwrite values",
+                        "Owerwrite values",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (n ==JOptionPane.YES_OPTION) {
+                    urlTextureLibrary.setOverwrite(true);
+                }
+
+                this.textureLibraryService.loadUserFile(urlTextureLibrary);
             } else {
                 log.info("Open command cancelled by user." );
             }

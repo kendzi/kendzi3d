@@ -32,6 +32,7 @@ import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
+import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
@@ -137,6 +138,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     private List<FpsListener> fpsChangeListenerList = new ArrayList<FpsListener>();
 
+    @Inject
+    SkyBox skyBox;
+
 
     /**
      * Default constructor.
@@ -150,6 +154,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.simpleMoveAnimator = new SimpleMoveAnimator();
 
         this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
+
+        this.skyBox = new SkyBox();
     }
 
 
@@ -195,6 +201,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
         gl.glEnable(GL2.GL_MULTISAMPLE);
+
+
+        this.skyBox.draw(gl, this.simpleMoveAnimator, null);
 
 
         this.ground.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());

@@ -124,17 +124,20 @@ public abstract class Roof extends AbstractWayModel {
      */
     protected TextureData getRoofTexture() {
 
-        String roofMaterial = this.way.get("building:roof:material");
-
-        String roofColor = this.way.get("building:roof:color");
-        if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = this.way.get("building:roof:colour");
+        String roofMaterial = this.way.get("roof:material");
+        if (StringUtil.isBlankOrNull(roofMaterial)) {
+            roofMaterial = this.way.get("building:roof:material");
         }
+
+        String roofColor = this.way.get("roof:colour");
         if (StringUtil.isBlankOrNull(roofColor)) {
             roofColor = this.way.get("roof:color");
         }
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = this.way.get("roof:colour");
+            roofColor = this.way.get("building:roof:colour");
+        }
+        if (StringUtil.isBlankOrNull(roofColor)) {
+            roofColor = this.way.get("building:roof:color");
         }
 
         if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {

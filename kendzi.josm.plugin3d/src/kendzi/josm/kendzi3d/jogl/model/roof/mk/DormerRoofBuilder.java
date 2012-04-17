@@ -43,6 +43,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_7;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_8;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_9;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeFlat;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
@@ -101,6 +102,8 @@ public class DormerRoofBuilder {
         new RoofType2_8(),
 
         new RoofType4_0(),
+
+        new RoofType5_6(),
 
         new RoofType8_0(),
 

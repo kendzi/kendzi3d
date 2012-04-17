@@ -15,8 +15,8 @@ public class TextCoord {
 
 
 	/**
-	 * @param u
-	 * @param v
+	 * @param u x
+	 * @param v y
 	 */
 	public TextCoord(double u, double v) {
 		this.u = u;

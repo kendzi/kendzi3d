@@ -1,4 +1,8 @@
 [current]
+
+- skybox
+- roof type 5.6
+- action for load texture library
 - fix to texture library xml format
 
 [2012-04-09]

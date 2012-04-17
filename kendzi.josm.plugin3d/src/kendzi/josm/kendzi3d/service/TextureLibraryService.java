@@ -41,7 +41,7 @@ public class TextureLibraryService {
 
     private Random randomNumberGenerator = new Random();
 
-    private File userTextureLibraryFile = null;
+    private UrlTextureLibrary userTextureLibraryUrl = null;
 
     /** Constructor.
      * @param urlReciverService url reciver service
@@ -137,7 +137,7 @@ public class TextureLibraryService {
 
         try {
             // load wiki
-            loadUserFile(userTextureLibraryFile);
+            loadUserFile(userTextureLibraryUrl);
         } catch (Exception e) {
             log.error(e,e);
         }
@@ -169,12 +169,14 @@ public class TextureLibraryService {
         }
     }
 
-    public void loadUserFile(File file) throws FileNotFoundException, JAXBException, MalformedURLException {
-//        this.textureMap.clear();
+    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException {
 
-        URL pointModelConf = file.toURI().toURL();
+        if (pUrlTextureLibrary.isOverwrite()) {
+            this.textureMap.clear();
+        }
 
-        loadUrl(pointModelConf);
+        loadUrl(pUrlTextureLibrary.getUrl());
+        userTextureLibraryUrl = pUrlTextureLibrary;
     }
 
     private TextureData convert(kendzi.josm.kendzi3d.dto.xsd.TextureData td) {
@@ -245,5 +247,36 @@ public class TextureLibraryService {
         this.textureMap.clear();
 
         init();
+    }
+
+    public static class UrlTextureLibrary {
+        private URL url;
+        private boolean overwrite;
+        /**
+         * @return the url
+         */
+        public URL getUrl() {
+            return url;
+        }
+        /**
+         * @param url the url to set
+         */
+        public void setUrl(URL url) {
+            this.url = url;
+        }
+        /**
+         * @return the overwrite
+         */
+        public boolean isOverwrite() {
+            return overwrite;
+        }
+        /**
+         * @param overwrite the overwrite to set
+         */
+        public void setOverwrite(boolean overwrite) {
+            this.overwrite = overwrite;
+        }
+
+
     }
 }

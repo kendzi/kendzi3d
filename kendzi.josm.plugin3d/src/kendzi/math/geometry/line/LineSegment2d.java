@@ -1,6 +1,7 @@
 package kendzi.math.geometry.line;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Vector2d;
 
 public class LineSegment2d {
 
@@ -108,5 +109,67 @@ public class LineSegment2d {
     public void setOpenEnd(boolean openEnd) {
         this.openEnd = openEnd;
     }
+
+
+ // dist_Point_to_Segment(): get the distance of a point to a segment.
+//  Input:  a Point P and a Segment S (in any dimension)
+//  Return: the shortest distance from P to S
+
+    //http://softsurfer.com/Archive/algorithm_0102/algorithm_0102.htm#References
+    public static double distancePointToSegment(Point2d P, LineSegment2d S) {
+//        Vector v = S.P1 - S.P0;
+//        Vector w = P - S.P0;
+
+        Vector2d v = new Vector2d(S.getEnd());
+        v.sub(S.getBegin());
+
+        Vector2d w = new Vector2d(P);
+        w.sub(S.getBegin());
+
+
+        double c1 = w.dot(v);//dot(w,v);
+        if ( c1 <= 0 ) {
+            return d(P, S.getBegin());
+        }
+
+        double c2 = v.dot(v);//dot(v,v);
+        if ( c2 <= c1 ) {
+            return d(P, S.getEnd());
+        }
+
+        double b = c1 / c2;
+
+        //Pb = S.P0 + b * v;
+        Point2d Pb = new Point2d(v);
+        Pb.scale(b);
+        Pb.add(S.getBegin());
+
+        return d(P, Pb);
+    }
+
+    private static double d(Point2d u, Point2d v) {
+        double dx = u.x - v.x;
+        double dy = u.y - v.y;
+
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "LineSegment2d "
+                + (openBegin ? "(" : "<")
+                + begin
+                + ", "
+                + end
+                + (openEnd ? ")" : ">")
+               ;
+    }
+
+
 }
 

@@ -49,6 +49,10 @@
 		<textureData fileKey="/textures/building_roof_material_roofingFelt.png" height="2" width="2"/>
 	</textureSet>
 	
+	<textureSet key="buildings.window">	
+		<textureData fileKey="/textures/pd/MarekPlainWindow00002.jpg" height="1.5" width="1.8"/>
+	</textureSet>
+	
 	<!-- Barrier -->
 	<textureSet key="barrier.fence_unknown">
 		<textureData fileKey="/textures/fence_undefined.png" width="2"/>

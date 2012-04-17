@@ -14,6 +14,7 @@ import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
+import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
@@ -68,6 +69,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(WallLayer.class);
 
         bind(PhotoRenderer.class);
+        bind(SkyBox.class);
 
         bind(Kendzi3dGLEventListener.class).in(Singleton.class);
 

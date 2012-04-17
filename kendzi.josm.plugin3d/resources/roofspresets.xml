@@ -39,8 +39,8 @@
 				<combo text="Roof shape" key="roof:shape">
 					<list_entry value="flat" icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg"/>
 					<list_entry value="gabled" icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg"/>
-					<list_entry value="hipped"  display_value="hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg"/>
-					<list_entry value="half-hipped"  display_value="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg"/>
+					<list_entry value="half-hipped"  display_value="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg"/>
+					<list_entry value="hipped"  display_value="hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg"/>
 					<list_entry value="pyramidal"  display_value="pyramidal" icon="http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg"/>
 					<list_entry value="gambrel"  display_value="gambrel" icon="http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg"/>
 					<list_entry value="mansard"  display_value="mansard" icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg"/>
@@ -79,7 +79,7 @@
 				<text text="Roof colour" key="roof:colour"/>
 				<!-- we need to agree some values!!! -->
 				<combo text="Roof material" key="roof:material" delete_if_empty="true">
-					<list_entry value="roofTiles" short_description="Warning this may change!" 
+					<list_entry value="roofTiles" short_description="Warning this may change!" 		icon="http://openstreetmap.pl/kendzi/preset/roof_roofTiles.png" 
 						/>
 					<list_entry value="roofingFelt" short_description="Warning this may change!" 
 						/>
@@ -113,8 +113,8 @@
 				<combo text="Roof shape" key="roof:shape">
 					<list_entry value="flat" icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg"/>
 					<list_entry value="gabled" icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg"/>
-					<list_entry value="hipped"  display_value="hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg"/>
-					<list_entry value="half-hipped"  display_value="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg"/>
+					<list_entry value="half-hipped"  display_value="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg"/>
+					<list_entry value="hipped"  display_value="hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg"/>
 					<list_entry value="pyramidal"  display_value="pyramidal" icon="http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg"/>
 					<list_entry value="gambrel"  display_value="gambrel" icon="http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg"/>
 					<list_entry value="mansard"  display_value="mansard" icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg"/>
@@ -153,7 +153,7 @@
 				<text text="Roof colour" key="roof:colour"/>
 				<!-- we need to agree some values!!! -->
 				<combo text="Roof material" key="roof:material" delete_if_empty="true">
-					<list_entry value="roofTiles" short_description="Warning this may change!" 
+					<list_entry value="roofTiles" short_description="Warning this may change!" 		icon="http://openstreetmap.pl/kendzi/preset/roof_roofTiles.png" 
 						/>
 					<list_entry value="roofingFelt" short_description="Warning this may change!" 
 						/>
@@ -201,41 +201,47 @@
             
 <!--             <space /> -->
             <combo key="3dr:type" text="&lt;html&gt;&lt;b&gt;Roof type&lt;/b&gt;&lt;/html&gt;" match="key">
-            	<list_entry value="0.0" short_description="flat" 		icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg" />
-            	<list_entry value="0.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof0_1.jpg"/>
-            	<list_entry value="0.2" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof0_2.jpg"/>
-            	<list_entry value="0.3" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof0_3.jpg"/>
-				<list_entry value="1.0" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof1_0.jpg"   />
-				<list_entry value="1.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof1_1.jpg"   />
-				<list_entry value="2.0" short_description="gabled" 		icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg" />
-				<list_entry value="2.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof2_1.jpg" />
-				<list_entry value="2.2" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof2_2.jpg" />
-				<list_entry value="2.3" short_description="hipped"  	icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg" />
-				<list_entry value="2.4" short_description="half-hipped" icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg" />
-				<list_entry value="2.5" short_description="pyramidal"  	icon="http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg" />
-				<list_entry value="2.6" short_description=""  			icon="http://openstreetmap.pl/kendzi/preset/Roof2_6.jpg" />
-				<list_entry value="2.7" short_description=""  			icon="http://openstreetmap.pl/kendzi/preset/Roof2_7.jpg" />
-				<list_entry value="2.8" short_description=""  			icon="http://openstreetmap.pl/kendzi/preset/Roof2_8.jpg" />
-				<list_entry value="2.9" short_description=""  			icon="http://openstreetmap.pl/kendzi/preset/Roof2_9.jpg" />
-				<list_entry value="3.0" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof3_0.jpg" />
-				<list_entry value="3.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof3_1.jpg" />
-				<list_entry value="3.2" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof3_2.jpg" />
-				<list_entry value="3.3" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof3_3.jpg" />
-				<list_entry value="3.4" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof3_4.jpg" />
-				<list_entry value="4.0" short_description="gambrel" 	icon="http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg" />
-				<list_entry value="4.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof4_1.jpg" />
-				<list_entry value="4.2" short_description="mansard" 	icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg" />
-				<list_entry value="4.2.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof4_2_1.jpg" />
-				<list_entry value="5.0"  />
-				<list_entry value="5.2"  />
-				<list_entry value="5.6" short_description="dome" 		icon="http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg" />
-				<list_entry value="6.0"  />
-				<list_entry value="6.2"  />
-				<list_entry value="6.3"  />
-				<list_entry value="6.4.4" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof6_4_4.jpg" />
-				<list_entry value="9.0" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof9_0.jpg" />
-				<list_entry value="9.1" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof9_1.jpg" />
-				<list_entry value="9.2" short_description="" 			icon="http://openstreetmap.pl/kendzi/preset/Roof9_2.jpg" />
+            	<list_entry value="0.0" short_description="flat" 			icon="http://openstreetmap.pl/kendzi/preset/Roof0_0.jpg" />
+            	<list_entry value="0.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof0_1.jpg"/>
+            	<list_entry value="0.2" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof0_2.jpg"/>
+            	<list_entry value="0.3" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof0_3.jpg"/>
+				<list_entry value="1.0" short_description="skillion"		icon="http://openstreetmap.pl/kendzi/preset/Roof1_0.jpg"   />
+				<list_entry value="1.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof1_1.jpg"   />
+				<list_entry value="2.0" short_description="gabled" 			icon="http://openstreetmap.pl/kendzi/preset/Roof2_0.jpg" />
+				<list_entry value="2.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof2_1.jpg" />
+				<list_entry value="2.2" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof2_2.jpg" />
+				<list_entry value="2.3" short_description="half-hipped"		icon="http://openstreetmap.pl/kendzi/preset/Roof2_3.jpg" />
+				<list_entry value="2.4" short_description="hipped"			icon="http://openstreetmap.pl/kendzi/preset/Roof2_4.jpg" />
+				<list_entry value="2.5" short_description="pyramidal" 	 	icon="http://openstreetmap.pl/kendzi/preset/Roof2_5.jpg" />
+				<list_entry value="2.6" short_description=""  				icon="http://openstreetmap.pl/kendzi/preset/Roof2_6.jpg" />
+				<list_entry value="2.7" short_description=""  				icon="http://openstreetmap.pl/kendzi/preset/Roof2_7.jpg" />
+				<list_entry value="2.8" short_description=""  				icon="http://openstreetmap.pl/kendzi/preset/Roof2_8.jpg" />
+				<list_entry value="2.9" short_description=""  				icon="http://openstreetmap.pl/kendzi/preset/Roof2_9.jpg" />
+				<list_entry value="3.0" short_description="saltbox" 		icon="http://openstreetmap.pl/kendzi/preset/Roof3_0.jpg" />
+				<list_entry value="3.1" short_description="double_saltbox"	icon="http://openstreetmap.pl/kendzi/preset/Roof3_1.jpg" />
+				<list_entry value="3.2" short_description="corner_saltbox" 	icon="http://openstreetmap.pl/kendzi/preset/Roof3_2.jpg" />
+				<list_entry value="3.3" short_description="triple_saltbox" 	icon="http://openstreetmap.pl/kendzi/preset/Roof3_3.jpg" />
+				<list_entry value="3.4" short_description="quadruple_saltbox"	icon="http://openstreetmap.pl/kendzi/preset/Roof3_4.jpg" />
+				<list_entry value="4.0" short_description="gambrel" 		icon="http://openstreetmap.pl/kendzi/preset/Roof4_0.jpg" />
+				<list_entry value="4.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof4_1.jpg" />
+				<list_entry value="4.2" short_description="mansard" 		icon="http://openstreetmap.pl/kendzi/preset/Roof4_2.jpg" />
+				<list_entry value="4.2.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof4_2_1.jpg" />
+				<list_entry value="4.3" short_description="helm" 			 />
+				<list_entry value="5.0" short_description="round" />
+				<list_entry value="5.2" short_description="half_round" />
+				<list_entry value="5.6" short_description="dome" 			icon="http://openstreetmap.pl/kendzi/preset/Roof5_6.jpg" />
+				<list_entry value="6.0" short_description="three_aisled" />
+				<list_entry value="6.2" short_description="crosspitched" />
+				<list_entry value="6.3" short_description="five_aisled" />
+				<list_entry value="7.1" short_description="sawtooth" />
+				<list_entry value="7.2" short_description="trapeze" />
+				<list_entry value="7.3" short_description="gabled_row" />
+				<list_entry value="7.4" short_description="round_row" />
+				<list_entry value="7.5" short_description="wave" />
+				<list_entry value="6.4.4" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof6_4_4.jpg" />
+				<list_entry value="9.0" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof9_0.jpg" />
+				<list_entry value="9.1" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof9_1.jpg" />
+				<list_entry value="9.2" short_description="" 				icon="http://openstreetmap.pl/kendzi/preset/Roof9_2.jpg" />
 									
             </combo> 
                         

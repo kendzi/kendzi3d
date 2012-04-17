@@ -331,7 +331,7 @@ public class RoofType9_0 extends AbstractRoofType {
      * @param height height
      * @return minimal rectangle
      */
-    protected List<Point3d> findRectangle(List<Point2d> pPolygon, double height) {
+    public static List<Point3d> findRectangle(List<Point2d> pPolygon, double height) {
 
         double minx = Double.MAX_VALUE;
         double miny = Double.MAX_VALUE;
