@@ -30,6 +30,11 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class AutostartToggleAction extends JosmAction {
 
     /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Autostart property key.
      */
     public final static String KENDZI_3D_AUTOSTART = "kendzi3d.autostart";

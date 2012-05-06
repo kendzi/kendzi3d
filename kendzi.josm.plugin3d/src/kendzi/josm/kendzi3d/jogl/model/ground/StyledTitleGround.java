@@ -75,7 +75,7 @@ public class StyledTitleGround extends Ground {
      * @param textureCacheService texture cache service
      */
     public StyledTitleGround(TextureCacheService textureCacheService) {
-        super();
+        super(textureCacheService, null);
         this.textureCacheService = textureCacheService;
     }
 

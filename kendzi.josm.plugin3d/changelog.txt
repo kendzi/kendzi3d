@@ -1,5 +1,11 @@
 [current]
 
+- ground bug fix
+- texture library bug fix
+- debug view - remember settings
+
+
+[2012-05-06]
 - skybox
 - roof type 5.6
 - action for load texture library

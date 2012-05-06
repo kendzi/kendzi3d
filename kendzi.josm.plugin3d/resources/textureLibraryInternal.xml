@@ -61,5 +61,9 @@
 		<textureData fileKey="/textures/fence_balustrade.png" width="0.2"/>
 	</textureSet>
 
+	<!-- Ground -->
+	<textureSet key="ground.unknown">
+		<textureData fileKey="/textures/pd/600px-MarekGrassDehydrated0001.jpg" width="2" height="2" />
+	</textureSet>
 
 </ns2:textureLibrary>

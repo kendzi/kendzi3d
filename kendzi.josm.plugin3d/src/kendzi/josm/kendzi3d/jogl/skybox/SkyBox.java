@@ -6,6 +6,7 @@ import javax.vecmath.Point3d;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
@@ -16,27 +17,20 @@ public class SkyBox {
     @Inject
     private TextureCacheService textureCacheService;
 
+    @Inject
+    private TextureLibraryService textureLibraryService;
+
     public void init() {
 
     }
 
     public void draw(GL2 gl , Camera camera, Perspective3D perspective3d) {
 
-//        Photo photo =  this.photo ;
-
-
         gl.glDisable(GL2.GL_DEPTH_TEST);
         gl.glColor4f((float) 255/255, (float)255/255, (float)255/255, 1f);
 
-        // Enable Alpha Blending (disable alpha testing)
-//        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-//        gl.glEnable(GL2.GL_BLEND);
-
-
-
         gl.glDisable(GL2.GL_LIGHTING);
         gl.glEnable(GL2.GL_TEXTURE_2D);
-
 
         //XXX
         String frontTextureName = "/textures/free/sky1/sfront37.jpg";
@@ -85,9 +79,7 @@ public class SkyBox {
 
         gl.glColor4f((float) 255/255, (float)255/255, (float)255/255, (float) 255/255);
 
-//        gl.glDisable(GL2.GL_BLEND);
         gl.glEnable(GL2.GL_DEPTH_TEST);
-
 
     }
 

@@ -245,6 +245,9 @@ public class TextureCacheService {
 
     public Texture loadTexture(String pName, boolean filter) {
 
+        if (pName == null) {
+            return null;
+        }
         // String fileName = pName;
 
 //        URL textUrl = FileUrlReciverService.getResourceUrl(pName);

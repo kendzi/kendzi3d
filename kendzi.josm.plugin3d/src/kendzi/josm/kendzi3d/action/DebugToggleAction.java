@@ -19,6 +19,7 @@ import javax.swing.ButtonModel;
 
 import kendzi.jogl.model.render.ModelRender;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
@@ -30,6 +31,16 @@ import com.google.inject.Inject;
  *
  */
 public class DebugToggleAction extends JosmAction {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Debug view property key.
+     */
+    public final static String KENDZI_3D_DEBUG_VIEW = "kendzi3d.debug.view";
 
     /**
      * Button models.
@@ -46,6 +57,7 @@ public class DebugToggleAction extends JosmAction {
 
     /**
      * Constructor of debug toggle action.
+     * @param pModelRender model render
      */
     @Inject
     public DebugToggleAction(ModelRender pModelRender) {
@@ -57,7 +69,8 @@ public class DebugToggleAction extends JosmAction {
                 false
         );
 
-        this.selected = true;
+        this.selected = Main.pref.getBoolean(KENDZI_3D_DEBUG_VIEW, false);
+
         this.modelRender = pModelRender;
         // Main.pref.getBoolean("draw.wireframe", false);
         notifySelectedState();
@@ -100,7 +113,7 @@ public class DebugToggleAction extends JosmAction {
      */
     protected void toggleSelectedState() {
         this.selected = !this.selected;
-//        Main.pref.put("draw.wireframe", this.selected);
+        Main.pref.put(KENDZI_3D_DEBUG_VIEW, this.selected);
         notifySelectedState();
 
         setDebugMode(this.selected);

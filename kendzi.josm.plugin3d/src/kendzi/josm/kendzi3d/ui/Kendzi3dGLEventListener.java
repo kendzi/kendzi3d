@@ -34,6 +34,7 @@ import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
@@ -72,6 +73,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     @Inject
     private TextureCacheService textureCacheService;
+
+    /**
+     * Texture library service.
+     */
+    @Inject
+    private TextureLibraryService textureLibraryService;
 
     /**
      * Position of sun. XXX
@@ -461,7 +468,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         if (pType) {
             this.ground = new StyledTitleGround(this.textureCacheService);
         } else {
-            this.ground = new Ground();
+            this.ground = new Ground(this.textureCacheService, this.textureLibraryService);
         }
     }
 

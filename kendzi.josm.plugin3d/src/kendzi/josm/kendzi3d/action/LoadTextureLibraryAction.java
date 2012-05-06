@@ -12,14 +12,17 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.xml.bind.JAXBException;
 
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -88,15 +91,10 @@ public class LoadTextureLibraryAction extends JosmAction {
                 UrlTextureLibrary urlTextureLibrary = new UrlTextureLibrary();
                 urlTextureLibrary.setUrl(file.toURI().toURL());
 
-                int n = JOptionPane.showConfirmDialog(
-                        null,
-                        "Owerwrite values",
-                        "Owerwrite values",
-                        JOptionPane.YES_NO_OPTION);
+                boolean overwrite = showOverwriteDialog();
 
-                if (n ==JOptionPane.YES_OPTION) {
-                    urlTextureLibrary.setOverwrite(true);
-                }
+                urlTextureLibrary.setOverwrite(overwrite);
+
 
                 this.textureLibraryService.loadUserFile(urlTextureLibrary);
             } else {
@@ -139,6 +137,18 @@ public class LoadTextureLibraryAction extends JosmAction {
 //        }
     }
 
+    /**
+     * @return
+     */
+    public boolean showOverwriteDialog() {
+        int n = showNegativeConfirmDialog(
+                null,
+                "Overwrite values",
+                "Overwrite values");
+        boolean overwrite = n ==JOptionPane.YES_OPTION;
+        return overwrite;
+    }
+
     private void showError(Exception e) {
       //custom title, error icon
         JOptionPane.showMessageDialog(null,
@@ -156,4 +166,17 @@ public class LoadTextureLibraryAction extends JosmAction {
     protected void updateEnabledState() {
 //        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
+
+    public static int showNegativeConfirmDialog(Component parentComponent, Object message, String title) {
+        List<Object> options = new ArrayList<Object>();
+        Object defaultOption;
+
+        options.add(UIManager.getString("OptionPane.yesButtonText"));
+        options.add(UIManager.getString("OptionPane.noButtonText"));
+        defaultOption = UIManager.getString("OptionPane.noButtonText");
+
+        return JOptionPane.showOptionDialog(parentComponent, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options.toArray(), defaultOption);
+    }
+
 }

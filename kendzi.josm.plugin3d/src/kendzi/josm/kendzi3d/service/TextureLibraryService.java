@@ -204,7 +204,10 @@ public class TextureLibraryService {
 
     public static List<TextureSet> loadXml(URL url) throws JAXBException, FileNotFoundException {
 
-        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+//        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+
+        JAXBContext jaxbContext=JAXBContext.newInstance( "kendzi.josm.kendzi3d.dto.xsd", TextureLibraryService.class.getClassLoader());
+       // JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
 
         Unmarshaller unmarshaller =
                 jaxbContext.createUnmarshaller();
