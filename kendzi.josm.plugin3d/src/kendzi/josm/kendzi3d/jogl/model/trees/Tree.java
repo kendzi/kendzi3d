@@ -537,7 +537,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         // enable texturing
         gl.glEnable(GL2.GL_TEXTURE_2D);
-        tex.bind();
+        tex.bind(gl);
 
         // replace the quad colours with the texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);

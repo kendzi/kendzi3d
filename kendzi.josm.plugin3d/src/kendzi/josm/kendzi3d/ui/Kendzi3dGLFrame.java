@@ -24,6 +24,8 @@ import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.jogamp.common.GlueGenVersion;
+import com.jogamp.opengl.JoglVersion;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -180,7 +182,17 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     private Canvas makeCanvas(JPanel render) {
 
-        log.info("is set debug for GraphicsConfiguration: " + com.jogamp.opengl.impl.Debug.debug("GraphicsConfiguration"));
+        log.info("is set debug for GraphicsConfiguration: " + jogamp.opengl.Debug.debug("GraphicsConfiguration"));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("JoglVersion: \n");
+        JoglVersion.getInstance().getFullManifestInfo(sb);
+
+        sb.append("\nGlueGenVersion: \n");
+        GlueGenVersion.getInstance().getFullManifestInfo(sb);
+
+        log.info(sb.toString());
+
 
         //create a profile, in this case OpenGL 2 or later
         GLProfile profile = GLProfile.get(GLProfile.GL2);
@@ -189,6 +201,12 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         GLCapabilities capabilities = new GLCapabilities(profile);
 
         setUpCapabilities(capabilities);
+//        // setup z-buffer
+//        capabilities.setDepthBits(16);
+//
+//        // for anti-aliasing
+//        capabilities.setSampleBuffers(true);
+//        capabilities.setNumSamples(2);
 
         //initialize a GLDrawable of your choice
         GLCanvas canvas = new GLCanvas(capabilities);

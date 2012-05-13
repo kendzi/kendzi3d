@@ -48,10 +48,10 @@ public class Ground {
         //gl.glColor3f((float) 188/255, (float)169/255, (float)169/255);
 
         TextureData td = this.textureLibraryService.getTextureDefault("ground.unknown");
-        Texture texture = this.textureCacheService.get(td.getFile());
+        Texture texture = this.textureCacheService.get(gl, td.getFile());
 
-        texture.enable();
-        texture.bind();
+        texture.enable(gl);
+        texture.bind(gl);
 
 
         gl.glBegin(GL2.GL_POLYGON);
@@ -82,7 +82,7 @@ public class Ground {
 
         gl.glEnd();
 
-        texture.disable();
+        texture.disable(gl);
 
         gl.glDisable(GL2.GL_TEXTURE_2D);
     }

@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.net.URL;
 import java.util.HashMap;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 
@@ -107,7 +108,7 @@ public class ModelRender {
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
 
-                boolean meshUseTexture = mesh.hasTexture && getTexture(mesh.materialID, model) != null;
+                boolean meshUseTexture = mesh.hasTexture && getTexture(gl, mesh.materialID, model) != null;
                 if (meshUseTexture) {
                     if (model.useTexture && useTextureDisabled) {
                         // if model is using textures only in some mesh
@@ -116,7 +117,7 @@ public class ModelRender {
                     }
                     //FIXME
 //                    Texture texture = this.textures.get(model.getMaterial(mesh.materialID));
-                    Texture texture = getTexture(mesh.materialID, model);
+                    Texture texture = getTexture(gl, mesh.materialID, model);
 
                     // switch to texture mode and push a new matrix on the stack
                     gl.glMatrixMode(GL2.GL_TEXTURE);
@@ -137,8 +138,8 @@ public class ModelRender {
                     gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 
                     // enable, bind
-                    texture.enable();
-                    texture.bind();
+                    texture.enable(gl);
+                    texture.bind(gl);
                 } else {
 
                     // if model is using textures only in some mesh
@@ -196,10 +197,10 @@ public class ModelRender {
 
 
                 if (meshUseTexture) {
-                    Texture t = getTexture(mesh.materialID, model);
+                    Texture t = getTexture(gl, mesh.materialID, model);
                     //this.textures.get(mesh.materialID);// .get(mesh.materialID);
                     if (t != null) {
-                        t.disable();
+                        t.disable(gl);
                     }
 
                     gl.glMatrixMode(GL2.GL_TEXTURE);
@@ -550,16 +551,16 @@ public class ModelRender {
         this.lastSetMaterial = material;
     }
 
-    private Texture getTexture(int materialId, Model model) {
+    private Texture getTexture(GL gl, int materialId, Model model) {
 
         if (model.getMaterial(materialId).strFile != null) {
 //            if (this.isDebugging) {
 //                log.info("        Material:  " + model.getMaterial(materialId).strFile);
 //            }
 
-            return this.textureCacheService.getTexture(model.getMaterial(materialId).strFile);
+            return this.textureCacheService.getTexture(gl, model.getMaterial(materialId).strFile);
         }
-        return this.textureCacheService.getTexture("/textures/undefined.png");
+        return this.textureCacheService.getTexture(gl, "/textures/undefined.png");
     }
 
 

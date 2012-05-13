@@ -81,7 +81,9 @@ public class AxisLabels {
     public void init() {
 
         this.font = new Font("SansSerif", Font.BOLD, 24);
-        this.axisLabelRenderer = new TextRenderer(this.font);
+        this.axisLabelRenderer = new TextRenderer(this.font );
+        // FIXME don't work ?!
+        this.axisLabelRenderer.setUseVertexArrays(false);
     }
 
     /**

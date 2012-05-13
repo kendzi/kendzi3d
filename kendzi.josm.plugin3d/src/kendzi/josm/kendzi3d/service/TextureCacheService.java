@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.glu.GLU;
 
 import org.apache.log4j.Logger;
 
@@ -84,21 +86,21 @@ public class TextureCacheService {
      *            2. from resources from jar in dir {PLUGIN_JAR}/ <br>
      * @return texture
      */
-    public Texture getTexture(String pName) {
-        return this.get(pName);
+    public Texture getTexture(GL gl, String pName) {
+        return this.get(gl, pName);
     }
-    /**
-     * Get texture from cache or load it to cache.
-     *
-     * @param pName
-     *            file name from: <br>
-     *            1. directory {PLUGIN_DIR_NAME}/textures <br>
-     *            2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
-     * @return texture
-     */
-    public Texture getTextureFromDir(String pName) {
-        return this.get("/textures/" + pName);
-    }
+//    /**
+//     * Get texture from cache or load it to cache.
+//     *
+//     * @param pName
+//     *            file name from: <br>
+//     *            1. directory {PLUGIN_DIR_NAME}/textures <br>
+//     *            2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
+//     * @return texture
+//     */
+//    public Texture getTextureFromDir(String pName) {
+//        return this.get("/textures/" + pName);
+//    }
 
     /**
      * Add texture builder.
@@ -118,8 +120,8 @@ public class TextureCacheService {
      *
      * @depricated
      */
-    public void setTexture(String pName, BufferedImage pImg) throws IOException {
-        this.addTexture(pName, pImg, this.filter);
+    public void setTexture(GL gl, String pName, BufferedImage pImg) throws IOException {
+        this.addTexture(gl, pName, pImg, this.filter);
     }
 
     /**
@@ -169,11 +171,11 @@ public class TextureCacheService {
      * @param pName
      * @return
      */
-    public Texture get(String pName) {
+    public Texture get(GL gl, String pName) {
         Texture texture = this.cache.get(pName);
         if (texture == null) {
 
-            texture = loadTexture(pName, this.filter);
+            texture = loadTexture(gl, pName, this.filter);
 
             if (texture == null && pName != null && this.textureBuilderList != null) {
                 //builders
@@ -189,7 +191,7 @@ public class TextureCacheService {
             }
 
             if (texture == null) {
-                texture = loadTexture(TEXTURES_UNDEFINED_PNG, this.filter);
+                texture = loadTexture(gl, TEXTURES_UNDEFINED_PNG, this.filter);
             }
 
             this.cache.put(pName, texture);
@@ -206,7 +208,7 @@ public class TextureCacheService {
         this.cache.put(pName, tex);
 
     }
-    public void addTexture(String pName, BufferedImage img, boolean filter) throws IOException {
+    public void addTexture(GL gl, String pName, BufferedImage img, boolean filter) throws IOException {
 
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //
@@ -233,8 +235,8 @@ public class TextureCacheService {
             if (filter) {
 
             } else {
-                tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-                tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+                tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+                tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
             }
 
         }
@@ -243,7 +245,7 @@ public class TextureCacheService {
 
     }
 
-    public Texture loadTexture(String pName, boolean filter) {
+    public Texture loadTexture(GL gl, String pName, boolean filter) {
 
         if (pName == null) {
             return null;
@@ -260,6 +262,11 @@ public class TextureCacheService {
         try {
             tex = TextureIO.newTexture(textUrl, filter, null);
         } catch (Exception e) {
+//            gl.getGL4().glGetErrorString
+            int errorCode = gl.glGetError();
+            String errorStr = new String();
+            errorStr = (new GLU().gluErrorString( errorCode ));
+            System.err.println(errorStr);
             log.error("Error loading texture: " + pName + " texture url: " + textUrl, e);
         }
 
@@ -307,8 +314,8 @@ public class TextureCacheService {
 //          tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 
             } else {
-          tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-          tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+          tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+          tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
             }
 //        tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 

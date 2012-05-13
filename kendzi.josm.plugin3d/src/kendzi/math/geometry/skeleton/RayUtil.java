@@ -21,7 +21,7 @@ import javax.vecmath.Vector2d;
 //     operators for:
 //         == to test equality
 //         != to test inequality
-//         Point  = Point ± Vector
+//         Point  = Point   Vector
 //         Vector = Point - Point
 //         Vector = Scalar * Vector    (scalar product)
 //         Vector = Vector * Vector    (3D cross product)

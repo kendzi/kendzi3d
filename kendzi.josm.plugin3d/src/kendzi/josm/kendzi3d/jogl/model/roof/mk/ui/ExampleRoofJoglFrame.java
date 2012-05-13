@@ -49,11 +49,13 @@ public class ExampleRoofJoglFrame extends BaseJoglFrame {
 
         // this is required only for textures file finding. It is used in renderer do load files.
         // if textures are not used but only colored materials it is not required!
-        String locationOfResources = "D:/java/workspace/sun/kendzi.josm.plugin3d";
+        String locationOfResources = "c:/java/workspace/sun/sun/kendzi.josm.plugin3d";
         // service to take files url's
         UrlReciverService fileUrlReciverService = new FileUrlReciverService(locationOfResources);
         // cache for textures files.
         TextureCacheService textureCacheService = new TextureCacheService();
+        textureCacheService.setFilter(true);
+
         // manual injection
         textureCacheService.setFileUrlReciverService(fileUrlReciverService);
 

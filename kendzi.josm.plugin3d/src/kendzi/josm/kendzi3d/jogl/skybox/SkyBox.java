@@ -94,10 +94,10 @@ public class SkyBox {
     public void drawPolygon(GL2 gl, String frontTextureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (frontTextureName!= null) {
-            Texture texture = this.textureCacheService.getTexture(frontTextureName);
+            Texture texture = this.textureCacheService.getTexture(gl, frontTextureName);
 
-            texture.enable();
-            texture.bind();
+            texture.enable(gl);
+            texture.bind(gl);
 
             tc = texture.getImageTexCoords();
         }
@@ -124,9 +124,9 @@ public class SkyBox {
 //        gl.glPopMatrix();
 
         if (frontTextureName!= null) {
-            Texture t = this.textureCacheService.getTexture(frontTextureName);
+            Texture t = this.textureCacheService.getTexture(gl, frontTextureName);
             if (t != null) {
-                t.disable();
+                t.disable(gl);
             }
         }
     }

@@ -71,7 +71,7 @@ public class PhotoRenderer {
 
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName!= null) {
-            Texture texture = this.textureCacheService.getTexture(textureName);
+            Texture texture = this.textureCacheService.getTexture(gl, textureName);
 
 //            // switch to texture mode and push a new matrix on the stack
 //            gl.glMatrixMode(GL2.GL_TEXTURE);
@@ -92,8 +92,8 @@ public class PhotoRenderer {
 //            gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 
             // enable, bind
-            texture.enable();
-            texture.bind();
+            texture.enable(gl);
+            texture.bind(gl);
 
             tc = texture.getImageTexCoords();
 
@@ -165,12 +165,12 @@ public class PhotoRenderer {
         gl.glPopMatrix();
 
         if (textureName!= null) {
-            Texture texture = this.textureCacheService.getTexture(textureName);
+            Texture texture = this.textureCacheService.getTexture(gl, textureName);
 
-            Texture t = this.textureCacheService.getTexture(textureName);
+            Texture t = this.textureCacheService.getTexture(gl, textureName);
             //this.textures.get(mesh.materialID);// .get(mesh.materialID);
             if (t != null) {
-                t.disable();
+                t.disable(gl);
             }
 
             gl.glMatrixMode(GL2.GL_TEXTURE);

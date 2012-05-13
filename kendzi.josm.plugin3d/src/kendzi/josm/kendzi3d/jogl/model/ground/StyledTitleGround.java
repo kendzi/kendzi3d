@@ -107,12 +107,12 @@ public class StyledTitleGround extends Ground {
     /**
      * Draws title.
      *
-     * @param pGl gl
+     * @param gl gl
      * @param e east title key
      * @param n north title key
      * @param pPerspective3d perspective
      */
-    private void drawTitle(GL2 pGl, int e, int n, Perspective3D pPerspective3d) {
+    private void drawTitle(GL2 gl, int e, int n, Perspective3D pPerspective3d) {
 
 
         double xCenter = e * TITLE_LENGTH;
@@ -166,36 +166,36 @@ public class StyledTitleGround extends Ground {
                 }
 
             } else {
-                texture = this.textureCacheService.getTexture(TextureCacheService.TEXTURES_UNDEFINED_PNG);
+                texture = this.textureCacheService.getTexture(gl, TextureCacheService.TEXTURES_UNDEFINED_PNG);
             }
 
         } else {
-            texture = this.textureCacheService.getTexture(textName);
+            texture = this.textureCacheService.getTexture(gl, textName);
         }
 
-        pGl.glEnable(GL2.GL_LIGHTING);
-        pGl.glEnable(GL2.GL_TEXTURE_2D);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_TEXTURE_2D);
 
 
-        texture.enable();
-        texture.bind();
+        texture.enable(gl);
+        texture.bind(gl);
 
-        pGl.glBegin(GL2.GL_QUADS);
-        pGl.glNormal3d(0d, 1d, 0d);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glNormal3d(0d, 1d, 0d);
 
         double h = -0.1d;
 
-        pGl.glTexCoord2d(0, 1);
-        pGl.glVertex3d(x1, h, z1);
-        pGl.glTexCoord2d(1, 1);
-        pGl.glVertex3d(x2, h, z2);
-        pGl.glTexCoord2d(1, 0);
-        pGl.glVertex3d(x3, h, z3);
-        pGl.glTexCoord2d(0, 0);
-        pGl.glVertex3d(x4, h, z4);
-        pGl.glEnd();
+        gl.glTexCoord2d(0, 1);
+        gl.glVertex3d(x1, h, z1);
+        gl.glTexCoord2d(1, 1);
+        gl.glVertex3d(x2, h, z2);
+        gl.glTexCoord2d(1, 0);
+        gl.glVertex3d(x3, h, z3);
+        gl.glTexCoord2d(0, 0);
+        gl.glVertex3d(x4, h, z4);
+        gl.glEnd();
 
-        texture.disable();
+        texture.disable(gl);
     }
 
 

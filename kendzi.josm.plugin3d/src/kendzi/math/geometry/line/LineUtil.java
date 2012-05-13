@@ -80,7 +80,7 @@ public class LineUtil {
 	 * @return Point of crossing line with Line Segment. Or null if they don't cross
 	 */
 	public static Point2d crossLineWithLineSegment(Point2d lA, Point2d lB, Point2d sC, Point2d sD) {
-		// Sprawdzanie, czy jakiœ punkt nale¿y do drugiego odcinka
+		// Sprawdzanie, czy jakis punkt nalezy do drugiego odcinka
 		if (matrixDet(lA, lB, sC) == 0) {
 			return new Point2d(sC.x, sC.y);
 		} else if (matrixDet(lA, lB, sD) == 0) {
@@ -110,7 +110,7 @@ public class LineUtil {
 	 * @return
 	 */
 	public static Point2d crossLineSegment(Point2d A, Point2d B, Point2d C, Point2d D) {
-		// Sprawdzanie, czy jakiœ punkt nale¿y do drugiego odcinka
+		// Sprawdzanie, czy jakis punkt nalezy do drugiego odcinka
 		if ((pointLiesOnLineSegment(A.x, A.y, B.x, B.y, C.x, C.y))) {
 			// Line Segment end C lies on the Line Segment |AB|
 			return new Point2d(C.x,C.y);
@@ -136,7 +136,7 @@ public class LineUtil {
 				//System.out.println("Odcinki sie NIE przecinaja");
 				return null;
 			} else {
-				// znaki wyznaczników sa równe
+				// znaki wyznacznikow sa rowne
 //				System.out.println("Odcinki sie przecinaja- punkty leza po przeciwnych stronach");
 
 				return lineCrossPoint(A.x, A.y, B.x, B.y, C.x, C.y, D.x, D.y);

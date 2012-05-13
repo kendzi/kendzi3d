@@ -1,5 +1,8 @@
 [current]
 
+- new version of JOGL b57
+
+[13-05-2012]
 - ground bug fix
 - texture library bug fix
 - debug view - remember settings
