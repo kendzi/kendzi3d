@@ -1,5 +1,9 @@
 [current]
 
+[22-05-2012]
+- fix for roof:orientation
+- fix for resource loader (loading file pluginProperties.properties)
+- fix for downloading configuration from wiki action
 - new version of JOGL b57
 
 [13-05-2012]

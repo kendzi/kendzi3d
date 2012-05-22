@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 public class Vector2dUtil {
 
-    private static Vector2d orthogonal(Vector2d v) {
+    public static Vector2d orthogonal(Vector2d v) {
         return new Vector2d(-v.y, v.x);
     }
 

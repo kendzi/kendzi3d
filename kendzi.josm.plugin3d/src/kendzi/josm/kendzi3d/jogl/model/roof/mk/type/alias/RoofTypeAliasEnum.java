@@ -22,7 +22,8 @@ public enum RoofTypeAliasEnum {
     HIPPED("hipped"),
     PITCHED("pitched"),
     PYRAMIDAL("pyramidal"),
-    SKILLION("skillion")
+    SKILLION("skillion"),
+    DOME("dome")
     ;
 
     private String key;

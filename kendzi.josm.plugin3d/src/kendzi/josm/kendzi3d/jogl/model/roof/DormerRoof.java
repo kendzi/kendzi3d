@@ -34,6 +34,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.Direction;
@@ -160,7 +161,9 @@ public class DormerRoof extends Roof {
         = new  DormerRoofModel();
 
         roof.setBuilding(new PolygonList2d(this.points));
-        roof.setRoofType(Parser.parseRoofType(type));
+        RoofType roofType = Parser.parseRoofType(type);
+        roof.setRoofType(roofType);
+        roof.setRoofTypeParameter(Parser.parseRoofTypeParameter(roofType, type));
 
         roof.setDormers(Parser.parseMultipleDormers(dormer));
         roof.setDormersFront(Parser.parseSiteDormers("front",keys));

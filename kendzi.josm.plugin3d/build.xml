@@ -33,7 +33,7 @@
    
 	<property name="commit.message" value="Commit message" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="4157" />
+	<property name="plugin.main.version" value="5241" />
 	<property name="plugin.author" value="Tomasz Kędziora (Kendzi)" />
 	
     <!--
@@ -108,7 +108,11 @@
             </fileset>
         </copy>
     	<copy todir="${plugin.build.dir}/lib">
-    	   <fileset dir="lib"/>
+    	   <fileset dir="lib">
+    	   		<exclude name="**/jogl-java-src.zip"/>
+    	   		<exclude name="**/gluegen-java-src.zip"/>
+    	   		<exclude name="**/skip_build/**"/>
+    		</fileset>
     	</copy>
     	
     	<echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
@@ -216,7 +220,7 @@
     -->
 	<target name="publish-local-ftp-dir" depends="dist">
 		
-	    <property name="local-ftp-dir" location="d:/projekty/osmWeb/Kendzi3d/snapshot"/>
+	    <property name="local-ftp-dir" location="c:/projekty/osmWeb/Kendzi3d/snapshot"/>
 	
 		<copy file="${plugin.jar}" todir="${local-ftp-dir}/current"/>
         <mkdir dir="${local-ftp-dir}/${build.number}"/>

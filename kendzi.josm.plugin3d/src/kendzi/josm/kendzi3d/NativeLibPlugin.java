@@ -70,7 +70,7 @@ public abstract class NativeLibPlugin extends Plugin {
             }
         }
 
-        return getClass().getResourceAsStream(pFileName);
+        return getResourceAsStream(pFileName);
     }
 
     /**
@@ -307,7 +307,10 @@ public abstract class NativeLibPlugin extends Plugin {
             makeDirs(to);
 
             URL url = getClass().getResource(from);
-            System.out.println("url to res: " + (url == null ? null : url.toString()));
+
+            System.out.println("url to res    : " + (url == null ? null : url.toString()));
+            url = getPluginResourceClassLoader().getResource(from);
+            System.out.println("url to res new: " + (url == null ? null : url.toString()));
 
             String pluginDirName = getPluginDir();
             File pluginDir = new File(pluginDirName);
@@ -375,11 +378,28 @@ public abstract class NativeLibPlugin extends Plugin {
      */
     public InputStream getResourceAsStream(String pName) {
         URL url = getResourceUrl(pName);
+        InputStream ret = null;
         try {
-            return url != null ? url.openStream() : null;
+            ret = url != null ? url.openStream() : null;
         } catch (IOException e) {
-            return null;
+            //
         }
+        if (ret == null) {
+            System.out.println("Can't open stream to resource: " + pName);
+        }
+        return ret;
+    }
+
+    public URL getResourceUrl(String pResName) {
+
+        if (pResName != null) {
+            pResName = pResName.trim();
+            if (pResName.startsWith("/")) {
+                pResName = pResName.substring(1);
+            }
+        }
+
+        return getPluginResourceClassLoader().getResource(pResName);
     }
 
     /**
@@ -394,7 +414,7 @@ public abstract class NativeLibPlugin extends Plugin {
      *            started from "/" of jar or project in eclipse
      * @return url to resource
      */
-    public static URL getResourceUrl(String pResName) {
+    public static URL getResourceUrl_OLD(String pResName) {
         // FIXME make util with FileUrlReciverService.getResourceUrl(...)
 
         URL resource = NativeLibPlugin.class.getResource("");

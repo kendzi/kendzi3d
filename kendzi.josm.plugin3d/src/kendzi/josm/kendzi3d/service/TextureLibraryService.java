@@ -226,7 +226,7 @@ public class TextureLibraryService {
             dir.mkdirs();
         }
 
-        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd", TextureLibraryService.class.getClassLoader());
         Marshaller marshaller=jaxbContext.
                createMarshaller();
 

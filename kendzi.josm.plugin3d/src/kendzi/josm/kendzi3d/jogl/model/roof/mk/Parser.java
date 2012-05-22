@@ -13,6 +13,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
+import kendzi.josm.kendzi3d.util.StringUtil;
 
 public class Parser {
 
@@ -48,6 +49,32 @@ public class Parser {
                 return rt;
             }
         }
+        return null;
+    }
+
+    public static Integer parseRoofTypeParameter(RoofType pRoofType, String pKey) {
+        // FIXME it should return roof shape enum not roof builder class!
+
+        if (pRoofType == null) {
+            return null;
+        }
+
+        if (pKey == null) {
+            return null;
+        }
+
+        int l = pRoofType.getPrefixKey().length();
+        if (pKey.length() < l + 1) {
+            return null;
+        }
+
+        String key = pKey.substring(l + 1);
+        try {
+            return Integer.parseInt(key);
+        } catch (Exception e) {
+            //
+        }
+
         return null;
     }
 
@@ -172,11 +199,19 @@ public class Parser {
 
     public static BuildingRoofOrientation parseOrientation(Map<String, String> pKeys) {
         try {
-            String key = pKeys.get("building:roof:orientation");
-            if (key == null) {
+
+            String key = pKeys.get("roof:orientation");
+
+            if (StringUtil.isBlankOrNull(key)) {
+                key = pKeys.get("building:roof:orientation");
+            }
+
+            if (StringUtil.isBlankOrNull(key)) {
                 return null;
             }
+
             return BuildingRoofOrientation.valueOf(key);
+
         } catch (java.lang.IllegalArgumentException e) {
             //
         }
