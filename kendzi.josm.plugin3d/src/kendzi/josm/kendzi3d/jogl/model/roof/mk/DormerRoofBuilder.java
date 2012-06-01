@@ -51,6 +51,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
@@ -80,6 +81,7 @@ public class DormerRoofBuilder {
         new RoofTypeHipped(),
         new RoofTypePyramidal(),
         new RoofTypeDome(),
+        new RoofTypeOnion(),
 
         // normal types
         new RoofType0_0(),

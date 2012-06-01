@@ -155,7 +155,7 @@ public class ModelRender {
                     Material faceMaterial = getFaceMaterial(model, mesh, face);
 //                    materialchanged = isMaterialChanged(faceMaterial, lastMaterial)
                     if (isMaterialChanged(faceMaterial, this.lastSetMaterial)) {
-                //        setupMaterial(gl, faceMaterial);
+                        setupMaterial(gl, faceMaterial);
                     }
 
 //                    boolean setupMaterials = setupMaterials(materialChanged, gl, model, mesh, face);
@@ -454,7 +454,7 @@ public class ModelRender {
     }
 
     private boolean isMaterialChanged(Material material, Material lastMaterial) {
-        return material == null || material.equals(lastMaterial);
+        return material == null || !material.equals(lastMaterial);
     }
 
     private void setupMaterials(Material material, GL2 pGl) {

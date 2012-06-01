@@ -1,4 +1,10 @@
 <pointModels>
+<!-- 
+* scale - scale functions:
+	- scaleHeight(a,default)
+	- normalHeight(a, default)
+	- number
+ -->
 	<pointModel id="1" matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="0.154" />
 	<pointModel id="2" matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
@@ -7,4 +13,7 @@
 		translateX="0" translateY="65" translateZ="0" scale="scaleHeight(0.0154,20)" />
 	<pointModel id="4" matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
 		translateX="0" translateY="65" translateZ="0" scale="normalHeight(0.8,20)" />
+	
+	<pointModel id="4" matcher="(emergency=fire_hydrant)" model="/models/pd/fire_hydrant.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1)" />
 </pointModels> 

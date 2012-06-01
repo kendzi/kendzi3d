@@ -198,7 +198,7 @@ public class RoofType8_0 extends AbstractRoofType {
     }
 
 
-    private Bend [] getBends(Map<MeasurementKey, Measurement> measurements, Circle circle) {
+    protected Bend [] getBends(Map<MeasurementKey, Measurement> measurements, Circle circle) {
 
         int numOfBend = getNumOfBend(measurements);
 
@@ -265,11 +265,11 @@ public class RoofType8_0 extends AbstractRoofType {
         return ret;
     }
 
-    class Bend {
+    public static class Bend {
         private double height;
         private double radius;
 
-        private Bend(double height, double radius) {
+        public Bend(double height, double radius) {
             super();
             this.height = height;
             this.radius = radius;
@@ -304,11 +304,11 @@ public class RoofType8_0 extends AbstractRoofType {
     }
 
 
-    private boolean isSoft(Integer pRoofParameter) {
+    protected boolean isSoft(Integer pRoofParameter) {
         return pRoofParameter == null;
     }
 
-    private int getIsection(Integer pRoofParameter) {
+    protected int getIsection(Integer pRoofParameter) {
         final int def = 9;
 
         if (pRoofParameter == null) {

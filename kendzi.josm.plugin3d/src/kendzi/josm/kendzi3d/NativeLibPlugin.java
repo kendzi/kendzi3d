@@ -218,17 +218,21 @@ public abstract class NativeLibPlugin extends Plugin {
         method.setAccessible(true);
 
         File library = new File(getPluginDir() + "/");
-        if (library.exists()) {
-            System.out.println("loading lib: " + library.getAbsoluteFile());
-        } else {
-            System.err.println("lib don't exist!: " + library.getAbsoluteFile());
-        }
-
-        method.invoke(sysLoader, new Object[] { library.toURI().toURL() });
+//        if (library.exists()) {
+//            System.out.println("loading lib: " + library.getAbsoluteFile());
+//        } else {
+//            System.err.println("lib don't exist!: " + library.getAbsoluteFile());
+//        }
+       // XXX this line breaks class loader on linux !
+       // method.invoke(sysLoader, new Object[] { library.toURI().toURL() });
 
         for (int i = 0; i < pLiblaryNamesList.size(); i++) {
             library = new File(getPluginDir() + "/" + pLiblaryNamesList.get(i));
-            System.out.println("loadin lib: " + library.getAbsoluteFile());
+            if (library.exists()) {
+                System.out.println("loading lib: " + library.getAbsoluteFile());
+            } else {
+                System.err.println("lib don't exist!: " + library.getAbsoluteFile());
+            }
             method.invoke(sysLoader, new Object[] { library.toURI().toURL() });
         }
     }
@@ -306,11 +310,11 @@ public abstract class NativeLibPlugin extends Plugin {
             System.out.println("copying file from jar: " + from + " to: " + to);
             makeDirs(to);
 
-            URL url = getClass().getResource(from);
-
-            System.out.println("url to res    : " + (url == null ? null : url.toString()));
-            url = getPluginResourceClassLoader().getResource(from);
-            System.out.println("url to res new: " + (url == null ? null : url.toString()));
+//            URL url = getClass().getResource(from);
+//
+//            System.out.println("url to res    : " + (url == null ? null : url.toString()));
+//            url = getPluginResourceClassLoader().getResource(from);
+//            System.out.println("url to res new: " + (url == null ? null : url.toString()));
 
             String pluginDirName = getPluginDir();
             File pluginDir = new File(pluginDirName);
@@ -318,8 +322,23 @@ public abstract class NativeLibPlugin extends Plugin {
                 pluginDir.mkdirs();
             }
             FileOutputStream out = new FileOutputStream(new File(pluginDirName, to));
-            InputStream in = getResourceAsStream(from);
+
+            URL fromUrl = getResourceUrl(from);
+            if (fromUrl == null) {
+                throw new Exception("Can't get url for from location: " + from);
+            }
+
+            InputStream in = null;
+            try {
+                in = fromUrl.openStream();
+            } catch (IOException e) {
+                throw new Exception("Can't open stream to resource: " + fromUrl, e);
+            }
+
+
+            //InputStream in = getResourceAsStream(from);
             //            InputStream in = getClass().getResourceAsStream(from);
+
             byte[] buffer = new byte[8192];
             long l = 0;
             for (int len = in.read(buffer); len > 0; len = in.read(buffer)) {
@@ -328,11 +347,11 @@ public abstract class NativeLibPlugin extends Plugin {
             }
             in.close();
             out.close();
-            System.out.println("end of copying bytes: " + l + " from file: " + from);
+            System.out.println("end of copying bytes: " + l + " from file: " + from + " at url: " + fromUrl);
 
 
-            System.out.println(this.getClass().getResource(""));
-            System.out.println(this.getClass().getResource("/"));
+//            System.out.println(this.getClass().getResource(""));
+//            System.out.println(this.getClass().getResource("/"));
 
         } catch (java.lang.NullPointerException e) {
             // for debbuging and testing I don't care.
