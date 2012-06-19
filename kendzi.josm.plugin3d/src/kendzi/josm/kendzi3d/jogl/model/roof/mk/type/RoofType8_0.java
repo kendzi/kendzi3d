@@ -26,6 +26,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
@@ -49,8 +50,8 @@ public class RoofType8_0 extends AbstractRoofType {
     private static final Logger log = Logger.getLogger(RoofType8_0.class);
 
     @Override
-    public String getPrefixKey() {
-        return "8.0";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE8_0;
     }
 
     @Override

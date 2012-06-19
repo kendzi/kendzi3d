@@ -20,8 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
 public class RoofTypeGambrel extends RoofType4_0 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.GAMBREL.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.GAMBREL;
     }
 
 }

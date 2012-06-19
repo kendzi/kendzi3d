@@ -20,8 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_3;
 public class RoofTypeHalfHipped extends RoofType2_3 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.HALF_HIPPED.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.HALF_HIPPED;
     }
 
 }

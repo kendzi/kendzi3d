@@ -18,6 +18,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 /**
  * Roof type 0.3.
@@ -28,8 +29,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 public class RoofType0_3 extends RoofType0 {
 
     @Override
-    public String getPrefixKey() {
-        return "0.3";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE0_3;
     }
 
     @Override

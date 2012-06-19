@@ -9,6 +9,8 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -23,8 +25,8 @@ public class RoofType2_6 extends RoofType2_7 {
     private static final Logger log = Logger.getLogger(RoofType2_6.class);
 
     @Override
-    public String getPrefixKey() {
-        return "2.6";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE2_6;
     }
 
 

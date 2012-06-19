@@ -20,8 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 public class RoofTypeDome extends RoofType5_6 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.DOME.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.DOME;
     }
 
 }

@@ -35,6 +35,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpac
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
@@ -54,8 +55,8 @@ public class RoofType2_1 extends RectangleRoofType{
     private static final Logger log = Logger.getLogger(RoofType2_1.class);
 
     @Override
-    public String getPrefixKey() {
-        return "2.1";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE2_1;
     }
 
     @Override

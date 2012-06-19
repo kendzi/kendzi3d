@@ -13,6 +13,7 @@ import java.util.Map;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 import org.apache.log4j.Logger;
 
@@ -29,8 +30,8 @@ public class RoofType2_4 extends RoofType2_3{
     private static final Logger log = Logger.getLogger(RoofType2_4.class);
 
     @Override
-    public String getPrefixKey() {
-        return "2.4";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE2_4;
     }
 
     @Override

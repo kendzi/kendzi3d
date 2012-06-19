@@ -20,8 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
 public class RoofTypeFlat extends RoofType0_0 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.FLAT.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.FLAT;
     }
 
 }

@@ -1,6 +1,8 @@
 [current]
+- support for roof type 4.2
 
 [2012-06-01]
+- support for roof type 8.0
 - tag emergency=fire_hydrant
 - tag roof:shape=onion
 - fix for loading resource on linux

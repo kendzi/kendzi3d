@@ -16,10 +16,11 @@ import javax.vecmath.Point2d;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 public interface RoofType {
 
-    public String getPrefixKey();
+    public RoofTypeAliasEnum getPrefixKey();
 
     public boolean isPrefixParameter();
 

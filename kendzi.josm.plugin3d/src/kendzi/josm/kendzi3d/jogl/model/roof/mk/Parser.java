@@ -45,7 +45,7 @@ public class Parser {
             return null;
         }
         for (RoofType rt : DormerRoofBuilder.roofTypes) {
-            if (pKey.startsWith(rt.getPrefixKey())) {
+            if (pKey.startsWith(rt.getPrefixKey().getKey())) {
                 return rt;
             }
         }
@@ -63,7 +63,7 @@ public class Parser {
             return null;
         }
 
-        int l = pRoofType.getPrefixKey().length();
+        int l = pRoofType.getPrefixKey().getKey().length();
         if (pKey.length() < l + 1) {
             return null;
         }

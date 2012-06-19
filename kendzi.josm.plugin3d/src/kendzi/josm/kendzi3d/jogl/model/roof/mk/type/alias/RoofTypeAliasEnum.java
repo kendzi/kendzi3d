@@ -15,6 +15,33 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
  *
  */
 public enum RoofTypeAliasEnum {
+    ROOF_TYPE0_0("0.0"),
+    ROOF_TYPE0_1("0.1"),
+    ROOF_TYPE0_2("0.2"),
+    ROOF_TYPE0_3("0.3"),
+    ROOF_TYPE0_4("0.4"),
+
+    ROOF_TYPE1_0("1.0"),
+    ROOF_TYPE1_1("1.1"),
+
+    ROOF_TYPE2_0("2.1"),
+    ROOF_TYPE2_1("2.1"),
+    ROOF_TYPE2_2("2.2"),
+    ROOF_TYPE2_3("2.3"),
+    ROOF_TYPE2_4("2.4"),
+    ROOF_TYPE2_5("2.5"),
+    ROOF_TYPE2_6("2.6"),
+    ROOF_TYPE2_7("2.7"),
+    ROOF_TYPE2_8("2.8"),
+    ROOF_TYPE2_9("2.9"),
+
+    ROOF_TYPE4_0("4.0"),
+    ROOF_TYPE4_2("4.2"),
+
+    ROOF_TYPE5_6("5.6"),
+    ROOF_TYPE8_0("8.0"),
+    ROOF_TYPE9_0("9.0"),
+
     FLAT("flat"),
     GABLED("gabled"),
     GAMBREL("gambrel"),

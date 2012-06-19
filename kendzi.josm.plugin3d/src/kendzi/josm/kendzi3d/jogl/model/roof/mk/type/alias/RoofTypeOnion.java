@@ -25,8 +25,8 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 public class RoofTypeOnion extends RoofType8_0 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.ONION.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ONION;
     }
 
 

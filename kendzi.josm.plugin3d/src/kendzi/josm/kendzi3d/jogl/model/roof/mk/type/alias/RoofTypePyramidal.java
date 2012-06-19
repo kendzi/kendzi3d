@@ -20,8 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_5;
 public class RoofTypePyramidal extends RoofType2_5 {
 
     @Override
-    public String getPrefixKey() {
-        return RoofTypeAliasEnum.PYRAMIDAL.getKey();
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.PYRAMIDAL;
     }
 
 }

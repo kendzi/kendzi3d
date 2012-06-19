@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,26 +33,23 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygon;
-import kendzi.math.geometry.polygon.split.SplitPolygons;
 
 import org.apache.log4j.Logger;
 
 /**
- * Roof type 4.0.
+ * Roof type 4.2.
  *
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType4_0 extends RectangleRoofType{
+public class RoofType4_2 extends RectangleRoofType{
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType4_0.class);
+    private static final Logger log = Logger.getLogger(RoofType4_2.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.ROOF_TYPE4_0;
+        return RoofTypeAliasEnum.ROOF_TYPE4_2;
     }
 
     @Override
@@ -139,20 +137,35 @@ public class RoofType4_0 extends RectangleRoofType{
         meshRoof.materialID = roofMaterialIndex;
         meshRoof.hasTexture = true;
 
-        Point2d rightTopPoint = new Point2d(pRecWidth, pRecHeight - l2);
-        Point2d rightMiddlePoint = new Point2d(pRecWidth, 0.5d * pRecHeight);
-        Point2d rightBottomPoint = new Point2d(pRecWidth, l2);
+        double halfRecHeight = 0.5d * pRecHeight;
 
-        Point2d leftTopPoint = new Point2d(0, pRecHeight - l2);
-        Point2d leftMiddlePoint = new Point2d(0, 0.5d * pRecHeight);
-        Point2d leftBottomPoint = new Point2d(0, l2);
+        Point2d rightTop = new Point2d(pRecWidth, pRecHeight);
+        Point2d rightMiddleTopPoint = new Point2d(pRecWidth - l2, pRecHeight - l2);
+        Point2d rightCenterPoint = new Point2d(pRecWidth - halfRecHeight, halfRecHeight);
+        Point2d rightMiddleBottomPoint = new Point2d(pRecWidth - l2, l2);
+        Point2d rightBottom = new Point2d(pRecWidth, 0);
+
+        Point2d leftTop = new Point2d(0, pRecHeight);
+        Point2d leftMiddleTopPoint = new Point2d(l2, pRecHeight - l2);
+        Point2d leftCenterPoint = new Point2d(halfRecHeight, halfRecHeight);
+        Point2d leftMiddleBottomPoint = new Point2d(l2, l2);
+        Point2d leftBottom = new Point2d(0, 0);
 
 
 
+        LinePoints2d tLine = new LinePoints2d(leftMiddleTopPoint, rightMiddleTopPoint);
+        LinePoints2d mLine = new LinePoints2d(leftCenterPoint, rightCenterPoint);
+        LinePoints2d bLine = new LinePoints2d(leftMiddleBottomPoint, rightMiddleBottomPoint);
 
-        LinePoints2d tLine = new LinePoints2d(leftTopPoint, rightTopPoint);
-        LinePoints2d mLine = new LinePoints2d(leftMiddlePoint, rightMiddlePoint);
-        LinePoints2d bLine = new LinePoints2d(leftBottomPoint, rightBottomPoint);
+        LinePoints2d lLine = new LinePoints2d(leftMiddleBottomPoint, leftMiddleTopPoint);
+        LinePoints2d rLine = new LinePoints2d(rightMiddleTopPoint, rightMiddleBottomPoint);
+
+        LinePoints2d lbLine = new LinePoints2d(leftBottom, leftCenterPoint);
+        LinePoints2d ltLine = new LinePoints2d(leftCenterPoint, leftTop);
+
+        LinePoints2d rtLine = new LinePoints2d(rightTop, rightCenterPoint);
+        LinePoints2d rbLine = new LinePoints2d(rightCenterPoint, rightBottom);
+
 
 
         Vector3d nt = new Vector3d(0, l2  , -(h2));
@@ -165,36 +178,66 @@ public class RoofType4_0 extends RectangleRoofType{
         Vector3d nb = new Vector3d(0, l2  , (h2));
         nb.normalize();
 
+        Vector3d nr = new Vector3d(h2, l2  , 0);
+        nr.normalize();
+        Vector3d nmr = new Vector3d((h1 - h2), (pRecHeight * 0.5d) - l2  , 0);
+        nmr.normalize();
+        Vector3d nl = new Vector3d(-h2, l2  , 0);
+        nl.normalize();
+        Vector3d nml = new Vector3d(-(h1 - h2), (pRecHeight * 0.5d) - l2  , 0);
+        nml.normalize();
+
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-        SplitPolygon middleSplit = PolygonSplitUtil.splitPolygon(borderPolygon, mLine);
+        MultiPolygonList2d topMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftTop,  leftMiddleTopPoint, rightMiddleTopPoint, rightTop)));
+        MultiPolygonList2d topMiddleMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftMiddleTopPoint, leftCenterPoint, rightCenterPoint, rightMiddleTopPoint)));
+        MultiPolygonList2d bottomMiddleMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftMiddleBottomPoint, rightMiddleBottomPoint, rightCenterPoint, leftCenterPoint)));
+        MultiPolygonList2d bottomMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftBottom, rightBottom, rightMiddleBottomPoint, leftMiddleBottomPoint)));
 
-        MultiPolygonList2d topMP = middleSplit.getTopMultiPolygons();
-        MultiPolygonList2d bottomMP = middleSplit.getBottomMultiPolygons();
+        MultiPolygonList2d leftMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftBottom,  leftMiddleBottomPoint, leftMiddleTopPoint, leftTop)));
+        MultiPolygonList2d leftMiddleMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(leftMiddleBottomPoint,  leftCenterPoint, leftMiddleTopPoint)));
+
+        MultiPolygonList2d rightMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(rightBottom, rightTop, rightMiddleTopPoint, rightMiddleBottomPoint)));
+        MultiPolygonList2d rightMiddleMP = borderPolygon.intersection(
+                new PolygonList2d(Arrays.asList(rightMiddleBottomPoint, rightMiddleTopPoint, rightCenterPoint)));
 
 
-        SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(topMP, tLine);
 
-        topMP = topSplit.getTopMultiPolygons();
-        MultiPolygonList2d topMiddleMP = topSplit.getBottomMultiPolygons();
-
-
-        SplitPolygons bottomSplit = PolygonSplitUtil.splitMultiPolygon(bottomMP, bLine);
-
-        bottomMP = bottomSplit.getBottomMultiPolygons();
-        MultiPolygonList2d bottomMiddleMP = bottomSplit.getTopMultiPolygons();
+//        SplitPolygon middleSplit = PolygonSplitUtil.splitPolygon(borderPolygon, mLine);
+//
+//        MultiPolygonList2d topMP = middleSplit.getTopMultiPolygons();
+//        MultiPolygonList2d bottomMP = middleSplit.getBottomMultiPolygons();
+//
+//
+//        SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(topMP, tLine);
+//
+//        topMP = topSplit.getTopMultiPolygons();
+//        MultiPolygonList2d topMiddleMP = topSplit.getBottomMultiPolygons();
+//
+//
+//        SplitPolygons bottomSplit = PolygonSplitUtil.splitMultiPolygon(bottomMP, bLine);
+//
+//        bottomMP = bottomSplit.getBottomMultiPolygons();
+//        MultiPolygonList2d bottomMiddleMP = bottomSplit.getTopMultiPolygons();
 
 
         Point3d planeLeftBottomPoint =  new Point3d(
-                leftBottomPoint.x ,
+                leftMiddleBottomPoint.x ,
                 h2,
-                -leftBottomPoint.y);
+                -leftMiddleBottomPoint.y);
 
         Point3d planeRightTopPoint =  new Point3d(
-                rightTopPoint.x ,
+                rightMiddleTopPoint.x ,
                 h2,
-                -rightTopPoint.y);
+                -rightMiddleTopPoint.y);
 
 
 
@@ -210,11 +253,24 @@ public class RoofType4_0 extends RectangleRoofType{
                 planeRightTopPoint,
                 nt);
 
-
         Plane3d planeMiddleTop = new Plane3d(
                 planeRightTopPoint,
                 nmt);
 
+
+        Plane3d planeLeft = new Plane3d(
+                planeLeftBottomPoint,
+                nl);
+        Plane3d planeMiddleLeft = new Plane3d(
+                planeLeftBottomPoint,
+                nml);
+
+        Plane3d planeRight = new Plane3d(
+                planeRightTopPoint,
+                nr);
+        Plane3d planeMiddleRight = new Plane3d(
+                planeRightTopPoint,
+                nmr);
 
 
         Vector3d roofBottomLineVector = new Vector3d(
@@ -227,6 +283,15 @@ public class RoofType4_0 extends RectangleRoofType{
                 0,
                 0);
 
+        Vector3d roofLeftLineVector = new Vector3d(
+                0,
+                0,
+                pRecHeight);
+
+        Vector3d roofRightLineVector = new Vector3d(
+                0,
+                0,
+                -pRecHeight);
 
 
 
@@ -235,13 +300,24 @@ public class RoofType4_0 extends RectangleRoofType{
         RoofTypeUtil.addPolygonToRoofMesh(meshRoof, bottomMiddleMP, planeMiddleBottom, roofBottomLineVector, roofTexture);
         RoofTypeUtil.addPolygonToRoofMesh(meshRoof, bottomMP, planeBottom, roofBottomLineVector, roofTexture);
 
+        RoofTypeUtil.addPolygonToRoofMesh(meshRoof, leftMP, planeLeft, roofLeftLineVector, roofTexture);
+        RoofTypeUtil.addPolygonToRoofMesh(meshRoof, leftMiddleMP, planeMiddleLeft, roofLeftLineVector, roofTexture);
+
+        RoofTypeUtil.addPolygonToRoofMesh(meshRoof, rightMP, planeRight, roofRightLineVector, roofTexture);
+        RoofTypeUtil.addPolygonToRoofMesh(meshRoof, rightMiddleMP, planeMiddleRight, roofRightLineVector, roofTexture);
 
 
-        List<Point2d> borderSplit = RoofTypeUtil.splitBorder(borderPolygon, mLine, bLine, tLine);
+        List<Point2d> borderSplit = RoofTypeUtil.splitBorder(borderPolygon, mLine, bLine, tLine,
+                lLine, rLine, lbLine, ltLine, rtLine, rbLine
+                );
+
+
 
         List<Double> borderHeights = calcHeightList(
-                borderSplit, mLine, bLine, tLine,
-                planeTop, planeMiddleTop, planeMiddleBottom, planeBottom);
+                borderSplit, mLine, bLine, tLine, lLine, rLine, lbLine, ltLine, rtLine, rbLine,
+                planeTop, planeMiddleTop, planeMiddleBottom, planeBottom,
+                planeLeft, planeMiddleLeft, planeRight, planeMiddleRight
+                );
 
 
 
@@ -282,7 +358,9 @@ public class RoofType4_0 extends RectangleRoofType{
     private List<Double> calcHeightList(
             List<Point2d> pSplitBorder,
             LinePoints2d mLine, LinePoints2d bLine,  LinePoints2d tLine,
-            Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom, Plane3d planeBottom) {
+            LinePoints2d lLine, LinePoints2d rLine, LinePoints2d lbLine, LinePoints2d ltLine, LinePoints2d rtLine, LinePoints2d rbLine,
+            Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom, Plane3d planeBottom,
+            Plane3d planeLeft, Plane3d planeMiddleLeft, Plane3d planeRight, Plane3d planeMiddleRight) {
 
 
 
@@ -290,7 +368,10 @@ public class RoofType4_0 extends RectangleRoofType{
         for (Point2d point : pSplitBorder) {
 
            double height = calcHeight(point, mLine, bLine, tLine,
-                   planeTop, planeMiddleTop, planeMiddleBottom, planeBottom);
+                   lLine, rLine, lbLine, ltLine, rtLine, rbLine,
+                   planeTop, planeMiddleTop, planeMiddleBottom, planeBottom,
+                   planeLeft, planeMiddleLeft, planeRight, planeMiddleRight
+                   );
 
            borderHeights.add(height);
 
@@ -312,12 +393,26 @@ public class RoofType4_0 extends RectangleRoofType{
      */
     private double calcHeight(Point2d point,
             LinePoints2d mLine, LinePoints2d bLine,  LinePoints2d tLine,
-            Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom, Plane3d planeBottom) {
+            LinePoints2d lLine, LinePoints2d rLine, LinePoints2d lbLine, LinePoints2d ltLine, LinePoints2d rtLine, LinePoints2d rbLine,
+            Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom, Plane3d planeBottom,
+            Plane3d planeLeft, Plane3d planeMiddleLeft, Plane3d planeRight, Plane3d planeMiddleRight) {
+
 
         double x = point.x;
         double z = -point.y;
 
-        if (mLine.inFront(point)) {
+        if (lbLine.inFront(point) && ltLine.inFront(point)) {
+            if (lLine.inFront(point)) {
+                return planeLeft.calcYOfPlane(x, z);
+            }
+            return planeMiddleLeft.calcYOfPlane(x, z);
+        } else if (rtLine.inFront(point) && rbLine.inFront(point)) {
+            if (rLine.inFront(point)) {
+                return planeRight.calcYOfPlane(x, z);
+            }
+            return planeMiddleRight.calcYOfPlane(x, z);
+
+        } else if (mLine.inFront(point)) {
 
             if (tLine.inFront(point)) {
                 return planeTop.calcYOfPlane(x, z);

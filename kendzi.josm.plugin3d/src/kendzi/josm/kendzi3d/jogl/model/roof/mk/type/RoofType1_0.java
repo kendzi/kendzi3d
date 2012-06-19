@@ -18,6 +18,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 import org.apache.log4j.Logger;
 
@@ -33,8 +34,8 @@ public class RoofType1_0 extends RoofType1_1 {
     private static final Logger log = Logger.getLogger(RoofType1_0.class);
 
     @Override
-    public String getPrefixKey() {
-        return "1.0";
+    public RoofTypeAliasEnum getPrefixKey() {
+        return RoofTypeAliasEnum.ROOF_TYPE1_0;
     }
 
     @Override
