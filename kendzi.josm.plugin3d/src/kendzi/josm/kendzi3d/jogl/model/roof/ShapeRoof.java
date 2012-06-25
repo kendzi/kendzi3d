@@ -72,7 +72,7 @@ public class ShapeRoof extends DormerRoof {
             shape = RoofTypeAliasEnum.FLAT;
         }
 
-        roof.setRoofType(Parser.parseRoofType(shape.getKey()));
+        roof.setRoofType(shape);
 
         RoofTextureData rtd = new RoofTextureData();
         rtd.setFacadeTextrure(getFasadeTexture());

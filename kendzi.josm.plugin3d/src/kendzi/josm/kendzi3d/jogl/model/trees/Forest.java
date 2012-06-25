@@ -31,6 +31,8 @@ import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
@@ -627,6 +629,14 @@ public class Forest extends AbstractWayModel {
     public Point3d getPoint() {
         return new Point3d(this.x, 0, -this.y);
     }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
 
 
 }

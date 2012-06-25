@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.media.opengl.GL2;
@@ -32,6 +33,8 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -695,5 +698,14 @@ public class Wall extends AbstractWayModel {
 
             pGl.glDisable(GL2.GL_CULL_FACE);
         }
+    }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildModel();
+        }
+
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
     }
 }

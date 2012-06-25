@@ -44,7 +44,7 @@ import org.ejml.data.SimpleMatrix;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType8_0 extends AbstractRoofType {
+public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofType8_0.class);

@@ -7,7 +7,7 @@ import javax.vecmath.Vector2d;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
@@ -16,8 +16,7 @@ public class DormerRoofModel {
     PolygonList2d building;
 
     // Roof Type
-    // FIXME it should contain roof shape enum not roof builder class!
-    RoofType roofType;
+    RoofTypeAliasEnum roofType;
 
     Integer roofTypeParameter;
 
@@ -119,7 +118,7 @@ public class DormerRoofModel {
     /**
      * @return the roofType
      */
-    public RoofType getRoofType() {
+    public RoofTypeAliasEnum getRoofType() {
         return this.roofType;
     }
 
@@ -127,7 +126,7 @@ public class DormerRoofModel {
     /**
      * @param roofType the roofType to set
      */
-    public void setRoofType(RoofType roofType) {
+    public void setRoofType(RoofTypeAliasEnum roofType) {
         this.roofType = roofType;
     }
 

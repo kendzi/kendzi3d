@@ -23,6 +23,7 @@ import javax.swing.JMenuItem;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
+import kendzi.josm.kendzi3d.action.ExportAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
@@ -212,6 +213,17 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
 
         this.view3dJMenu.addSeparator();
+
+        JMenu advMenu = new JMenu(tr("Adv"));
+        this.view3dJMenu.add(advMenu);
+
+
+        ExportAction exportAction = injector.getInstance(ExportAction.class);
+        final JMenuItem exportActionItem = new JMenuItem(exportAction);
+        advMenu.add(exportActionItem);
+        exportActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
+
+
 
         setEnabledAll(true);
     }

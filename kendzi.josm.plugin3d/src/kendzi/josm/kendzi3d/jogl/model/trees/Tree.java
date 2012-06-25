@@ -9,7 +9,9 @@
 
 package kendzi.josm.kendzi3d.jogl.model.trees;
 
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
@@ -27,6 +29,8 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
@@ -573,6 +577,15 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     @Override
     public Point3d getPoint() {
         return new Point3d(this.x, 0, -this.y);
+    }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.modelLod.get(LOD.LOD1) == null) {
+            buildModel(LOD.LOD1);
+        }
+
+        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
     }
 
 

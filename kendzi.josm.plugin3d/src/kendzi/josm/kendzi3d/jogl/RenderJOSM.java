@@ -50,13 +50,13 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     /** Log. */
     private static final Logger log = Logger.getLogger(RenderJOSM.class);
 
-    private static final double NOWE_KRAMSKO_CENTER_X = 0.275119242;
-    private static final double NOWE_KRAMSKO_CENTER_Y = 1.070152217;
+//    private static final double NOWE_KRAMSKO_CENTER_X = 0.275119242;
+//    private static final double NOWE_KRAMSKO_CENTER_Y = 1.070152217;
 
-    /**
-     * List of models. XXX move to layers.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
+//    /**
+//     * List of models. XXX move to layers.
+//     */
+//    private List<Model> modelList = new ArrayList<Model>();
 
 
 
@@ -162,9 +162,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             rebuildData();
         }
 
-        for (Model r : this.modelList) {
-            drawModel(r, gl, camera);
-        }
+//        for (Model r : this.modelList) {
+//            drawModel(r, gl, camera);
+//        }
 
         for (Layer layer : this.layerList ) {
             List<Model> models = layer.getModels();
@@ -346,7 +346,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             return;
         }
 
-        this.modelList.clear();
+        //this.modelList.clear();
 
         for (Layer layer : this.layerList ) {
             layer.clear();
@@ -538,7 +538,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return modelRender;
+        return this.modelRender;
     }
     /**
      * @param modelRender the modelRender to set
@@ -550,7 +550,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * @return the layerList
      */
     public List<Layer> getLayerList() {
-        return layerList;
+        return this.layerList;
     }
     /**
      * @param layerList the layerList to set
@@ -558,6 +558,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public void setLayerList(List<Layer> layerList) {
         this.layerList = layerList;
     }
+
+
 
 
 }

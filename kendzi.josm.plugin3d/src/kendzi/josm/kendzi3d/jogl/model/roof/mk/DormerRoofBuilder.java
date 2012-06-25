@@ -24,7 +24,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.validation.ValidationUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_1;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_2;
@@ -47,12 +46,15 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_2;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeBuilder;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeDome;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeFlat;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeMansard;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
@@ -72,7 +74,7 @@ public class DormerRoofBuilder {
     /** Log. */
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
 
-    static RoofType [] roofTypes = {
+    protected static RoofTypeBuilder [] roofTypeBuilders = {
         // word alias for types
         new RoofTypeFlat(),
         new RoofTypePitched(),
@@ -84,6 +86,7 @@ public class DormerRoofBuilder {
         new RoofTypePyramidal(),
         new RoofTypeDome(),
         new RoofTypeOnion(),
+        new RoofTypeMansard(),
 
         // normal types
         new RoofType0_0(),
@@ -139,7 +142,7 @@ public class DormerRoofBuilder {
 
         Point2d startPoint = polygon.get(0);
 
-        RoofType roofType = roof.getRoofType();
+        RoofTypeBuilder roofType = parseRoofTypeBuilder(roof.getRoofType());
 
         RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, pRoofTextureData);
 
@@ -165,6 +168,19 @@ public class DormerRoofBuilder {
         out.setDebug(debug);
 
         return out;
+    }
+
+    private static RoofTypeBuilder parseRoofTypeBuilder(RoofTypeAliasEnum roofTypeEnum) {
+
+        if (roofTypeEnum == null) {
+            return null;
+        }
+        for (RoofTypeBuilder rt : DormerRoofBuilder.roofTypeBuilders) {
+            if (roofTypeEnum.equals(rt.getPrefixKey())) {
+                return rt;
+            }
+        }
+        return null;
     }
 
     /**

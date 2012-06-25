@@ -53,7 +53,7 @@ import org.ejml.data.SimpleMatrix;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType9_0 extends AbstractRoofType {
+public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofType9_0.class);
@@ -179,7 +179,7 @@ public class RoofType9_0 extends AbstractRoofType {
 
             Vector2d v1 = new Vector2d(edge.getEnd());
             v1.sub(edge.getBegin());
-            PolygonRoofHooksSpace hookSpace = RectangleRoofType.buildRecHookSpace(edge.getBegin(), v1, new PolygonPlane(multiPolygonList2d, plane));
+            PolygonRoofHooksSpace hookSpace = RectangleRoofTypeBuilder.buildRecHookSpace(edge.getBegin(), v1, new PolygonPlane(multiPolygonList2d, plane));
             polygonRoofHooksSpace.add(hookSpace);
         }
 

@@ -36,10 +36,10 @@ import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
 
-public abstract class RectangleRoofType extends AbstractRoofType implements RoofType {
+public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RectangleRoofType.class);
+    private static final Logger log = Logger.getLogger(RectangleRoofTypeBuilder.class);
 
     @Override
     public RoofTypeOutput buildRoof(

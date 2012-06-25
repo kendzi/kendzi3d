@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +29,15 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.Direction;
@@ -161,7 +164,7 @@ public class DormerRoof extends Roof {
         = new  DormerRoofModel();
 
         roof.setBuilding(new PolygonList2d(this.points));
-        RoofType roofType = Parser.parseRoofType(type);
+        RoofTypeAliasEnum roofType = Parser.parseRoofShape(type);
         roof.setRoofType(roofType);
         roof.setRoofTypeParameter(Parser.parseRoofTypeParameter(roofType, type));
 
@@ -377,6 +380,15 @@ public class DormerRoof extends Roof {
         this.axisLabelRenderer.begin3DRendering();
         this.axisLabelRenderer.draw3D(txt, (float) x - width / 2, (float)y, (float)z, SCALE_FACTOR);
         this.axisLabelRenderer.end3DRendering();
+    }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildModel();
+        }
+
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
     }
 
 }

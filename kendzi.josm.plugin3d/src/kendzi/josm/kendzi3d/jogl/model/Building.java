@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.media.opengl.GL2;
@@ -31,6 +32,8 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.Roof;
 import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
@@ -331,7 +334,7 @@ public class Building extends AbstractWayModel {
         this.buildingHeight = this.roof.getMinHeight();
 
 
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+        Material facadeMaterial = MaterialFactory.createTextureMaterial(this.facadeTexture.getFile());
 
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
@@ -350,7 +353,7 @@ public class Building extends AbstractWayModel {
 
         if (this.points.size() > 0) {
 
-            double vEnd = (int) (this.buildingHeight / facadeTexture.getHeight());
+            double vEnd = (int) (this.buildingHeight / this.facadeTexture.getHeight());
 
             Point2d beginPoint = this.points.get(0);
 
@@ -361,7 +364,7 @@ public class Building extends AbstractWayModel {
                 int n = meshWalls.addNormal(normals[i - 1]);
 
                 double distance = beginPoint.distance(endPoint);
-                double uEnd = (int) (distance / facadeTexture.getLenght());
+                double uEnd = (int) (distance / this.facadeTexture.getLenght());
 
                 int tc1 = meshWalls.addTextCoord(new TextCoord(0, 0));
                 int tc2 = meshWalls.addTextCoord(new TextCoord(0, vEnd));
@@ -786,7 +789,7 @@ public class Building extends AbstractWayModel {
          * @return the width
          */
         public double getWidth() {
-            return width;
+            return this.width;
         }
         /**
          * @param width the width to set
@@ -858,5 +861,14 @@ public class Building extends AbstractWayModel {
      */
     public double getHeight() {
         return this.height;
+    }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildModel();
+        }
+
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
     }
 }

@@ -11,7 +11,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
@@ -92,10 +91,8 @@ public class ExampleRoofJoglFrame extends BaseJoglFrame {
         DormerRoofModel roof = new DormerRoofModel();
         roof.setBuilding(new PolygonList2d(border));
 
-        // WARNING: this should be simplified.
-        // Method setRoofType should take emum RoofTypeAliasEnum directly!
-        // I will change this in future
-        roof.setRoofType(Parser.parseRoofType(RoofTypeAliasEnum.PYRAMIDAL.getKey()));
+        // Roof type
+        roof.setRoofType(RoofTypeAliasEnum.PYRAMIDAL);
 
         RoofTextureData rtd = new RoofTextureData();
         // it can be material with color ! (XXX my renderer portably crash with materials);

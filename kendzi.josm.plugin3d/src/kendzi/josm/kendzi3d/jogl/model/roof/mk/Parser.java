@@ -10,7 +10,6 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementParserUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.josm.kendzi3d.util.StringUtil;
@@ -20,7 +19,7 @@ public class Parser {
 
     public static RoofTypeAliasEnum parseRoofShape(String pName) {
 
-        if (pName == null) {
+        if (StringUtil.isBlankOrNull(pName)) {
             return null;
         }
 
@@ -30,7 +29,7 @@ public class Parser {
 
 
         for (RoofTypeAliasEnum type : RoofTypeAliasEnum.values()) {
-            if (type.getKey().equals(name)) {
+            if (name.startsWith(type.getKey())) {
                 return type;
             }
         }
@@ -38,22 +37,8 @@ public class Parser {
 
     }
 
-    public static RoofType parseRoofType(String pKey) {
-        // FIXME it should return roof shape enum not roof builder class!
 
-        if (pKey == null) {
-            return null;
-        }
-        for (RoofType rt : DormerRoofBuilder.roofTypes) {
-            if (pKey.startsWith(rt.getPrefixKey().getKey())) {
-                return rt;
-            }
-        }
-        return null;
-    }
-
-    public static Integer parseRoofTypeParameter(RoofType pRoofType, String pKey) {
-        // FIXME it should return roof shape enum not roof builder class!
+    public static Integer parseRoofTypeParameter(RoofTypeAliasEnum pRoofType, String pKey) {
 
         if (pRoofType == null) {
             return null;
@@ -63,7 +48,7 @@ public class Parser {
             return null;
         }
 
-        int l = pRoofType.getPrefixKey().getKey().length();
+        int l = pRoofType.getKey().length();
         if (pKey.length() < l + 1) {
             return null;
         }

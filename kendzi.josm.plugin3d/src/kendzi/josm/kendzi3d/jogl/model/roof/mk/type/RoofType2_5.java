@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_5 extends RectangleRoofType{
+public class RoofType2_5 extends RectangleRoofTypeBuilder{
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RoofType2_5.class);

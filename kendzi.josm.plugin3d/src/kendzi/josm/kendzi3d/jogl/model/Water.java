@@ -9,6 +9,9 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -21,6 +24,8 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeUtil;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.math.geometry.Plane3d;
@@ -119,5 +124,14 @@ public class Water extends AbstractWayModel {
             pGl.glPopMatrix();
         }
 	}
+
+	@Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildModel();
+        }
+
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+    }
 
 }

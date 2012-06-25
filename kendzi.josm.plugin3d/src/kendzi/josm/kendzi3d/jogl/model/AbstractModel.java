@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.vecmath.Point2d;
 
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
 import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
@@ -28,7 +29,7 @@ import org.openstreetmap.josm.data.osm.Way;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, OsmPrimitiveRender {
+public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, OsmPrimitiveRender, ExportModel {
 
 
     protected double x;

@@ -45,6 +45,7 @@ public enum RoofTypeAliasEnum {
     FLAT("flat"),
     GABLED("gabled"),
     GAMBREL("gambrel"),
+    MANSARD("mansard"),
     HALF_HIPPED("half hipped"),
     HIPPED("hipped"),
     PITCHED("pitched"),

@@ -18,7 +18,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
-public interface RoofType {
+public interface RoofTypeBuilder {
 
     public RoofTypeAliasEnum getPrefixKey();
 

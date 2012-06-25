@@ -25,6 +25,8 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
@@ -267,6 +269,25 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
     @Override
     public Point3d getPoint() {
         return new Point3d(this.x, 0, -this.y);
+    }
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.modelLod.get(LOD.LOD1) == null) {
+            buildModel(LOD.LOD1);
+        }
+
+        List<ExportItem> ret = new ArrayList<ExportItem>();
+
+        for (Point2d hook : this.hookPoints) {
+
+           Point3d p = new Point3d(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+
+           Vector3d s = new Vector3d(this.scale.x, this.scale.y, this.scale.z);
+           ret.add(new ExportItem(this.modelLod.get(LOD.LOD1), p, s));
+
+        }
+        return ret;
     }
 
 

@@ -11,6 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.media.opengl.GL2;
@@ -27,6 +28,8 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
@@ -424,5 +427,14 @@ public class Road extends AbstractModel {
         this.modelRender.render(pGl, this.model);
 
 	}
+
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildModel();
+        }
+
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+    }
 
 }
