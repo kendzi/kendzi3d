@@ -294,9 +294,9 @@ public class Building extends AbstractWayModel {
                 Point2d endPoint = this.points.get(i);
 
 //                Vector3d norm = Normal.calcNormalNorm2(
-//                        beginPoint.getX(), 0.0f, beginPoint.getY(),
-//                        endPoint.getX(), 0.0f, endPoint.getY(),
-//                        beginPoint.getX(), 1.0, beginPoint.getY());
+//                        beginPoint.x, 0.0f, beginPoint.y,
+//                        endPoint.x, 0.0f, endPoint.y,
+//                        beginPoint.x, 1.0, beginPoint.y);
 
 
                 Vector3d norm = new Vector3d(
@@ -371,10 +371,10 @@ public class Building extends AbstractWayModel {
                 int tc3 = meshWalls.addTextCoord(new TextCoord(uEnd, vEnd));
                 int tc4 = meshWalls.addTextCoord(new TextCoord(uEnd, 0));
 
-                int w1 = meshWalls.addVertex(new Point3d(beginPoint.getX(), this.minHeight, -beginPoint.getY()));
-                int w2 = meshWalls.addVertex(new Point3d(beginPoint.getX(), this.buildingHeight, -beginPoint.getY()));
-                int w3 = meshWalls.addVertex(new Point3d(endPoint.getX(), this.buildingHeight, -endPoint.getY()));
-                int w4 = meshWalls.addVertex(new Point3d(endPoint.getX(), this.minHeight, -endPoint.getY()));
+                int w1 = meshWalls.addVertex(new Point3d(beginPoint.x, this.minHeight, -beginPoint.y));
+                int w2 = meshWalls.addVertex(new Point3d(beginPoint.x, this.buildingHeight, -beginPoint.y));
+                int w3 = meshWalls.addVertex(new Point3d(endPoint.x, this.buildingHeight, -endPoint.y));
+                int w4 = meshWalls.addVertex(new Point3d(endPoint.x, this.minHeight, -endPoint.y));
 
 
                 FaceFactory face = meshWalls.addFace(FaceType.QUADS);

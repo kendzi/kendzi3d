@@ -186,8 +186,8 @@ public class SimpleMoveAnimator implements Camera {
 
         Vector3d speed = new Vector3d(this.vf, this.vu, this.vs);
 
-        speed = PointUtil.rotateZ3d(speed, this.angle.getZ());
-        speed = PointUtil.rotateY3d(speed, this.angle.getY());
+        speed = PointUtil.rotateZ3d(speed, this.angle.z);
+        speed = PointUtil.rotateY3d(speed, this.angle.y);
 
         Vector3d dx = speed;
         dx.scale(dt);

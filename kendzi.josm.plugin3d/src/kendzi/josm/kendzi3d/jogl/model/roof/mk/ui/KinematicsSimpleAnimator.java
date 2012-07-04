@@ -98,8 +98,8 @@ public class KinematicsSimpleAnimator {
 
 //        Vector3d force = new Vector3d(pForward, 0, pSide);
 //
-//        force = PointUtil.rotateZ3d(force, this.rotate.getZ());
-//        force = PointUtil.rotateY3d(force, this.rotate.getY());
+//        force = PointUtil.rotateZ3d(force, this.rotate.z);
+//        force = PointUtil.rotateY3d(force, this.rotate.y);
 
         Vector3d r = new Vector3d(1d, 0, 0 );
 //        r.cross(v1, v2)
@@ -138,8 +138,8 @@ public class KinematicsSimpleAnimator {
     void setForce(double pForward, double pSide) {
         Vector3d force = new Vector3d(pForward, 0, pSide);
 
-        force = PointUtil.rotateZ3d(force, this.angle.getZ());
-        force = PointUtil.rotateY3d(force, this.angle.getY());
+        force = PointUtil.rotateZ3d(force, this.angle.z);
+        force = PointUtil.rotateY3d(force, this.angle.y);
 
         this.force.add(force);
 

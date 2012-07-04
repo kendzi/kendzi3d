@@ -151,8 +151,8 @@ public class TransformationMatrix2d {
     public static Point2d transform(Point2d pPoint, SimpleMatrix pSimpleMatrix) {
         SimpleMatrix sm = new SimpleMatrix(
                 new double [][] {
-                        {pPoint.getX()},
-                        {pPoint.getY()},
+                        {pPoint.x},
+                        {pPoint.y},
                         {1}
                 });
 
@@ -164,8 +164,8 @@ public class TransformationMatrix2d {
     public static Vector2d transform(Vector2d pVector, SimpleMatrix pSimpleMatrix) {
         SimpleMatrix sm = new SimpleMatrix(
                 new double [][] {
-                        {pVector.getX()},
-                        {pVector.getY()},
+                        {pVector.x},
+                        {pVector.y},
                         {0}
                 });
 
