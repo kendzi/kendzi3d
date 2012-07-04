@@ -216,7 +216,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         for (int i = 0; i< isection; i++) {
             double a = Math.toRadians(360) / isection * i;
 
-            SimpleMatrix tranA = TransformationMatrix3d.tranA(center.getX(), 0, -center.getY());
+            SimpleMatrix tranA = TransformationMatrix3d.tranA(center.x, 0, -center.y);
             SimpleMatrix rotY = TransformationMatrix3d.rotYA(a);
 
             SimpleMatrix trans = tranA.mult(rotY);
@@ -254,8 +254,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         // add soft normals vectors
         int [][] softNormalsIntex = new int[isection][];
         if (soft) {
-//            double circleX = circle.getPoint().getX();
-//            double circleY = circle.getPoint().getY();
+//            double circleX = circle.getPoint().x;
+//            double circleY = circle.getPoint().y;
 //            for (int i = 0; i < isection; i++) {
 //                softNormalsIntex[i] = new int[icross];
 //                for (int j = 0; j < icross; j++) {
@@ -334,10 +334,10 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                     ic1p2n = softNormalsIntex[i][j+1];
                     ic2p2n = softNormalsIntex[i2][j+1];
 //                 // XXX doubled normals
-//                    Vector3d c1p1n = new Vector3d(c1p1.x - circle.getPoint().getX(), c1p1.y,  c1p1.z  + circle.getPoint().getY());
-//                    Vector3d c2p1n = new Vector3d(c2p1.x - circle.getPoint().getX(), c2p1.y,  c2p1.z  + circle.getPoint().getY());
-//                    Vector3d c1p2n = new Vector3d(c1p2.x - circle.getPoint().getX(), c1p2.y,  c1p2.z  + circle.getPoint().getY());
-//                    Vector3d c2p2n = new Vector3d(c2p2.x - circle.getPoint().getX(), c2p2.y,  c2p2.z  + circle.getPoint().getY());
+//                    Vector3d c1p1n = new Vector3d(c1p1.x - circle.getPoint().x, c1p1.y,  c1p1.z  + circle.getPoint().y);
+//                    Vector3d c2p1n = new Vector3d(c2p1.x - circle.getPoint().x, c2p1.y,  c2p1.z  + circle.getPoint().y);
+//                    Vector3d c1p2n = new Vector3d(c1p2.x - circle.getPoint().x, c1p2.y,  c1p2.z  + circle.getPoint().y);
+//                    Vector3d c2p2n = new Vector3d(c2p2.x - circle.getPoint().x, c2p2.y,  c2p2.z  + circle.getPoint().y);
 //
 //                    ic1p1n = meshFactory.addNormal(c1p1n);
 //                    ic2p1n = meshFactory.addNormal(c2p1n);

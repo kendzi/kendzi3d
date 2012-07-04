@@ -19,8 +19,8 @@ public class DrawUtil {
      * @param disp
      */
     public static void drawPoint(Point2d p, boolean selected, Graphics2D g2d, EquationDisplay disp) {
-        int x = (int) disp.xPositionToPixel(p.getX());
-        int y = (int) disp.yPositionToPixel(p.getY());
+        int x = (int) disp.xPositionToPixel(p.x);
+        int y = (int) disp.yPositionToPixel(p.y);
         // g2d.translate(x, y);
         Color color = g2d.getColor();
         if (selected) {

@@ -405,8 +405,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         posLookAt.add(pos);
 
-        pGlu.gluLookAt(pos.getX(), pos.getY(), pos.getZ(),
-                posLookAt.getX(), posLookAt.getY(), posLookAt.getZ(),
+        pGlu.gluLookAt(pos.x, pos.y, pos.z,
+                posLookAt.x, posLookAt.y, posLookAt.z,
                 0, 1, 0);
     }
 

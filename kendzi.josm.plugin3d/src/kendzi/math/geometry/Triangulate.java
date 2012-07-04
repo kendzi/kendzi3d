@@ -29,8 +29,8 @@ public class Triangulate {
 		float A = 0.0f;
 
 		for (int p = n - 1, q = 0; q < n; p = q++) {
-			A += contour.get(p).getX() * contour.get(q).getY()
-					- contour.get(q).getX() * contour.get(p).getY();
+			A += contour.get(p).x * contour.get(q).y
+					- contour.get(q).x * contour.get(p).y;
 		}
 		return A * 0.5f;
 	}
@@ -42,8 +42,8 @@ public class Triangulate {
 		float A = 0.0f;
 
 		for (int p = n - 1, q = 0; q < n; p = q++) {
-			A += contour.get(p).getX() * contour.get(q).getY()
-			        - contour.get(q).getX() * contour.get(p).getY();
+			A += contour.get(p).x * contour.get(q).y
+			        - contour.get(q).x * contour.get(p).y;
 		}
 		return A * 0.5f;
 	}
@@ -55,8 +55,8 @@ public class Triangulate {
 		float A = 0.0f;
 
 		for (int p = n - 1, q = 0; q < n; p = q++) {
-			A += contour[p].getX() * contour[q].getY()
-			- contour[q].getX() * contour[p].getY();
+			A += contour[p].x * contour[q].y
+			- contour[q].x * contour[p].y;
 		}
 		return A * 0.5f;
 	}
@@ -97,14 +97,14 @@ public class Triangulate {
 		int p;
 		double Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
-		Ax = contour.get(V[u]).getX();
-		Ay = contour.get(V[u]).getY();
+		Ax = contour.get(V[u]).x;
+		Ay = contour.get(V[u]).y;
 
-		Bx = contour.get(V[v]).getX();
-		By = contour.get(V[v]).getY();
+		Bx = contour.get(V[v]).x;
+		By = contour.get(V[v]).y;
 
-		Cx = contour.get(V[w]).getX();
-		Cy = contour.get(V[w]).getY();
+		Cx = contour.get(V[w]).x;
+		Cy = contour.get(V[w]).y;
 
 		if (EPSILON > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax))))
 			return false;
@@ -112,8 +112,8 @@ public class Triangulate {
 		for (p = 0; p < n; p++) {
 			if ((p == u) || (p == v) || (p == w))
 				continue;
-			Px = contour.get(V[p]).getX();
-			Py = contour.get(V[p]).getY();
+			Px = contour.get(V[p]).x;
+			Py = contour.get(V[p]).y;
 			if (insideTriangle(Ax, Ay, Bx, By, Cx, Cy, Px, Py))
 				return false;
 		}

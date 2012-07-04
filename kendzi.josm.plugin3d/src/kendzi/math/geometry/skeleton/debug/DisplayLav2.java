@@ -77,8 +77,8 @@ public class DisplayLav2 extends DisplayObject {
      * @param disp
      */
     public void drawPoint(Point2d p, boolean selected, Graphics2D g2d, EquationDisplay disp) {
-        int x = (int) disp.xPositionToPixel(p.getX());
-        int y = (int) disp.yPositionToPixel(p.getY());
+        int x = (int) disp.xPositionToPixel(p.x);
+        int y = (int) disp.yPositionToPixel(p.y);
         // g2d.translate(x, y);
         if (selected) {
             g2d.setColor(Color.GREEN.brighter());

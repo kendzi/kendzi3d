@@ -191,9 +191,9 @@ public class PhotoRenderer {
     }
 
     private Vector3d transform(Vector3d angle, Vector3d speed) {
-                speed = PointUtil.rotateX3d(speed, angle.getX());
-                speed = PointUtil.rotateZ3d(speed, angle.getZ());
-                speed = PointUtil.rotateY3d(speed, angle.getY());
+                speed = PointUtil.rotateX3d(speed, angle.x);
+                speed = PointUtil.rotateZ3d(speed, angle.z);
+                speed = PointUtil.rotateY3d(speed, angle.y);
 
                 return speed;
     }

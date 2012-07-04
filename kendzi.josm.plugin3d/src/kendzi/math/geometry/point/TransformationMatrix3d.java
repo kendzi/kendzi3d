@@ -154,9 +154,9 @@ public class TransformationMatrix3d {
     public static Point3d transform(Point3d pPoint, SimpleMatrix pSimpleMatrix) {
         SimpleMatrix sm = new SimpleMatrix(
                 new double [][] {
-                        {pPoint.getX()},
-                        {pPoint.getY()},
-                        {pPoint.getZ()},
+                        {pPoint.x},
+                        {pPoint.y},
+                        {pPoint.z},
                         {1}
                 });
 
@@ -168,9 +168,9 @@ public class TransformationMatrix3d {
     public static Vector3d transform(Vector3d pVector, SimpleMatrix pSimpleMatrix) {
         SimpleMatrix sm = new SimpleMatrix(
                 new double [][] {
-                        {pVector.getX()},
-                        {pVector.getY()},
-                        {pVector.getZ()},
+                        {pVector.x},
+                        {pVector.y},
+                        {pVector.z},
                         {0}
                 });
 
