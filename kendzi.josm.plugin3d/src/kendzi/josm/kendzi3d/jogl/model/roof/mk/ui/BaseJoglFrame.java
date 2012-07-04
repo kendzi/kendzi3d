@@ -232,9 +232,9 @@ public class BaseJoglFrame implements GLEventListener {
                 Point2d endPoint = border.get(i);
 
                 Vector3d norm = Normal.calcNormalNorm2(
-                        beginPoint.getX(), 0.0f, beginPoint.getY(),
-                        endPoint.getX(), 0.0f, endPoint.getY(),
-                        beginPoint.getX(), 1.0, beginPoint.getY());
+                        beginPoint.x, 0.0f, beginPoint.y,
+                        endPoint.x, 0.0f, endPoint.y,
+                        beginPoint.x, 1.0, beginPoint.y);
 
                 if (isCounterClockwise) {
                     norm.negate();
@@ -250,10 +250,10 @@ public class BaseJoglFrame implements GLEventListener {
                 int tc3 = meshWalls.addTextCoord(new TextCoord(uEnd, vEnd));
                 int tc4 = meshWalls.addTextCoord(new TextCoord(uEnd, 0));
 
-                int w1 = meshWalls.addVertex(new Point3d(beginPoint.getX(),  minHeight, -beginPoint.getY()));
-                int w2 = meshWalls.addVertex(new Point3d(beginPoint.getX(), height, -beginPoint.getY()));
-                int w3 = meshWalls.addVertex(new Point3d(endPoint.getX(), height, -endPoint.getY()));
-                int w4 = meshWalls.addVertex(new Point3d(endPoint.getX(), minHeight, -endPoint.getY()));
+                int w1 = meshWalls.addVertex(new Point3d(beginPoint.x,  minHeight, -beginPoint.y));
+                int w2 = meshWalls.addVertex(new Point3d(beginPoint.x, height, -beginPoint.y));
+                int w3 = meshWalls.addVertex(new Point3d(endPoint.x, height, -endPoint.y));
+                int w4 = meshWalls.addVertex(new Point3d(endPoint.x, minHeight, -endPoint.y));
 
 
                 FaceFactory face = meshWalls.addFace(FaceType.QUADS);
@@ -363,8 +363,8 @@ public class BaseJoglFrame implements GLEventListener {
 
         posLookAt.add(pos);
 
-        pGlu.gluLookAt(pos.getX(), pos.getY(), pos.getZ(),
-                posLookAt.getX(), posLookAt.getY(), posLookAt.getZ(),
+        pGlu.gluLookAt(pos.x, pos.y, pos.z,
+                posLookAt.x, posLookAt.y, posLookAt.z,
                 0, 1, 0);
     }
 

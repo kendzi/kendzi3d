@@ -47,8 +47,8 @@ public class DisplayPoints extends DisplayObject {
 
             g2d.setColor(Color.RED.brighter());
 
-            int x = (int) disp.xPositionToPixel(p.getX());
-            int y = (int) disp.yPositionToPixel(p.getY());
+            int x = (int) disp.xPositionToPixel(p.x);
+            int y = (int) disp.yPositionToPixel(p.y);
             // g2d.translate(x, y);
             if (selected) {
                 g2d.setColor(Color.GREEN.brighter());
