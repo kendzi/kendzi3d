@@ -24,9 +24,9 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
@@ -40,6 +40,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.ShapeRoof;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
 import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.point.Vector2dUtil;
@@ -235,7 +236,7 @@ public class Building extends AbstractWayModel {
 
         if (!StringUtil.isBlankOrNull(facadeMaterial) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String textureKey = this.textureLibraryService.getKey("buildings.facade_{0}", facadeMaterial);
+            String textureKey = this.textureLibraryService.getKey(TextureLibraryKey.BUILDING_FACADE, facadeMaterial);
             return this.textureLibraryService.getTextureDefault(textureKey);
 
 //            String facadeTextureFile = metadataCacheService.getPropertites(
@@ -497,7 +498,7 @@ public class Building extends AbstractWayModel {
 //        TextureData facadeTexture = new  TextureData("#c=#303030", 1d, 1d);
 //        return facadeTexture;
 
-        String textureKey = this.textureLibraryService.getKey("buildings.window");
+        String textureKey = this.textureLibraryService.getKey(TextureLibraryKey.BUILDING_WINDOW);
         return this.textureLibraryService.getTextureDefault(textureKey);
     }
 

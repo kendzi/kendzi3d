@@ -46,7 +46,7 @@ public class TextureData {
      * @return the lenght
      */
     public double getLenght() {
-        return lenght;
+        return this.lenght;
     }
 
     /**
@@ -61,7 +61,7 @@ public class TextureData {
      * @return the height
      */
     public double getHeight() {
-        return height;
+        return this.height;
     }
 
     /**
@@ -72,4 +72,47 @@ public class TextureData {
         this.height = pHeight;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.file == null) ? 0 : this.file.hashCode());
+        long temp;
+        temp = Double.doubleToLongBits(this.height);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.lenght);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TextureData other = (TextureData) obj;
+        if (this.file == null) {
+            if (other.file != null)
+                return false;
+        } else if (!this.file.equals(other.file))
+            return false;
+        if (Double.doubleToLongBits(this.height) != Double.doubleToLongBits(other.height))
+            return false;
+        if (Double.doubleToLongBits(this.lenght) != Double.doubleToLongBits(other.lenght))
+            return false;
+        return true;
+    }
 }

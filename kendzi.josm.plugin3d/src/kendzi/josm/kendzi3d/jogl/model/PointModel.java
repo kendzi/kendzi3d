@@ -17,8 +17,8 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
+import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer.PointModelConf;

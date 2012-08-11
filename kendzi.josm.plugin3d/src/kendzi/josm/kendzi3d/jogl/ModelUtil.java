@@ -13,7 +13,6 @@ import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Util for jogl model.
@@ -98,17 +97,17 @@ public final class ModelUtil {
 
 
     /** Get double value of attribute or return default value.
-     * @param pWay object to take numerical value
+     * @param pOsmPrimitive object to take numerical value
      * @param pAttrName name of attribute
      * @param pDefaultValue default value of attribute
      * @return double value of attribute
      */
-    public static Double getNumberAttribute(Way pWay, String pAttrName, Double pDefaultValue) {
+    public static Double getNumberAttribute(OsmPrimitive pOsmPrimitive, String pAttrName, Double pDefaultValue) {
 
         Double he = pDefaultValue;
-        if (pWay.get(pAttrName) != null) {
+        if (pOsmPrimitive.get(pAttrName) != null) {
             try {
-                he = new Double(pWay.get(pAttrName));
+                he = new Double(pOsmPrimitive.get(pAttrName));
             } catch (Exception e) {
                 e.printStackTrace();
                 // TODO

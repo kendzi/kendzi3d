@@ -20,13 +20,11 @@ import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
@@ -69,7 +67,12 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofTextureData pRoofTextureData) {
+            Point2d pStartPoint,
+            List<Point2d> pPolygon,
+            DormerRoofModel pRoof,
+            double height,
+            ModelFactory model,
+            RoofMaterials pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
@@ -92,7 +95,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
 
 
-        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, model, pRoofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -104,26 +107,15 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
-    Double h1, Double angle, double l1, double l2, RoofTextureData pRoofTextureData) {
+        Double h1, Double angle, double l1, double l2,
+        ModelFactory model,
+        RoofMaterials pRoofTextureData) {
 
-        ModelFactory model = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = model.addMesh("roof_border");
-        MeshFactory meshRoof = model.addMesh("roof_top");
+        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
 
-        // XXX move it
-        TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-        // XXX move material
-        int facadeMaterialIndex = model.addMaterial(facadeMaterial);
-        int roofMaterialIndex = model.addMaterial(roofMaterial);
-
-        meshBorder.materialID = roofMaterialIndex;
-        meshBorder.hasTexture = true;
-
-        meshRoof.materialID = roofMaterialIndex;
-        meshRoof.hasTexture = true;
+        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);

@@ -11,7 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space;
 
 import java.util.List;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
@@ -22,6 +22,6 @@ public interface RoofHooksSpaces {
 
     List<RoofHooksSpace> getRoofHooksSpaces();
 
-    List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofTextureData pRoofTextureData);
+    List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofMaterials pRoofTextureData);
 
 }

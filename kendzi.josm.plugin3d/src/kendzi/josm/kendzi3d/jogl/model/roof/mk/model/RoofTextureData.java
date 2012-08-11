@@ -7,23 +7,21 @@
  *
  */
 
-package kendzi.josm.kendzi3d.jogl.model.roof.mk;
+package kendzi.josm.kendzi3d.jogl.model.roof.mk.model;
 
 import kendzi.josm.kendzi3d.dto.TextureData;
 
 public class RoofTextureData {
 
-    public final static int FACADE_TEXTRURE_INDEX = 0;
-    public final static int ROOF_TEXTRURE_INDEX = 1;
-
-
     TextureData facadeTextrure;
+
     TextureData roofTexture;
+
     /**
      * @return the facadeTextrure
      */
     public TextureData getFacadeTextrure() {
-        return facadeTextrure;
+        return this.facadeTextrure;
     }
     /**
      * @param facadeTextrure the facadeTextrure to set
@@ -35,7 +33,7 @@ public class RoofTextureData {
      * @return the roofTexture
      */
     public TextureData getRoofTexture() {
-        return roofTexture;
+        return this.roofTexture;
     }
     /**
      * @param roofTexture the roofTexture to set

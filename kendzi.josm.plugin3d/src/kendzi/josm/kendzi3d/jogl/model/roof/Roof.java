@@ -19,8 +19,10 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 public abstract class Roof extends AbstractWayModel {
@@ -117,33 +119,35 @@ public abstract class Roof extends AbstractWayModel {
     }
 
 
-
+    protected TextureData getRoofTexture() {
+        return getRoofTexture(this.way, this.textureLibraryService);
+    }
 
     /** Get roof texture.
      * @return roof texture
      */
-    protected TextureData getRoofTexture() {
+    public static TextureData getRoofTexture(OsmPrimitive way, TextureLibraryService pTextureLibraryService) {
 
-        String roofMaterial = this.way.get("roof:material");
+        String roofMaterial = way.get("roof:material");
         if (StringUtil.isBlankOrNull(roofMaterial)) {
-            roofMaterial = this.way.get("building:roof:material");
+            roofMaterial = way.get("building:roof:material");
         }
 
-        String roofColor = this.way.get("roof:colour");
+        String roofColor = way.get("roof:colour");
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = this.way.get("roof:color");
+            roofColor = way.get("roof:color");
         }
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = this.way.get("building:roof:colour");
+            roofColor = way.get("building:roof:colour");
         }
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = this.way.get("building:roof:color");
+            roofColor = way.get("building:roof:color");
         }
 
         if (!StringUtil.isBlankOrNull(roofMaterial) || StringUtil.isBlankOrNull(roofColor)) {
 
-            String textureKey = this.textureLibraryService.getKey("buildings.roof_{0}", roofMaterial);
-            return this.textureLibraryService.getTextureDefault(textureKey);
+            String textureKey = pTextureLibraryService.getKey(TextureLibraryKey.BUILDING_ROOF, roofMaterial);
+            return pTextureLibraryService.getTextureDefault(textureKey);
 //
 //            String facadeTextureFile = this.metadataCacheService.getPropertites(
 //                    "buildings.building_roof_material_{0}.texture.file", null, roofMaterial);

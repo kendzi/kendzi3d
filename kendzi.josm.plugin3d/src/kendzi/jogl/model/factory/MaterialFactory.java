@@ -11,10 +11,11 @@ package kendzi.jogl.model.factory;
 
 import java.awt.Color;
 
-import kendzi.jogl.model.geometry.Material;
+import kendzi.jogl.model.geometry.material.Material;
 
 public class MaterialFactory {
 
+    @Deprecated
     public static Material emptyMaterial() {
         Material m = new Material();
         m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
@@ -25,12 +26,31 @@ public class MaterialFactory {
 
         return m;
     }
-    /** Create material for texture.
-   * @param pTexId texture id
-   * @return material
-   */
-    public static Material createTextureMaterial(String pTexId) {
+
+    /** Create default material.
+     * @return default material
+     */
+    public static Material getDefaultMaterial() {
+
         Material m = new Material();
+        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+        m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+        m.shininess = 0.0f;
+        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        return m;
+    }
+
+    /**
+     * Create default material for texture0.
+     *
+     * @param pTexId
+     *            texture id
+     * @return material
+     */
+    public static Material createTextureMaterial(String pTexId) {
+        Material m = getDefaultMaterial();
         m.strFile = pTexId;
         m.strName = pTexId;
         return m;

@@ -1,25 +1,30 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.vecmath.Point2d;
 
+import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
+import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
+import kendzi.josm.kendzi3d.jogl.model.building.model.Wall;
+import kendzi.josm.kendzi3d.jogl.model.building.model.WallNode;
+import kendzi.josm.kendzi3d.jogl.model.building.model.WallPart;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
-import kendzi.math.geometry.polygon.PolygonList2d;
 
 public class ExampleRoofJoglFrame extends BaseJoglFrame {
 
@@ -77,19 +82,34 @@ public class ExampleRoofJoglFrame extends BaseJoglFrame {
 
         double height = 15;
 
-        List<Point2d> border = new ArrayList<Point2d>();
+        List<WallNode> nodes = new ArrayList<WallNode>();
+        nodes.add(new WallNode(new Point2d(10, 0), null));
+        nodes.add(new WallNode(new Point2d(20, 0), null));
+        nodes.add(new WallNode(new Point2d(20, 5), null));
+        nodes.add(new WallNode(new Point2d(10, 5), null));
 
-        border.add(new Point2d(10, 0));
-        border.add(new Point2d(20, 0));
-        border.add(new Point2d(20, 5));
-        border.add(new Point2d(10, 5));
+        WallPart wp = new WallPart();
+        wp.setNodes(nodes);
 
+//        List<Point2d> border = new ArrayList<Point2d>();
+//
+//        border.add(new Point2d(10, 0));
+//        border.add(new Point2d(20, 0));
+//        border.add(new Point2d(20, 5));
+//        border.add(new Point2d(10, 5));
+//
 //        border.add(border.get(0));
+        Wall w = new Wall();
+        w.setWallParts(Arrays.asList(wp));
 
 
+        BuildingPart bp = new BuildingPart();
+        bp.setWall(w);
 
         DormerRoofModel roof = new DormerRoofModel();
-        roof.setBuilding(new PolygonList2d(border));
+        bp.setRoof(roof);
+
+//        roof.setBuilding(new PolygonList2d(border));
 
         // Roof type
         roof.setRoofType(RoofTypeAliasEnum.PYRAMIDAL);
@@ -101,7 +121,9 @@ public class ExampleRoofJoglFrame extends BaseJoglFrame {
         rtd.setFacadeTextrure(new TextureData("/textures/building_facade_plaster.png", 4, 2));
         rtd.setRoofTexture(new TextureData("/textures/building_roof_material_roofTiles.png", 3, 3));
 
-        RoofOutput roofOutput = DormerRoofBuilder.build(roof, height, rtd);
+        ModelFactory mf = ModelFactory.modelBuilder();
+
+        RoofOutput roofOutput = DormerRoofBuilder.build(bp, height, mf, rtd);
 
         this.debug = roofOutput.getDebug();
 

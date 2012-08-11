@@ -22,14 +22,12 @@ import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.GableRoof;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
@@ -39,7 +37,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.PolygonSplit;
 
 import org.apache.log4j.Logger;
 
@@ -74,7 +72,8 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             double pSizeB,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData
+            ModelFactory model,
+            RoofMaterials pRoofTextureData
             ) {
 
 
@@ -84,7 +83,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
 
         Double b1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pSizeA, pSizeA /2d);
 
-        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, pRoofTextureData);
+        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, model, pRoofTextureData);
 
     }
 
@@ -116,29 +115,16 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             double h1,
             double h2,
             double b1,
-            RoofTextureData pRoofTextureData) {
+            ModelFactory model,
+            RoofMaterials pRoofTextureData) {
 
 
-        ModelFactory model = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = model.addMesh("roof_border");
-        MeshFactory meshRoof = model.addMesh("roof_top");
+        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
 
-        //XXX move it
-        TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-        // XXX move material
-        int facadeMaterialIndex = model.addMaterial(facadeMaterial);
-        int roofMaterialIndex = model.addMaterial(roofMaterial);
+        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
-        meshBorder.materialID = facadeMaterialIndex;
-        meshBorder.hasTexture = true;
-
-        meshRoof.materialID = roofMaterialIndex;
-        meshRoof.hasTexture = true;
-
-//        double minHeight = 0;
 
         double roofLineDistance1 = b1;
         double roofLineDistance2 = pSizeA - roofLineDistance1;
@@ -190,7 +176,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
         List<List<Integer>> polygonsLeft = new ArrayList<List<Integer>>();
         List<List<Integer>> polygonsRight = new ArrayList<List<Integer>>();
 
-        PolygonSplitUtil.splitPolygonByLine(roofLine, border, borderExtanded, polygonsLeft, polygonsRight);
+        PolygonSplit.splitPolygonByLine(roofLine, border, borderExtanded, polygonsLeft, polygonsRight);
 
         for (Point2d p : borderExtanded) {
             //XXX

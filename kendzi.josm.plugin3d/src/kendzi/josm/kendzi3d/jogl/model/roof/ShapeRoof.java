@@ -15,11 +15,9 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -60,7 +58,7 @@ public class ShapeRoof extends DormerRoof {
         Map<String, String> keys = this.way.getKeys();
 
 
-        DormerRoofModel roof = parseDormerRoof(keys);
+        DormerRoofModel roof = parseDormerRoof(/*this.points,*/ this.way, this.perspective);
 
         String shapeName = keys.get("building:roof:shape");
         if (shapeName == null) {
@@ -79,12 +77,12 @@ public class ShapeRoof extends DormerRoof {
         rtd.setRoofTexture(getRoofTexture());
 
 
-        RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
-
-        this.debug = roofOutput.getDebug();
-
-        this.minHeight = this.height - roofOutput.getHeight();
-        this.model = roofOutput.getModel();
+//        RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
+//
+//        this.debug = roofOutput.getDebug();
+//
+//        this.minHeight = this.height - roofOutput.getHeight();
+//        this.model = roofOutput.getModel();
 
     }
 }

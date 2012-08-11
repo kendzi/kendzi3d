@@ -5,9 +5,9 @@ import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
+import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
@@ -61,7 +61,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(ModelRender.class).in(Singleton.class);
 
         bind(PointModelsLayer.class);
-        bind(BuildingLayer.class);
+        bind(NewBuildingLayer.class);
         bind(RoadLayer.class);
         bind(WaterLayer.class);
         bind(TreeLayer.class);
@@ -110,7 +110,7 @@ public class Kendzi3dModule extends AbstractModule {
     RenderJOSM provideRenderJOSM(
             ModelRender pModelRender,
             PointModelsLayer pointModelsLayer,
-            BuildingLayer buildingLayer,
+            NewBuildingLayer buildingLayer,
             RoadLayer roadLayer,
             WaterLayer waterLayer,
             TreeLayer treeLayer,

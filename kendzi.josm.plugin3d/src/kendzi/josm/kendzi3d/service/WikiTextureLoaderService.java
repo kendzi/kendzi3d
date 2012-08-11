@@ -92,10 +92,10 @@ public class WikiTextureLoaderService {
 
         LoadRet ret = new LoadRet();
 
-        StringBuffer sb = readWikiStream();
+        StringBuffer sb = readWikiStream(wikiUrl);
         log.debug(sb);
 
-        WikiRet wikiRet = parseXmlFile(null);
+        WikiRet wikiRet = parseXmlFile(wikiUrl);
         ret.setTimestamp(wikiRet.getTimestamp());
         log.debug(wikiRet.getText());
 
@@ -473,7 +473,7 @@ public class WikiTextureLoaderService {
     }
 
 
-    private static WikiRet parseXmlFile(String string) {
+    public static WikiRet parseXmlFile(String wikiUrl) {
 
         WikiRet ret = new WikiRet();
 
@@ -527,7 +527,7 @@ public class WikiTextureLoaderService {
         return ret;
     }
 
-    static class WikiRet {
+    public static class WikiRet {
         String text;
         String timestamp;
         /**
@@ -557,7 +557,7 @@ public class WikiTextureLoaderService {
 
     }
 
-    private static StringBuffer readWikiStream() throws MalformedURLException, IOException {
+    public static StringBuffer readWikiStream(String wikiUrl) throws MalformedURLException, IOException {
         URL url = new URL(wikiUrl);
 
         // URL oracle = new URL("http://www.oracle.com/");

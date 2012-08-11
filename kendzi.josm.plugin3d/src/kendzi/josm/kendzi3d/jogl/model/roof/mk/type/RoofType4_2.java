@@ -10,7 +10,6 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +17,10 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
@@ -33,6 +30,7 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 
 import org.apache.log4j.Logger;
 
@@ -67,7 +65,8 @@ public class RoofType4_2 extends RectangleRoofTypeBuilder{
             double pRecWidth,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData
+            ModelFactory model,
+            RoofMaterials pRoofTextureData
             ) {
 
         Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
@@ -80,7 +79,7 @@ public class RoofType4_2 extends RectangleRoofTypeBuilder{
 
 
 
-        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, pRoofTextureData);
+        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, model, pRoofTextureData);
 
     }
 
@@ -115,27 +114,15 @@ public class RoofType4_2 extends RectangleRoofTypeBuilder{
             double h1,
             double h2,
             double l2,
-            RoofTextureData pRoofTextureData) {
+            ModelFactory model,
+            RoofMaterials pRoofTextureData) {
 
 
-        ModelFactory model = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = model.addMesh("roof_border");
-        MeshFactory meshRoof = model.addMesh("roof_top");
+        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
 
-        //XXX move it
-        TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-        // XXX move material
-        int facadeMaterialIndex = model.addMaterial(facadeMaterial);
-        int roofMaterialIndex = model.addMaterial(roofMaterial);
-
-        meshBorder.materialID = facadeMaterialIndex;
-        meshBorder.hasTexture = true;
-
-        meshRoof.materialID = roofMaterialIndex;
-        meshRoof.hasTexture = true;
+        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
         double halfRecHeight = 0.5d * pRecHeight;
 
@@ -189,25 +176,26 @@ public class RoofType4_2 extends RectangleRoofTypeBuilder{
 
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
+        MultiPolygonList2d borderMultiPolygon = new MultiPolygonList2d(borderPolygon);
 
-        MultiPolygonList2d topMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftTop,  leftMiddleTopPoint, rightMiddleTopPoint, rightTop)));
-        MultiPolygonList2d topMiddleMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftMiddleTopPoint, leftCenterPoint, rightCenterPoint, rightMiddleTopPoint)));
-        MultiPolygonList2d bottomMiddleMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftMiddleBottomPoint, rightMiddleBottomPoint, rightCenterPoint, leftCenterPoint)));
-        MultiPolygonList2d bottomMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftBottom, rightBottom, rightMiddleBottomPoint, leftMiddleBottomPoint)));
+        MultiPolygonList2d topMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftTop,  leftMiddleTopPoint, rightMiddleTopPoint, rightTop, leftTop);
+        MultiPolygonList2d topMiddleMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftMiddleTopPoint, leftCenterPoint, rightCenterPoint, rightMiddleTopPoint, leftMiddleTopPoint);
+        MultiPolygonList2d bottomMiddleMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftMiddleBottomPoint, rightMiddleBottomPoint, rightCenterPoint, leftCenterPoint, leftMiddleBottomPoint);
+        MultiPolygonList2d bottomMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftBottom, rightBottom, rightMiddleBottomPoint, leftMiddleBottomPoint, leftBottom);
 
-        MultiPolygonList2d leftMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftBottom,  leftMiddleBottomPoint, leftMiddleTopPoint, leftTop)));
-        MultiPolygonList2d leftMiddleMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(leftMiddleBottomPoint,  leftCenterPoint, leftMiddleTopPoint)));
+        MultiPolygonList2d leftMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftBottom,  leftMiddleBottomPoint, leftMiddleTopPoint, leftTop, leftBottom);
+        MultiPolygonList2d leftMiddleMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftMiddleBottomPoint,  leftCenterPoint, leftMiddleTopPoint, leftMiddleBottomPoint);
 
-        MultiPolygonList2d rightMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(rightBottom, rightTop, rightMiddleTopPoint, rightMiddleBottomPoint)));
-        MultiPolygonList2d rightMiddleMP = borderPolygon.intersection(
-                new PolygonList2d(Arrays.asList(rightMiddleBottomPoint, rightMiddleTopPoint, rightCenterPoint)));
+        MultiPolygonList2d rightMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, rightBottom, rightTop, rightMiddleTopPoint, rightMiddleBottomPoint, rightBottom);
+        MultiPolygonList2d rightMiddleMP =
+                PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, rightMiddleBottomPoint, rightMiddleTopPoint, rightCenterPoint, rightMiddleBottomPoint);
 
 
 

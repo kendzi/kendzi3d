@@ -24,7 +24,7 @@ public enum RoofTypeAliasEnum {
     ROOF_TYPE1_0("1.0"),
     ROOF_TYPE1_1("1.1"),
 
-    ROOF_TYPE2_0("2.1"),
+    ROOF_TYPE2_0("2.0"),
     ROOF_TYPE2_1("2.1"),
     ROOF_TYPE2_2("2.2"),
     ROOF_TYPE2_3("2.3"),

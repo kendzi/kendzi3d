@@ -16,10 +16,10 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.geometry.Face;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.geometry.material.Material;
 
 public class ModelFactory {
 
@@ -157,6 +157,16 @@ public class ModelFactory {
         this.materials.add(mat);
         // XXX
         return this.materials.size() - 1;
+    }
+
+    public int cacheMaterial(Material mat) {
+
+        int i = this.materials.indexOf(mat);
+        if ( i >= 0 ) {
+            return i;
+        }
+
+        return addMaterial(mat);
     }
 
 

@@ -32,6 +32,28 @@ public class TextureLibraryService {
     private static final String TEXTURE_LIBRARY_INTERNAL_XML = "/resources/textureLibraryInternal.xml";
     public static final String TEXTURE_LIBRARY_WIKI_XML = "/resources/textureLibraryWiki.xml";
 
+    public enum TextureLibraryKey {
+        BARRIER_FENCE("barrier.fence_{0}"),
+        BUILDING_FACADE("buildings.facade_{0}"),
+        BUILDING_ROOF("buildings.roof_{0}"),
+        BUILDING_WINDOW("buildings.window_{0}"),
+        BUILDING_WINDOWS("buildings.windows_{0}"),
+        BUILDING_ENTRANCE("buildings.entrance_{0}"),
+
+        ;
+
+        private String key;
+
+        TextureLibraryKey(String pKey) {
+            this.key = pKey;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+    }
+
     /** Log. */
     private static final Logger log = Logger.getLogger(TextureLibraryService.class);
 
@@ -70,7 +92,7 @@ public class TextureLibraryService {
      * @param key texture key
      * @return is texture exist
      */
-    public TextureData getTexture(String key) {
+    public TextureData getRadnomTextureFromSet(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
         if (set== null || set.size() == 0) {
             return null;
@@ -81,6 +103,18 @@ public class TextureLibraryService {
         return set.get(nextInt);
     }
 
+    /** Return texture set for key.
+     * @param key texture key
+     * @return texture list for key
+     */
+    public List<TextureData> getTextureSet(String key) {
+        ArrayList<TextureData> set = this.textureMap.get(key);
+        if (set == null) {
+            return new ArrayList<TextureData>();
+        }
+        return set;
+    }
+
     /**
      * Always return texture data. If configuration for texture key is not set return default texture data.
      *
@@ -88,14 +122,19 @@ public class TextureLibraryService {
      * @return texture data
      */
     public TextureData getTextureDefault(String key) {
-        TextureData texture = getTexture(key);
+        TextureData texture = getRadnomTextureFromSet(key);
         if (texture == null) {
             return new TextureData(null, 1, 1);
         }
         return texture;
     }
 
-    public String getKey(String pPattern, String ... pKeyParts) {
+    public String getKey(TextureLibraryKey pKey, String ... pKeyParts) {
+        return getKey(pKey.getKey(), true, pKeyParts);
+    }
+
+    @Deprecated
+    private String getKey(String pPattern, String ... pKeyParts) {
         return getKey(pPattern, true, pKeyParts);
     }
 

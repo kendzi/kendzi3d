@@ -22,7 +22,7 @@ import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
@@ -54,13 +54,12 @@ public class RoofDormerTypeA extends AbstractRoofDormerType {
             RoofHookPoint pRoofHookPoint,
             RoofHooksSpace space,
             Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData) {
+            RoofMaterials pRoofTextureData) {
 
         RoofDormerTypeOutput out = new RoofDormerTypeOutput();
 
 
-        TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-        TextureData roofTexture = pRoofTextureData.getRoofTexture();
+
 
         double width1 = getWidth(MeasurementKey.DORMER_WIDTH_1, pMeasurements, 1.5d);
         double height1 = getHeight(MeasurementKey.DORMER_HEIGHT_1, pMeasurements, 1.5d);
@@ -71,7 +70,7 @@ public class RoofDormerTypeA extends AbstractRoofDormerType {
 
         double height2 = getHeight2(pMeasurements, height1, depth);
 
-        return buildMesh(pRoofHookPoint, space, out, facadeTexture, roofTexture, width1, height1, depth, height2);
+        return buildMesh(pRoofHookPoint, space, out, pRoofTextureData, width1, height1, depth, height2);
     }
 
     private double getHeight2(Map<MeasurementKey, Measurement> pMeasurements, double height1, double depth) {
@@ -94,11 +93,14 @@ public class RoofDormerTypeA extends AbstractRoofDormerType {
     }
 
     private RoofDormerTypeOutput buildMesh(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
-            RoofDormerTypeOutput out, TextureData facadeTexture, TextureData roofTexture, double width1, double h1,
+            RoofDormerTypeOutput out, RoofMaterials pRoofTextureData, double width1, double h1,
             double d, double h2) {
 
-        int facadeMaterialIndex = RoofTextureData.FACADE_TEXTRURE_INDEX;
-        int topMaterialIndex = RoofTextureData.ROOF_TEXTRURE_INDEX;
+        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+
+        int facadeMaterialIndex = pRoofTextureData.getFacade().getMaterialIndexInModel();
+        int topMaterialIndex = pRoofTextureData.getRoof().getMaterialIndexInModel();
 
         double v1 = (h1 / facadeTexture.getHeight());
         double v2 = (h2 / facadeTexture.getHeight());

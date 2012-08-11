@@ -9,17 +9,13 @@
 
 package kendzi.jogl.model.render;
 
-import java.awt.Color;
-import java.net.URL;
-import java.util.HashMap;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.vecmath.Point3d;
 
-import kendzi.jogl.model.factory.FaceFactory.FaceType;
+import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.geometry.Face;
-import kendzi.jogl.model.geometry.Material;
+import kendzi.jogl.model.geometry.material.Material;
+import kendzi.jogl.model.geometry.material.Material.MatType;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -28,25 +24,24 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class ModelRender {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(ModelRender.class);
 
-    private static final Material TEXTURE_MATERIAL = getDefaultMaterial();
+    private static final Material TEXTURE_MATERIAL = MaterialFactory.getDefaultMaterial();
 
-//    private static ModelRender instance = new ModelRender();
-    private HashMap<Integer, Texture> textures;
     private boolean debugging = true;
 
     private boolean drawEdges;
+
     private boolean drawNormals;
 
     private Material lastSetMaterial;
 
     private int vertexCount;
+
     private int faceCount;
 
     /**
@@ -55,12 +50,12 @@ public class ModelRender {
     @Inject
     private TextureCacheService textureCacheService;
 
+    /**
+     *
+     */
     public ModelRender() {
-    }
 
-//    public static ModelRender getInstance() {
-//        return instance;
-//    }
+    }
 
     public int getFaceCount() {
         return this.faceCount;
@@ -69,7 +64,6 @@ public class ModelRender {
     public void resetFaceCount() {
        this.faceCount = 0;
     }
-
 
     public void render(GL2 gl, Model model) {
         // XXX get list from cash
@@ -83,30 +77,22 @@ public class ModelRender {
             gl.glDisable(GL2.GL_TEXTURE_2D);
         }
 
-
-
         draw(gl, model);
-
     }
 
     private void draw(GL2 gl, Model model) {
 
-//        boolean materialChanged = true;
-
-//        if (this.textures == null) {
-//            //FIXME
-//            initTextures(model);
-//        }
         int mi = 0;
         int fi = 0;
 
-//        gl.glPushMatrix();
-
         try {
+
             boolean useTextureDisabled = false;
 
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
+
+                Material material = model.getMaterial(mesh.materialID);
 
                 boolean meshUseTexture = mesh.hasTexture && getTexture(gl, mesh.materialID, model) != null;
                 if (meshUseTexture) {
@@ -115,31 +101,29 @@ public class ModelRender {
                         gl.glEnable(GL2.GL_TEXTURE_2D);
                         useTextureDisabled = false;
                     }
-                    //FIXME
-//                    Texture texture = this.textures.get(model.getMaterial(mesh.materialID));
-                    Texture texture = getTexture(gl, mesh.materialID, model);
 
-                    // switch to texture mode and push a new matrix on the stack
-                    gl.glMatrixMode(GL2.GL_TEXTURE);
-                    gl.glPushMatrix();
 
-                    // check to see if the texture needs flipping
-                    if (texture.getMustFlipVertically()) {
-                        gl.glScaled(1, -1, 1);
-                        gl.glTranslated(0, -1, 0);
+                    if (MatType.TEXTURE0.equals(material.matType)) {
+                        Material mat =  model.getMaterial(mesh.materialID);
+                        Texture texture0 = getTexture(gl, mat.strFile);
+
+                        bindTexture(gl, texture0);
+                    } else if (MatType.COLOR_MultT0_MultT1.equals(material.matType)) {
+                        Material mat =  model.getMaterial(mesh.materialID);
+                        Texture texture0 = getTexture(gl, mat.strFile);
+                        Texture texture1 = getTexture(gl, mat.texture1);
+
+                        gl.glActiveTexture(GL2.GL_TEXTURE0);
+                        gl.glEnable(GL2.GL_TEXTURE_2D);
+                        bindTexture(gl, texture0);
+                        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+
+                        gl.glActiveTexture(GL2.GL_TEXTURE1);
+                        gl.glEnable(GL2.GL_TEXTURE_2D);
+                        bindTexture(gl, texture1);
+
                     }
 
-                    // switch to modelview matrix and push a new matrix on the stack
-                    gl.glMatrixMode(GL2.GL_MODELVIEW);
-                    gl.glPushMatrix();
-
-                    // This is required to repeat textures
-                    gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-                    gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
-
-                    // enable, bind
-                    texture.enable(gl);
-                    texture.bind(gl);
                 } else {
 
                     // if model is using textures only in some mesh
@@ -183,7 +167,18 @@ public class ModelRender {
                             if (mesh.texCoords != null) {
                                 textureIndex = face.coordIndex[i];
 
-                                gl.glTexCoord2d(mesh.texCoords[textureIndex].u, mesh.texCoords[textureIndex].v);
+                                if (MatType.COLOR_MultT0_MultT1.equals(material.matType)) {
+                                    gl.glMultiTexCoord2d(GL2.GL_TEXTURE0, mesh.texCoords[textureIndex].u, mesh.texCoords[textureIndex].v);
+
+                                    textureIndex = face.coordIndex1[i];
+                                    gl.glMultiTexCoord2d(GL2.GL_TEXTURE1, mesh.texCoords[textureIndex].u, mesh.texCoords[textureIndex].v);
+
+                                    textureIndex = face.coordIndex2[i];
+                                    gl.glMultiTexCoord2d(GL2.GL_TEXTURE2, mesh.texCoords[textureIndex].u, mesh.texCoords[textureIndex].v);
+
+                                } else {
+                                    gl.glTexCoord2d(mesh.texCoords[textureIndex].u, mesh.texCoords[textureIndex].v);
+                                }
                             }
                         }
 
@@ -199,9 +194,21 @@ public class ModelRender {
                 if (meshUseTexture) {
                     Texture t = getTexture(gl, mesh.materialID, model);
                     //this.textures.get(mesh.materialID);// .get(mesh.materialID);
-                    if (t != null) {
-                        t.disable(gl);
+
+                    if (MatType.TEXTURE0.equals(material.matType)) {
+                        if (t != null) {
+                            t.disable(gl);
+                        }
+
+                    } else if (MatType.COLOR_MultT0_MultT1.equals(material.matType)) {
+                        gl.glActiveTexture(GL2.GL_TEXTURE1);
+                        gl.glDisable(GL2.GL_TEXTURE_2D);
+                        gl.glActiveTexture(GL2.GL_TEXTURE2);
+                        gl.glDisable(GL2.GL_TEXTURE_2D);
+
+                        gl.glActiveTexture(GL2.GL_TEXTURE0);
                     }
+
 
                     gl.glMatrixMode(GL2.GL_TEXTURE);
                     gl.glPopMatrix();
@@ -223,223 +230,50 @@ public class ModelRender {
                     + " mesh: " + mi + " (" + (model.mesh[mi] != null ? model.mesh[mi].name : "" ) + ")"
                     + " face: " + fi, e);
         }
-//        gl.glPopMatrix();
 
         gl.glDisable(GL2.GL_LIGHTING);
 
         if (this.drawEdges || model.drawEdges) {
-            drawEdges(gl, model);
+            DebugModelRendererUtil.drawEdges(gl, model);
         }
         if (this.drawNormals || model.drawNormals) {
-            drawNormals(gl, model);
+            DebugModelRendererUtil.drawNormals(gl, model);
         }
 
         gl.glColor3f(1.0f, 1.0f, 1.0f);
 
     }
 
-    /** Draws normals.
-     * @param pGl gl
-     * @param pModel model
+    /**
+     * @param gl
+     * @param texture
      */
-    private void drawNormals(GL2 pGl, Model pModel) {
+    public void bindTexture(GL2 gl, Texture texture) {
+        // switch to texture mode and push a new matrix on the stack
+        gl.glMatrixMode(GL2.GL_TEXTURE);
+        gl.glPushMatrix();
 
-        for (Mesh mesh : pModel.mesh) {
-            //blue
-            pGl.glColor3f(0.5f, 0.5f, 1.0f);
-
-            // Set line width
-            pGl.glLineWidth(2);
-            // Repeat count, repeat pattern
-            pGl.glLineStipple(1, (short) 0xf0f0);
-
-            pGl.glBegin(GL2.GL_LINES);
-
-            for (Face face : mesh.face) {
-                int vertLength = face.vertIndex.length;
-
-                if (face.normalIndex != null && face.normalIndex.length > 0) {
-                    for (int i = 0; i < vertLength; i++) {
-
-                        int normalIndex = face.normalIndex[i];
-                        if (mesh.normals.length > normalIndex) {
-
-                            int vetexIndex = face.vertIndex[i];
-                            pGl.glVertex3d(
-                                    mesh.vertices[vetexIndex].x,
-                                    mesh.vertices[vetexIndex].y,
-                                    mesh.vertices[vetexIndex].z);
-
-                            double normScale = 0.5;
-                            pGl.glVertex3d(
-                            mesh.vertices[vetexIndex].x + normScale * mesh.normals[normalIndex].x,
-                            mesh.vertices[vetexIndex].y + normScale * mesh.normals[normalIndex].y,
-                            mesh.vertices[vetexIndex].z + normScale * mesh.normals[normalIndex].z);
-                        }
-
-                    }
-                }
-            }
-
-            pGl.glEnd();
+        // check to see if the texture needs flipping
+        if (texture.getMustFlipVertically()) {
+            gl.glScaled(1, -1, 1);
+            gl.glTranslated(0, -1, 0);
         }
+
+        // switch to modelview matrix and push a new matrix on the stack
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glPushMatrix();
+
+        // This is required to repeat textures
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+
+        // enable, bind
+        texture.enable(gl);
+        texture.bind(gl);
     }
 
-    /** Draws edges.
-     * @param pGl gl
-     * @param pModel model
-     */
-    private void drawEdges(GL2 pGl, Model pModel) {
-        for (Mesh mesh : pModel.mesh) {
-            //green
-            pGl.glColor3f(0.5f, 1.0f, 0.5f);
-
-            // Set line width
-            pGl.glLineWidth(4);
-            // Repeat count, repeat pattern
-            pGl.glLineStipple(1, (short) 0xf0f0);
 
 
-            for (Face face : mesh.face) {
-                int vertLength = face.vertIndex.length;
-
-                if (face.type == FaceType.TRIANGLE_STRIP.getType()) {
-                    pGl.glBegin(GL2.GL_LINE_STRIP);
-                    for (int i = 0; i < vertLength; i++) {
-
-                        int vetexIndex = face.vertIndex[i];
-                        pGl.glVertex3d(
-                                mesh.vertices[vetexIndex].x,
-                                mesh.vertices[vetexIndex].y,
-                                mesh.vertices[vetexIndex].z);
-                    }
-                    pGl.glEnd();
-                    if (face.vertIndex.length > 2) {
-                        pGl.glBegin(GL2.GL_LINE_STRIP);
-                        for (int i = 0; i < vertLength; i = i + 2) {
-
-                            int vetexIndex = face.vertIndex[i];
-                            pGl.glVertex3d(
-                                    mesh.vertices[vetexIndex].x,
-                                    mesh.vertices[vetexIndex].y,
-                                    mesh.vertices[vetexIndex].z);
-                        }
-                        pGl.glEnd();
-                        pGl.glBegin(GL2.GL_LINE_STRIP);
-                        for (int i = 1; i < vertLength; i = i + 2) {
-
-                            int vetexIndex = face.vertIndex[i];
-                            pGl.glVertex3d(
-                                    mesh.vertices[vetexIndex].x,
-                                    mesh.vertices[vetexIndex].y,
-                                    mesh.vertices[vetexIndex].z);
-                        }
-                        pGl.glEnd();
-                    }
-                } else if (face.type == FaceType.TRIANGLES.getType()) {
-                    int i = 0;
-                    while (i < vertLength) {
-                        pGl.glBegin(GL2.GL_LINE_LOOP);
-                        int triangleCount = 0;
-                        while (i + triangleCount < vertLength && triangleCount < 3) {
-
-                            int vetexIndex = face.vertIndex[i + triangleCount];
-                            pGl.glVertex3d(
-                                    mesh.vertices[vetexIndex].x,
-                                    mesh.vertices[vetexIndex].y,
-                                    mesh.vertices[vetexIndex].z);
-                            triangleCount++;
-                        }
-                        i = i + 3;
-                        pGl.glEnd();
-                    }
-                } else if (face.type == FaceType.TRIANGLE_FAN.getType()) {
-                    pGl.glBegin(GL2.GL_LINE_LOOP);
-                    for (int i = 0; i < vertLength; i++) {
-
-                        int vetexIndex = face.vertIndex[i];
-                        pGl.glVertex3d(
-                                mesh.vertices[vetexIndex].x,
-                                mesh.vertices[vetexIndex].y,
-                                mesh.vertices[vetexIndex].z);
-                    }
-                    pGl.glEnd();
-
-                    if (vertLength > 1) {
-
-                        Point3d begin = mesh.vertices[face.vertIndex[0]];
-
-                        pGl.glBegin(GL2.GL_LINES);
-                        for (int i = 2; i < vertLength; i++) {
-
-                            pGl.glVertex3d(begin.x, begin.y, begin.z);
-
-                            int endIndex = face.vertIndex[i];
-                            pGl.glVertex3d(
-                                    mesh.vertices[endIndex].x,
-                                    mesh.vertices[endIndex].y,
-                                    mesh.vertices[endIndex].z);
-                        }
-                        pGl.glEnd();
-                    }
-
-                } else if (face.type == FaceType.QUADS.getType()) {
-                    int q = 0;
-
-                    while (q < vertLength) {
-                        pGl.glBegin(GL2.GL_LINE_LOOP);
-                        int i = 0;
-                        while (i < 4 && i + q < vertLength) {
-//                        for (int i = 0; i < 4; i++) {
-
-                            int vetexIndex = face.vertIndex[i + q];
-                            pGl.glVertex3d(
-                                    mesh.vertices[vetexIndex].x,
-                                    mesh.vertices[vetexIndex].y,
-                                    mesh.vertices[vetexIndex].z);
-
-                            i++;
-                        }
-                        q = q + 4;
-                        pGl.glEnd();
-                    }
-                } else if (face.type == FaceType.QUAD_STRIP.getType()) {
-                    pGl.glBegin(GL2.GL_LINES);
-                    for (int i = 0; i < vertLength; i++) {
-
-                        int vetexIndex = face.vertIndex[i];
-                        pGl.glVertex3d(
-                                mesh.vertices[vetexIndex].x,
-                                mesh.vertices[vetexIndex].y,
-                                mesh.vertices[vetexIndex].z);
-                    }
-                    pGl.glEnd();
-
-                    pGl.glBegin(GL2.GL_LINE_STRIP);
-                    for (int i = 0; i < vertLength; i = i + 2) {
-
-                        int vetexIndex = face.vertIndex[i];
-                        pGl.glVertex3d(
-                                mesh.vertices[vetexIndex].x,
-                                mesh.vertices[vetexIndex].y,
-                                mesh.vertices[vetexIndex].z);
-                    }
-                    pGl.glEnd();
-
-                    pGl.glBegin(GL2.GL_LINE_STRIP);
-                    for (int i = 1; i < vertLength; i = i + 2) {
-
-                        int vetexIndex = face.vertIndex[i];
-                        pGl.glVertex3d(
-                                mesh.vertices[vetexIndex].x,
-                                mesh.vertices[vetexIndex].y,
-                                mesh.vertices[vetexIndex].z);
-                    }
-                    pGl.glEnd();
-                }
-            }
-        }
-    }
 
 
 
@@ -466,45 +300,45 @@ public class ModelRender {
         setupMaterial(pGl, material);
     }
 
-    private boolean setupMaterials(boolean materialChanged, GL2 pGl, Model pModel, Mesh mesh, Face face) {
-
-
-        // If the object has a texture, then do nothing till later...else
-        // apply the material property to it.
-       if (mesh.hasTexture) {
-                // nothing
-           if (materialChanged) {
-               setDefaultMaterial(pGl);
-           }
-
-            // Has no texture but has a material instead and this material is
-            // the FACES material, and not the OBJECTS material ID as being used
-            // incorrectly below...by specification, the materialID is associated
-            // with a FACE and not an OBJECT
-        } else {
-            if (face.materialID < pModel.getNumberOfMaterials()) {
-
-
-
-                float [] f = new float[6];
-
-                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, f, 0);
-                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, f, 0);
-                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, f, 0);
-                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, f, 0);
-                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, f, 0);
-
-
-                Material material = pModel.getMaterial(face.materialID);
-
-                setupMaterial(pGl, material);
-
-                return true;
-            }
-        }
-       return false;
-
-    }
+//    private boolean setupMaterials(boolean materialChanged, GL2 pGl, Model pModel, Mesh mesh, Face face) {
+//
+//
+//        // If the object has a texture, then do nothing till later...else
+//        // apply the material property to it.
+//       if (mesh.hasTexture) {
+//                // nothing
+//           if (materialChanged) {
+//               setDefaultMaterial(pGl);
+//           }
+//
+//            // Has no texture but has a material instead and this material is
+//            // the FACES material, and not the OBJECTS material ID as being used
+//            // incorrectly below...by specification, the materialID is associated
+//            // with a FACE and not an OBJECT
+//        } else {
+//            if (face.materialID < pModel.getNumberOfMaterials()) {
+//
+//
+//
+//                float [] f = new float[6];
+//
+//                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, f, 0);
+//                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, f, 0);
+//                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, f, 0);
+//                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, f, 0);
+//                pGl.glGetMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, f, 0);
+//
+//
+//                Material material = pModel.getMaterial(face.materialID);
+//
+//                setupMaterial(pGl, material);
+//
+//                return true;
+//            }
+//        }
+//       return false;
+//
+//    }
 
     public static void setDefaultMaterial(GL2 pGl) {
         pGl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float[] {0.8f, 0.8f, 0.8f, 1.0f}, 0);
@@ -516,18 +350,18 @@ public class ModelRender {
         pGl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, new float[] {0.0f, 0.0f, 0.0f, 1.0f}, 0);
     }
 
-    public static Material getDefaultMaterial() {
-
-        Material m = new Material();
-        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
-        m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
-        //FIXME don't setup materials after each rendered model !!!
-        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-
-        m.shininess = 0.0f;
-        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-        return m;
-    }
+//    public static Material getDefaultMaterial() {
+//
+//        Material m = new Material();
+//        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+//        m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+//        //FIXME don't setup materials after each rendered model !!!
+//        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+//
+//        m.shininess = 0.0f;
+//        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+//        return m;
+//    }
 
     private void setupMaterial(GL2 pGl, Material material) {
         float[] rgba = new float[4];
@@ -552,13 +386,13 @@ public class ModelRender {
     }
 
     private Texture getTexture(GL gl, int materialId, Model model) {
+        return getTexture(gl, model.getMaterial(materialId).strFile);
+    }
 
-        if (model.getMaterial(materialId).strFile != null) {
-//            if (this.isDebugging) {
-//                log.info("        Material:  " + model.getMaterial(materialId).strFile);
-//            }
+    private Texture getTexture(GL gl, String file) {
 
-            return this.textureCacheService.getTexture(gl, model.getMaterial(materialId).strFile);
+        if (file != null) {
+            return this.textureCacheService.getTexture(gl, file);
         }
         return this.textureCacheService.getTexture(gl, "/textures/undefined.png");
     }
@@ -614,24 +448,7 @@ public class ModelRender {
 //    }
 
 
-    /** Loads texture file.
-     * @param url
-     * @param id
-     * @return
-     */
-    private Texture loadTexture(URL url, int id) {
-        if (url != null ) {
-            try {
-                Texture tex = AWTTextureIO.newTexture(url, true, null);
-                this.textures.put(id,tex);
 
-            } catch (Exception e) {
-                log.error("faild to load texture from url: " + url);
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     /**
      * @return the drawEdges

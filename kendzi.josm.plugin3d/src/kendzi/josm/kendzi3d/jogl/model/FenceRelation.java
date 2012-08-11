@@ -25,9 +25,9 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
@@ -37,6 +37,7 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractRelationModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -303,7 +304,7 @@ public class FenceRelation extends AbstractRelationModel {
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String textureKey = textureLibraryService.getKey("barrier.fence_{0}", fenceType);
+            String textureKey = textureLibraryService.getKey(TextureLibraryKey.BARRIER_FENCE, fenceType);
             return textureLibraryService.getTextureDefault(textureKey);
 
 //            String facadeTextureFile = metadataCacheService.getPropertites(

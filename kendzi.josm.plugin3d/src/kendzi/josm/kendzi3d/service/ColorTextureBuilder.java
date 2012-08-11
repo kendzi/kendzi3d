@@ -59,8 +59,8 @@ public class ColorTextureBuilder implements TextureBuilder {
         return img;
     }
 
-    private Color parseColor(String pColor) {
-
+    public static Color parseColor(String pColor) {
+        // XXX move method to ColourUtil
         Color color = getColor(pColor);
         if (Color.black.equals(color)) {
             color = color.brighter().brighter().brighter().brighter().brighter();
@@ -83,7 +83,7 @@ public class ColorTextureBuilder implements TextureBuilder {
      * @param colorName
      * @return
      */
-    public Color getColor(String colorName) {
+    public static Color getColor(String colorName) {
         try {
             // Find the field and value of colorName
             Field field = Class.forName("java.awt.Color").getField(colorName);

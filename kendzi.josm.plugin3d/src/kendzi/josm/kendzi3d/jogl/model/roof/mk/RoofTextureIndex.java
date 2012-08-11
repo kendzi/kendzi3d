@@ -11,10 +11,46 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 
 import kendzi.josm.kendzi3d.dto.TextureData;
 
-@Deprecated
+
 public class RoofTextureIndex {
 
-    TextureData wallTextrure;
-    TextureData topTexture;
+    int materialIndexInModel;
+
+    TextureData textureData;
+
+
+    public RoofTextureIndex(int materialIndexInModel, TextureData textureData) {
+        super();
+        this.materialIndexInModel = materialIndexInModel;
+        this.textureData = textureData;
+    }
+
+    /**
+     * @return the materialIndexInModel
+     */
+    public int getMaterialIndexInModel() {
+        return materialIndexInModel;
+    }
+
+    /**
+     * @param materialIndexInModel the materialIndexInModel to set
+     */
+    public void setMaterialIndexInModel(int materialIndexInModel) {
+        this.materialIndexInModel = materialIndexInModel;
+    }
+
+    /**
+     * @return the textureData
+     */
+    public TextureData getTextureData() {
+        return textureData;
+    }
+
+    /**
+     * @param textureData the textureData to set
+     */
+    public void setTextureData(TextureData textureData) {
+        this.textureData = textureData;
+    }
 
 }

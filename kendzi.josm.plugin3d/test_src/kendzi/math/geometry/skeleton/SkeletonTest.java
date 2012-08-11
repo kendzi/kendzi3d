@@ -847,8 +847,8 @@ public class SkeletonTest {
 
                     g2d.setColor(Color.RED.brighter());
 
-                    int x = (int) disp.xPositionToPixel(p.getX());
-                    int y = (int) disp.yPositionToPixel(p.getY());
+                    int x = (int) disp.xPositionToPixel(p.x);
+                    int y = (int) disp.yPositionToPixel(p.y);
 //                    g2d.translate(x, y);
                     g2d.fillOval(-10 + x, -10 + y, 20, 20);
                 }

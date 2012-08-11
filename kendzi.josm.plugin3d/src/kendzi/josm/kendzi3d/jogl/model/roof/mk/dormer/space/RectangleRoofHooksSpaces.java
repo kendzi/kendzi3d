@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerTypeBuilder;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerType;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHookPoint;
@@ -42,7 +42,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
 
     @Override
-    public List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofTextureData pRoofTextureData) {
+    public List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
         List<RoofHooksSpace> pRoofHooksSpace = getRoofHooksSpaces();
 
@@ -91,7 +91,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
 
     private void build(Map<DormerRow, List<DormerType>> dormersOnSpace, RoofHooksSpace space,
-            List<RoofDormerTypeOutput> ret, DormerRoofModel pRoof, RoofTextureData pRoofTextureData) {
+            List<RoofDormerTypeOutput> ret, DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
 
         int dormerRowNum = findMaxRow(dormersOnSpace.keySet());
@@ -127,7 +127,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
      * @param pRoofTextureData
      */
     private void build(List<DormerType> dormersOnSpace, DormerRow dormerRow, int dormerRowNum, RoofHooksSpace space, List<RoofDormerTypeOutput> ret,
-            DormerRoofModel pRoof, RoofTextureData pRoofTextureData) {
+            DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
         if (space == null) {
             return;

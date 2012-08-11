@@ -18,12 +18,16 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Model;
-import kendzi.jogl.model.validation.ValidationUtil;
+import kendzi.jogl.model.geometry.material.Material;
+import kendzi.josm.kendzi3d.dto.TextureData;
+import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
+import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_1;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_2;
@@ -60,6 +64,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
 import kendzi.math.geometry.point.TransformationMatrix3d;
+import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
 import org.ejml.data.SimpleMatrix;
@@ -126,25 +131,39 @@ public class DormerRoofBuilder {
      *
      * @param roof roof model
      * @param height roof maximal height. Taken from building
+     * @param mf2
      * @param pRoofTextureData texture data
      * @return roof model
      */
     public static RoofOutput build(
-            DormerRoofModel roof,
+            BuildingPart pBuildingPart,
+            //DormerRoofModel roof,
 
             double height,
 
+            ModelFactory mf,
             RoofTextureData pRoofTextureData
             ) {
 
+//        ModelFactory mf = ModelFactory.modelBuilder();
 
-        List<Point2d> polygon = cleanPolygon(roof.getBuilding().getPoints());
+        RoofMaterials roofMaterials = addMaterials(pRoofTextureData, mf);
+
+
+
+
+
+        DormerRoofModel roof = pBuildingPart.getRoof();
+
+        PolygonList2d wallPolygon = BuildingUtil.wallToPolygon(pBuildingPart.getWall());
+
+        List<Point2d> polygon = wallPolygon.getPoints();// cleanPolygon(roof.getBuilding().getPoints());
 
         Point2d startPoint = polygon.get(0);
 
         RoofTypeBuilder roofType = parseRoofTypeBuilder(roof.getRoofType());
 
-        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, pRoofTextureData);
+        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, mf, roofMaterials);
 
         List<RoofDormerTypeOutput> roofExtensionsList =
                 DormerTypeBuilder.build(
@@ -153,21 +172,50 @@ public class DormerRoofBuilder {
                         roof,
 
                         roof.getMeasurements(),
-                        pRoofTextureData);
+                        roofMaterials);
 
 
 
-        Model model = buildModel(rto, roofExtensionsList);
+        ModelFactory model = buildModel(rto, roofExtensionsList);
 
         RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList);
 
 
         RoofOutput out = new RoofOutput();
-        out.setModel(model);
+//        out.setModel(model);
         out.setHeight(rto.getHeight());
         out.setDebug(debug);
 
         return out;
+    }
+
+    /**
+     * @param pRoofTextureData
+     * @param model
+     * @return
+     */
+    public static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
+        RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTextrure(), model);
+        RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(), model);
+
+        RoofMaterials roofMaterials = new RoofMaterials();
+        roofMaterials.setFacade(facadeTextureIndex);
+        roofMaterials.setRoof(roofTextureIndex);
+        return roofMaterials;
+    }
+
+    /** Add material representing texture to model.
+     * @param pTextureData
+     * @param pModel
+     * @return
+     */
+    private static RoofTextureIndex addMateraialTexture(TextureData pTextureData, ModelFactory pModel) {
+        //XXX add catch for texture materials in ModelFactory?
+        Material facadeMaterial = MaterialFactory.createTextureMaterial(pTextureData.getFile());
+
+        int facadeMaterialIndex = pModel.addMaterial(facadeMaterial);
+
+        return new RoofTextureIndex(facadeMaterialIndex, pTextureData);
     }
 
     private static RoofTypeBuilder parseRoofTypeBuilder(RoofTypeAliasEnum roofTypeEnum) {
@@ -296,11 +344,7 @@ public class DormerRoofBuilder {
         return out;
     }
 
-    private static Model buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList) {
-        // TODO Auto-generated method stub
-//        Model model = new Model();
-//        model.mesh = new Mesh[1 + (roofExtensionsList != null ? roofExtensionsList.size() : 0)];
-//        model.mesh[0] = mesh;
+    private static ModelFactory buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList) {
 
         ModelFactory modelFactory = rto.getModel();
 
@@ -323,12 +367,12 @@ public class DormerRoofBuilder {
             }
         }
 
-        Model model = modelFactory.toModel();
-        model.useLight = true;
+//        Model model = modelFactory.toModel();
+//        model.useLight = true;
+//
+//        List<String> validate = ValidationUtil.validate(model);
+//        log.info(ValidationUtil.errorToString(validate));
 
-        List<String> validate = ValidationUtil.validate(model);
-        log.info(ValidationUtil.errorToString(validate));
-
-        return model;
+        return modelFactory;
     }
 }

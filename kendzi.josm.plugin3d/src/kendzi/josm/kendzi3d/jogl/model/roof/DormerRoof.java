@@ -28,22 +28,20 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerRoofBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.util.Direction;
 import kendzi.josm.kendzi3d.util.DirectionParserUtil;
 import kendzi.josm.kendzi3d.util.StringUtil;
-import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
@@ -130,9 +128,9 @@ public class DormerRoof extends Roof {
     @Override
     public void buildModel() {
 
-        Map<String, String> keys = this.way.getKeys();
 
-        DormerRoofModel roof = parseDormerRoof(keys);
+        DormerRoofModel roof = parseDormerRoof(
+                /*this.points,*/ this.way, this.perspective);
 
 
         RoofTextureData rtd = new RoofTextureData();
@@ -140,12 +138,12 @@ public class DormerRoof extends Roof {
         rtd.setRoofTexture(getRoofTexture());
 
 
-        RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
-
-        this.debug = roofOutput.getDebug();
-
-        this.minHeight = this.height - roofOutput.getHeight();
-        this.model = roofOutput.getModel();
+//        RoofOutput roofOutput = DormerRoofBuilder.build(roof, this.height, rtd);
+//
+//        this.debug = roofOutput.getDebug();
+//
+//        this.minHeight = this.height - roofOutput.getHeight();
+//        this.model = roofOutput.getModel();
 
     }
 
@@ -153,18 +151,28 @@ public class DormerRoof extends Roof {
 
 
     /**
-     * @param keys
+     * @param points
+     * @param perspective
+     * @param way
      * @return
      */
-    public DormerRoofModel parseDormerRoof(Map<String, String> keys) {
-        String type = keys.get("3dr:type");
-        String dormer = keys.get("3dr:dormers");
+    public static DormerRoofModel parseDormerRoof(
+            /*List<Point2d> points,*/ Way way, Perspective3D perspective) {
 
-        DormerRoofModel roof
-        = new  DormerRoofModel();
 
-        roof.setBuilding(new PolygonList2d(this.points));
+
+        Map<String, String> keys = way.getKeys();
+
+        String type = keys.get(OsmAttributeKeys._3DR_TYPE.getKey());
+        String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
+
+        DormerRoofModel roof = new  DormerRoofModel();
+
+//        roof.setBuilding(new PolygonList2d(points));
         RoofTypeAliasEnum roofType = Parser.parseRoofShape(type);
+        if (roofType == null) {
+            roofType = RoofTypeAliasEnum.FLAT;
+        }
         roof.setRoofType(roofType);
         roof.setRoofTypeParameter(Parser.parseRoofTypeParameter(roofType, type));
 
@@ -176,7 +184,7 @@ public class DormerRoof extends Roof {
 
         roof.setMeasurements(Parser.parseMeasurements(keys));
 
-        roof.setDirection(findDirection(this.way, this.perspective));
+        roof.setDirection(findDirection(way, perspective));
         roof.setOrientation(Parser.parseOrientation(keys));
         return roof;
     }

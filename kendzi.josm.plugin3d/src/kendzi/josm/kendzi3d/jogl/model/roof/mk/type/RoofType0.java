@@ -16,20 +16,17 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygon;
+import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 import kendzi.math.geometry.polygon.split.SplitPolygons;
 
 import org.apache.log4j.Logger;
@@ -69,6 +66,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
      * @param l3
      * @param l4
      * @param type
+     * @param model
      * @param pRoofTextureData
      * @return
      */
@@ -86,27 +84,15 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
            double l3,
            double l4,
            int type,
-           RoofTextureData pRoofTextureData) {
+           ModelFactory model,
+           RoofMaterials pRoofTextureData) {
 
+       MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
+       MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
 
-       ModelFactory model = ModelFactory.modelBuilder();
-       MeshFactory meshBorder = model.addMesh("roof_border");
-       MeshFactory meshRoof = model.addMesh("roof_top");
+       TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+       TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
-       //XXX move it
-       TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-       TextureData roofTexture = pRoofTextureData.getRoofTexture();
-       Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-       Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-       // XXX move material
-       int facadeMaterialIndex = model.addMaterial(facadeMaterial);
-       int roofMaterialIndex = model.addMaterial(roofMaterial);
-
-       meshBorder.materialID = facadeMaterialIndex;
-       meshBorder.hasTexture = true;
-
-       meshRoof.materialID = roofMaterialIndex;
-       meshRoof.hasTexture = true;
 
        // first calc BASEE
 
@@ -164,7 +150,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
            LinePoints2d bLine = new LinePoints2d(new Point2d(0, l1), new Point2d(pRecWidth, l1));
 
 
-           SplitPolygon middleSplit = PolygonSplitUtil.splitPolygon(borderPolygon, bLine);
+           SplitPolygons middleSplit = PolygonSplitUtil.split(borderPolygon, bLine);
 
 
            MultiPolygonList2d centerMP = middleSplit.getTopMultiPolygons();
@@ -174,7 +160,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2, pRecHeight));
 
 
-               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, rLine);
+               SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, rLine);
 
                centerMP = topSplit.getTopMultiPolygons();
 
@@ -185,7 +171,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0, pRecHeight - l3));
 
 
-               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, tLine);
+               SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, tLine);
 
                centerMP = topSplit.getTopMultiPolygons();
 
@@ -196,7 +182,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
                LinePoints2d tLine = new LinePoints2d(new Point2d(l4, pRecHeight), new Point2d(l4, 0));
 
 
-               SplitPolygons topSplit = PolygonSplitUtil.splitMultiPolygon(centerMP, tLine);
+               SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, tLine);
 
                centerMP = topSplit.getTopMultiPolygons();
 
@@ -244,16 +230,18 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
        rto.setRoofHooksSpaces(null);
 
        return rto;
-   }
+    }
 
-   private List<Double> calcHeightList(
+
+
+    private List<Double> calcHeightList(
            List<Point2d> pSplitBorder, double height) {
 
-       List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
-       for (Point2d point : pSplitBorder) {
-          borderHeights.add(height);
-       }
+        List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
+        for (Point2d point : pSplitBorder) {
+            borderHeights.add(height);
+        }
 
-       return borderHeights;
-   }
+        return borderHeights;
+    }
 }

@@ -8,7 +8,7 @@
  */
 
 
-package kendzi.math.geometry.polygon;
+package kendzi.math.geometry.polygon.split;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +18,15 @@ import javax.vecmath.Point2d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.line.LineUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygon;
-import kendzi.math.geometry.polygon.split.SplitPolygons;
+import kendzi.math.geometry.polygon.MultiPolygonList2d;
+import kendzi.math.geometry.polygon.PolygonList2d;
 
 import org.apache.log4j.Logger;
 
-public class PolygonSplitUtil {
+public class PolygonSplit {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(PolygonSplitUtil.class);
+    private static final Logger log = Logger.getLogger(PolygonSplit.class);
 
     private static final double EPSILON = 1E-10;
     private static final double EPSILON_SQRT = EPSILON * EPSILON;
@@ -452,10 +452,10 @@ public class PolygonSplitUtil {
 
 
 
-    public static SplitPolygon splitPolygon(PolygonList2d pPolygon, LinePoints2d pSplitingLine) {
+    static SplitPolygon splitPolygon(PolygonList2d pPolygon, LinePoints2d pSplitingLine) {
         SplitPolygon splitPolygon = new SplitPolygon();
 
-        PolygonSplitUtil.splitPolygonByLine(pSplitingLine, pPolygon.getPoints(), splitPolygon.getPolygonExtanded(), splitPolygon.getPolygonsLeft(), splitPolygon.getPolygonsRight());
+        PolygonSplit.splitPolygonByLine(pSplitingLine, pPolygon.getPoints(), splitPolygon.getPolygonExtanded(), splitPolygon.getPolygonsLeft(), splitPolygon.getPolygonsRight());
 
         return splitPolygon;
     }
@@ -470,7 +470,7 @@ public class PolygonSplitUtil {
     public static SplitPolygon splitPolygon(List<Point2d> pPolygon, LinePoints2d pSplitingLine) {
         SplitPolygon splitPolygon = new SplitPolygon();
 
-        PolygonSplitUtil.splitPolygonByLine(pSplitingLine, pPolygon, splitPolygon.getPolygonExtanded(), splitPolygon.getPolygonsLeft(), splitPolygon.getPolygonsRight());
+        PolygonSplit.splitPolygonByLine(pSplitingLine, pPolygon, splitPolygon.getPolygonExtanded(), splitPolygon.getPolygonsLeft(), splitPolygon.getPolygonsRight());
 
         return splitPolygon;
     }
@@ -479,7 +479,7 @@ public class PolygonSplitUtil {
      * @param pPolygons
      * @param pSplitingLine
      * @return
-     * @deprecated use kendzi.math.geometry.polygon.PolygonSplitUtil.splitMultiPolygon(MultiPolygonList2d, LinePoints2d)
+     * @deprecated use kendzi.math.geometry.polygon.PolygonSplit.splitMultiPolygon(MultiPolygonList2d, LinePoints2d)
      */
     @Deprecated
     public static SplitPolygons splitMultiPolygon(List<List<Point2d>> pPolygons, LinePoints2d pSplitingLine) {
@@ -489,7 +489,7 @@ public class PolygonSplitUtil {
         for (List<Point2d> p : pPolygons) {
             SplitPolygon partPolygon = new SplitPolygon();
 
-            PolygonSplitUtil.splitPolygonByLine(
+            PolygonSplit.splitPolygonByLine(
                     pSplitingLine,
                     p,
                     partPolygon.getPolygonExtanded(),
@@ -510,7 +510,7 @@ public class PolygonSplitUtil {
         for (PolygonList2d p : pPolygons.getPolygons()) {
             SplitPolygon partPolygon = new SplitPolygon();
 
-            PolygonSplitUtil.splitPolygonByLine(
+            PolygonSplit.splitPolygonByLine(
                     pSplitingLine,
                     p.getPoints(),
                     partPolygon.getPolygonExtanded(),

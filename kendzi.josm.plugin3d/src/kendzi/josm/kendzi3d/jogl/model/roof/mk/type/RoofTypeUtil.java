@@ -27,7 +27,7 @@ import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.PolygonSplit;
 
 import org.apache.log4j.Logger;
 
@@ -303,10 +303,12 @@ public class RoofTypeUtil {
 
 
         for (LinePoints2d line : pLines) {
-            splitPolygon = PolygonSplitUtil.splitLineSegmentsOnLine(line, splitPolygon);
+            splitPolygon = PolygonSplit.splitLineSegmentsOnLine(line, splitPolygon);
         }
 
         return (splitPolygon);
     }
+
+
 
 }

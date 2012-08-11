@@ -17,12 +17,10 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Material;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
@@ -32,8 +30,8 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.polygon.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygon;
+import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.SplitPolygons;
 
 import org.apache.log4j.Logger;
 
@@ -68,7 +66,8 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
             double pRecWidth,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData
+            ModelFactory model,
+            RoofMaterials pRoofTextureData
             ) {
 
 
@@ -85,7 +84,7 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
         h1 = getHeight1(h1);
         h2 = getHeight2(h2);
 
-        return build(border, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, middleLineHeight, pRoofTextureData);
+        return build(border, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, middleLineHeight, model, pRoofTextureData);
 
     }
 
@@ -135,29 +134,17 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
             double h2,
             double middleLineHeight,
 
-            RoofTextureData pRoofTextureData
+            ModelFactory model,
+            RoofMaterials pRoofTextureData
            ) {
 
 
 
-        ModelFactory model = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = model.addMesh("roof_border");
-        MeshFactory meshRoof = model.addMesh("roof_top");
+        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
 
-        //XXX move it
-        TextureData facadeTexture = pRoofTextureData.getFacadeTextrure();
-        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-        // XXX move material
-        int facadeMaterialIndex = model.addMaterial(facadeMaterial);
-        int roofMaterialIndex = model.addMaterial(roofMaterial);
-
-        meshBorder.materialID = facadeMaterialIndex;
-        meshBorder.hasTexture = true;
-
-        meshRoof.materialID = roofMaterialIndex;
-        meshRoof.hasTexture = true;
+        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
         Point2d rightTopPoint = new Point2d(pRecWidth, pRecHeight);
         Point2d rightBottomPoint = new Point2d(pRecWidth, 0);
@@ -182,7 +169,7 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-        SplitPolygon leftSplit = PolygonSplitUtil.splitPolygon(borderPolygon, lLine);
+        SplitPolygons leftSplit = PolygonSplitUtil.split(borderPolygon, lLine);
 
         MultiPolygonList2d bottomMP = leftSplit.getTopMultiPolygons();
         MultiPolygonList2d topMP = leftSplit.getBottomMultiPolygons();

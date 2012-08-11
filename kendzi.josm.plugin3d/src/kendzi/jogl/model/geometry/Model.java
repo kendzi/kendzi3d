@@ -14,6 +14,8 @@ import java.util.Vector;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.model.geometry.material.Material;
+
 
 public class Model {
 

@@ -13,6 +13,8 @@ package kendzi.jogl.model.geometry;
 public class Face {
 	public int [] vertIndex;
     public int [] coordIndex;
+    public int [] coordIndex1;
+    public int [] coordIndex2;
     public int [] normalIndex;
 
     public int type;

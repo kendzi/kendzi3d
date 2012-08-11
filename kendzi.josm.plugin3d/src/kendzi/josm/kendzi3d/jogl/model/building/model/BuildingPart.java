@@ -1,81 +1,85 @@
 package kendzi.josm.kendzi3d.jogl.model.building.model;
 
+import java.awt.Color;
 import java.util.List;
 
+import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
 public class BuildingPart {
-    double maxHeight;
-    double minHeight;
 
-    double maxLevel;
-    double minLevel;
+    private static final double DEFAULT_BUILDING_HEIGHT = 8;
 
-    double levelHeight;
+    Double maxHeight;
+    Double minHeight;
+
+    Double maxLevel;
+    Double minLevel;
+
+    double levelHeight = 2.5;
+
+    private TextureData facadeTextureData;
+
+    private TextureData roofTextureData;
+
+    private Color colour;
 
     DormerRoofModel roof;
 
     //Outline
-    List<WallPart> wallParts;
+    Wall wall;
+
+    //Inline
+    List<Wall> inlineWalls;
+
+    DormerRoofModel dormerRoofModel;
 
     //Windows
 
+    //Indoor
 
-    /**
-     * @return the maxHeight
-     */
-    public double getMaxHeight() {
-        return maxHeight;
+    // XXX move to util
+    public double getDefaultMinHeight() {
+        if (minHeight != null) {
+            return minHeight;
+        }
+
+        if (minLevel != null) {
+            return minLevel * levelHeight;
+        }
+        return 0;
     }
 
-    /**
-     * @param maxHeight the maxHeight to set
-     */
-    public void setMaxHeight(double maxHeight) {
-        this.maxHeight = maxHeight;
+ // XXX move to util
+    public double getDefaultMaxHeight() {
+        if (maxHeight != null) {
+            return maxHeight;
+        }
+
+        if (maxLevel != null) {
+            return maxLevel * levelHeight;
+        }
+        return getDefaultMinHeight() + DEFAULT_BUILDING_HEIGHT;
     }
 
-    /**
-     * @return the minHeight
-     */
-    public double getMinHeight() {
-        return minHeight;
+ // XXX move to util
+    public double getDefaultMinLevel() {
+        if (minLevel != null) {
+            return minLevel;
+        }
+
+        return 0;
     }
 
-    /**
-     * @param minHeight the minHeight to set
-     */
-    public void setMinHeight(double minHeight) {
-        this.minHeight = minHeight;
+ // XXX move to util
+    public double getDefaultMaxLevel() {
+        if (maxLevel != null) {
+            return maxLevel;
+        }
+
+        return getDefaultMinLevel() + 1;
     }
 
-    /**
-     * @return the maxLevel
-     */
-    public double getMaxLevel() {
-        return maxLevel;
-    }
-
-    /**
-     * @param maxLevel the maxLevel to set
-     */
-    public void setMaxLevel(double maxLevel) {
-        this.maxLevel = maxLevel;
-    }
-
-    /**
-     * @return the minLevel
-     */
-    public double getMinLevel() {
-        return minLevel;
-    }
-
-    /**
-     * @param minLevel the minLevel to set
-     */
-    public void setMinLevel(double minLevel) {
-        this.minLevel = minLevel;
-    }
 
     /**
      * @return the levelHeight
@@ -106,18 +110,154 @@ public class BuildingPart {
     }
 
     /**
-     * @return the wallParts
+     * @return the wall
      */
-    public List<WallPart> getWallParts() {
-        return wallParts;
+    public Wall getWall() {
+        return wall;
     }
 
     /**
-     * @param wallParts the wallParts to set
+     * @param wall the wall to set
      */
-    public void setWallParts(List<WallPart> wallParts) {
-        this.wallParts = wallParts;
+    public void setWall(Wall wall) {
+        this.wall = wall;
     }
+
+    /**
+     * @return the inlineWalls
+     */
+    public List<Wall> getInlineWalls() {
+        return inlineWalls;
+    }
+
+    /**
+     * @param inlineWalls the inlineWalls to set
+     */
+    public void setInlineWalls(List<Wall> inlineWalls) {
+        this.inlineWalls = inlineWalls;
+    }
+
+    /**
+     * @return the facadeTextureData
+     */
+    public TextureData getFacadeTextureData() {
+        return facadeTextureData;
+    }
+
+    /**
+     * @param facadeTextureData the facadeTextureData to set
+     */
+    public void setFacadeTextureData(TextureData facadeTextureData) {
+        this.facadeTextureData = facadeTextureData;
+    }
+
+
+    /**
+     * @return the maxHeight
+     */
+    public Double getMaxHeight() {
+        return maxHeight;
+    }
+
+
+    /**
+     * @param maxHeight the maxHeight to set
+     */
+    public void setMaxHeight(Double maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
+
+    /**
+     * @return the minHeight
+     */
+    public Double getMinHeight() {
+        return minHeight;
+    }
+
+
+    /**
+     * @param minHeight the minHeight to set
+     */
+    public void setMinHeight(Double minHeight) {
+        this.minHeight = minHeight;
+    }
+
+
+    /**
+     * @return the maxLevel
+     */
+    public Double getMaxLevel() {
+        return maxLevel;
+    }
+
+
+    /**
+     * @param maxLevel the maxLevel to set
+     */
+    public void setMaxLevel(Double maxLevel) {
+        this.maxLevel = maxLevel;
+    }
+
+
+    /**
+     * @return the minLevel
+     */
+    public Double getMinLevel() {
+        return minLevel;
+    }
+
+
+    /**
+     * @param minLevel the minLevel to set
+     */
+    public void setMinLevel(Double minLevel) {
+        this.minLevel = minLevel;
+    }
+
+
+    /**
+     * @return the colour
+     */
+    public Color getColour() {
+        return colour;
+    }
+
+    /**
+     * @param colour the colour to set
+     */
+    public void setColour(Color colour) {
+        this.colour = colour;
+    }
+
+    /**
+     * @return the dormerRoofModel
+     */
+    public DormerRoofModel getDormerRoofModel() {
+        return dormerRoofModel;
+    }
+
+    /**
+     * @param dormerRoofModel the dormerRoofModel to set
+     */
+    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
+        this.dormerRoofModel = dormerRoofModel;
+    }
+
+    /**
+     * @return the roofTextureData
+     */
+    public TextureData getRoofTextureData() {
+        return roofTextureData;
+    }
+
+    /**
+     * @param roofTextureData the roofTextureData to set
+     */
+    public void setRoofTextureData(TextureData roofTextureData) {
+        this.roofTextureData = roofTextureData;
+    }
+
 
 
 

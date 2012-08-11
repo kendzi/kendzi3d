@@ -35,7 +35,7 @@ public class DormerTypeBuilder {
             RoofHooksSpaces pRoofHooksSpaces,
             DormerRoofModel roof,
             Map<MeasurementKey, Measurement> pMeasurements,
-            RoofTextureData pRoofTextureData) {
+            RoofMaterials pRoofTextureData) {
 
         List<RoofDormerTypeOutput> ret = new ArrayList<RoofDormerTypeOutput>();
 

@@ -11,7 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer;
 
 import java.util.Map;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
@@ -22,5 +22,5 @@ public interface RoofDormerType {
 
     public DormerType getType();
 
-    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space, Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData);
+    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space, Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData);
 }

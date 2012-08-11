@@ -12,7 +12,7 @@ import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
 public class DormerRoofModel {
-
+    @Deprecated
     PolygonList2d building;
 
     // Roof Type
@@ -60,7 +60,7 @@ public class DormerRoofModel {
 
     /**
      * @return the building
-     */
+     */@Deprecated
     public PolygonList2d getBuilding() {
         return this.building;
     }
