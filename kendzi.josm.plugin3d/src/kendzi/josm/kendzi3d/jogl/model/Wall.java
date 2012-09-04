@@ -592,7 +592,7 @@ public class Wall extends AbstractWayModel {
                     for (int c = 0; c < polygonSize; c++) {
                         int index = j * polygonSize + c;
                         int vi = ff.vertIndex.get(index);
-                        int ti = ff.coordIndex.get(index);
+                        int ti = ff.coordIndexLayers.get(0).get(index);
                         int ni = ff.normalIndex.get(index);
 
                         Point3d v = solidModel.vertices.get(vi);

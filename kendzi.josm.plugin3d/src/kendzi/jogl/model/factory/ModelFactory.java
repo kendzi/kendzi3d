@@ -116,22 +116,41 @@ public class ModelFactory {
             Face [] faces = new Face[faceFactory.size()];
             int j = 0;
             for (FaceFactory ff : faceFactory) {
-                Face f = new Face();
-                f.type = ff.type.getType();
-                f.coordIndex = new int[ff.coordIndex.size()];
-                for (int i = 0; i < ff.coordIndex.size(); i++) {
-                    f.coordIndex[i] = ff.coordIndex.get(i);
+                Face f = new Face(ff.type.getType(), ff.vertIndex.size(), ff.numOfTexturesLayers());
+//                f.type = ff.type.getType();
+//                f.coordIndex = new int[ff.coordIndex.size()];
+                for (int l = 0; l < ff.numOfTexturesLayers(); l++) {
+                    List<Integer> coordIndex = ff.coordIndexLayers.get(l);
+
+                    for (int i = 0; i < coordIndex.size(); i++) {
+                        f.coordIndexLayers[l][i] = coordIndex.get(i);
+                    }
                 }
-                f.normalIndex = new int[ff.normalIndex.size()];
+
+//                if (ff.coordIndex1 != null) {
+//                    f.coordIndex1 = new int[ff.coordIndex1.size()];
+//                    for (int i = 0; i < ff.coordIndex1.size(); i++) {
+//                        f.coordIndex1[i] = ff.coordIndex1.get(i);
+//                    }
+//                }
+//
+//                if (ff.coordIndex2 != null) {
+//                    f.coordIndex2 = new int[ff.coordIndex2.size()];
+//                    for (int i = 0; i < ff.coordIndex2.size(); i++) {
+//                        f.coordIndex2[i] = ff.coordIndex2.get(i);
+//                    }
+//                }
+
+//                f.normalIndex = new int[ff.normalIndex.size()];
                 for (int i = 0; i < ff.normalIndex.size(); i++) {
                     f.normalIndex[i] = ff.normalIndex.get(i);
                 }
-                f.vertIndex = new int[ff.vertIndex.size()];
+//                f.vertIndex = new int[ff.vertIndex.size()];
                 for (int i = 0; i < ff.vertIndex.size(); i++) {
                     f.vertIndex[i] = ff.vertIndex.get(i);
                 }
 //                if (no face material)
-                f.materialID = mesh.materialID;
+//                f.materialID = mesh.materialID;
 
                 faces[j] = f;
 

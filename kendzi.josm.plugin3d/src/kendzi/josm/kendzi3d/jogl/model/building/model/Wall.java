@@ -1,8 +1,7 @@
 package kendzi.josm.kendzi3d.jogl.model.building.model;
 
+import java.awt.Color;
 import java.util.List;
-
-import kendzi.josm.kendzi3d.dto.TextureData;
 
 /**
  *
@@ -12,10 +11,13 @@ public class Wall {
 
     private List<WallPart> wallParts;
 
-    private TextureData facadeTextureData;
+    private String facadeMaterialType;
 
-    private TextureData roofTextureData;
+    private String roofMaterialType;
 
+    private Color facadeColour;
+
+    private Color roofColour;
 
 
     /**
@@ -33,31 +35,59 @@ public class Wall {
     }
 
     /**
-     * @return the facadeTextureData
+     * @return the facadeMaterialType
      */
-    public TextureData getFacadeTextureData() {
-        return this.facadeTextureData;
+    public String getFacadeMaterialType() {
+        return this.facadeMaterialType;
     }
 
     /**
-     * @param facadeTextureData the facadeTextureData to set
+     * @param facadeMaterialType the facadeMaterialType to set
      */
-    public void setFacadeTextureData(TextureData facadeTextureData) {
-        this.facadeTextureData = facadeTextureData;
+    public void setFacadeMaterialType(String facadeMaterialType) {
+        this.facadeMaterialType = facadeMaterialType;
     }
 
     /**
-     * @return the roofTextureData
+     * @return the roofMaterialType
      */
-    public TextureData getRoofTextureData() {
-        return this.roofTextureData;
+    public String getRoofMaterialType() {
+        return this.roofMaterialType;
     }
 
     /**
-     * @param roofTextureData the roofTextureData to set
+     * @param roofMaterialType the roofMaterialType to set
      */
-    public void setRoofTextureData(TextureData roofTextureData) {
-        this.roofTextureData = roofTextureData;
+    public void setRoofMaterialType(String roofMaterialType) {
+        this.roofMaterialType = roofMaterialType;
+    }
+
+    /**
+     * @return the facadeColour
+     */
+    public Color getFacadeColour() {
+        return this.facadeColour;
+    }
+
+    /**
+     * @param facadeColour the facadeColour to set
+     */
+    public void setFacadeColour(Color facadeColour) {
+        this.facadeColour = facadeColour;
+    }
+
+    /**
+     * @return the roofColour
+     */
+    public Color getRoofColour() {
+        return this.roofColour;
+    }
+
+    /**
+     * @param roofColour the roofColour to set
+     */
+    public void setRoofColour(Color roofColour) {
+        this.roofColour = roofColour;
     }
 
 

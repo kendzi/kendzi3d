@@ -29,6 +29,7 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeValues;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
@@ -45,6 +46,7 @@ import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -157,13 +159,20 @@ public class DormerRoof extends Roof {
      * @return
      */
     public static DormerRoofModel parseDormerRoof(
-            /*List<Point2d> points,*/ Way way, Perspective3D perspective) {
+            /*List<Point2d> points,*/ OsmPrimitive way, Perspective3D perspective) {
 
 
 
         Map<String, String> keys = way.getKeys();
 
         String type = keys.get(OsmAttributeKeys._3DR_TYPE.getKey());
+        if (StringUtil.isBlankOrNull(type)) {
+            type = keys.get(OsmAttributeKeys.ROOF_SHAPE.getKey());
+        }
+        if (StringUtil.isBlankOrNull(type)) {
+            type = keys.get(OsmAttributeKeys.BUILDING_ROOF_SHAPE.getKey());
+        }
+
         String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
 
         DormerRoofModel roof = new  DormerRoofModel();
@@ -189,17 +198,20 @@ public class DormerRoof extends Roof {
         return roof;
     }
 
-    private static Vector2d findDirection(Way pWay, Perspective3D pPerspective) {
+    private static Vector2d findDirection(OsmPrimitive pWay, Perspective3D pPerspective) {
         Vector2d ret = null;
 
         ret = findDirectionByRelation(pWay);
         if (ret != null) {
             return ret;
         }
-
-        ret = findDirectionByPoints(pWay, pPerspective);
-        if (ret != null) {
-            return ret;
+        if (pWay instanceof Way) {
+            ret = findDirectionByPoints((Way) pWay, pPerspective);
+            if (ret != null) {
+                return ret;
+            }
+        } else {
+            //TODO
         }
 
         ret = findDirectionByDirectionTag(pWay);
@@ -211,21 +223,21 @@ public class DormerRoof extends Roof {
     }
 
 
-    private static Vector2d findDirectionByRelation(Way pWay) {
+    private static Vector2d findDirectionByRelation(OsmPrimitive pWay) {
         // TODO
         // XXX add support for relations
         return null;
     }
 
     private static Vector2d findDirectionByPoints(Way pWay, Perspective3D pPerspective) {
-        Point2d directionBegin = findPoint("3dr:direction", "begin", pWay, pPerspective);
+        Point2d directionBegin = findPoint(OsmAttributeKeys._3DR_DIRECTION.getKey(), OsmAttributeValues.BEGIN.getValue(), pWay, pPerspective);
         if (directionBegin == null) {
             directionBegin = pPerspective.calcPoint(pWay.getNode(0));
         }
 
 
 
-        Point2d directionEnd = findPoint("3dr:direction", "end", pWay, pPerspective);
+        Point2d directionEnd = findPoint(OsmAttributeKeys._3DR_DIRECTION.getKey(), OsmAttributeValues.END.getValue(), pWay, pPerspective);
         if (directionBegin != null && directionEnd != null) {
             Vector2d direction = new Vector2d(directionEnd);
             direction.sub(directionBegin);
@@ -235,11 +247,11 @@ public class DormerRoof extends Roof {
         return null;
     }
 
-    static private Vector2d findDirectionByDirectionTag(Way pWay) {
+    static private Vector2d findDirectionByDirectionTag(OsmPrimitive pWay) {
         // XXX roof:direction
-        String directionValue = pWay.get("roof:direction");
+        String directionValue = OsmAttributeKeys.ROOF_DIRECTION.parsePrimitive(pWay);
         if(StringUtil.isBlankOrNull(directionValue)) {
-            directionValue = pWay.get("direction");
+            directionValue = OsmAttributeKeys.DIRECTION.parsePrimitive(pWay);
         }
 //        directionValue = pWay.get("direction");
         Direction direction = DirectionParserUtil.parse(directionValue);

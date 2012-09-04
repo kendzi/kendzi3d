@@ -3,7 +3,6 @@ package kendzi.josm.kendzi3d.jogl.model.building.model;
 import java.awt.Color;
 import java.util.List;
 
-import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
 public class BuildingPart {
@@ -13,16 +12,22 @@ public class BuildingPart {
     Double maxHeight;
     Double minHeight;
 
-    Double maxLevel;
-    Double minLevel;
+    Integer maxLevel;
+    Integer minLevel;
 
     double levelHeight = 2.5;
 
-    private TextureData facadeTextureData;
+    private String facadeMaterialType;
 
-    private TextureData roofTextureData;
+    private String roofMaterialType;
 
-    private Color colour;
+//    private TextureData facadeTextureData;
+//
+//    private TextureData roofTextureData;
+
+    private Color facadeColour;
+
+    private Color roofColour;
 
     DormerRoofModel roof;
 
@@ -63,7 +68,7 @@ public class BuildingPart {
     }
 
  // XXX move to util
-    public double getDefaultMinLevel() {
+    public int getDefaultMinLevel() {
         if (minLevel != null) {
             return minLevel;
         }
@@ -72,7 +77,7 @@ public class BuildingPart {
     }
 
  // XXX move to util
-    public double getDefaultMaxLevel() {
+    public int getDefaultMaxLevel() {
         if (maxLevel != null) {
             return maxLevel;
         }
@@ -137,19 +142,19 @@ public class BuildingPart {
         this.inlineWalls = inlineWalls;
     }
 
-    /**
-     * @return the facadeTextureData
-     */
-    public TextureData getFacadeTextureData() {
-        return facadeTextureData;
-    }
-
-    /**
-     * @param facadeTextureData the facadeTextureData to set
-     */
-    public void setFacadeTextureData(TextureData facadeTextureData) {
-        this.facadeTextureData = facadeTextureData;
-    }
+//    /**
+//     * @return the facadeTextureData
+//     */
+//    public TextureData getFacadeTextureData() {
+//        return facadeTextureData;
+//    }
+//
+//    /**
+//     * @param facadeTextureData the facadeTextureData to set
+//     */
+//    public void setFacadeTextureData(TextureData facadeTextureData) {
+//        this.facadeTextureData = facadeTextureData;
+//    }
 
 
     /**
@@ -187,7 +192,7 @@ public class BuildingPart {
     /**
      * @return the maxLevel
      */
-    public Double getMaxLevel() {
+    public Integer getMaxLevel() {
         return maxLevel;
     }
 
@@ -195,7 +200,7 @@ public class BuildingPart {
     /**
      * @param maxLevel the maxLevel to set
      */
-    public void setMaxLevel(Double maxLevel) {
+    public void setMaxLevel(Integer maxLevel) {
         this.maxLevel = maxLevel;
     }
 
@@ -203,7 +208,7 @@ public class BuildingPart {
     /**
      * @return the minLevel
      */
-    public Double getMinLevel() {
+    public Integer getMinLevel() {
         return minLevel;
     }
 
@@ -211,24 +216,12 @@ public class BuildingPart {
     /**
      * @param minLevel the minLevel to set
      */
-    public void setMinLevel(Double minLevel) {
+    public void setMinLevel(Integer minLevel) {
         this.minLevel = minLevel;
     }
 
 
-    /**
-     * @return the colour
-     */
-    public Color getColour() {
-        return colour;
-    }
 
-    /**
-     * @param colour the colour to set
-     */
-    public void setColour(Color colour) {
-        this.colour = colour;
-    }
 
     /**
      * @return the dormerRoofModel
@@ -244,18 +237,74 @@ public class BuildingPart {
         this.dormerRoofModel = dormerRoofModel;
     }
 
+//    /**
+//     * @return the roofTextureData
+//     */
+//    public TextureData getRoofTextureData() {
+//        return roofTextureData;
+//    }
+//
+//    /**
+//     * @param roofTextureData the roofTextureData to set
+//     */
+//    public void setRoofTextureData(TextureData roofTextureData) {
+//        this.roofTextureData = roofTextureData;
+//    }
+
     /**
-     * @return the roofTextureData
+     * @return the facadeMaterialType
      */
-    public TextureData getRoofTextureData() {
-        return roofTextureData;
+    public String getFacadeMaterialType() {
+        return facadeMaterialType;
     }
 
     /**
-     * @param roofTextureData the roofTextureData to set
+     * @param facadeMaterialType the facadeMaterialType to set
      */
-    public void setRoofTextureData(TextureData roofTextureData) {
-        this.roofTextureData = roofTextureData;
+    public void setFacadeMaterialType(String facadeMaterialType) {
+        this.facadeMaterialType = facadeMaterialType;
+    }
+
+    /**
+     * @return the roofMaterialType
+     */
+    public String getRoofMaterialType() {
+        return roofMaterialType;
+    }
+
+    /**
+     * @param roofMaterialType the roofMaterialType to set
+     */
+    public void setRoofMaterialType(String roofMaterialType) {
+        this.roofMaterialType = roofMaterialType;
+    }
+
+    /**
+     * @return the facadeColour
+     */
+    public Color getFacadeColour() {
+        return facadeColour;
+    }
+
+    /**
+     * @param facadeColour the facadeColour to set
+     */
+    public void setFacadeColour(Color facadeColour) {
+        this.facadeColour = facadeColour;
+    }
+
+    /**
+     * @return the roofColour
+     */
+    public Color getRoofColour() {
+        return roofColour;
+    }
+
+    /**
+     * @param roofColour the roofColour to set
+     */
+    public void setRoofColour(Color roofColour) {
+        this.roofColour = roofColour;
     }
 
 

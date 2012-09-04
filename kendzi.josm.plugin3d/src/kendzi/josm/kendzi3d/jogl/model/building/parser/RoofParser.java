@@ -6,11 +6,11 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.roof.DormerRoof;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class RoofParser {
 
-    public static DormerRoofModel parse(Way way, Perspective3D perspective
+    public static DormerRoofModel parse(OsmPrimitive way, Perspective3D perspective
             /*, TextureData facdeTexture*/) {
 
         Map<String, String> keys = way.getKeys();

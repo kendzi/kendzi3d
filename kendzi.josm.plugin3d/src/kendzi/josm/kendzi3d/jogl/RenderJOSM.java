@@ -21,6 +21,7 @@ import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
+import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
@@ -227,14 +228,14 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     kendzi.jogl.model.geometry.Model createErrorModel() {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        Material material = new Material();
-        material.ambientColor = Color.RED;
-        material.diffuseColor = Color.RED;
-        material.specularColor = Color.RED;
-
-        material.emissive = Color.RED;
-
-        material.shininess = (float) 0.5;
+        Material material = new Material(new AmbientDiffuseComponent(Color.RED, Color.RED));
+//        material.ambientColor = Color.RED;
+//        material.diffuseColor = Color.RED;
+//        material.specularColor = Color.RED;
+//
+//        material.emissive = Color.RED;
+//
+//        material.shininess = (float) 0.5;
 
 //        material.shininess2 = (float) 0.5;
 

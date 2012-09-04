@@ -51,6 +51,12 @@ public class MeshFactory {
 
 
 
+    public FaceFactory addFace(FaceType faceType, int numOfTextures) {
+        FaceFactory ff = new FaceFactory(faceType, numOfTextures);
+        this.faceFactory.add(ff);
+        return ff;
+    }
+
     public FaceFactory addFace(FaceType faceType) {
         FaceFactory ff = new FaceFactory(faceType);
         this.faceFactory.add(ff);

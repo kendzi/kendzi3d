@@ -17,7 +17,11 @@ import javax.media.opengl.GL2;
 public class FaceFactory {
 
 	public List<Integer> vertIndex = new ArrayList<Integer>();
-	public List<Integer> coordIndex = new ArrayList<Integer>();
+
+	public List<List<Integer>> coordIndexLayers = new ArrayList<List<Integer>>();
+//	public List<Integer> coordIndex = new ArrayList<Integer>();
+//	public List<Integer> coordIndex1 = new ArrayList<Integer>();
+//	public List<Integer> coordIndex2 = new ArrayList<Integer>();
 	public List<Integer> normalIndex = new ArrayList<Integer>();
 
 	public int count;
@@ -30,6 +34,20 @@ public class FaceFactory {
 //    public int [] normalIndex;
 
 //    public Type type;
+
+
+    protected FaceFactory(FaceType pFaceType) {
+        this(pFaceType, 1);
+    }
+
+    protected FaceFactory(FaceType pFaceType, int numOfLayers) {
+	    this.type = pFaceType;
+	    this.coordIndexLayers = new ArrayList<List<Integer>>();
+
+	    for (int i = 0; i < numOfLayers; i++) {
+	        coordIndexLayers.add(new ArrayList<Integer>());
+	    }
+	}
 
     public enum FaceType {
     	/**
@@ -66,35 +84,58 @@ public class FaceFactory {
 		}
     }
 
-	protected FaceFactory(FaceType type) {
-		this.type = type;
-	}
 
 	public void addVertIndex(int i) {
-		vertIndex.add(i);
+		this.vertIndex.add(i);
 	}
 
 	public void addCoordIndex(int i) {
-		coordIndex.add(i);
+		this.coordIndexLayers.get(0).add(i);
 	}
 
 	public void addNormalIndex(int i) {
-		normalIndex.add(i);
+		this.normalIndex.add(i);
 	}
 
 	public void addVert(int vertIndex, int coordIndex, int normalIndex) {
 
 		this.vertIndex.add(vertIndex);
 
-		this.coordIndex.add(coordIndex);
+		validateAddedTextrureCoordinates(1);
+
+		this.coordIndexLayers.get(0).add(coordIndex);
 
 		this.normalIndex.add(normalIndex);
 
-		count++;
+		this.count++;
+	}
+
+	private void validateAddedTextrureCoordinates(int numOfAddedTexturesCoordinates) {
+	    if (this.coordIndexLayers.size() != numOfAddedTexturesCoordinates) {
+            throw new RuntimeException("face have setup: " + this.coordIndexLayers.size() + " textures layers but added vertex has only coordinate for: "+ numOfAddedTexturesCoordinates);
+        }
+	}
+
+	public void addVert(int vertIndex, int coordIndex0, int coordIndex1, int normalIndex) {
+
+	    this.vertIndex.add(vertIndex);
+
+	    validateAddedTextrureCoordinates(2);
+
+	    this.coordIndexLayers.get(0).add(coordIndex0);
+	    this.coordIndexLayers.get(1).add(coordIndex1);
+
+	    this.normalIndex.add(normalIndex);
+
+	    this.count++;
 	}
 
 	public void setTextIndex(int textIndex) {
 		this.textIndex = textIndex;
+	}
+
+	public int numOfTexturesLayers() {
+	    return this.coordIndexLayers.size();
 	}
 
 //	public void setType(Type type) {

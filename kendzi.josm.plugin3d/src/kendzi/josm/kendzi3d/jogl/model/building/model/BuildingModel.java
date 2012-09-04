@@ -1,8 +1,7 @@
 package kendzi.josm.kendzi3d.jogl.model.building.model;
 
+import java.awt.Color;
 import java.util.List;
-
-import kendzi.josm.kendzi3d.dto.TextureData;
 
 public class BuildingModel {
 //    @Deprecated
@@ -10,16 +9,26 @@ public class BuildingModel {
 
     List<BuildingPart> parts;
 
-    String facadeMaterial;
 
-    String roofMaterial;
+    private String facadeMaterialType;
 
-    private TextureData facadeTextureData;
+    private String roofMaterialType;
 
-    private TextureData roofTextureData;
+    private Color facadeColour;
 
-    // XXX move to set in Building! (to chose best match);
-    private TextureData windowsColumnsTextureData;
+    private Color roofColour;
+
+
+//    String facadeMaterial;
+//
+//    String roofMaterial;
+//
+//    private TextureData facadeTextureData;
+//
+//    private TextureData roofTextureData;
+//
+//    // XXX move to set in Building! (to chose best match);
+//    private TextureData windowsColumnsTextureData;
 
 
 //    /**
@@ -41,7 +50,7 @@ public class BuildingModel {
      * @return the parts
      */
     public List<BuildingPart> getParts() {
-        return parts;
+        return this.parts;
     }
 
     /**
@@ -52,72 +61,58 @@ public class BuildingModel {
     }
 
     /**
-     * @return the facadeMaterial
+     * @return the facadeMaterialType
      */
-    public String getFacadeMaterial() {
-        return facadeMaterial;
+    public String getFacadeMaterialType() {
+        return this.facadeMaterialType;
     }
 
     /**
-     * @param facadeMaterial the facadeMaterial to set
+     * @param facadeMaterialType the facadeMaterialType to set
      */
-    public void setFacadeMaterial(String facadeMaterial) {
-        this.facadeMaterial = facadeMaterial;
+    public void setFacadeMaterialType(String facadeMaterialType) {
+        this.facadeMaterialType = facadeMaterialType;
     }
 
     /**
-     * @return the roofMaterial
+     * @return the roofMaterialType
      */
-    public String getRoofMaterial() {
-        return roofMaterial;
+    public String getRoofMaterialType() {
+        return this.roofMaterialType;
     }
 
     /**
-     * @param roofMaterial the roofMaterial to set
+     * @param roofMaterialType the roofMaterialType to set
      */
-    public void setRoofMaterial(String roofMaterial) {
-        this.roofMaterial = roofMaterial;
+    public void setRoofMaterialType(String roofMaterialType) {
+        this.roofMaterialType = roofMaterialType;
     }
 
     /**
-     * @return the facadeTextureData
+     * @return the facadeColour
      */
-    public TextureData getFacadeTextureData() {
-        return facadeTextureData;
+    public Color getFacadeColour() {
+        return this.facadeColour;
     }
 
     /**
-     * @param facadeTextureData the facadeTextureData to set
+     * @param facadeColour the facadeColour to set
      */
-    public void setFacadeTextureData(TextureData facadeTextureData) {
-        this.facadeTextureData = facadeTextureData;
+    public void setFacadeColour(Color facadeColour) {
+        this.facadeColour = facadeColour;
     }
 
     /**
-     * @return the windowsColumnsTextureData
+     * @return the roofColour
      */
-    public TextureData getWindowsColumnsTextureData() {
-        return windowsColumnsTextureData;
+    public Color getRoofColour() {
+        return this.roofColour;
     }
 
     /**
-     * @param windowsColumnsTextureData the windowsColumnsTextureData to set
+     * @param roofColour the roofColour to set
      */
-    public void setWindowsColumnsTextureData(TextureData windowsColumnsTextureData) {
-        this.windowsColumnsTextureData = windowsColumnsTextureData;
-    }
-
-    /**
-     * @return the roofTextureData
-     */
-    public TextureData getRoofTextureData() {
-        return roofTextureData;
-    }
-
-    /**
-     * @param roofTextureData the roofTextureData to set
-     */
-    public void setRoofTextureData(TextureData roofTextureData) {
-        this.roofTextureData = roofTextureData;
+    public void setRoofColour(Color roofColour) {
+        this.roofColour = roofColour;
     }
 }

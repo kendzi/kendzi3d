@@ -14,6 +14,7 @@ import java.util.Map;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.Building;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
@@ -60,9 +61,9 @@ public class ShapeRoof extends DormerRoof {
 
         DormerRoofModel roof = parseDormerRoof(/*this.points,*/ this.way, this.perspective);
 
-        String shapeName = keys.get("building:roof:shape");
+        String shapeName = keys.get(OsmAttributeKeys.BUILDING_ROOF_SHAPE.getKey());
         if (shapeName == null) {
-            shapeName = keys.get("roof:shape");
+            shapeName = keys.get(OsmAttributeKeys.ROOF_SHAPE.getKey());
         }
 
         RoofTypeAliasEnum shape = Parser.parseRoofShape(shapeName);

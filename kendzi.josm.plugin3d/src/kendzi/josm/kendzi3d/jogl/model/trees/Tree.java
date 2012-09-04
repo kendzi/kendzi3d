@@ -24,6 +24,7 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.Camera;
@@ -296,8 +297,9 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         ModelFactory mf = ModelFactory.modelBuilder();
         Material mat = new Material();
-        mat.strName = "flat_texture";
-        mat.strFile = getFlatTextureFile();
+//        mat.strName = "flat_texture";
+//        mat.strFile = getFlatTextureFile();
+        mat.setTexture0(getFlatTextureFile());
 
         int mi = mf.addMaterial(mat);
 
@@ -411,7 +413,11 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     private static void setAmbientColor(Model pModel) {
         for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
             Material material = pModel.getMaterial(i);
-            material.ambientColor = material.diffuseColor;
+//            material.ambientColor = material.diffuseColor;
+            material.setAmbientDiffuse(new AmbientDiffuseComponent(
+                    material.getAmbientDiffuse().getDiffuseColor(),
+                    material.getAmbientDiffuse().getDiffuseColor()
+                    ));
         }
     }
 

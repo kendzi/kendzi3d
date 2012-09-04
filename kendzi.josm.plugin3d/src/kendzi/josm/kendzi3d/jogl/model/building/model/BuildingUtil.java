@@ -32,6 +32,13 @@ public class BuildingUtil {
             }
         }
 
+//        if (points.size() > 1) {
+        if (points.get(0).equals(points.get(points.size()-1))) {
+            points.remove(points.size()-1);
+        } else {
+           throw new IllegalArgumentException("wall is not closed!!!");
+        }
+
         return new PolygonList2d(points);
     }
 

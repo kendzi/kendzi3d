@@ -4,12 +4,15 @@ import java.awt.Color;
 
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.building.model.WindowGridBuildingElement;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 
 public class BuildingAttributeParser {
 
@@ -37,25 +40,27 @@ public class BuildingAttributeParser {
 
 
     public static String parseFacadeName(OsmPrimitive p1, OsmPrimitive p2) {
-        String name = parseFacadeName(p1);
+        String name = parseFacadeMaterialName(p1);
         if (name != null) {
             return name;
         }
-        return parseFacadeName(p2);
+        return parseFacadeMaterialName(p2);
     }
 
     /** Gets facade texture.
      * @param primitive
      * @return facade texture data
      */
-    public static String parseFacadeName(OsmPrimitive primitive) {
+    public static String parseFacadeMaterialName(OsmPrimitive primitive) {
 
-        String facadeMaterial = primitive.get("building:material");
+        String facadeMaterial = OsmAttributeKeys.BUILDING_MATERIAL.parsePrimitive(primitive);
+
         if (StringUtil.isBlankOrNull(facadeMaterial)) {
-            facadeMaterial = primitive.get("building:facade:material");
+            facadeMaterial = OsmAttributeKeys.BUILDING_FACADE_MATERIAL.parsePrimitive(primitive);
         }
+
         if (StringUtil.isBlankOrNull(facadeMaterial)) {
-            facadeMaterial = primitive.get("facade:material");
+            facadeMaterial = OsmAttributeKeys.FACADE_MATERIAL.parsePrimitive(primitive);
         }
 
         return facadeMaterial;
@@ -69,6 +74,20 @@ public class BuildingAttributeParser {
 //        return null;
     }
 
+    /** Gets facade texture.
+     * @param primitive
+     * @return facade texture data
+     */
+    public static String parseRoofMaterialName(OsmPrimitive primitive) {
+
+
+        String roofMaterial = OsmAttributeKeys.ROOF_MATERIAL.parsePrimitive(primitive);
+        if (StringUtil.isBlankOrNull(roofMaterial)) {
+            roofMaterial = OsmAttributeKeys.BUILDING_ROOF_MATERIAL.parsePrimitive(primitive);
+        }
+
+        return roofMaterial;
+    }
 
     public static Color parseFacadeColour(OsmPrimitive p1, OsmPrimitive p2) {
         Color name = parseFacadeColour(p1);
@@ -84,19 +103,44 @@ public class BuildingAttributeParser {
      */
     public static Color parseFacadeColour(OsmPrimitive primitive) {
 
-        String facadeColor = primitive.get("building:facade:color");
+        String facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOR.parsePrimitive(primitive);
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = primitive.get("building:facade:colour");
+            facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOUR.parsePrimitive(primitive);
         }
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = primitive.get("building:color");
+            facadeColor = OsmAttributeKeys.BUILDING_COLOR.parsePrimitive(primitive);
         }
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = primitive.get("building:colour");
+            facadeColor = OsmAttributeKeys.BUILDING_COLOUR.parsePrimitive(primitive);
         }
 
         if (!StringUtil.isBlankOrNull(facadeColor)) {
             return ColorTextureBuilder.parseColor(facadeColor);
+        }
+        return null;
+    }
+
+
+
+    /** Gets roof colour.
+     * @param primitive
+     * @return roof colour
+     */
+    public static Color parseRoofColour(OsmPrimitive primitive) {
+
+        String roofColor = OsmAttributeKeys.ROOF_COLOUR.parsePrimitive(primitive);
+        if (StringUtil.isBlankOrNull(roofColor)) {
+            roofColor = OsmAttributeKeys.ROOF_COLOR.parsePrimitive(primitive);
+        }
+        if (StringUtil.isBlankOrNull(roofColor)) {
+            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOUR.parsePrimitive(primitive);
+        }
+        if (StringUtil.isBlankOrNull(roofColor)) {
+            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOR.parsePrimitive(primitive);
+        }
+
+        if (!StringUtil.isBlankOrNull(roofColor)) {
+            return ColorTextureBuilder.parseColor(roofColor);
         }
         return null;
     }
@@ -110,55 +154,87 @@ public class BuildingAttributeParser {
         return ModelUtil.getHeight(p1, null);
     }
 
-    public static Double parseMaxHeight(OsmPrimitive p1, OsmPrimitive p2) {
-        Double height = ModelUtil.getHeight(p1, null);
-        if (height != null) {
-            return height;
-        }
-
-        return ModelUtil.getHeight(p2, null);
-    }
+//    public static Double parseMaxHeight(OsmPrimitive p1, OsmPrimitive p2) {
+//        Double height = ModelUtil.getHeight(p1, null);
+//        if (height != null) {
+//            return height;
+//        }
+//
+//        return ModelUtil.getHeight(p2, null);
+//    }
 
     public static Double parseMinHeight(OsmPrimitive p1) {
         return ModelUtil.getMinHeight(p1, null);
     }
 
-    public static Double parseMinHeight(OsmPrimitive p1, OsmPrimitive p2) {
-        Double height = ModelUtil.getMinHeight(p1, null);
-        if (height != null) {
-            return height;
-        }
+//    public static Double parseMinHeight(OsmPrimitive p1, OsmPrimitive p2) {
+//        Double height = ModelUtil.getMinHeight(p1, null);
+//        if (height != null) {
+//            return height;
+//        }
+//
+//        return ModelUtil.getMinHeight(p2, null);
+//    }
 
-        return ModelUtil.getMinHeight(p2, null);
-    }
-
-    public static Double parseMaxLevel(OsmPrimitive p1) {
-        Double level = ModelUtil.getNumberAttribute(p1, "building:max_level", null);
+    public static Integer parseMaxLevel(OsmPrimitive p1) {
+        Integer level = roundToInteger(
+                ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MAX_LEVEL.getKey(), null));
         if (level != null) {
             return level;
         }
-        return ModelUtil.getNumberAttribute(p1, "building:levels", null);
+        return roundToInteger(
+                ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS.getKey(), null));
     }
 
-    public static Double parseMaxLevel(OsmPrimitive p1, OsmPrimitive p2) {
-        Double level = parseMaxLevel(p1);
-        if (level != null) {
-            return level;
+    private static Integer roundToInteger(Double d) {
+        if (d == null) {
+            return null;
+        }
+        return (int) Math.round(d);
+    }
+
+//    public static Integer parseMaxLevel(OsmPrimitive p1, OsmPrimitive p2) {
+//        Integer level = parseMaxLevel(p1);
+//        if (level != null) {
+//            return level;
+//        }
+//
+//        return parseMaxLevel(p2);
+//    }
+
+    public static Integer parseMinLevel(OsmPrimitive p1) {
+        return roundToInteger(ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MIN_LEVEL.getKey(), null));
+    }
+
+//    public static Integer parseMinLevel(OsmPrimitive p1, OsmPrimitive p2) {
+//        Integer level = parseMinLevel(p1);
+//        if (level != null) {
+//            return level;
+//        }
+//
+//        return parseMinLevel(p2);
+//    }
+
+
+    public static WindowGridBuildingElement parseWallWindowsColumns(Way w) {
+
+        String windowsCols = OsmAttributeKeys.WINDOWS.parsePrimitive(w);
+
+        if (StringUtil.isBlankOrNull(windowsCols)) {
+            return null;
         }
 
-        return parseMaxLevel(p2);
-    }
+        Integer cols = null;
 
-    public static Double parseMinLevel(OsmPrimitive p1) {
-        return ModelUtil.getNumberAttribute(p1, "building:min_level", null);
-    }
-
-    public static Double parseMinLevel(OsmPrimitive p1, OsmPrimitive p2) {
-        Double level = parseMinLevel(p1);
-        if (level != null) {
-            return level;
+        try {
+            cols = Integer.parseInt(windowsCols);
+        } catch (Exception e) {
+            //
+        }
+        if (cols != null) {
+            return new WindowGridBuildingElement(cols);
         }
 
-        return parseMinLevel(p2);
+        return null;
     }
 }

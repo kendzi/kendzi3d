@@ -39,6 +39,12 @@ public class Skeleton {
 
 
     public static Output sk(List<Point2d> pBorder) {
+        if (pBorder == null) {
+            throw new IllegalArgumentException("border can't be null");
+        }
+        if (pBorder.get(0).equals(pBorder.get(pBorder.size() - 1))) {
+            throw new IllegalArgumentException("border can't start and end with the same point");
+        }
         return sk(pBorder, null);
     }
 

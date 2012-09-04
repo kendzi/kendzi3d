@@ -71,6 +71,8 @@ public class Ground {
         double zButtom = c.z + groundSize;
         double zTop = c.z - groundSize;
 
+        gl.glNormal3d(0, 1, 0);
+
         gl.glTexCoord2d(xRight * td.getLenght() , zButtom * td.getHeight());
         gl.glVertex3d(xRight, -0.01, zButtom);
         gl.glTexCoord2d(xLeft * td.getLenght() , zButtom * td.getHeight());

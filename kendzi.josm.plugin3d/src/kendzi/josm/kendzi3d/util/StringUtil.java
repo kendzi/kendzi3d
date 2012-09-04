@@ -31,4 +31,14 @@ public class StringUtil {
         }
         return null;
     }
+
+    public static boolean equalsOrNulls(String s1, String s2) {
+        if (s1 == null && s2 == null) {
+            return true;
+        } else if (s1 == null || s2 == null) {
+            return false;
+        } else {
+            return s1.equals(s2);
+        }
+    }
 }

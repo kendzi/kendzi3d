@@ -26,7 +26,9 @@ import kendzi.jogl.model.geometry.Face;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
+import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.math.geometry.Normal;
 import net.java.joglutils.model.ModelLoadException;
@@ -251,8 +253,8 @@ public class WaveFrontLoader implements iLoader {
 
         for (int i = 0; i < this.model.getNumberOfMaterials(); i++) {
             Material material = this.model.getMaterial(i);
-            if (material.strFile != null) {
-                material.strFile = getFullTexturePath(this.model.getSource()) + material.strFile;
+            if (material.getTexture0() != null) {
+                material.setTexture0(getFullTexturePath(this.model.getSource()) + material.getTexture0());
             }
         }
 
@@ -606,9 +608,9 @@ public class WaveFrontLoader implements iLoader {
 
             if (temp.length > 1) { // we have texture data
                 if (Integer.valueOf(temp[1]) < 0) {
-                    face.coordIndex[loop - 1] = 0;
+                    face.coordIndexLayers[0][loop - 1] = 0;
                 } else {
-                    face.coordIndex[loop - 1] = Integer.valueOf(temp[1]) - 1 - this.textureTotal;
+                    face.coordIndexLayers[0][loop - 1] = Integer.valueOf(temp[1]) - 1 - this.textureTotal;
                     // log.info("found texture index: " + face.coordIndex[loop-1]);
                 }
             }
@@ -691,11 +693,11 @@ public class WaveFrontLoader implements iLoader {
             Material mat = this.model.getMaterial(i);
 
             if(
-               (mat.strName != null && mat.strName.equals(s[1]))
-               || (mat.strName == null && (s.length < 2 || s[1] == null))
+               (mat.getTexture0() != null && mat.getTexture0().equals(s[1]))
+               || (mat.getTexture0() == null && (s.length < 2 || s[1] == null))
                     ){
                 materialID = i;
-                if(mat.strFile != null) {
+                if(mat.getTexture0() != null) {
                     hasTexture = true;
                 } else {
                     hasTexture = false;
@@ -710,7 +712,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     public Material loadMaterialFile(InputStream stream) {
-        Material mat = null;
+        EditableMaterial mat = null;
         int texId = 0;
 
         try {
@@ -726,33 +728,33 @@ public class WaveFrontLoader implements iLoader {
                         this.model.addMaterial(mat);
                     }
 
-                    mat = new Material();
+                    mat = new EditableMaterial();
                     if (parts.length > 1) {
-                        mat.strName = parts[1];
+                        mat.setTexture0(parts[1]);
                     }
-                    mat.textureId = texId++;
+//                    mat.textureId = texId++;
 
                 } else if (parts[0].equals("Ks")) {
-                    mat.specularColor = parseColor(line);
+                    mat.setSpecularColor(parseColor(line));
                 } else if (parts[0].equals("Ns")) {
                     if (parts.length > 1) {
-                        mat.shininess = Float.valueOf(parts[1]);
+                        mat.setShininess(Float.valueOf(parts[1]));
                     }
                 } else if (parts[0].equals("d")) {
                     ;
                 } else if (parts[0].equals("illum")) {
                     ;
                 } else if (parts[0].equals("Ka")) {
-                    mat.ambientColor = parseColor(line);
+                    mat.setAmbientColor(parseColor(line));
                 } else if (parts[0].equals("Kd")) {
-                    mat.diffuseColor = parseColor(line);
+                    mat.setDiffuseColor(parseColor(line));
                 } else if (parts[0].equals("map_Kd")) {
                     if (parts.length > 1) {
-                        mat.strFile = /* baseDir + */parts[1];
+                        mat.setTexture0(/* baseDir + */parts[1]);
                     }
                 } else if (parts[0].equals("map_Ka")) {
                     if (parts.length > 1) {
-                        mat.strFile = /* baseDir + */parts[1];
+                        mat.setTexture0(/* baseDir + */parts[1]);
                     }
                 }
             }
@@ -766,6 +768,25 @@ public class WaveFrontLoader implements iLoader {
             ioe.printStackTrace();
         }
         return mat;
+    }
+
+    private class EditableMaterial extends Material {
+
+        void setAmbientColor(Color c) {
+            this.setAmbientDiffuse(new AmbientDiffuseComponent(c, this.getAmbientDiffuse().getDiffuseColor()));
+        }
+
+        void setDiffuseColor(Color c) {
+            this.setAmbientDiffuse(new AmbientDiffuseComponent(this.getAmbientDiffuse().getAmbientColor(), c));
+        }
+
+        void setSpecularColor(Color c) {
+            this.setOther(new OtherComponent(c, this.getOther().getEmissive(), this.getOther().getShininess()));
+        }
+
+        void setShininess(float c) {
+            this.setOther(new OtherComponent(this.getOther().getSpecularColor(), this.getOther().getEmissive(), c));
+        }
     }
 
     private Color parseColor(String line) {

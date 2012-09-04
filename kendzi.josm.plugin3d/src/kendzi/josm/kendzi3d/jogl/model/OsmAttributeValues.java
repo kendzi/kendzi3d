@@ -2,7 +2,10 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 public enum OsmAttributeValues{
     WINDOW("window"),
-    ENTRANCE("entrance");
+    ENTRANCE("entrance"),
+    BEGIN("begin"),
+    END("end"),
+    ;
 
     String value;
 
@@ -10,7 +13,7 @@ public enum OsmAttributeValues{
         this.value = str;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return this.value;
     }
 

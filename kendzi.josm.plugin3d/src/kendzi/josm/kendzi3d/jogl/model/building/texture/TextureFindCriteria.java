@@ -8,14 +8,16 @@ public class TextureFindCriteria {
     private String subTypeName;
     private Double width;
     private Double height;
+    private boolean colorable;
 
-    public TextureFindCriteria(Type pType, String typeName, String subTypeName, Double width, Double height) {
+    public TextureFindCriteria(Type pType, String typeName, String subTypeName, Double width, Double height, boolean colorable) {
         super();
         this.type = pType;
         this.typeName = typeName;
         this.subTypeName = subTypeName;
         this.width = width;
         this.height = height;
+        this.colorable = colorable;
     }
 
     /**
@@ -165,6 +167,20 @@ public class TextureFindCriteria {
         } else if (!this.width.equals(other.width))
             return false;
         return true;
+    }
+
+    /**
+     * @return the colorable
+     */
+    public boolean isColorable() {
+        return colorable;
+    }
+
+    /**
+     * @param colorable the colorable to set
+     */
+    public void setColorable(boolean colorable) {
+        this.colorable = colorable;
     }
 
 }

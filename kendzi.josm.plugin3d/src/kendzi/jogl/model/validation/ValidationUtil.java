@@ -101,15 +101,15 @@ public final class ValidationUtil {
                         } else {
                             continue;
                         }
-                    } else if (face.coordIndex.length > face.vertIndex.length) {
-
-                        ret.add(faceDescription("less texCoords indexs then vertex indexs", pModel, mi, fi));
-                        if (pRepair) {
-                            ret.add(faceDescription("urning off hasTexture", pModel, mi, fi));
-                            mesh.hasTexture = false;
-                        } else {
-                            continue;
-                        }
+//                    } else if (face.coordIndex.length > face.vertIndex.length) {
+//
+//                        ret.add(faceDescription("less texCoords indexs then vertex indexs", pModel, mi, fi));
+//                        if (pRepair) {
+//                            ret.add(faceDescription("urning off hasTexture", pModel, mi, fi));
+//                            mesh.hasTexture = false;
+//                        } else {
+//                            continue;
+//                        }
                     }
                 }
 
@@ -145,18 +145,18 @@ public final class ValidationUtil {
                     }
 
                     if (mesh.hasTexture) {
-                        int textureIndex = face.coordIndex[vi];
-                        if (mesh.texCoords.length < textureIndex) {
-                            ret.add(faceVertexDescription(
-                                    "textureIndex index biger then size of texCoords array in model: "
-                                            + mesh.texCoords.length, pModel, mi, fi, vi));
-                            if (pRepair) {
-                                ret.add(faceVertexDescription("urning off hasTexture", pModel, mi, fi, vi));
-                                mesh.hasTexture = false;
-                            } else {
-                                continue;
-                            }
-                        }
+//                        int textureIndex = face.coordIndex[vi];
+//                        if (mesh.texCoords.length < textureIndex) {
+//                            ret.add(faceVertexDescription(
+//                                    "textureIndex index biger then size of texCoords array in model: "
+//                                            + mesh.texCoords.length, pModel, mi, fi, vi));
+//                            if (pRepair) {
+//                                ret.add(faceVertexDescription("urning off hasTexture", pModel, mi, fi, vi));
+//                                mesh.hasTexture = false;
+//                            } else {
+//                                continue;
+//                            }
+//                        }
                     }
                 }
             }

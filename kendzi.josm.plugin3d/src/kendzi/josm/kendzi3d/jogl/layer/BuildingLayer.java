@@ -63,6 +63,7 @@ public class BuildingLayer implements Layer {
     TextureLibraryService textureLibraryService;
 
     private Match buildingMatcher;
+    private Match buildingRelationMatcher;
 
     {
         try {
@@ -72,6 +73,7 @@ public class BuildingLayer implements Layer {
             this.buildingMatcher = new SearchCompiler.Never();
             log.error(e);
         }
+
 
     }
 

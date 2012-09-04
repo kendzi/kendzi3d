@@ -8,7 +8,6 @@
  */
 
 package kendzi.jogl.model.geometry.material;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,40 +17,63 @@ public class Material {
 
     public static final OtherComponent OTHER_COMPONENT = new OtherComponent();
 
-    AmbientDiffuseComponent ad = AMBIENT_DIFFUSE_COMPONENT;
+    AmbientDiffuseComponent ambientDiffuse = AMBIENT_DIFFUSE_COMPONENT;
 
-    OtherComponent oc = OTHER_COMPONENT;
+    OtherComponent other = OTHER_COMPONENT;
 
     List<String> texturesComponent = new ArrayList<String>();
 
-    public int getNumOfTextures() {
-        return texturesComponent.size();
+    public Material() {
+        //
     }
 
-    @Deprecated
-    public String strName;
-    @Deprecated
-    public String strFile;
+    public Material(AmbientDiffuseComponent pAmbientDiffuseComponent) {
+        this.ambientDiffuse = pAmbientDiffuseComponent;
+    }
 
-    @Deprecated
-    public Color ambientColor;
-    @Deprecated
-    public Color specularColor;
-    @Deprecated
-    public Color diffuseColor;
-    @Deprecated
-    public Color emissive = Color.BLACK;
-    @Deprecated
-    public float shininess;
-    @Deprecated
-    public int textureId;
+    public int getNumOfTextures() {
+        return this.texturesComponent.size();
+    }
 
-    @Deprecated
-    public MatType matType = MatType.TEXTURE0;
-    @Deprecated
-    public String texture1;
-    @Deprecated
-    public String texture2;
+    public void setTexture0(String key) {
+        if (this.texturesComponent.size() == 0) {
+            this.texturesComponent.add(key);
+        } else {
+            this.texturesComponent.set(0, key);
+        }
+    }
+
+    public String getTexture0() {
+        if (this.texturesComponent.size() == 0) {
+            return null;
+        }
+        return this.texturesComponent.get(0);
+    }
+
+//    @Deprecated
+//    public String strName;
+//    @Deprecated
+//    public String strFile;
+
+//    @Deprecated
+//    public Color ambientColor;
+//    @Deprecated
+//    public Color specularColor;
+//    @Deprecated
+//    public Color diffuseColor;
+//    @Deprecated
+//    public Color emissive = Color.BLACK;
+//    @Deprecated
+//    public float shininess;
+//    @Deprecated
+//    public int textureId;
+//
+//    @Deprecated
+//    public MatType matType = MatType.TEXTURE0;
+//    @Deprecated
+//    public String texture1;
+//    @Deprecated
+//    public String texture2;
 
 
 
@@ -61,5 +83,59 @@ public class Material {
         COLOR_TEXTURE0,
         COLOR_TEXTURE2,
         COLOR_MultT0_MultT1,
+    }
+
+
+
+    /**
+     * @return the ambientDiffuse
+     */
+    public AmbientDiffuseComponent getAmbientDiffuse() {
+        return this.ambientDiffuse;
+    }
+
+
+
+    /**
+     * @param ambientDiffuse the ambientDiffuse to set
+     */
+    public void setAmbientDiffuse(AmbientDiffuseComponent ambientDiffuse) {
+        this.ambientDiffuse = ambientDiffuse;
+    }
+
+
+
+    /**
+     * @return the other
+     */
+    public OtherComponent getOther() {
+        return this.other;
+    }
+
+
+
+    /**
+     * @param other the other to set
+     */
+    public void setOther(OtherComponent other) {
+        this.other = other;
+    }
+
+
+
+    /**
+     * @return the texturesComponent
+     */
+    public List<String> getTexturesComponent() {
+        return this.texturesComponent;
+    }
+
+
+
+    /**
+     * @param texturesComponent the texturesComponent to set
+     */
+    public void setTexturesComponent(List<String> texturesComponent) {
+        this.texturesComponent = texturesComponent;
     }
 }

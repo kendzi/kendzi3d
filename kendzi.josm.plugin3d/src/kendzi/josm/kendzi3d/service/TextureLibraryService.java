@@ -92,8 +92,15 @@ public class TextureLibraryService {
      * @param key texture key
      * @return is texture exist
      */
-    public TextureData getRadnomTextureFromSet(String key) {
+    public TextureData getRadnomTextureForKey(String key) {
+
         ArrayList<TextureData> set = this.textureMap.get(key);
+
+        return getRadnomTextureFromSet(set);
+    }
+
+    public TextureData getRadnomTextureFromSet(List<TextureData> set) {
+
         if (set== null || set.size() == 0) {
             return null;
         }
@@ -122,7 +129,7 @@ public class TextureLibraryService {
      * @return texture data
      */
     public TextureData getTextureDefault(String key) {
-        TextureData texture = getRadnomTextureFromSet(key);
+        TextureData texture = getRadnomTextureForKey(key);
         if (texture == null) {
             return new TextureData(null, 1, 1);
         }
@@ -209,6 +216,10 @@ public class TextureLibraryService {
     }
 
     public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException {
+
+        if (pUrlTextureLibrary == null) {
+            return;
+        }
 
         if (pUrlTextureLibrary.isOverwrite()) {
             this.textureMap.clear();

@@ -63,10 +63,20 @@ public class NewBuildingLayer implements Layer {
     TextureLibraryService textureLibraryService;
 
     private Match buildingMatcher;
+    private Match buildingRelationMatcher;
 
     {
         try {
             this.buildingMatcher = SearchCompiler.compile("(building=*) | (building\\:part=yes)", false, false);
+
+        } catch (ParseError e) {
+            this.buildingMatcher = new SearchCompiler.Never();
+            log.error(e);
+        }
+
+        try {
+            this.buildingRelationMatcher = SearchCompiler.compile(
+                    "(type=multipolygon) & ((building=*) | (building\\:part=yes))", false, false);
 
         } catch (ParseError e) {
             this.buildingMatcher = new SearchCompiler.Never();
@@ -88,7 +98,7 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public Match getRelationMatcher() {
-        return null;
+        return this.buildingRelationMatcher;
     }
 
     @Override
@@ -114,7 +124,8 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        //
+        this.modelList.add(new NewBuilding(relation, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryService));
     }
 
     @Override

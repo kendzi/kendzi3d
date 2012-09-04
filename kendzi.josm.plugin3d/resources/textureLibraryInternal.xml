@@ -54,6 +54,10 @@
 		<textureData fileKey="/textures/pd/MarekPlainWindow00002.jpg" height="1.5" width="1.8"/>
 	</textureSet>
 	
+	<textureSet key="buildings.windows_unknown">	
+		<textureData fileKey="/textures/pd/MarekCompositeWall00001.png" height="2.8" width="2.8"/>
+	</textureSet>
+	
 	<textureSet key="buildings.window_unknown">	
 		<textureData fileKey="/textures/pd/MarekPlainWindow00002.jpg" height="1.5" width="1.8"/>
 	</textureSet>

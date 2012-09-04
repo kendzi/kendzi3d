@@ -1,12 +1,57 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+
 public enum OsmAttributeKeys {
 
     BUILDING("building"),
 
+    BUILDING_MIN_LEVEL("building:min_level"),
+
+    BUILDING_MAX_LEVEL("building:max_level"),
+
+    BUILDING_LEVELS("building:levels"),
+
+    BUILDING_FACADE_COLOR("building:facade:color"),
+
+    BUILDING_FACADE_COLOUR("building:facade:colour"),
+
+    BUILDING_COLOR("building:color"),
+
+    BUILDING_COLOUR("building:colour"),
+
+    BUILDING_MATERIAL("building:material"),
+
+    BUILDING_FACADE_MATERIAL("building:facade:material"),
+
+    FACADE_MATERIAL("facade:material"),
+
+    BUILDING_ROOF_SHAPE("building:roof:shape"),
+
+    ROOF_SHAPE("roof:shape"),
+
+    ROOF_MATERIAL("roof:material"),
+
+    ROOF_DIRECTION("roof:direction"),
+    DIRECTION("direction"),
+
+    BUILDING_ROOF_MATERIAL("building:roof:material"),
+
+    ROOF_COLOUR("roof:colour"),
+
+    ROOF_COLOR("roof:color"),
+
+    BUILDING_ROOF_COLOUR("building:roof:colour"),
+
+    BUILDING_ROOF_COLOR("building:roof:color"),
+
     _3DR_TYPE("3dr:type"),
 
     _3DR_DORMERS("3dr:dormers"),
+
+    _3DR_DIRECTION("3dr:direction"),
+
+    WINDOWS("windows"),
 
     ;
 
@@ -18,6 +63,14 @@ public enum OsmAttributeKeys {
 
     public String getKey() {
         return this.key;
+    }
+
+    public String parsePrimitive(OsmPrimitive primitive) {
+        if (this.key == null || primitive == null) {
+            return null;
+        }
+
+        return primitive.get(this.key);
     }
 
 }
