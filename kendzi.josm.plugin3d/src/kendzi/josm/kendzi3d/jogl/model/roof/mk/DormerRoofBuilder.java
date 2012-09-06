@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -195,8 +196,8 @@ public class DormerRoofBuilder {
      * @return
      */
     public static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
-        RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTextrure(), model);
-        RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(), model);
+        RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTextrure(), pRoofTextureData.getFacadeCoror(), model);
+        RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(), pRoofTextureData.getRoofCoror(), model);
 
         RoofMaterials roofMaterials = new RoofMaterials();
         roofMaterials.setFacade(facadeTextureIndex);
@@ -209,9 +210,14 @@ public class DormerRoofBuilder {
      * @param pModel
      * @return
      */
-    private static RoofTextureIndex addMateraialTexture(TextureData pTextureData, ModelFactory pModel) {
-        //XXX add catch for texture materials in ModelFactory?
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(pTextureData.getFile());
+    private static RoofTextureIndex addMateraialTexture(TextureData pTextureData, Color pColor, ModelFactory pModel) {
+
+        Material facadeMaterial = null;
+        if (pColor != null) {
+            facadeMaterial = MaterialFactory.createTextureColorMaterial(pTextureData.getFile(), pColor);
+        } else {
+            facadeMaterial = MaterialFactory.createTextureMaterial(pTextureData.getFile());
+        }
 
         int facadeMaterialIndex = pModel.addMaterial(facadeMaterial);
 

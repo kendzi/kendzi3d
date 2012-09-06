@@ -323,6 +323,11 @@ public class ModelRender {
         this.lastAmbientDiffuseComponent = null;
     }
 
+    Material defaultMaterial = new Material();
+    public void setupDefaultMaterial(GL2 pGL) {
+        setupMaterial2(pGL, this.defaultMaterial);
+    }
+
     private void setupMaterial2(GL2 pGl, Material material) {
         if (isAmbientDiffuseChanged(material.getAmbientDiffuse())) {
             setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse());

@@ -173,6 +173,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 drawModel(r, gl, camera);
             }
         }
+
+        this.modelRender.setupDefaultMaterial(gl);
     }
     /**
      * @param r

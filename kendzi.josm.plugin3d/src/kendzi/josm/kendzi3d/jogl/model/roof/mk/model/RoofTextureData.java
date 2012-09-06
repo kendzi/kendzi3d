@@ -9,13 +9,19 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.model;
 
+import java.awt.Color;
+
 import kendzi.josm.kendzi3d.dto.TextureData;
 
 public class RoofTextureData {
 
     TextureData facadeTextrure;
 
+    Color facadeCoror;
+
     TextureData roofTexture;
+
+    Color roofCoror;
 
     /**
      * @return the facadeTextrure
@@ -40,6 +46,30 @@ public class RoofTextureData {
      */
     public void setRoofTexture(TextureData roofTexture) {
         this.roofTexture = roofTexture;
+    }
+    /**
+     * @return the facadeCoror
+     */
+    public Color getFacadeCoror() {
+        return facadeCoror;
+    }
+    /**
+     * @param facadeCoror the facadeCoror to set
+     */
+    public void setFacadeCoror(Color facadeCoror) {
+        this.facadeCoror = facadeCoror;
+    }
+    /**
+     * @return the roofCoror
+     */
+    public Color getRoofCoror() {
+        return roofCoror;
+    }
+    /**
+     * @param roofCoror the roofCoror to set
+     */
+    public void setRoofCoror(Color roofCoror) {
+        this.roofCoror = roofCoror;
     }
 
 

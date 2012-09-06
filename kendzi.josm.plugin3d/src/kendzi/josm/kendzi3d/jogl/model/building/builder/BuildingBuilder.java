@@ -106,11 +106,12 @@ public class BuildingBuilder {
         RoofTextureData rtd = new RoofTextureData();
         // XXX fix, currently roof builder support only one texture, fix before roof builder is changed.
         WallPart firstWallPart = getFirstWallPart(w);
-        Color facadeColorData = takeFacadeColorData(buildingModel, bp, w, firstWallPart, tm);
-        // FIXME add support for colors
-        rtd.setFacadeTextrure(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColorData!=null));
-        rtd.setRoofTexture(takeRoofTextureData(buildingModel, bp, w, tm));
-
+        Color facadeColor = takeFacadeColor(buildingModel, bp, w, firstWallPart, tm);
+        rtd.setFacadeCoror(facadeColor);
+        rtd.setFacadeTextrure(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
+        Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
+        rtd.setRoofCoror(roofColor);
+        rtd.setRoofTexture(takeRoofTextureData(buildingModel, bp, w, tm, roofColor!=null));
         double maxHeight = bp.getDefaultMaxHeight();
 
         RoofOutput roofOutput = DormerRoofBuilder.build(bp, maxHeight, mf, rtd);
@@ -170,7 +171,7 @@ public class BuildingBuilder {
             List<WallNode> nodes = wp.getNodes();
             int size = nodes.size();
 
-            Color facadeColor = takeFacadeColorData(buildingModel, bp, w, wp, tm);
+            Color facadeColor = takeFacadeColor(buildingModel, bp, w, wp, tm);
             TextureData facadeTD = takeFacadeTextureData(buildingModel, bp, w, wp, tm, facadeColor != null);
 
             String tex0Key = facadeTD.getFile();
@@ -401,7 +402,7 @@ public class BuildingBuilder {
         return td;
     }
 
-    private static Color takeFacadeColorData(
+    private static Color takeFacadeColor(
             BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp, BuildingElementsTextureMenager tm) {
 
         Color c = null;
@@ -419,8 +420,26 @@ public class BuildingBuilder {
         return c;
     }
 
+    private static Color takeRoofColor(
+            BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp, BuildingElementsTextureMenager tm) {
+
+        Color c = null;
+
+        if (wp != null && wp.getRoofColour() != null) {
+            c = wp.getRoofColour();
+        } else  if (w.getRoofColour() != null) {
+            c = w.getRoofColour();
+        } else  if (bp.getRoofColour() != null) {
+            c = bp.getRoofColour();
+        } else  if (buildingModel.getRoofColour() != null) {
+            c = buildingModel.getRoofColour();
+        }
+
+        return c;
+    }
+
     private static TextureData takeRoofTextureData(
-            BuildingModel buildingModel, BuildingPart bp, Wall w, BuildingElementsTextureMenager tm) {
+            BuildingModel buildingModel, BuildingPart bp, Wall w, BuildingElementsTextureMenager tm, boolean colorable) {
 
         String mt = null;
 
@@ -432,7 +451,7 @@ public class BuildingBuilder {
             mt = buildingModel.getRoofMaterialType();
         }
 
-        TextureData td = tm.findTexture(new TextureFindCriteria(Type.ROOF, mt, null, null, null, false));
+        TextureData td = tm.findTexture(new TextureFindCriteria(Type.ROOF, mt, null, null, null, colorable));
 
         if (td == null) {
             td = new TextureData(null, 1, 1);
