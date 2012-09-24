@@ -1,4 +1,10 @@
-[current]
+[2012-09-17]
+- completely new building builder,
+- basic support for building as multipolygons without holes
+- windows, entrance build into walls
+- windows rows as multitextures
+- roof and facade colors as colored textures
+ 
 - support for roof type 4.2
 
 [2012-06-01]
