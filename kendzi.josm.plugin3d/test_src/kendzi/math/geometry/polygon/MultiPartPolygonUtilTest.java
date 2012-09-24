@@ -22,17 +22,11 @@ public class MultiPartPolygonUtilTest {
 
 	Vertex<Object> vertex(final int id) {
 
-	    return new Vertex<Object>(
-	            new Object() {
-    	        @Override
-    	        public String toString() {
-    	            return "v" + id;
-    	        }
-    	    }) {
+	    return new Vertex<Object>(id) {
 	        @Override
 	        public String toString() {
 	            if (getData() != null) {
-	                return getData().toString();
+	                return "v" + id;
 	            }
 	            return super.toString();
 	        }
@@ -250,5 +244,32 @@ public class MultiPartPolygonUtilTest {
 		assertContein(e6, polygon, false);
 		assertContein(e7, polygon, false);
 	}
+
+	@Test
+    public void test6() {
+        // one edge not connected
+        Vertex<Object> v0 = vertex(-6);
+        Vertex<Object> v1 = vertex(-4);
+        Vertex<Object> v2 = vertex(-10);
+        Vertex<Object> v3 = vertex(-8);
+
+        Edge<Object, Object> e0 = edge(vertex(-6),  vertex(-4), 0);
+        Edge<Object, Object> e1 = edge(vertex(-4),  vertex(-10), 1);
+        Edge<Object, Object> e2 = edge(vertex(-10), vertex(-8), 2);
+        Edge<Object, Object> e3 = edge(vertex(-8),  vertex(-6), 3);
+
+        List<List<EdgeOut<Object, Object>>> ret = MultiPartPolygonUtil.connect(Arrays.asList(e0, e1, e2, e3));
+
+        assertEquals(1, ret.size());
+
+        List<EdgeOut<Object, Object>> polygon = ret.get(0);
+
+        assertEquals(4, polygon.size());
+
+        assertContein(e0, polygon, false);
+        assertContein(e1, polygon, false);
+        assertContein(e2, polygon, false);
+        assertContein(e3, polygon, false);
+    }
 
 }
