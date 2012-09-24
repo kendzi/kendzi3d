@@ -61,6 +61,9 @@
 	<textureSet key="buildings.window_unknown">	
 		<textureData fileKey="/textures/pd/MarekPlainWindow00002.jpg" height="1.5" width="1.8"/>
 	</textureSet>
+	<textureSet key="buildings.window_unknown">	
+		<textureData fileKey="/textures/pd/MarekPlainWindow00003.jpg" height="1.9" width="0.95"/>
+	</textureSet>
 	<textureSet key="buildings.entrance_unknown">	
 		<textureData fileKey="/textures/pd/DE19F1FreisingDoor00006.jpg" height="2.36" width="1.2"/>	
 	</textureSet>
