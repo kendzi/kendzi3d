@@ -300,7 +300,7 @@ public class FenceRelation extends AbstractRelationModel {
     public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive,
             TextureLibraryService textureLibraryService) {
 
-        String facadeColor = pOsmPrimitive.get("fence:color");
+        String facadeColor = OsmAttributeKeys.FENCE_COLOR.parsePrimitive(pOsmPrimitive);
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
@@ -330,9 +330,9 @@ public class FenceRelation extends AbstractRelationModel {
      * @return fence type
      */
     public static String getFenceType(OsmPrimitive pOsmPrimitive) {
-        String fenceType = pOsmPrimitive.get("fence:type");
+        String fenceType = OsmAttributeKeys.FENCE__TYPE.parsePrimitive(pOsmPrimitive);
         if (StringUtil.isBlankOrNull(fenceType)) {
-            fenceType = pOsmPrimitive.get("fence_type");
+            fenceType = OsmAttributeKeys.FENCE_TYPE.parsePrimitive(pOsmPrimitive);
         }
         return fenceType;
     }

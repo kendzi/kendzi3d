@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.OsmAttributeValues;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -28,22 +30,13 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
             if (op instanceof Relation) {
                 Relation r = (Relation) op;
 
-                if ("clone:height".equals(op.get("type"))) {
+                if (OsmAttributeValues.CLONE_HEIGHT.equals(OsmAttributeKeys.TYPE.parsePrimitive(op))) {
                     RelationCloneHeight clone2 = parseHeightClone(r);
 
                     if (clone2 != null) {
                         ret.add(clone2);
                     }
-
-
                 }
-//                    for (RelationMember rm : r.getMembers()) {
-//                        if ("building:roof:ridge".equals(rm.getRole())
-//                                && rm.isWay()) {
-//                            ridgeWay = rm.getWay();
-//                            break ref;
-//                        }
-//                    }
             }
         }
 

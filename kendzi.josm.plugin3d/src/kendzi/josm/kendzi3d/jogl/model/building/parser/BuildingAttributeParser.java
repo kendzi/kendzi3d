@@ -179,11 +179,18 @@ public class BuildingAttributeParser {
     public static Integer parseMaxLevel(OsmPrimitive p1) {
         Integer level = roundToInteger(
                 ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MAX_LEVEL.getKey(), null));
-        if (level != null) {
-            return level;
+
+        if (level == null) {
+            level = roundToInteger(
+                    ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS.getKey(), null));
         }
-        return roundToInteger(
-                ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS.getKey(), null));
+
+        if (level == null) {
+            level = roundToInteger(
+                    ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS_ABOVEGROUND.getKey(), null));
+        }
+
+        return level;
     }
 
     private static Integer roundToInteger(Double d) {
@@ -203,7 +210,16 @@ public class BuildingAttributeParser {
 //    }
 
     public static Integer parseMinLevel(OsmPrimitive p1) {
-        return roundToInteger(ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MIN_LEVEL.getKey(), null));
+        Integer level = roundToInteger(ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MIN_LEVEL.getKey(), null));
+
+        if (level == null) {
+            level = roundToInteger(ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS_UNDERGROUND.getKey(), null));
+            if (level != null) {
+                level = -level;
+            }
+        }
+
+        return level;
     }
 
 //    public static Integer parseMinLevel(OsmPrimitive p1, OsmPrimitive p2) {

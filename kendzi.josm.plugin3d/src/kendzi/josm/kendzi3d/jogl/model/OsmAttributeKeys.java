@@ -12,6 +12,10 @@ public enum OsmAttributeKeys {
 
     BUILDING_LEVELS("building:levels"),
 
+    BUILDING_LEVELS_ABOVEGROUND("building:levels:aboveground"),
+
+    BUILDING_LEVELS_UNDERGROUND("building:levels:underground"),
+
     BUILDING_FACADE_COLOR("building:facade:color"),
 
     BUILDING_FACADE_COLOUR("building:facade:colour"),
@@ -52,6 +56,14 @@ public enum OsmAttributeKeys {
     _3DR_DIRECTION("3dr:direction"),
 
     WINDOWS("windows"),
+
+    TYPE("type"),
+
+    FENCE_COLOR("fence:color"),
+
+    FENCE_TYPE("fence_type"),
+
+    FENCE__TYPE("fence:type"),
 
     ;
 
