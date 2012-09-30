@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.vecmath.Point2d;
 
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
@@ -25,5 +24,11 @@ public interface RoofTypeBuilder {
 
     public boolean isPrefixParameter();
 
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, ModelFactory model, RoofMaterials roofMaterials);
+    public RoofTypeOutput buildRoof(
+            Point2d pStartPoint,
+            List<Point2d> pPolygon,
+            DormerRoofModel pRoof,
+            double height,
+            RoofMaterials roofMaterials);
+
 }

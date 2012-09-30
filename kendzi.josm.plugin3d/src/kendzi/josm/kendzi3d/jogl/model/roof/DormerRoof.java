@@ -28,9 +28,9 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.Building;
-import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
-import kendzi.josm.kendzi3d.jogl.model.OsmAttributeValues;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeValues;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
@@ -249,9 +249,9 @@ public class DormerRoof extends Roof {
 
     static private Vector2d findDirectionByDirectionTag(OsmPrimitive pWay) {
         // XXX roof:direction
-        String directionValue = OsmAttributeKeys.ROOF_DIRECTION.parsePrimitive(pWay);
+        String directionValue = OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay);
         if(StringUtil.isBlankOrNull(directionValue)) {
-            directionValue = OsmAttributeKeys.DIRECTION.parsePrimitive(pWay);
+            directionValue = OsmAttributeKeys.DIRECTION.primitiveValue(pWay);
         }
 //        directionValue = pWay.get("direction");
         Direction direction = DirectionParserUtil.parse(directionValue);

@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,6 @@ import javax.vecmath.Vector3d;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
@@ -71,7 +71,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
             List<Point2d> pPolygon,
             DormerRoofModel pRoof,
             double height,
-            ModelFactory model,
             RoofMaterials pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
@@ -95,7 +94,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
 
 
-        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, model, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, pRoofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -108,11 +107,10 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
         Double h1, Double angle, double l1, double l2,
-        ModelFactory model,
         RoofMaterials pRoofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
 
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
@@ -151,7 +149,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(circle.getRadius());
 
-        rto.setModel(model);
+        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         rto.setRoofHooksSpaces(null);
 

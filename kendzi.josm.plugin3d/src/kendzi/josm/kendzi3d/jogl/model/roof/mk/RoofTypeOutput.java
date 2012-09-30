@@ -13,7 +13,7 @@ import java.util.List;
 
 import javax.vecmath.Point3d;
 
-import kendzi.jogl.model.factory.ModelFactory;
+import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpaces;
 
 import org.ejml.data.SimpleMatrix;
@@ -25,7 +25,8 @@ public class RoofTypeOutput {
      */
     List<Point3d> rectangle;
 
-    ModelFactory model;
+//    ModelFactory model;
+    List<MeshFactory> mesh;
 
     RoofHooksSpaces roofHooksSpaces;
 
@@ -45,20 +46,6 @@ public class RoofTypeOutput {
      */
     public void setHeight(double height) {
         this.height = height;
-    }
-
-    /**
-     * @return the model
-     */
-    public ModelFactory getModel() {
-        return model;
-    }
-
-    /**
-     * @param model the model to set
-     */
-    public void setModel(ModelFactory model) {
-        this.model = model;
     }
 
     /**
@@ -102,5 +89,19 @@ public class RoofTypeOutput {
      */
     public void setRoofHooksSpaces(RoofHooksSpaces roofHooksSpaces) {
         this.roofHooksSpaces = roofHooksSpaces;
+    }
+
+    /**
+     * @return the mesh
+     */
+    public List<MeshFactory> getMesh() {
+        return mesh;
+    }
+
+    /**
+     * @param mesh the mesh to set
+     */
+    public void setMesh(List<MeshFactory> mesh) {
+        this.mesh = mesh;
     }
 }

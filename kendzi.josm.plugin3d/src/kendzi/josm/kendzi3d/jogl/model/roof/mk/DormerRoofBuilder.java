@@ -164,7 +164,7 @@ public class DormerRoofBuilder {
 
         RoofTypeBuilder roofType = parseRoofTypeBuilder(roof.getRoofType());
 
-        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, mf, roofMaterials);
+        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, roofMaterials);
 
         List<RoofDormerTypeOutput> roofExtensionsList =
                 DormerTypeBuilder.build(
@@ -177,7 +177,7 @@ public class DormerRoofBuilder {
 
 
 
-        ModelFactory model = buildModel(rto, roofExtensionsList);
+        ModelFactory model = buildModel(rto, roofExtensionsList, mf);
 
         RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList);
 
@@ -350,12 +350,13 @@ public class DormerRoofBuilder {
         return out;
     }
 
-    private static ModelFactory buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList) {
+    private static ModelFactory buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList, ModelFactory modelFactory) {
 
-        ModelFactory modelFactory = rto.getModel();
+//        ModelFactory modelFactory = rto.getModel();
 
-        for (MeshFactory mf : rto.getModel().getMashFactory()) {
+        for (MeshFactory mf : rto.getMesh()) {
             transformMeshFactory(mf, rto.getTransformationMatrix());
+            modelFactory.addMesh(mf);
         }
 
         for (RoofDormerTypeOutput e : roofExtensionsList) {

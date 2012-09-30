@@ -55,12 +55,12 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Forward move speed 1.
      */
-    private static final double FORWARD_SPEED_1 = 15;
+    private static final double FORWARD_SPEED_1 = toMps(60); //15 (54);
 
     /**
      * Forward move speed 2.
      */
-    private static final double FORWARD_SPEED_2 = 45;
+    private static final double FORWARD_SPEED_2 = toMps(250);// 45; (160)
 
     /**
      * Forward move acceleration.
@@ -91,6 +91,15 @@ public class SimpleMoveAnimator implements Camera {
      * Rotate angular speed.
      */
     private static final double ROTATE_SPEED = Math.toRadians(180);;
+
+    private static double toKmph(double mps) {
+        return 3.6 * mps;
+    }
+
+    private static double toMps(double kmph) {
+        return (kmph * 10.0) / 36.0;
+    }
+
 
     /**
      * Speed directions.

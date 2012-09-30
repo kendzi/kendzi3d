@@ -1,3 +1,11 @@
+[current}
+
+[2012-09-30]
+- support for relation type=building switch between outline and part
+- fix for multipolygon reversed segments
+- fix for dormers
+
+
 [2012-09-17]
 - completely new building builder,
 - basic support for building as multipolygons without holes

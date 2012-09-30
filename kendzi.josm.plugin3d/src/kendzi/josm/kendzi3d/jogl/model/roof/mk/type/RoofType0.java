@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.vecmath.Point2d;
@@ -17,7 +18,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
@@ -84,11 +84,11 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
            double l3,
            double l4,
            int type,
-           ModelFactory model,
+           //ModelFactory model,
            RoofMaterials pRoofTextureData) {
 
-       MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
-       MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
+       MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
+       MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
 
        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
@@ -216,7 +216,8 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
        RoofTypeOutput rto = new RoofTypeOutput();
        rto.setHeight(h1 + h2);
 
-       rto.setModel(model);
+//       rto.setModel(model);
+       rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
        RoofHooksSpace [] rhs = null;
 //           buildRectRoofHooksSpace(

@@ -25,6 +25,8 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeValues;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingBuilder;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
@@ -60,6 +62,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+
 
 /**
  * Representing building model.
@@ -139,14 +142,12 @@ public class NewBuilding extends AbstractModel {
 
         BuildingModel bm = null;
 
-        String key = "building";
-
         if (this.relation != null)  {
             if (this.relation.isMultipolygon()) {
-                bm = parseBuildingMultiPolygon(this.relation, key, this.perspective);
+                bm = parseBuildingMultiPolygon(this.relation, this.perspective);
 
             } else {
-                bm = parseBuildingRelation(this.relation, key, this.perspective);
+                bm = parseBuildingRelation(this.relation, this.perspective);
             }
         } else if (this.way != null) {
             bm = parseBuildingWay(this.way, this.perspective);
@@ -263,9 +264,12 @@ public class NewBuilding extends AbstractModel {
         return bm;
     }
 
-    BuildingModel parseBuildingRelation(Relation pRelation, String key, Perspective3D pers) {
+    BuildingModel parseBuildingRelation(Relation pRelation, Perspective3D pers) {
         // TODO for relation type=building !
-
+        BuildingType bt = BuildingType.OUTLINE;
+        if (isRelationHaveBuildingParts(pRelation)) {
+            bt = BuildingType.PARTS;
+        }
 
         BuildingModel bm = new BuildingModel();
         List<BuildingPart> bps = new ArrayList<BuildingPart>();
@@ -276,6 +280,14 @@ public class NewBuilding extends AbstractModel {
 
             OsmPrimitive primitive = member.getMember();
 
+            if (BuildingType.OUTLINE.equals(bt)
+                && !OsmAttributeKeys.BUILDING.primitiveKeyHaveAnyValue(member.getMember())) {
+                continue;
+            } else if (BuildingType.PARTS.equals(bt)
+                && !OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(member.getMember())) {
+                continue;
+            }
+
             if (primitive instanceof Way) {
                 BuildingPart bp = parseBuildingPart((Way) primitive, pers);
                 if (bp != null) {
@@ -284,7 +296,7 @@ public class NewBuilding extends AbstractModel {
             } else if (primitive instanceof Relation) {
                 Relation r = (Relation) primitive;
                 if (r.isMultipolygon()) {
-                    List<BuildingPart> bp = parseBuildingMultiPolygonPart((Relation) primitive, key, pers);
+                    List<BuildingPart> bp = parseBuildingMultiPolygonPart((Relation) primitive, pers);
                     if (bp != null) {
                         bps.addAll(bp);
                     }
@@ -294,7 +306,27 @@ public class NewBuilding extends AbstractModel {
         return bm;
     }
 
-    BuildingModel parseBuildingMultiPolygon(Relation pRelation, String key, Perspective3D pers) {
+    enum BuildingType {
+        OUTLINE,
+        PARTS
+    }
+
+    private boolean isRelationHaveBuildingParts(Relation pRelation) {
+
+        boolean haveParts = false;
+        for (int i = 0; i < pRelation.getMembersCount(); i++) {
+            RelationMember member = pRelation.getMember(i);
+
+            if (OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(member.getMember())) {
+                haveParts = true;
+                break;
+            }
+        }
+
+        return haveParts;
+    }
+
+    BuildingModel parseBuildingMultiPolygon(Relation pRelation, Perspective3D pers) {
         if (!pRelation.isMultipolygon()) {
             throw new IllegalArgumentException("for multipolygon relations!");
         }
@@ -303,7 +335,7 @@ public class NewBuilding extends AbstractModel {
         List<BuildingPart> bps = new ArrayList<BuildingPart>();
         bm.setParts(bps);
 
-        List<BuildingPart> bp = parseBuildingMultiPolygonPart(pRelation, key, pers);
+        List<BuildingPart> bp = parseBuildingMultiPolygonPart(pRelation, pers);
         if (bp != null) {
             bps.addAll(bp);
         }
@@ -340,7 +372,7 @@ public class NewBuilding extends AbstractModel {
 
 
     }
-    List<BuildingPart> parseBuildingMultiPolygonPart(Relation pRelation, String key, Perspective3D pPerspective) {
+    List<BuildingPart> parseBuildingMultiPolygonPart(Relation pRelation, Perspective3D pPerspective) {
 
         List<AreaWithHoles> waysPolygon = findAreaWithHoles(pRelation);
 
@@ -588,7 +620,7 @@ public class NewBuilding extends AbstractModel {
             }
         } else {
 
-            for (int i = way.getNodesCount() - 1; i <= 0; i--) {
+            for (int i = way.getNodesCount() - 1; i >= 0; i--) {
 
                 WallNode wn = parseWallNode(way.getNode(i), pPerspective);
 

@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.jogl.model.attribute;
 
 public enum OsmAttributeValues{
     WINDOW("window"),

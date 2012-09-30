@@ -17,7 +17,6 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
@@ -44,7 +43,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height,  ModelFactory model, RoofMaterials pRoofTextureData) {
+            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofMaterials pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
@@ -111,7 +110,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
 
         RoofTypeOutput buildRectangleRoof = buildRectangleRoof(pPolygon, rectangleContur, scaleA, scaleB, recHeight, recWidth, pRoof.getRoofTypeParameter(),
-                pRoof.getMeasurements(), model, pRoofTextureData);
+                pRoof.getMeasurements(), pRoofTextureData);
 
         SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, scaleA, scaleB);
 
@@ -222,7 +221,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
      * @return build roof
      */
     public abstract RoofTypeOutput buildRectangleRoof(List<Point2d> border, Point2d[] rectangleContur, double scaleA, double scaleB,
-            double sizeA, double sizeB2, Integer prefixParameter, Map<MeasurementKey, Measurement> pMeasurements, ModelFactory model, RoofMaterials pRoofTextureData);
+            double sizeA, double sizeB2, Integer prefixParameter, Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData);
 
     private Point2d[] findStartPoint(Point2d pStartPoint, Point2d[] pRectangleContur) {
         int minI = 0;

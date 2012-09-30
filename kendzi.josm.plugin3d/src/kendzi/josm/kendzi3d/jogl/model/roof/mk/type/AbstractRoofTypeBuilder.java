@@ -3,7 +3,6 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 import java.util.Map;
 
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
@@ -128,9 +127,9 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         return false;
     }
 
-    protected MeshFactory createRoofMesh(ModelFactory model, RoofMaterials pRoofTextureData) {
+    protected MeshFactory createRoofMesh(RoofMaterials pRoofTextureData) {
 
-        MeshFactory meshRoof = model.addMesh("roof_top");
+        MeshFactory meshRoof = new MeshFactory("roof_top");
 
 //        TextureData roofTexture = pRoofTextureData.getRoofTexture();
 //        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
@@ -141,9 +140,9 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         return meshRoof;
     }
 
-    protected MeshFactory createFacadeMesh(ModelFactory model, RoofMaterials pRoofTextureData) {
+    protected MeshFactory createFacadeMesh(RoofMaterials pRoofTextureData) {
 
-        MeshFactory meshBorder = model.addMesh("roof_facade");
+        MeshFactory meshBorder = new MeshFactory("roof_facade");
 //        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
 //        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
 //        int facadeMaterialIndex = model.addMaterial(facadeMaterial);

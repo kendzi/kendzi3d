@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
-import kendzi.josm.kendzi3d.jogl.model.OsmAttributeKeys;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WindowGridBuildingElement;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -53,14 +53,14 @@ public class BuildingAttributeParser {
      */
     public static String parseFacadeMaterialName(OsmPrimitive primitive) {
 
-        String facadeMaterial = OsmAttributeKeys.BUILDING_MATERIAL.parsePrimitive(primitive);
+        String facadeMaterial = OsmAttributeKeys.BUILDING_MATERIAL.primitiveValue(primitive);
 
         if (StringUtil.isBlankOrNull(facadeMaterial)) {
-            facadeMaterial = OsmAttributeKeys.BUILDING_FACADE_MATERIAL.parsePrimitive(primitive);
+            facadeMaterial = OsmAttributeKeys.BUILDING_FACADE_MATERIAL.primitiveValue(primitive);
         }
 
         if (StringUtil.isBlankOrNull(facadeMaterial)) {
-            facadeMaterial = OsmAttributeKeys.FACADE_MATERIAL.parsePrimitive(primitive);
+            facadeMaterial = OsmAttributeKeys.FACADE_MATERIAL.primitiveValue(primitive);
         }
 
         return facadeMaterial;
@@ -81,9 +81,9 @@ public class BuildingAttributeParser {
     public static String parseRoofMaterialName(OsmPrimitive primitive) {
 
 
-        String roofMaterial = OsmAttributeKeys.ROOF_MATERIAL.parsePrimitive(primitive);
+        String roofMaterial = OsmAttributeKeys.ROOF_MATERIAL.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(roofMaterial)) {
-            roofMaterial = OsmAttributeKeys.BUILDING_ROOF_MATERIAL.parsePrimitive(primitive);
+            roofMaterial = OsmAttributeKeys.BUILDING_ROOF_MATERIAL.primitiveValue(primitive);
         }
 
         return roofMaterial;
@@ -103,15 +103,15 @@ public class BuildingAttributeParser {
      */
     public static Color parseFacadeColour(OsmPrimitive primitive) {
 
-        String facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOR.parsePrimitive(primitive);
+        String facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOR.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOUR.parsePrimitive(primitive);
+            facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOUR.primitiveValue(primitive);
         }
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = OsmAttributeKeys.BUILDING_COLOR.parsePrimitive(primitive);
+            facadeColor = OsmAttributeKeys.BUILDING_COLOR.primitiveValue(primitive);
         }
         if (StringUtil.isBlankOrNull(facadeColor)) {
-            facadeColor = OsmAttributeKeys.BUILDING_COLOUR.parsePrimitive(primitive);
+            facadeColor = OsmAttributeKeys.BUILDING_COLOUR.primitiveValue(primitive);
         }
 
         if (!StringUtil.isBlankOrNull(facadeColor)) {
@@ -128,15 +128,15 @@ public class BuildingAttributeParser {
      */
     public static Color parseRoofColour(OsmPrimitive primitive) {
 
-        String roofColor = OsmAttributeKeys.ROOF_COLOUR.parsePrimitive(primitive);
+        String roofColor = OsmAttributeKeys.ROOF_COLOUR.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = OsmAttributeKeys.ROOF_COLOR.parsePrimitive(primitive);
+            roofColor = OsmAttributeKeys.ROOF_COLOR.primitiveValue(primitive);
         }
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOUR.parsePrimitive(primitive);
+            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOUR.primitiveValue(primitive);
         }
         if (StringUtil.isBlankOrNull(roofColor)) {
-            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOR.parsePrimitive(primitive);
+            roofColor = OsmAttributeKeys.BUILDING_ROOF_COLOR.primitiveValue(primitive);
         }
 
         if (!StringUtil.isBlankOrNull(roofColor)) {
@@ -234,7 +234,7 @@ public class BuildingAttributeParser {
 
     public static WindowGridBuildingElement parseWallWindowsColumns(Way w) {
 
-        String windowsCols = OsmAttributeKeys.WINDOWS.parsePrimitive(w);
+        String windowsCols = OsmAttributeKeys.WINDOWS.primitiveValue(w);
 
         if (StringUtil.isBlankOrNull(windowsCols)) {
             return null;

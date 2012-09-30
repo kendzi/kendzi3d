@@ -32,6 +32,7 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractRelationModel;
@@ -300,7 +301,7 @@ public class FenceRelation extends AbstractRelationModel {
     public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive,
             TextureLibraryService textureLibraryService) {
 
-        String facadeColor = OsmAttributeKeys.FENCE_COLOR.parsePrimitive(pOsmPrimitive);
+        String facadeColor = OsmAttributeKeys.FENCE_COLOR.primitiveValue(pOsmPrimitive);
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
@@ -330,9 +331,9 @@ public class FenceRelation extends AbstractRelationModel {
      * @return fence type
      */
     public static String getFenceType(OsmPrimitive pOsmPrimitive) {
-        String fenceType = OsmAttributeKeys.FENCE__TYPE.parsePrimitive(pOsmPrimitive);
+        String fenceType = OsmAttributeKeys.FENCE__TYPE.primitiveValue(pOsmPrimitive);
         if (StringUtil.isBlankOrNull(fenceType)) {
-            fenceType = OsmAttributeKeys.FENCE_TYPE.parsePrimitive(pOsmPrimitive);
+            fenceType = OsmAttributeKeys.FENCE_TYPE.primitiveValue(pOsmPrimitive);
         }
         return fenceType;
     }

@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,6 @@ import javax.vecmath.Vector3d;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.GableRoof;
@@ -72,7 +72,6 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             double pSizeB,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
-            ModelFactory model,
             RoofMaterials pRoofTextureData
             ) {
 
@@ -83,7 +82,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
 
         Double b1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pSizeA, pSizeA /2d);
 
-        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, model, pRoofTextureData);
+        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, pRoofTextureData);
 
     }
 
@@ -115,12 +114,11 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             double h1,
             double h2,
             double b1,
-            ModelFactory model,
             RoofMaterials pRoofTextureData) {
 
 
-        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
 
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
@@ -217,7 +215,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(Math.max(h1, h2));
 
-        rto.setModel(model);
+        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
 
         List<List<Point2d>> polygonTop = indexesToList(borderExtanded, polygonsRight);

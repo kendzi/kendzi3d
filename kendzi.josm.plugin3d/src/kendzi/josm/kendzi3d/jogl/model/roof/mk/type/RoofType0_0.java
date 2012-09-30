@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.vecmath.Point2d;
 
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
@@ -54,7 +53,6 @@ public class RoofType0_0 extends RoofType0 {
             double pRecWidth,
             Integer prefixParameter,
             Map<MeasurementKey, Measurement> pMeasurements,
-            ModelFactory model,
             RoofMaterials pRoofTextureData
             ) {
 
@@ -62,6 +60,6 @@ public class RoofType0_0 extends RoofType0 {
 
         int type = getType();
 
-        return build(border, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, 0, 0, 0, 0, 0, type, model, pRoofTextureData);
+        return build(border, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, 0, 0, 0, 0, 0, type, pRoofTextureData);
     }
 }

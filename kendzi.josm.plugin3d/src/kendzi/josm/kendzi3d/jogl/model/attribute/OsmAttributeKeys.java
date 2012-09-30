@@ -1,10 +1,12 @@
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.jogl.model.attribute;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public enum OsmAttributeKeys {
 
     BUILDING("building"),
+
+    BUILDING_PART("building:part"),
 
     BUILDING_MIN_LEVEL("building:min_level"),
 
@@ -77,12 +79,12 @@ public enum OsmAttributeKeys {
         return this.key;
     }
 
-    public String parsePrimitive(OsmPrimitive primitive) {
-        if (this.key == null || primitive == null) {
-            return null;
-        }
+    public String primitiveValue(OsmPrimitive primitive) {
+        return OsmAttributeUtil.primitiveValue(primitive, this);
+    }
 
-        return primitive.get(this.key);
+    public boolean primitiveKeyHaveAnyValue(OsmPrimitive primitive) {
+        return OsmAttributeUtil.primitiveKeyHaveAnyValue(primitive, this);
     }
 
 }

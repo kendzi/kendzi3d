@@ -10,6 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
@@ -69,7 +69,6 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRoof(
             Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height,
-            ModelFactory model,
             RoofMaterials pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
@@ -93,7 +92,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
 
 
-        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, model, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, pRoofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -106,11 +105,10 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
         Double h1, Double angle, double l1, double l2,
-        ModelFactory model,
         RoofMaterials pRoofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(model, pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(model, pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
+        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
 
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
@@ -176,7 +174,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(findMaxDistance(distance));
 
-        rto.setModel(model);
+        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
 
       //FIXME
