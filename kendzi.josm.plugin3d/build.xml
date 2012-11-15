@@ -112,6 +112,8 @@
     	   		<exclude name="**/jogl-java-src.zip"/>
     	   		<exclude name="**/gluegen-java-src.zip"/>
     	   		<exclude name="**/skip_build/**"/>
+    	   		<exclude name="**/jogl-all-natives-*.jar"/>
+    	   		<exclude name="**/gluegen-rt-natives-*.jar"/>
     		</fileset>
     	</copy>
     	
@@ -215,7 +217,7 @@
     </target>
 
 
-    <!--
+	  <!--
     ************************** Publishing the plugin *********************************** 
     -->
 	<target name="publish-local-ftp-dir" depends="dist">
@@ -227,6 +229,7 @@
 		<copy file="${plugin.jar}" todir="${local-ftp-dir}/${build.number}"/>
 				
 	</target>
+	
 	
     	
     <!--

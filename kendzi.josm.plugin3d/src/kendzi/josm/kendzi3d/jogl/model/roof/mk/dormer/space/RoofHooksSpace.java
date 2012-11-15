@@ -12,7 +12,7 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofHookPoint;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRow;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public interface RoofHooksSpace {
 

@@ -19,20 +19,19 @@ public class RectanglePointVector2d {
     Vector2d vector;
 
     public RectanglePointVector2d(double width, double height, Point2d point, Vector2d vector) {
-        super();
-        this.width = width;
-        this.height = height;
-        this.point = new Point2d(point);
-        this.vector = new Vector2d(vector);
-        this.vector.normalize();
+        this(width, height, point, vector, false);
     }
 
     public RectanglePointVector2d(double width, double height, Point2d point, Vector2d vector, boolean normalized) {
         super();
         this.width = width;
         this.height = height;
-        this.point = point;
-        this.vector = vector;
+        this.point = new Point2d(point);
+        this.vector = new Vector2d(vector);
+
+        if (!normalized) {
+            this.vector.normalize();
+        }
     }
 
     /**

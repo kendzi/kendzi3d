@@ -22,6 +22,7 @@ import kendzi.josm.kendzi3d.dto.xsd.ObjectFactory;
 import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.dto.xsd.PointModels;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.josm.kendzi3d.util.UrlUtil;
 
 import org.apache.log4j.Logger;
 
@@ -216,12 +217,11 @@ public class PointModelService {
     private void loadInternal() {
         this.pointModelsInternalMap.clear();
 
+        String pInternalUrl = "/models/pointModelLayerInternal.xml";
+
         try {
-            URL pointModelConf = this.urlReciverService.receiveFileUrl("/models/pointModelLayerInternal.xml");
 
-            List<PointModel> pointModelsInternalList;
-
-            pointModelsInternalList = loadXml(pointModelConf);
+            List<PointModel> pointModelsInternalList = loadXml(pInternalUrl);
 
             for (PointModel p : pointModelsInternalList) {
                 this.pointModelsInternalMap.put(p.getId(), p);
@@ -235,9 +235,9 @@ public class PointModelService {
         this.pointModelsUserMap.clear();
 
         try {
-            URL pointModelConf = this.urlReciverService.receiveFileUrl("/models/pointModelLayer.xml");
+            String pFileName = "/models/pointModelLayer.xml";
 
-            List<PointModel> pointModelsList = loadXml(pointModelConf);
+            List<PointModel> pointModelsList = loadXml(pFileName);
 
             for (PointModel p : pointModelsList) {
                 this.pointModelsUserMap.put(p.getId(), p);
@@ -274,7 +274,23 @@ public class PointModelService {
     }
 
 
+    public List<PointModel> loadXml(String fileUrl) throws JAXBException, FileNotFoundException {
+
+        URL pointModelConf = this.urlReciverService.receiveFileUrl(fileUrl);
+
+        if (!UrlUtil.existUrl(pointModelConf)) {
+            log.warn("cant load point motel configuration from: " + fileUrl + " url don't exist: " + pointModelConf);
+            return new ArrayList<PointModel>();
+        }
+
+        return loadXml(pointModelConf);
+
+    }
+
     public static List<PointModel> loadXml(URL url) throws JAXBException, FileNotFoundException {
+
+
+
 
         JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
 

@@ -35,6 +35,7 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 import org.apache.log4j.Logger;
 
@@ -61,7 +62,7 @@ public class RoofType1_1 extends RectangleRoofTypeBuilder{
 
     @Override
     public RoofTypeOutput buildRectangleRoof(
-            List<Point2d> border,
+            PolygonWithHolesList2d buildingPolygon,
             Point2d[] rectangleContur,
             double pScaleA,
             double pScaleB,
@@ -78,7 +79,7 @@ public class RoofType1_1 extends RectangleRoofTypeBuilder{
 //        Double h3 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_3, h2);
 
 
-        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, h3, pRoofTextureData);
+        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, h3, pRoofTextureData);
 
     }
 
@@ -101,7 +102,7 @@ public class RoofType1_1 extends RectangleRoofTypeBuilder{
      * @return
      */
     protected RoofTypeOutput build(
-            List<Point2d> pBorderList,
+            PolygonWithHolesList2d buildingPolygon,
             double pScaleA,
             double pScaleB,
             double pRecHeight,
@@ -122,6 +123,8 @@ public class RoofType1_1 extends RectangleRoofTypeBuilder{
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
+
+        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
 
 
         // FIXME

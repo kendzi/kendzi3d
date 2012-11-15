@@ -65,10 +65,10 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
 import kendzi.math.geometry.point.TransformationMatrix3d;
-import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 import org.apache.log4j.Logger;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 
 /**
@@ -156,15 +156,16 @@ public class DormerRoofBuilder {
 
         DormerRoofModel roof = pBuildingPart.getRoof();
 
-        PolygonList2d wallPolygon = BuildingUtil.wallToPolygon(pBuildingPart.getWall());
+//        PolygonList2d wallPolygon = BuildingUtil.wallToOuterPolygon(pBuildingPart.getWall());
+        PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(pBuildingPart);
 
-        List<Point2d> polygon = wallPolygon.getPoints();// cleanPolygon(roof.getBuilding().getPoints());
+        List<Point2d> polygon = buildingPolygon.getOuter().getPoints();// cleanPolygon(roof.getBuilding().getPoints());
 
         Point2d startPoint = polygon.get(0);
 
         RoofTypeBuilder roofType = parseRoofTypeBuilder(roof.getRoofType());
 
-        RoofTypeOutput rto = roofType.buildRoof(startPoint, polygon, roof, height, roofMaterials);
+        RoofTypeOutput rto = roofType.buildRoof(startPoint, buildingPolygon, roof, height, roofMaterials);
 
         List<RoofDormerTypeOutput> roofExtensionsList =
                 DormerTypeBuilder.build(
@@ -177,9 +178,11 @@ public class DormerRoofBuilder {
 
 
 
+        double minHeight = height - rto.getHeight();
+
         ModelFactory model = buildModel(rto, roofExtensionsList, mf);
 
-        RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList);
+        RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList, startPoint, minHeight);
 
 
         RoofOutput out = new RoofOutput();
@@ -333,7 +336,12 @@ public class DormerRoofBuilder {
             mesh.normals = normals;
     }
 
-    private static RoofDebugOut buildDebugInfo(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList) {
+    private static RoofDebugOut buildDebugInfo(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList, Point2d startPoint, double height) {
+
+
+//        Point3d startPointMark = TransformationMatrix3d.transform(new Point3d(startPoint.x, 0, -startPoint.y), rto.getTransformationMatrix());
+        Point3d startPointMark = new Point3d(startPoint.x, height, -startPoint.y);
+
 
         List<Point3d> rectangleTransf = new ArrayList<Point3d>();
 
@@ -345,8 +353,8 @@ public class DormerRoofBuilder {
         }
         rto.setRectangle(rectangleTransf);
         RoofDebugOut out = new RoofDebugOut();
-        out.setRectangle(rectangleTransf);
-
+        out.setBbox(rectangleTransf);
+        out.setStartPoint(startPointMark);
         return out;
     }
 

@@ -30,6 +30,7 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 import kendzi.math.geometry.polygon.split.SplitPolygons;
 
@@ -58,7 +59,7 @@ public class RoofType4_0 extends RectangleRoofTypeBuilder{
 
     @Override
     public RoofTypeOutput buildRectangleRoof(
-            List<Point2d> border,
+            PolygonWithHolesList2d buildingPolygon,
             Point2d[] rectangleContur,
             double pScaleA,
             double pScaleB,
@@ -79,7 +80,7 @@ public class RoofType4_0 extends RectangleRoofTypeBuilder{
 
 
 
-        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, pRoofTextureData);
+        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, l2, pRoofTextureData);
 
     }
 
@@ -105,7 +106,7 @@ public class RoofType4_0 extends RectangleRoofTypeBuilder{
      * @return
      */
     protected RoofTypeOutput build(
-            List<Point2d> pBorderList,
+            PolygonWithHolesList2d buildingPolygon,
             double pScaleA,
             double pScaleB,
             double pRecHeight,
@@ -149,6 +150,7 @@ public class RoofType4_0 extends RectangleRoofTypeBuilder{
         Vector3d nb = new Vector3d(0, l2  , (h2));
         nb.normalize();
 
+        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 

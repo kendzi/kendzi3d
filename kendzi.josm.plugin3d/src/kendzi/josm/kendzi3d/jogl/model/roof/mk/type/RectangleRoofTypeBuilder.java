@@ -25,16 +25,16 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
-import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
 import org.apache.log4j.Logger;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
@@ -43,7 +43,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height, RoofMaterials pRoofTextureData) {
+            Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height, RoofMaterials pRoofTextureData) {
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
@@ -53,9 +53,12 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         if (pRoof.getDirection() == null) {
             /**/
 
-            List<Point2d> graham = Graham.grahamScan(pPolygon);
+            PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
-            rectangleContur = RectangleUtil.findRectangleContur(graham);
+//            List<Point2d> graham = Graham.grahamScan(outerPolygon.getPoints());
+//            rectangleContur = RectangleUtil.findRectangleConturOld(graham);
+
+            rectangleContur = rectToList(RectangleUtil.findRectangleContur(outerPolygon.getPoints()));
             rectangleContur = findStartPoint(pStartPoint, rectangleContur);
 
             if (pRoof.getOrientation() == null) {
@@ -69,7 +72,9 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             /**/
 
         } else {
-            rectangleContur = calcRectangle(pPolygon, pRoof.getDirection());
+            PolygonList2d outerPolygon = buildingPolygon.getOuter();
+
+            rectangleContur = calcRectangle(outerPolygon.getPoints(), pRoof.getDirection());
         }
 
         Point2d newStartPoint = rectangleContur[0];
@@ -79,7 +84,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
                 rectangleContur[1].y - rectangleContur[0].y,
                 rectangleContur[1].x - rectangleContur[0].x);
         //XXX
-        log.info(Math.toDegrees(alpha));
+//        log.info(Math.toDegrees(alpha));
 
         boolean normalizeAB = normalizeAB();
 
@@ -105,23 +110,25 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         }
 
         SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, scaleA, scaleB);
-        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
+//        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
+        PolygonWithHolesList2d transfBuildingPolygon = transformationPolygonWithHoles(buildingPolygon, transformLocal);
         rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
 
-        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(pPolygon, rectangleContur, scaleA, scaleB, recHeight, recWidth, pRoof.getRoofTypeParameter(),
-                pRoof.getMeasurements(), pRoofTextureData);
+        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(
+                transfBuildingPolygon,
+                rectangleContur,
+                scaleA, scaleB,
+                recHeight, recWidth,
+                pRoof.getRoofTypeParameter(),
+                pRoof.getMeasurements(),
+                pRoofTextureData);
 
         SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, scaleA, scaleB);
 
         buildRectangleRoof.setTransformationMatrix(tr);
 
-        List<Point3d> rect = new ArrayList<Point3d>();
-        rect.add(new Point3d(rectangleContur[0].x, 0, -rectangleContur[0].y));
-        rect.add(new Point3d(rectangleContur[1].x, 0, -rectangleContur[1].y));
-        rect.add(new Point3d(rectangleContur[2].x, 0, -rectangleContur[2].y));
-        rect.add(new Point3d(rectangleContur[3].x, 0, -rectangleContur[3].y));
-        buildRectangleRoof.setRectangle(rect);
+        buildRectangleRoof.setRectangle(createRectangle(rectangleContur));
 
         return buildRectangleRoof;
 
@@ -131,10 +138,60 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
 
 
+    /**
+     * @param rectangleContur
+     * @return
+     */
+    public List<Point3d> createRectangle(Point2d[] rectangleContur) {
+        List<Point3d> rect = new ArrayList<Point3d>();
+        rect.add(new Point3d(rectangleContur[0].x, 0, -rectangleContur[0].y));
+        rect.add(new Point3d(rectangleContur[1].x, 0, -rectangleContur[1].y));
+        rect.add(new Point3d(rectangleContur[2].x, 0, -rectangleContur[2].y));
+        rect.add(new Point3d(rectangleContur[3].x, 0, -rectangleContur[3].y));
+        return rect;
+    }
+
+
+
+
+
+    private PolygonWithHolesList2d transformationPolygonWithHoles(PolygonWithHolesList2d polygonWithHoles,
+            SimpleMatrix transformLocal) {
+
+        PolygonList2d outer = transformPolygon(polygonWithHoles.getOuter(), transformLocal);
+
+        List<PolygonList2d> inner = new ArrayList<PolygonList2d>();
+
+        if (polygonWithHoles.getInner() != null) {
+            for (PolygonList2d pi : polygonWithHoles.getInner()) {
+                inner.add(transformPolygon(pi, transformLocal));
+            }
+        }
+        return new PolygonWithHolesList2d(outer, inner);
+    }
+
+    PolygonList2d transformPolygon(PolygonList2d polygon, SimpleMatrix transformLocal) {
+        return new PolygonList2d(TransformationMatrix2d.transformList(polygon.getPoints(), transformLocal));
+    }
+
+
+
+
     private Point2d[] calcRectangle(List<Point2d> pPolygon, Vector2d pDirection) {
-        RectanglePointVector2d contur = RectangleUtil.findRectangleContur(new PolygonList2d(pPolygon),  pDirection);
+
+        RectanglePointVector2d contur = RectangleUtil.findRectangleContur(pPolygon,  pDirection);
+
+        Point2d[] ret = rectToList(contur);
+
+        return ret;
+    }
 
 
+    /**
+     * @param contur
+     * @return
+     */
+    public Point2d[] rectToList(RectanglePointVector2d contur) {
         Point2d p1 = contur.getPoint();
         Point2d p2 = new Point2d(contur.getVector());
         p2.scaleAdd(contur.getWidth(), contur.getPoint());
@@ -153,7 +210,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         ret[1] = p2;
         ret[2] = p3;
         ret[3] = p4;
-
         return ret;
     }
 
@@ -220,8 +276,15 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
      * @param pRoofTextureData
      * @return build roof
      */
-    public abstract RoofTypeOutput buildRectangleRoof(List<Point2d> border, Point2d[] rectangleContur, double scaleA, double scaleB,
-            double sizeA, double sizeB2, Integer prefixParameter, Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData);
+    public abstract RoofTypeOutput buildRectangleRoof(
+            PolygonWithHolesList2d buildingPolygon,
+            Point2d[] rectangleContur,
+            double scaleA, double scaleB,
+            double sizeA, double sizeB2,
+            Integer prefixParameter,
+            Map<MeasurementKey, Measurement> pMeasurements,
+            RoofMaterials pRoofTextureData);
+
 
     private Point2d[] findStartPoint(Point2d pStartPoint, Point2d[] pRectangleContur) {
         int minI = 0;

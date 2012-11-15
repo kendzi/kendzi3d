@@ -22,6 +22,7 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.dto.xsd.ObjectFactory;
 import kendzi.josm.kendzi3d.dto.xsd.TextureLibrary;
 import kendzi.josm.kendzi3d.dto.xsd.TextureSet;
+import kendzi.josm.kendzi3d.util.UrlUtil;
 
 import org.apache.log4j.Logger;
 
@@ -199,8 +200,15 @@ public class TextureLibraryService {
 
         URL pointModelConf = this.urlReciverService.receiveFileUrl(pUrl);
 
+        if (!UrlUtil.existUrl(pointModelConf)) {
+            log.warn("cant load texture configuration from: " + pUrl + " url don't exist: " + pointModelConf);
+            return;
+        }
+
         loadUrl(pointModelConf);
     }
+
+
 
     private void loadUrl(URL pUrl) throws JAXBException, FileNotFoundException {
         List<TextureSet> pointModelsInternalList = loadXml(pUrl);

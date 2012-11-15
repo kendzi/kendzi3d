@@ -32,9 +32,10 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 import org.apache.log4j.Logger;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  * Roof type 8.0.
@@ -59,10 +60,11 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height,
+            Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height,
             RoofMaterials pRoofTextureData) {
 
 
+        List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 

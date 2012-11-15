@@ -14,7 +14,10 @@ import java.util.List;
 import javax.vecmath.Point3d;
 
 public class RoofDebugOut {
-    List<Point3d> rectangle;
+
+    private Point3d startPoint;
+
+    private List<Point3d> bbox;
 
     class TextPoint {
         String text;
@@ -24,7 +27,7 @@ public class RoofDebugOut {
          * @return the text
          */
         public String getText() {
-            return text;
+            return this.text;
         }
         /**
          * @param text the text to set
@@ -36,7 +39,7 @@ public class RoofDebugOut {
          * @return the point
          */
         public Point3d getPoint() {
-            return point;
+            return this.point;
         }
         /**
          * @param point the point to set
@@ -45,17 +48,33 @@ public class RoofDebugOut {
             this.point = point;
         }
     }
+
+
     /**
-     * @return the rectangle
+     * @return the startPoint
      */
-    public List<Point3d> getRectangle() {
-        return rectangle;
+    public Point3d getStartPoint() {
+        return this.startPoint;
     }
 
     /**
-     * @param rectangle the rectangle to set
+     * @param startPoint the startPoint to set
      */
-    public void setRectangle(List<Point3d> rectangle) {
-        this.rectangle = rectangle;
+    public void setStartPoint(Point3d startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    /**
+     * @return the bbox
+     */
+    public List<Point3d> getBbox() {
+        return this.bbox;
+    }
+
+    /**
+     * @param bbox the bbox to set
+     */
+    public void setBbox(List<Point3d> bbox) {
+        this.bbox = bbox;
     }
 }

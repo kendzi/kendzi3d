@@ -35,7 +35,7 @@
 	<textureSet key="buildings.roof_unknown">
 		<textureData fileKey="/textures/building_roof_material_unknown.png" height="2" width="2"/>
 	</textureSet>
-	<textureSet key="buildings.roof_roofTiles">
+	<textureSet key="buildings.roof_roof_tiles">
 		<textureData fileKey="/textures/building_roof_material_roofTiles.png" height="3" width="3"/>
 		
 		

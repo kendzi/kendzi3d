@@ -20,7 +20,7 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public class RectangleRoofHooksSpace implements RoofHooksSpace {
     Point2d p1;

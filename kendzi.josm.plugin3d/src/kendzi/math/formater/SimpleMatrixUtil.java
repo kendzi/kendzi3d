@@ -15,7 +15,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public class SimpleMatrixUtil {
 

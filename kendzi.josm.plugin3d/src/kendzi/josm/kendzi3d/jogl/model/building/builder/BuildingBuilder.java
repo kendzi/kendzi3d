@@ -17,7 +17,6 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
-import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.josm.kendzi3d.dto.TextureData;
@@ -47,22 +46,27 @@ import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 
 public class BuildingBuilder {
 
-    public static Model buildModel(BuildingModel buildingModel, BuildingElementsTextureMenager tm) {
+    public static BuildingOutput buildModel(BuildingModel buildingModel, BuildingElementsTextureMenager tm) {
 
 //        ModelFactory modelFactory = ModelFactory.modelBuilder();
+        List<BuildingPartOutput> partsOut = new ArrayList<BuildingPartOutput>();
 
         ModelFactory mf = ModelFactory.modelBuilder();
 
         if (buildingModel.getParts() != null) {
 
             for (BuildingPart bp : buildingModel.getParts()) {
-                buildPart(bp, buildingModel, mf, tm);
-             }
+
+                partsOut.add(buildPart(bp, buildingModel, mf, tm));
+            }
         }
 //        else {
 //            buildPart(buildingModel.getOutline(), buildingModel, mf, tm);
 //        }
-        return mf.toModel();
+        BuildingOutput out = new BuildingOutput();
+        out.setModel( mf.toModel());
+        out.setBuildingPartOutput(partsOut);
+        return out;
     }
 
     ModelFactory CreateModelFactory() {
@@ -87,7 +91,7 @@ public class BuildingBuilder {
 
 
     static boolean isWallCounterClockwise(Wall wall) {
-        PolygonList2d wallToPolygon = BuildingUtil.wallToPolygon(wall);
+        PolygonList2d wallToPolygon = BuildingUtil.wallToOuterPolygon(wall);
 
         if (0.0f < Triangulate.area(wallToPolygon.getPoints())) {
             return true;
@@ -95,7 +99,9 @@ public class BuildingBuilder {
         return false;
     }
 
-    private static void buildPart(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureMenager tm) {
+    private static BuildingPartOutput buildPart(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureMenager tm) {
+
+        BuildingPartOutput partOutput = new BuildingPartOutput();
 
         CatchFaceFactory catchFaceFactory = new CatchFaceFactory(mf);
 
@@ -119,6 +125,7 @@ public class BuildingBuilder {
         double wallHeight = maxHeight - roofOutput.getHeight();
 
 
+
         buildWall(w, cc, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm);
 
 //        for (WallPart wp : w.getWallParts()) {
@@ -135,10 +142,24 @@ public class BuildingBuilder {
     //            }
             }
         }
-//        BuildingModelUtil.WallPartToOutline(wallParts)
 
+        partOutput.setRoofDebugOut(roofOutput.getDebug());
+//        partOutput.setFirstPoint(getFirstWallPoint(w));
+
+        return partOutput;
     }
 
+    private static Point2d getFirstWallPoint(Wall w) {
+        WallPart firstWallPart = getFirstWallPart(w);
+
+        if (firstWallPart != null
+                && firstWallPart.getNodes() != null
+                && firstWallPart.getNodes().size() > 0) {
+            return firstWallPart.getNodes().get(0).getPoint();
+        }
+
+        return null;
+    }
     private static WallPart getFirstWallPart(Wall w) {
 
         if (w == null) {

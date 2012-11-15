@@ -9,7 +9,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Point2d;
@@ -19,6 +18,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +39,8 @@ public class RoofType1_0 extends RoofType1_1 {
     }
 
     @Override
-    public RoofTypeOutput buildRectangleRoof(List<Point2d> border,
+    public RoofTypeOutput buildRectangleRoof(
+            PolygonWithHolesList2d buildingPolygon,
             Point2d[] rectangleContur,
             double pScaleA,
             double pScaleB,
@@ -53,7 +54,7 @@ public class RoofType1_0 extends RoofType1_1 {
 //        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
         Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_1, 0, pRecHeight, 20d);
 
-        return build(border, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, 0, h1, 0, pRoofTextureData);
+        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, 0, h1, 0, pRoofTextureData);
     }
 
 }

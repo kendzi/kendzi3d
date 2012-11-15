@@ -39,11 +39,12 @@ import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.skeleton.Skeleton;
 import kendzi.math.geometry.skeleton.Skeleton.Output;
 
 import org.apache.log4j.Logger;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  * Roof type 9.0.
@@ -68,8 +69,10 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, List<Point2d> pPolygon, DormerRoofModel pRoof, double height,
+            Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height,
             RoofMaterials pRoofTextureData) {
+
+        List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
 //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {

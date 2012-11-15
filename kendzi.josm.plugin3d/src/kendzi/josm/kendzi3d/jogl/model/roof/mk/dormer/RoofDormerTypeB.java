@@ -30,7 +30,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerType;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 
 import org.apache.log4j.Logger;
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  * Dormer type B.

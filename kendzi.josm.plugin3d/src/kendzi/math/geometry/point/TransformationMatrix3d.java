@@ -12,7 +12,7 @@ package kendzi.math.geometry.point;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 /**
  *

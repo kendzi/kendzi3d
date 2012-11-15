@@ -37,6 +37,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplit;
 
 import org.apache.log4j.Logger;
@@ -64,7 +65,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
 
     @Override
     public RoofTypeOutput buildRectangleRoof(
-            List<Point2d> border,
+            PolygonWithHolesList2d buildingPolygon,
             Point2d[] rectangleContur,
             double scaleA,
             double scaleB,
@@ -82,7 +83,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
 
         Double b1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pSizeA, pSizeA /2d);
 
-        return build(border, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, pRoofTextureData);
+        return build(buildingPolygon, scaleA, scaleB, pSizeA, pSizeB, rectangleContur, h1, h2, b1, pRoofTextureData);
 
     }
 
@@ -105,7 +106,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
      * @return
      */
     protected RoofTypeOutput build(
-            List<Point2d> pBorderList,
+            PolygonWithHolesList2d buildingPolygon,
             double pScaleA,
             double pScaleB,
             double pSizeA,
@@ -162,6 +163,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
         List<Point2d> borderExtanded = new ArrayList<Point2d>();
 
 
+        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
 
 
         for (Point2d ppp : pBorderList) {

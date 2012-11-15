@@ -9,14 +9,13 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.List;
-
 import javax.vecmath.Point2d;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 public interface RoofTypeBuilder {
 
@@ -26,7 +25,9 @@ public interface RoofTypeBuilder {
 
     public RoofTypeOutput buildRoof(
             Point2d pStartPoint,
-            List<Point2d> pPolygon,
+//            PolygonList2d outerPolygon,
+            PolygonWithHolesList2d wallPolygon,
+//            List<Point2d> pPolygon,
             DormerRoofModel pRoof,
             double height,
             RoofMaterials roofMaterials);

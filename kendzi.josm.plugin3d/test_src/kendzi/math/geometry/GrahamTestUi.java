@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Vector2d;
+
+import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
 public class GrahamTestUi extends Applet {
 	/**
@@ -128,13 +131,37 @@ public class GrahamTestUi extends Applet {
 		}
 
 		ch2 = new Polygon();
-		Point2d[] cont = RectangleUtil.findRectangleContur(Collections.unmodifiableList(ret));
+		Point2d[] cont = rectToList(RectangleUtil.findRectangleContur(Collections.unmodifiableList(ret)));
 		for (Point2d p : cont) {
 			ch2.addPoint((int) p.x, (int) p.y);
 		}
 
 		return true;
 	}
+	/**
+     * @param contur
+     * @return
+     */
+    public Point2d[] rectToList(RectanglePointVector2d contur) {
+        Point2d p1 = contur.getPoint();
+        Point2d p2 = new Point2d(contur.getVector());
+        p2.scaleAdd(contur.getWidth(), contur.getPoint());
 
+        Vector2d ort = new Vector2d(-contur.getVector().y * contur.getHeight(), contur.getVector().x * contur.getHeight());
+
+        Point2d p3 = new Point2d(p2);
+        p3.add(ort);
+
+        Point2d p4 = new Point2d(p1);
+        p4.add(ort);
+
+
+        Point2d[] ret = new Point2d[4];
+        ret[0] = p1;
+        ret[1] = p2;
+        ret[2] = p3;
+        ret[3] = p4;
+        return ret;
+    }
 
 }

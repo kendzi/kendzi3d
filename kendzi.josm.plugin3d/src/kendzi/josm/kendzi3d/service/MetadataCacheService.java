@@ -83,8 +83,11 @@ public class MetadataCacheService {
         try {
             URL fileUrl = this.urlReciverService.receiveFileUrl(pFileName);
 
+            if (fileUrl != null) {
             this.metadataProperties.load(fileUrl.openStream());
-
+            } else {
+                log.warn("cant find url for file: " + pFileName);
+            }
         } catch (Exception e) {
             log.error("error loading metadata file: " + pFileName, e);
         }

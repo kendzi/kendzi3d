@@ -6,11 +6,26 @@ import java.util.List;
 import javax.vecmath.Point2d;
 
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 public class BuildingUtil {
 
-    //public static PolygonWithHolesList2d wallToPolygonWall(Wall wall) {
-    public static PolygonList2d wallToPolygon(Wall wall) {
+    public static PolygonWithHolesList2d buildingPartToPolygonWithHoles(BuildingPart bp) {
+
+        PolygonList2d outerPolygon = wallToOuterPolygon(bp.getWall());
+
+        List<PolygonList2d> innerList = new ArrayList<PolygonList2d>();
+        if (bp.getInlineWalls() != null) {
+            for (Wall innerWall : bp.getInlineWalls()) {
+                PolygonList2d innerPolygon = wallToOuterPolygon(innerWall);
+                innerList.add(innerPolygon);
+            }
+        }
+
+        return new PolygonWithHolesList2d(outerPolygon, innerList);
+    }
+
+    public static PolygonList2d wallToOuterPolygon(Wall wall) {
         return wallPartsToPolygon(wall.getWallParts());
     }
 

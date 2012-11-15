@@ -26,7 +26,7 @@ import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public class PolygonRoofHooksSpace implements RoofHooksSpace {
     Point2d p1;

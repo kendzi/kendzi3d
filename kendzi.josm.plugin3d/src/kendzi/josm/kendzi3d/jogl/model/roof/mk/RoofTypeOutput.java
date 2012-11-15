@@ -16,7 +16,7 @@ import javax.vecmath.Point3d;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RoofHooksSpaces;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public class RoofTypeOutput {
 

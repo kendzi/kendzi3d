@@ -56,7 +56,7 @@ public class RoofOutput {
      * @return the debug
      */
     public RoofDebugOut getDebug() {
-        return debug;
+        return this.debug;
     }
     /**
      * @param debug the debug to set

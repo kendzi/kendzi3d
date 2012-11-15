@@ -13,7 +13,7 @@ import java.util.List;
 
 import kendzi.jogl.model.factory.MeshFactory;
 
-import org.ejml.data.SimpleMatrix;
+import org.ejml.simple.SimpleMatrix;
 
 public class RoofDormerTypeOutput {
 

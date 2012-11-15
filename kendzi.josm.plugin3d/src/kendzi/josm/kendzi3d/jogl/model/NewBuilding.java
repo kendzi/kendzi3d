@@ -28,6 +28,8 @@ import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeValues;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingBuilder;
+import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingOutput;
+import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingPartOutput;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingWallElement;
@@ -99,6 +101,8 @@ public class NewBuilding extends AbstractModel {
 
     private Way way;
 
+    private List<NewBuildingDebug> debug = new ArrayList<NewBuildingDebug>();
+
 
 
     /**
@@ -156,12 +160,27 @@ public class NewBuilding extends AbstractModel {
         if (bm != null) {
 
             BuildingElementsTextureMenager tm = new CacheOsmBuildingElementsTextureMenager(this.textureLibraryService);
-            Model model = BuildingBuilder.buildModel(bm, tm);
+
+            BuildingOutput buildModel = BuildingBuilder.buildModel(bm, tm);
+            Model model = buildModel.getModel();
             model.useLight = true;
             model.useTexture = true;
 
             this.model = model;
             this.buildModel = true;
+
+            this.debug.clear();
+
+            if (buildModel.getBuildingPartOutput() != null) {
+                for (BuildingPartOutput bo: buildModel.getBuildingPartOutput()) {
+                    this.debug.add(new NewBuildingDebug(bo.getRoofDebugOut()));
+                }
+
+////                    && buildModel.getBuildingPartOutput().size() > 0) {
+//                //debug inf o for first part
+//                BuildingPartOutput buildingPartOutput = buildModel.getBuildingPartOutput().get(0);
+
+            }
         }
     }
 
@@ -349,7 +368,7 @@ public class NewBuilding extends AbstractModel {
          * @return the outer
          */
         public List<ReversableWay> getOuter() {
-            return outer;
+            return this.outer;
         }
         /**
          * @param outer the outer to set
@@ -361,7 +380,7 @@ public class NewBuilding extends AbstractModel {
          * @return the inner
          */
         public List<List<ReversableWay>> getInner() {
-            return inner;
+            return this.inner;
         }
         /**
          * @param inner the inner to set
@@ -375,6 +394,7 @@ public class NewBuilding extends AbstractModel {
     List<BuildingPart> parseBuildingMultiPolygonPart(Relation pRelation, Perspective3D pPerspective) {
 
         List<AreaWithHoles> waysPolygon = findAreaWithHoles(pRelation);
+
 
         List<BuildingPart> ret = new ArrayList<BuildingPart>();
 
@@ -742,7 +762,7 @@ public class NewBuilding extends AbstractModel {
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);
 
-            if (!type.equals(member.getType())) {
+            if (!type.equals(member.getDisplayType())) {
                 continue;
             }
 
@@ -752,16 +772,19 @@ public class NewBuilding extends AbstractModel {
             }
 
             if (StringUtil.equalsOrNulls(role, member.getRole())) {
-                // XXX
-                if (key != null && member.getMember().hasKey(key)) {
-                    ret.add(member.getMember());
-                }
+                ret.add(member.getMember());
             }
         }
         return ret;
     }
 
-
+    boolean isClosedWay(RelationMember member) {
+        if (OsmPrimitiveType.WAY.equals(member.getType())
+                && (member.getWay().isClosed())) {
+            return true;
+        }
+        return false;
+    }
 
 
     private BuildingPart parseBuildingPart(Way primitive, Perspective3D pPerspective) {
@@ -795,7 +818,16 @@ public class NewBuilding extends AbstractModel {
         this.modelRender.render(pGl, this.model);
 
         pGl.glPopMatrix();
+
+        if (this.modelRender.isDebugging() && this.debug != null) {
+            for (NewBuildingDebug d : this.debug) {
+                d.drawDebugRoof(pGl);
+            }
+        }
     }
+
+
+
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {

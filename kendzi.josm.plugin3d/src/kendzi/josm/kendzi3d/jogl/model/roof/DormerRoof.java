@@ -354,18 +354,18 @@ public class DormerRoof extends Roof {
         double middleY = 0;
         double middleZ = 0;
 
-        for (Point3d p :  this.debug.getRectangle()) {
+        for (Point3d p :  this.debug.getBbox()) {
             middleX = middleX + p.x;
             middleY = middleY + p.y;
             middleZ = middleZ + p.z;
         }
 
         Point3d middle = new Point3d(
-                middleX / this.debug.getRectangle().size(),
-                middleY / this.debug.getRectangle().size(),
-                middleZ / this.debug.getRectangle().size());
+                middleX / this.debug.getBbox().size(),
+                middleY / this.debug.getBbox().size(),
+                middleZ / this.debug.getBbox().size());
 
-        for (Point3d p :  this.debug.getRectangle()) {
+        for (Point3d p :  this.debug.getBbox()) {
             Vector3d v = new Vector3d(p);
             v.sub(middle);
             v.normalize();

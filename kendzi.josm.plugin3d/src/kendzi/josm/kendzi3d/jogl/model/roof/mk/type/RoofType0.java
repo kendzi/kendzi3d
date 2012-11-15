@@ -26,8 +26,10 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 import kendzi.math.geometry.polygon.split.SplitPolygons;
+import kendzi.math.geometry.triangulate.Poly2TriUtil;
 
 import org.apache.log4j.Logger;
 
@@ -71,7 +73,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
      * @return
      */
     protected RoofTypeOutput build(
-           List<Point2d> pBorderList,
+           PolygonWithHolesList2d buildingPolygon,
            double pScaleA,
            double pScaleB,
            double pRecHeight,
@@ -96,9 +98,17 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
        // first calc BASEE
 
+       List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
+
+
+       MultiPolygonList2d topMP = Poly2TriUtil.triangulate(buildingPolygon);
+
        PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-       MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
+
+//       MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
+
+
        Point3d planeRightTopPoint =  new Point3d(
              0 ,
              h1,

@@ -17,7 +17,6 @@ import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 
 import org.apache.log4j.Logger;
@@ -72,9 +71,15 @@ public class RectangleUtil {
 	}
 
 
-	public static RectanglePointVector2d findRectangleContur(PolygonList2d pPolygon, Vector2d pDirection) {
 
-	    List<Point2d> points = pPolygon.getPoints();
+
+	/**
+	 *  For given direction vector, calculate smallest rectangle with all points in side.
+	 * @param pPolygon
+	 * @param pDirection
+	 * @return
+	 */
+	public static RectanglePointVector2d findRectangleContur(List<Point2d> points, Vector2d pDirection) {
 
 	    Vector2d vector = new Vector2d(pDirection);
 	    vector.normalize();
@@ -127,12 +132,46 @@ public class RectangleUtil {
 	    return (v.x*v1.x + v.y*v1.y);
 	}
 
+
+	/** Finds minimal area rectangle containing set of points.
+	 *
+	 * @param points set of points
+	 * @return vertex of rectangle or null if less then 3 points
+	 */
+	public static RectanglePointVector2d findRectangleContur(List<Point2d> points) {
+
+        List<Point2d> graham = Graham.grahamScan(points);
+
+        double smalestArea = Double.MAX_VALUE;
+        RectanglePointVector2d smalestRectangle = null;
+
+        Point2d begin = graham.get(graham.size() - 1);
+        for (Point2d end : graham) {
+
+            Vector2d direction = new Vector2d(end);
+            direction.sub(begin);
+
+            RectanglePointVector2d rectangleContur = findRectangleContur(graham, direction);
+
+            double area = rectangleContur.getHeight() * rectangleContur.getWidth();
+            if (area < smalestArea) {
+                smalestArea = area;
+                smalestRectangle = rectangleContur;
+            }
+
+            begin = end;
+        }
+//        log.info("new area: " + smalestRectangle.getHeight() * smalestRectangle.getWidth());
+        return smalestRectangle;
+    }
+
 	/** Finds minimal area rectangle containing set of points.
 	 *
 	 * @param plist set of points
 	 * @return vertex of rectangle or null if less then 3 points
 	 */
-	public static Point2d[] findRectangleContur(List<Point2d> plist) {
+	@Deprecated
+	public static Point2d[] findRectangleConturOld(List<Point2d> plist) {
 
 		// TODO clenup, but it work for now
 
@@ -191,8 +230,7 @@ public class RectangleUtil {
 			double area = maxHeight * (maxLenght - minLenght);
 
 			if (area < minArea) {
-				log.debug("znaleziono mniejsze pole i: " + i
-						+ " area: " + area);
+				log.debug("znaleziono mniejsze pole i: " + i + " area: " + area);
 				minArea = area;
 
 				double dist2 = ppp1[minLenghtIndex]
