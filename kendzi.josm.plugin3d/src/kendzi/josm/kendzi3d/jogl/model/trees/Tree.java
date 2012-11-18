@@ -76,6 +76,10 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //    private boolean isFlat;
     Vector3d scale;
 
+    private double minHeight;
+
+    private double maxHeight;
+
     /**
      * @param node node
      * @param pPerspective3D perspective
@@ -121,48 +125,32 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         this.genus = this.node.get("genus");
         this.species = this.node.get("species");
 
-        double height = getHeight(this.node, this.species, this.genus, this.type, this.metadataCacheService);
+        Double maxHeight = getMaxHeight(this.node, this.species, this.genus, this.type, this.metadataCacheService);
+        this.minHeight = getMinHeight(this.node, this.species, this.genus, this.type, this.metadataCacheService);
+
+        if (maxHeight == null) {
+            double height = getHeight(this.node, this.species, this.genus, this.type, this.metadataCacheService);
+            maxHeight = this.minHeight + height;
+        }
+
+        this.maxHeight = maxHeight;
 
         Model model = null;
 
-//        switch (pLod) {
-//        case LOD1:
-//        case LOD2:
-//            model = buildFlatModel();
-//            break;
-//        case LOD3:
-//        case LOD4:
-//        case LOD5:
-//
-//
-//
-//            model = findSimpleModel(LOD.LOD3);
-//
-//
-//            break;
-//
-//
-//
-//        default:
-//
-//        }
 
         model = findSimpleModel(this.species, this.genus, this.type, pLod, this.metadataCacheService, this.modelCacheService);
 
-        setupScale(model, height);
+        setupScale(model, maxHeight, this.minHeight);
 
-//        if (LOD.LOD3.equals(pLod)) {
-//
-//            MetadataCacheService.getModel("models/obj/broad_leafed")
-//            MetadataCacheService.getModel("models/obj/tree3.obj")
-//
-//        }
 
 
         this.modelLod.put(pLod, model);
     }
 
-    private void setupScale(Model model2, double height) {
+
+    private void setupScale(Model model2, double maxHeight, double minHeight) {
+
+        double height = maxHeight - minHeight;
 
         Bounds bounds = model2.getBounds();
 
@@ -172,6 +160,8 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         double modelScaleHeight = height / modelHeight;
 
         double modelScaleWidht = modelScaleHeight;
+
+
 
         this.scale.x = modelScaleWidht;
         this.scale.y = modelScaleHeight;
@@ -257,11 +247,10 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * @return height
      */
     public static double getHeight(OsmPrimitive node, String species, String genus, String type, MetadataCacheService metadataCacheService) {
-        // let go
 
         Double height = 1d;
 
-        Double nodeHeight = ModelUtil.getHeight(node, null);
+        Double nodeHeight = ModelUtil.getObjHeight(node, null);
 
         Double spacesHeight = metadataCacheService.getPropertitesDouble("models.trees.species.{0}.height", null, species);
         Double genusHeight = metadataCacheService.getPropertitesDouble("models.trees.genus.{0}.height", null, genus);
@@ -287,6 +276,14 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         }
 
         return height;
+    }
+
+    public static Double getMaxHeight(OsmPrimitive node, String species, String genus, String type, MetadataCacheService metadataCacheService) {
+        return ModelUtil.getHeight(node, null);
+    }
+
+    public static double getMinHeight(OsmPrimitive node, String species, String genus, String type, MetadataCacheService metadataCacheService) {
+        return ModelUtil.getMinHeight(node, 0d);
     }
 
     private Model buildFlatModel() {
@@ -427,7 +424,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         if (model2 != null) {
 
             gl.glPushMatrix();
-            gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+            gl.glTranslated(this.getGlobalX(), this.minHeight, -this.getGlobalY());
 
             gl.glEnable(GL2.GL_NORMALIZE);
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);

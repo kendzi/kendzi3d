@@ -129,4 +129,8 @@ public final class ModelUtil {
         return pDefault;
     }
 
+    public static Double getObjHeight(OsmPrimitive pOsmPrimitive, Double pDefaultHeight) {
+        return parseHeight(pOsmPrimitive.get("obj_height"), pDefaultHeight);
+    }
+
 }
