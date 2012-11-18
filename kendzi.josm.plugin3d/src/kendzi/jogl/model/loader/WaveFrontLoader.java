@@ -686,16 +686,19 @@ public class WaveFrontLoader implements iLoader {
     private void processMaterialType(String line, Mesh mesh) {
         String [] s = line.split("\\s+");
 
+        String materialName = s.length > 1 ? s[1] : null;
+
         int materialID = -1;
         boolean hasTexture = false;
 
         for(int i = 0; i < this.model.getNumberOfMaterials(); i++){
-            Material mat = this.model.getMaterial(i);
+            EditableMaterial mat = (EditableMaterial) this.model.getMaterial(i);
 
             if(
-               (mat.getTexture0() != null && mat.getTexture0().equals(s[1]))
-               || (mat.getTexture0() == null && (s.length < 2 || s[1] == null))
-                    ){
+               (mat.getName() != null && mat.getName().equals(materialName))
+               || (mat.getName() == null && materialName == null)
+               ){
+
                 materialID = i;
                 if(mat.getTexture0() != null) {
                     hasTexture = true;
@@ -730,7 +733,7 @@ public class WaveFrontLoader implements iLoader {
 
                     mat = new EditableMaterial();
                     if (parts.length > 1) {
-                        mat.setTexture0(parts[1]);
+                        mat.setName(parts[1]);
                     }
 //                    mat.textureId = texId++;
 
@@ -771,6 +774,9 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private class EditableMaterial extends Material {
+        String name;
+
+
 
         void setAmbientColor(Color c) {
             this.setAmbientDiffuse(new AmbientDiffuseComponent(c, this.getAmbientDiffuse().getDiffuseColor()));
@@ -786,6 +792,20 @@ public class WaveFrontLoader implements iLoader {
 
         void setShininess(float c) {
             this.setOther(new OtherComponent(this.getOther().getSpecularColor(), this.getOther().getEmissive(), c));
+        }
+
+        /**
+         * @return the name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @param name the name to set
+         */
+        public void setName(String name) {
+            this.name = name;
         }
     }
 
