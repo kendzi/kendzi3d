@@ -27,6 +27,7 @@ import kendzi.jogl.DrawUtil;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.Building;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
@@ -35,6 +36,9 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
@@ -191,7 +195,22 @@ public class DormerRoof extends Roof {
         roof.setDormersBack(Parser.parseSiteDormers("back",keys));
         roof.setDormersRight(Parser.parseSiteDormers("right",keys));
 
-        roof.setMeasurements(Parser.parseMeasurements(keys));
+        Map<MeasurementKey, Measurement> measurements = Parser.parseMeasurements(keys);
+
+        if (measurements.get(MeasurementKey.HEIGHT_1) == null) {
+
+            Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(way), null);
+            Double roofAngle = ModelUtil.getNumberAttribute(way, OsmAttributeKeys.ROOF_ANGLE.getKey(), null);
+
+            if (roofHeight != null) {
+                measurements.put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
+            } else if (roofAngle != null) {
+                measurements.put(MeasurementKey.HEIGHT_1, new Measurement(roofAngle, MeasurementUnit.DEGREES));
+            }
+
+        }
+
+        roof.setMeasurements(measurements);
 
         roof.setDirection(findDirection(way, perspective));
         roof.setOrientation(Parser.parseOrientation(keys));

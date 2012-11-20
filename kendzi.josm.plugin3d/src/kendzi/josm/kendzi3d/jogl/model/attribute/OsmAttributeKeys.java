@@ -36,6 +36,10 @@ public enum OsmAttributeKeys {
 
     ROOF_SHAPE("roof:shape"),
 
+    ROOF_ANGLE("roof:angle"),
+
+    ROOF_HEIGHT("roof:height"),
+
     ROOF_MATERIAL("roof:material"),
 
     ROOF_DIRECTION("roof:direction"),

@@ -21,7 +21,7 @@ public class Measurement {
 
 
 
-    Measurement(double pValue, MeasurementUnit pUnit) {
+    public Measurement(double pValue, MeasurementUnit pUnit) {
 
         this.value = pValue;
         this.unit = pUnit;
