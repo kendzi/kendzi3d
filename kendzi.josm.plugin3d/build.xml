@@ -41,6 +41,7 @@
       ** should not be necessary to change the following properties
      -->
     <property name="josm"                   location="../JOSM/dist/josm-custom.jar"/>
+    <property name="kendzi-josm-jogl" 		location="../JOSM/dist/kendzi3d-jogl.jar"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.src.dir"         value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -73,6 +74,7 @@
 
         	<classpath>
 				<pathelement location="${josm}"/>
+				<pathelement location="${kendzi-josm-jogl}"/>
 				<fileset dir="lib">
 					<include name="**/*.jar"/>
 				</fileset>
@@ -114,11 +116,13 @@
     	   		<exclude name="**/skip_build/**"/>
     	   		<exclude name="**/jogl-all-natives-*.jar"/>
     	   		<exclude name="**/gluegen-rt-natives-*.jar"/>
+    	   		
+    	   		<exclude name="**/log4j-1*.jar"/>
     		</fileset>
     	</copy>
     	
     	<echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
-    	<echo>{version.entry.commit.revision}: ${version.entry.commit.revision}</echo>
+    	<echo>{build.number}: ${build.number}</echo>
     	<echo>{build.number}: ${build.number}</echo>
     	
     	<echo>{plugin.jar}: ${plugin.jar}</echo>
@@ -145,11 +149,24 @@
             	<attribute name="Plugin-Icon" value="images/stock_3d-effects24.png"/>
             	<!--attribute name="Plugin-Icon" value="images/dialogs/icon_error24.png"/ -->
             	<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D"/>
-            					
+            	
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Version" value="${build.number}"/>
+            	
+            	<!-- <attribute name="Plugin-Requires" value="log4j;kendzi3d-josm-jogl"/> -->
+            	<attribute name="Plugin-Requires" value="log4j;kendzi3d-jogl"/> 
+            	
             </manifest>
         </jar>
+    	
+    	<mkdir dir="${plugin.dist.dir}/${ant.project.name}_v${build.number}"/>
+    	<copy todir="${plugin.dist.dir}/${ant.project.name}_v${build.number}" file="${plugin.jar}" /> 
+    	    	
+    	<!-- <copy tofile="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" file="${plugin.jar}" /> -->
+    	
+    	
+    	
+    		
     </target>
 
     <!--
@@ -171,15 +188,17 @@
         <delete file="REVISION"/>
         -->
     	
+    	<copy file="build.number" tofile="build.number.last"/>
+    	
     	<buildnumber/>
     	 
 		<tstamp>
 		  	<format property="version.entry.commit.date" pattern="yyyy-MM-dd hh:mm aa"/>
 		</tstamp>
-    	<property name="version.entry.commit.revision" value="${build.number}" />
+    	<!-- <property name="build.number" value="${build.number}" /> -->
     	
     	 <echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
-    	 <echo>{version.entry.commit.revision}: ${version.entry.commit.revision}</echo>
+    	 <echo>{build.number}: ${build.number}</echo>
     	 <echo>{build.number}: ${build.number}</echo>
     	       
 
@@ -290,7 +309,7 @@
     Commit message    : '${commit.message}'                    
     Plugin-Mainversion: ${plugin.main.version}
     JOSM build version: ${coreversion.info.entry.revision}
-    Plugin-Version    : ${version.entry.commit.revision}
+    Plugin-Version    : ${build.number}
     ***** / Properties of published ${plugin.jar} *****                    
                         
     Now commiting ${plugin.jar} ...
@@ -328,6 +347,55 @@
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
 	
+	
+    <target name="publish_osm.vxm.pl" depends="">
+    	<!-- publish-local-ftp-dir -->
+    	
+    	<property file="/bin/osm.vxm.properties"/>
+   
+    	<property file="build.number.last"/>
+    	
+    	<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
+    		  
+    	<echo>${plugin_version.jar}</echo>
+    	<echo>${osm.vxm.username}</echo>
+    	<!-- <echo>${osm.vxm.password}</echo> -->
+    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${plugin.jar}"</echo>
+    	
+    	
+    	<ftp server="openstreetmap.vxm.pl"
+    	      
+	        remotedir="/Kendzi3d/snapshot/current"
+	        userid="${osm.vxm.username}"
+	        password="${osm.vxm.password}"
+	        passive="yes"
+	        depends="yes"
+	        binary="yes"
+    		verbose="yes"
+    	>
+    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />    	
+    	</ftp>
+    	
+    	<ftp action="mkdir"
+    	       server="openstreetmap.vxm.pl"
+    	       userid="${osm.vxm.username}"
+    	       password="${osm.vxm.password}"
+    	       remotedir="/Kendzi3d/snapshot/${build.number}"/>
+    	
+    	<ftp server="openstreetmap.vxm.pl"
+    	    	      
+	        remotedir="/Kendzi3d/snapshot/${build.number}"
+	        userid="${osm.vxm.username}"
+	        password="${osm.vxm.password}"
+	        passive="yes"
+	        depends="yes"
+	        binary="yes"
+    		verbose="yes"
+    	>
+    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" /> 
+    	</ftp>
+    	
+    </target>
 	
     <target name="publish_osm.pl" depends="">
     	<tstamp>
