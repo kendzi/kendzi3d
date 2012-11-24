@@ -128,13 +128,14 @@ public abstract class NativeLibPlugin extends Plugin {
         List<String> platformNativeLiblaryNamesList = loadPropertitesValues("nativeLibrary-" + system + "-", system);
         copyFilesFromJar(platformNativeLiblaryNamesList);
 
-        String platformNativeLiblaryPath = this.pluginProperties.getProperty("jogl_dir", "/lib");
-        platformNativeLiblaryPath =
-            getPluginDir()
-            + platformNativeLiblaryPath.replaceAll("\\{jogl_system_version\\}", system);
-
-
-        setUpJavaLibraryPath(platformNativeLiblaryPath);
+//        // setup path for native library
+//        String platformNativeLiblaryPath = this.pluginProperties.getProperty("jogl_dir", "/lib");
+//        platformNativeLiblaryPath =
+//            getPluginDir()
+//            + platformNativeLiblaryPath.replaceAll("\\{jogl_system_version\\}", system);
+//
+//
+//        setUpJavaLibraryPath(platformNativeLiblaryPath);
 
     }
 

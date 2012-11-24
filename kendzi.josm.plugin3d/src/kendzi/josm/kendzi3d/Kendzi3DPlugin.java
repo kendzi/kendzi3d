@@ -20,6 +20,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import kendzi.josm.jogl.JoglPlugin;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
@@ -28,6 +29,7 @@ import kendzi.josm.kendzi3d.action.GroundToggleAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
 import kendzi.josm.kendzi3d.action.PointModelListAction;
+import kendzi.josm.kendzi3d.action.ShowPluginDirAction;
 import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
@@ -71,11 +73,14 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 //        FileUrlReciverService.initFileReciver(getPluginDir());
 
         try {
+
+            JoglPlugin.addJoglToClassPath();
+
             loadLibrary();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+//        this.getClass().getClassLoader()
         Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDir()));
 
 
@@ -223,7 +228,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         advMenu.add(exportActionItem);
         exportActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
 
-
+        ShowPluginDirAction showPluginDirAction = injector.getInstance(ShowPluginDirAction.class);
+        final JMenuItem showPluginDirActionItem = new JMenuItem(showPluginDirAction);
+        advMenu.add(showPluginDirActionItem);
+        showPluginDirActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
 
         setEnabledAll(true);
     }
