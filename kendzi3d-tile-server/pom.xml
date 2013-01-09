@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kendzi.kendzi3d</groupId>
+	<artifactId>kendzi3d-tile-server</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>kendzi3d-tile-server</name>
+	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<properties>
+		<java.version>1.6</java.version>
+		<!--   
+		3.1.0.RELEASE
+		-->
+		<spring.version>3.2.0.M2</spring.version>
+		<cglib.version>2.2.2</cglib.version>
+<!-- 		<cglib.version>3.0.0</cglib.version> -->
+	</properties>
+
+	<dependencies>
+		<!-- Spring core & mvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework</groupId> -->
+<!-- 			<artifactId>spring-mvc-async</artifactId> -->
+<!-- 			<version>${spring.version}</version> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- CGLib for @Configuration -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>${cglib.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+
+		<!-- Servlet Spec -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>javax.servlet</groupId> -->
+<!-- 			<artifactId>servlet-api</artifactId> -->
+<!-- 			<version>2.4</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>7.0.30</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency> 
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-core</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-render</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+
+<!--
+		<dependency>
+		  	<groupId>com.google.inject</groupId>
+		  	<artifactId>guice</artifactId>
+		  	<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+				
+		
+		<dependency> 
+			<groupId>josm</groupId>
+			<artifactId>josm</artifactId>
+			<version>5540</version>
+		</dependency> 
+		
+	    <dependency>
+	      	<groupId>jogl</groupId>
+	      	<artifactId>jogl-all</artifactId>
+	      	<version>2.0-b57-20120502</version>
+	    </dependency>
+	    
+	    <dependency>
+	      	<groupId>jogl</groupId>
+	      	<artifactId>gluegen-rt</artifactId>
+	      	<version>2.0-b57-20120502</version>
+	    </dependency>
+	    
+	    <dependency>
+	      <groupId>java3d</groupId>
+	      <artifactId>vecmath</artifactId>
+	      <version>1.3.1</version>
+	    </dependency>
+	    
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.0-801.jdbc4</version>
+		</dependency>
+		     
+     	<dependency>
+			<groupId>org.postgis</groupId>
+			<artifactId>postgis-jdbc</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+                   
+        <dependency>
+		    <groupId>com.googlecode.efficient-java-matrix-library</groupId>
+		    <artifactId>ejml</artifactId>
+		    <version>0.20</version>
+		</dependency>
+		
+        <dependency>
+		    <groupId>org.poly2tri</groupId>
+		    <artifactId>poly2tri-core</artifactId>
+		    <version>0.1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		  <groupId>commons-dbcp</groupId>
+		  <artifactId>commons-dbcp</artifactId>
+		  <version>1.4</version>
+		</dependency>
+  -->
+		
+		<dependency>
+		  <groupId>taglibs</groupId>
+		  <artifactId>standard</artifactId>
+		  <version>1.1.2</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>jstl</artifactId>
+		  <version>1.2</version>
+		</dependency>
+		
+	</dependencies>
+
+	
+	<repositories>
+	
+		
+<!-- 		<repository> -->
+<!-- 			<id>springsource-milestones</id> -->
+<!-- 			<name>SpringSource Milestones Proxy</name> -->
+<!-- 			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url> -->
+<!-- 		</repository> -->
+
+		<repository>
+		    <id>repo</id>
+		    <releases>
+		        <enabled>true</enabled>
+		        <checksumPolicy>ignore</checksumPolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>true</enabled>
+		    </snapshots>
+		    <url>file://${project.basedir}/repo</url>
+		</repository>
+<!-- 		<repository> -->
+<!-- 			<id>central</id> -->
+<!-- 			<url>http://repo.maven.apache.org/maven2/</url> -->
+<!-- 		</repository> -->
+		<repository>
+		    <id>repository.springsource.milestone</id>
+		    <name>SpringSource Milestone Repository</name>
+		    <url>http://repo.springsource.org/milestone</url>
+		</repository>
+	</repositories>
+	
+	<profiles>
+	<!-- 
+	    <profile>
+	      <id>linux-i586</id>
+	      <activation>
+	        <os>
+	          <arch>i386</arch>
+	          <family>unix</family>
+	          <name>linux</name>
+	        </os>
+	      </activation>
+	      <dependencies>
+	        <dependency>
+	          <groupId>net.java.dev.jogl.jogl-linux-i586</groupId>
+	          <artifactId>jogl-linux-i586</artifactId>
+	          <version>2.0-beta10</version>
+	        </dependency>
+	      </dependencies>
+	    </profile>
+	    <profile>
+	      <id>windows-i586</id>
+	      <activation>
+	        <os>
+	          <arch>i386</arch>
+	          <family>windows</family>
+	          <name>windows</name>
+	        </os>
+	      </activation>
+	      <dependencies>
+	        <dependency>
+	          <groupId>jogl</groupId>
+	          <artifactId>jogl-all-natives-windows-i586</artifactId>
+	          <version>2.0-b57-20120502</version>
+	        </dependency>
+	        <dependency>
+	          <groupId>jogl</groupId>
+	          <artifactId>gluegen-rt-natives-windows-i586</artifactId>
+	          <version>2.0-b57-20120502</version>
+	        </dependency>
+	      </dependencies>
+	    </profile>
+	    <profile>
+	      <id>windows-amd64</id>
+	      <activation>
+	        <os>
+	          <arch>amd64</arch>
+	          <family>windows</family>
+	          <name>windows</name>
+	        </os>
+	      </activation>
+	      <dependencies>
+	        <dependency>
+	          <groupId>jogl</groupId>
+	          <artifactId>jogl-all-natives-windows-amd64</artifactId>
+	          <version>2.0-b57-20120502</version>
+	        </dependency>
+	        <dependency>
+	          <groupId>jogl</groupId>
+	          <artifactId>gluegen-rt-natives-windows-amd64</artifactId>
+	          <version>2.0-b57-20120502</version>
+	        </dependency>
+	      	
+	      	
+	      </dependencies>
+	      
+	    </profile>
+	 -->
+	  </profiles>
+
+	<build>
+		<finalName>kendzi3d-tile-server</finalName>
+		
+		
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			 
+<!-- 			 mvn tomcat:deploy -->
+<!-- 		    <plugin> -->
+<!-- 		        <groupId>org.codehaus.mojo</groupId> -->
+<!-- 		        <artifactId>tomcat-maven-plugin</artifactId> -->
+<!-- 		        <version>1.2-SNAPSHOT</version> -->
+<!-- 		        <configuration> -->
+<!-- 		          <server>myserver</server> -->
+<!-- 		        </configuration> -->
+<!-- 		    </plugin>       -->
+
+			<plugin>
+		        <artifactId>maven-antrun-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <phase>deploy</phase>
+		            <configuration>
+		              <tasks>
+		              	 <copy todir="target/kendzi3d-tile-server.war">
+				            <fileset dir="\\KENDZI-SERVER\osm-tomcat-webapps\"/>
+				         </copy>
+		
+		                <!--
+		                  Place any Ant task here. You can add anything
+		                  you can add between <target> and </target> in a
+		                  build.xml.
+		                -->
+		
+		              </tasks>
+		            </configuration>
+		            <goals>
+		              <goal>run</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
+		</plugins>
+	</build>
+	<distributionManagement>
+		
+	
+	</distributionManagement>
+<!-- 	<developers> -->
+<!-- 	<developer> -->
+	
+<!-- 	</developer> -->
+<!-- 	</developers> -->
+</project>

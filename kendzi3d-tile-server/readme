@@ -1,0 +1,43 @@
+This is web application for tomcat. It allow to render tiles on demand and store them in catch directory.
+
+
+*** Configuration
+All configuration is in file:
+/kendzi3d-tile-server/src/main/webapp/WEB-INF/classes/application.properties
+
+available options are:
+
+* Data source
+k3dr.input.source - PGSQL - data source form database schema, FILE - from osm xml file
+k3dr.db.username - database user
+k3dr.db.password - database password
+k3dr.db.url - jdbc url to database
+k3dr.file.url - url for xml file with data
+
+* Render 
+k3dr.camera.angle.x - angle of camera in x axis
+k3dr.camera.angle.y - angle of camera in y axis
+k3dr.width - output image width in pixels
+k3dr.height - output image height in pixels
+k3dr.resource.dir - resource directory with textures, models, settings, if not setup resources have been taken form classpath
+
+
+*** How to build
+run maven clean install
+Comand should generate file "kendzi3d-tile-server.war"
+
+*** How to install
+copy file "kendzi3d-tile-server.war" to directory: tomcat/webapps
+after deployment you can run this link in webbroswer:
+http://localhost:8080/kendzi3d-tile-server/tiles/18/142550/86423.png/dirty
+It should render one tile.
+
+Use this link in OpenLayer or Leaflet: http://localhost:8080/kendzi3d-tile-server/tiles/{z}/{x}/{y}.png
+For simple statistic open link: http://localhost:8080/kendzi3d-tile-server/status
+
+*** License
+
+This software is provided "AS IS" without a warranty of any kind. You use it on your own risk and responsibility!!!
+
+This program is shared on license BSDv3 more information in file BSD3.
+Some parts of program as source, images, models may be shared on different licenses. In case of doubt ask.
