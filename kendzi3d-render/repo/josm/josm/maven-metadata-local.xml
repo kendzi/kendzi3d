@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>josm</groupId>
+  <artifactId>josm</artifactId>
+  <versioning>
+    <release>5540</release>
+    <versions>
+      <version>5540</version>
+    </versions>
+    <lastUpdated>20121227223349</lastUpdated>
+  </versioning>
+</metadata>

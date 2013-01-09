@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>kendzi.kendzi3d</groupId>
+  <artifactId>kendzi3d-core</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20121222113151</lastUpdated>
+  </versioning>
+</metadata>
