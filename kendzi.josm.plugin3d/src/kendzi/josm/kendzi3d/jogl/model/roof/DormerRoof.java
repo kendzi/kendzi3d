@@ -44,6 +44,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.josm.kendzi3d.util.Direction;
 import kendzi.josm.kendzi3d.util.DirectionParserUtil;
 import kendzi.josm.kendzi3d.util.StringUtil;
@@ -213,7 +214,14 @@ public class DormerRoof extends Roof {
         roof.setMeasurements(measurements);
 
         roof.setDirection(findDirection(way, perspective));
-        roof.setOrientation(Parser.parseOrientation(keys));
+        BuildingRoofOrientation parseOrientation = Parser.parseOrientation(keys);
+        if (parseOrientation == null) {
+            parseOrientation = BuildingRoofOrientation.along;
+        }
+
+        roof.setOrientation(parseOrientation);
+
+
         return roof;
     }
 
