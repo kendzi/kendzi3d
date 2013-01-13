@@ -10,7 +10,7 @@
 <!-- 	<ns2:textureLibrary xmlns:ns2="http://www.kendzi3d.org"> -->
 	
 	
-	<!-- Buildings -->
+	<!-- Buildings facades -->
 	<textureSet key="buildings.facade_unknown">
 		<textureData fileKey="/textures/building_facade_unknown.png" height="2.0" width="2.0"/>
 	</textureSet>
@@ -30,14 +30,17 @@
 	<textureSet key="buildings.facade_stone">
 		<textureData fileKey="/textures/pd/Red_sandstone_wall.jpg" height="1.8" width="1.8"/>
 	</textureSet>
+	<textureSet key="buildings.facade_metal">
+		<textureData fileKey="/textures/pd/Metal_wall.jpg" height="0.28" width="0.28"/>
+	</textureSet>
+	
 	 
-	<!-- Roof -->
+	<!-- Buildings roofs -->
 	<textureSet key="buildings.roof_unknown">
 		<textureData fileKey="/textures/building_roof_material_unknown.png" height="2" width="2"/>
 	</textureSet>
 	<textureSet key="buildings.roof_roof_tiles">
 		<textureData fileKey="/textures/building_roof_material_roofTiles.png" height="3" width="3"/>
-		
 		
 		<textureData fileKey="/textures/pd/Frankfurter_Pfanne_rot.png" height="1.5" width="1.5"/>
 		<textureData fileKey="/textures/pd/Flachdachpfanne_anthrazit.png" height="1.5" width="1.5"/>
@@ -45,10 +48,16 @@
 		<textureData fileKey="/textures/pd/MarekTile0002.jpg" height="0.75" width="0.75"/>
 		<textureData fileKey="/textures/pd/MarekTile0003.jpg" height="0.40" width="0.40"/>
 	</textureSet>
+	
 	<textureSet key="buildings.roof_roofingFelt">
 		<textureData fileKey="/textures/building_roof_material_roofingFelt.png" height="2" width="2"/>
 	</textureSet>
 	
+	<textureSet key="buildings.roof_metal">
+		<textureData fileKey="/textures/pd/DE20D4_OldMetallRoof0001.jpg" height="3.6" width="1.8"/>
+	</textureSet>
+	
+	<!-- Buildings windows -->
 	<textureSet key="buildings.window">	
 		<!-- outdate remove! -->
 		<textureData fileKey="/textures/pd/MarekPlainWindow00002.jpg" height="1.5" width="1.8"/>

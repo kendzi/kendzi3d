@@ -1,0 +1,15 @@
+# Blender MTL File: 'tombstone.blend'
+# Material Count: 1
+newmtl lapide-01
+Ns 37.254902
+Ka 0.000183 0.000000 0.004895
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd lapide-01-DIF.jpg
+map_Ks lapide-01-SP.jpg
+map_Bump lapide-01-NM.jpg
+
+
