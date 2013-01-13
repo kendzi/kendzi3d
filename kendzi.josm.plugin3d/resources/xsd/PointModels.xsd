@@ -18,6 +18,7 @@
     	<xsd:attribute name="translateY" type="xsd:double"></xsd:attribute>
     	<xsd:attribute name="translateZ" type="xsd:double"></xsd:attribute>
     	<xsd:attribute name="scale" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="direction" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
 </xsd:schema>
