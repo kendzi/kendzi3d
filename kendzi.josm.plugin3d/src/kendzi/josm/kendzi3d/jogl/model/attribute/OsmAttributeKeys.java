@@ -8,6 +8,8 @@ public enum OsmAttributeKeys {
 
     BUILDING_PART("building:part"),
 
+    BUILDING_HEIGHT("building:height"),
+
     BUILDING_MIN_LEVEL("building:min_level"),
 
     BUILDING_MAX_LEVEL("building:max_level"),

@@ -151,7 +151,12 @@ public class BuildingAttributeParser {
 
 
     public static Double parseMaxHeight(OsmPrimitive p1) {
-        return ModelUtil.getHeight(p1, null);
+         Double height = ModelUtil.getHeight(p1, null);
+         if (height != null) {
+             return height;
+         }
+
+         return ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_HEIGHT.primitiveValue(p1), null);
     }
 
 //    public static Double parseMaxHeight(OsmPrimitive p1, OsmPrimitive p2) {
