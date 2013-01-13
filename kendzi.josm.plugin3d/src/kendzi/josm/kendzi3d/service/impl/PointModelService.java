@@ -249,20 +249,16 @@ public class PointModelService {
 
     public static  void saveXml(List<PointModel> pPointModelList, File file) throws JAXBException, FileNotFoundException {
 
-        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd", PointModelService.class.getClassLoader());
         Marshaller marshaller=jaxbContext.
                createMarshaller();
 
-//        File file = new File("c:/jaxb2example.xml");
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
 
         ObjectFactory factory=new ObjectFactory();
 
         PointModels pointModels=(factory.createPointModels());
-//        PointModel pointModel = factory.createPointModel();
-//        pointModel.setMatcher("matcher");
 
         pointModels.getPointModel().addAll(pPointModelList);
 
@@ -289,18 +285,12 @@ public class PointModelService {
 
     public static List<PointModel> loadXml(URL url) throws JAXBException, FileNotFoundException {
 
-
-
-
-        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
-
-//        Marshaller marshaller=jaxbContext.createMarshaller();
-////        File file = new File("c:/jaxb2example.xml");
-//        marshaller.setProperty("jaxb.formatted.output", true);
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd", PointModelService.class.getClassLoader());
 
         Unmarshaller unmarshaller =
                 jaxbContext.createUnmarshaller();
+
+        @SuppressWarnings("unchecked")
         JAXBElement<PointModels> c = (JAXBElement<PointModels>)
                 unmarshaller.unmarshal(url);
 
