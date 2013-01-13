@@ -42,6 +42,7 @@
      -->
     <property name="josm"                   location="../JOSM/dist/josm-custom.jar"/>
     <property name="kendzi-josm-jogl" 		location="../JOSM/dist/kendzi3d-jogl.jar"/>
+		
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.src.dir"         value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -66,6 +67,11 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
+    	
+    	<!-- <unzip src="${kendzi-josm-jogl}" dest="./jogl_jars" /> -->
+    	
+    	
+    	<echo message="${jogl.jars.dir}"></echo>
         <javac source="1.6" target="1.6" srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
 			<src path="src"/>
        	    <src path="src_xsd"/>
@@ -75,6 +81,10 @@
         	<classpath>
 				<pathelement location="${josm}"/>
 				<pathelement location="${kendzi-josm-jogl}"/>
+				  
+				<fileset dir="lib_build">
+					<include name="**/*.jar"/>
+				</fileset>
 				<fileset dir="lib">
 					<include name="**/*.jar"/>
 				</fileset>
@@ -91,6 +101,9 @@
         <echo message="creating ${ant.project.name}.jar ... "/>
         <copy todir="${plugin.build.dir}/resources">
             <fileset dir="resources"/>
+        </copy>
+        <copy tofile="${plugin.build.dir}/log4j.properties">
+            <fileset file="resources/log4j.properties"/>
         </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
@@ -345,6 +358,61 @@
     </target>
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+    </target>
+	
+	
+    <target name="publish_osm.zibi" depends="">
+    	<!-- publish-local-ftp-dir -->
+    	<property name="zibi.host" value="zibi.openstreetmap.org.pl" />    		
+    	
+    	<property file="/bin/osm.zibi.properties"/>
+   
+    	<property file="build.number.last"/>
+    	
+    	<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
+    		  
+    	<echo>${plugin_version.jar}</echo>
+    	<echo>${osm.zibi.username}</echo>
+    	<!-- <echo>${osm.vxm.password}</echo> -->
+    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${plugin.jar}"</echo>
+    	
+    	
+    	<ftp server="${zibi.host}"
+    	      
+	        remotedir="/Kendzi3d/snapshot/current"
+	        userid="${osm.zibi.username}"
+	        password="${osm.zibi.password}"
+	        passive="yes"
+	        depends="yes"
+	        binary="yes"
+    		verbose="yes"
+    		chmod="755"
+    	>
+    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />    	
+    	</ftp>
+    	
+    	<ftp action="mkdir"
+    	    server="${zibi.host}"
+    	   	userid="${osm.zibi.username}"
+    	    password="${osm.zibi.password}"
+    	    remotedir="/Kendzi3d/snapshot/${build.number}"
+    		chmod="755"
+    	/>
+    	
+    	<ftp server="${zibi.host}"
+    	    	      
+	        remotedir="/Kendzi3d/snapshot/${build.number}"
+	        userid="${osm.zibi.username}"
+	        password="${osm.zibi.password}"
+	        passive="yes"
+	        depends="yes"
+	        binary="yes"
+    		verbose="yes"
+    		chmod="755"
+    	>
+    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" /> 
+    	</ftp>
+    	
     </target>
 	
 	
