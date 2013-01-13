@@ -51,13 +51,15 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     /** Log. */
     private static final Logger log = Logger.getLogger(RenderJOSM.class);
 
-//    private static final double NOWE_KRAMSKO_CENTER_X = 0.275119242;
-//    private static final double NOWE_KRAMSKO_CENTER_Y = 1.070152217;
+    DataSet dataSet = null;
 
-//    /**
-//     * List of models. XXX move to layers.
-//     */
-//    private List<Model> modelList = new ArrayList<Model>();
+    public static double lod1 = 20 * 20;
+
+    private static double lod2 = 100 * 100;
+
+    private static double lod3 = 500 * 500;
+
+    private static double lod4 = 1000 * 1000;
 
 
 
@@ -307,12 +309,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         return getLods(r.getPoint(), camera.getPoint());
     }
 
+
     public static LOD getLods(Point3d point, Point3d camera) {
-        // XXX only temporary !
-        double lod1 = 20 * 20;
-        double lod2 = 100 * 100;
-        double lod3 = 500 * 500;
-        double lod4 = 1000 * 1000;
+
 //        double lod5 = 1000 * 1000;
 
 //        //XXX temporary
@@ -411,7 +410,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(scale, center.getX(), center.getY());
     }
 
-    DataSet dataSet = null;
+
 
 
     @Override
