@@ -122,7 +122,11 @@ public class PointModelsLayer implements Layer, PointModelDataChange {
          */
         private Vector3d translate;
 
-        // direction
+
+        /**
+         * Model direction.
+         */
+        private double direction;
 
         /**
          * @return the model
@@ -172,6 +176,19 @@ public class PointModelsLayer implements Layer, PointModelDataChange {
         public void setTranslate(Vector3d translate) {
             this.translate = translate;
         }
+        /**
+         * @return the direction
+         */
+        public double getDirection() {
+            return direction;
+        }
+        /**
+         * @param direction the direction to set
+         */
+        public void setDirection(double direction) {
+            this.direction = direction;
+        }
+
     }
 
     private static List<PointModelConf> parseXmlFile(String pFileUrl) {
@@ -299,6 +316,17 @@ public class PointModelsLayer implements Layer, PointModelDataChange {
 
         pm.setScale(SimpleDoubleExpressionParser.compile(scale, new ModelScaleContext()));
 
+        Double direction = 0d;
+        try {
+            direction = (Double.parseDouble(pointModel.getDirection()));
+        } catch (Exception e) {
+            //
+        }
+        if (direction == null) {
+            direction = 0d;
+        }
+
+        pm.setDirection(direction);
         return pm;
     }
 

@@ -74,6 +74,8 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
      */
     private PointModelConf pointModelConf;
 
+    private double rotateY;
+
     /** Constructor.
      * @param node node
      * @param pPointModelConf model configuration
@@ -122,6 +124,8 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         this.scale = new Vector3d(scale, scale, scale);
 
         this.translate = this.pointModelConf.getTranslate();
+
+        this.rotateY = this.pointModelConf.getDirection();
 
         this.modelLod.put(pLod, model);
     }
@@ -180,6 +184,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
             gl.glEnable(GL2.GL_NORMALIZE); //XXX
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
+            gl.glRotated(this.rotateY, 0d, 1d, 0d);
             gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
             this.modelRenderer.render(gl, model2);
