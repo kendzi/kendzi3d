@@ -29,4 +29,7 @@
 	<pointModel id="8" matcher="amenity=waste_basket" model="/models/pd/waste_basket.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,0.6)" direction="0"/>
 		
+	<pointModel id="9" matcher="amenity=post_box" model="/models/pd/post_box.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.1)" direction="0"/>
+		
 </pointModels> 
