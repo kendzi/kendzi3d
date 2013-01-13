@@ -16,4 +16,17 @@
 	
 	<pointModel id="4" matcher="(emergency=fire_hydrant)" model="/models/pd/fire_hydrant.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1)" />
+		
+	<pointModel id="5" matcher="tomb=*" model="/models/cc/tombstone/tombstone_stone.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(0.8,0.8)" direction="90"/>
+		
+	<pointModel id="6" matcher="highway=street_lamp" model="/models/pd/lamp.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,5.5)" direction="0"/>
+		
+	<pointModel id="7" matcher="amenity=bench" model="/models/pd/bench.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.2)" direction="0"/>
+		
+	<pointModel id="8" matcher="amenity=waste_basket" model="/models/pd/waste_basket.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,0.6)" direction="0"/>
+		
 </pointModels> 
