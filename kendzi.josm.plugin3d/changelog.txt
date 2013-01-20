@@ -1,4 +1,16 @@
-[current}
+[current]
+
+
+[2013-01-20]
+- calculation of normals on obj file load
+- tile render and tile server as tomcat application
+- concrete, metal texture, fix in grass texture
+- new models of street_lamp, bench, waste_basket, post_box
+- possible to change direction in model configuration
+- Tag building:height
+- fix along roof orientation for roof by default.
+- fix for parsing xml in startup
+ 
 
 [2012-09-30]
 - support for relation type=building switch between outline and part
