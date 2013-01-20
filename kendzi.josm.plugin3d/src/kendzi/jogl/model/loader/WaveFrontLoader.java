@@ -30,7 +30,6 @@ import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
-import kendzi.math.geometry.Normal;
 import net.java.joglutils.model.ModelLoadException;
 
 import org.apache.log4j.Logger;
@@ -262,6 +261,8 @@ public class WaveFrontLoader implements iLoader {
         log.info(bounds);
         this.model.setBounds(bounds);
         this.model.setCenterPoint(bounds.center);
+
+        ObjLoader.createMissingNormals(this.model);
 
         return this.model;
     }
@@ -526,44 +527,45 @@ public class WaveFrontLoader implements iLoader {
             }
         }
 
+//        mesh.normals = ObjLoader.addMissingNormals(mesh.normals, mesh.vertices, faces);
+
         // move at end of model generation
-        if (this.rebildNormals) {
-            List<Vector3d> normals = new ArrayList<Vector3d>();
-
-            for (Face face : faces) {
-                if (face.vertIndex.length > 2) {
-                    Vector3d normal = Normal.calcNormalNorm(
-                            mesh.vertices[face.vertIndex[0]],
-                            mesh.vertices[face.vertIndex[1]],
-                            mesh.vertices[face.vertIndex[2]]);
-                    normals.add(normal);
-                    int ni = normals.indexOf(normal);
-
-                    face.normalIndex = new int[face.vertIndex.length];
-                    for (int vi = 0; vi < face.vertIndex.length; vi++) {
-                        face.normalIndex[vi] = ni;
-                    }
-                } else {
-                    log.error("Ups face don't have three vertex, can't calc new normal vector");
-//                    ??
-                }
-            }
-            if (mesh.normals == null) {
-                mesh.normals = new Vector3d[0];
-            }
-            Vector3d [] newNormals = new Vector3d[mesh.normals.length + normals.size()];
-            System.arraycopy(mesh.normals, 0, newNormals, 0, mesh.normals.length);
-
-            int s = mesh.normals.length;
-            for (int i = 0; i < normals.size(); i++) {
-                newNormals[s + i] = normals.get(i);
-            }
-            mesh.normals = newNormals;
-        }
+//        if (this.rebildNormals) {
+//            List<Vector3d> normals = new ArrayList<Vector3d>();
+//
+//            for (Face face : faces) {
+//                if (face.vertIndex.length > 2) {
+//                    Vector3d normal = Normal.calcNormalNorm(
+//                            mesh.vertices[face.vertIndex[0]],
+//                            mesh.vertices[face.vertIndex[1]],
+//                            mesh.vertices[face.vertIndex[2]]);
+//                    normals.add(normal);
+//                    int ni = normals.indexOf(normal);
+//
+//                    face.normalIndex = new int[face.vertIndex.length];
+//                    for (int vi = 0; vi < face.vertIndex.length; vi++) {
+//                        face.normalIndex[vi] = ni;
+//                    }
+//                } else {
+//                    log.error("Ups face don't have three vertex, can't calc new normal vector");
+////                    ??
+//                }
+//            }
+//            if (mesh.normals == null) {
+//                mesh.normals = new Vector3d[0];
+//            }
+//            Vector3d [] newNormals = new Vector3d[mesh.normals.length + normals.size()];
+//            System.arraycopy(mesh.normals, 0, newNormals, 0, mesh.normals.length);
+//
+//            int s = mesh.normals.length;
+//            for (int i = 0; i < normals.size(); i++) {
+//                newNormals[s + i] = normals.get(i);
+//            }
+//            mesh.normals = newNormals;
+//        }
 
         // return the faces
-        Face [] values = new Face[faces.size()];
-        return faces.toArray(values);
+        return faces.toArray(new Face[faces.size()]);
     }
 
     private boolean startSmoothingGroup(String line) {
@@ -618,6 +620,8 @@ public class WaveFrontLoader implements iLoader {
             if (temp.length > 2) { // we have normal data
                 face.normalIndex[loop - 1] = Integer.valueOf(temp[2]) - 1 - this.normalTotal;
                 // log.info("found normal index: " + face.normalIndex[loop-1]);
+            } else {
+                face.normalIndex[loop - 1] = -1;
             }
         }
 
