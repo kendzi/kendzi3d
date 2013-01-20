@@ -22,7 +22,12 @@
 		
 	<pointModel id="6" matcher="highway=street_lamp" model="/models/pd/lamp.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,5.5)" direction="0"/>
-		
+	
+	<pointModel id="10" matcher="highway=street_lamp1" model="/models/pd/StreetlampM2_Height323cm.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,5.5)" direction="0"/>
+	
+	
+	
 	<pointModel id="7" matcher="amenity=bench" model="/models/pd/bench.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.2)" direction="0"/>
 		
