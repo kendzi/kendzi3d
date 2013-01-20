@@ -41,4 +41,8 @@ public class ModelCacheService {
         return model;
     }
 
+    public void clear() {
+        this.modelCache.clear();
+    }
+
 }

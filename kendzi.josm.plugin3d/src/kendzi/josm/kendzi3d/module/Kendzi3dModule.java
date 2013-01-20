@@ -18,6 +18,7 @@ import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
@@ -57,6 +58,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(WikiTextureLoaderService.class).in(Singleton.class);
         bind(PointModelService.class).in(Singleton.class);
         bind(TextureLibraryService.class).in(Singleton.class);
+        bind(ModelCacheService.class).in(Singleton.class);
 
         bind(ModelRender.class).in(Singleton.class);
 
