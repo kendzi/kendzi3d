@@ -59,7 +59,7 @@ public class RoofTypeUtil {
 //            List<Point2d> poly = makeListFromIndex(pPolygonsPoints, polyIndex);
 
             if (poly.size() < 3) {
-                log.error("blad za malo wiezcholkow !!!!!!");
+                log.error("error polygon should have more then 3 vertex - skiping!");
                 continue;
             }
             int s1 = poly.size();

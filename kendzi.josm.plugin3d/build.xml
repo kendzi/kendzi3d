@@ -40,14 +40,16 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-    <property name="josm"                   location="../JOSM/dist/josm-custom.jar"/>
-    <property name="kendzi-josm-jogl" 		location="../JOSM/dist/kendzi3d-jogl.jar"/>
+    <property name="josm.project"           value="C:/java/workspace/sun/JOSM"/>
+	
+    <property name="josm"                   location="${josm.project}/dist/josm-custom.jar"/>
+    <property name="kendzi-josm-jogl" 		location="${josm.project}/dist/kendzi3d-jogl.jar"/>
 		
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.src.dir"         value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="ant.build.javac.target" value="1.6"/>
-    <property name="plugin.dist.dir"        value="../JOSM/dist"/>
+    <property name="plugin.dist.dir"        value="${josm.project}/dist"/>
 <!--    <property name="plugin.dist.dir"        value="../JOSM/dist"/> -->
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
@@ -374,7 +376,7 @@
     	<echo>${plugin_version.jar}</echo>
     	<echo>${osm.zibi.username}</echo>
     	<!-- <echo>${osm.vxm.password}</echo> -->
-    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${plugin.jar}"</echo>
+    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}"</echo>
     	
     	
     	<ftp server="${zibi.host}"
