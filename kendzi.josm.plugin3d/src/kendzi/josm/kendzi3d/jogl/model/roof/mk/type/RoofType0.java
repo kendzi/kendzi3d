@@ -99,7 +99,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
        // first calc BASEE
 
        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
-
+       List<List<Point2d>> innerLists = innerLists(buildingPolygon);
 
        MultiPolygonList2d topMP = Poly2TriUtil.triangulate(buildingPolygon);
 
@@ -151,6 +151,19 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
                meshBorder,
                facadeTexture
                );
+
+
+       for (List<Point2d> inner : innerLists) {
+           // for inners
+           List<Double> innerHeights = calcHeightList(inner, h1);
+
+           RoofTypeUtil.makeRoofBorderMesh(
+                   inner,
+                   innerHeights,
+                   meshBorder,
+                   facadeTexture
+                   );
+       }
 
 
        /// NOW UPPER PART
@@ -244,6 +257,20 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
     }
 
 
+
+    private List<List<Point2d>> innerLists(PolygonWithHolesList2d buildingPolygon) {
+        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+
+        if (buildingPolygon.getInner() == null) {
+            return ret;
+        }
+
+        for (PolygonList2d p : buildingPolygon.getInner()) {
+            ret.add(p.getPoints());
+        }
+
+        return ret;
+    }
 
     private List<Double> calcHeightList(
            List<Point2d> pSplitBorder, double height) {
