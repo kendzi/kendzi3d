@@ -204,7 +204,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         gl.glLoadIdentity();
 
 
-        setCamera(glu);
+        setCamera(glu, this.simpleMoveAnimator);
 
 
         gl.glEnable(GL2.GL_MULTISAMPLE);
@@ -361,6 +361,14 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         pCanvas.addMouseListener(this.cameraMoveListener);
     }
 
+    /** Register listener for mouse selection.
+     * @param pCanvas canvas for listener
+     */
+    public void registerMouseSelectionListener(Canvas pCanvas) {
+
+        pCanvas.addMouseListener(this.cameraMoveListener);
+    }
+
     /**
      * Set up a point source with ambient, diffuse, and specular colour.
      * components
@@ -393,21 +401,26 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * Sets camera position and rotation.
      * @param pGlu GLU
      */
-    private void setCamera(GLU pGlu) {
+    private void setCamera(GLU pGlu, Camera pCamera) {
 
-        Point3d pos = this.simpleMoveAnimator.getPoint();
+        Point3d pos = pCamera.getPoint();
         Vector3d posLookAt = new Vector3d(100, 0, 0);
-        Vector3d rotate = this.simpleMoveAnimator.getAngle();
+        Vector3d posLookUp = new Vector3d(0, 1, 0);
+
+        Vector3d rotate = pCamera.getAngle();
 
         posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z);
         posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y);
 //        posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
 
+        posLookUp = PointUtil.rotateZ3d(posLookUp, rotate.z);
+        posLookUp = PointUtil.rotateY3d(posLookUp, rotate.y);
+
         posLookAt.add(pos);
 
         pGlu.gluLookAt(pos.x, pos.y, pos.z,
                 posLookAt.x, posLookAt.y, posLookAt.z,
-                0, 1, 0);
+                posLookUp.x, posLookUp.y, posLookUp.z);
     }
 
 
