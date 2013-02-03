@@ -10,12 +10,13 @@
 package kendzi.jogl;
 
 import javax.media.opengl.GL2;
+import javax.vecmath.Point3d;
 
 public class DrawUtil {
 
-    public static void drawDotY(GL2 pGl, Double size, int numberOfPoints) {
+    public static void drawDotY(GL2 pGl, double radius, int numberOfPoints) {
 
-        double x = 1d;
+        double x = radius;
         double y = 0d;
 
         double angle = 2 * Math.PI / numberOfPoints;
@@ -37,6 +38,30 @@ public class DrawUtil {
         }
         pGl.glEnd();
 
+    }
+    public static void drawDotOuterY(GL2 pGl, double radius, int numberOfPoints) {
+
+        double x = radius;
+        double y = 0d;
+
+        double angle = 2 * Math.PI / numberOfPoints;
+
+        pGl.glBegin(GL2.GL_LINE_LOOP);
+        for (int i = 0; i < numberOfPoints; i++) {
+
+            double cosA = Math.cos(angle);
+            double sinA = Math.sin(angle);
+
+            double nx = x * cosA - y * sinA;
+            double ny = x * sinA + y * cosA;
+
+            pGl.glVertex3d(x, 0, -y);
+
+            x = nx;
+            y = ny;
+
+        }
+        pGl.glEnd();
     }
 
     /** Draw guads on XZ plane, y==0. Skeep odd quads.
@@ -120,6 +145,38 @@ public class DrawUtil {
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         // restore previous model view settings
         gl.glPopMatrix();
+    }
+
+    public static void drawBox(GL2 pGl, Point3d max, Point3d min) {
+
+        pGl.glBegin(GL2.GL_LINES);
+
+        pGl.glVertex3d(max.x, max.y, min.z);
+        pGl.glVertex3d(min.x, max.y, min.z);
+
+        pGl.glVertex3d(max.x, min.y, min.z);
+        pGl.glVertex3d(min.x, min.y, min.z);
+
+        pGl.glVertex3d(max.x, min.y, max.z);
+        pGl.glVertex3d(min.x, min.y, max.z);
+
+        pGl.glEnd();
+
+        pGl.glBegin(GL2.GL_LINE_LOOP);
+
+        pGl.glVertex3d(max.x, max.y, max.z);
+        pGl.glVertex3d(max.x, min.y, max.z);
+        pGl.glVertex3d(max.x, min.y, min.z);
+        pGl.glVertex3d(max.x, max.y, min.z);
+        pGl.glVertex3d(max.x, max.y, max.z);
+
+        pGl.glVertex3d(min.x, max.y, max.z);
+        pGl.glVertex3d(min.x, min.y, max.z);
+        pGl.glVertex3d(min.x, min.y, min.z);
+        pGl.glVertex3d(min.x, max.y, min.z);
+        pGl.glVertex3d(min.x, max.y, max.z);
+
+        pGl.glEnd();
     }
 }
 
