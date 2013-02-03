@@ -23,32 +23,36 @@ public class BoundsFactory {
     }
 
     public void addPoint(Point3d p) {
-        if (this.bounds.min.x > p.x) {
-            this.bounds.min.x = p.x;
+        addPoint(p.x, p.y, p.z);
+    }
+
+    public void addPoint(double p_x, double p_y, double p_z) {
+        if (this.bounds.min.x > p_x) {
+            this.bounds.min.x = p_x;
         }
-        if (this.bounds.min.y > p.y) {
-            this.bounds.min.y = p.y;
+        if (this.bounds.min.y > p_y) {
+            this.bounds.min.y = p_y;
         }
-        if (this.bounds.min.z > p.z) {
-            this.bounds.min.z = p.z;
+        if (this.bounds.min.z > p_z) {
+            this.bounds.min.z = p_z;
         }
-        if (this.bounds.max.x < p.x) {
-            this.bounds.max.x = p.x;
+        if (this.bounds.max.x < p_x) {
+            this.bounds.max.x = p_x;
         }
-        if (this.bounds.max.y < p.y) {
-            this.bounds.max.y = p.y;
+        if (this.bounds.max.y < p_y) {
+            this.bounds.max.y = p_y;
         }
-        if (this.bounds.max.z < p.z) {
-            this.bounds.max.z = p.z;
+        if (this.bounds.max.z < p_z) {
+            this.bounds.max.z = p_z;
         }
     }
 
     public Bounds toBounds() {
 
         this.bounds.center = new Point3d(
-                (this.bounds.max.x + this.bounds.max.x) / 2d,
-                (this.bounds.max.y + this.bounds.max.y) / 2d,
-                (this.bounds.max.z + this.bounds.max.z) / 2d);
+                (this.bounds.max.x + this.bounds.min.x) / 2d,
+                (this.bounds.max.y + this.bounds.min.y) / 2d,
+                (this.bounds.max.z + this.bounds.min.z) / 2d);
 
         double dx = this.bounds.max.x - this.bounds.min.x;
         double dy = this.bounds.max.y - this.bounds.min.y;

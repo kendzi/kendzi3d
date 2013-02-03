@@ -12,30 +12,20 @@ package kendzi.jogl.model.geometry;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.jogamp.opengl.util.texture.Texture;
-
 public class Mesh {
-
 
 	public Face [] face;
 
 	public Point3d [] vertices;
+
 	public Vector3d [] normals;
-
-//	public Texture [] texture;
-
-	public Texture texture;
 
 	public TextCoord[] texCoords;
 
-
     public String name;
+
     public int materialID;
-	public boolean hasTexture;
-    public int numOfVerts;
-    public int numTexCoords;
 
-    public Object numOfFaces;
-
+    public boolean hasTexture;
 
 }

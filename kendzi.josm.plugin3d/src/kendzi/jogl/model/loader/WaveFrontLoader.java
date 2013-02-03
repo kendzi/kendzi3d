@@ -192,7 +192,7 @@ public class WaveFrontLoader implements iLoader {
                     }
 
                     mesh.face = getFaces(line, mesh, br);
-                    mesh.numOfFaces = mesh.face.length;
+//                    mesh.numOfFaces = mesh.face.length;
 
                     //FIXME
                     if (this.model.mesh == null) {
@@ -243,7 +243,7 @@ public class WaveFrontLoader implements iLoader {
 
         for (Mesh m : this.model.mesh) {
             m.vertices = vertexArray;
-            m.numOfVerts = vertexArray.length;
+//            m.numOfVerts = vertexArray.length;
             m.texCoords = texCoordsArray;
 //            m.numOfTextCord = texCoordsArray.length;
             m.normals = vectorArray;

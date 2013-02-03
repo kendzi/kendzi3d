@@ -35,4 +35,54 @@ public class Bounds {
      * Center of bounds.
      */
     public Point3d center;
+    /**
+     * @return the min
+     */
+    public Point3d getMin() {
+        return min;
+    }
+    /**
+     * @param min the min to set
+     */
+    public void setMin(Point3d min) {
+        this.min = min;
+    }
+    /**
+     * @return the max
+     */
+    public Point3d getMax() {
+        return max;
+    }
+    /**
+     * @param max the max to set
+     */
+    public void setMax(Point3d max) {
+        this.max = max;
+    }
+    /**
+     * @return the radius
+     */
+    public double getRadius() {
+        return radius;
+    }
+    /**
+     * @param radius the radius to set
+     */
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+    /**
+     * @return the center
+     */
+    public Point3d getCenter() {
+        return center;
+    }
+    /**
+     * @param center the center to set
+     */
+    public void setCenter(Point3d center) {
+        this.center = center;
+    }
+
+
 }
