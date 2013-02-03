@@ -7,6 +7,9 @@ http://fly.srk.fer.hr/~unreal/theredbook/chapter07.html
 http://www.allegro.cc/forums/thread/587562/613774#target
 
 >> JOGL <<
+
+>> Pro Java 6 3D Game Development by Andrew Davison: http://fivedots.coe.psu.ac.th/~ad/jg2/ch16/index.html
+
 http://michael-bien.com/mbien/entry/jogl_2_opengl_profiles_explained
 
 background: http://www.felixgers.de/teaching/jogl/textureAsBackground.html

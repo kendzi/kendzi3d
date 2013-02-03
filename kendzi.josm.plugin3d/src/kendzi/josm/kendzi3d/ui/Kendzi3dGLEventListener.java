@@ -10,6 +10,8 @@
 package kendzi.josm.kendzi3d.ui;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +29,13 @@ import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.MouseSelectionListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
+import kendzi.josm.kendzi3d.jogl.selection.Editor;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -39,6 +43,7 @@ import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import kendzi.math.geometry.point.PointUtil;
+import kendzi.math.geometry.ray.Ray3d;
 
 import org.apache.log4j.Logger;
 
@@ -55,6 +60,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /** Log. */
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Kendzi3dGLEventListener.class);
+
+
+
+    Viewport viewport = new Viewport(1, 1);
 
     /**
      * Model renderer.
@@ -95,6 +104,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * Key and mouse listener for camera movement.
      */
     private CameraMoveListener cameraMoveListener;
+
+    private MouseSelectionListener mouseSelectionListener = new MouseSelectionListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            select(e.getX(), e.getY());
+        }
+    };
 
     /**
      * Axis labels.
@@ -147,6 +163,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     @Inject
     SkyBox skyBox;
+
+
+
+    private Ray3d selectRay = null;
+
+
+
 
 
     /**
@@ -240,12 +263,20 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         }
 
-
+        Ray3d select = this.selectRay;
+        if (select != null) {
+            drawSelectRay(gl, select);
+        }
 
 
         // Flush all drawing operations to the graphics card
         gl.glFlush();
     }
+
+
+
+
+
 
 
 
@@ -328,24 +359,22 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         GLU glu = new GLU();
 
         if (height <= 0) { // avoid a divide by zero error!
-
             height = 1;
         }
-        final float h = (float) width / (float) height;
-//        gl.glViewport(0, 0, width, height);
-//        gl.glMatrixMode(GL2.GL_PROJECTION);
-//        gl.glLoadIdentity();
-//        glu.gluPerspective(45.0f, h, 1.0, 20.0);
-//        gl.glMatrixMode(GL2.GL_MODELVIEW);
-//        gl.glLoadIdentity();
 
+        //this.viewportAspectRatio = (double) width / (double) height;
+
+        this.viewport = new Viewport(width, height);
 
 
         gl.glViewport(0, 0, width, height); // size of drawing area
 
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0, (float)width / (float) height, 1.0, 1500.0); // 5
+        glu.gluPerspective(
+                Viewport.PERSP_VIEW_ANGLE,
+                this.viewport.viewportAspectRatio(),
+                Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE, 1500.0); // 5
 
     }
 
@@ -366,7 +395,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     public void registerMouseSelectionListener(Canvas pCanvas) {
 
-        pCanvas.addMouseListener(this.cameraMoveListener);
+        pCanvas.addMouseListener(this.mouseSelectionListener);
     }
 
     /**
@@ -400,30 +429,289 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Sets camera position and rotation.
      * @param pGlu GLU
+     * @param pCamera
      */
     private void setCamera(GLU pGlu, Camera pCamera) {
 
-        Point3d pos = pCamera.getPoint();
-        Vector3d posLookAt = new Vector3d(100, 0, 0);
-        Vector3d posLookUp = new Vector3d(0, 1, 0);
 
-        Vector3d rotate = pCamera.getAngle();
+        Point3d position = pCamera.getPoint();
 
-        posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z);
-        posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y);
-//        posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+        this.viewport.updateViewport(pCamera);
 
-        posLookUp = PointUtil.rotateZ3d(posLookUp, rotate.z);
-        posLookUp = PointUtil.rotateY3d(posLookUp, rotate.y);
+        Vector3d lookAt = this.viewport.getLookAt();
+        Vector3d lookUp = this.viewport.getLookUp();
 
-        posLookAt.add(pos);
+//        Vector3d lookAt = new Vector3d(100, 0, 0);
+//        Vector3d lookUp = new Vector3d(0, 1, 0);
+//
+//        Vector3d rotate = pCamera.getAngle();
+//
+//        lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
+//        lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
+////        posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+//
+//        lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
+//        lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
+//
+//        lookAt.add(position);
 
-        pGlu.gluLookAt(pos.x, pos.y, pos.z,
-                posLookAt.x, posLookAt.y, posLookAt.z,
-                posLookUp.x, posLookUp.y, posLookUp.z);
+
+        pGlu.gluLookAt(position.x, position.y, position.z,
+                lookAt.x, lookAt.y, lookAt.z,
+                lookUp.x, lookUp.y, lookUp.z);
+
+
+
+//        Vector3d view = new Vector3d();
+//        Vector3d screenHoritzontally = new Vector3d();
+//        Vector3d screenVertically = new Vector3d();
+//
+//        // look direction
+//        view.sub(lookAt, position);
+//        view.normalize();
+//
+//
+//        // screenX
+//        screenHoritzontally.cross(view, lookUp);
+//        screenHoritzontally.normalize();
+//
+//        // screenY
+//        screenVertically.cross(screenHoritzontally, view);
+//        screenVertically.normalize();
+//
+//        final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
+//        float halfHeight = (float) (Math.tan(radians/2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+//        float halfScaledAspectRatio = (float) (halfHeight * this.viewportAspectRatio);
+//
+//        screenVertically.scale(halfHeight);
+//        screenHoritzontally.scale(halfScaledAspectRatio);
     }
 
 
+    private void select(int x, int y) {
+
+        Ray3d selectRay = this.viewport.picking(x, y);
+
+        Editor activeEditor = this.renderJosm.selectActiveEditor(selectRay);
+        if (activeEditor != null) {
+            activeEditor.select(true);
+        } else {
+
+            this.renderJosm.select(selectRay);
+        }
+
+        this.selectRay = selectRay;
+    }
+
+    /**
+     * @param gl
+     * @param select
+     */
+    public void drawSelectRay(GL2 gl, Ray3d select) {
+        gl.glPushMatrix();
+
+        Vector3d v = select.getVector();
+        Point3d p = select.getPoint();
+
+        double dx = p.x + 10*v.x;
+        double dy = p.y + 10*v.y;
+        double dz = p.z + 10*v.z;
+
+
+        gl.glTranslated(dx, dy, dz);
+
+        gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
+
+        DrawUtil.drawDotY(gl, 0.3, 6);
+
+        gl.glPopMatrix();
+    }
+
+    static class Viewport {
+
+        /**
+         * Viev angle of camera (fovy).
+         */
+        public static final double PERSP_VIEW_ANGLE = 45;
+
+        /**
+         * The distance from the viewer to the near clipping plane. (zNear).
+         */
+        public static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE = 1d;
+
+        private int width;
+        private int height;
+
+        private Point3d position;
+        private Vector3d lookAt;
+        private Vector3d lookUp;
+        private Vector3d view;
+        private Vector3d screenHoritzontally = new Vector3d();
+        private Vector3d screenVertically = new Vector3d();
+
+
+
+        public Viewport(int width, int height) {
+            super();
+            this.width = width;
+            this.height = height;
+        }
+
+
+        public double viewportAspectRatio() {
+            return (double) this.width / (double) this.height;
+//
+        }
+
+        void updateViewport(Camera pCamera) {
+
+            Point3d position = pCamera.getPoint();
+            Vector3d lookAt = new Vector3d(100, 0, 0);
+            Vector3d lookUp = new Vector3d(0, 1, 0);
+
+            Vector3d rotate = pCamera.getAngle();
+
+            lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
+            lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
+//            posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+
+            lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
+            lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
+
+            lookAt.add(position);
+
+
+            Vector3d view = new Vector3d();
+            Vector3d screenHoritzontally = new Vector3d();
+            Vector3d screenVertically = new Vector3d();
+
+            // look direction
+            view.sub(lookAt, position);
+            view.normalize();
+
+
+            // screenX
+            screenHoritzontally.cross(view, lookUp);
+            screenHoritzontally.normalize();
+
+            // screenY
+            screenVertically.cross(screenHoritzontally, view);
+            screenVertically.normalize();
+
+            final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
+            float halfHeight = (float) (Math.tan(radians/2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+            float halfScaledAspectRatio = (float) (halfHeight * this.viewportAspectRatio());
+
+            screenVertically.scale(halfHeight);
+            screenHoritzontally.scale(halfScaledAspectRatio);
+
+
+            this.lookAt = lookAt;
+            this.lookUp = lookUp;
+            this.view = view;
+            this.screenHoritzontally = screenHoritzontally;
+            this.screenVertically = screenVertically;
+            this.position = position;
+        }
+
+        public Ray3d picking(float screenX, float screenY) {
+
+            Ray3d pickingRay = new Ray3d();
+
+            double viewportWidth = this.width;
+            double viewportHeight = this.height;
+
+//            Camera camera = this.simpleMoveAnimator;
+
+
+            Point3d point = new Point3d(this.position);
+            point.add(this.view);
+
+            pickingRay.getPoint().set(this.position);
+            pickingRay.getPoint().add(this.view);
+
+            screenX -= (float)viewportWidth/2f;
+            screenY = (float)viewportHeight/2f - screenY;
+
+            // normalize to 1
+            screenX /= ((float)viewportWidth/2f);
+            screenY /= ((float)viewportHeight/2f);
+
+            pickingRay.getPoint().x += this.screenHoritzontally.x*screenX + this.screenVertically.x*screenY;
+            pickingRay.getPoint().y += this.screenHoritzontally.y*screenX + this.screenVertically.y*screenY;
+            pickingRay.getPoint().z += this.screenHoritzontally.z*screenX + this.screenVertically.z*screenY;
+
+            pickingRay.getVector().set(pickingRay.getPoint());
+            pickingRay.getVector().sub(this.position);
+
+            return pickingRay;
+        }
+
+
+        /**
+         * @return the width
+         */
+        public int getWidth() {
+            return this.width;
+        }
+
+
+        /**
+         * @param width the width to set
+         */
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+
+        /**
+         * @return the height
+         */
+        public int getHeight() {
+            return this.height;
+        }
+
+
+        /**
+         * @param height the height to set
+         */
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+
+        /**
+         * @return the lookAt
+         */
+        public Vector3d getLookAt() {
+            return this.lookAt;
+        }
+
+
+        /**
+         * @param lookAt the lookAt to set
+         */
+        public void setLookAt(Vector3d lookAt) {
+            this.lookAt = lookAt;
+        }
+
+
+        /**
+         * @return the lookUp
+         */
+        public Vector3d getLookUp() {
+            return this.lookUp;
+        }
+
+
+        /**
+         * @param lookUp the lookUp to set
+         */
+        public void setLookUp(Vector3d lookUp) {
+            this.lookUp = lookUp;
+        }
+
+    }
     /**
      * @return the renderJosm
      */

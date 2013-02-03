@@ -216,6 +216,8 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
 
         this.canvasListener.registerMoveListener(canvas);
+        this.canvasListener.registerMouseSelectionListener(canvas);
+
         this.canvasListener.addFpsChangeListener(this);
 
         // Center frame

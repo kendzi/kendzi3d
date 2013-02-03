@@ -14,9 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.DrawUtil;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -29,6 +32,11 @@ import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
+import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
+import kendzi.josm.kendzi3d.jogl.selection.Editor;
+import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.math.geometry.ray.Ray3d;
+import kendzi.math.geometry.ray.Ray3dUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -117,6 +125,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     private EastNorth center;
     private List<Layer> layerList = new ArrayList<Layer>();
 
+    private Selection selection;
+
+    private GLUquadric quadratic;   // Storage For Our Quadratic Objects
+    private GLU glu = new GLU();
 
     public Perspective3D getPerspective() {
         return this.pers;
@@ -138,21 +150,14 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         this.pers = new Perspective3D(1, 0, 0);
 
-
-//        this.layerList.add(new PointModelsLayer());
-//        this.layerList.add(new BuildingLayer());
-//        this.layerList.add(new RoadLayer());
-//        this.layerList.add(new WaterLayer());
-//        this.layerList.add(new TreeLayer());
-//        this.layerList.add(new FenceLayer());
     }
 
     public void init(GL2 gl) {
-
-//        gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
-
-//        this.modelRender = ModelRender.getInstance();
-
+        //
+        this.quadratic = this.glu.gluNewQuadric();
+        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH); // Create Smooth Normals
+       // glu.gluQuadricTexture(quadratic, true);
+       // glu.gluQuadricTexture(quadratic, true);
     }
 
     public void draw(GL2 gl, Camera camera) {
@@ -176,7 +181,57 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             }
         }
 
+        if (this.modelRender.isDebugging()) {
+            drawSelectable(gl);
+
+        }
+        Selection selection = this.selection;
+        if (selection != null) {
+            drawEditors(gl, selection);
+        }
+
         this.modelRender.setupDefaultMaterial(gl);
+    }
+    private void drawEditors(GL2 gl, Selection selection) {
+        List<Editor> editors = selection.getEditors();
+
+        gl.glDisable(GL2.GL_TEXTURE_2D);
+       // gl.glEnable(GL2.GL_LIGHTING);
+
+        for (Editor editor : editors) {
+            if (editor instanceof ArrowEditor) {
+                ArrowEditor ae = (ArrowEditor) editor;
+                Point3d p = ae.getPoint();
+                Vector3d v = ae.getVector();
+                double l = ae.getLength();
+
+                if (ae.isSelect()) {
+                    gl.glColor3fv(Color.RED.darker().darker().darker().getRGBComponents(new float[4]), 0);
+                } else {
+                    gl.glColor3fv(Color.green.darker().darker().darker().getRGBComponents(new float[4]), 0);
+                }
+
+                gl.glPushMatrix();
+                gl.glTranslated(p.x, p.y, p.z);
+
+                DrawUtil.drawDotY(gl, 0.3, 6);
+
+                gl.glPopMatrix();
+
+
+                gl.glPushMatrix();
+                gl.glTranslated(p.x + v.x * l, p.y + v.y * l, p.z + v.z * l);
+
+               // DrawUtil.drawDotY(gl, 0.3, 6);
+             // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
+                this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
+//                http://www.felixgers.de/teaching/jogl/gluQuadricPrimitives.html
+             // A Cylinder With A Radius Of 0.5 And A Height Of 2
+//                glu.gluCylinder(quadratic, 1.0f, 1.0f, 3.0f, 32, 32);
+
+                gl.glPopMatrix();
+            }
+        }
     }
     /**
      * @param r
@@ -559,6 +614,117 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      */
     public void setLayerList(List<Layer> layerList) {
         this.layerList = layerList;
+    }
+
+    public void drawSelectable(GL2 gl) {
+
+        gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
+
+        for (Layer layer : this.layerList ) {
+            List<Model> models = layer.getModels();
+            for (Model r : models) {
+                for (Selection s : r.getSelection()) {
+                   // Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
+
+                    gl.glPushMatrix();
+
+
+                    Point3d p = s.getCenter();
+
+                    double dx = p.x;
+                    double dy = p.y;
+                    double dz = p.z;
+
+                    gl.glLineWidth(1);
+                    gl.glTranslated(dx, dy, dz);
+
+                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+
+                    gl.glRotated(90d, 1d, 0, 0);
+                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+
+
+                    gl.glRotated(90d, 0, 0, 1d);
+                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+
+                    gl.glPopMatrix();
+                }
+            }
+        }
+
+    }
+
+    public void select(Ray3d selectRay) {
+        Selection selection = null;
+        double min = Double.MAX_VALUE;
+
+        for (Layer layer : this.layerList ) {
+            List<Model> models = layer.getModels();
+            for (Model r : models) {
+                for (Selection s : r.getSelection()) {
+                    Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
+                    if (intersect ==null) {
+                        continue;
+                    }
+                    if (intersect < min) {
+                        selection = s;
+                        min = intersect;
+                    }
+                }
+               // drawModel(r, gl, camera);
+            }
+        }
+
+        Selection last = this.selection;
+
+        if (selection != null) {
+            log.info("selected object: " + selection);
+
+            if (last != selection) {
+                selection.select(true);
+                if (last != null) {
+                    last.select(false);
+                }
+            }
+
+        } else {
+            log.info("can't find selection");
+
+            if (last != null) {
+                last.select(false);
+            }
+        }
+
+        this.selection = selection;
+    }
+
+    public Editor selectActiveEditor(Ray3d selectRay) {
+        Selection selection = this.selection;
+        if (selection == null) {
+            return null;
+        }
+        List<Editor> editors = selection.getEditors();
+
+        Editor selectedEditor = null;
+        double min = Double.MAX_VALUE;
+
+
+        for (Editor e : editors) {
+            if (e instanceof ArrowEditor) {
+                ArrowEditor ae = (ArrowEditor) e;
+
+                Double intersect = Ray3dUtil.intersect(selectRay, ae.getPoint(), 0.3);
+                if (intersect ==null) {
+                    continue;
+                }
+                if (intersect < min) {
+                    selectedEditor = e;
+                    min = intersect;
+                }
+            }
+        }
+
+        return selectedEditor;
     }
 
 

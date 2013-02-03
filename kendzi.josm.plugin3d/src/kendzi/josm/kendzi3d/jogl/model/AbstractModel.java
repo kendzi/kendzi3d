@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
 import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
+import kendzi.josm.kendzi3d.jogl.selection.Selection;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -262,10 +264,21 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
         throw new RuntimeException("TODO");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.selection.Selectable#getSelection()
+     */
+    @Override
+    public List<Selection> getSelection() {
+        return Collections.<Selection>emptyList();
+    }
+
 //    protected MetadataCacheService getMetadataCacheService() {
 //        ApplicationContext context = ApplicationContextFactory.getContext();
 //        // XXX rewrite with injections?
 //        return (MetadataCacheService) context.getBean("metadataCacheService");
 //    }
+
 
 }

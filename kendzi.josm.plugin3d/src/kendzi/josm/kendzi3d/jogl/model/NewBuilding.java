@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,9 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.media.opengl.GL2;
+import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.DrawUtil;
+import kendzi.jogl.model.factory.BoundsFactory;
+import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.dto.TextureData;
@@ -48,6 +53,10 @@ import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
+import kendzi.josm.kendzi3d.jogl.selection.BuildingSelection;
+import kendzi.josm.kendzi3d.jogl.selection.Editor;
+import kendzi.josm.kendzi3d.jogl.selection.Selection;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
@@ -103,7 +112,11 @@ public class NewBuilding extends AbstractModel {
 
     private List<NewBuildingDebug> debug = new ArrayList<NewBuildingDebug>();
 
+    private List<Selection> selection = Collections.<Selection>emptyList();
 
+    private boolean selected;
+
+    private Bounds bounds;
 
     /**
      * Constructor for building.
@@ -141,6 +154,7 @@ public class NewBuilding extends AbstractModel {
 
 
 
+
     @Override
     public void buildModel() {
 
@@ -155,6 +169,10 @@ public class NewBuilding extends AbstractModel {
             }
         } else if (this.way != null) {
             bm = parseBuildingWay(this.way, this.perspective);
+
+            this.selection = parseSelection(this.way.getId(), bm);
+
+
         }
 
         if (bm != null) {
@@ -183,6 +201,52 @@ public class NewBuilding extends AbstractModel {
             }
         }
     }
+
+    private List<Selection> parseSelection(long wayId, BuildingModel bm) {
+        BoundsFactory bf = new BoundsFactory();
+
+        List<BuildingPart> parts = bm.getParts();
+        for (BuildingPart bp : parts) {
+            List<WallPart> wallParts = bp.getWall().getWallParts();
+            for (WallPart wp : wallParts) {
+                for( WallNode wn : wp.getNodes()) {
+
+                    Point2d p = wn.getPoint();
+
+                    bf.addPoint(p.x, bp.getDefaultMinHeight(), -p.y);
+                    bf.addPoint(p.x, bp.getDefaultMaxHeight(), -p.y);
+                }
+            }
+        }
+
+        Bounds bounds = bf.toBounds();
+
+        this.bounds= bounds;
+
+        final ArrowEditor ae = new ArrowEditor();
+        ae.setPoint(bounds.getMin());
+        ae.setVector(new Vector3d(0,1,0));
+        ae.setLength(bounds.max.y);
+
+        return Arrays.<Selection>asList(
+                new BuildingSelection(wayId,bounds.getCenter(), bounds.getRadius()) {
+
+                    @Override
+                    public void select(boolean selected) {
+                        NewBuilding.this.selected = selected;
+                    }
+
+                    @Override
+                    public List<Editor> getEditors() {
+                        // TODO Auto-generated method stub
+                        return Arrays.<Editor>asList(ae);
+                    }
+                }
+                );
+
+    }
+
+
 
     class CacheOsmBuildingElementsTextureMenager extends OsmBuildingElementsTextureMenager {
 
@@ -817,6 +881,14 @@ public class NewBuilding extends AbstractModel {
 
         this.modelRender.render(pGl, this.model);
 
+        if (this.selected && this.bounds != null) {
+            pGl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
+
+            pGl.glLineWidth(6);
+
+            DrawUtil.drawBox(pGl, this.bounds.getMax(), this.bounds.getMin());
+        }
+
         pGl.glPopMatrix();
 
         if (this.modelRender.isDebugging() && this.debug != null) {
@@ -836,5 +908,15 @@ public class NewBuilding extends AbstractModel {
         }
 
         return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getSelection()
+     */
+    @Override
+    public List<Selection> getSelection() {
+        return this.selection;
     }
 }

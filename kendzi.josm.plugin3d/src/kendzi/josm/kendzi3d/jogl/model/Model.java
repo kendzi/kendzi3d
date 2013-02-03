@@ -12,12 +12,13 @@ package kendzi.josm.kendzi3d.jogl.model;
 import javax.media.opengl.GL2;
 
 import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.josm.kendzi3d.jogl.selection.Selectable;
 
 /** Model of OSM objects. Base interface for all objects. Support building and drawing them.
  *
  * @author Tomasz Kedziora (Kendzi)
  */
-public interface Model {
+public interface Model extends Selectable {
 
 
     /** test if model is in camera visible range.
@@ -81,5 +82,6 @@ public interface Model {
 //     * @return Matcher for way
 //     */
 //    static Match getWayMatcher();
+
 
 }
