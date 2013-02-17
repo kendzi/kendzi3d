@@ -27,6 +27,9 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.RoofDormerTypeOutput;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0_0;
@@ -155,6 +158,17 @@ public class DormerRoofBuilder {
 
 
         DormerRoofModel roof = pBuildingPart.getRoof();
+
+        if (roof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null
+                && pBuildingPart.getRoofLevels() != null) {
+
+            double roofHeight = pBuildingPart.getDefaultRoofHeight();
+            if (pBuildingPart.getRoofLevels() < 1) {
+                roofHeight = 1d;
+            }
+
+            roof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
+        }
 
 //        PolygonList2d wallPolygon = BuildingUtil.wallToOuterPolygon(pBuildingPart.getWall());
         PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(pBuildingPart);
