@@ -40,6 +40,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
@@ -225,28 +226,26 @@ public class DormerRoof extends Roof {
         return roof;
     }
 
-    private static Vector2d findDirection(OsmPrimitive pWay, Perspective3D pPerspective) {
-        Vector2d ret = null;
+    private static RoofDirection findDirection(OsmPrimitive pWay, Perspective3D pPerspective) {
 
-        ret = findDirectionByRelation(pWay);
-        if (ret != null) {
-            return ret;
+        Vector2d direction = null;
+        boolean soft = false;
+
+        direction = findDirectionByRelation(pWay);
+        if (direction != null) {
+            return new RoofDirection(direction, soft);
         }
         if (pWay instanceof Way) {
-            ret = findDirectionByPoints((Way) pWay, pPerspective);
-            if (ret != null) {
-                return ret;
+            direction = findDirectionByPoints((Way) pWay, pPerspective);
+            if (direction != null) {
+                return new RoofDirection(direction, soft);
             }
         } else {
             //TODO
         }
 
-        ret = findDirectionByDirectionTag(pWay);
-        if (ret != null) {
-            return ret;
-        }
+        return findDirectionByDirectionTag(pWay);
 
-        return null;
     }
 
 
@@ -274,16 +273,35 @@ public class DormerRoof extends Roof {
         return null;
     }
 
-    static private Vector2d findDirectionByDirectionTag(OsmPrimitive pWay) {
-        // XXX roof:direction
+    static private RoofDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
+
         String directionValue = OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay);
-        if(StringUtil.isBlankOrNull(directionValue)) {
+
+        boolean orthogonal = false;
+        boolean soft = false;
+
+        if (StringUtil.isBlankOrNull(directionValue)) {
             directionValue = OsmAttributeKeys.DIRECTION.primitiveValue(pWay);
         }
-//        directionValue = pWay.get("direction");
+
+        if (StringUtil.isBlankOrNull(directionValue)) {
+            directionValue = OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay);
+            soft = true;
+        }
+
+        if (StringUtil.isBlankOrNull(directionValue)) {
+            directionValue = OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay);
+            orthogonal = true;
+            soft = true;
+        }
+
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
-            return direction.getVector();
+            Vector2d directionVector = direction.getVector();
+            if (orthogonal) {
+                directionVector = new Vector2d(directionVector.y, -directionVector.x);
+            }
+            return new RoofDirection(directionVector, soft);
         }
         return null;
     }

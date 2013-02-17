@@ -24,6 +24,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSp
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
@@ -50,8 +51,8 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
         Point2d[] rectangleContur = null;
 
-        if (pRoof.getDirection() == null) {
-            /**/
+        RoofDirection direction = pRoof.getDirection();
+        if (direction == null) {
 
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
@@ -74,7 +75,13 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         } else {
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
-            rectangleContur = calcRectangle(outerPolygon.getPoints(), pRoof.getDirection());
+            if (direction.isSoft()) {
+                Vector2d alignedDirection = alignedDirectionToOutline(pRoof.getDirection().getDirection(), outerPolygon);
+                rectangleContur = calcRectangle(outerPolygon.getPoints(), alignedDirection);
+
+            } else {
+                rectangleContur = calcRectangle(outerPolygon.getPoints(), pRoof.getDirection().getDirection());
+            }
         }
 
         Point2d newStartPoint = rectangleContur[0];
@@ -132,6 +139,34 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
         return buildRectangleRoof;
 
+    }
+
+
+
+
+
+    private Vector2d alignedDirectionToOutline(Vector2d direction, PolygonList2d outerPolygon) {
+
+
+        List<Point2d> points = outerPolygon.getPoints();
+
+        double maxD = -Double.MAX_VALUE;
+        Vector2d maxV = null;
+
+        Point2d end = points.get(points.size() - 1);
+        for (Point2d begin : points) {
+            Vector2d v = new Vector2d(end);
+            v.sub(begin);
+            v.normalize();
+
+            double d = v.dot(direction);
+            if (d > maxD) {
+                maxD = d;
+                maxV = v;
+            }
+            end = begin;
+        }
+        return maxV;
     }
 
 
