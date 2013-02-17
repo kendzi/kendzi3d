@@ -214,7 +214,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 gl.glPushMatrix();
                 gl.glTranslated(p.x, p.y, p.z);
 
-                DrawUtil.drawDotY(gl, 0.3, 6);
+//                DrawUtil.drawDotY(gl, 0.3, 6);
+                this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
 
                 gl.glPopMatrix();
 
