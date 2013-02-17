@@ -118,7 +118,10 @@ public class BuildingBuilder {
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
         rtd.setRoofCoror(roofColor);
         rtd.setRoofTexture(takeRoofTextureData(buildingModel, bp, w, tm, roofColor!=null));
+
         double maxHeight = bp.getDefaultMaxHeight();
+
+
 
         RoofOutput roofOutput = DormerRoofBuilder.build(bp, maxHeight, mf, rtd);
 
@@ -347,9 +350,8 @@ public class BuildingBuilder {
 
 
     private static int getFacadeLevels(Wall w, BuildingPart bp) {
-        // FIXME TODO XXX
-        // take levels of roof
-        return bp.getDefaultMaxLevel() - bp.getDefaultMinLevel();
+
+        return bp.getDefaultMaxLevel() - bp.getDefaultMinLevel() - bp.getDefaultRoofLevels();
     }
 
     private static Integer hasWindowsCloumns(List<BuildingWallElement> list) {

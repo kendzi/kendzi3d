@@ -13,7 +13,10 @@ public class BuildingPart {
     Double minHeight;
 
     Integer maxLevel;
+
     Integer minLevel;
+
+    Integer roofLevels;
 
     double levelHeight = 2.5;
 
@@ -45,32 +48,32 @@ public class BuildingPart {
 
     // XXX move to util
     public double getDefaultMinHeight() {
-        if (minHeight != null) {
-            return minHeight;
+        if (this.minHeight != null) {
+            return this.minHeight;
         }
 
-        if (minLevel != null) {
-            return minLevel * levelHeight;
+        if (this.minLevel != null) {
+            return this.minLevel * this.levelHeight;
         }
         return 0;
     }
 
  // XXX move to util
     public double getDefaultMaxHeight() {
-        if (maxHeight != null) {
-            return maxHeight;
+        if (this.maxHeight != null) {
+            return this.maxHeight;
         }
 
-        if (maxLevel != null) {
-            return maxLevel * levelHeight;
+        if (this.maxLevel != null) {
+            return this.maxLevel * this.levelHeight;
         }
         return getDefaultMinHeight() + DEFAULT_BUILDING_HEIGHT;
     }
 
  // XXX move to util
     public int getDefaultMinLevel() {
-        if (minLevel != null) {
-            return minLevel;
+        if (this.minLevel != null) {
+            return this.minLevel;
         }
 
         return 0;
@@ -78,19 +81,32 @@ public class BuildingPart {
 
  // XXX move to util
     public int getDefaultMaxLevel() {
-        if (maxLevel != null) {
-            return maxLevel;
+        if (this.maxLevel != null) {
+            return this.maxLevel;
         }
 
         return getDefaultMinLevel() + 1;
     }
 
+    public int getDefaultRoofLevels() {
+        if (this.roofLevels != null) {
+            return this.roofLevels;
+        }
+        return 0;
+    }
+
+    public double getDefaultRoofHeight() {
+        if (this.roofLevels != null) {
+            return this.roofLevels * levelHeight;
+        }
+        return 0;
+    }
 
     /**
      * @return the levelHeight
      */
     public double getLevelHeight() {
-        return levelHeight;
+        return this.levelHeight;
     }
 
     /**
@@ -104,7 +120,7 @@ public class BuildingPart {
      * @return the roof
      */
     public DormerRoofModel getRoof() {
-        return roof;
+        return this.roof;
     }
 
     /**
@@ -118,7 +134,7 @@ public class BuildingPart {
      * @return the wall
      */
     public Wall getWall() {
-        return wall;
+        return this.wall;
     }
 
     /**
@@ -132,7 +148,7 @@ public class BuildingPart {
      * @return the inlineWalls
      */
     public List<Wall> getInlineWalls() {
-        return inlineWalls;
+        return this.inlineWalls;
     }
 
     /**
@@ -161,7 +177,7 @@ public class BuildingPart {
      * @return the maxHeight
      */
     public Double getMaxHeight() {
-        return maxHeight;
+        return this.maxHeight;
     }
 
 
@@ -177,7 +193,7 @@ public class BuildingPart {
      * @return the minHeight
      */
     public Double getMinHeight() {
-        return minHeight;
+        return this.minHeight;
     }
 
 
@@ -193,7 +209,7 @@ public class BuildingPart {
      * @return the maxLevel
      */
     public Integer getMaxLevel() {
-        return maxLevel;
+        return this.maxLevel;
     }
 
 
@@ -209,7 +225,7 @@ public class BuildingPart {
      * @return the minLevel
      */
     public Integer getMinLevel() {
-        return minLevel;
+        return this.minLevel;
     }
 
 
@@ -227,7 +243,7 @@ public class BuildingPart {
      * @return the dormerRoofModel
      */
     public DormerRoofModel getDormerRoofModel() {
-        return dormerRoofModel;
+        return this.dormerRoofModel;
     }
 
     /**
@@ -255,7 +271,7 @@ public class BuildingPart {
      * @return the facadeMaterialType
      */
     public String getFacadeMaterialType() {
-        return facadeMaterialType;
+        return this.facadeMaterialType;
     }
 
     /**
@@ -269,7 +285,7 @@ public class BuildingPart {
      * @return the roofMaterialType
      */
     public String getRoofMaterialType() {
-        return roofMaterialType;
+        return this.roofMaterialType;
     }
 
     /**
@@ -283,7 +299,7 @@ public class BuildingPart {
      * @return the facadeColour
      */
     public Color getFacadeColour() {
-        return facadeColour;
+        return this.facadeColour;
     }
 
     /**
@@ -297,7 +313,7 @@ public class BuildingPart {
      * @return the roofColour
      */
     public Color getRoofColour() {
-        return roofColour;
+        return this.roofColour;
     }
 
     /**
@@ -306,6 +322,22 @@ public class BuildingPart {
     public void setRoofColour(Color roofColour) {
         this.roofColour = roofColour;
     }
+
+    /**
+     * @return the roofLevels
+     */
+    public Integer getRoofLevels() {
+        return this.roofLevels;
+    }
+
+    /**
+     * @param roofLevels the roofLevels to set
+     */
+    public void setRoofLevels(Integer roofLevels) {
+        this.roofLevels = roofLevels;
+    }
+
+
 
 
 

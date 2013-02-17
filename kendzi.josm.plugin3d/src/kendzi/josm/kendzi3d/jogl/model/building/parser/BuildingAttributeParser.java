@@ -6,9 +6,9 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WindowGridBuildingElement;
-import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
+import kendzi.josm.kendzi3d.service.textures.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -181,6 +181,13 @@ public class BuildingAttributeParser {
 //        return ModelUtil.getMinHeight(p2, null);
 //    }
 
+    public static Integer parseRoofLevels(OsmPrimitive p1) {
+        Integer level = roundToInteger(
+                ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.ROOF_LEVELS.getKey(), null));
+
+        return level;
+    }
+
     public static Integer parseMaxLevel(OsmPrimitive p1) {
         Integer level = roundToInteger(
                 ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_MAX_LEVEL.getKey(), null));
@@ -193,6 +200,15 @@ public class BuildingAttributeParser {
         if (level == null) {
             level = roundToInteger(
                     ModelUtil.getNumberAttribute(p1, OsmAttributeKeys.BUILDING_LEVELS_ABOVEGROUND.getKey(), null));
+        }
+
+        if (level != null) {
+
+            Integer roofLevels = BuildingAttributeParser.parseRoofLevels(p1);
+
+            if (roofLevels != null) {
+                level += roofLevels;
+            }
         }
 
         return level;
