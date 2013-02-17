@@ -54,6 +54,10 @@ public class RoofType1_0 extends RoofType1_1 {
 //        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
         Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_1, 0, pRecHeight, 20d);
 
+        if (h1 < 0) {
+            h1 = 0d;
+        }
+
         return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, rectangleContur, 0, h1, 0, pRoofTextureData);
     }
 
