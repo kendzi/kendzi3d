@@ -3,17 +3,12 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.model;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Vector2d;
-
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
-import kendzi.math.geometry.polygon.PolygonList2d;
 
 public class DormerRoofModel {
-    @Deprecated
-    PolygonList2d building;
 
     // Roof Type
     RoofTypeAliasEnum roofType;
@@ -23,7 +18,7 @@ public class DormerRoofModel {
     // starting point ?
 
     // direction
-    Vector2d direction;
+    RoofDirection direction;
 
     /**
      * Only for simple buildings.
@@ -58,29 +53,13 @@ public class DormerRoofModel {
     Map<MeasurementKey, Measurement> measurements;
 
 
-    /**
-     * @return the building
-     */@Deprecated
-    public PolygonList2d getBuilding() {
-        return this.building;
-    }
-
-
-    /**
-     * @param building the building to set
-     */
-    public void setBuilding(PolygonList2d building) {
-        this.building = building;
-    }
-
-
 
 
 
     /**
      * @return the direction
      */
-    public Vector2d getDirection() {
+    public RoofDirection getDirection() {
         return this.direction;
     }
 
@@ -88,7 +67,7 @@ public class DormerRoofModel {
     /**
      * @param direction the direction to set
      */
-    public void setDirection(Vector2d direction) {
+    public void setDirection(RoofDirection direction) {
         this.direction = direction;
     }
 
