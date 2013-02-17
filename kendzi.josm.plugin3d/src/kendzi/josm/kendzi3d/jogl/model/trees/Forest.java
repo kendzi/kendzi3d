@@ -574,13 +574,15 @@ public class Forest extends AbstractWayModel {
 
         for (HeightCluster c : this.clusterHook) {
 
-            gl.glPushMatrix();
+            if (this.modelRender.isDebugging()) {
+                gl.glPushMatrix();
 
-            gl.glTranslated(c.getCenter().x + this.getGlobalX(), 2, c.getCenter().z - this.getGlobalY());
+                gl.glTranslated(c.getCenter().x + this.getGlobalX(), 2, c.getCenter().z - this.getGlobalY());
 
-            DrawUtil.drawDotY(gl, 6d, 6);
+                DrawUtil.drawDotY(gl, 6d, 6);
 
-            gl.glPopMatrix();
+                gl.glPopMatrix();
+            }
 
             LOD lod = RenderJOSM.getLods(c.getCenter(), localCamera);
             List<Point2d> hookPoints = c.getHook();
