@@ -16,7 +16,6 @@ import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
-import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -25,6 +24,8 @@ import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
+import kendzi.josm.kendzi3d.service.textures.BwFileTextureBuilder;
+import kendzi.josm.kendzi3d.service.textures.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 
@@ -90,6 +91,7 @@ public class Kendzi3dModule extends AbstractModule {
         TextureCacheService textureCacheService = new TextureCacheService();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
         textureCacheService.addTextureBuilder(new ColorTextureBuilder());
+        textureCacheService.addTextureBuilder(new BwFileTextureBuilder(pUrlReciverService));
         return textureCacheService;
     }
 
