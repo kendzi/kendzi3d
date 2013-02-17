@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.service;
+package kendzi.josm.kendzi3d.service.textures;
 
 import java.awt.Image;
 
@@ -23,8 +23,9 @@ public interface TextureBuilder {
      * Generate texture.
      * @param pKey key
      * @return build texture
+     * @throws Exception
      */
-    Texture buildTexture(String pKey);
+    Texture buildTexture(String pKey) throws Exception;
 
     /**
      * Image for model export.

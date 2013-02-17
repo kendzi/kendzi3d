@@ -111,6 +111,8 @@ public class TextureLibraryService {
         return set.get(nextInt);
     }
 
+
+
     /** Return texture set for key.
      * @param key texture key
      * @return texture list for key
@@ -120,7 +122,26 @@ public class TextureLibraryService {
         if (set == null) {
             return new ArrayList<TextureData>();
         }
+
         return set;
+    }
+
+    public TextureData colorableTextureData(TextureData textureData) {
+
+
+        String file = textureData.getFile();
+
+        if (file == null) {
+            file = "#c=0xffffff";
+        } else {
+            file = "#bw=" + file;
+        }
+
+        return new TextureData(
+                file,
+                textureData.getLenght(),
+                textureData.getHeight());
+
     }
 
     /**

@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.service;
+package kendzi.josm.kendzi3d.service.textures;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -62,9 +62,13 @@ public class ColorTextureBuilder implements TextureBuilder {
     public static Color parseColor(String pColor) {
         // XXX move method to ColourUtil
         Color color = getColor(pColor);
-        if (Color.black.equals(color)) {
-            color = color.brighter().brighter().brighter().brighter().brighter();
+
+        if (color != null) {
+            color = color.brighter().brighter().brighter().brighter();
         }
+//        if (Color.black.equals(color)) {
+//        color = color.brighter().brighter().brighter().brighter().brighter();
+//        }
 
         if (color == null) {
             try {

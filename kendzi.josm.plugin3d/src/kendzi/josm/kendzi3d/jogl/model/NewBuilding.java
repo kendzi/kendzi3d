@@ -279,6 +279,8 @@ public class NewBuilding extends AbstractModel {
         @Override
         public TextureData findTexture(TextureFindCriteria pTextureFindCriteria) {
 
+            boolean colorable = pTextureFindCriteria.isColorable();
+
             TextureLibraryKey key = null;
             Type type = pTextureFindCriteria.getType();
             if (Type.WINDOW.equals(type)) {
@@ -298,16 +300,29 @@ public class NewBuilding extends AbstractModel {
             }
 
             String keyStr = this.textureLibraryService.getKey(key, pTextureFindCriteria.getTypeName()/*, pTextureFindCriteria.getSubTypeName()*/);
+
+//            if (colorable) {
+//                keyStr = "#bw=" + keyStr;
+//            }
+
             List<TextureData> textureSet = this.textureLibraryService.getTextureSet(keyStr);
 
             if ( pTextureFindCriteria.getHeight() != null ||  pTextureFindCriteria.getWidth() != null) {
                 textureSet = filterByBestSizeMatch(pTextureFindCriteria, textureSet);
             }
 
-            TextureData tex = this.textureLibraryService.getRadnomTextureFromSet(textureSet);
+            TextureData textureData = this.textureLibraryService.getRadnomTextureFromSet(textureSet);
 
-            return tex;
+            if (colorable) {
+                textureData = this.textureLibraryService.colorableTextureData(textureData);
+            }
+
+            return textureData;
         }
+
+
+
+
 
         /**
          * @param pTextureFindCriteria
@@ -582,6 +597,7 @@ public class NewBuilding extends AbstractModel {
         bp.setMaxHeight(BuildingAttributeParser.parseMaxHeight(pRelation));
         bp.setMinHeight(BuildingAttributeParser.parseMinHeight(pRelation));
         bp.setMaxLevel(BuildingAttributeParser.parseMaxLevel(pRelation));
+        bp.setRoofLevels(BuildingAttributeParser.parseRoofLevels(pRelation));
         bp.setMinLevel(BuildingAttributeParser.parseMinLevel(pRelation));
 
         bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(pRelation));

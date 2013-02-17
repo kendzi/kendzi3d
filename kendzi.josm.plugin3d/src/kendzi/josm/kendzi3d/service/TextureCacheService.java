@@ -19,8 +19,11 @@ import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
+
+import kendzi.josm.kendzi3d.service.textures.TextureBuilder;
 
 import org.apache.log4j.Logger;
 
@@ -56,6 +59,7 @@ public class TextureCacheService {
     private List<TextureBuilder> textureBuilderList = new ArrayList<TextureBuilder>();
 
 
+
     /** Set texture filter.
      * @param pEnabled enabled
      */
@@ -65,17 +69,6 @@ public class TextureCacheService {
             this.clear();
         }
     }
-
-
-//    /**
-//     * Initialize texture cache. It need plugin dir to load external textures.
-//     *
-//     * @param pTexDir
-//     *            plugin dir where are external textures
-//     */
-//    public static void initTextureCache(String pTexDir) {
-//        textureCache = new TextureCacheService();
-//    }
 
     /**
      * Get texture from cache or load it to cache.
@@ -89,18 +82,6 @@ public class TextureCacheService {
     public Texture getTexture(GL gl, String pName) {
         return this.get(gl, pName);
     }
-//    /**
-//     * Get texture from cache or load it to cache.
-//     *
-//     * @param pName
-//     *            file name from: <br>
-//     *            1. directory {PLUGIN_DIR_NAME}/textures <br>
-//     *            2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
-//     * @return texture
-//     */
-//    public Texture getTextureFromDir(String pName) {
-//        return this.get("/textures/" + pName);
-//    }
 
     /**
      * Add texture builder.
@@ -109,10 +90,6 @@ public class TextureCacheService {
     public void addTextureBuilder(TextureBuilder pTextureBuilder) {
         this.textureBuilderList.add(pTextureBuilder);
     }
-
-// 	public TextureCacheService(String pTexDir) {
-//        this.textureDir = pTexDir;
-//    }
 
     /**
      * DONT use Only for test!!
@@ -144,9 +121,6 @@ public class TextureCacheService {
     }
 
 
-
-
-
     /**
      * Clean up all textures from cache.
      */
@@ -175,29 +149,98 @@ public class TextureCacheService {
         Texture texture = this.cache.get(pName);
         if (texture == null) {
 
-            texture = loadTexture(gl, pName, this.filter);
+            texture = loadTexture(gl, pName);
 
-            if (texture == null && pName != null && this.textureBuilderList != null) {
-                //builders
-
-                for (TextureBuilder tb : this.textureBuilderList) {
-                    if (pName.startsWith(tb.getBuilderPrefix())) {
-                        texture = tb.buildTexture(pName);
-                        if (texture != null) {
-                            break;
-                        }
-                    }
-                }
+            if (texture == null) {
+                texture = loadTexture(gl, TEXTURES_UNDEFINED_PNG);
             }
 
             if (texture == null) {
-                texture = loadTexture(gl, TEXTURES_UNDEFINED_PNG, this.filter);
+                log.error("no texture to load!!" + " texture url: " + pName);
+            } else {
+                setupFilter(gl, texture);
             }
 
             this.cache.put(pName, texture);
 
         }
         return texture;
+    }
+
+
+    /**
+     * @param gl
+     * @param texture
+     */
+    public void setupFilter(GL gl, Texture texture) {
+        if (filter) {
+            // GL_LINEAR / GL_LINEAR_MIPMAP_LINEAR
+            // tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
+            // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+
+            // tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+            // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+
+        } else {
+            texture.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+            texture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+        }
+    }
+
+
+    /**
+     * @param gl
+     * @param pName
+     * @return
+     */
+    public Texture loadTexture(GL gl, String pName) {
+        Texture texture = null;
+
+        if (pName != null && this.textureBuilderList != null) {
+            //builders
+
+            for (TextureBuilder tb : this.textureBuilderList) {
+                if (pName.startsWith(tb.getBuilderPrefix())) {
+                    try {
+                        texture = tb.buildTexture(pName);
+                    } catch (Exception e) {
+                        // gl.getGL4().glGetErrorString
+                        int errorCode = gl.glGetError();
+                        String errorStr = new String();
+                        errorStr = (new GLU().gluErrorString(errorCode));
+                        System.err.println(errorStr);
+                        log.error("Error loading texture: " + pName + " texture url: " + pName, e);
+                    }
+
+                    if (texture != null) {
+                        return texture;
+                    }
+                }
+            }
+
+            try {
+                return loadTextureFile(pName, this.filter);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public Texture loadTextureFile(String pName, boolean filter) throws GLException, IOException {
+
+        if (pName == null) {
+            return null;
+        }
+
+        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        if (textUrl == null) {
+            log.info("No file to load: " + pName);
+            return null;
+        }
+
+        return TextureIO.newTexture(textUrl, filter, null);
     }
 
 
@@ -245,91 +288,7 @@ public class TextureCacheService {
 
     }
 
-    public Texture loadTexture(GL gl, String pName, boolean filter) {
 
-        if (pName == null) {
-            return null;
-        }
-        // String fileName = pName;
-
-//        URL textUrl = FileUrlReciverService.getResourceUrl(pName);
-        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
-        if (textUrl == null) {
-            log.info("No file to load: " + pName);
-            return null;
-        }
-        Texture tex = null;
-        try {
-            tex = TextureIO.newTexture(textUrl, filter, null);
-        } catch (Exception e) {
-//            gl.getGL4().glGetErrorString
-            int errorCode = gl.glGetError();
-            String errorStr = new String();
-            errorStr = (new GLU().gluErrorString( errorCode ));
-            System.err.println(errorStr);
-            log.error("Error loading texture: " + pName + " texture url: " + textUrl, e);
-        }
-
-//
-//        File f = new File(this.textureDir, fileName);
-//
-//        if (f.exists()) {
-//            try {
-//                tex = TextureIO.newTexture(f, false);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                log.error("Error loading texture " + fileName);
-//            }
-//        }
-//        if (tex == null) {
-//            try {
-//                // URL fileUrl = Kendzi3DPlugin.getPluginResource(fileName);
-//                URL fileUrl = TextureCache.class.getResource(fileName);
-//
-//                // tex = TextureIO.newTexture(new File(fileUrl.toURI()), false);
-//                tex = TextureIO.newTexture(fileUrl, false, null);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                log.error("Error loading texture from jar " + fileName);
-//            }
-//        }
-        if (tex == null) {
-            log.error("no texture to load!!"  + " texture url: " + textUrl);
-            // TODO load default empty texture
-            // XXX never throw exeption, allways load default texture!!
-            //throw new RuntimeException("faild load texture: " + fileName);
-        } else {
-
-//            tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
-//            tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
-
-
-            if (filter) {
-//          GL_LINEAR / GL_LINEAR_MIPMAP_LINEAR
-//          tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
-//          tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
-
-//          tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-//          tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
-
-            } else {
-          tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-          tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
-            }
-//        tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
-
-//          tex.setTexParameteri(GL2.GL_GENERATE_MIPMAP, GL2.GL_TRUE);
-
-//          tex.setUsingAutoMipmapGeneration
-//          gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
-
-
-
-        }
-
-        return tex;
-    }
 
     /**
      * @return the filter
