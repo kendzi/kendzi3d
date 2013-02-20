@@ -355,11 +355,42 @@ public class NewBuilding extends AbstractModel {
     BuildingModel parseBuildingWay(Way way, Perspective3D perspective) {
         BuildingModel bm = new BuildingModel();
 
-        BuildingPart bp = parseBuildingPart(way, perspective);
-
-        bm.setParts(Arrays.asList(bp));
-
+        List<BuildingPart> bpList = parseBuildingPart(way, perspective);
+        bm.setParts(bpList);
         return bm;
+    }
+
+    private BuildingPart cloneBuildingPart(BuildingPart bp, Double height) {
+        BuildingPart ret = new BuildingPart();
+        if (bp.getMaxHeight() == null) {
+            ret.setMaxHeight(bp.getDefaultMaxHeight() + height);
+        } else {
+            ret.setMaxHeight(bp.getMaxHeight() + height);
+        }
+
+        if (bp.getMinHeight() == null) {
+            ret.setMinHeight(bp.getDefaultMinHeight() + height);
+        } else {
+            ret.setMinHeight(bp.getMinHeight() + height);
+        }
+
+        ret.setDormerRoofModel(bp.getDormerRoofModel());
+        ret.setFacadeColour(bp.getFacadeColour());
+        ret.setFacadeMaterialType(bp.getFacadeMaterialType());
+        ret.setInlineWalls(bp.getInlineWalls());
+        ret.setLevelHeight(bp.getLevelHeight());
+
+        ret.setMaxLevel(bp.getMaxLevel());
+        ret.setMinLevel(bp.getMinLevel());
+
+        ret.setRoof(bp.getRoof());
+        ret.setRoofColour(bp.getRoofColour());
+        ret.setRoofLevels(bp.getRoofLevels());
+        ret.setRoofMaterialType(bp.getRoofMaterialType());
+
+        ret.setWall(bp.getWall());
+
+        return ret;
     }
 
     BuildingModel parseBuildingRelation(Relation pRelation, Perspective3D pers) {
@@ -387,10 +418,8 @@ public class NewBuilding extends AbstractModel {
             }
 
             if (primitive instanceof Way) {
-                BuildingPart bp = parseBuildingPart((Way) primitive, pers);
-                if (bp != null) {
-                    bps.add(bp);
-                }
+                bps.addAll(parseBuildingPart((Way) primitive, pers));
+
             } else if (primitive instanceof Relation) {
                 Relation r = (Relation) primitive;
                 if (r.isMultipolygon()) {
@@ -780,10 +809,10 @@ public class NewBuilding extends AbstractModel {
             for (RelationCloneHeight rch : buildHeightClone) {
                 for (Double cloner : rch) {
 
-                    entrance = (EntranceBuildingElement) clone(entrance);
+                    EntranceBuildingElement beClone = (EntranceBuildingElement) clone(entrance);
 
-                    entrance.setMinHeight(entrance.getMinHeight() + cloner);
-                    buildingElements.add(entrance);
+                    beClone.setMinHeight(beClone.getMinHeight() + cloner);
+                    buildingElements.add(beClone);
                 }
             }
 
@@ -806,10 +835,10 @@ public class NewBuilding extends AbstractModel {
                 for (Double cloner : rch) {
 
 
-                    entrance = (WindowBuildingElement) clone(entrance);
+                    WindowBuildingElement beClone = (WindowBuildingElement) clone(entrance);
 
-                    entrance.setMinHeight(entrance.getMinHeight() + cloner);
-                    buildingElements.add(entrance);
+                    beClone.setMinHeight(beClone.getMinHeight() + cloner);
+                    buildingElements.add(beClone);
                 }
 
             }
@@ -867,22 +896,40 @@ public class NewBuilding extends AbstractModel {
     }
 
 
-    private BuildingPart parseBuildingPart(Way primitive, Perspective3D pPerspective) {
+    private List<BuildingPart> parseBuildingPart(Way primitive, Perspective3D pPerspective) {
 
-        if (primitive.isClosed()) {
-            OsmPrimitive p = primitive;
-
-            BuildingPart bp = parseBuildingPartAttributes(p);
-
-            bp.setWall(parseWall((Way) p, pPerspective));
-            bp.setInlineWalls(null);
-
-            bp.setRoof(RoofParser.parse(primitive, pPerspective));
-
-            return bp;
+        if (!primitive.isClosed()) {
+            throw new RuntimeException("Way is not closed: " + primitive);
         }
 
-        throw new RuntimeException("Way is not closed: " + primitive);
+        OsmPrimitive p = primitive;
+
+        BuildingPart bp = parseBuildingPartAttributes(p);
+
+        bp.setWall(parseWall((Way) p, pPerspective));
+        bp.setInlineWalls(null);
+
+        bp.setRoof(RoofParser.parse(primitive, pPerspective));
+
+        List<BuildingPart> bpList = new ArrayList<BuildingPart>();
+        bpList.add(bp);
+
+        bpList.addAll(parseRelationClone(primitive, bp));
+
+        return bpList;
+    }
+
+    private List<BuildingPart> parseRelationClone(Way primitive, BuildingPart bp) {
+        List<RelationCloneHeight> buildHeightClone = RelationCloneHeight.buildHeightClone(primitive);
+        List<BuildingPart> bpList = new ArrayList<BuildingPart>();
+
+        for (RelationCloneHeight relationCloneHeight : buildHeightClone) {
+            for (Double height : relationCloneHeight) {
+
+                bpList.add(cloneBuildingPart(bp, height));
+            }
+        }
+        return bpList;
     }
 
     @Override
