@@ -51,6 +51,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_8;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_9;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_2;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_2;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
@@ -61,6 +62,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeFlat;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfRound;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeMansard;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
@@ -96,6 +98,7 @@ public class DormerRoofBuilder {
         new RoofTypeDome(),
         new RoofTypeOnion(),
         new RoofTypeMansard(),
+        new RoofTypeHalfRound(),
 
         // normal types
         new RoofType0_0(),
@@ -121,6 +124,7 @@ public class DormerRoofBuilder {
         new RoofType4_0(),
         new RoofType4_2(),
 
+        new RoofType5_2(),
         new RoofType5_6(),
 
         new RoofType8_0(),
@@ -178,6 +182,10 @@ public class DormerRoofBuilder {
         Point2d startPoint = polygon.get(0);
 
         RoofTypeBuilder roofType = parseRoofTypeBuilder(roof.getRoofType());
+
+        if (roofType == null) {
+            roofType = new RoofType0_0();
+        }
 
         RoofTypeOutput rto = roofType.buildRoof(startPoint, buildingPolygon, roof, height, roofMaterials);
 

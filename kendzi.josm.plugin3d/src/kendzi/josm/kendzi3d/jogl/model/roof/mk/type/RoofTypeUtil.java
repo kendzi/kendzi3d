@@ -19,9 +19,9 @@ import javax.vecmath.Vector3d;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
+import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.GableRoof;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
@@ -41,9 +41,25 @@ public class RoofTypeUtil {
      * @param plane2
      * @param pRoofLineVector
      * @param roofTexture
+     *
+     * @see kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeUtil#addPolygonToRoofMesh(MeshFactory, MultiPolygonList2d, Plane3d, Vector3d, TextureData, double, double)
      */
     public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons,
              Plane3d plane2, Vector3d pRoofLineVector, TextureData roofTexture) {
+        addPolygonToRoofMesh(pMeshRoof, pMultiPolygons, plane2, pRoofLineVector, roofTexture, 0, 0);
+    }
+
+    /** Add polygons to roof mesh.
+     * @param pMeshRoof roof mesh
+     * @param pMultiPolygons point of polygons
+     * @param plane2
+     * @param pRoofLineVector
+     * @param roofTexture
+     * @param textureOffsetU offset for texture U
+     * @param textureOffsetV offset for texture V
+     */
+    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons,
+            Plane3d plane2, Vector3d pRoofLineVector, TextureData roofTexture, double textureOffsetU, double textureOffsetV) {
 
         int normalIndex = pMeshRoof.addNormal(plane2.getNormal());
 
@@ -109,7 +125,7 @@ public class RoofTypeUtil {
 
                 face.addNormalIndex(normalIndex);
 
-                TextCoord calcUV = GableRoof.calcUV(point3d, plane2.getNormal(), pRoofLineVector, plane2.getPoint(), roofTexture);
+                TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, plane2.getNormal(), pRoofLineVector, plane2.getPoint(), roofTexture, textureOffsetU, textureOffsetV);
 
                 int tci = pMeshRoof.addTextCoord(calcUV);
 

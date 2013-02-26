@@ -70,6 +70,7 @@ public class PolygonSplit {
     }
 
 
+
     /** Splits line segments of polygon on point where line is crossing them.
      * @param pLine line which divide polygon
      * @param pPolygon polygon
@@ -86,7 +87,6 @@ public class PolygonSplit {
 
             detList.add(matrix_det(pLine.getP1(), pLine.getP2(), pPolygon.get(i)));
         }
-
 
         // we need add new vertex on line segments grossing top of roof
         for (int i = 0; i < pPolygon.size(); i++) {
@@ -116,6 +116,58 @@ public class PolygonSplit {
                 borderExtanded.add(p3);
             }
         }
+
+        return borderExtanded;
+    }
+
+    /** Splits line segments of polygon on point where line is crossing them.
+     * @param pLine line which divide polygon
+     * @param pPolygon polygon
+     * @param open if true
+     * @return polygon with extra points where line is crossing line segments of polygon
+     */
+    public static List<Point2d> splitLineSegmentsOnLineBBB(LinePoints2d pLine,
+            List<Point2d> pPolygon) {
+
+        List<Point2d> borderExtanded = new ArrayList<Point2d>();
+
+        List<java.lang.Double> detList = new ArrayList<java.lang.Double>();
+        int size = pPolygon.size();
+        for (int i = 0; i < size; i++) {
+
+            detList.add(matrix_det(pLine.getP1(), pLine.getP2(), pPolygon.get(i)));
+        }
+
+        // we need add new vertex on line segments grossing top of roof
+        for (int i = 0; i < pPolygon.size() - 1; i++) {
+            // searching for first line segment crossing top of roof
+            Point2d pp1 = pPolygon.get(i);
+            Point2d pp2 = pPolygon.get((i + 1) % size);
+
+            double dp1 = detList.get(i);
+            double dp2 = detList.get((i + 1) % size);
+
+            borderExtanded.add(pp1);
+
+            if (equalZero(dp1) || equalZero(dp2)) {
+                // point laying on splitting line, we don't need add new point
+                continue;
+
+            } else if (dp1 * dp2 < 0) {
+                // line segment crossing top of roof
+                // we need add new vertex on this line
+                Point2d p3 = lineCrosLineSegment(pLine.getP1(), pLine.getP2(), pp1, pp2);
+
+                if (!equalZero(matrix_det(pLine.getP1(), pLine.getP2(), p3))) {
+                    // for test only
+                    log.error("added point is not on splitting line !!!. Probably epsilon is too small !!!");
+                }
+
+                borderExtanded.add(p3);
+            }
+        }
+
+        borderExtanded.add(pPolygon.get(pPolygon.size() - 1));
 
         return borderExtanded;
     }

@@ -93,5 +93,17 @@ public class LinePoints2d {
         return LineUtil.matrixDet(this.p1, this.p2, pPoint) >= 0;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "L (" + this.p1 + ") -> (" + this.p2 + ")";
+    }
+
+
+
 
 }
