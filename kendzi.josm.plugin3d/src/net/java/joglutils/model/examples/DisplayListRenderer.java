@@ -151,7 +151,7 @@ public class DisplayListRenderer implements iModel3DRenderer {
      * Load the model and associated materials, etc
      *
      * @param gl
-     * @param file
+     * @param model
      * @return
      */
     private int initialize(GL2 gl, Model model)
