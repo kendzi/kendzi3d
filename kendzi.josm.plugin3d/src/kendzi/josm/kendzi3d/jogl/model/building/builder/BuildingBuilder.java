@@ -2,7 +2,6 @@ package kendzi.josm.kendzi3d.jogl.model.building.builder;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,9 +197,12 @@ public class BuildingBuilder {
             Color facadeColor = takeFacadeColor(buildingModel, bp, w, wp, tm);
             TextureData facadeTD = takeFacadeTextureData(buildingModel, bp, w, wp, tm, facadeColor != null);
 
-            String tex0Key = facadeTD.getFile();
+            String tex0Key = facadeTD.getTex0();
             Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, facadeColor);
 
+            if (facadeTD.getTex1()!= null) {
+                mat.getTexturesComponent().add(facadeTD.getTex1());
+            }
             //XXX
 
             Integer windowsCols = hasWindowsCloumns(wp.getBuildingElements());
@@ -210,9 +212,14 @@ public class BuildingBuilder {
             if (isWindows){
 
                 TextureData windowsTD = takeWindowsColumnsTextureData(buildingModel, bp, w, wp, tm);
-                String tex1Key = windowsTD.getFile();
-                mat.setTexturesComponent(Arrays.asList(tex0Key, tex1Key));
-
+                String tex1Key = windowsTD.getTex0();
+                if (facadeTD.getTex1()== null) {
+//                    mat.setTexturesComponent(Arrays.asList(tex0Key, tex1Key));
+                    mat.getTexturesComponent().add(tex1Key);
+                }
+//                else {
+//                    mat.setTexturesComponent(Arrays.asList(tex0Key, facadeTD.getTex1(), tex1Key));
+//                }
 
 
                 double windowsSegmetLength = wallLength / ((double)windowsCols);
@@ -232,7 +239,11 @@ public class BuildingBuilder {
             mesh.hasTexture = true;
             mesh.materialID = mf.cacheMaterial(mat);
 
-            FaceFactory face = mesh.addFace(FaceType.QUADS, isWindows ? 2 : 1);
+            boolean isOverLayer = facadeTD.getTex1() != null;
+
+            int texNum = 1 + (isOverLayer ? 1 : 0) + (isWindows ? 1 : 0);
+
+            FaceFactory face = mesh.addFace(FaceType.QUADS, texNum);
 
 
 
@@ -286,7 +297,7 @@ public class BuildingBuilder {
 
                 // build mesh
 
-                TextureData facadeTexture = facadeTD;
+
                 Vector3d normal = new Vector3d(-direction.y, 0, -direction.x);
                 if (counterClockwise) {
                     normal.negate();
@@ -303,21 +314,24 @@ public class BuildingBuilder {
                         throw new RuntimeException("more then 4 points in quate!" + points);
                     }
 
+
                     for(Point2d p: points) {
                         //addPointToMesh(p, start, direction, mesh, face, iN, facadeTexture);
+                        int vi = segmentPointToVertex3dIndex(p, start, direction, mesh);
+
+                        int [] tex = new int[texNum];
+
+                        tex[0] = segmentPointToTextureDataIndex(p, 0d, 0d,  mesh, facadeTD);
+
+                        if (isOverLayer) {
+                            tex[1] = tex[0];
+                        }
 
                         if (isWindows) {
-                            face.addVert(
-                                    segmentPointToVertex3dIndex(p, start, direction, mesh),
-                                    segmentPointToTextureDataIndex(p, 0d, 0d,  mesh, facadeTexture),
-                                    segmentPointToTextureDataIndex(p, wallDistance, 0d,  mesh, windowsTexture),
-                                    iN);
-                        } else {
-                            face.addVert(
-                                    segmentPointToVertex3dIndex(p, start, direction, mesh),
-                                    segmentPointToTextureDataIndex(p, 0d, 0d,  mesh, facadeTexture),
-                                    iN);
+                            tex[texNum-1]  = segmentPointToTextureDataIndex(p, wallDistance, 0d,  mesh, windowsTexture);
                         }
+
+                        face.addVert(vi,iN,tex);
                     }
                 }
                 //FaceFactory face = pMeshBorder.addFace(FaceType.QUADS);
@@ -561,7 +575,7 @@ public class BuildingBuilder {
 
             TextureData td = findWindowTextureData(be, pTextureMenager);
 
-            MeshFactory mesh = pCatchFaceFactory.createOrGetMeshFactory(td.getFile());
+            MeshFactory mesh = pCatchFaceFactory.createOrGetMeshFactory(td.getTex0());
 
             FaceFactory face = mesh.addFace(FaceType.QUADS);
 
@@ -626,7 +640,7 @@ public class BuildingBuilder {
 
             TextureData td = findWindowTextureData(be, pTextureMenager);
 
-            MeshFactory mesh = pCatchFaceFactory.createOrGetMeshFactory(td.getFile());
+            MeshFactory mesh = pCatchFaceFactory.createOrGetMeshFactory(td.getTex0());
 
             FaceFactory face = mesh.addFace(FaceType.QUADS);
 
@@ -775,7 +789,7 @@ public class BuildingBuilder {
     public static int segmentPointToTextureDataIndex(Point2d point, double offsetX, double offsetY, MeshFactory mesh, TextureData td) {
         int iTc = mesh.addTextCoord(
                 new TextCoord(
-                        (point.x + offsetX)/ td.getLenght() ,
+                        (point.x + offsetX)/ td.getWidth() ,
                         (point.y  + offsetY)/ td.getHeight()));
         return iTc;
     }

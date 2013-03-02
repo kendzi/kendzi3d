@@ -48,11 +48,7 @@ public class TextureCacheService {
      */
     public static final String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
 
-//    private static TextureCacheService textureCache = null;
-
     private Map<String, Texture> cache = new HashMap<String, Texture>();
-
-//    private String textureDir = null;
 
     private boolean filter;
 
@@ -221,6 +217,7 @@ public class TextureCacheService {
             try {
                 return loadTextureFile(pName, this.filter);
             } catch (Exception e) {
+                log.error("can't load texture", e);
                 return null;
             }
         }

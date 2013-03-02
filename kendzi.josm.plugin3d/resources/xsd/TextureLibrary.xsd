@@ -30,7 +30,10 @@
 	
 	<xs:complexType name="TextureData">
 	
-		<xs:attribute name="fileKey" type="xs:string"/>
+		<xs:attribute name="tex0" type="xs:string"/>
+		<xs:attribute name="tex1" type="xs:string"/>
+		
+		<xs:attribute name="colorable" type="xs:boolean"/>
 		
 		<xs:attribute name="height" type="xs:double"/>
 		<xs:attribute name="width" type="xs:double"/>

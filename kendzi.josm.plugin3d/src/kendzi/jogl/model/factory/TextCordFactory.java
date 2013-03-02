@@ -55,7 +55,7 @@ public class TextCordFactory {
 
         Vector3d orthogonalProjectionU = Algebra.orthogonalProjection(pLineVector, p);
 
-        double u = orthogonalProjectionU.length() / pTexture.getLenght();
+        double u = orthogonalProjectionU.length() / pTexture.getWidth();
 
         if (pLineVector.dot(orthogonalProjectionU) < 0) {
             u = u * -1;
@@ -74,7 +74,7 @@ public class TextCordFactory {
             v = v * -1;
         }
 
-        u = u + textureOffsetU / pTexture.getLenght();
+        u = u + textureOffsetU / pTexture.getWidth();
         v = v + textureOffsetV / pTexture.getHeight();
 
         return new TextCoord(u, v);

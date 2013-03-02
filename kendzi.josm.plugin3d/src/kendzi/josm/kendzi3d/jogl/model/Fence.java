@@ -124,7 +124,7 @@ public class Fence extends AbstractWayModel {
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
         TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryService);
-        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
 

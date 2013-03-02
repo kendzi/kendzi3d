@@ -184,7 +184,7 @@ public class FenceRelation extends AbstractRelationModel {
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
         TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryService);
-        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
 
@@ -257,7 +257,7 @@ public class FenceRelation extends AbstractRelationModel {
 
 
             double dist = start.distance(end);
-            double uvEnd = (int) (dist / pWallTexture.getLenght());
+            double uvEnd = (int) (dist / pWallTexture.getWidth());
 
             TextCoord em = new TextCoord(uvEnd, 0);
             TextCoord eh = new TextCoord(uvEnd, 1);

@@ -130,6 +130,21 @@ public class FaceFactory {
 	    this.count++;
 	}
 
+	public void addVert(int vertIndex, int normalIndex, int...cords) {
+
+	    this.vertIndex.add(vertIndex);
+
+	    validateAddedTextrureCoordinates(cords.length);
+
+	    for (int i = 0; i < cords.length; i++) {
+	        this.coordIndexLayers.get(i).add(cords[i]);
+	    }
+
+	    this.normalIndex.add(normalIndex);
+
+	    this.count++;
+	}
+
 	public void setTextIndex(int textIndex) {
 		this.textIndex = textIndex;
 	}

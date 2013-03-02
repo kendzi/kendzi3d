@@ -335,7 +335,7 @@ public class Building extends AbstractWayModel {
         this.buildingHeight = this.roof.getMinHeight();
 
 
-        Material facadeMaterial = MaterialFactory.createTextureMaterial(this.facadeTexture.getFile());
+        Material facadeMaterial = MaterialFactory.createTextureMaterial(this.facadeTexture.getTex0());
 
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
@@ -365,7 +365,7 @@ public class Building extends AbstractWayModel {
                 int n = meshWalls.addNormal(normals[i - 1]);
 
                 double distance = beginPoint.distance(endPoint);
-                double uEnd = (int) (distance / this.facadeTexture.getLenght());
+                double uEnd = (int) (distance / this.facadeTexture.getWidth());
 
                 int tc1 = meshWalls.addTextCoord(new TextCoord(0, 0));
                 int tc2 = meshWalls.addTextCoord(new TextCoord(0, vEnd));
@@ -462,7 +462,7 @@ public class Building extends AbstractWayModel {
             MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
             TextureData facadeTexture = getWindowsTexture(this.way);
-            Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
+            Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
             int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
 

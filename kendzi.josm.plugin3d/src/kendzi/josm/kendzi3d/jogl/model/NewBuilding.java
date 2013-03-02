@@ -301,11 +301,31 @@ public class NewBuilding extends AbstractModel {
 
             String keyStr = this.textureLibraryService.getKey(key, pTextureFindCriteria.getTypeName()/*, pTextureFindCriteria.getSubTypeName()*/);
 
+            // FIXME
+            if ("buildings.facade_test1".equals(keyStr)) {
+//                return new TextureData("test1", 2,  2);
+              //  return new TextureData("#c=0xffffff", "/textures/pd/test/channel1gray.png", 2, 2);
+//                return new TextureData("#c=0xffffff", "/textures/pd/MarekCompositeWall00001.png", 2, 2);
+            }
+            // FIXME
+
 //            if (colorable) {
 //                keyStr = "#bw=" + keyStr;
 //            }
 
             List<TextureData> textureSet = this.textureLibraryService.getTextureSet(keyStr);
+            boolean findColorable = false;
+            if (colorable) {
+                List<TextureData> filterByColorable = filterByColorable(colorable, textureSet);
+
+                if (filterByColorable.size() > 0) {
+                    // only when colorable texture data exist.
+                    // otherwise we use regular (all) texture data
+                    textureSet = filterByColorable;
+                    findColorable = true;
+                }
+            }
+
 
             if ( pTextureFindCriteria.getHeight() != null ||  pTextureFindCriteria.getWidth() != null) {
                 textureSet = filterByBestSizeMatch(pTextureFindCriteria, textureSet);
@@ -313,9 +333,11 @@ public class NewBuilding extends AbstractModel {
 
             TextureData textureData = this.textureLibraryService.getRadnomTextureFromSet(textureSet);
 
-            if (colorable) {
+            if (colorable && !findColorable) {
                 textureData = this.textureLibraryService.colorableTextureData(textureData);
             }
+
+
 
             return textureData;
         }
@@ -324,6 +346,23 @@ public class NewBuilding extends AbstractModel {
 
 
 
+        /**
+         * @param colorable
+         * @param textureSet
+         * @return
+         */
+        public List<TextureData> filterByColorable(
+                boolean colorable, List<TextureData> textureSet) {
+            List<TextureData> ret = new ArrayList<TextureData>();
+
+            for (TextureData td : textureSet) {
+
+                if (td.isColorable() != null && td.isColorable() == colorable) {
+                    ret.add(td);
+                }
+            }
+            return ret;
+        }
         /**
          * @param pTextureFindCriteria
          * @param textureSet
@@ -338,7 +377,7 @@ public class NewBuilding extends AbstractModel {
 
             for (TextureData td : textureSet) {
                 double dH = td.getHeight() - height;
-                double dW = td.getLenght() - width;
+                double dW = td.getWidth() - width;
 
                 double err = dH * dH + dW * dW;
 

@@ -239,9 +239,9 @@ public class DormerRoofBuilder {
 
         Material facadeMaterial = null;
         if (pColor != null) {
-            facadeMaterial = MaterialFactory.createTextureColorMaterial(pTextureData.getFile(), pColor);
+            facadeMaterial = MaterialFactory.createTextureColorMaterial(pTextureData.getTex0(), pColor);
         } else {
-            facadeMaterial = MaterialFactory.createTextureMaterial(pTextureData.getFile());
+            facadeMaterial = MaterialFactory.createTextureMaterial(pTextureData.getTex0());
         }
 
         int facadeMaterialIndex = pModel.addMaterial(facadeMaterial);

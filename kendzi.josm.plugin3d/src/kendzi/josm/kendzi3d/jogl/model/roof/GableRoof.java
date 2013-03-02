@@ -213,7 +213,7 @@ public class GableRoof {
                 double hm = pHight.get((be) % pBorderExtanded.size());
                 int plm = pMeshBorder.addVertex(new Point3d(phm.x, hm, -phm.y));
 
-                double u = pl1.distance(phm) / facadeTexture.getLenght();
+                double u = pl1.distance(phm) / facadeTexture.getWidth();
                 int tc = pMeshBorder.addTextCoord(new TextCoord(u  , hm / facadeTexture.getHeight()));
 
                 face.addVertIndex(plm);
@@ -233,7 +233,7 @@ public class GableRoof {
             int ph2i = pMeshBorder.addVertex(new Point3d(ph2.x, h2, -ph2.y));
 
 
-            double u = pl1.distance(pl2) / facadeTexture.getLenght();
+            double u = pl1.distance(pl2) / facadeTexture.getWidth();
 
             int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(0  , 0));
             int tc_0_v = pMeshBorder.addTextCoord(new TextCoord(0  , h1 / facadeTexture.getHeight()));

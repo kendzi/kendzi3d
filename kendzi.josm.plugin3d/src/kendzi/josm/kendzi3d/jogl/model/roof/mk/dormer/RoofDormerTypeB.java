@@ -79,7 +79,7 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         int topMaterialIndex = pRoofTextureData.getRoof().getMaterialIndexInModel();
 
         double v1 = (h1 / facadeTexture.getHeight());
-        double u1 = (width1 / facadeTexture.getLenght());
+        double u1 = (width1 / facadeTexture.getWidth());
 
         MeshFactory border = MeshFactory.meshBuilder("border");
         border.materialID = facadeMaterialIndex;

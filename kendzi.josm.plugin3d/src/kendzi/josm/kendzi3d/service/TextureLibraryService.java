@@ -129,18 +129,20 @@ public class TextureLibraryService {
     public TextureData colorableTextureData(TextureData textureData) {
 
 
-        String file = textureData.getFile();
+        String tex0 = textureData.getTex0();
 
-        if (file == null) {
-            file = "#c=0xffffff";
+        if (tex0 == null) {
+            tex0 = "#c=0xffffff";
         } else {
-            file = "#bw=" + file;
+            tex0 = "#bw=" + tex0;
         }
 
         return new TextureData(
-                file,
-                textureData.getLenght(),
-                textureData.getHeight());
+                tex0,
+                textureData.getTex1(),
+                textureData.getWidth(),
+                textureData.getHeight(),
+                true);
 
     }
 
@@ -205,7 +207,7 @@ public class TextureLibraryService {
 
         try {
             // load wiki
-            loadUserFile(userTextureLibraryUrl);
+            loadUserFile(this.userTextureLibraryUrl);
         } catch (Exception e) {
             log.error(e,e);
         }
@@ -255,14 +257,16 @@ public class TextureLibraryService {
         }
 
         loadUrl(pUrlTextureLibrary.getUrl());
-        userTextureLibraryUrl = pUrlTextureLibrary;
+        this.userTextureLibraryUrl = pUrlTextureLibrary;
     }
 
     private TextureData convert(kendzi.josm.kendzi3d.dto.xsd.TextureData td) {
         TextureData textureData = new TextureData(
-                td.getFileKey(),
+                td.getTex0(),
+                td.getTex1(),
                 td.getWidth() == null ? 1d : td.getWidth(),
-                td.getHeight() == null ? 1d :td.getHeight());
+                td.getHeight() == null ? 1d :td.getHeight(),
+                td.isColorable());
 
         return textureData;
     }
@@ -338,7 +342,7 @@ public class TextureLibraryService {
          * @return the url
          */
         public URL getUrl() {
-            return url;
+            return this.url;
         }
         /**
          * @param url the url to set
@@ -350,7 +354,7 @@ public class TextureLibraryService {
          * @return the overwrite
          */
         public boolean isOverwrite() {
-            return overwrite;
+            return this.overwrite;
         }
         /**
          * @param overwrite the overwrite to set

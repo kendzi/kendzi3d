@@ -419,7 +419,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             int normalIndex = pMeshBorder.addNormal(n);
 
             double uBegin = uLast;
-            double uEnd = uBegin + point1.distance(point2) / facadeTexture.getLenght();
+            double uEnd = uBegin + point1.distance(point2) / facadeTexture.getWidth();
             uLast = uEnd;
 
             int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(uBegin  , 0));
@@ -485,7 +485,7 @@ public class RoofType2_1 extends RectangleRoofTypeBuilder{
             int normalIndex = pMeshBorder.addNormal(n);
 
 
-            double u = start.distance(end) / facadeTexture.getLenght();
+            double u = start.distance(end) / facadeTexture.getWidth();
 
             int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(0  , heightStartLeft / facadeTexture.getHeight()));
             int tc_0_v = pMeshBorder.addTextCoord(new TextCoord(0  , heightStartRight / facadeTexture.getHeight()));

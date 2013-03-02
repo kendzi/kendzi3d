@@ -48,7 +48,7 @@ public class Ground {
         //gl.glColor3f((float) 188/255, (float)169/255, (float)169/255);
 
         TextureData td = this.textureLibraryService.getTextureDefault("ground.unknown");
-        Texture texture = this.textureCacheService.get(gl, td.getFile());
+        Texture texture = this.textureCacheService.get(gl, td.getTex0());
 
         texture.enable(gl);
         texture.bind(gl);
@@ -73,13 +73,13 @@ public class Ground {
 
         gl.glNormal3d(0, 1, 0);
 
-        gl.glTexCoord2d(xRight * td.getLenght() , zButtom * td.getHeight());
+        gl.glTexCoord2d(xRight * td.getWidth() , zButtom * td.getHeight());
         gl.glVertex3d(xRight, -0.01, zButtom);
-        gl.glTexCoord2d(xLeft * td.getLenght() , zButtom * td.getHeight());
+        gl.glTexCoord2d(xLeft * td.getWidth() , zButtom * td.getHeight());
         gl.glVertex3d(xLeft, -0.01, zButtom);
-        gl.glTexCoord2d(xLeft * td.getLenght() , zTop * td.getHeight());
+        gl.glTexCoord2d(xLeft * td.getWidth() , zTop * td.getHeight());
         gl.glVertex3d(xLeft, -0.01, zTop);
-        gl.glTexCoord2d(xRight * td.getLenght() , zTop * td.getHeight());
+        gl.glTexCoord2d(xRight * td.getWidth() , zTop * td.getHeight());
         gl.glVertex3d(xRight, -0.01, zTop);
 
         gl.glEnd();

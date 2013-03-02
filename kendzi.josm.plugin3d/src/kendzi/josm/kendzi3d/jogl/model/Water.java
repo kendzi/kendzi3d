@@ -74,7 +74,7 @@ public class Water extends AbstractWayModel {
 	    MeshFactory meshRoof = model.addMesh("water");
 
         TextureData roofTexture = new TextureData("#c=#008EFF", 1d, 1d);
-        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
+        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getTex0());
         int roofMaterialIndex = model.addMaterial(roofMaterial);
 
         meshRoof.materialID = roofMaterialIndex;

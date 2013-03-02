@@ -16,37 +16,44 @@ package kendzi.josm.kendzi3d.dto;
  *
  */
 public class TextureData {
-    String file;
-    double lenght;
-    double height;
+    private String tex0;
+    private String tex1;
+    private double width;
+    private double height;
+    private Boolean colorable;
 
-    public TextureData(String pFile, double pLenght, double pHeight) {
+    public TextureData(String pTex0, double pWidth, double pHeight) {
+        this(pTex0, null, pWidth, pHeight, false);
+    }
+    public TextureData(String pTex0, String pTex1, double pWidth, double pHeight, Boolean colorable) {
         super();
-        this.file = pFile;
-        this.lenght = pLenght;
+        this.tex0 = pTex0;
+        this.tex1 = pTex1;
+        this.width = pWidth;
         this.height = pHeight;
+        this.colorable = colorable;
     }
 
     /**
      * @return the file
      */
-    public String getFile() {
-        return this.file;
+    public String getTex0() {
+        return this.tex0;
     }
 
     /**
-     * @param pFile
+     * @param pTex0
      *            the file to set
      */
-    public void setFile(String pFile) {
-        this.file = pFile;
+    public void setTex0(String pTex0) {
+        this.tex0 = pTex0;
     }
 
     /**
      * @return the lenght
      */
-    public double getLenght() {
-        return this.lenght;
+    public double getWidth() {
+        return this.width;
     }
 
     /**
@@ -54,7 +61,7 @@ public class TextureData {
      *            the lenght to set
      */
     public void setLenght(double pLenght) {
-        this.lenght = pLenght;
+        this.width = pLenght;
     }
 
     /**
@@ -71,6 +78,19 @@ public class TextureData {
     public void setHeight(double pHeight) {
         this.height = pHeight;
     }
+    /**
+     * @return the tex1
+     */
+    public String getTex1() {
+        return tex1;
+    }
+
+    /**
+     * @param tex1 the tex1 to set
+     */
+    public void setTex1(String tex1) {
+        this.tex1 = tex1;
+    }
 
     /**
      * {@inheritDoc}
@@ -81,15 +101,15 @@ public class TextureData {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.file == null) ? 0 : this.file.hashCode());
+        result = prime * result + ((tex0 == null) ? 0 : tex0.hashCode());
         long temp;
-        temp = Double.doubleToLongBits(this.height);
+        temp = Double.doubleToLongBits(height);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.lenght);
+        temp = Double.doubleToLongBits(width);
         result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((tex1 == null) ? 0 : tex1.hashCode());
         return result;
     }
-
     /**
      * {@inheritDoc}
      *
@@ -104,15 +124,39 @@ public class TextureData {
         if (getClass() != obj.getClass())
             return false;
         TextureData other = (TextureData) obj;
-        if (this.file == null) {
-            if (other.file != null)
+        if (tex0 == null) {
+            if (other.tex0 != null)
                 return false;
-        } else if (!this.file.equals(other.file))
+        } else if (!tex0.equals(other.tex0))
             return false;
-        if (Double.doubleToLongBits(this.height) != Double.doubleToLongBits(other.height))
+        if (Double.doubleToLongBits(height) != Double.doubleToLongBits(other.height))
             return false;
-        if (Double.doubleToLongBits(this.lenght) != Double.doubleToLongBits(other.lenght))
+        if (Double.doubleToLongBits(width) != Double.doubleToLongBits(other.width))
+            return false;
+        if (tex1 == null) {
+            if (other.tex1 != null)
+                return false;
+        } else if (!tex1.equals(other.tex1))
             return false;
         return true;
     }
+    /**
+     * @return the colorable
+     */
+    public Boolean isColorable() {
+        return colorable;
+    }
+    /**
+     * @param colorable the colorable to set
+     */
+    public void setColorable(Boolean colorable) {
+        this.colorable = colorable;
+    }
+    /**
+     * @param width the width to set
+     */
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
 }

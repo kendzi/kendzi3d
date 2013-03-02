@@ -269,7 +269,7 @@ public class RoofTypeUtil {
             int normalIndex = pMeshBorder.addNormal(n);
 
             double uBegin = uLast;
-            double uEnd = uLast + point1.distance(point2) / facadeTexture.getLenght();
+            double uEnd = uLast + point1.distance(point2) / facadeTexture.getWidth();
             uLast = uEnd;
 
             int tc_0_0 = pMeshBorder.addTextCoord(new TextCoord(uBegin  , minHeight1  / facadeTexture.getHeight()));

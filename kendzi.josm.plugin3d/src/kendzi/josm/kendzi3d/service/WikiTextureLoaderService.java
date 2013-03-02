@@ -214,7 +214,7 @@ public class WikiTextureLoaderService {
 
             kendzi.josm.kendzi3d.dto.xsd.TextureData td = new kendzi.josm.kendzi3d.dto.xsd.TextureData();
 
-            td.setFileKey("/textures/" +  wt.getFileKey());
+            td.setTex0("/textures/" +  wt.getFileKey());
             td.setHeight(StringUtil.parseDouble(wt.getHeight()));
             td.setWidth(StringUtil.parseDouble(wt.getLenght()));
 
