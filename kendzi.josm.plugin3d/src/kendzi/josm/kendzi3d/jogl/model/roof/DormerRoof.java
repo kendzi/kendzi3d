@@ -273,37 +273,66 @@ public class DormerRoof extends Roof {
         return null;
     }
 
+    /**
+     * Find roof direction saved in tag.
+     *
+     * @param pWay way
+     * @return roof direction
+     */
     static private RoofDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
 
-        String directionValue = OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay);
+        RoofDirection roofDirection = parseDirectionStr(
+                OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
 
-        boolean orthogonal = false;
-        boolean soft = false;
-
-        if (StringUtil.isBlankOrNull(directionValue)) {
-            directionValue = OsmAttributeKeys.DIRECTION.primitiveValue(pWay);
+        if (roofDirection != null) {
+            return roofDirection;
         }
 
-        if (StringUtil.isBlankOrNull(directionValue)) {
-            directionValue = OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay);
-            soft = true;
+        roofDirection = parseDirectionStr(
+                OsmAttributeKeys.DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
+
+        if (roofDirection != null) {
+            return roofDirection;
         }
 
-        if (StringUtil.isBlankOrNull(directionValue)) {
-            directionValue = OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay);
-            orthogonal = true;
-            soft = true;
+        roofDirection = parseDirectionStr(
+                OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay), Ortagonal.NONE, true);
+
+        if (roofDirection != null) {
+            return roofDirection;
         }
 
+        roofDirection = parseDirectionStr(
+                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.LEFT, true);
+
+        return roofDirection;
+
+    }
+
+    /**
+     * @param directionValue
+     * @param orthogonal
+     * @param soft
+     * @return
+     */
+    public static RoofDirection parseDirectionStr(String directionValue, Ortagonal orthogonal, boolean soft) {
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
             Vector2d directionVector = direction.getVector();
-            if (orthogonal) {
+            if (Ortagonal.LEFT.equals(orthogonal)) {
                 directionVector = new Vector2d(directionVector.y, -directionVector.x);
+            } else if (Ortagonal.RIGHT.equals(orthogonal)) {
+                directionVector = new Vector2d(-directionVector.y, directionVector.x);
             }
             return new RoofDirection(directionVector, soft);
         }
         return null;
+    }
+
+    enum Ortagonal {
+        NONE,
+        LEFT,
+        RIGHT
     }
 
 
