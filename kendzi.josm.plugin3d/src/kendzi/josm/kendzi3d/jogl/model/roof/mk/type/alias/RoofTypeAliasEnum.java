@@ -35,6 +35,8 @@ public enum RoofTypeAliasEnum {
     ROOF_TYPE2_8("2.8"),
     ROOF_TYPE2_9("2.9"),
 
+    ROOF_TYPE3_0("3.0"),
+
     ROOF_TYPE4_0("4.0"),
     ROOF_TYPE4_2("4.2"),
 
