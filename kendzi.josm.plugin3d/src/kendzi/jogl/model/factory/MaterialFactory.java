@@ -11,7 +11,6 @@ package kendzi.jogl.model.factory;
 
 import java.awt.Color;
 
-import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 
 public class MaterialFactory {
@@ -60,10 +59,11 @@ public class MaterialFactory {
 
     public static Material createTextureColorMaterial(String pTexId, Color pColor) {
         Material m = getDefaultMaterial();
-        if (pColor != null) {
-            m.setAmbientDiffuse(new AmbientDiffuseComponent(pColor, pColor));
-        }
+//        if (pColor != null) {
+//            m.setAmbientDiffuse(new AmbientDiffuseComponent(pColor, pColor));
+//        }
         m.setTexture0(pTexId);
+        m.setTexture0Color(pColor);
         return m;
     }
 

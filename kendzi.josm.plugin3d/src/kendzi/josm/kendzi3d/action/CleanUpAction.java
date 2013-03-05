@@ -10,8 +10,6 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.event.ActionEvent;
 
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
@@ -22,6 +20,8 @@ import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
+
+import static org.openstreetmap.josm.tools.I18n.*;
 
 /**
  * Clean up action.

@@ -8,6 +8,7 @@
  */
 
 package kendzi.jogl.model.geometry.material;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class Material {
     OtherComponent other = OTHER_COMPONENT;
 
     List<String> texturesComponent = new ArrayList<String>();
+
+    Color texture0Color = null; //Color.WHITE;
 
     public Material() {
         //
@@ -137,5 +140,19 @@ public class Material {
      */
     public void setTexturesComponent(List<String> texturesComponent) {
         this.texturesComponent = texturesComponent;
+    }
+
+    /**
+     * @return the texture0Color
+     */
+    public Color getTexture0Color() {
+        return texture0Color;
+    }
+
+    /**
+     * @param texture0Color the texture0Color to set
+     */
+    public void setTexture0Color(Color texture0Color) {
+        this.texture0Color = texture0Color;
     }
 }

@@ -203,7 +203,6 @@ public class BuildingBuilder {
             if (facadeTD.getTex1()!= null) {
                 mat.getTexturesComponent().add(facadeTD.getTex1());
             }
-            //XXX
 
             Integer windowsCols = hasWindowsCloumns(wp.getBuildingElements());
             //windowsCols = 0;
@@ -212,14 +211,9 @@ public class BuildingBuilder {
             if (isWindows){
 
                 TextureData windowsTD = takeWindowsColumnsTextureData(buildingModel, bp, w, wp, tm);
-                String tex1Key = windowsTD.getTex0();
-                if (facadeTD.getTex1()== null) {
-//                    mat.setTexturesComponent(Arrays.asList(tex0Key, tex1Key));
-                    mat.getTexturesComponent().add(tex1Key);
+                if (windowsTD.getTex0() != null) {
+                    mat.getTexturesComponent().add(windowsTD.getTex0());
                 }
-//                else {
-//                    mat.setTexturesComponent(Arrays.asList(tex0Key, facadeTD.getTex1(), tex1Key));
-//                }
 
 
                 double windowsSegmetLength = wallLength / ((double)windowsCols);

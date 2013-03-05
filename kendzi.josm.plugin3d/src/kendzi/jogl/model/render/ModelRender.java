@@ -34,7 +34,7 @@ public class ModelRender {
 
     private static final int[] GL_TEXTURE = {GL2.GL_TEXTURE0, GL2.GL_TEXTURE1, GL2.GL_TEXTURE2, GL2.GL_TEXTURE3};
 
-    private static final int MAX_TEXTURES_LAYERS = 3;
+    private static final int MAX_TEXTURES_LAYERS = 4;
 
     private boolean debugging = true;
 
@@ -172,8 +172,11 @@ public class ModelRender {
 
     private void unsetupTextures(GL2 gl, Material material, boolean useTextures) {
         List<String> texturesComponent = material.getTexturesComponent();
+        boolean colored = material.getTexture0Color() != null;
 
         int texSize = texturesComponent.size();
+
+        int texColored = (colored && texSize > 0? texSize : -1);
 
         for (int i = MAX_TEXTURES_LAYERS -1; i >=  0; i--) {
 
@@ -181,15 +184,11 @@ public class ModelRender {
 
             gl.glActiveTexture(GL_TEXTURE[i]);
 
-            if (textLayerEnabled) {
+            if (i == 0 && colored) {
+                gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+            }
 
-//                String textureKey = texturesComponent.get(i);
-//
-//                Texture texture = getTexture(gl, textureKey);
-//
-//                if (texture != null) {
-//                    texture.disable(gl);
-//                }
+            if (textLayerEnabled || texColored == i) {
 
                 gl.glDisable(GL2.GL_TEXTURE_2D);
 
@@ -201,16 +200,38 @@ public class ModelRender {
     private void setupTextures(GL2 gl, Material material, boolean useTextures) {
 
         List<String> texturesComponent = material.getTexturesComponent();
+        boolean colored = material.getTexture0Color() != null;
 
         int texSize = texturesComponent.size();
-
+        int texColored = (colored && texSize > 0? texSize : -1);
         for (int i = 0; i< MAX_TEXTURES_LAYERS; i++) {
 
-            boolean textLayerEnabled = i < texSize && useTextures;
+            boolean layerEnabled = i < texSize && useTextures;
+            boolean lightLayerEnabled = i == texColored;
 
             gl.glActiveTexture(GL_TEXTURE[i]);
 
-            if (textLayerEnabled) {
+            if (lightLayerEnabled) {
+                String textureKey = texturesComponent.get(texSize - 1);
+
+                Texture texture = getTexture(gl, textureKey);
+
+                gl.glEnable(GL2.GL_TEXTURE_2D);
+
+                bindTexture(gl, texture);
+
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_COMBINE );
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_COMBINE_RGB, GL2.GL_MODULATE );
+
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2.GL_PRIMARY_COLOR );
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND0_RGB, GL2.GL_SRC_COLOR );
+
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2.GL_PREVIOUS );
+                gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND1_RGB, GL2.GL_SRC_COLOR );
+
+
+
+            } else if (layerEnabled) {
 
                 String textureKey = texturesComponent.get(i);
 
@@ -221,11 +242,31 @@ public class ModelRender {
                 bindTexture(gl, texture);
 
                 if (i == 0) {
+                    if (colored) {
+                        // For colored textures
+                        // material.setAmbientDiffuse(new AmbientDiffuseComponent(Color.WHITE, Color.WHITE));
+                        float[] rgbComponents = material.getTexture0Color().getRGBComponents(new float [4]);
+                        rgbComponents[3] = 0.7f;
 
-                    gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+                        gl.glTexEnvfv(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_COLOR, rgbComponents, 0);
+
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_COMBINE );
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_COMBINE_RGB, GL2.GL_INTERPOLATE );
+
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2.GL_CONSTANT );
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND0_RGB, GL2.GL_SRC_COLOR );
+
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2.GL_TEXTURE);
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND1_RGB, GL2.GL_SRC_COLOR );
+
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL2.GL_CONSTANT );
+                        gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND2_RGB, GL2.GL_SRC_ALPHA );
+
+                    } else {
+                        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+                    }
 
                 } else {
-
                     gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_COMBINE );
                     gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_COMBINE_RGB, GL2.GL_INTERPOLATE );
 
@@ -237,7 +278,6 @@ public class ModelRender {
 
                     gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL2.GL_TEXTURE );
                     gl.glTexEnvi( GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND2_RGB, GL2.GL_SRC_ALPHA );
-
                 }
 
             } else {
