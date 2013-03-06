@@ -169,6 +169,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             d = v.dot(direction);
             if (d > maxD) {
                 maxD = d;
+                v.negate();
                 maxV = v;
             }
 

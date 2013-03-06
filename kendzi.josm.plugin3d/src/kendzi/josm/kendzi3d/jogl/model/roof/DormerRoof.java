@@ -303,7 +303,7 @@ public class DormerRoof extends Roof {
         }
 
         roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.LEFT, true);
+                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
 
         return roofDirection;
 
@@ -320,9 +320,9 @@ public class DormerRoof extends Roof {
         if (direction != null) {
             Vector2d directionVector = direction.getVector();
             if (Ortagonal.LEFT.equals(orthogonal)) {
-                directionVector = new Vector2d(directionVector.y, -directionVector.x);
-            } else if (Ortagonal.RIGHT.equals(orthogonal)) {
                 directionVector = new Vector2d(-directionVector.y, directionVector.x);
+            } else if (Ortagonal.RIGHT.equals(orthogonal)) {
+                directionVector = new Vector2d(directionVector.y, -directionVector.x);
             }
             return new RoofDirection(directionVector, soft);
         }
