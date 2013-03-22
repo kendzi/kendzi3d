@@ -72,12 +72,11 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
             ) {
 
 
-        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight / 2d);
+//        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight);
 
-        Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_1, 0, l1, 30);
+        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, pRecHeight);
 
-
-        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, pRectangleContur, h1, l1, pRoofTextureData);
+        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, pRectangleContur, h1, pRoofTextureData);
 
     }
 
@@ -124,7 +123,6 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
      * @param pRecWidth
      * @param pRectangleContur
      * @param height
-     * @param l1
      * @param pRoofTextureData
      * @return
      */
@@ -136,7 +134,6 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
             double pRecWidth,
             Point2d[] pRectangleContur,
             double height,
-            double l1,
             RoofMaterials pRoofTextureData) {
 
 
@@ -146,9 +143,7 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
 
-        Point2d rightMiddlePoint = new Point2d(pRecWidth, l1);
 
-        Point2d leftMiddlePoint = new Point2d(0, l1);
 
         List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);

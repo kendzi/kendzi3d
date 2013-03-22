@@ -71,12 +71,13 @@ public class RoofType3_0 extends RectangleRoofTypeBuilder {
             ) {
 
 
-        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight / 2d);
+        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight * 0.2);
 
-        Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_1, 0, l1, 30);
+        Double h1 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_1, 0, l1, 60);
 
+        Double h2 = getHeightDegreesMeters(pMeasurements, MeasurementKey.HEIGHT_2, 0, pRecHeight - l1, 10);
 
-        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, pRectangleContur, h1, l1, pRoofTextureData);
+        return build(buildingPolygon, pScaleA, pScaleB, pRecHeight, pRecWidth, pRectangleContur, h1, h2, l1, pRoofTextureData);
 
     }
 
@@ -106,9 +107,12 @@ public class RoofType3_0 extends RectangleRoofTypeBuilder {
             double pRecWidth,
             Point2d[] pRectangleContur,
             double h1,
+            double h2,
             double l1,
             RoofMaterials pRoofTextureData) {
 
+
+        double height = Math.max(h1, h2);
 
         MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
         MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
@@ -122,7 +126,7 @@ public class RoofType3_0 extends RectangleRoofTypeBuilder {
 
         LinePoints2d mLine = new LinePoints2d(leftMiddlePoint, rightMiddlePoint);
 
-        Vector3d nt = new Vector3d(0, l1, -h1);
+        Vector3d nt = new Vector3d(0, pRecHeight - l1, -h2);
         nt.normalize();
 
         Vector3d nb = new Vector3d(0, l1, h1);
@@ -140,12 +144,12 @@ public class RoofType3_0 extends RectangleRoofTypeBuilder {
 
         Point3d planeLeftPoint =  new Point3d(
                 leftMiddlePoint.x ,
-                h1,
+                height,
                 -leftMiddlePoint.y);
 
         Point3d planeRightPoint =  new Point3d(
                 rightMiddlePoint.x ,
-                h1,
+                height,
                 -rightMiddlePoint.y);
 
         Plane3d planeTop = new Plane3d(planeRightPoint, nt);
@@ -187,7 +191,7 @@ public class RoofType3_0 extends RectangleRoofTypeBuilder {
 
 
         RoofTypeOutput rto = new RoofTypeOutput();
-        rto.setHeight(h1);
+        rto.setHeight(Math.max(h1, h2));
 
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
