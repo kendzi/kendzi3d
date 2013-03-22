@@ -17,6 +17,7 @@ import java.util.Properties;
 
 import kendzi.josm.kendzi3d.metadata.ModelMetadata;
 import kendzi.josm.kendzi3d.metadata.TextureMetadata;
+import kendzi.josm.kendzi3d.util.UrlUtil;
 
 import org.apache.log4j.Logger;
 
@@ -83,11 +84,13 @@ public class MetadataCacheService {
         try {
             URL fileUrl = this.urlReciverService.receiveFileUrl(pFileName);
 
-            if (fileUrl != null) {
-            this.metadataProperties.load(fileUrl.openStream());
-            } else {
+            if (!UrlUtil.existUrl(fileUrl)) {
                 log.warn("cant find url for file: " + pFileName);
+                return;
             }
+
+            this.metadataProperties.load(fileUrl.openStream());
+
         } catch (Exception e) {
             log.error("error loading metadata file: " + pFileName, e);
         }
