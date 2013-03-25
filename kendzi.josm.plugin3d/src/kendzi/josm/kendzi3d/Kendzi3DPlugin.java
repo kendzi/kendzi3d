@@ -9,9 +9,6 @@
 
 package kendzi.josm.kendzi3d;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -42,6 +39,9 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import static org.openstreetmap.josm.gui.help.HelpUtil.*;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
 
@@ -250,24 +250,33 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
 
     private void openJOGLWindow(Injector injector) {
-        if (this.ogl == null || !this.ogl.isDisplayable()) {
+        try {
+            if (this.ogl == null || !this.ogl.isDisplayable()) {
 
-            Kendzi3dGLFrame frame = injector.getInstance(Kendzi3dGLFrame.class);
+                Kendzi3dGLFrame frame = injector.getInstance(Kendzi3dGLFrame.class);
 
-//            Kendzi3dGLFrame frame = new Kendzi3dGLFrame();
-////            frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
-//            frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
+    //            Kendzi3dGLFrame frame = new Kendzi3dGLFrame();
+    ////            frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
+    //            frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
 
-            frame.initUI();
+                frame.initUI();
 
-            frame.setVisible(true);
+                frame.setVisible(true);
 
-            this.ogl = frame;
-        }
-//        else {
-//            this.ogl.resume();
-//            this.ogl.setVisible(true);
+                this.ogl = frame;
+            }
+    //        else {
+    //            this.ogl.resume();
+    //            this.ogl.setVisible(true);
 //        }
+        } catch (NoClassDefFoundError e) {
+            e.printStackTrace();
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("error opening kendzi3d window", e);
+        }
     }
 
 
