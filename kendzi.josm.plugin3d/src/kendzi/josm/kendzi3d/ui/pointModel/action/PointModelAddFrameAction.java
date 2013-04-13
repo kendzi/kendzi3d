@@ -1,13 +1,11 @@
 package kendzi.josm.kendzi3d.ui.pointModel.action;
 
-import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JTextField;
 
 import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.pointModel.PointModelAddFrame;
+import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -60,39 +58,18 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
 
     public boolean validateData() {
         boolean valid = true;
-        valid &= validateTextString(txtMatcher);
-        valid &= validateTextString(txtModel);
-        valid &= validateTextString(txtFilter);
-        valid &= validateTextString(txtScale);
+        valid &= ValidateUtil.validateTextString(txtMatcher);
+        valid &= ValidateUtil.validateTextString(txtModel);
+        valid &= ValidateUtil.validateTextString(txtFilter);
+        valid &= ValidateUtil.validateTextString(txtScale);
 
-        valid &= validateTextEmptyDouble(txtTranslatex);
-        valid &= validateTextEmptyDouble(txtTranslatey);
-        valid &= validateTextEmptyDouble(txtTranslatez);
+        valid &= ValidateUtil.validateTextEmptyDouble(txtTranslatex);
+        valid &= ValidateUtil.validateTextEmptyDouble(txtTranslatey);
+        valid &= ValidateUtil.validateTextEmptyDouble(txtTranslatez);
         return valid;
     }
 
-    private boolean validateTextString(JTextField pJTextField) {
 
-        boolean valid = !StringUtil.isBlankOrNull(pJTextField.getText());
-        setComponentError(pJTextField, !valid);
-        return valid;
-
-    }
-
-    private boolean validateTextEmptyDouble(JTextField pJTextField) {
-        boolean valid = isEmptyDouble(pJTextField.getText());
-        setComponentError(pJTextField, !valid);
-        return valid;
-
-    }
-
-    private void setComponentError(JTextField pJTextField, boolean b) {
-        if (b) {
-            pJTextField.setBackground(Color.red.brighter());
-        } else {
-            pJTextField.setBackground(null);
-        }
-    }
 
     public void load(Long id) {
         PointModel pointModel = pointModelService.load(id);
@@ -141,36 +118,13 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
         pm.setMatcher(txtMatcher.getText());
         pm.setModel(txtModel.getText());
         pm.setScale(txtScale.getText());
-        pm.setTranslateX(parseDouble(txtTranslatex.getText()));
-        pm.setTranslateY(parseDouble(txtTranslatey.getText()));
-        pm.setTranslateZ(parseDouble(txtTranslatez.getText()));
+        pm.setTranslateX(ValidateUtil.parseDouble(txtTranslatex.getText()));
+        pm.setTranslateY(ValidateUtil.parseDouble(txtTranslatey.getText()));
+        pm.setTranslateZ(ValidateUtil.parseDouble(txtTranslatez.getText()));
 
         return pm;
     }
 
-    Double parseDouble(String pStr) {
-        if (StringUtil.isBlankOrNull(pStr)) {
-            return null;
-        }
-        try {
-            return Double.parseDouble(pStr);
-        } catch (Exception e) {
-            //
-        }
-        return null;
-
-    }
-
-    boolean isEmptyDouble(String pStr) {
-        if (StringUtil.isBlankOrNull(pStr)) {
-            return true;
-        }
-        return isDouble(pStr);
-    }
-
-    boolean isDouble(String pStr) {
-        return parseDouble(pStr) != null;
-    }
 
     /**
      * @param pointModelService the pointModelService to set

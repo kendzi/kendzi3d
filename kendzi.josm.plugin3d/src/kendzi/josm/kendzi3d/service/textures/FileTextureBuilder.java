@@ -1,6 +1,6 @@
 package kendzi.josm.kendzi3d.service.textures;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
@@ -35,7 +35,7 @@ public class FileTextureBuilder implements TextureBuilder {
     }
 
     @Override
-    public Image buildImage(String pKey) {
+    public BufferedImage buildImage(String pKey) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLException;
@@ -77,6 +78,63 @@ public class TextureCacheService {
      */
     public Texture getTexture(GL gl, String pName) {
         return this.get(gl, pName);
+    }
+
+    /**
+     * Get texture image from.
+     *
+     * @param pName
+     *            file name from: <br>
+     *            1. directory {PLUGIN_DIR_NAME}/ <br>
+     *            2. from resources from jar in dir {PLUGIN_JAR}/ <br>
+     * @return texture
+     */
+    public BufferedImage getImage(String pName) {
+        return loadImage(pName);
+    }
+
+    private BufferedImage loadImage(String pName) {
+        BufferedImage texture = null;
+
+        if (pName != null && this.textureBuilderList != null) {
+            //builders
+
+            for (TextureBuilder tb : this.textureBuilderList) {
+                if (pName.startsWith(tb.getBuilderPrefix())) {
+
+                    texture = tb.buildImage(pName);
+
+
+                    if (texture != null) {
+                        return texture;
+                    }
+                }
+            }
+
+            try {
+                return loadTextureImageFile(pName);
+            } catch (Exception e) {
+                log.error("can't load texture", e);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public BufferedImage loadTextureImageFile(String pName) throws GLException, IOException {
+
+        if (pName == null) {
+            return null;
+        }
+
+        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        if (textUrl == null) {
+            log.info("No file to load: " + pName);
+            return null;
+        }
+
+        return ImageIO.read(textUrl);
     }
 
     /**

@@ -10,16 +10,11 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
@@ -27,11 +22,16 @@ import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
+import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
+import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
+
+import static org.openstreetmap.josm.tools.I18n.*;
 
 /**
  * Export action.
@@ -50,6 +50,12 @@ public class ExportAction extends JosmAction {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Texture cache service.
+     */
+    private TextureCacheService textureCacheService;
+
+
+    /**
      * Rendering service.
      */
     private RenderJOSM renderJOSM;
@@ -58,8 +64,10 @@ public class ExportAction extends JosmAction {
     final JFileChooser fc = new JFileChooser();
 
 
+
     @Inject
-    public ExportAction(RenderJOSM pRenderJOSM) {
+    public ExportAction(RenderJOSM pRenderJOSM,
+            TextureCacheService textureCacheService) {
         super(
                 tr("Export models to files"),
                 null,
@@ -69,56 +77,9 @@ public class ExportAction extends JosmAction {
         );
 
         this.renderJOSM = pRenderJOSM;
+        this.textureCacheService = textureCacheService;
+
     }
-
-//    /**
-//     *
-//     */
-//    public void loadTextureLibraryFromFile() {
-//        List<String> errors = null;
-//        String timestamp = null;
-//        try {
-//            int returnVal = this.fc.showOpenDialog(null);
-//
-//            if (returnVal == JFileChooser.APPROVE_OPTION) {
-//                File file = this.fc.getSelectedFile();
-//                //This is where a real application would open the file.
-//                log.info("Opening: " + file.getName());
-//
-//                UrlTextureLibrary urlTextureLibrary = new UrlTextureLibrary();
-//                urlTextureLibrary.setUrl(file.toURI().toURL());
-//
-//                boolean overwrite = showOverwriteDialog();
-//
-//                urlTextureLibrary.setOverwrite(overwrite);
-//
-//
-//                this.textureLibraryService.loadUserFile(urlTextureLibrary);
-//            } else {
-//                log.info("Open command cancelled by user." );
-//            }
-//
-//////            LoadRet load = this.textureLibraryService.load();
-////            errors = load.getErrors();
-////            timestamp = load.getTimestamp();
-//
-//        } catch (MalformedURLException e) {
-//            log.error(e, e);
-//            showError(e);
-//        } catch (IOException e) {
-//            log.error(e, e);
-//            showError(e);
-//        } catch (JAXBException e) {
-//            log.error(e, e);
-//            showError(e);
-//        }
-
-
-//    }
-
-
-
-
 
     @Override
     public void actionPerformed(ActionEvent pE) {
@@ -126,9 +87,20 @@ public class ExportAction extends JosmAction {
     }
 
     private void export() {
-        // UI code
 
-        exportService(null);
+        ExportModelConf conf = new ExportModelConf();
+        conf.setFilePattern("/multiText/out.dae");
+
+        ExportUiAction frame = new ExportUiAction();
+        frame.setModal(true);
+        frame.setVisible(true);
+        conf = frame.getExportModelConf();
+
+        if (conf == null) {
+            return;
+        }
+
+        exportService(conf);
     }
 
 
@@ -153,14 +125,13 @@ public class ExportAction extends JosmAction {
     }
 
 
+
     private void saveToFiles(List<ExportItem> itemsToExport, ExportModelConf conf) {
-        // Tu trzeba by cos zrobic...
-        for(ExportItem ei : itemsToExport) {
-            // if (conf.type == "obj") {
-            //     saveToObjFile(ei);
-            // }
-        }
+        ExportWorker ew = new ExportWorker(itemsToExport, conf, this.textureCacheService);
+        ew.start();
     }
+
+
 
     public List<ExportItem> exportLayer(List<Model> modelList, ExportModelConf conf) {
 
@@ -183,16 +154,6 @@ public class ExportAction extends JosmAction {
 //        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
 
-    public static int showNegativeConfirmDialog(Component parentComponent, Object message, String title) {
-        List<Object> options = new ArrayList<Object>();
-        Object defaultOption;
 
-        options.add(UIManager.getString("OptionPane.yesButtonText"));
-        options.add(UIManager.getString("OptionPane.noButtonText"));
-        defaultOption = UIManager.getString("OptionPane.noButtonText");
-
-        return JOptionPane.showOptionDialog(parentComponent, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, options.toArray(), defaultOption);
-    }
 
 }

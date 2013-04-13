@@ -1,8 +1,10 @@
 package kendzi.josm.kendzi3d.service.textures;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
 import com.jogamp.opengl.util.awt.TextureRenderer;
@@ -31,13 +33,22 @@ public class ColorTextureBuilder implements TextureBuilder {
     }
 
     @Override
-    public Image buildImage(String pKey) {
+    public BufferedImage buildImage(String pKey) {
         TextureRenderer build = build(pKey);
         if (build != null) {
-            return build.getImage();
+            return imageToBufferedImage(build.getImage());
         }
         return null;
     }
+
+    public static BufferedImage imageToBufferedImage(Image im) {
+        BufferedImage bi = new BufferedImage
+           (im.getWidth(null),im.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+        Graphics bg = bi.getGraphics();
+        bg.drawImage(im, 0, 0, null);
+        bg.dispose();
+        return bi;
+     }
 
     private TextureRenderer build(String pKey) {
 

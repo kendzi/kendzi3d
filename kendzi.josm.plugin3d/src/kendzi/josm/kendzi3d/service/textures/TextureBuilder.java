@@ -1,6 +1,6 @@
 package kendzi.josm.kendzi3d.service.textures;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import com.jogamp.opengl.util.texture.Texture;
 
@@ -32,7 +32,7 @@ public interface TextureBuilder {
      * @param pKey key
      * @return build image
      */
-    Image buildImage(String pKey);
+    BufferedImage buildImage(String pKey);
 
 
 }

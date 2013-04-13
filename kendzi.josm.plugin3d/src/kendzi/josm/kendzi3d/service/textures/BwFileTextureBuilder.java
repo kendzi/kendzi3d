@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.service.textures;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
@@ -48,7 +47,7 @@ public class BwFileTextureBuilder implements TextureBuilder {
             pKey = pKey.substring(getBuilderPrefix().length());
         }
 
-        TextureRenderer tr = loadTexture(pKey);
+        TextureRenderer tr = loadTextureRenderer(pKey);
 
         if (tr != null) {
             return tr.getTexture();
@@ -58,12 +57,19 @@ public class BwFileTextureBuilder implements TextureBuilder {
     }
 
     @Override
-    public Image buildImage(String pKey) {
-        return null;
+    public BufferedImage buildImage(String pKey) {
+        if (pKey == null) {
+            return null;
+        }
+
+        if (pKey.startsWith(getBuilderPrefix())) {
+            pKey = pKey.substring(getBuilderPrefix().length());
+        }
+
+        return loadBufferedImage(pKey);
     }
 
-    private TextureRenderer loadTexture(String pKey) {
-
+    public BufferedImage loadBufferedImage(String pKey) {
         if (pKey == null) {
             return null;
         }
@@ -78,10 +84,22 @@ public class BwFileTextureBuilder implements TextureBuilder {
         try {
             img = ImageIO.read(url);
         } catch (IOException e) {
+            log.warn("cant load image: " + pKey, e);
             return null;
         }
 
         filterBw(img);
+
+        return img;
+    }
+
+    private TextureRenderer loadTextureRenderer(String pKey) {
+
+        BufferedImage img = loadBufferedImage(pKey);
+        if (img == null) {
+            return null;
+        }
+
 
         TextureRenderer tr = new TextureRenderer(img.getWidth(), img.getHeight(), true, true);
 
@@ -116,9 +134,4 @@ public class BwFileTextureBuilder implements TextureBuilder {
             }
         }
     }
-
-
-
-
-
 }
