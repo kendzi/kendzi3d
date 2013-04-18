@@ -80,6 +80,8 @@ public enum OsmAttributeKeys {
 
     FENCE__TYPE("fence:type"),
 
+    ENTRANCE("entrance"),
+
     ;
 
     String key;

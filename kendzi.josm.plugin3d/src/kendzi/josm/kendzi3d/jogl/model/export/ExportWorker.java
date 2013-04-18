@@ -101,7 +101,9 @@ public class ExportWorker extends Thread {
         }
 
         try {
+            addToLog("starting save");
             exporter.save(file.getAbsolutePath());
+            addToLog("end save");
         } catch (Throwable e) {
             log.error("Error saving file: " + file, e);
             addToLog(e.getMessage());

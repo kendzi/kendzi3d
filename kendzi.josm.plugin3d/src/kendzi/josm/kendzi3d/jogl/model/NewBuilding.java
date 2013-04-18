@@ -834,7 +834,9 @@ public class NewBuilding extends AbstractModel {
 
         List<RelationCloneHeight> buildHeightClone = RelationCloneHeight.buildHeightClone(node);
 
-        if (isAttribute(node, OsmAttributeKeys.BUILDING, OsmAttributeValues.ENTRANCE)) {
+        if (isAttribute(node, OsmAttributeKeys.BUILDING, OsmAttributeValues.ENTRANCE)
+            || isAnyAttribute(node, OsmAttributeKeys.ENTRANCE)
+                ) {
 
             EntranceBuildingElement entrance = new EntranceBuildingElement();
             entrance.setHeight(ModelUtil.getHeight(node,  entrance.getHeight()));
@@ -888,6 +890,9 @@ public class NewBuilding extends AbstractModel {
 
     boolean isAttribute(OsmPrimitive prim, OsmAttributeKeys key, OsmAttributeValues val) {
         return val.getValue().equals(prim.get(key.getKey()));
+    }
+    boolean isAnyAttribute(OsmPrimitive prim, OsmAttributeKeys key) {
+        return !StringUtil.isBlankOrNull(prim.get(key.getKey()));
     }
 
     private BuildingNodeElement clone(BuildingNodeElement entrance) {
