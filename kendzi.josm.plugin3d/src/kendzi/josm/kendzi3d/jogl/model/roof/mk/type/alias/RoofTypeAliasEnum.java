@@ -40,6 +40,7 @@ public enum RoofTypeAliasEnum {
     ROOF_TYPE4_0("4.0"),
     ROOF_TYPE4_2("4.2"),
 
+    ROOF_TYPE5_0("5.0"),
     ROOF_TYPE5_2("5.2"),
     ROOF_TYPE5_6("5.6"),
     ROOF_TYPE8_0("8.0"),
@@ -56,7 +57,8 @@ public enum RoofTypeAliasEnum {
     SKILLION("skillion"),
     DOME("dome"),
     ONION("onion"),
-    HALF_ROUND("half round")
+    HALF_ROUND("half round"),
+    ROUND("round"),
     ;
 
     private String key;
