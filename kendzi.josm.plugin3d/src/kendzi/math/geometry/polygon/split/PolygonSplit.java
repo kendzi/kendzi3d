@@ -364,7 +364,7 @@ public class PolygonSplit {
 
             List<Point2d> poly = makeListFromIndex(pPolygonsPoints, polyIndex);
 
-            if (pIsCounterClockwise == (0.0f < Triangulate.area2(poly))) {
+            if (pIsCounterClockwise == (0.0f < Triangulate.area(poly))) {
                 borderPolygons.add(polyIndex);
             } else {
                 internalPolygons.add(polyIndex);

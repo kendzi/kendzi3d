@@ -120,12 +120,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
         // XXX temporary ?
         if (0.0f > Triangulate.area(pBorderList)) {
 
-            List<Point2d> list = new ArrayList<Point2d>();
-
-            for (int i = pBorderList.size() - 1; i >= 0; i--) {
-                list.add(pBorderList.get(i));
-            }
-            pBorderList = list;
+            pBorderList = PolygonList2d.reverse(pBorderList);
         }
 
 

@@ -99,4 +99,22 @@ public class PolygonList2d {
         throw new RuntimeException("TODO");
     }
 
+
+    /** Reverse point order in list
+     * @param polygon
+     * @return
+     */
+    public static List<Point2d> reverse(List<Point2d> polygon) {
+        if (polygon == null) {
+            return null;
+        }
+
+        List<Point2d> list = new ArrayList<Point2d>(polygon.size());
+
+        for (int i = polygon.size() - 1; i >= 0; i--) {
+            list.add(polygon.get(i));
+        }
+        return list;
+    }
+
 }

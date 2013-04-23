@@ -35,19 +35,6 @@ public class Triangulate {
 		return A * 0.5f;
 	}
 
-	public static float area2(List<Point2d> contour) {
-
-		int n = contour.size();
-
-		float A = 0.0f;
-
-		for (int p = n - 1, q = 0; q < n; p = q++) {
-			A += contour.get(p).x * contour.get(q).y
-			        - contour.get(q).x * contour.get(p).y;
-		}
-		return A * 0.5f;
-	}
-
 	public static float area(Point2D.Double [] contour) {
 
 		int n = contour.length;

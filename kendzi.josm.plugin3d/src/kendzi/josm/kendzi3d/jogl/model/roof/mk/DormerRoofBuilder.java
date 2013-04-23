@@ -58,6 +58,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeBuilder;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeTented;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeDome;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeFlat;
@@ -136,7 +137,9 @@ public class DormerRoofBuilder {
 
         new RoofType8_0(),
 
-        new RoofType9_0()
+        new RoofType9_0(),
+
+        new RoofTypeTented()
     };
 
 
