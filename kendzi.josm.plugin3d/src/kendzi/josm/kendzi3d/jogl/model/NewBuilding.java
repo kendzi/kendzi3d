@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.DrawUtil;
 import kendzi.jogl.model.factory.BoundsFactory;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
@@ -987,11 +989,11 @@ public class NewBuilding extends AbstractModel {
         this.modelRender.render(pGl, this.model);
 
         if (this.selected && this.bounds != null) {
-//            pGl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
-//
-//            pGl.glLineWidth(6);
-//
-//            DrawUtil.drawBox(pGl, this.bounds.getMax(), this.bounds.getMin());
+            pGl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
+
+            pGl.glLineWidth(6);
+
+            DrawUtil.drawBox(pGl, this.bounds.getMax(), this.bounds.getMin());
         }
 
         pGl.glPopMatrix();

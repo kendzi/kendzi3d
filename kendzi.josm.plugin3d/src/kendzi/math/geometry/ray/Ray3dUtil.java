@@ -167,4 +167,47 @@ public class Ray3dUtil {
     public final static double dot(Tuple3d v, Tuple3d v1) {
         return (v.x * v1.x + v.y * v1.y + v.z * v1.z);
     }
+
+    public final static Vector3d sub(Tuple3d v, Tuple3d v1) {
+        return new Vector3d(v.x - v1.x, v.y - v1.y, v.z - v1.z);
+    }
+
+    /** Return closest point to ray, The point is laying on ray baseRay.
+     * @param ray
+     * @param baseRay
+     * @return
+     */
+    public static Point3d closestPointOnBaseRay(Ray3d ray, Ray3d baseRay) {
+        //http://geomalgorithms.com/a07-_distance.html
+        Ray3d P = ray;
+        Ray3d Q = baseRay;
+
+        Vector3d u = P.getVector();
+        Vector3d v = Q.getVector();
+
+        Point3d Q0 = Q.getPoint();
+        Point3d P0 = P.getPoint();
+
+        Vector3d w0 = sub(P0, Q0);
+
+        double a = dot(u, u);
+        double b = dot(u, v);
+        double c = dot(v, v);
+        double d = dot(u, w0);
+        double e = dot(v, w0);
+
+        double m = a * c - b * b;
+        if (m == 0) {
+            return new Point3d(Q0);
+        }
+
+        double tc = (a * e - b * d) / m;
+
+        return new Point3d(
+                Q0.x + v.x * tc,
+                Q0.y + v.y * tc,
+                Q0.z + v.z * tc
+                );
+
+    }
 }

@@ -13,11 +13,19 @@ public class ArrowEditor implements Editor {
 
     private boolean selected;
 
+    public Point3d arrowEnd() {
+        return new Point3d (
+                this.point.x + this.vector.x * this.length,
+                this.point.y + this.vector.y * this.length,
+                this.point.z + this.vector.z * this.length
+                );
+    }
+
     /**
      * @return the point
      */
     public Point3d getPoint() {
-        return point;
+        return this.point;
     }
     /**
      * @param point the point to set
@@ -29,7 +37,7 @@ public class ArrowEditor implements Editor {
      * @return the vector
      */
     public Vector3d getVector() {
-        return vector;
+        return this.vector;
     }
     /**
      * @param vector the vector to set
@@ -41,7 +49,7 @@ public class ArrowEditor implements Editor {
      * @return the length
      */
     public double getLength() {
-        return length;
+        return this.length;
     }
     /**
      * @param length the length to set

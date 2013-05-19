@@ -35,6 +35,7 @@ import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
+import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
 import kendzi.josm.kendzi3d.jogl.selection.Editor;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
@@ -44,6 +45,7 @@ import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import kendzi.math.geometry.ray.Ray3dUtil;
 
 import org.apache.log4j.Logger;
 
@@ -110,6 +112,17 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         public void mouseClicked(MouseEvent e) {
             select(e.getX(), e.getY());
         }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            selectActiveEditor(e.getX(), e.getY());
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            // TODO Auto-generated method stub
+            moveActiveEditor(e.getX(), e.getY());
+        }
     };
 
     /**
@@ -167,6 +180,14 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
     private Ray3d selectRay = null;
+
+
+
+    private Editor activeEditor;
+
+
+
+    private Point3d closestPointOnBaseRay;
 
 
 
@@ -266,6 +287,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         Ray3d select = this.selectRay;
         if (select != null) {
             drawSelectRay(gl, select);
+        }
+
+        if (this.closestPointOnBaseRay != null) {
+            drawPoint(gl, this.closestPointOnBaseRay);
         }
 
 
@@ -494,13 +519,71 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         Editor activeEditor = this.renderJosm.selectActiveEditor(selectRay);
         if (activeEditor != null) {
-            activeEditor.select(true);
+//            activeEditor.select(true);
+//            this.activeEditor = activeEditor;
+
         } else {
 
             this.renderJosm.select(selectRay);
         }
 
         this.selectRay = selectRay;
+    }
+
+    private void selectActiveEditor(int x, int y) {
+
+        Ray3d selectRay = this.viewport.picking(x, y);
+
+        Editor activeEditor = this.renderJosm.selectActiveEditor(selectRay);
+        if (activeEditor != null) {
+            activeEditor.select(true);
+            this.activeEditor = activeEditor;
+
+        }
+
+        this.selectRay = selectRay;
+    }
+
+    public void moveActiveEditor(int x, int y) {
+        Editor activeEditor = this.activeEditor;
+
+        if (activeEditor == null) {
+            return;
+        }
+
+        if (!(activeEditor instanceof ArrowEditor)) {
+            return;
+        }
+
+        ArrowEditor arrow = (ArrowEditor) activeEditor;
+
+        Ray3d moveRay = this.viewport.picking(x, y);
+
+        Ray3d arrowRay = new Ray3d(arrow.getPoint(), arrow.getVector());
+        Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
+
+        this.closestPointOnBaseRay = closestPointOnBaseRay;
+
+    }
+
+    /**
+     * @param gl
+     * @param select
+     */
+    public void drawPoint(GL2 gl, Point3d p) {
+        gl.glPushMatrix();
+
+        double dx = p.x;
+        double dy = p.y;
+        double dz = p.z;
+
+        gl.glTranslated(dx, dy, dz);
+
+        gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
+
+        DrawUtil.drawDotY(gl, 0.3, 6);
+
+        gl.glPopMatrix();
     }
 
     /**
