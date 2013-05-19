@@ -205,6 +205,8 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 Vector3d v = ae.getVector();
                 double l = ae.getLength();
 
+                drawArrowIcon(gl, ae);
+
                 if (ae.isSelect()) {
                     gl.glColor3fv(Color.RED.darker().darker().darker().getRGBComponents(new float[4]), 0);
                 } else {
@@ -233,6 +235,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 gl.glPopMatrix();
             }
         }
+    }
+    private void drawArrowIcon(GL2 gl, ArrowEditor ae) {
+        // TODO Auto-generated method stub
+
     }
     /**
      * @param r
@@ -471,7 +477,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     @Override
     public void processDatasetEvent(AbstractDatasetChangedEvent pEvent) {
+        if (Main.map == null) {
 
+            return;
+        }
 
         if (this.center == null || pEvent == null) {
         // for tests we change center only on menu button action
@@ -727,6 +736,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         return selectedEditor;
     }
+
 
 
 

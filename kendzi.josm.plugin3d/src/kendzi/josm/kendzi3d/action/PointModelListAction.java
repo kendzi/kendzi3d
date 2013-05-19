@@ -10,8 +10,6 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.event.ActionEvent;
 
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
@@ -22,6 +20,8 @@ import kendzi.josm.kendzi3d.ui.pointModel.action.PointModelListFrameAction;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
+
+import static org.openstreetmap.josm.tools.I18n.*;
 
 /**
  * Point model list action.
@@ -77,10 +77,10 @@ public class PointModelListAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent pE) {
 
-        this.textureCacheService.clear();
-
-        // XXX add event
-        this.renderJosm.processDatasetEvent(null);
+//        this.textureCacheService.clear();
+//
+//        // XXX add event
+//        this.renderJosm.processDatasetEvent(null);
 
 
         PointModelListFrameAction frame = new PointModelListFrameAction();
