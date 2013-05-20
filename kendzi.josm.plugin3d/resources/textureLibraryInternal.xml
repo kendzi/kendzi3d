@@ -48,6 +48,9 @@
 	<textureSet key="buildings.facade_timber_framing">
 		<textureData tex0="/textures/pd/DE_19_B7_PreussischerMauer0001.jpg" height="4" width="2.5"/>
 	</textureSet>
+	<textureSet key="buildings.facade_glass">
+		<textureData tex0="/textures/cc0/KnerrGlassWallGrey0001.jpg" height="2.5" width="2.1"/>
+	</textureSet>
 	
 	<textureSet key="buildings.facade_test2">
 		<textureData 
@@ -87,6 +90,9 @@
 	</textureSet>
 	<textureSet key="buildings.roof_grass">
 		<textureData tex0="/textures/pd/IR99C1GrassSpring0001.jpg" height="1" width="1"/>
+	</textureSet>
+	<textureSet key="buildings.roof_glass">
+		<textureData tex0="/textures/cc0/KnerrGlassWallGrey0001.jpg" height="2.5" width="2.1"/>
 	</textureSet>
 	
 	<!-- Buildings windows -->
