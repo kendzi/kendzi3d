@@ -182,6 +182,50 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     private Canvas makeCanvas(JPanel render) {
 
+        logJoglManifest();
+
+        //create a profile, in this case OpenGL 2 or later
+        GLProfile profile = GLProfile.get(GLProfile.GL2);
+
+        //configure context
+        GLCapabilities capabilities = new GLCapabilities(profile);
+
+        setUpCapabilities(capabilities);
+
+        //initialize a GLDrawable of your choice
+        GLCanvas canvas = new GLCanvas(capabilities);
+
+        canvas.addGLEventListener(this.canvasListener);
+
+        this.canvasListener.closeEvent(new CloseEvent() {
+            @Override
+            public void closeAction() {
+                windowClosing(null);
+            }
+        });
+
+
+        this.canvasListener.registerMoveListener(canvas);
+        this.canvasListener.registerMouseSelectionListener(canvas);
+
+        this.canvasListener.addFpsChangeListener(this);
+
+        // Center frame
+        // render.setLocationRelativeTo(null);
+
+        this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
+        this.animator.start();
+
+        canvas.setFocusable(true);
+        canvas.requestFocus();
+
+        return canvas;
+    }
+
+    /**
+     * Log Jogl manifest information.
+     */
+    private void logJoglManifest() {
         log.info("is set debug for GraphicsConfiguration: " + jogamp.opengl.Debug.debug("GraphicsConfiguration"));
 
         StringBuilder sb = new StringBuilder();
@@ -192,42 +236,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         GlueGenVersion.getInstance().getFullManifestInfo(sb);
 
         log.info(sb.toString());
-
-
-        //create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
-
-        //configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
-
-        setUpCapabilities(capabilities);
-//        // setup z-buffer
-//        capabilities.setDepthBits(16);
-//
-//        // for anti-aliasing
-//        capabilities.setSampleBuffers(true);
-//        capabilities.setNumSamples(2);
-
-        //initialize a GLDrawable of your choice
-        GLCanvas canvas = new GLCanvas(capabilities);
-
-        canvas.addGLEventListener(this.canvasListener);
-
-        this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
-
-        this.canvasListener.registerMoveListener(canvas);
-        this.canvasListener.registerMouseSelectionListener(canvas);
-
-        this.canvasListener.addFpsChangeListener(this);
-
-        // Center frame
-//        render.setLocationRelativeTo(null);
-
-        this.animator.start();
-        canvas.setFocusable(true);
-        canvas.requestFocus();
-
-        return canvas;
     }
 
 
@@ -310,10 +318,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     @Override
     public void windowClosing(WindowEvent e) {
-
-//        View3dGLFrame.this.animator.stop();
-//        View3dGLFrame.this.setVisible(false);
-//        this.dispose();
 
         if (Kendzi3dGLFrame.this.animator.isStarted()) {
             Kendzi3dGLFrame.this.animator.stop();

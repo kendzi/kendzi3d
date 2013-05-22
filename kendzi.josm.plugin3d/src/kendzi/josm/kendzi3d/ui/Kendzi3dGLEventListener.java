@@ -19,6 +19,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.swing.JOptionPane;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -191,6 +192,14 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
 
+    private CloseEvent closeEvent;
+
+
+
+    private boolean error;
+
+
+
 
 
     /**
@@ -214,6 +223,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     @Override
     public void display(GLAutoDrawable pDrawable) {
+
+        if (this.error) {
+            return;
+        }
 
         countFps();
 
@@ -344,6 +357,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         GL2 gl = pDrawable.getGL().getGL2();
         //System.err.println("INIT GL IS: " + gl.getClass().getName());
 
+        checkRequiredExtensions(gl);
+
+
         // Enable VSync
         gl.setSwapInterval(1);
 
@@ -377,6 +393,37 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
     }
+
+    /** Check if all required openGl extensions are available.
+     * @param gl
+     * @return
+     */
+    private boolean checkRequiredExtensions(GL2 gl) {
+        this.error = false;
+        // String extensions = gl.glGetString(GL2.GL_EXTENSIONS);
+        if (!gl.isExtensionAvailable("GL_ARB_multitexture")) {
+
+            // JOptionPane.showMessageDialog(null,
+            // "GL_ARB_vertex_buffer_object extension not available",
+            // "Unavailable extension", JOptionPane.ERROR_MESSAGE);
+
+            // Check if the extension ARB_multitexture is supported by the Graphic card
+            JOptionPane.showMessageDialog(
+                            null,
+                            "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
+                            "Extension not supported", JOptionPane.ERROR_MESSAGE);
+            this.error = true;
+
+            if (this.closeEvent != null) {
+                this.closeEvent.closeAction();
+            }
+        }
+
+        return this.error;
+    }
+
+
+
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -940,5 +987,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     public void removeFpsChangeListener(FpsListener pFpsListener) {
         this.fpsChangeListenerList.remove(pFpsListener);
+    }
+
+
+
+
+    public void closeEvent(CloseEvent closeEvent) {
+        this.closeEvent = closeEvent;
     }
 }
