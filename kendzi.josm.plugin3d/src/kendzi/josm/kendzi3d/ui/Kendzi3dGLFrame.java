@@ -205,8 +205,9 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         });
 
 
-        this.canvasListener.registerMoveListener(canvas);
+        // selection/edition listener first!
         this.canvasListener.registerMouseSelectionListener(canvas);
+        this.canvasListener.registerMoveListener(canvas);
 
         this.canvasListener.addFpsChangeListener(this);
 

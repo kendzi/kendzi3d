@@ -11,7 +11,6 @@ package kendzi.josm.kendzi3d.ui;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +29,17 @@ import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.MouseSelectionListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
-import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
-import kendzi.josm.kendzi3d.jogl.selection.Editor;
+import kendzi.josm.kendzi3d.jogl.selection.JosmEditorListener;
+import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionListener.EditorChangeListener;
+import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
+import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.josm.kendzi3d.jogl.selection.event.ArrowEditorChangeEvent;
+import kendzi.josm.kendzi3d.jogl.selection.event.EditorChangeEvent;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -46,7 +48,6 @@ import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
-import kendzi.math.geometry.ray.Ray3dUtil;
 
 import org.apache.log4j.Logger;
 
@@ -58,7 +59,7 @@ import com.google.inject.Inject;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {
+public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener, EditorChangeListener {
 
     /** Log. */
     @SuppressWarnings("unused")
@@ -108,23 +109,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     private CameraMoveListener cameraMoveListener;
 
-    private MouseSelectionListener mouseSelectionListener = new MouseSelectionListener() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            select(e.getX(), e.getY());
-        }
 
-        @Override
-        public void mousePressed(MouseEvent e) {
-            selectActiveEditor(e.getX(), e.getY());
-        }
 
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            // TODO Auto-generated method stub
-            moveActiveEditor(e.getX(), e.getY());
-        }
-    };
+    private ObjectSelectionManager objectSelectionListener;
 
     /**
      * Axis labels.
@@ -180,11 +167,11 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
 
-    private Ray3d selectRay = null;
+    private Ray3d lastSelectRay = null;
 
 
 
-    private Editor activeEditor;
+
 
 
 
@@ -216,9 +203,32 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
         this.skyBox = new SkyBox();
+
+        initObjectSelectionListener();
     }
 
 
+    private void initObjectSelectionListener() {
+
+        this.objectSelectionListener = new ObjectSelectionManager() {
+
+            @Override
+            public Ray3d viewportPicking(int x, int y) {
+                return Kendzi3dGLEventListener.this.viewport.picking(x, y);
+            }
+
+            @Override
+            public Selection select(Ray3d selectRay) {
+                return Kendzi3dGLEventListener.this.renderJosm.select(selectRay);
+            }
+        };
+
+//        this.selectEditorListeners.add(this.objectSelectionListener);
+        this.objectSelectionListener.addEditorChangeListener(this);
+
+        JosmEditorListener jel = new JosmEditorListener();
+        this.objectSelectionListener.addEditorChangeListener(jel);
+    }
 
 
     @Override
@@ -297,7 +307,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         }
 
-        Ray3d select = this.selectRay;
+        Ray3d select = this.lastSelectRay;
         if (select != null) {
             drawSelectRay(gl, select);
         }
@@ -467,7 +477,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     public void registerMouseSelectionListener(Canvas pCanvas) {
 
-        pCanvas.addMouseListener(this.mouseSelectionListener);
+        pCanvas.addMouseListener(this.objectSelectionListener);
+        pCanvas.addMouseMotionListener(this.objectSelectionListener);
     }
 
     /**
@@ -560,58 +571,15 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
 
-    private void select(int x, int y) {
 
-        Ray3d selectRay = this.viewport.picking(x, y);
 
-        Editor activeEditor = this.renderJosm.selectActiveEditor(selectRay);
-        if (activeEditor != null) {
-//            activeEditor.select(true);
-//            this.activeEditor = activeEditor;
 
-        } else {
 
-            this.renderJosm.select(selectRay);
-        }
 
-        this.selectRay = selectRay;
-    }
-
-    private void selectActiveEditor(int x, int y) {
-
-        Ray3d selectRay = this.viewport.picking(x, y);
-
-        Editor activeEditor = this.renderJosm.selectActiveEditor(selectRay);
-        if (activeEditor != null) {
-            activeEditor.select(true);
-            this.activeEditor = activeEditor;
-
-        }
-
-        this.selectRay = selectRay;
-    }
-
-    public void moveActiveEditor(int x, int y) {
-        Editor activeEditor = this.activeEditor;
-
-        if (activeEditor == null) {
-            return;
-        }
-
-        if (!(activeEditor instanceof ArrowEditor)) {
-            return;
-        }
-
-        ArrowEditor arrow = (ArrowEditor) activeEditor;
-
-        Ray3d moveRay = this.viewport.picking(x, y);
-
-        Ray3d arrowRay = new Ray3d(arrow.getPoint(), arrow.getVector());
-        Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
-
-        this.closestPointOnBaseRay = closestPointOnBaseRay;
+    private void onEditorChanged() {
 
     }
+
 
     /**
      * @param gl
@@ -994,5 +962,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     public void closeEvent(CloseEvent closeEvent) {
         this.closeEvent = closeEvent;
+    }
+
+
+    @Override
+    public void onEditorChange(EditorChangeEvent args) {
+        if (args instanceof ArrowEditorChangeEvent) {
+            this.closestPointOnBaseRay = ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
+        }
     }
 }

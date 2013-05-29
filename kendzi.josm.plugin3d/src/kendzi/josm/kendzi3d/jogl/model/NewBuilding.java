@@ -53,10 +53,10 @@ import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
 import kendzi.josm.kendzi3d.jogl.selection.BuildingSelection;
-import kendzi.josm.kendzi3d.jogl.selection.Editor;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditorJosmImp;
+import kendzi.josm.kendzi3d.jogl.selection.editor.Editor;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
@@ -223,10 +223,14 @@ public class NewBuilding extends AbstractModel {
 
         this.bounds= bounds;
 
-        final ArrowEditor ae = new ArrowEditor();
+        if (this.way != null) {
+        final ArrowEditorJosmImp ae = new ArrowEditorJosmImp();
         ae.setPoint(bounds.getMin());
         ae.setVector(new Vector3d(0,1,0));
         ae.setLength(bounds.max.y);
+        ae.setFildName("height");
+        ae.setPrimitiveId(this.way.getUniqueId());
+        ae.setPrimitiveType(OsmPrimitiveType.WAY);
 
         return Arrays.<Selection>asList(
                 new BuildingSelection(wayId,bounds.getCenter(), bounds.getRadius()) {
@@ -243,7 +247,8 @@ public class NewBuilding extends AbstractModel {
                     }
                 }
                 );
-
+        }
+        return Collections.emptyList();
     }
 
 

@@ -1,9 +1,9 @@
-package kendzi.josm.kendzi3d.jogl.selection;
+package kendzi.josm.kendzi3d.jogl.selection.editor;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-public class ArrowEditor implements Editor {
+public class ArrowEditorImp implements ArrowEditor {
 
     private Point3d point;
 
@@ -13,6 +13,8 @@ public class ArrowEditor implements Editor {
 
     private boolean selected;
 
+
+
     public Point3d arrowEnd() {
         return new Point3d (
                 this.point.x + this.vector.x * this.length,
@@ -21,9 +23,13 @@ public class ArrowEditor implements Editor {
                 );
     }
 
+
     /**
-     * @return the point
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditor#getPoint()
      */
+    @Override
     public Point3d getPoint() {
         return this.point;
     }
@@ -34,8 +40,11 @@ public class ArrowEditor implements Editor {
         this.point = point;
     }
     /**
-     * @return the vector
+     * {@inheritDoc}
+     *
+     * @see kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditor#getVector()
      */
+    @Override
     public Vector3d getVector() {
         return this.vector;
     }
@@ -45,6 +54,7 @@ public class ArrowEditor implements Editor {
     public void setVector(Vector3d vector) {
         this.vector = vector;
     }
+
     /**
      * @return the length
      */
@@ -62,10 +72,13 @@ public class ArrowEditor implements Editor {
         this.selected = selected;
     }
 
-
+    @Deprecated
     public boolean isSelect() {
         return this.selected;
     }
 
-
+    @Override
+    public double getValue() {
+        return this.length;
+    }
 }

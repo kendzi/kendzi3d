@@ -99,6 +99,14 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
      */
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (log.isTraceEnabled()) {
+            log.trace("mouseDragged");
+        }
+
+        if (e.isConsumed()) {
+            return;
+        }
+
         moveCamera(this.lastX - e.getX() , this.lastY - e.getY());
         this.lastX = e.getX();
         this.lastY = e.getY();

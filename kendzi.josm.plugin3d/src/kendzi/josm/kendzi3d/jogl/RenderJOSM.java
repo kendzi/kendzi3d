@@ -32,9 +32,10 @@ import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
-import kendzi.josm.kendzi3d.jogl.selection.ArrowEditor;
-import kendzi.josm.kendzi3d.jogl.selection.Editor;
+import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditor;
+import kendzi.josm.kendzi3d.jogl.selection.editor.Editor;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
 
@@ -46,15 +47,19 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.projection.Projection;
 
 public class RenderJOSM implements DataSetListenerAdapter.Listener {
+
+
 
     /** Log. */
     private static final Logger log = Logger.getLogger(RenderJOSM.class);
@@ -125,7 +130,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     private EastNorth center;
     private List<Layer> layerList = new ArrayList<Layer>();
 
-    private Selection selection;
+    private Selection lastSelection;
 
     private GLUquadric quadratic;   // Storage For Our Quadratic Objects
     private GLU glu = new GLU();
@@ -185,7 +190,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             drawSelectable(gl);
 
         }
-        Selection selection = this.selection;
+        Selection selection = this.lastSelection;
         if (selection != null) {
             drawEditors(gl, selection);
         }
@@ -217,7 +222,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 gl.glTranslated(p.x, p.y, p.z);
 
 //                DrawUtil.drawDotY(gl, 0.3, 6);
-                this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
+                this.glu.gluSphere(this.quadratic, ObjectSelectionManager.SELECTION_ETITOR_RADIUS, 32, 32);
 
                 gl.glPopMatrix();
 
@@ -482,6 +487,11 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             return;
         }
 
+//        if (pEvent != null && pEvent.getType() == DatasetEventType.TAGS_CHANGED){
+        if (pEvent instanceof TagsChangedEvent){
+            updatePrimitive(((TagsChangedEvent) pEvent).getPrimitive());
+        }
+
         if (this.center == null || pEvent == null) {
         // for tests we change center only on menu button action
             this.center = Main.map.mapView.getCenter();
@@ -523,6 +533,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
 
 
+    private void updatePrimitive(OsmPrimitive primitive) {
+        // TODO Auto-generated method stub
+
+    }
     public static Bounds boundsFromDataSet(DataSet dataset) {
         // XXX move to util
 
@@ -664,7 +678,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     }
 
-    public void select(Ray3d selectRay) {
+    public Selection select(Ray3d selectRay) {
         Selection selection = null;
         double min = Double.MAX_VALUE;
 
@@ -681,16 +695,16 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                         min = intersect;
                     }
                 }
-               // drawModel(r, gl, camera);
             }
         }
 
-        Selection last = this.selection;
+        Selection last = this.lastSelection;
 
         if (selection != null) {
             log.info("selected object: " + selection);
-
+          //FIXME
             if (last != selection) {
+                //FIXME
                 selection.select(true);
                 if (last != null) {
                     last.select(false);
@@ -699,43 +713,18 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         } else {
             log.info("can't find selection");
-
+          //FIXME
             if (last != null) {
                 last.select(false);
             }
         }
 
-        this.selection = selection;
+        this.lastSelection = selection;
+
+        return selection;
     }
 
-    public Editor selectActiveEditor(Ray3d selectRay) {
-        Selection selection = this.selection;
-        if (selection == null) {
-            return null;
-        }
-        List<Editor> editors = selection.getEditors();
 
-        Editor selectedEditor = null;
-        double min = Double.MAX_VALUE;
-
-
-        for (Editor e : editors) {
-            if (e instanceof ArrowEditor) {
-                ArrowEditor ae = (ArrowEditor) e;
-
-                Double intersect = Ray3dUtil.intersect(selectRay, ae.getPoint(), 0.3);
-                if (intersect ==null) {
-                    continue;
-                }
-                if (intersect < min) {
-                    selectedEditor = e;
-                    min = intersect;
-                }
-            }
-        }
-
-        return selectedEditor;
-    }
 
 
 
