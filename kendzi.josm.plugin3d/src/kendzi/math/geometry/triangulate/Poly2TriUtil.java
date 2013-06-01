@@ -56,10 +56,12 @@ public class Poly2TriUtil {
     public static Polygon convert(PolygonWithHolesList2d polygonWithHoles) {
         Polygon outer = convert(polygonWithHoles.getOuter());
 
-        for (PolygonList2d inner : polygonWithHoles.getInner()) {
-            Polygon innerPoly = convert(inner);
+        if (polygonWithHoles.getInner() != null) {
+            for (PolygonList2d inner : polygonWithHoles.getInner()) {
+                Polygon innerPoly = convert(inner);
 
-            outer.addHole(innerPoly);
+                outer.addHole(innerPoly);
+            }
         }
         return outer;
     }

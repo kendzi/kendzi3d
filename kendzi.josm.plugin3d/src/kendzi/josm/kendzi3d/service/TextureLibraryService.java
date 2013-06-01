@@ -40,6 +40,7 @@ public class TextureLibraryService {
         BUILDING_WINDOW("buildings.window_{0}"),
         BUILDING_WINDOWS("buildings.windows_{0}"),
         BUILDING_ENTRANCE("buildings.entrance_{0}"),
+        WATER("landuse.water_{0}"),
 
         ;
 

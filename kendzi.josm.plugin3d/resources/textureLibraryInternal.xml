@@ -127,5 +127,10 @@
 	<textureSet key="ground.unknown">
 		<textureData tex0="/textures/pd/600px-MarekGrassDehydrated0001.jpg" width="2" height="2" />
 	</textureSet>
+	
+	<!-- water -->
+	<textureSet key="landuse.water_unknown">
+		<textureData tex0="/textures/pd/Water-512.jpg" width="4" height="4" />
+	</textureSet>
 
 </ns2:textureLibrary>
