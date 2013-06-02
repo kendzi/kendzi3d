@@ -10,7 +10,6 @@
 package kendzi.josm.kendzi3d.ui;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +34,9 @@ import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.jogl.selection.JosmEditorListener;
-import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionListener.EditorChangeListener;
 import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
-import kendzi.josm.kendzi3d.jogl.selection.event.ArrowEditorChangeEvent;
-import kendzi.josm.kendzi3d.jogl.selection.event.EditorChangeEvent;
+import kendzi.josm.kendzi3d.jogl.selection.draw.SelectionDrawUtil;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
@@ -59,7 +56,7 @@ import com.google.inject.Inject;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener, EditorChangeListener {
+public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {
 
     /** Log. */
     @SuppressWarnings("unused")
@@ -118,7 +115,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     private AxisLabels axisLabels;
 
-
+    private SelectionDrawUtil selectionDrawUtil;
 
     /**
      * Ground.
@@ -175,7 +172,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
 
-    private Point3d closestPointOnBaseRay;
+//    private Point3d closestPointOnBaseRay;
 
 
 
@@ -204,6 +201,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         this.skyBox = new SkyBox();
 
+        this.selectionDrawUtil = new SelectionDrawUtil();
+
         initObjectSelectionListener();
     }
 
@@ -224,7 +223,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         };
 
 //        this.selectEditorListeners.add(this.objectSelectionListener);
-        this.objectSelectionListener.addEditorChangeListener(this);
+//        this.objectSelectionListener.addEditorChangeListener(this);
 
         JosmEditorListener jel = new JosmEditorListener();
         this.objectSelectionListener.addEditorChangeListener(jel);
@@ -307,14 +306,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         }
 
-        Ray3d select = this.lastSelectRay;
-        if (select != null) {
-            drawSelectRay(gl, select);
-        }
 
-        if (this.closestPointOnBaseRay != null) {
-            drawPoint(gl, this.closestPointOnBaseRay);
-        }
+
+//        if (this.closestPointOnBaseRay != null) {
+//            drawPoint(gl, this.closestPointOnBaseRay);
+//        }
+
+        selectionDrawUtil.draw(gl, this.objectSelectionListener);
 
 
         // Flush all drawing operations to the graphics card
@@ -399,6 +397,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         this.axisLabels.init();
         this.renderJosm.init(gl);
+        this.selectionDrawUtil.init(gl);
+
 
 
 
@@ -581,49 +581,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
 
-    /**
-     * @param gl
-     * @param select
-     */
-    public void drawPoint(GL2 gl, Point3d p) {
-        gl.glPushMatrix();
-
-        double dx = p.x;
-        double dy = p.y;
-        double dz = p.z;
-
-        gl.glTranslated(dx, dy, dz);
-
-        gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
-
-        DrawUtil.drawDotY(gl, 0.3, 6);
-
-        gl.glPopMatrix();
-    }
-
-    /**
-     * @param gl
-     * @param select
-     */
-    public void drawSelectRay(GL2 gl, Ray3d select) {
-        gl.glPushMatrix();
-
-        Vector3d v = select.getVector();
-        Point3d p = select.getPoint();
-
-        double dx = p.x + 10*v.x;
-        double dy = p.y + 10*v.y;
-        double dz = p.z + 10*v.z;
 
 
-        gl.glTranslated(dx, dy, dz);
-
-        gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
-
-        DrawUtil.drawDotY(gl, 0.3, 6);
-
-        gl.glPopMatrix();
-    }
 
     static class Viewport {
 
@@ -965,10 +924,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
 
-    @Override
-    public void onEditorChange(EditorChangeEvent args) {
-        if (args instanceof ArrowEditorChangeEvent) {
-            this.closestPointOnBaseRay = ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
-        }
-    }
+//    @Override
+//    public void onEditorChange(EditorChangeEvent args) {
+//        if (args instanceof ArrowEditorChangeEvent) {
+//            this.closestPointOnBaseRay = ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
+//        }
+//    }
 }

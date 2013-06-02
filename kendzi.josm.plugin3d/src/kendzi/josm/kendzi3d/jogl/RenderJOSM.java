@@ -32,10 +32,7 @@ import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
-import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
-import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditor;
-import kendzi.josm.kendzi3d.jogl.selection.editor.Editor;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
 
@@ -190,61 +187,14 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             drawSelectable(gl);
 
         }
-        Selection selection = this.lastSelection;
-        if (selection != null) {
-            drawEditors(gl, selection);
-        }
+//        Selection selection = this.lastSelection;
+//        if (selection != null) {
+//            drawEditors(gl, selection);
+//        }
 
         this.modelRender.setupDefaultMaterial(gl);
     }
-    private void drawEditors(GL2 gl, Selection selection) {
-        List<Editor> editors = selection.getEditors();
 
-        gl.glDisable(GL2.GL_TEXTURE_2D);
-       // gl.glEnable(GL2.GL_LIGHTING);
-
-        for (Editor editor : editors) {
-            if (editor instanceof ArrowEditor) {
-                ArrowEditor ae = (ArrowEditor) editor;
-                Point3d p = ae.getPoint();
-                Vector3d v = ae.getVector();
-                double l = ae.getLength();
-
-                drawArrowIcon(gl, ae);
-
-                if (ae.isSelect()) {
-                    gl.glColor3fv(Color.RED.darker().darker().darker().getRGBComponents(new float[4]), 0);
-                } else {
-                    gl.glColor3fv(Color.green.darker().darker().darker().getRGBComponents(new float[4]), 0);
-                }
-
-                gl.glPushMatrix();
-                gl.glTranslated(p.x, p.y, p.z);
-
-//                DrawUtil.drawDotY(gl, 0.3, 6);
-                this.glu.gluSphere(this.quadratic, ObjectSelectionManager.SELECTION_ETITOR_RADIUS, 32, 32);
-
-                gl.glPopMatrix();
-
-
-                gl.glPushMatrix();
-                gl.glTranslated(p.x + v.x * l, p.y + v.y * l, p.z + v.z * l);
-
-               // DrawUtil.drawDotY(gl, 0.3, 6);
-             // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
-                this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
-//                http://www.felixgers.de/teaching/jogl/gluQuadricPrimitives.html
-             // A Cylinder With A Radius Of 0.5 And A Height Of 2
-//                glu.gluCylinder(quadratic, 1.0f, 1.0f, 3.0f, 32, 32);
-
-                gl.glPopMatrix();
-            }
-        }
-    }
-    private void drawArrowIcon(GL2 gl, ArrowEditor ae) {
-        // TODO Auto-generated method stub
-
-    }
     /**
      * @param r
      * @param gl

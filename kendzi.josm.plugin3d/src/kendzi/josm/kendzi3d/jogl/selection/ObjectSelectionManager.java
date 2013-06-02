@@ -31,6 +31,8 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
     private Selection lastSelection;
 
+    private Point3d lastClosestPointOnBaseRay;
+
     public abstract Ray3d viewportPicking(int x, int y);
 
     /**
@@ -85,7 +87,8 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
         if (finish) {
             this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
         }
-//        this.closestPointOnBaseRay = closestPointOnBaseRay;
+
+        this.lastClosestPointOnBaseRay = closestPointOnBaseRay;
         return true;
     }
 
@@ -154,6 +157,27 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
         this.lastSelection = selection;
 
         return selection;
+    }
+
+    /**
+     * @return the lastClosestPointOnBaseRay
+     */
+    public Point3d getLastClosestPointOnBaseRay() {
+        return lastClosestPointOnBaseRay;
+    }
+
+    /**
+     * @return the lastSelectRay
+     */
+    public Ray3d getLastSelectRay() {
+        return lastSelectRay;
+    }
+
+    /**
+     * @return the lastSelection
+     */
+    public Selection getLastSelection() {
+        return lastSelection;
     }
 
 }
