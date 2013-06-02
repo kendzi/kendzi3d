@@ -1,5 +1,7 @@
 package kendzi.josm.kendzi3d.jogl.selection;
 
+import java.text.DecimalFormat;
+
 import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditorJosm;
 import kendzi.josm.kendzi3d.jogl.selection.event.ArrowEditorChangeEvent;
 import kendzi.josm.kendzi3d.jogl.selection.event.EditorChangeEvent;
@@ -10,6 +12,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionListener.EditorChangeListener {
+
+    DecimalFormat formater = new DecimalFormat( "#0.0" );
 
     @Override
     public void onEditorChange(EditorChangeEvent event) {
@@ -28,8 +32,8 @@ public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.O
                 if (primitive instanceof Way) {
                     Way newWay = new Way((Way) primitive);
 
-                    // XXX FIXME format!
-                    newWay.put(ae.getFildName(), "" + newValue);
+
+                    newWay.put(ae.getFildName(), this.formater.format(newValue));
 
                     ae.setValue(newValue);
 
