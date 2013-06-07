@@ -193,6 +193,9 @@ public class Fence extends AbstractWayModel {
 
             pGl.glDisable(GL2.GL_CULL_FACE);
         }
+
+        pGl.glDisable(GL2.GL_ALPHA_TEST);
+        pGl.glDisable(GL2.GL_BLEND);
     }
 
 
