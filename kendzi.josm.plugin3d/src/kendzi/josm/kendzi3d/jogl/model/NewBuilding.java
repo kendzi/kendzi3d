@@ -115,6 +115,10 @@ public class NewBuilding extends AbstractModel {
 
     private Bounds bounds;
 
+    protected boolean preview;
+
+    private BuildingModel bm;
+
     /**
      * Constructor for building.
      *
@@ -155,21 +159,28 @@ public class NewBuilding extends AbstractModel {
     @Override
     public void buildModel() {
 
-        BuildingModel bm = null;
+        BuildingModel bm = this.bm;
+        log.info("buildModel");
+        log.info("buildModel: " + NewBuilding.this.preview + " buildModel: " + NewBuilding.this.buildModel);
+        if (!this.preview || bm == null) {
+            log.info("buildModel2");
 
-        if (this.relation != null)  {
-            if (this.relation.isMultipolygon()) {
-                bm = parseBuildingMultiPolygon(this.relation, this.perspective);
+            if (this.relation != null)  {
+                if (this.relation.isMultipolygon()) {
+                    bm = parseBuildingMultiPolygon(this.relation, this.perspective);
 
-            } else {
-                bm = parseBuildingRelation(this.relation, this.perspective);
+                } else {
+                    bm = parseBuildingRelation(this.relation, this.perspective);
+                }
+            } else if (this.way != null) {
+                bm = parseBuildingWay(this.way, this.perspective);
+
+                this.selection = parseSelection(this.way.getId(), bm);
+
+
             }
-        } else if (this.way != null) {
-            bm = parseBuildingWay(this.way, this.perspective);
-
-            this.selection = parseSelection(this.way.getId(), bm);
-
-
+            this.preview = false;
+            this.bm = bm;
         }
 
         if (bm != null) {
@@ -199,7 +210,7 @@ public class NewBuilding extends AbstractModel {
         }
     }
 
-    private List<Selection> parseSelection(long wayId, BuildingModel bm) {
+    private List<Selection> parseSelection(long wayId, final BuildingModel bm) {
         BoundsFactory bf = new BoundsFactory();
 
         List<BuildingPart> parts = bm.getParts();
@@ -221,7 +232,23 @@ public class NewBuilding extends AbstractModel {
         this.bounds= bounds;
 
         if (this.way != null) {
-        final ArrowEditorJosmImp ae = new ArrowEditorJosmImp();
+        final ArrowEditorJosmImp ae = new ArrowEditorJosmImp() {
+
+            @Override
+            public void preview(double newValue) {
+                log.info("preview: " + newValue);
+
+                if (bm != null && bm.getParts() != null && bm.getParts().size() > 0) {
+                    bm.getParts().get(0).setMaxHeight(newValue);
+                }
+                NewBuilding.this.preview = true;
+                NewBuilding.this.buildModel = false;
+
+                log.info("preview: " + NewBuilding.this.preview + " buildModel: " + NewBuilding.this.buildModel);
+
+            }
+
+        };
         ae.setPoint(bounds.getMin());
         ae.setVector(new Vector3d(0,1,0));
         ae.setLength(bounds.max.y);

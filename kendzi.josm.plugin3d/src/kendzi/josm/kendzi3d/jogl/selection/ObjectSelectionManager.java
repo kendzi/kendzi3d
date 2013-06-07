@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
-    public static final float SELECTION_ETITOR_RADIUS = 0.3f;
+    public static final float SELECTION_ETITOR_RADIUS = 0.6f;
 
     /** Log. */
     private static final Logger log = Logger.getLogger(ObjectSelectionManager.class);
@@ -84,7 +84,10 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
         double height = arrow.getPoint().distance(closestPointOnBaseRay);
 
+
         if (finish) {
+            this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
+        } else {
             this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
         }
 

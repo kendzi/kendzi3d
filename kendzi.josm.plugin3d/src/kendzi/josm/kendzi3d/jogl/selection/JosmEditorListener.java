@@ -24,24 +24,32 @@ public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.O
             if ( aece.getArrowEditor() instanceof ArrowEditorJosm) {
 
                 ArrowEditorJosm ae = (ArrowEditorJosm) aece.getArrowEditor();
-
-                OsmPrimitive primitive = Main.main.getCurrentDataSet().getPrimitiveById(ae.getPrimitiveId(), ae.getPrimitiveType());
-
                 double newValue = aece.getHeight();
 
-                if (primitive instanceof Way) {
-                    Way newWay = new Way((Way) primitive);
+                if (aece.isEnd() ) {
+
+                    OsmPrimitive primitive = Main.main.getCurrentDataSet().getPrimitiveById(ae.getPrimitiveId(), ae.getPrimitiveType());
 
 
-                    newWay.put(ae.getFildName(), this.formater.format(newValue));
+                    if (primitive instanceof Way) {
+                        Way newWay = new Way((Way) primitive);
 
-                    ae.setValue(newValue);
 
-                    Main.main.undoRedo.add(new ChangeCommand(primitive, newWay));
+                        newWay.put(ae.getFildName(), this.formater.format(newValue));
 
+                        ae.setValue(newValue);
+
+                        Main.main.undoRedo.add(new ChangeCommand(primitive, newWay));
+
+                    } else {
+                        throw new RuntimeException("TODO");
+                    }
                 } else {
-                    throw new RuntimeException("TODO");
+                    ae.preview(newValue);
                 }
+
+                ae.setValue(newValue);
+
             } else {
                 throw new RuntimeException("TODO");
             }

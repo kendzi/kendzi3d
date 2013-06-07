@@ -11,4 +11,6 @@ public interface ArrowEditorJosm extends ArrowEditor {
     String getFildName();
 
     void setValue(double value);
+
+    public void preview(double newValue);
 }

@@ -1,13 +1,27 @@
 package kendzi.josm.kendzi3d.jogl.selection.editor;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 
-public class ArrowEditorJosmImp extends ArrowEditorImp implements ArrowEditorJosm {
+public abstract class ArrowEditorJosmImp extends ArrowEditorImp implements ArrowEditorJosm {
 
     private long primitiveId;
     private OsmPrimitiveType primitiveType;
     private String fildName;
 
+    public ArrowEditorJosmImp() {
+        super();
+    }
+
+    public ArrowEditorJosmImp(Point3d point, Vector3d vector, double length, boolean selected, long primitiveId,
+            OsmPrimitiveType primitiveType, String fildName) {
+        super(point, vector, length, selected);
+        this.primitiveId = primitiveId;
+        this.primitiveType = primitiveType;
+        this.fildName = fildName;
+    }
     /**
      * @return the osmPrimitiveType
      */
@@ -53,6 +67,8 @@ public class ArrowEditorJosmImp extends ArrowEditorImp implements ArrowEditorJos
         this.primitiveId = primitiveId;
     }
 
+    @Override
+    public abstract void preview(double value);
 
 
 }

@@ -13,8 +13,20 @@ public class ArrowEditorImp implements ArrowEditor {
 
     private boolean selected;
 
+    public ArrowEditorImp() {
+        super();
+    }
+
+    public ArrowEditorImp(Point3d point, Vector3d vector, double length, boolean selected) {
+        super();
+        this.point = point;
+        this.vector = vector;
+        this.length = length;
+        this.selected = selected;
+    }
 
 
+    @Override
     public Point3d arrowEnd() {
         return new Point3d (
                 this.point.x + this.vector.x * this.length,
@@ -58,6 +70,7 @@ public class ArrowEditorImp implements ArrowEditor {
     /**
      * @return the length
      */
+    @Override
     public double getLength() {
         return this.length;
     }
@@ -72,6 +85,7 @@ public class ArrowEditorImp implements ArrowEditor {
         this.selected = selected;
     }
 
+    @Override
     @Deprecated
     public boolean isSelect() {
         return this.selected;
