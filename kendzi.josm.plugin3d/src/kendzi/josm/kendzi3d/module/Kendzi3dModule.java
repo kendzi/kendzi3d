@@ -63,11 +63,11 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(ModelRender.class).in(Singleton.class);
 
-        bind(PointModelsLayer.class);
         bind(NewBuildingLayer.class);
         bind(RoadLayer.class);
         bind(WaterLayer.class);
         bind(TreeLayer.class);
+        bind(PointModelsLayer.class);
         bind(FenceLayer.class);
         bind(WallLayer.class);
 
@@ -145,10 +145,10 @@ public class Kendzi3dModule extends AbstractModule {
         // fenceLayer.setModelRender(modelRender);
 
         List<Layer> layerList = new ArrayList<Layer>();
-        layerList.add(pointModelsLayer);
         layerList.add(buildingLayer);
         layerList.add(roadLayer);
         layerList.add(waterLayer);
+        layerList.add(pointModelsLayer);
         layerList.add(treeLayer);
         layerList.add(fenceLayer);
         layerList.add(wallLayer);
