@@ -194,20 +194,11 @@ public class WaveFrontLoader implements iLoader {
                     mesh.face = getFaces(line, mesh, br);
 //                    mesh.numOfFaces = mesh.face.length;
 
-                    //FIXME
-                    if (this.model.mesh == null) {
-                        this.model.mesh = new Mesh [0];
+                    if (mesh.face != null && mesh.face.length > 0 && mesh.face[0].coordIndexLayers.length > 0) {
+                        mesh.hasTexture = true;
                     }
 
-                    Mesh [] ma = new Mesh[ this.model.mesh.length + 1];
 
-                    System.arraycopy(this.model.mesh, 0, ma, 0, this.model.mesh.length);
-                    ma[ma.length - 1] = mesh;
-                    // FIXME
-                    this.model.mesh = ma;
-
-                    //                    model.addMesh(mesh);
-                    mesh = new Mesh();
                 }
 
                 if (lineIs("mtllib ", line)) {
@@ -215,7 +206,10 @@ public class WaveFrontLoader implements iLoader {
                 }
 
                 if (lineIs("usemtl ", line)) {
+                    mesh = new Mesh();
                     processMaterialType(line, mesh);
+                    addMesh(mesh);
+
                 }
             }
         } catch (IOException e) {
@@ -225,12 +219,7 @@ public class WaveFrontLoader implements iLoader {
 
         // FIXME
         if (mesh.vertices != null) {
-            Mesh [] ma = new Mesh[ this.model.mesh.length + 1];
-
-            System.arraycopy(this.model.mesh, 0, ma, 0, this.model.mesh.length);
-            ma[ma.length - 1] = mesh;
-            // FIXME
-            this.model.mesh = ma;
+            addMesh(mesh);
         }
         //        model.addMesh(mesh);
 
@@ -265,6 +254,23 @@ public class WaveFrontLoader implements iLoader {
         ObjLoader.createMissingNormals(this.model);
 
         return this.model;
+    }
+
+    /**
+     * @param mesh
+     */
+    public void addMesh(Mesh mesh) {
+        //FIXME
+        if (this.model.mesh == null) {
+            this.model.mesh = new Mesh [0];
+        }
+
+        Mesh [] ma = new Mesh[ this.model.mesh.length + 1];
+
+        System.arraycopy(this.model.mesh, 0, ma, 0, this.model.mesh.length);
+        ma[ma.length - 1] = mesh;
+        // FIXME
+        this.model.mesh = ma;
     }
 
     /** Get full texture path. Textures in obj files are described by file name.
@@ -513,8 +519,8 @@ public class WaveFrontLoader implements iLoader {
                     smoothing = true;
                 }
                 continue;
-            } else if (lineIs("usemtl ", line)) {
-                processMaterialType(line, mesh);
+//            } else if (lineIs("usemtl ", line)) {
+//                processMaterialType(line, mesh);
             } else if (lineIs(FACE_DATA, line)) {
                 Face face = parseFace(line);
                 if (smoothing) {
