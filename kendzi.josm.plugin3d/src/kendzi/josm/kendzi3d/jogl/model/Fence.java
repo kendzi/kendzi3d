@@ -145,18 +145,12 @@ public class Fence extends AbstractWayModel {
     }
 
 
+
     @Override
     public void draw(GL2 pGl, Camera pCamera) {
 
 
-        // do not draw the transparent parts of the texture
-        pGl.glEnable(GL2.GL_BLEND);
-        pGl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-        // don't show source alpha parts in the destination
-
-        // determine which areas of the polygon are to be rendered
-        pGl.glEnable(GL2.GL_ALPHA_TEST);
-        pGl.glAlphaFunc(GL2.GL_GREATER, 0); // only render if alpha > 0
+        enableTransparentText(pGl);
 
         // replace the quad colours with the texture
         //      gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
@@ -194,10 +188,26 @@ public class Fence extends AbstractWayModel {
             pGl.glDisable(GL2.GL_CULL_FACE);
         }
 
-        pGl.glDisable(GL2.GL_ALPHA_TEST);
-        pGl.glDisable(GL2.GL_BLEND);
+        disableTransparentText(pGl);
+
     }
 
+    public static void enableTransparentText(GL2 pGl) {
+        // do not draw the transparent parts of the texture
+        pGl.glEnable(GL2.GL_BLEND);
+        pGl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+        // don't show source alpha parts in the destination
+
+        // determine which areas of the polygon are to be rendered
+        pGl.glEnable(GL2.GL_ALPHA_TEST);
+        pGl.glAlphaFunc(GL2.GL_GREATER, 0); // only render if alpha > 0
+    }
+
+    public static void disableTransparentText(GL2 pGl) {
+        pGl.glDisable(GL2.GL_ALPHA_TEST);
+        pGl.glDisable(GL2.GL_BLEND);
+
+    }
 
 
     @Override
