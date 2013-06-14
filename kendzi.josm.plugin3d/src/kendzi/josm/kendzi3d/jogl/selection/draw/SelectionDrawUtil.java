@@ -77,9 +77,16 @@ public class SelectionDrawUtil {
                 gl.glPushMatrix();
                 gl.glTranslated(p.x + v.x * l, p.y + v.y * l, p.z + v.z * l);
 
+                double lenght = 2;
+                int section = 16;
+                double arrowLenght = 1;
+                double baseRadius = 0.1d;
+                double arrowRadius = 0.6d;
+                drawArrow(gl, this.glu, this.quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+
                // DrawUtil.drawDotY(gl, 0.3, 6);
              // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
-                this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
+              //  this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
 //                http://www.felixgers.de/teaching/jogl/gluQuadricPrimitives.html
              // A Cylinder With A Radius Of 0.5 And A Height Of 2
 //                glu.gluCylinder(quadratic, 1.0f, 1.0f, 3.0f, 32, 32);
@@ -87,6 +94,26 @@ public class SelectionDrawUtil {
                 gl.glPopMatrix();
             }
         }
+    }
+
+    private void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic2, double lenght, double arrowLenght, double baseRadius, double arrowRadius, int section) {
+        gl.glPushMatrix();
+        gl.glTranslated(0, -1d,0);
+        gl.glRotated(-90d, 1d, 0d, 0d);
+
+        double baseLenght = lenght - arrowLenght;
+
+        // TODO Auto-generated method stub
+        glu.gluDisk(this.quadratic, 0, baseRadius, section, 2);
+        glu.gluCylinder(this.quadratic, baseRadius, baseRadius, baseLenght, section, 2);
+
+        gl.glTranslated(0, 0, baseLenght);
+
+        glu.gluDisk(this.quadratic, 0, arrowRadius, section, 2);
+        glu.gluCylinder(this.quadratic, arrowRadius, 0, arrowLenght, section, 2);
+
+        gl.glPopMatrix();
+
     }
 
     /**

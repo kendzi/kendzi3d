@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
-    public static final float SELECTION_ETITOR_RADIUS = 0.6f;
+    public static final float SELECTION_ETITOR_RADIUS = 2f;
 
     /** Log. */
     private static final Logger log = Logger.getLogger(ObjectSelectionManager.class);

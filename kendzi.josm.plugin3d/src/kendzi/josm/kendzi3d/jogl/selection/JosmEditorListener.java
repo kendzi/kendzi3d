@@ -6,12 +6,16 @@ import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditorJosm;
 import kendzi.josm.kendzi3d.jogl.selection.event.ArrowEditorChangeEvent;
 import kendzi.josm.kendzi3d.jogl.selection.event.EditorChangeEvent;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionListener.EditorChangeListener {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(JosmEditorListener.class);
 
     DecimalFormat formater = new DecimalFormat( "#0.0" );
 
@@ -27,9 +31,10 @@ public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.O
                 double newValue = aece.getHeight();
 
                 if (aece.isEnd() ) {
-
+                    if (Main.main.getCurrentDataSet() == null) {
+                        throw new RuntimeException("No current dataset!");
+                    }
                     OsmPrimitive primitive = Main.main.getCurrentDataSet().getPrimitiveById(ae.getPrimitiveId(), ae.getPrimitiveType());
-
 
                     if (primitive instanceof Way) {
                         Way newWay = new Way((Way) primitive);
@@ -44,6 +49,7 @@ public class JosmEditorListener implements kendzi.josm.kendzi3d.jogl.selection.O
                     } else {
                         throw new RuntimeException("TODO");
                     }
+
                 } else {
                     ae.preview(newValue);
                 }
