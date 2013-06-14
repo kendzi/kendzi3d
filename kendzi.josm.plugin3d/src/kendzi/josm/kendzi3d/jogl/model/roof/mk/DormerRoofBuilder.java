@@ -58,6 +58,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType9_0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeBuilder;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeTented;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeDome;
@@ -70,9 +71,9 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeMansard;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePyramidal;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeRound;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquarePyramidal;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
@@ -98,7 +99,11 @@ public class DormerRoofBuilder {
         new RoofTypeGambrel(),
         new RoofTypeHalfHipped(),
         new RoofTypeHipped(),
+
+        new RoofTypeSquarePyramidal(),
         new RoofTypePyramidal(),
+        new RoofTypeTented(),
+
         new RoofTypeDome(),
         new RoofTypeOnion(),
         new RoofTypeMansard(),
@@ -139,7 +144,7 @@ public class DormerRoofBuilder {
 
         new RoofType9_0(),
 
-        new RoofTypeTented()
+
     };
 
 

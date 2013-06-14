@@ -54,12 +54,14 @@ public enum RoofTypeAliasEnum {
     HIPPED("hipped"),
     PITCHED("pitched"),
     PYRAMIDAL("pyramidal"),
+    SQUARE_PYRAMIDAL("square pyramidal"),
+    TENTED("tented"),
+
     SKILLION("skillion"),
     DOME("dome"),
     ONION("onion"),
     HALF_ROUND("half round"),
     ROUND("round"),
-    TENTED("tented"),
     ;
 
     private String key;

@@ -26,12 +26,13 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_2.CrossSectionElement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.BetweenLinesHeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplit;
 
 import org.apache.log4j.Logger;
 
@@ -124,9 +125,7 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
 
     }
 
-    public static abstract class HeightCalculator {
-        abstract SegmentHeight [] height(Point2d p1, Point2d p2);
-    }
+
 
     /**
      * @param pBorderList
@@ -190,61 +189,7 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
             RoofTypeUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
         }
 
-        HeightCalculator hc  = new HeightCalculator( ) {
-
-            @Override
-            SegmentHeight [] height(Point2d p1, Point2d p2) {
-
-                 List<Point2d> splitPolygon = Arrays.asList(p1, p2);
-
-                 for (LinePoints2d line : lines) {
-                     splitPolygon = PolygonSplit.splitLineSegmentsOnLineBBB(line, splitPolygon);
-                 }
-
-                 SegmentHeight [] ret = new SegmentHeight [splitPolygon.size()-1];
-
-                 for (int i = 0; i < splitPolygon.size() - 1; i++) {
-                     int j = i + 1;
-
-                     Point2d begin = splitPolygon.get(i);
-                     Point2d end = splitPolygon.get(j);
-
-                     double beginHeight = calcHeight(begin, lines, planes);
-                     double endHeight = calcHeight(end, lines, planes);
-
-                     SegmentHeight sh = new SegmentHeight(begin, beginHeight, end, endHeight);
-                     ret[i] = sh;
-                 }
-
-                 return ret;
-            }
-
-
-
-            /** Calc height of point in border.
-             * @param point
-             * @param lines
-             * @param planes
-             * @return
-             */
-            private double calcHeight(Point2d point, LinePoints2d[] lines, Plane3d[] planes) {
-
-                double x = point.x;
-                double z = -point.y;
-
-                for (int i = 1; i < lines.length; i++) {
-                    LinePoints2d line = lines[i];
-
-                    if (!line.inFront(point)) {
-                        return planes[i-1].calcYOfPlane(x, z);
-                    }
-                }
-
-                return planes[planes.length-1].calcYOfPlane(x, z);
-            }
-
-        };
-
+        HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
         List<Point2d> borderSplit = new ArrayList<Point2d>();
         List<Double> borderHeights = new ArrayList<Double>();

@@ -17,11 +17,11 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_5;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypePyramidal extends RoofType2_5 {
+public class RoofTypeSquarePyramidal extends RoofType2_5 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.PYRAMIDAL;
+        return RoofTypeAliasEnum.SQUARE_PYRAMIDAL;
     }
 
 }
