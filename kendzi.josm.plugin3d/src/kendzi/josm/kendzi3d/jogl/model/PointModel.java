@@ -174,11 +174,13 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         }
     }
 
+
+
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
         Model model2 = this.modelLod.get(pLod);
         if (model2 != null) {
-
+            Fence.enableTransparentText(gl);
             gl.glPushMatrix();
             gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
 
@@ -192,6 +194,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             gl.glDisable(GL2.GL_NORMALIZE);
 
             gl.glPopMatrix();
+            Fence.disableTransparentText(gl);
         }
     }
 
