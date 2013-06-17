@@ -94,6 +94,9 @@
 	<textureSet key="buildings.roof_glass">
 		<textureData tex0="/textures/cc0/KnerrGlassWallGrey0001.jpg" height="2.5" width="2.1"/>
 	</textureSet>
+	<textureSet key="buildings.roof_copper">
+		<textureData tex0="/textures/pd/Copper_roof_texture.png" height="1.5" width="1.5"/>
+	</textureSet>
 	
 	<!-- Buildings windows -->
 	<textureSet key="buildings.window">	
