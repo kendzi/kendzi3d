@@ -1,6 +1,5 @@
 package kendzi.josm.kendzi3d.ui;
 
-
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Container;
@@ -13,6 +12,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -73,20 +73,19 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     @Inject
     Kendzi3dGLEventListener canvasListener;
-//    = new Kendzi3dGLEventListener() {
-//
-//        @Override
-//        void displayStats(long pTime, int pFps) {
-//            setTimeSpent(pTime);
-//            setFps(pFps);
-//        }
-//    };
+    // = new Kendzi3dGLEventListener() {
+    //
+    // @Override
+    // void displayStats(long pTime, int pFps) {
+    // setTimeSpent(pTime);
+    // setFps(pFps);
+    // }
+    // };
 
     /**
      * 3d view animator.
      */
     private AnimatorBase animator;
-
 
     /**
      * Constructor.
@@ -100,35 +99,36 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
      */
     public void initUI() {
 
-//      Container c = getContentPane();
-      Container c = this;
-      c.setLayout(new BorderLayout());
-      c.add(makeRenderPanel(), BorderLayout.CENTER);
+        // Container c = getContentPane();
+        Container c = this;
+        c.setLayout(new BorderLayout());
+        c.add(makeRenderPanel(), BorderLayout.CENTER);
 
-      JPanel ctrls = new JPanel(); // a row of text fields
-      ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
+        JPanel ctrls = new JPanel(); // a row of text fields
+        ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
 
-      this.jTFFps = new JTextField("Fps: unknown");
-      this.jTFFps.setEditable(false);
-      ctrls.add(this.jTFFps);
+        this.jTFFps = new JTextField("Fps: unknown");
+        this.jTFFps.setEditable(false);
+        ctrls.add(this.jTFFps);
 
-      this.jTFTime = new JTextField("Time Spent: 0 secs");
-      this.jTFTime.setEditable(false);
-      ctrls.add(this.jTFTime);
+        this.jTFTime = new JTextField("Time Spent: 0 secs");
+        this.jTFTime.setEditable(false);
+        ctrls.add(this.jTFTime);
 
-      c.add(ctrls, BorderLayout.SOUTH);
+        c.add(ctrls, BorderLayout.SOUTH);
 
-      addWindowListener(this);
+        addWindowListener(this);
 
-//      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        // setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-      pack();
-      setVisible(true);
+        if (PhotoParmPanel.showPhotoPanel) {
+            initPhotoFrame();
+        }
 
-      if (PhotoParmPanel.showPhotoPanel) {
-          initPhotoFrame();
-      }
+        pack();
+        // setVisible(true);
     }
+
 
     private void initPhotoFrame() {
         JFrame photoFrame = new JFrame();
@@ -155,7 +155,7 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         renderPane.setSize(640, 480);
 
         this.canvas = makeCanvas(renderPane);
-//        renderPane.add("Center", this.canvas);
+        // renderPane.add("Center", this.canvas);
 
         renderPane.add(this.canvas);
         renderPane.setVisible(true);
@@ -167,15 +167,15 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         this.canvas.requestFocus(); // the canvas now has focus, so receives key
         // events
 
-//        // detect window resizes, and reshape the canvas accordingly
-//        renderPane.addComponentListener(new ComponentAdapter() {
-//            @Override
-//            public void componentResized(ComponentEvent evt) {
-//                Dimension d = evt.getComponent().getSize();
-//                // log.info("New size: " + d);
-//                View3dGLFrame.this.canvas.reshape(d.width, d.height);
-//            } // end of componentResized()
-//        });
+        // // detect window resizes, and reshape the canvas accordingly
+        // renderPane.addComponentListener(new ComponentAdapter() {
+        // @Override
+        // public void componentResized(ComponentEvent evt) {
+        // Dimension d = evt.getComponent().getSize();
+        // // log.info("New size: " + d);
+        // View3dGLFrame.this.canvas.reshape(d.width, d.height);
+        // } // end of componentResized()
+        // });
 
         return renderPane;
     }
@@ -184,15 +184,15 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
         logJoglManifest();
 
-        //create a profile, in this case OpenGL 2 or later
+        // create a profile, in this case OpenGL 2 or later
         GLProfile profile = GLProfile.get(GLProfile.GL2);
 
-        //configure context
+        // configure context
         GLCapabilities capabilities = new GLCapabilities(profile);
 
         setUpCapabilities(capabilities);
 
-        //initialize a GLDrawable of your choice
+        // initialize a GLDrawable of your choice
         GLCanvas canvas = new GLCanvas(capabilities);
 
         canvas.addGLEventListener(this.canvasListener);
@@ -204,7 +204,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
             }
         });
 
-
         // selection/edition listener first!
         this.canvasListener.registerMouseSelectionListener(canvas);
         this.canvasListener.registerMoveListener(canvas);
@@ -214,7 +213,7 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         // Center frame
         // render.setLocationRelativeTo(null);
 
-        this.animator = new FPSAnimator(canvas, 50);//Animator(canvas);
+        this.animator = new FPSAnimator(canvas, 50);// Animator(canvas);
         this.animator.start();
 
         canvas.setFocusable(true);
@@ -239,12 +238,11 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         log.info(sb.toString());
     }
 
-
-
     /**
      * Set up openGL capabilities.
      *
-     * @param capabilities openGL capabilities
+     * @param capabilities
+     *            openGL capabilities
      */
     private void setUpCapabilities(GLCapabilities capabilities) {
         String zbuffer = System.getProperty("kendzi3d.opengl.zbuffer");
@@ -281,15 +279,21 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         log.info("GLCapabilities: " + capabilities);
     }
 
-    /** Display time spent.
-     * @param pTime time
+    /**
+     * Display time spent.
+     *
+     * @param pTime
+     *            time
      */
     public void setTimeSpent(long pTime) {
         this.jTFTime.setText("Time Spent: " + pTime + " secs");
     }
 
-    /** Display fps.
-     * @param pFps fps
+    /**
+     * Display fps.
+     *
+     * @param pFps
+     *            fps
      */
     public void setFps(int pFps) {
         this.jTFFps.setText("Fps: " + pFps);
@@ -299,22 +303,22 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     @Override
     public void windowActivated(WindowEvent e) {
-//        this.canvas.resumeGame();
+        // this.canvas.resumeGame();
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-//        this.canvas.pauseGame();
+        // this.canvas.pauseGame();
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-//        this.canvas.resumeGame();
+        // this.canvas.resumeGame();
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-//        this.canvas.pauseGame();
+        // this.canvas.pauseGame();
     }
 
     @Override
@@ -356,7 +360,8 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
     }
 
     /**
-     * @param canvasListener the canvasListener to set
+     * @param canvasListener
+     *            the canvasListener to set
      */
     public void setCanvasListener(Kendzi3dGLEventListener canvasListener) {
         this.canvasListener = canvasListener;

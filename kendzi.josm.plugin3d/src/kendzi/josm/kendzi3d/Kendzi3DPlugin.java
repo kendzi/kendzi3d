@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -36,6 +37,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -44,8 +46,6 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.*;
 import static org.openstreetmap.josm.tools.I18n.*;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
-
-
 
     /**
      * Menu in JOSM.
@@ -57,7 +57,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      */
     private Kendzi3dGLFrame ogl;
 
-
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
      *
@@ -67,10 +66,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     public Kendzi3DPlugin(PluginInformation pInfo) {
         super(pInfo);
 
-
-
-//        // requre to set up before library are loaded
-//        FileUrlReciverService.initFileReciver(getPluginDir());
+        // // requre to set up before library are loaded
+        // FileUrlReciverService.initFileReciver(getPluginDir());
 
         try {
 
@@ -80,24 +77,23 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        this.getClass().getClassLoader()
+        // this.getClass().getClassLoader()
         Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDir()));
-
 
         refreshMenu(injector);
 
-        if (!Boolean.FALSE.equals(
-                Main.pref.getBoolean(
-                        AutostartToggleAction.KENDZI_3D_AUTOSTART, true))) {
-//            Main.pref.put("kendzi3d.autostart", "true");
-//            Main.pref.put("kendzi3d.autostart", "false");
+        if (!Boolean.FALSE.equals(Main.pref.getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, true))) {
+            // Main.pref.put("kendzi3d.autostart", "true");
+            // Main.pref.put("kendzi3d.autostart", "false");
             openJOGLWindow(injector);
         }
     }
 
     /**
      * Check if file exist in plugin directory.
-     * @param pFileName file path
+     *
+     * @param pFileName
+     *            file path
      * @return if file exist
      */
     public boolean isFileExis(String pFileName) {
@@ -109,11 +105,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         return (new File(pluginDirName, pFileName)).exists();
     }
 
-
-
-
     /**
      * Refreshing menu.
+     *
      * @param injector
      */
     public void refreshMenu(final Injector injector) {
@@ -121,20 +115,18 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         System.err.println("3d test");
         if (this.view3dJMenu == null) {
-            this.view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.defaultMenuPos,
-                    ht("/Plugin/WMS"));
+            this.view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.defaultMenuPos, ht("/Plugin/WMS"));
         } else {
             this.view3dJMenu.removeAll();
         }
 
-
         this.view3dJMenu.addSeparator();
-        //		wmsJMenu.add(new JMenuItem(new OpenViewAction()));
-        this.view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+        // wmsJMenu.add(new JMenuItem(new OpenViewAction()));
+        this.view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24",
+                tr("Open 3D View"), null, false) {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                //				super(tr("3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false);
                 putValue("toolbar", "3dView_run");
 
                 openJOGLWindow(injector);
@@ -142,7 +134,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             }
 
         }));
-
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         if (autostartToggleAction.canDebug()) {
@@ -158,7 +149,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         this.view3dJMenu.add(moveCameraItem);
         moveCameraItem.setAccelerator(moveCameraAction.getShortcut().getKeyStroke());
 
-
         CleanUpAction cleanUpAction = injector.getInstance(CleanUpAction.class);
         final JMenuItem cleanUpItem = new JMenuItem(cleanUpAction);
         this.view3dJMenu.add(cleanUpItem);
@@ -168,7 +158,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         final JMenuItem pointModelListItem = new JMenuItem(pointModelListAction);
         this.view3dJMenu.add(pointModelListItem);
         pointModelListItem.setAccelerator(pointModelListAction.getShortcut().getKeyStroke());
-
 
         // -- Ground Toggle Action
         GroundToggleAction groundToggleAction = injector.getInstance(GroundToggleAction.class);
@@ -180,7 +169,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             groundToggleAction.addButtonModel(debug.getModel());
         }
 
-
         // -- debug toggle action
         DebugToggleAction debugToggleAction = injector.getInstance(DebugToggleAction.class);
         if (debugToggleAction.canDebug()) {
@@ -190,7 +178,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             debug.setAccelerator(debugToggleAction.getShortcut().getKeyStroke());
             debugToggleAction.addButtonModel(debug.getModel());
         }
-
 
         // -- debug toggle action
         TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
@@ -215,13 +202,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         this.view3dJMenu.add(loadTextureLibraryItem);
         loadTextureLibraryItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
 
-
-
         this.view3dJMenu.addSeparator();
 
         JMenu advMenu = new JMenu(tr("Adv"));
         this.view3dJMenu.add(advMenu);
-
 
         ExportAction exportAction = injector.getInstance(ExportAction.class);
         final JMenuItem exportActionItem = new JMenuItem(exportAction);
@@ -246,29 +230,31 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         }
     }
 
-
-
-
     private void openJOGLWindow(Injector injector) {
         try {
             if (this.ogl == null || !this.ogl.isDisplayable()) {
 
                 Kendzi3dGLFrame frame = injector.getInstance(Kendzi3dGLFrame.class);
 
-    //            Kendzi3dGLFrame frame = new Kendzi3dGLFrame();
-    ////            frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
-    //            frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
+                // Kendzi3dGLFrame frame = new Kendzi3dGLFrame();
+                // // frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
+                // frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
 
                 frame.initUI();
+
+                ImageIcon img = ImageProvider.get("stock_3d-effects24");
+                if (img != null) {
+                    frame.setIconImage(img.getImage());
+                }
 
                 frame.setVisible(true);
 
                 this.ogl = frame;
             }
-    //        else {
-    //            this.ogl.resume();
-    //            this.ogl.setVisible(true);
-//        }
+            // else {
+            // this.ogl.resume();
+            // this.ogl.setVisible(true);
+            // }
         } catch (NoClassDefFoundError e) {
             e.printStackTrace();
             throw e;
@@ -278,6 +264,5 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             throw new RuntimeException("error opening kendzi3d window", e);
         }
     }
-
 
 }
