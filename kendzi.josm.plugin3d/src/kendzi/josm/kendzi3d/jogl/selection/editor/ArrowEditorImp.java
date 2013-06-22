@@ -3,7 +3,7 @@ package kendzi.josm.kendzi3d.jogl.selection.editor;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-public class ArrowEditorImp implements ArrowEditor {
+public class ArrowEditorImp extends AbstractEditor implements ArrowEditor {
 
     private Point3d point;
 
@@ -11,7 +11,6 @@ public class ArrowEditorImp implements ArrowEditor {
 
     private double length;
 
-    private boolean selected;
 
     public ArrowEditorImp() {
         super();
@@ -22,7 +21,6 @@ public class ArrowEditorImp implements ArrowEditor {
         this.point = point;
         this.vector = vector;
         this.length = length;
-        this.selected = selected;
     }
 
 
@@ -74,25 +72,21 @@ public class ArrowEditorImp implements ArrowEditor {
     public double getLength() {
         return this.length;
     }
+
     /**
      * @param length the length to set
      */
     public void setLength(double length) {
         this.length = length;
     }
-    @Override
-    public void select(boolean selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    @Deprecated
-    public boolean isSelect() {
-        return this.selected;
-    }
 
     @Override
     public double getValue() {
         return this.length;
+    }
+
+    @Override
+    public Point3d getEditorCenter() {
+        return this.arrowEnd();
     }
 }

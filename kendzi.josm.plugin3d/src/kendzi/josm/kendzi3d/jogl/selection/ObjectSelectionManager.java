@@ -20,8 +20,6 @@ import org.apache.log4j.Logger;
  */
 public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
-    public static final float SELECTION_ETITOR_RADIUS = 2f;
-
     /** Log. */
     private static final Logger log = Logger.getLogger(ObjectSelectionManager.class);
 
@@ -33,6 +31,11 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
     private Point3d lastClosestPointOnBaseRay;
 
+    /**
+     * @param x
+     * @param y
+     * @return
+     */
     public abstract Ray3d viewportPicking(int x, int y);
 
     /**
@@ -50,10 +53,9 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
         }
     }
 
-
-//    public void onSelectEditor(SelectEditorEvent args) {
-//        this.lastActiveEditor = args.getEditor();
-//    }
+    // public void onSelectEditor(SelectEditorEvent args) {
+    // this.lastActiveEditor = args.getEditor();
+    // }
 
     /**
      * @return the activeEditor
@@ -84,14 +86,10 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
         double height = arrow.getPoint().distance(closestPointOnBaseRay);
 
-
-        if (finish) {
-            this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
-        } else {
-            this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
-        }
+        this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
 
         this.lastClosestPointOnBaseRay = closestPointOnBaseRay;
+
         return true;
     }
 
@@ -101,9 +99,6 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
         Ray3d selectRay = viewportPicking(x, y);
 
         Editor activeEditor = selectActiveEditor(selectRay, this.lastSelection);
-        if (activeEditor != null) {
-            activeEditor.select(true);
-        }
 
         this.lastActiveEditor = activeEditor;
         this.lastSelectRay = selectRay;
@@ -126,8 +121,9 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
             if (e instanceof ArrowEditor) {
                 ArrowEditor ae = (ArrowEditor) e;
 
-                Double intersect = Ray3dUtil.intersect(selectRay, ae.arrowEnd(), SELECTION_ETITOR_RADIUS);
-                if (intersect ==null) {
+                Double intersect = ae.intersect(selectRay);
+
+                if (intersect == null) {
                     continue;
                 }
                 if (intersect < min) {
@@ -148,8 +144,8 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
         Editor activeEditor = selectActiveEditor(selectRay, this.lastSelection);
         if (activeEditor != null) {
-//            activeEditor.select(true);
-//            this.activeEditor = activeEditor;
+            // activeEditor.select(true);
+            // this.activeEditor = activeEditor;
 
         } else {
 
@@ -181,6 +177,13 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
      */
     public Selection getLastSelection() {
         return lastSelection;
+    }
+
+    /**
+     * @return the lastActiveEditor
+     */
+    public Editor getLastActiveEditor() {
+        return lastActiveEditor;
     }
 
 }

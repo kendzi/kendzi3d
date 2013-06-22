@@ -39,27 +39,32 @@ public class SelectionDrawUtil {
             drawSelectRay(gl, select);
         }
 
-        Selection selection = manager.getLastSelection();
-        if (selection != null) {
-            drawEditors(gl, selection);
-        }
+        drawEditors(gl, manager.getLastSelection(), manager.getLastActiveEditor());
+
 
     }
 
-    private void drawEditors(GL2 gl, Selection selection) {
+    private void drawEditors(GL2 gl, Selection selection, Editor activeEditor) {
+        if (selection == null) {
+            return;
+        }
+
         List<Editor> editors = selection.getEditors();
 
         gl.glDisable(GL2.GL_TEXTURE_2D);
        // gl.glEnable(GL2.GL_LIGHTING);
 
         for (Editor editor : editors) {
+            boolean isActiveEditor = editor.equals(activeEditor);
+
             if (editor instanceof ArrowEditor) {
                 ArrowEditor ae = (ArrowEditor) editor;
                 Point3d p = ae.getPoint();
                 Vector3d v = ae.getVector();
                 double l = ae.getLength();
 
-                if (ae.isSelect()) {
+
+                if (isActiveEditor) {
                     gl.glColor3fv(Color.RED.darker().darker().darker().getRGBComponents(new float[4]), 0);
                 } else {
                     gl.glColor3fv(Color.green.darker().darker().darker().getRGBComponents(new float[4]), 0);
@@ -69,7 +74,7 @@ public class SelectionDrawUtil {
                 gl.glTranslated(p.x, p.y, p.z);
 
 //                DrawUtil.drawDotY(gl, 0.3, 6);
-                this.glu.gluSphere(this.quadratic, ObjectSelectionManager.SELECTION_ETITOR_RADIUS, 32, 32);
+               // this.glu.gluSphere(this.quadratic, ObjectSelectionManager.SELECTION_ETITOR_RADIUS, 32, 32);
 
                 gl.glPopMatrix();
 
@@ -84,12 +89,12 @@ public class SelectionDrawUtil {
                 double arrowRadius = 0.6d;
                 drawArrow(gl, this.glu, this.quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-               // DrawUtil.drawDotY(gl, 0.3, 6);
-             // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
-              //  this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
-//                http://www.felixgers.de/teaching/jogl/gluQuadricPrimitives.html
-             // A Cylinder With A Radius Of 0.5 And A Height Of 2
-//                glu.gluCylinder(quadratic, 1.0f, 1.0f, 3.0f, 32, 32);
+                // DrawUtil.drawDotY(gl, 0.3, 6);
+                // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
+                // this.glu.gluSphere(this.quadratic, 0.3f, 32, 32);
+                // http://www.felixgers.de/teaching/jogl/gluQuadricPrimitives.html
+                // A Cylinder With A Radius Of 0.5 And A Height Of 2
+                // glu.gluCylinder(quadratic, 1.0f, 1.0f, 3.0f, 32, 32);
 
                 gl.glPopMatrix();
             }

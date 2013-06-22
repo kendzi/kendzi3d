@@ -17,8 +17,6 @@ public interface ArrowEditor extends Editor {
 
     double getLength();
 
-    @Deprecated
-    boolean isSelect();
     /**
      * @return
      */
