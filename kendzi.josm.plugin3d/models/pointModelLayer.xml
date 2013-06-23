@@ -37,4 +37,10 @@
 	<pointModel id="9" matcher="amenity=post_box" model="/models/pd/post_box.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.1)" direction="0"/>
 		
+	<pointModel id="10" matcher="test=tree1" model="/models/pd/tree1/christian_nietsche_tree.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(7,1)" direction="0"/>
+		
+	<pointModel id="11" matcher="test=tree2" model="/models/pd/new_tree_lod_packed/New_Tree_Lod_Packed.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(7,1)" direction="0"/>
+		
 </pointModels> 
