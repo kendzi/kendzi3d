@@ -585,6 +585,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private Face parseFace(String line) {
+        boolean hasTexture = true;
         String [] s = line.split("\\s+");
         if (line.contains("//")) { // Pattern is present if obj has no texture
             for (int loop = 1; loop < s.length; loop++) {
@@ -617,6 +618,7 @@ public class WaveFrontLoader implements iLoader {
             if (temp.length > 1) { // we have texture data
                 if (Integer.valueOf(temp[1]) < 0) {
                     face.coordIndexLayers[0][loop - 1] = 0;
+                    hasTexture = false;
                 } else {
                     face.coordIndexLayers[0][loop - 1] = Integer.valueOf(temp[1]) - 1 - this.textureTotal;
                     // log.info("found texture index: " + face.coordIndex[loop-1]);
@@ -629,6 +631,10 @@ public class WaveFrontLoader implements iLoader {
             } else {
                 face.normalIndex[loop - 1] = -1;
             }
+        }
+
+        if (!hasTexture) {
+            face.coordIndexLayers = new int[0][];
         }
 
         return face;
