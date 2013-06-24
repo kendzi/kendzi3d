@@ -4,47 +4,20 @@ import java.awt.Color;
 import java.util.List;
 
 public class BuildingModel {
-//    @Deprecated
-//    BuildingPart outline;
 
     List<BuildingPart> parts;
-
 
     private String facadeMaterialType;
 
     private String roofMaterialType;
 
+    private String floorMaterialType;
+
     private Color facadeColour;
 
     private Color roofColour;
 
-
-//    String facadeMaterial;
-//
-//    String roofMaterial;
-//
-//    private TextureData facadeTextureData;
-//
-//    private TextureData roofTextureData;
-//
-//    // XXX move to set in Building! (to chose best match);
-//    private TextureData windowsColumnsTextureData;
-
-
-//    /**
-//     * @return the outline
-//     */
-//    @Deprecated
-//    public BuildingPart getOutline() {
-//        return outline;
-//    }
-//
-//    /**
-//     * @param outline the outline to set
-//     */
-//    public void setOutline(BuildingPart outline) {
-//        this.outline = outline;
-//    }
+    private Color floorColour;
 
     /**
      * @return the parts
@@ -54,7 +27,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param parts the parts to set
+     * @param parts
+     *            the parts to set
      */
     public void setParts(List<BuildingPart> parts) {
         this.parts = parts;
@@ -68,7 +42,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param facadeMaterialType the facadeMaterialType to set
+     * @param facadeMaterialType
+     *            the facadeMaterialType to set
      */
     public void setFacadeMaterialType(String facadeMaterialType) {
         this.facadeMaterialType = facadeMaterialType;
@@ -82,7 +57,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param roofMaterialType the roofMaterialType to set
+     * @param roofMaterialType
+     *            the roofMaterialType to set
      */
     public void setRoofMaterialType(String roofMaterialType) {
         this.roofMaterialType = roofMaterialType;
@@ -96,7 +72,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param facadeColour the facadeColour to set
+     * @param facadeColour
+     *            the facadeColour to set
      */
     public void setFacadeColour(Color facadeColour) {
         this.facadeColour = facadeColour;
@@ -110,9 +87,38 @@ public class BuildingModel {
     }
 
     /**
-     * @param roofColour the roofColour to set
+     * @param roofColour
+     *            the roofColour to set
      */
     public void setRoofColour(Color roofColour) {
         this.roofColour = roofColour;
+    }
+
+    /**
+     * @return the floorMaterialType
+     */
+    public String getFloorMaterialType() {
+        return floorMaterialType;
+    }
+
+    /**
+     * @param floorMaterialType the floorMaterialType to set
+     */
+    public void setFloorMaterialType(String floorMaterialType) {
+        this.floorMaterialType = floorMaterialType;
+    }
+
+    /**
+     * @return the floorColour
+     */
+    public Color getFloorColour() {
+        return floorColour;
+    }
+
+    /**
+     * @param floorColour the floorColour to set
+     */
+    public void setFloorColour(Color floorColour) {
+        this.floorColour = floorColour;
     }
 }

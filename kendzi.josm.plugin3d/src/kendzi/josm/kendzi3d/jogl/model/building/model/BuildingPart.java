@@ -10,6 +10,7 @@ public class BuildingPart {
     private static final double DEFAULT_BUILDING_HEIGHT = 8;
 
     Double maxHeight;
+
     Double minHeight;
 
     Integer maxLevel;
@@ -24,27 +25,27 @@ public class BuildingPart {
 
     private String roofMaterialType;
 
-//    private TextureData facadeTextureData;
-//
-//    private TextureData roofTextureData;
+    private String floorMaterialType;
 
     private Color facadeColour;
 
     private Color roofColour;
 
+    private Color floorColour;
+
     DormerRoofModel roof;
 
-    //Outline
+    // Outline
     Wall wall;
 
-    //Inline
+    // Inline
     List<Wall> inlineWalls;
 
     DormerRoofModel dormerRoofModel;
 
-    //Windows
+    // Windows
 
-    //Indoor
+    // Indoor
 
     // XXX move to util
     public double getDefaultMinHeight() {
@@ -58,7 +59,7 @@ public class BuildingPart {
         return 0;
     }
 
- // XXX move to util
+    // XXX move to util
     public double getDefaultMaxHeight() {
         if (this.maxHeight != null) {
             return this.maxHeight;
@@ -70,7 +71,7 @@ public class BuildingPart {
         return getDefaultMinHeight() + DEFAULT_BUILDING_HEIGHT;
     }
 
- // XXX move to util
+    // XXX move to util
     public int getDefaultMinLevel() {
         if (this.minLevel != null) {
             return this.minLevel;
@@ -79,7 +80,7 @@ public class BuildingPart {
         return 0;
     }
 
- // XXX move to util
+    // XXX move to util
     public int getDefaultMaxLevel() {
         if (this.maxLevel != null) {
             return this.maxLevel;
@@ -110,7 +111,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param levelHeight the levelHeight to set
+     * @param levelHeight
+     *            the levelHeight to set
      */
     public void setLevelHeight(double levelHeight) {
         this.levelHeight = levelHeight;
@@ -124,7 +126,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param roof the roof to set
+     * @param roof
+     *            the roof to set
      */
     public void setRoof(DormerRoofModel roof) {
         this.roof = roof;
@@ -138,7 +141,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param wall the wall to set
+     * @param wall
+     *            the wall to set
      */
     public void setWall(Wall wall) {
         this.wall = wall;
@@ -152,26 +156,26 @@ public class BuildingPart {
     }
 
     /**
-     * @param inlineWalls the inlineWalls to set
+     * @param inlineWalls
+     *            the inlineWalls to set
      */
     public void setInlineWalls(List<Wall> inlineWalls) {
         this.inlineWalls = inlineWalls;
     }
 
-//    /**
-//     * @return the facadeTextureData
-//     */
-//    public TextureData getFacadeTextureData() {
-//        return facadeTextureData;
-//    }
-//
-//    /**
-//     * @param facadeTextureData the facadeTextureData to set
-//     */
-//    public void setFacadeTextureData(TextureData facadeTextureData) {
-//        this.facadeTextureData = facadeTextureData;
-//    }
-
+    // /**
+    // * @return the facadeTextureData
+    // */
+    // public TextureData getFacadeTextureData() {
+    // return facadeTextureData;
+    // }
+    //
+    // /**
+    // * @param facadeTextureData the facadeTextureData to set
+    // */
+    // public void setFacadeTextureData(TextureData facadeTextureData) {
+    // this.facadeTextureData = facadeTextureData;
+    // }
 
     /**
      * @return the maxHeight
@@ -180,14 +184,13 @@ public class BuildingPart {
         return this.maxHeight;
     }
 
-
     /**
-     * @param maxHeight the maxHeight to set
+     * @param maxHeight
+     *            the maxHeight to set
      */
     public void setMaxHeight(Double maxHeight) {
         this.maxHeight = maxHeight;
     }
-
 
     /**
      * @return the minHeight
@@ -196,14 +199,13 @@ public class BuildingPart {
         return this.minHeight;
     }
 
-
     /**
-     * @param minHeight the minHeight to set
+     * @param minHeight
+     *            the minHeight to set
      */
     public void setMinHeight(Double minHeight) {
         this.minHeight = minHeight;
     }
-
 
     /**
      * @return the maxLevel
@@ -212,14 +214,13 @@ public class BuildingPart {
         return this.maxLevel;
     }
 
-
     /**
-     * @param maxLevel the maxLevel to set
+     * @param maxLevel
+     *            the maxLevel to set
      */
     public void setMaxLevel(Integer maxLevel) {
         this.maxLevel = maxLevel;
     }
-
 
     /**
      * @return the minLevel
@@ -228,16 +229,13 @@ public class BuildingPart {
         return this.minLevel;
     }
 
-
     /**
-     * @param minLevel the minLevel to set
+     * @param minLevel
+     *            the minLevel to set
      */
     public void setMinLevel(Integer minLevel) {
         this.minLevel = minLevel;
     }
-
-
-
 
     /**
      * @return the dormerRoofModel
@@ -247,25 +245,26 @@ public class BuildingPart {
     }
 
     /**
-     * @param dormerRoofModel the dormerRoofModel to set
+     * @param dormerRoofModel
+     *            the dormerRoofModel to set
      */
     public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
         this.dormerRoofModel = dormerRoofModel;
     }
 
-//    /**
-//     * @return the roofTextureData
-//     */
-//    public TextureData getRoofTextureData() {
-//        return roofTextureData;
-//    }
-//
-//    /**
-//     * @param roofTextureData the roofTextureData to set
-//     */
-//    public void setRoofTextureData(TextureData roofTextureData) {
-//        this.roofTextureData = roofTextureData;
-//    }
+    // /**
+    // * @return the roofTextureData
+    // */
+    // public TextureData getRoofTextureData() {
+    // return roofTextureData;
+    // }
+    //
+    // /**
+    // * @param roofTextureData the roofTextureData to set
+    // */
+    // public void setRoofTextureData(TextureData roofTextureData) {
+    // this.roofTextureData = roofTextureData;
+    // }
 
     /**
      * @return the facadeMaterialType
@@ -275,7 +274,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param facadeMaterialType the facadeMaterialType to set
+     * @param facadeMaterialType
+     *            the facadeMaterialType to set
      */
     public void setFacadeMaterialType(String facadeMaterialType) {
         this.facadeMaterialType = facadeMaterialType;
@@ -289,7 +289,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param roofMaterialType the roofMaterialType to set
+     * @param roofMaterialType
+     *            the roofMaterialType to set
      */
     public void setRoofMaterialType(String roofMaterialType) {
         this.roofMaterialType = roofMaterialType;
@@ -303,7 +304,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param facadeColour the facadeColour to set
+     * @param facadeColour
+     *            the facadeColour to set
      */
     public void setFacadeColour(Color facadeColour) {
         this.facadeColour = facadeColour;
@@ -317,7 +319,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param roofColour the roofColour to set
+     * @param roofColour
+     *            the roofColour to set
      */
     public void setRoofColour(Color roofColour) {
         this.roofColour = roofColour;
@@ -331,19 +334,39 @@ public class BuildingPart {
     }
 
     /**
-     * @param roofLevels the roofLevels to set
+     * @param roofLevels
+     *            the roofLevels to set
      */
     public void setRoofLevels(Integer roofLevels) {
         this.roofLevels = roofLevels;
     }
 
+    /**
+     * @return the floorMaterialType
+     */
+    public String getFloorMaterialType() {
+        return floorMaterialType;
+    }
 
+    /**
+     * @param floorMaterialType the floorMaterialType to set
+     */
+    public void setFloorMaterialType(String floorMaterialType) {
+        this.floorMaterialType = floorMaterialType;
+    }
 
+    /**
+     * @return the floorColour
+     */
+    public Color getFloorColour() {
+        return floorColour;
+    }
 
-
-
-
-
-
+    /**
+     * @param floorColour the floorColour to set
+     */
+    public void setFloorColour(Color floorColour) {
+        this.floorColour = floorColour;
+    }
 
 }

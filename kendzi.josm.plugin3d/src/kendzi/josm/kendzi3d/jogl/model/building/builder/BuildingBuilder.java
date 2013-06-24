@@ -15,6 +15,7 @@ import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
+import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
@@ -41,6 +42,7 @@ import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 
 public class BuildingBuilder {
@@ -112,6 +114,7 @@ public class BuildingBuilder {
         // XXX fix, currently roof builder support only one texture, fix before roof builder is changed.
         WallPart firstWallPart = getFirstWallPart(w);
         Color facadeColor = takeFacadeColor(buildingModel, bp, w, firstWallPart, tm);
+
         rtd.setFacadeCoror(facadeColor);
         rtd.setFacadeTextrure(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
@@ -128,7 +131,11 @@ public class BuildingBuilder {
 
 
 
-        buildWall(w, cc, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm);
+        double minHeight = bp.getDefaultMinHeight();
+        buildWall(w, cc, minHeight, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm);
+
+        buildFloor(bp, buildingModel, mf, tm, rtd, facadeColor, minHeight);
+
 
 //        for (WallPart wp : w.getWallParts()) {
 //            buildWallPart(wp, bp, mf);
@@ -138,7 +145,7 @@ public class BuildingBuilder {
             for (Wall in : bp.getInlineWalls()) {
                 boolean ccc = isWallCounterClockwise(w);
 
-                buildWall(in, ccc, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm);
+                buildWall(in, ccc, minHeight, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm);
     //            for (WallPart wp : in.getWallParts()) {
     //                buildWallPart(wp, bp, mf);
     //            }
@@ -149,6 +156,32 @@ public class BuildingBuilder {
 //        partOutput.setFirstPoint(getFirstWallPoint(w));
 
         return partOutput;
+    }
+
+    /**
+     * @param bp
+     * @param buildingModel
+     * @param mf
+     * @param tm
+     * @param rtd
+     * @param facadeColor
+     * @param minHeight
+     */
+    public static void buildFloor(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf,
+            BuildingElementsTextureMenager tm, RoofTextureData rtd, Color facadeColor, double minHeight) {
+        Color floorColor = takeFloorColor(buildingModel, bp, tm);
+        TextureData floorTD = takeFloorTextureData(buildingModel, bp, tm, floorColor != null);
+
+        String tex0Key = floorTD.getTex0();
+        Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, facadeColor);
+
+
+        MeshFactory mesh = mf.addMesh("FlorPart");
+        mesh.hasTexture = true;
+        mesh.materialID = mf.cacheMaterial(mat);
+
+        PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
+        MeshFactoryUtil.addPolygonWithHolesInYRevert(buildingPolygon, minHeight, mesh, rtd.getRoofTexture(), 0, 0, new Vector3d(1, 0, 0));
     }
 
     private static Point2d getFirstWallPoint(Wall w) {
@@ -175,9 +208,8 @@ public class BuildingBuilder {
         return null;
     }
 
-    private static void buildWall(Wall w, boolean counterClockwise, double wallHeight, BuildingPart bp, BuildingModel buildingModel, ModelFactory mf,  CatchFaceFactory catchFaceFactory, BuildingElementsTextureMenager tm) {
+    private static void buildWall(Wall w, boolean counterClockwise, double minHeight, double wallHeight, BuildingPart bp, BuildingModel buildingModel, ModelFactory mf,  CatchFaceFactory catchFaceFactory, BuildingElementsTextureMenager tm) {
 
-        double minHeight = bp.getDefaultMinHeight();
 
 //        MeshFactory meshWind = mf.addMesh("Windows");
 //        meshWind.hasTexture = true;
@@ -433,36 +465,69 @@ public class BuildingBuilder {
         return td;
     }
 
-    private static Color takeFacadeColor(
-            BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp, BuildingElementsTextureMenager tm) {
+    private static TextureData takeFloorTextureData(
+            BuildingModel buildingModel, BuildingPart bp, BuildingElementsTextureMenager tm, boolean colorable) {
+
+        String mt = null;
+
+        if (bp.getFloorMaterialType() != null) {
+            mt = bp.getFloorMaterialType();
+        } else  if (buildingModel.getFloorMaterialType() != null) {
+            mt = buildingModel.getFloorMaterialType();
+        }
+
+        TextureData td = tm.findTexture(new TextureFindCriteria(Type.FLOOR, mt, null, null, null, colorable));
+
+        if (td == null) {
+            td = new TextureData(null, 1, 1);
+        }
+
+        return td;
+    }
+
+    private static Color takeFacadeColor(BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp,
+            BuildingElementsTextureMenager tm) {
 
         Color c = null;
 
         if (wp != null && wp.getFacadeColour() != null) {
             c = wp.getFacadeColour();
-        } else  if (w.getFacadeColour() != null) {
+        } else if (w.getFacadeColour() != null) {
             c = w.getFacadeColour();
-        } else  if (bp.getFacadeColour() != null) {
+        } else if (bp.getFacadeColour() != null) {
             c = bp.getFacadeColour();
-        } else  if (buildingModel.getFacadeColour() != null) {
+        } else if (buildingModel.getFacadeColour() != null) {
             c = buildingModel.getFacadeColour();
         }
 
         return c;
     }
 
-    private static Color takeRoofColor(
-            BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp, BuildingElementsTextureMenager tm) {
+    private static Color takeFloorColor(BuildingModel buildingModel, BuildingPart bp, BuildingElementsTextureMenager tm) {
+
+        Color c = null;
+
+        if (bp.getFloorColour() != null) {
+            c = bp.getFloorColour();
+        } else if (buildingModel.getFloorColour() != null) {
+            c = buildingModel.getFloorColour();
+        }
+
+        return c;
+    }
+
+    private static Color takeRoofColor(BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp,
+            BuildingElementsTextureMenager tm) {
 
         Color c = null;
 
         if (wp != null && wp.getRoofColour() != null) {
             c = wp.getRoofColour();
-        } else  if (w.getRoofColour() != null) {
+        } else if (w.getRoofColour() != null) {
             c = w.getRoofColour();
-        } else  if (bp.getRoofColour() != null) {
+        } else if (bp.getRoofColour() != null) {
             c = bp.getRoofColour();
-        } else  if (buildingModel.getRoofColour() != null) {
+        } else if (buildingModel.getRoofColour() != null) {
             c = buildingModel.getRoofColour();
         }
 

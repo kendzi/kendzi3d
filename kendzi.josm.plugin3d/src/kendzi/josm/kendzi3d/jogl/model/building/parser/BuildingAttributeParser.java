@@ -74,6 +74,14 @@ public class BuildingAttributeParser {
 //        return null;
     }
 
+    /** Gets floor texture.
+     * @param primitive
+     * @return facade texture data
+     */
+    public static String parseFloorMaterialName(OsmPrimitive primitive) {
+        return OsmAttributeKeys.FLOOR_MATERIAL.primitiveValue(primitive);
+    }
+
     /** Gets facade texture.
      * @param primitive
      * @return facade texture data
@@ -112,6 +120,23 @@ public class BuildingAttributeParser {
         }
         if (StringUtil.isBlankOrNull(facadeColor)) {
             facadeColor = OsmAttributeKeys.BUILDING_COLOUR.primitiveValue(primitive);
+        }
+
+        if (!StringUtil.isBlankOrNull(facadeColor)) {
+            return ColorTextureBuilder.parseColor(facadeColor);
+        }
+        return null;
+    }
+
+    /** Gets floor texture.
+     * @param primitive
+     * @return facade texture
+     */
+    public static Color parseFloorColour(OsmPrimitive primitive) {
+
+        String facadeColor = OsmAttributeKeys.FLOOR_COLOR.primitiveValue(primitive);
+        if (StringUtil.isBlankOrNull(facadeColor)) {
+            facadeColor = OsmAttributeKeys.FLOOR_COLOUR.primitiveValue(primitive);
         }
 
         if (!StringUtil.isBlankOrNull(facadeColor)) {

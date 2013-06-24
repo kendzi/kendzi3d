@@ -60,6 +60,12 @@ public enum OsmAttributeKeys {
 
     ROOF_COLOR("roof:color"),
 
+    FLOOR_MATERIAL("floor:material"),
+
+    FLOOR_COLOUR("floor:colour"),
+
+    FLOOR_COLOR("floor:color"),
+
     BUILDING_ROOF_COLOUR("building:roof:colour"),
 
     BUILDING_ROOF_COLOR("building:roof:color"),

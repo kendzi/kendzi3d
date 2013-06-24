@@ -322,6 +322,8 @@ public class NewBuilding extends AbstractModel {
                 key = TextureLibraryKey.BUILDING_FACADE;
             } else if (Type.ROOF.equals(type)) {
                 key = TextureLibraryKey.BUILDING_ROOF;
+            } else if (Type.FLOOR.equals(type)) {
+                key = TextureLibraryKey.BUILDING_FLOOR;
             }
 
             if (key == null) {
@@ -329,18 +331,6 @@ public class NewBuilding extends AbstractModel {
             }
 
             String keyStr = this.textureLibraryService.getKey(key, pTextureFindCriteria.getTypeName()/*, pTextureFindCriteria.getSubTypeName()*/);
-
-            // FIXME
-            if ("buildings.facade_test1".equals(keyStr)) {
-//                return new TextureData("test1", 2,  2);
-              //  return new TextureData("#c=0xffffff", "/textures/pd/test/channel1gray.png", 2, 2);
-//                return new TextureData("#c=0xffffff", "/textures/pd/MarekCompositeWall00001.png", 2, 2);
-            }
-            // FIXME
-
-//            if (colorable) {
-//                keyStr = "#bw=" + keyStr;
-//            }
 
             List<TextureData> textureSet = this.textureLibraryService.getTextureSet(keyStr);
             boolean findColorable = false;
@@ -365,8 +355,6 @@ public class NewBuilding extends AbstractModel {
             if (colorable && !findColorable) {
                 textureData = this.textureLibraryService.colorableTextureData(textureData);
             }
-
-
 
             return textureData;
         }
@@ -445,6 +433,10 @@ public class NewBuilding extends AbstractModel {
         ret.setDormerRoofModel(bp.getDormerRoofModel());
         ret.setFacadeColour(bp.getFacadeColour());
         ret.setFacadeMaterialType(bp.getFacadeMaterialType());
+
+        ret.setFloorColour(bp.getFloorColour());
+        ret.setFloorMaterialType(bp.getFloorMaterialType());
+
         ret.setInlineWalls(bp.getInlineWalls());
         ret.setLevelHeight(bp.getLevelHeight());
 
@@ -594,22 +586,25 @@ public class NewBuilding extends AbstractModel {
     }
 
     /**
-     * @param pRelation
+     * @param pOsmPrimitive
      * @return
      */
-    public BuildingPart parseBuildingPartAttributes(OsmPrimitive pRelation) {
+    public BuildingPart parseBuildingPartAttributes(OsmPrimitive pOsmPrimitive) {
         BuildingPart bp = new BuildingPart();
-        bp.setMaxHeight(BuildingAttributeParser.parseMaxHeight(pRelation));
-        bp.setMinHeight(BuildingAttributeParser.parseMinHeight(pRelation));
-        bp.setMaxLevel(BuildingAttributeParser.parseMaxLevel(pRelation));
-        bp.setRoofLevels(BuildingAttributeParser.parseRoofLevels(pRelation));
-        bp.setMinLevel(BuildingAttributeParser.parseMinLevel(pRelation));
+        bp.setMaxHeight(BuildingAttributeParser.parseMaxHeight(pOsmPrimitive));
+        bp.setMinHeight(BuildingAttributeParser.parseMinHeight(pOsmPrimitive));
+        bp.setMaxLevel(BuildingAttributeParser.parseMaxLevel(pOsmPrimitive));
+        bp.setRoofLevels(BuildingAttributeParser.parseRoofLevels(pOsmPrimitive));
+        bp.setMinLevel(BuildingAttributeParser.parseMinLevel(pOsmPrimitive));
 
-        bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(pRelation));
-        bp.setFacadeColour(BuildingAttributeParser.parseFacadeColour(pRelation));
+        bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(pOsmPrimitive));
+        bp.setFacadeColour(BuildingAttributeParser.parseFacadeColour(pOsmPrimitive));
 
-        bp.setRoofMaterialType(BuildingAttributeParser.parseRoofMaterialName(pRelation));
-        bp.setRoofColour(BuildingAttributeParser.parseRoofColour(pRelation));
+        bp.setFloorMaterialType(BuildingAttributeParser.parseFloorMaterialName(pOsmPrimitive));
+        bp.setFloorColour(BuildingAttributeParser.parseFloorColour(pOsmPrimitive));
+
+        bp.setRoofMaterialType(BuildingAttributeParser.parseRoofMaterialName(pOsmPrimitive));
+        bp.setRoofColour(BuildingAttributeParser.parseRoofColour(pOsmPrimitive));
         return bp;
     }
 
