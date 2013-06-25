@@ -173,10 +173,10 @@ public class BuildingBuilder {
         TextureData floorTD = takeFloorTextureData(buildingModel, bp, tm, floorColor != null);
 
         String tex0Key = floorTD.getTex0();
-        Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, facadeColor);
+        Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, floorColor);
 
 
-        MeshFactory mesh = mf.addMesh("FlorPart");
+        MeshFactory mesh = mf.addMesh("FloorPart");
         mesh.hasTexture = true;
         mesh.materialID = mf.cacheMaterial(mat);
 

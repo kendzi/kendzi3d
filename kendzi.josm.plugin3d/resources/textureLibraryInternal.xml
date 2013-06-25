@@ -98,6 +98,10 @@
 		<textureData tex0="/textures/pd/Copper_roof_texture.png" height="1.5" width="1.5"/>
 	</textureSet>
 	
+	<textureSet key="buildings.floor_unknown">
+		<textureData tex0="/textures/pd/floor_unknown.png" height="1" width="1"/>
+	</textureSet>
+	
 	<!-- Buildings windows -->
 	<textureSet key="buildings.window">	
 		<!-- outdate remove! -->
