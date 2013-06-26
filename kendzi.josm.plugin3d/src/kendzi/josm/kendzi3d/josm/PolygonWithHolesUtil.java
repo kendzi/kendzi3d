@@ -1,10 +1,9 @@
-package kendzi.josm.kendzi3d.jogl.model;
+package kendzi.josm.kendzi3d.josm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import kendzi.josm.kendzi3d.jogl.model.NewBuilding.ReversableWay;
 import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.math.geometry.polygon.MultiPartPolygonUtil;
 import kendzi.math.geometry.polygon.MultiPartPolygonUtil.Edge;
@@ -27,7 +26,7 @@ public class PolygonWithHolesUtil {
         outersClosed.addAll(filterByRoleAndKey(pRelation, OsmPrimitiveType.CLOSEDWAY, null, null));
 
         List<OsmPrimitive> outersParts = filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, "outer", null);
-        outersParts.addAll(filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, null,  null ));
+        outersParts.addAll(filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, null, null));
 
         List<OsmPrimitive> innersClosed = filterByRoleAndKey(pRelation, OsmPrimitiveType.CLOSEDWAY, "inner", null);
         List<OsmPrimitive> innersParts = filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, "inner", null);
@@ -49,7 +48,7 @@ public class PolygonWithHolesUtil {
             AreaWithHoles wp = new AreaWithHoles();
             wp.setOuter(o);
 
-            //FIXME TODO filter out inners from outers!!
+            // FIXME TODO filter out inners from outers!!
             wp.setInner(inners);
 
             ret.add(wp);
@@ -62,22 +61,21 @@ public class PolygonWithHolesUtil {
      * @return
      */
     private static List<List<ReversableWay>> connectMultiPolygonParts(List<OsmPrimitive> outersParts) {
-        List<Edge<Way, Node>> in = new ArrayList<MultiPartPolygonUtil.Edge<Way,Node>>();
+        List<Edge<Way, Node>> in = new ArrayList<MultiPartPolygonUtil.Edge<Way, Node>>();
         for (OsmPrimitive osmPrimitive : outersParts) {
-            Way w =((Way) osmPrimitive);
+            Way w = ((Way) osmPrimitive);
             if (w.getNodesCount() < 2) {
                 // when relation is incomplete
                 continue;
             }
             Vertex<Node> v1 = new Vertex<Node>(w.getNode(0));
-            Vertex<Node> v2 = new Vertex<Node>(w.getNode(w.getNodesCount()-1));
+            Vertex<Node> v2 = new Vertex<Node>(w.getNode(w.getNodesCount() - 1));
 
             Edge<Way, Node> e = new Edge<Way, Node>(v1, v2, w);
             in.add(e);
         }
 
-        List<List<EdgeOut<Way,Node>>> connect = MultiPartPolygonUtil.connect(in);
-
+        List<List<EdgeOut<Way, Node>>> connect = MultiPartPolygonUtil.connect(in);
 
         List<List<ReversableWay>> outerWallParts = convert(connect);
         return outerWallParts;
@@ -91,7 +89,7 @@ public class PolygonWithHolesUtil {
 
         List<List<ReversableWay>> outerWallParts = new ArrayList<List<ReversableWay>>();
         for (List<EdgeOut<Way, Node>> list : connect) {
-            List<ReversableWay> wallParts = new ArrayList<NewBuilding.ReversableWay>();
+            List<ReversableWay> wallParts = new ArrayList<ReversableWay>();
             for (EdgeOut<Way, Node> edgeOut : list) {
                 wallParts.add(new ReversableWay(edgeOut.getEdge().getData(), edgeOut.isReverted()));
             }
@@ -133,24 +131,28 @@ public class PolygonWithHolesUtil {
     public static class AreaWithHoles {
         List<ReversableWay> outer;
         List<List<ReversableWay>> inner;
+
         /**
          * @return the outer
          */
         public List<ReversableWay> getOuter() {
             return this.outer;
         }
+
         /**
          * @param outer the outer to set
          */
         public void setOuter(List<ReversableWay> outer) {
             this.outer = outer;
         }
+
         /**
          * @return the inner
          */
         public List<List<ReversableWay>> getInner() {
             return this.inner;
         }
+
         /**
          * @param inner the inner to set
          */

@@ -1,6 +1,6 @@
 package kendzi.josm.kendzi3d.jogl.model.building.texture;
 
-import kendzi.josm.kendzi3d.jogl.model.building.texture.BuildingElementsTextureMenager.Type;
+import kendzi.josm.kendzi3d.jogl.model.building.texture.BuildingElementsTextureManager.Type;
 
 public class TextureFindCriteria {
     private Type type;

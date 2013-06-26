@@ -5,7 +5,7 @@ import java.util.Set;
 
 import kendzi.josm.kendzi3d.dto.TextureData;
 
-public class SimpleBuildingElementsTextureMenager extends BuildingElementsTextureMenager {
+public class SimpleBuildingElementsTextureMenager extends BuildingElementsTextureManager {
 
     private Set<TextureData> tdSet = new HashSet();
 
