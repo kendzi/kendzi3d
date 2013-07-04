@@ -120,10 +120,10 @@ public class BuildingBuilder {
         WallPart firstWallPart = getFirstWallPart(w);
         Color facadeColor = takeFacadeColor(buildingModel, bp, w, firstWallPart, tm);
 
-        rtd.setFacadeCoror(facadeColor);
-        rtd.setFacadeTextrure(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
+        rtd.setFacadeColor(facadeColor);
+        rtd.setFacadeTexture(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
-        rtd.setRoofCoror(roofColor);
+        rtd.setRoofColor(roofColor);
         rtd.setRoofTexture(takeRoofTextureData(buildingModel, bp, w, tm, roofColor!=null));
 
         double maxHeight = bp.getDefaultMaxHeight();
@@ -442,14 +442,14 @@ public class BuildingBuilder {
 
         Color c = null;
 
-        if (wp != null && wp.getFacadeColour() != null) {
-            c = wp.getFacadeColour();
-        } else if (w.getFacadeColour() != null) {
-            c = w.getFacadeColour();
-        } else if (bp.getFacadeColour() != null) {
-            c = bp.getFacadeColour();
-        } else if (buildingModel.getFacadeColour() != null) {
-            c = buildingModel.getFacadeColour();
+        if (wp != null && wp.getFacadeColor() != null) {
+            c = wp.getFacadeColor();
+        } else if (w.getFacadeColor() != null) {
+            c = w.getFacadeColor();
+        } else if (bp.getFacadeColor() != null) {
+            c = bp.getFacadeColor();
+        } else if (buildingModel.getFacadeColor() != null) {
+            c = buildingModel.getFacadeColor();
         }
 
         return c;
@@ -459,10 +459,10 @@ public class BuildingBuilder {
 
         Color c = null;
 
-        if (bp.getFloorColour() != null) {
-            c = bp.getFloorColour();
-        } else if (buildingModel.getFloorColour() != null) {
-            c = buildingModel.getFloorColour();
+        if (bp.getFloorColor() != null) {
+            c = bp.getFloorColor();
+        } else if (buildingModel.getFloorColor() != null) {
+            c = buildingModel.getFloorColor();
         }
 
         return c;
@@ -473,14 +473,14 @@ public class BuildingBuilder {
 
         Color c = null;
 
-        if (wp != null && wp.getRoofColour() != null) {
-            c = wp.getRoofColour();
-        } else if (w.getRoofColour() != null) {
-            c = w.getRoofColour();
-        } else if (bp.getRoofColour() != null) {
-            c = bp.getRoofColour();
-        } else if (buildingModel.getRoofColour() != null) {
-            c = buildingModel.getRoofColour();
+        if (wp != null && wp.getRoofColor() != null) {
+            c = wp.getRoofColor();
+        } else if (w.getRoofColor() != null) {
+            c = w.getRoofColor();
+        } else if (bp.getRoofColor() != null) {
+            c = bp.getRoofColor();
+        } else if (buildingModel.getRoofColor() != null) {
+            c = buildingModel.getRoofColor();
         }
 
         return c;

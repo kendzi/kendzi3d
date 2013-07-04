@@ -117,13 +117,13 @@ public class BuildingParser {
         bp.setMinLevel(BuildingAttributeParser.parseMinLevel(pOsmPrimitive));
 
         bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(pOsmPrimitive));
-        bp.setFacadeColour(BuildingAttributeParser.parseFacadeColour(pOsmPrimitive));
+        bp.setFacadeColor(BuildingAttributeParser.parseFacadeColor(pOsmPrimitive));
 
         bp.setFloorMaterialType(BuildingAttributeParser.parseFloorMaterialName(pOsmPrimitive));
-        bp.setFloorColour(BuildingAttributeParser.parseFloorColour(pOsmPrimitive));
+        bp.setFloorColor(BuildingAttributeParser.parseFloorColor(pOsmPrimitive));
 
         bp.setRoofMaterialType(BuildingAttributeParser.parseRoofMaterialName(pOsmPrimitive));
-        bp.setRoofColour(BuildingAttributeParser.parseRoofColour(pOsmPrimitive));
+        bp.setRoofColor(BuildingAttributeParser.parseRoofColor(pOsmPrimitive));
         return bp;
     }
 
@@ -221,10 +221,10 @@ public class BuildingParser {
         }
 
         ret.setDormerRoofModel(bp.getDormerRoofModel());
-        ret.setFacadeColour(bp.getFacadeColour());
+        ret.setFacadeColor(bp.getFacadeColor());
         ret.setFacadeMaterialType(bp.getFacadeMaterialType());
 
-        ret.setFloorColour(bp.getFloorColour());
+        ret.setFloorColor(bp.getFloorColor());
         ret.setFloorMaterialType(bp.getFloorMaterialType());
 
         ret.setInlineWalls(bp.getInlineWalls());
@@ -234,7 +234,7 @@ public class BuildingParser {
         ret.setMinLevel(bp.getMinLevel());
 
         ret.setRoof(bp.getRoof());
-        ret.setRoofColour(bp.getRoofColour());
+        ret.setRoofColor(bp.getRoofColor());
         ret.setRoofLevels(bp.getRoofLevels());
         ret.setRoofMaterialType(bp.getRoofMaterialType());
 
@@ -363,13 +363,13 @@ public class BuildingParser {
         // BuildingAttributeParser.parseFacadeMaterialName(w);
         // wp.setFacadeTextureData(BuildingAttributeParser.parseFacadeTexture(parseFacadeName,
         // this.textureLibraryService));
-        // wp.setColour(BuildingAttributeParser.parseFacadeColour(w));
+        // wp.setColor(BuildingAttributeParser.parseFacadeColor(w));
 
         wp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(way));
-        wp.setFacadeColour(BuildingAttributeParser.parseFacadeColour(way));
+        wp.setFacadeColor(BuildingAttributeParser.parseFacadeColor(way));
 
         wp.setRoofMaterialType(BuildingAttributeParser.parseRoofMaterialName(way));
-        wp.setRoofColour(BuildingAttributeParser.parseRoofColour(way));
+        wp.setRoofColor(BuildingAttributeParser.parseRoofColor(way));
 
         return wp;
     }

@@ -35,7 +35,7 @@ public class Photo {
      */
     double pitch;
 
-    double angleWitht;
+    double angleWidth;
     double angleHeigth;
 
 
@@ -138,17 +138,17 @@ public class Photo {
     }
 
     /**
-     * @return the angleWitht
+     * @return the angleWidth
      */
-    public double getAngleWitht() {
-        return angleWitht;
+    public double getAngleWidth() {
+        return angleWidth;
     }
 
     /**
-     * @param angleWitht the angleWitht to set
+     * @param angleWidth the angleWidth to set
      */
-    public void setAngleWitht(double angleWitht) {
-        this.angleWitht = angleWitht;
+    public void setAngleWidth(double angleWidth) {
+        this.angleWidth = angleWidth;
     }
 
     /**

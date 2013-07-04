@@ -15,9 +15,9 @@ public class Wall {
 
     private String roofMaterialType;
 
-    private Color facadeColour;
+    private Color facadeColor;
 
-    private Color roofColour;
+    private Color roofColor;
 
 
     /**
@@ -63,31 +63,31 @@ public class Wall {
     }
 
     /**
-     * @return the facadeColour
+     * @return the facadeColor
      */
-    public Color getFacadeColour() {
-        return this.facadeColour;
+    public Color getFacadeColor() {
+        return this.facadeColor;
     }
 
     /**
-     * @param facadeColour the facadeColour to set
+     * @param facadeColor the facadeColor to set
      */
-    public void setFacadeColour(Color facadeColour) {
-        this.facadeColour = facadeColour;
+    public void setFacadeColor(Color facadeColor) {
+        this.facadeColor = facadeColor;
     }
 
     /**
-     * @return the roofColour
+     * @return the roofColor
      */
-    public Color getRoofColour() {
-        return this.roofColour;
+    public Color getRoofColor() {
+        return this.roofColor;
     }
 
     /**
-     * @param roofColour the roofColour to set
+     * @param roofColor the roofColor to set
      */
-    public void setRoofColour(Color roofColour) {
-        this.roofColour = roofColour;
+    public void setRoofColor(Color roofColor) {
+        this.roofColor = roofColor;
     }
 
 

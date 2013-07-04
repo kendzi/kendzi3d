@@ -118,7 +118,7 @@ public class ExampleRoofJoglFrame extends BaseJoglFrame {
         // it can be material with color ! (XXX my renderer portably crash with materials);
         // simply create different keys for texture and replace it before rendering like this:
         // rtd.setFacadeTextrure(new TextureData("MY_MATERIAL_NAME_1", 1, 1));
-        rtd.setFacadeTextrure(new TextureData("/textures/building_facade_plaster.png", 4, 2));
+        rtd.setFacadeTexture(new TextureData("/textures/building_facade_plaster.png", 4, 2));
         rtd.setRoofTexture(new TextureData("/textures/building_roof_material_roofTiles.png", 3, 3));
 
         ModelFactory mf = ModelFactory.modelBuilder();

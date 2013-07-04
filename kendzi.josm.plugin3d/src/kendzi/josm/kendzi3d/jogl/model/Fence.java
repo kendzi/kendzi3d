@@ -152,7 +152,7 @@ public class Fence extends AbstractWayModel {
 
         enableTransparentText(pGl);
 
-        // replace the quad colours with the texture
+        // replace the quad colors with the texture
         //      gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
         pGl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
 

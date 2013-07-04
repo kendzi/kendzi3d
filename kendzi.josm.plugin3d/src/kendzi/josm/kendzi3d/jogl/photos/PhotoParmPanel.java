@@ -31,7 +31,7 @@ public class PhotoParmPanel extends JPanel {
     private JTextField pitchText;
     private JTextField pathText;
     private JTextField yawTest;
-    private JTextField angleWithtText;
+    private JTextField angleWidthText;
     private JTextField angleHeigthText;
 
 
@@ -85,10 +85,10 @@ public class PhotoParmPanel extends JPanel {
                         this.yawTest = new JTextField();
                         textPanel.add(yawTest);
 
-                                JLabel label_5 = new JLabel("angleWithtText");
+                                JLabel label_5 = new JLabel("angleWidthText");
                                 textPanel.add(label_5);
-                        this.angleWithtText = new JTextField();
-                        textPanel.add(angleWithtText);
+                        this.angleWidthText = new JTextField();
+                        textPanel.add(angleWidthText);
 
                                 JLabel label_6 = new JLabel("angleHeigthText");
                                 textPanel.add(label_6);
@@ -140,7 +140,7 @@ public class PhotoParmPanel extends JPanel {
         this.lonText.setText("15.764873979360045");
 
         this.angleHeigthText.setText("30");
-        this.angleWithtText.setText("60");
+        this.angleWidthText.setText("60");
         this.pathText.setText("test.png");
         this.pitchText.setText("0");
         this.rollText.setText("0");
@@ -163,8 +163,8 @@ public class PhotoParmPanel extends JPanel {
 
         photo.setAngleHeigth(
                 Math.toRadians(Double.parseDouble(this.angleHeigthText.getText())));
-        photo.setAngleWitht(
-                Math.toRadians(Double.parseDouble(this.angleWithtText.getText())));
+        photo.setAngleWidth(
+                Math.toRadians(Double.parseDouble(this.angleWidthText.getText())));
         photo.setPath( this.pathText.getText());
         photo.setPitch(
                 Math.toRadians(Double.parseDouble(this.pitchText.getText())));

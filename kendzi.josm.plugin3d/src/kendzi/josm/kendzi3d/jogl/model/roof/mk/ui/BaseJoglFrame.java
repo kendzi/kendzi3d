@@ -180,7 +180,7 @@ public class BaseJoglFrame implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         gl.glClearDepth(1.0);
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue colour
+        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
 
         gl.glEnable(GL2.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
@@ -308,7 +308,7 @@ public class BaseJoglFrame implements GLEventListener {
      // _direction_
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
 
-        // clear colour and depth buffers
+        // clear color and depth buffers
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -375,7 +375,7 @@ public class BaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular colour.
+     * Set up a point source with ambient, diffuse, and specular color.
      * components
      */
     private void addLight(GL2 gl) {
