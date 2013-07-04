@@ -3,7 +3,7 @@ package kendzi.josm.kendzi3d.jogl.model.building.model;
 import java.awt.Color;
 import java.util.List;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
+import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofModel;
 
 public class BuildingPart {
 
@@ -33,15 +33,14 @@ public class BuildingPart {
 
     private Color floorColor;
 
-    DormerRoofModel roof;
+    private RoofModel roof;
 
     // Outline
-    Wall wall;
+    private Wall wall;
 
     // Inline
-    List<Wall> inlineWalls;
+    private List<Wall> inlineWalls;
 
-    DormerRoofModel dormerRoofModel;
 
     // Windows
 
@@ -121,7 +120,7 @@ public class BuildingPart {
     /**
      * @return the roof
      */
-    public DormerRoofModel getRoof() {
+    public RoofModel getRoof() {
         return this.roof;
     }
 
@@ -129,7 +128,7 @@ public class BuildingPart {
      * @param roof
      *            the roof to set
      */
-    public void setRoof(DormerRoofModel roof) {
+    public void setRoof(RoofModel roof) {
         this.roof = roof;
     }
 
@@ -237,20 +236,20 @@ public class BuildingPart {
         this.minLevel = minLevel;
     }
 
-    /**
-     * @return the dormerRoofModel
-     */
-    public DormerRoofModel getDormerRoofModel() {
-        return this.dormerRoofModel;
-    }
-
-    /**
-     * @param dormerRoofModel
-     *            the dormerRoofModel to set
-     */
-    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
-        this.dormerRoofModel = dormerRoofModel;
-    }
+//    /**
+//     * @return the dormerRoofModel
+//     */
+//    public DormerRoofModel getDormerRoofModel() {
+//        return this.dormerRoofModel;
+//    }
+//
+//    /**
+//     * @param dormerRoofModel
+//     *            the dormerRoofModel to set
+//     */
+//    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
+//        this.dormerRoofModel = dormerRoofModel;
+//    }
 
     // /**
     // * @return the roofTextureData

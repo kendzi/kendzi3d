@@ -9,6 +9,7 @@ import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
 import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeValues;
+import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
@@ -32,48 +33,61 @@ import org.openstreetmap.josm.data.osm.Way;
 public class RoofParser {
 
     /** Parse roof model from way.
-     * @param way
+     * @param primitive
      * @param perspective
      * @return roof model
      */
-    public static DormerRoofModel parse(OsmPrimitive way, Perspective3D perspective) {
+    public static RoofModel parse(OsmPrimitive primitive, Perspective3D perspective) {
 
-        DormerRoofModel roof = parseDormerRoof(way, perspective);
+        if (isRoofLines(primitive)) {
+            return RoofLinesParser.parse(primitive, perspective);
+        }
 
-        return roof;
+        return parseDormerRoof(primitive, perspective);
+    }
+
+    private static boolean isRoofLines(OsmPrimitive primitive) {
+        if (!StringUtil.isBlankOrNull(parseRoofShape(primitive))) {
+            return false;
+        }
+        // XXX fix for not tagged flat roofs!
+        return true;
+    }
+
+    private static String parseRoofShape(OsmPrimitive primitive) {
+
+        String type = OsmAttributeKeys._3DR_TYPE.primitiveValue(primitive);
+        if (StringUtil.isBlankOrNull(type)) {
+            type = OsmAttributeKeys.ROOF_SHAPE.primitiveValue(primitive);
+        }
+        if (StringUtil.isBlankOrNull(type)) {
+            type = OsmAttributeKeys.BUILDING_ROOF_SHAPE.primitiveValue(primitive);
+        }
+        return type;
     }
 
     /**
      * @param perspective
-     * @param way
+     * @param primitive
      * @return
      */
-    public static DormerRoofModel parseDormerRoof(
-            /*List<Point2d> points,*/ OsmPrimitive way, Perspective3D perspective) {
-
-
-
-        Map<String, String> keys = way.getKeys();
-
-        String type = keys.get(OsmAttributeKeys._3DR_TYPE.getKey());
-        if (StringUtil.isBlankOrNull(type)) {
-            type = keys.get(OsmAttributeKeys.ROOF_SHAPE.getKey());
-        }
-        if (StringUtil.isBlankOrNull(type)) {
-            type = keys.get(OsmAttributeKeys.BUILDING_ROOF_SHAPE.getKey());
-        }
-
-        String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
+    private static DormerRoofModel parseDormerRoof(OsmPrimitive primitive, Perspective3D perspective) {
 
         DormerRoofModel roof = new  DormerRoofModel();
 
-//        roof.setBuilding(new PolygonList2d(points));
+        String type = parseRoofShape(primitive);
+
         RoofTypeAliasEnum roofType = Parser.parseRoofShape(type);
         if (roofType == null) {
             roofType = RoofTypeAliasEnum.FLAT;
         }
+
         roof.setRoofType(roofType);
         roof.setRoofTypeParameter(Parser.parseRoofTypeParameter(roofType, type));
+
+        Map<String, String> keys = primitive.getKeys();
+
+        String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
 
         roof.setDormers(Parser.parseMultipleDormers(dormer));
         roof.setDormersFront(Parser.parseSiteDormers("front",keys));
@@ -85,8 +99,8 @@ public class RoofParser {
 
         if (measurements.get(MeasurementKey.HEIGHT_1) == null) {
 
-            Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(way), null);
-            Double roofAngle = ModelUtil.getNumberAttribute(way, OsmAttributeKeys.ROOF_ANGLE.getKey(), null);
+            Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), null);
+            Double roofAngle = ModelUtil.getNumberAttribute(primitive, OsmAttributeKeys.ROOF_ANGLE.getKey(), null);
 
             if (roofHeight != null) {
                 measurements.put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
@@ -98,7 +112,7 @@ public class RoofParser {
 
         roof.setMeasurements(measurements);
 
-        roof.setDirection(findDirection(way, perspective));
+        roof.setDirection(findDirection(primitive, perspective));
         BuildingRoofOrientation parseOrientation = Parser.parseOrientation(keys);
         if (parseOrientation == null) {
             parseOrientation = BuildingRoofOrientation.along;
@@ -152,7 +166,7 @@ public class RoofParser {
      * @param soft
      * @return
      */
-    public static RoofDirection parseDirectionStr(String directionValue, Ortagonal orthogonal, boolean soft) {
+    private static RoofDirection parseDirectionStr(String directionValue, Ortagonal orthogonal, boolean soft) {
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
             Vector2d directionVector = direction.getVector();

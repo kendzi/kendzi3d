@@ -3,6 +3,8 @@ package kendzi.math.geometry.line;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
+import kendzi.math.geometry.point.Vector2dUtil;
+
 public class LineSegment2d {
 
     Point2d begin;
@@ -32,6 +34,8 @@ public class LineSegment2d {
      * @param A line in linear form parameter A
      * @param B line in linear form parameter B
      * @param C line in linear form parameter C
+     *
+     * XXX better name is intersects ?!
      * @return collision point
      */
     public static Point2d collide(double x1, double y1, double x2, double y2, double A, double B, double C
@@ -49,6 +53,14 @@ public class LineSegment2d {
         }
         return null;
     }
+
+    public Point2d intersect(LineSegment2d lineSegment) {
+        Vector2d v1 = Vector2dUtil.fromTo(this.begin, this.end);
+        Vector2d v2 = Vector2dUtil.fromTo(lineSegment.begin, lineSegment.end);
+
+        return LineUtil.intersectLineSegments(this.begin, lineSegment.begin, v1, v2);
+    }
+
 
     private static double det(double x, double y, double A, double B, double C) {
         return A * x + B * y + C;

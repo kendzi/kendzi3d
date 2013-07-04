@@ -3,12 +3,13 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.model;
 import java.util.List;
 import java.util.Map;
 
+import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.BuildingRoofOrientation;
 
-public class DormerRoofModel {
+public class DormerRoofModel implements RoofModel {
 
     // Roof Type
     RoofTypeAliasEnum roofType;
@@ -219,6 +220,12 @@ public class DormerRoofModel {
      */
     public void setOrientation(BuildingRoofOrientation orientation) {
         this.orientation = orientation;
+    }
+
+
+    @Override
+    public double getRoofHeight() {
+        throw new RuntimeException("TODO");
     }
 
 

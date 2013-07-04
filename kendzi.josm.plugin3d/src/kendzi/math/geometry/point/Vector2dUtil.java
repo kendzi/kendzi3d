@@ -1,5 +1,7 @@
 package kendzi.math.geometry.point;
 
+import javax.vecmath.Point2d;
+import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 
 public class Vector2dUtil {
@@ -96,5 +98,19 @@ public class Vector2dUtil {
 
     private static double EPSILON = 0.00000001;
 
+    /**
+     * Cross product for 2d is same as doc
+     * @param u
+     * @param v
+     * @return
+     * @see {http://mathworld.wolfram.com/CrossProduct.html}
+     */
+    public static double cross(Tuple2d u, Tuple2d v) {
+        return u.x * v.y - u.y * v.x;
+    }
+
+    public static Vector2d fromTo(Point2d begin, Point2d end) {
+        return new Vector2d(end.x - begin.x, end.y - begin.y);
+    }
 
 }

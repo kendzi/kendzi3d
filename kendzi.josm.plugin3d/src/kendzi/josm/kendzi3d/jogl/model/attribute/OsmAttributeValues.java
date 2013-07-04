@@ -7,6 +7,7 @@ public enum OsmAttributeValues{
     END("end"),
     CLONE_HEIGHT("clone:height"),
     CLONE_LEVEL("clone:level"),
+    YES("yes"),
     ;
 
     String value;

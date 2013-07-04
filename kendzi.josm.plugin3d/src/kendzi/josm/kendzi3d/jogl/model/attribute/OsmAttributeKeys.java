@@ -88,6 +88,12 @@ public enum OsmAttributeKeys {
 
     ENTRANCE("entrance"),
 
+    ROOF_EDGE("roof:edge"),
+
+    ROOF_RIDGE("roof:ridge"),
+
+    ROOF_APEX("roof:apex"),
+
     ;
 
     String key;
@@ -106,6 +112,10 @@ public enum OsmAttributeKeys {
 
     public boolean primitiveKeyHaveAnyValue(OsmPrimitive primitive) {
         return OsmAttributeUtil.primitiveKeyHaveAnyValue(primitive, this);
+    }
+
+    public boolean primitiveKeyHaveValue(OsmPrimitive primitive, OsmAttributeValues value) {
+        return value.getValue().equals(OsmAttributeUtil.primitiveKeyHaveAnyValue(primitive, this));
     }
 
 }

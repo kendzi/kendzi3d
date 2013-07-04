@@ -29,8 +29,8 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.element.WindowBuildingElem
 import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.josm.PolygonWithHolesUtil;
-import kendzi.josm.kendzi3d.josm.PolygonWithHolesUtil.AreaWithHoles;
 import kendzi.josm.kendzi3d.josm.ReversableWay;
+import kendzi.josm.kendzi3d.josm.PolygonWithHolesUtil.AreaWithHoles;
 import kendzi.josm.kendzi3d.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -81,11 +81,10 @@ public class BuildingParser {
         for (AreaWithHoles waysPolygon2 : waysPolygon) {
             BuildingPart bp = parseBuildingPartAttributes(pRelation);
 
-            DormerRoofModel roof = RoofParser.parse(pRelation, pPerspective);
             // DormerRoofModel roofClosedWay = RoofParser.parse(p,
             // pPerspective);
             // bp.setRoof(marge(roof, roofClosedWay));
-            bp.setRoof(roof);
+            bp.setRoof(RoofParser.parse(pRelation, pPerspective));
 
             bp.setWall(parseWall(waysPolygon2.getOuter(), pPerspective));
 
@@ -220,8 +219,10 @@ public class BuildingParser {
             ret.setMinHeight(bp.getMinHeight() + height);
         }
 
-        ret.setDormerRoofModel(bp.getDormerRoofModel());
+
+
         ret.setFacadeColor(bp.getFacadeColor());
+
         ret.setFacadeMaterialType(bp.getFacadeMaterialType());
 
         ret.setFloorColor(bp.getFloorColor());

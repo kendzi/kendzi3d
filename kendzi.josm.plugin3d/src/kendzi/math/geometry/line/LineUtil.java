@@ -11,7 +11,14 @@ package kendzi.math.geometry.line;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Tuple2d;
+import javax.vecmath.Vector2d;
 
+import kendzi.math.geometry.point.Vector2dUtil;
+
+/**
+ *
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class LineUtil {
 
 	/** Determinate if line is crossing Line segment.
@@ -142,6 +149,44 @@ public class LineUtil {
 				return lineCrossPoint(A.x, A.y, B.x, B.y, C.x, C.y, D.x, D.y);
 			}
 		}
+	}
+
+
+	/**
+	 * @param p1
+	 * @param p2
+	 * @param v1
+	 * @param v2
+	 * @return
+	 *
+	 * @see {http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/565282#565282}
+	 */
+	public static Point2d intersectLineSegments(Point2d p1, Point2d p2, Vector2d v1, Vector2d v2) {
+	    Point2d p = p1;
+	    Vector2d r = v1;
+	    Point2d q = p2;
+	    Vector2d s = v2;
+
+	    Vector2d qp = new Vector2d(q.x - p.x, q.y - p.y);
+	    double rs = Vector2dUtil.cross(r, s);
+
+
+
+	    //double t = Vector2dUtil.cross(qp, s) / rs;
+	    double u = Vector2dUtil.cross(qp, r) / rs;
+
+	    if (rs == 0) {
+	        if (u == 0) {
+	            // lines are collinear
+	            return new Point2d(p);
+	        } else {
+	            // never intersect
+	            return null;
+	        }
+	    }
+
+	    return new Point2d(q.x + u * s.x, q.y + u * s.y);
+
 	}
 
 	/** Calculate cross point of two lines.
