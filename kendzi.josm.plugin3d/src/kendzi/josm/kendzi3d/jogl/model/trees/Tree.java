@@ -486,7 +486,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 //        tex.bind();
 
 
-        // replace the quad colours with the texture
+        // replace the quad colors with the texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 
         this.modelRender.render(gl, model2);
@@ -509,7 +509,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         gl.glDisable(GL2.GL_TEXTURE_2D);
 
-        // switch back to modulation of quad colours and texture
+        // switch back to modulation of quad colors and texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         gl.glDisable(GL2.GL_ALPHA); // switch off transparency
         gl.glDisable(GL2.GL_BLEND);
@@ -546,7 +546,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         gl.glEnable(GL2.GL_TEXTURE_2D);
         tex.bind(gl);
 
-        // replace the quad colours with the texture
+        // replace the quad colors with the texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 
         TextureCoords tc = tex.getImageTexCoords();
@@ -567,7 +567,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         gl.glDisable(GL2.GL_TEXTURE_2D);
 
-        // switch back to modulation of quad colours and texture
+        // switch back to modulation of quad colors and texture
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         gl.glDisable(GL2.GL_ALPHA); // switch off transparency
         gl.glDisable(GL2.GL_BLEND);

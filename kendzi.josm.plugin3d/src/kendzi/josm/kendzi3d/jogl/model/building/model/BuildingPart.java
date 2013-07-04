@@ -27,11 +27,11 @@ public class BuildingPart {
 
     private String floorMaterialType;
 
-    private Color facadeColour;
+    private Color facadeColor;
 
-    private Color roofColour;
+    private Color roofColor;
 
-    private Color floorColour;
+    private Color floorColor;
 
     DormerRoofModel roof;
 
@@ -297,33 +297,33 @@ public class BuildingPart {
     }
 
     /**
-     * @return the facadeColour
+     * @return the facadeColor
      */
-    public Color getFacadeColour() {
-        return this.facadeColour;
+    public Color getFacadeColor() {
+        return this.facadeColor;
     }
 
     /**
-     * @param facadeColour
-     *            the facadeColour to set
+     * @param facadeColor
+     *            the facadeColor to set
      */
-    public void setFacadeColour(Color facadeColour) {
-        this.facadeColour = facadeColour;
+    public void setFacadeColor(Color facadeColor) {
+        this.facadeColor = facadeColor;
     }
 
     /**
-     * @return the roofColour
+     * @return the roofColor
      */
-    public Color getRoofColour() {
-        return this.roofColour;
+    public Color getRoofColor() {
+        return this.roofColor;
     }
 
     /**
-     * @param roofColour
-     *            the roofColour to set
+     * @param roofColor
+     *            the roofColor to set
      */
-    public void setRoofColour(Color roofColour) {
-        this.roofColour = roofColour;
+    public void setRoofColor(Color roofColor) {
+        this.roofColor = roofColor;
     }
 
     /**
@@ -356,17 +356,17 @@ public class BuildingPart {
     }
 
     /**
-     * @return the floorColour
+     * @return the floorColor
      */
-    public Color getFloorColour() {
-        return floorColour;
+    public Color getFloorColor() {
+        return floorColor;
     }
 
     /**
-     * @param floorColour the floorColour to set
+     * @param floorColor the floorColor to set
      */
-    public void setFloorColour(Color floorColour) {
-        this.floorColour = floorColour;
+    public void setFloorColor(Color floorColor) {
+        this.floorColor = floorColor;
     }
 
 }

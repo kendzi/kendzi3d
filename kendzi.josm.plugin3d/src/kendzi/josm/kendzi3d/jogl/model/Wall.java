@@ -663,7 +663,7 @@ public class Wall extends AbstractWayModel {
         pGl.glEnable(GL2.GL_ALPHA_TEST);
         pGl.glAlphaFunc(GL2.GL_GREATER, 0); // only render if alpha > 0
 
-        // replace the quad colours with the texture
+        // replace the quad colors with the texture
         //      gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
         pGl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
 

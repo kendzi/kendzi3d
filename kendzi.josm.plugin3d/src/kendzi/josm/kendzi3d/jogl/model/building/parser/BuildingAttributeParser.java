@@ -97,19 +97,19 @@ public class BuildingAttributeParser {
         return roofMaterial;
     }
 
-    public static Color parseFacadeColour(OsmPrimitive p1, OsmPrimitive p2) {
-        Color name = parseFacadeColour(p1);
+    public static Color parseFacadeColor(OsmPrimitive p1, OsmPrimitive p2) {
+        Color name = parseFacadeColor(p1);
         if (name != null) {
             return name;
         }
-        return parseFacadeColour(p2);
+        return parseFacadeColor(p2);
     }
 
     /** Gets facade texture.
      * @param primitive
      * @return facade texture
      */
-    public static Color parseFacadeColour(OsmPrimitive primitive) {
+    public static Color parseFacadeColor(OsmPrimitive primitive) {
 
         String facadeColor = OsmAttributeKeys.BUILDING_FACADE_COLOR.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(facadeColor)) {
@@ -132,7 +132,7 @@ public class BuildingAttributeParser {
      * @param primitive
      * @return facade texture
      */
-    public static Color parseFloorColour(OsmPrimitive primitive) {
+    public static Color parseFloorColor(OsmPrimitive primitive) {
 
         String facadeColor = OsmAttributeKeys.FLOOR_COLOR.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(facadeColor)) {
@@ -147,11 +147,11 @@ public class BuildingAttributeParser {
 
 
 
-    /** Gets roof colour.
+    /** Gets roof color.
      * @param primitive
-     * @return roof colour
+     * @return roof color
      */
-    public static Color parseRoofColour(OsmPrimitive primitive) {
+    public static Color parseRoofColor(OsmPrimitive primitive) {
 
         String roofColor = OsmAttributeKeys.ROOF_COLOUR.primitiveValue(primitive);
         if (StringUtil.isBlankOrNull(roofColor)) {

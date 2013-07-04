@@ -67,7 +67,6 @@ public class DrawUtil {
     /** Draw guads on XZ plane, y==0. Skeep odd quads.
      * XXX
      * @param gl gl
-     * @param color
      * @param size size of quads area
      * @param odd if draw odd quads
      */
@@ -77,7 +76,7 @@ public class DrawUtil {
         gl.glBegin(GL2.GL_QUADS);
         boolean aBlueTile;
         for (int z = -size / 2; z <= (size / 2) - 1; z++) {
-            // set colour type for new
+            // set color type for new
             aBlueTile = (z % 2 == 0) ? true : false;
             // row
             for (int x = -size / 2; x <= (size / 2) - 1; x++) {
