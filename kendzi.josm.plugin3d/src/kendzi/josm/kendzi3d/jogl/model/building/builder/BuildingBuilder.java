@@ -120,7 +120,7 @@ public class BuildingBuilder {
         WallPart firstWallPart = getFirstWallPart(w);
         Color facadeColor = takeFacadeColor(buildingModel, bp, w, firstWallPart, tm);
 
-        rtd.setFacadeCoror(facadeColor);
+        rtd.setFacadeColor(facadeColor);
         rtd.setFacadeTexture(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
         rtd.setRoofColor(roofColor);
