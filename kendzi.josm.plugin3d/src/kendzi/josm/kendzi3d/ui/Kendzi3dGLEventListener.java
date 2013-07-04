@@ -263,7 +263,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 //        gl.glMatrixMode(GL2.GL_MODELVIEW);
 //        gl.glLoadIdentity();
 
-        // clear colour and depth buffers
+        // clear color and depth buffers
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -377,7 +377,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         gl.glClearDepth(1.0);
-        // sky blue colour
+        // sky blue color
         gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
 
         gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -482,7 +482,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular colour.
+     * Set up a point source with ambient, diffuse, and specular color.
      * components
      * @param pGl gl
      */

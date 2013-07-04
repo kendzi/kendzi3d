@@ -236,8 +236,8 @@ public class DormerRoofBuilder {
      * @return
      */
     public static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
-        RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTextrure(), pRoofTextureData.getFacadeCoror(), model);
-        RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(), pRoofTextureData.getRoofCoror(), model);
+        RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTexture(), pRoofTextureData.getFacadeColor(), model);
+        RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(), pRoofTextureData.getRoofColor(), model);
 
         RoofMaterials roofMaterials = new RoofMaterials();
         roofMaterials.setFacade(facadeTextureIndex);

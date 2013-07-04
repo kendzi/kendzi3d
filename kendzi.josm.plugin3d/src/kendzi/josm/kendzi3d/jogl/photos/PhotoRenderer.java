@@ -120,7 +120,7 @@ public class PhotoRenderer {
 
         double distance = 500d;
 
-        double width = distance * Math.sin(photo.getAngleWitht() / 2d);
+        double width = distance * Math.sin(photo.getAngleWidth() / 2d);
         double height = distance * Math.sin(photo.getAngleHeigth() / 2d);
 
 

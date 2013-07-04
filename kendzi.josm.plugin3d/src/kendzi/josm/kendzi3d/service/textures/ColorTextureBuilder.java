@@ -71,7 +71,7 @@ public class ColorTextureBuilder implements TextureBuilder {
     }
 
     public static Color parseColor(String pColor) {
-        // XXX move method to ColourUtil
+        // XXX move method to ColorUtil
         Color color = getColor(pColor);
 
         if (color != null) {

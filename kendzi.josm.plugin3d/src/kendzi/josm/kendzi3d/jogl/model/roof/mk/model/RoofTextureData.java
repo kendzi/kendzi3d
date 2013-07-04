@@ -15,25 +15,25 @@ import kendzi.josm.kendzi3d.dto.TextureData;
 
 public class RoofTextureData {
 
-    TextureData facadeTextrure;
+    TextureData facadeTexture;
 
-    Color facadeCoror;
+    Color facadeColor;
 
     TextureData roofTexture;
 
-    Color roofCoror;
+    Color roofColor;
 
     /**
      * @return the facadeTextrure
      */
-    public TextureData getFacadeTextrure() {
-        return this.facadeTextrure;
+    public TextureData getFacadeTexture() {
+        return this.facadeTexture;
     }
     /**
-     * @param facadeTextrure the facadeTextrure to set
+     * @param facadeTexture the facadeTextrure to set
      */
-    public void setFacadeTextrure(TextureData facadeTextrure) {
-        this.facadeTextrure = facadeTextrure;
+    public void setFacadeTexture(TextureData facadeTexture) {
+        this.facadeTexture = facadeTexture;
     }
     /**
      * @return the roofTexture
@@ -48,28 +48,28 @@ public class RoofTextureData {
         this.roofTexture = roofTexture;
     }
     /**
-     * @return the facadeCoror
+     * @return the facadeColor
      */
-    public Color getFacadeCoror() {
-        return facadeCoror;
+    public Color getFacadeColor() {
+        return this.facadeColor;
     }
     /**
-     * @param facadeCoror the facadeCoror to set
+     * @param facadeColor the facadeColor to set
      */
-    public void setFacadeCoror(Color facadeCoror) {
-        this.facadeCoror = facadeCoror;
+    public void setFacadeColor(Color facadeColor) {
+        this.facadeColor = facadeColor;
     }
     /**
-     * @return the roofCoror
+     * @return the roofColor
      */
-    public Color getRoofCoror() {
-        return roofCoror;
+    public Color getRoofColor() {
+        return this.roofColor;
     }
     /**
-     * @param roofCoror the roofCoror to set
+     * @param roofColor the roofColor to set
      */
-    public void setRoofCoror(Color roofCoror) {
-        this.roofCoror = roofCoror;
+    public void setRoofColor(Color roofColor) {
+        this.roofColor = roofColor;
     }
 
 
