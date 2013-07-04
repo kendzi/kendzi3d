@@ -175,8 +175,8 @@ public class DormerRoofBuilder {
 
 
 
-
-        DormerRoofModel roof = pBuildingPart.getRoof();
+        // XXX
+        DormerRoofModel roof = (DormerRoofModel) pBuildingPart.getRoof();
 
         if (roof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null
                 && pBuildingPart.getRoofLevels() != null) {

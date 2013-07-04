@@ -23,7 +23,7 @@ import org.poly2tri.triangulation.point.TPoint;
 /**
  * @author Hannes Janetzek
  * */
-
+// XXX MARGE WITH Poly2TriUtil
 public class Poly2TriUtil2 {
 	static class CDTSet implements Triangulatable {
 		List<TriangulationPoint> points = new ArrayList<TriangulationPoint>(20);
