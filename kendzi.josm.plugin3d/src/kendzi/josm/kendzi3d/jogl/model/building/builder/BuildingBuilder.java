@@ -121,9 +121,9 @@ public class BuildingBuilder {
         Color facadeColor = takeFacadeColor(buildingModel, bp, w, firstWallPart, tm);
 
         rtd.setFacadeCoror(facadeColor);
-        rtd.setFacadeTextrure(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
+        rtd.setFacadeTexture(takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor!=null));
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
-        rtd.setRoofCoror(roofColor);
+        rtd.setRoofColor(roofColor);
         rtd.setRoofTexture(takeRoofTextureData(buildingModel, bp, w, tm, roofColor!=null));
 
         double maxHeight = bp.getDefaultMaxHeight();
