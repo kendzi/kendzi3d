@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kendzi.kendzi3d</groupId>
+	<artifactId>josm-wrapper</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<name>josm-wrapper</name>
+	<url>http://josm.openstreetmap.de</url>
+	<packaging>pom</packaging>
+	
+	<properties>
+		<java.version>1.6</java.version>
+	</properties>
+
+	<dependencies>
+
+	</dependencies>
+
+	<repositories>
+
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>tools.jar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<dependencies>
+							<dependency>
+								<groupId>com.sun</groupId>
+								<artifactId>tools</artifactId>
+								<version>1.6</version>  <!-- change to used JDK version -->
+								<scope>system</scope>
+								<systemPath>${java.home}/../lib/tools.jar</systemPath>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>josm-custom</finalName>
+		<plugins>
+
+			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
+				<execution> <phase>process-resources</phase> <configuration> <tasks> <ant 
+				antfile="C:/java/workspace/sun/JOSM/build.xml" dir="C:/java/workspace/sun/JOSM" 
+				target="dist" /> </tasks> </configuration> <goals> <goal>run</goal> </goals> 
+				</execution> </executions> <dependencies> This will work only with oracle 
+				jdk! http://docs.codehaus.org/display/MAVENUSER/Running+ant+tasks+that+use+the+JDK 
+				<dependency> <groupId>com.sun</groupId> <artifactId>tools</artifactId> <version>1.6.0</version> 
+				<scope>system</scope> <systemPath>${java.home}/../lib/tools.jar</systemPath> 
+				</dependency> </dependencies> </plugin> -->
+
+
+
+			<!-- <plugin> -->
+			<!-- <artifactId>maven-jar-plugin</artifactId> -->
+			<!-- <version>2.3.2</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>default-jar</id> -->
+			<!-- <phase>none</phase> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
+
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>attach-artifacts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>C:/java/workspace/sun/JOSM/dist/josm-custom.jar</file>
+									<type>jar</type>
+									<!-- <classifier>legacy</classifier> -->
+								</artifact>
+							</artifacts>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+	<!-- <plugin> -->
+	<!-- <groupId>org.codehaus.gmaven</groupId> -->
+	<!-- <artifactId>gmaven-plugin</artifactId> -->
+	<!-- <version>1.3</version> -->
+	<!-- <executions> -->
+	<!-- <execution> -->
+	<!-- <id>set-main-artifact</id> -->
+	<!-- <phase>package</phase> -->
+	<!-- <goals> -->
+	<!-- <goal>execute</goal> -->
+	<!-- </goals> -->
+	<!-- <configuration> -->
+	<!-- <source> -->
+	<!-- project.artifact.setFile(new File("./bin/classes.jar")) -->
+	<!-- </source> -->
+	<!-- </configuration> -->
+	<!-- </execution> -->
+	<!-- </executions> -->
+	<!-- </plugin> -->
+		</plugins>
+	</build>
+
+</project>
