@@ -22,7 +22,7 @@ import kendzi.josm.kendzi3d.dto.xsd.ObjectFactory;
 import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.dto.xsd.PointModels;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
-import kendzi.josm.kendzi3d.util.UrlUtil;
+import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
 

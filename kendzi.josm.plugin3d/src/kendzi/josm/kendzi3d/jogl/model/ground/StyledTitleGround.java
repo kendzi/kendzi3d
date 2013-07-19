@@ -14,9 +14,9 @@ import java.awt.Graphics2D;
 
 import javax.media.opengl.GL2;
 
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
+import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -52,11 +52,6 @@ public class StyledTitleGround extends Ground {
     private static final int TITLE_IMAGE_SIZE = 512;
 
     /**
-     * Texture cache service.
-     */
-    private TextureCacheService textureCacheService;
-
-    /**
      * Total title generation time.
      */
     private long totalTitleGenerateTime;
@@ -76,7 +71,6 @@ public class StyledTitleGround extends Ground {
      */
     public StyledTitleGround(TextureCacheService textureCacheService) {
         super(textureCacheService, null);
-        this.textureCacheService = textureCacheService;
     }
 
 

@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.ExportOutput;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.kendzi3d.collada.ColladaExport;
 import kendzi.kendzi3d.collada.TextExport;
 

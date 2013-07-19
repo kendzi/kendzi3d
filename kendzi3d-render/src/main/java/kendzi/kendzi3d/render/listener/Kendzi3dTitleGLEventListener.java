@@ -22,7 +22,7 @@ import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.math.geometry.point.PointUtil;
@@ -83,7 +83,7 @@ public class Kendzi3dTitleGLEventListener {
      * Texture cache service.
      */
     @Inject
-    private TextureCacheService textureCacheService;
+    private TextureCacheServiceImpl textureCacheService;
 
     /**
      * Texture library service.

@@ -17,7 +17,7 @@ import java.util.Properties;
 
 import kendzi.josm.kendzi3d.metadata.ModelMetadata;
 import kendzi.josm.kendzi3d.metadata.TextureMetadata;
-import kendzi.josm.kendzi3d.util.UrlUtil;
+import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
 

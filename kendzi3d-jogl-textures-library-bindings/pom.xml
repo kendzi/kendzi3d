@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kendzi.kendzi3d</groupId>
+	<artifactId>kendzi3d-jogl-textures-library-bindings</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<name>kendzi3d-jogl-textures-library-bindings</name>
+	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<properties>
+		<java.version>1.6</java.version>
+	</properties>
+
+	<dependencies>
+		
+		
+ 
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<configuration>
+					<schemaDirectory>src/main/resources</schemaDirectory>
+					<bindingDirectory>src/main/resources/schema</bindingDirectory>
+                   <!--
+                    <generatePackage>org.zmeu.blog.jaxb</generatePackage>
+                    -->
+                    <strict>false</strict>
+                    <extension>true</extension>
+                   <!-- 
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.6.2</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId>
+                            <version>0.6.2</version>
+                        </plugin>
+                    </plugins>
+                    <args>
+                        <arg>-Xannotate</arg>
+                        <arg>-XtoString</arg>
+                    </args>
+                    -->
+                    <!-- 
+                    <args>
+                    	<arg>src/main/resources/simpleMode.xsd</arg>
+                    </args> 
+                     -->
+				</configuration>
+				<executions>
+					<execution>
+						<!--<phase>generate-sources</phase> -->
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

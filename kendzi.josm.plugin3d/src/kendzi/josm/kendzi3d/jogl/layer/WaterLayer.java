@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.Water;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -60,7 +60,7 @@ public class WaterLayer implements Layer {
      * Texture library service.
      */
     @Inject
-    TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     private Match waterMatcher;
 
@@ -121,12 +121,12 @@ public class WaterLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Water(way, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryService));
+        this.modelList.add(new Water(way, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new Water(relation, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryService));
+        this.modelList.add(new Water(relation, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override

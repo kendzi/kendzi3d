@@ -18,6 +18,7 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
@@ -27,7 +28,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.Camera;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;

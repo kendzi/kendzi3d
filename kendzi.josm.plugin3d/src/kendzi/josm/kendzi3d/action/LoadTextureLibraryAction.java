@@ -10,8 +10,6 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -25,13 +23,15 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.xml.bind.JAXBException;
 
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService.UrlTextureLibrary;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.jogl.texture.library.UrlTextureLibrary;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
+
+import static org.openstreetmap.josm.tools.I18n.*;
 
 /**
  * Texture filter toggle action.
@@ -52,7 +52,7 @@ public class LoadTextureLibraryAction extends JosmAction {
     /**
      * Texture library service.
      */
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
 
     final JFileChooser fc = new JFileChooser();
@@ -62,7 +62,7 @@ public class LoadTextureLibraryAction extends JosmAction {
      * @param pWikiTextureLoaderService wiki texture loader service
      */
     @Inject
-    public LoadTextureLibraryAction(TextureLibraryService textureLibraryService) {
+    public LoadTextureLibraryAction(TextureLibraryStorageService TextureLibraryStorageService) {
         super(
                 tr("Load texture library from file"),
                 "1323558253_wikipedia-icon_24",
@@ -71,7 +71,7 @@ public class LoadTextureLibraryAction extends JosmAction {
                 false
         );
 
-        this.textureLibraryService = textureLibraryService;
+        this.textureLibraryStorageService = TextureLibraryStorageService;
     }
 
     /**
@@ -96,12 +96,12 @@ public class LoadTextureLibraryAction extends JosmAction {
                 urlTextureLibrary.setOverwrite(overwrite);
 
 
-                this.textureLibraryService.loadUserFile(urlTextureLibrary);
+                this.textureLibraryStorageService.loadUserFile(urlTextureLibrary);
             } else {
                 log.info("Open command cancelled by user." );
             }
 
-////            LoadRet load = this.textureLibraryService.load();
+////            LoadRet load = this.textureLibraryStorageService.load();
 //            errors = load.getErrors();
 //            timestamp = load.getTimestamp();
 

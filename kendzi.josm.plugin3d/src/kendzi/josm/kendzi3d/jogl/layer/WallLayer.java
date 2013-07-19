@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.Wall;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -55,7 +55,7 @@ public class WallLayer implements Layer {
      * Texture library service.
      */
     @Inject
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
 
     /**
@@ -112,7 +112,7 @@ public class WallLayer implements Layer {
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
         this.modelList.add(new Wall(way, pPerspective3D, this.modelRender, this.metadataCacheService,
-                this.textureLibraryService));
+                this.textureLibraryStorageService));
     }
 
     @Override

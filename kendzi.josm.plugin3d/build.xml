@@ -76,6 +76,22 @@
     	<echo message="${jogl.jars.dir}"></echo>
         <javac source="1.6" target="1.6" srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
 			<src path="src"/>
+			<src path="../kendzi-util/src/main/java"/>
+			<src path="../kendzi3d-math/src/main/java"/>
+			<src path="../kendzi3d-jogl-model/src/main/java"/>
+			<src path="../kendzi3d-jogl-model-render/src/main/java"/>
+			<src path="../kendzi3d-jogl-model-util/src/main/java"/>
+			<src path="../kendzi3d-jogl-textures/src/main/java"/>
+			<src path="../kendzi3d-jogl-textures-josm/src/main/java"/>
+			<src path="../kendzi3d-jogl-textures-library/src/main/java"/>
+        	<!-- !!! FIXME !!! -->
+			<src path="../kendzi3d-jogl-textures-library-bindings/target/generated-sources/xjc"/>
+			<src path="../kendzi3d-jogl-textures-library-res/src/main/java"/>
+			<src path="../kendzi3d-josm-core/src/main/java"/>
+			<src path="../kendzi3d-buildings/src/main/java"/>
+			<src path="../kendzi3d-buildings-josm/src/main/java"/>
+			<src path="../kendzi3d-file-util/src/main/java"/>
+
        	    <src path="src_xsd"/>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
@@ -117,6 +133,9 @@
         </copy>
         <copy todir="${plugin.build.dir}/textures">
             <fileset dir="textures"/>        	
+        </copy>
+        <copy todir="${plugin.build.dir}/textures">
+            <fileset dir="../kendzi3d-jogl-textures-library-res/src/main/resources/textures"/>        	
         </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">

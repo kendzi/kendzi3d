@@ -11,7 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import javax.media.opengl.GL2;
 
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.jogl.selection.Selectable;
 
 /** Model of OSM objects. Base interface for all objects. Support building and drawing them.

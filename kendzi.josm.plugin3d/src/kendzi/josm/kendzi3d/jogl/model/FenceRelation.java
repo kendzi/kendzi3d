@@ -20,6 +20,7 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
@@ -29,17 +30,16 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.ModelUtil;
-import kendzi.josm.kendzi3d.jogl.model.attribute.OsmAttributeKeys;
+import kendzi.jogl.texture.dto.TextureData;
+import kendzi.jogl.texture.library.TextureLibraryKey;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractRelationModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
-import kendzi.josm.kendzi3d.util.StringUtil;
+import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
+import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
@@ -73,7 +73,7 @@ public class FenceRelation extends AbstractRelationModel {
     /**
      * Texture library service.
      */
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Hight.
@@ -104,11 +104,11 @@ public class FenceRelation extends AbstractRelationModel {
      * @param pers Perspective
      * @param pModelRender model render
      * @param pMetadataCacheService metadata cache service
-     * @param pTextureLibraryService texture library service
+     * @param pTextureLibraryStorageService texture library service
      */
     public FenceRelation(Relation pRelation, Perspective3D pers,
             ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryService pTextureLibraryService) {
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pRelation, pers);
 
@@ -141,7 +141,7 @@ public class FenceRelation extends AbstractRelationModel {
         this.heights = heights;
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryService = pTextureLibraryService;
+        this.textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
     /**
@@ -183,7 +183,7 @@ public class FenceRelation extends AbstractRelationModel {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryService);
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryStorageService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
@@ -295,18 +295,18 @@ public class FenceRelation extends AbstractRelationModel {
     /** Gets fence texture data.
      * @param fenceType fence type
      * @param pOsmPrimitive primitive
-     * @param textureLibraryService texture library service
+     * @param TextureLibraryStorageService texture library service
      * @return texture data
      */
     public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive,
-            TextureLibraryService textureLibraryService) {
+            TextureLibraryStorageService TextureLibraryStorageService) {
 
         String facadeColor = OsmAttributeKeys.FENCE_COLOR.primitiveValue(pOsmPrimitive);
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {
 
-            String textureKey = textureLibraryService.getKey(TextureLibraryKey.BARRIER_FENCE, fenceType);
-            return textureLibraryService.getTextureDefault(textureKey);
+            String textureKey = TextureLibraryStorageService.getKey(TextureLibraryKey.BARRIER_FENCE, fenceType);
+            return TextureLibraryStorageService.getTextureDefault(textureKey);
 
 //            String facadeTextureFile = metadataCacheService.getPropertites(
 //                    "barrier.fence_{0}.texture.file", null, fenceType);

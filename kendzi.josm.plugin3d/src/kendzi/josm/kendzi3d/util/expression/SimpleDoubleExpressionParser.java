@@ -12,9 +12,9 @@ package kendzi.josm.kendzi3d.util.expression;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import kendzi.josm.kendzi3d.util.StringUtil;
 import kendzi.josm.kendzi3d.util.expression.fun.DoubleFunction;
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.util.StringUtil;
 
 /**
  * Simple expression parser. It expects double value or function defined in context.

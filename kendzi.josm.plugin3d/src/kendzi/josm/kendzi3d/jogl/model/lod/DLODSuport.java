@@ -12,7 +12,7 @@ package kendzi.josm.kendzi3d.jogl.model.lod;
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
 
 public interface DLODSuport {
     //FIXME

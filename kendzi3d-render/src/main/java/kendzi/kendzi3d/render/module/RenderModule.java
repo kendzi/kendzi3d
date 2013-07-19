@@ -16,7 +16,7 @@ import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
+import kendzi.josm.kendzi3d.service.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
@@ -96,7 +96,7 @@ public class RenderModule  extends AbstractModule {
 
 
     @Provides @Singleton
-    ModelRender provideModelRender(TextureCacheService textureCacheService) {
+    ModelRender provideModelRender(TextureCacheServiceImpl textureCacheService) {
 
         ModelRender modelRender = new ModelRender();
         modelRender.setTextureCacheService(textureCacheService);
@@ -110,8 +110,8 @@ public class RenderModule  extends AbstractModule {
 
 
     @Provides @Singleton
-    TextureCacheService provideTextureCacheService(UrlReciverService pUrlReciverService) {
-        TextureCacheService textureCacheService = new TextureCacheService();
+    TextureCacheServiceImpl provideTextureCacheService(UrlReciverService pUrlReciverService) {
+        TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
         textureCacheService.addTextureBuilder(new ColorTextureBuilder());
         textureCacheService.addTextureBuilder(new BwFileTextureBuilder(pUrlReciverService));

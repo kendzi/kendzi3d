@@ -12,8 +12,8 @@ package kendzi.josm.kendzi3d.action;
 
 import java.awt.event.ActionEvent;
 
+import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.pointModel.action.PointModelListFrameAction;
 

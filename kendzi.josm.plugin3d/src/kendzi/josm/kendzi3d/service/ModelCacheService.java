@@ -14,7 +14,7 @@ import java.util.Map;
 
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.loader.LoaderFactory;
-import net.java.joglutils.model.ModelLoadException;
+import kendzi.jogl.model.loader.ModelLoadException;
 
 import com.google.inject.Inject;
 

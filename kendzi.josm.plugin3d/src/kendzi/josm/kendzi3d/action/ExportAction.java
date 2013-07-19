@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
+import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.model.Model;
@@ -24,7 +25,6 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;

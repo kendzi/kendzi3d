@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.util.expression.fun;
 
-import kendzi.josm.kendzi3d.jogl.ModelUtil;
+import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.josm.kendzi3d.util.expression.ModelScaleContext;

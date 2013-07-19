@@ -14,7 +14,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 

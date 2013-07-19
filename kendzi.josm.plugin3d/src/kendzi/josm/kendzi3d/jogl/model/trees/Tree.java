@@ -17,6 +17,7 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -26,9 +27,8 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
+import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.ModelUtil;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
@@ -37,8 +37,9 @@ import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
-import net.java.joglutils.model.ModelLoadException;
+import kendzi.josm.kendzi3d.util.ModelUtil;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
@@ -51,6 +52,9 @@ import com.jogamp.opengl.util.texture.TextureCoords;
  * @author Tomasz Kędziora (Kendzi)
  */
 public class Tree extends AbstractPointModel implements DLODSuport {
+
+    /** Log. */
+    private static final Logger log = Logger.getLogger(Tree.class);
 
     /**
      * Renderer of model.
@@ -215,8 +219,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
                 return loadModel;
 
             } catch (ModelLoadException e) {
-                // XXX
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
 

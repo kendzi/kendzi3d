@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JTextField;
 
-import kendzi.josm.kendzi3d.util.StringUtil;
+import kendzi.util.StringUtil;
 
 public class ValidateUtil {
     public static boolean validateTextString(JTextField pJTextField) {

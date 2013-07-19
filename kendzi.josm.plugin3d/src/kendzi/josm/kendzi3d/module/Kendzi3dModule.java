@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.jogl.texture.builder.BwFileTextureBuilder;
+import kendzi.jogl.texture.builder.ColorTextureBuilder;
+import kendzi.jogl.texture.library.TextureLibraryService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
@@ -18,14 +24,10 @@ import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
-import kendzi.josm.kendzi3d.service.textures.BwFileTextureBuilder;
-import kendzi.josm.kendzi3d.service.textures.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 
@@ -58,10 +60,10 @@ public class Kendzi3dModule extends AbstractModule {
         bind(MetadataCacheService.class).in(Singleton.class);
         bind(WikiTextureLoaderService.class).in(Singleton.class);
         bind(PointModelService.class).in(Singleton.class);
-        bind(TextureLibraryService.class).in(Singleton.class);
+
         bind(ModelCacheService.class).in(Singleton.class);
 
-        bind(ModelRender.class).in(Singleton.class);
+//        bind(ModelRender.class).in(Singleton.class);
 
         bind(NewBuildingLayer.class);
         bind(RoadLayer.class);
@@ -78,21 +80,28 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(Kendzi3dGLFrame.class);
 
-        // /*
-        // * Similarly, this binding tells Guice that when CreditCardProcessor is used in
-        // * a dependency, that should be satisfied with a PaypalCreditCardProcessor.
-        // */
-        // bind(CreditCardProcessor.class).to(PaypalCreditCardProcessor.class);
+    }
 
+    @Provides @Singleton
+    TextureLibraryStorageService provideTextureLibraryStorageService(UrlReciverService pUrlReciverService) {
+        TextureLibraryService textureLibraryService = new TextureLibraryService(pUrlReciverService);
+        return textureLibraryService;
     }
 
     @Provides @Singleton
     TextureCacheService provideTextureCacheService(UrlReciverService pUrlReciverService) {
-        TextureCacheService textureCacheService = new TextureCacheService();
+        TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
         textureCacheService.addTextureBuilder(new ColorTextureBuilder());
         textureCacheService.addTextureBuilder(new BwFileTextureBuilder(pUrlReciverService));
         return textureCacheService;
+    }
+
+    @Provides @Singleton
+    ModelRender provideModelRender(TextureCacheService pTextureCacheService) {
+        ModelRender modelRender = new ModelRender();
+        modelRender.setTextureCacheService(pTextureCacheService);
+        return modelRender;
     }
 
 //    @Provides

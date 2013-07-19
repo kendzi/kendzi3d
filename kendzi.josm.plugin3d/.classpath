@@ -16,7 +16,7 @@
 	<classpathentry kind="lib" path="lib/javax.inject.jar"/>
 	<classpathentry kind="lib" path="lib/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib_build/log4j-1.2.17.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-josm-jogl"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-josm-jogl"/>
 	<classpathentry kind="lib" path="/kendzi3d-josm-jogl/lib/jogl-v2.0-rc11/gluegen-rt.jar" sourcepath="/kendzi3d-josm-jogl/lib/jogl-v2.0-rc11/gluegen-v2.0-rc11.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/kendzi3d-josm-jogl/lib/jogl-v2.0-rc11/gluegen-javadoc.zip!/gluegen-javadoc/gluegen/javadoc"/>
@@ -27,6 +27,20 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/kendzi3d-josm-jogl/lib/jogl-v2.0-rc11/jogl-javadoc.zip!/jogl-javadoc/jogl/javadoc"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-collada-exporter"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-collada-exporter"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-model"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-model-render"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-model-util"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-math"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-file-util"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-buildings"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-buildings-josm"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi-util"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-josm-core"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-josm"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library-bindings"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library-res"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

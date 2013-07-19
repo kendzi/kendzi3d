@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.NewBuilding;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -60,7 +60,7 @@ public class NewBuildingLayer implements Layer {
      * Texture library service.
      */
     @Inject
-    TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     private Match buildingMatcher;
     private Match buildingRelationMatcher;
@@ -119,13 +119,13 @@ public class NewBuildingLayer implements Layer {
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
         this.modelList.add(new NewBuilding(way, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryService));
+                this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
         this.modelList.add(new NewBuilding(relation, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryService));
+                this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override

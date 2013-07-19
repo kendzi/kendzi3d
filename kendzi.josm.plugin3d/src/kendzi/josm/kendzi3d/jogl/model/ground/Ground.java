@@ -12,30 +12,37 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 
-import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.jogl.texture.dto.TextureData;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.perspective.Perspective;
 
 import com.jogamp.opengl.util.texture.Texture;
 
 public class Ground {
 
+    protected TextureCacheServiceImpl textureCacheService;
+
+    private TextureLibraryStorageService textureLibraryStorageService;
 
 
-    public Ground(TextureCacheService textureCacheService, TextureLibraryService textureLibraryService) {
+    public Ground(TextureCacheService textureCacheService, TextureLibraryStorageService TextureLibraryStorageService) {
         super();
-        this.textureCacheService = textureCacheService;
-        this.textureLibraryService = textureLibraryService;
+        if (textureCacheService instanceof TextureCacheServiceImpl) {
+            this.textureCacheService = (TextureCacheServiceImpl) textureCacheService;
+        } else {
+            // XXX temporary
+            throw new IllegalArgumentException("TextureLibraryStorageService has to be instance of TextureCacheServiceImpl but it is instance of: " + textureCacheService);
+        }
+        this.textureLibraryStorageService = TextureLibraryStorageService;
     }
 
-    private TextureCacheService textureCacheService;
-
-    private TextureLibraryService textureLibraryService;
 
 
-    private Perspective3D pers;
+    private Perspective pers;
 
     public void init() {
 
@@ -47,7 +54,7 @@ public class Ground {
 
         //gl.glColor3f((float) 188/255, (float)169/255, (float)169/255);
 
-        TextureData td = this.textureLibraryService.getTextureDefault("ground.unknown");
+        TextureData td = this.textureLibraryStorageService.getTextureDefault("ground.unknown");
         Texture texture = this.textureCacheService.get(gl, td.getTex0());
 
         texture.enable(gl);

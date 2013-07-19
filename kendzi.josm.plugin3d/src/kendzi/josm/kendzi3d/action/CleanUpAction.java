@@ -12,10 +12,10 @@ package kendzi.josm.kendzi3d.action;
 
 import java.awt.event.ActionEvent;
 
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
@@ -49,7 +49,7 @@ public class CleanUpAction extends JosmAction {
     /**
      * Texture library service.
      */
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Model cache service.
@@ -64,7 +64,7 @@ public class CleanUpAction extends JosmAction {
     @Inject
     public CleanUpAction(RenderJOSM renderJosm,
             TextureCacheService textureCacheService,
-            TextureLibraryService textureLibraryService,
+            TextureLibraryStorageService TextureLibraryStorageService,
             ModelCacheService modelCacheService) {
 
         super(
@@ -77,14 +77,14 @@ public class CleanUpAction extends JosmAction {
 
         this.renderJosm = renderJosm;
         this.textureCacheService = textureCacheService;
-        this.textureLibraryService = textureLibraryService;
+        this.textureLibraryStorageService = TextureLibraryStorageService;
         this.modelCacheService = modelCacheService;
     }
 
     @Override
     public void actionPerformed(ActionEvent pE) {
 
-        this.textureLibraryService.clear();
+        this.textureLibraryStorageService.reload();
 
         this.textureCacheService.clear();
 

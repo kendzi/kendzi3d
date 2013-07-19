@@ -18,23 +18,24 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
+import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.texture.dto.TextureData;
+import kendzi.jogl.texture.library.TextureLibraryKey;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeUtil;
-import kendzi.josm.kendzi3d.josm.PolygonWithHolesUtil;
-import kendzi.josm.kendzi3d.josm.PolygonWithHolesUtil.AreaWithHoles;
-import kendzi.josm.kendzi3d.josm.ReversableWay;
+import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey;
+import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil;
+import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil.AreaWithHoles;
+import kendzi.kendzi3d.josm.model.polygon.ReversableWay;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
@@ -68,7 +69,7 @@ public class Water extends AbstractModel {
     /**
      * Texture library service.
      */
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Model of water.
@@ -86,16 +87,16 @@ public class Water extends AbstractModel {
 	 * @param pPerspective3D perspective
 	 * @param pModelRender
 	 * @param pMetadataCacheService
-	 * @param pTextureLibraryService
+	 * @param pTextureLibraryStorageService
 	 */
 	public Water(Way way, Perspective3D pPerspective3D, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryService pTextureLibraryService) {
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
 	    super(pPerspective3D);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryService = pTextureLibraryService;
+        this.textureLibraryStorageService = pTextureLibraryStorageService;
 
         this.way = way;
 	}
@@ -106,29 +107,29 @@ public class Water extends AbstractModel {
      * @param pPerspective perspective3d
      * @param pModelRender model render
 	 * @param pMetadataCacheService
-	 * @param pTextureLibraryService
+	 * @param pTextureLibraryStorageService
      */
     public Water(Relation pRelation, Perspective3D pPerspective,
             ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryService pTextureLibraryService) {
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pPerspective);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryService = pTextureLibraryService;
+        this.textureLibraryStorageService = pTextureLibraryStorageService;
 
         this.relation = pRelation;
     }
 
     List<PolygonWithHolesList2d> getMultiPolygonWithHoles() {
         if (this.relation != null) {
-            return getMultiPolygonWithHolesRelation(this.relation, perspective);
+            return getMultiPolygonWithHolesRelation(this.relation, this.perspective);
         }
-        return getMultiPolygonWithHolesWay(way, perspective);
+        return getMultiPolygonWithHolesWay(this.way, this.perspective);
     }
 
-    List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective3D pPerspective) {
+    List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective pPerspective) {
         List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
 
         List<Point2d> poly = new ArrayList<Point2d>();
@@ -147,7 +148,7 @@ public class Water extends AbstractModel {
         return ret;
     }
 
-    List<PolygonWithHolesList2d> getMultiPolygonWithHolesRelation(Relation pRelation, Perspective3D pPerspective) {
+    List<PolygonWithHolesList2d> getMultiPolygonWithHolesRelation(Relation pRelation, Perspective pPerspective) {
 
         List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
 
@@ -171,7 +172,7 @@ public class Water extends AbstractModel {
         return ret;
     }
 
-	private PolygonList2d parse(List<ReversableWay> outer, Perspective3D pPerspective) {
+	private PolygonList2d parse(List<ReversableWay> outer, Perspective pPerspective) {
 	    List<Point2d> poly = new ArrayList<Point2d>();
 
 	    for (ReversableWay rw : outer) {
@@ -250,7 +251,7 @@ public class Water extends AbstractModel {
 
 
 
-    	    RoofTypeUtil.addPolygonToRoofMesh(mesh, topMP, planeTop, roofTopLineVector, waterTexture);
+            MeshFactoryUtil.addPolygonToRoofMesh(mesh, topMP, planeTop, roofTopLineVector, waterTexture);
         }
 
 	    this.model = model.toModel();
@@ -287,8 +288,8 @@ public class Water extends AbstractModel {
 
 	 public TextureData getWaterTextureData() {
 
-         String keyStr = this.textureLibraryService.getKey(TextureLibraryKey.WATER, (String) null);
-         return textureLibraryService.getTextureDefault(keyStr);
+         String keyStr = this.textureLibraryStorageService.getKey(TextureLibraryKey.WATER, (String) null);
+         return this.textureLibraryStorageService.getTextureDefault(keyStr);
 
      }
 

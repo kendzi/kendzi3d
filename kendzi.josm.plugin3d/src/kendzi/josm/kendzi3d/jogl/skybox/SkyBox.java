@@ -3,10 +3,10 @@ package kendzi.josm.kendzi3d.jogl.skybox;
 import javax.media.opengl.GL2;
 import javax.vecmath.Point3d;
 
-import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.jogl.camera.Camera;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.perspective.Perspective;
 
 import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
@@ -18,13 +18,13 @@ public class SkyBox {
     private TextureCacheService textureCacheService;
 
     @Inject
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     public void init() {
 
     }
 
-    public void draw(GL2 gl , Camera camera, Perspective3D perspective3d) {
+    public void draw(GL2 gl , Camera camera, Perspective perspective3d) {
 
         gl.glDisable(GL2.GL_DEPTH_TEST);
         gl.glColor4f((float) 255/255, (float)255/255, (float)255/255, 1f);

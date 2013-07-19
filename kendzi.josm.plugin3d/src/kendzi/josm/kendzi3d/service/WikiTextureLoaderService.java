@@ -22,13 +22,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import kendzi.josm.kendzi3d.dto.xsd.TextureData;
-import kendzi.josm.kendzi3d.dto.xsd.TextureLibrary;
-import kendzi.josm.kendzi3d.dto.xsd.TextureSet;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.library.TextureLibraryService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
-import kendzi.josm.kendzi3d.util.StringUtil;
+import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
+import org.kendzi3d.TextureData;
+import org.kendzi3d.TextureLibrary;
+import org.kendzi3d.TextureSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -68,7 +71,7 @@ public class WikiTextureLoaderService {
      * Texture library service.
      */
     @Inject
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Wiki page with textures and metadata.
@@ -114,7 +117,7 @@ public class WikiTextureLoaderService {
         }
         this.textureCacheService.clear();
         this.metadataCacheService.clear();
-        this.textureLibraryService.clear();
+        this.textureLibraryStorageService.reload();
 
         return ret;
     }
@@ -207,12 +210,12 @@ public class WikiTextureLoaderService {
 
     private TextureLibrary createWikiTextureLiblary(List<WikiTextures> wikiTextures) {
 
-        Map<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>> textureMap = new HashMap<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>>();
+        Map<String, ArrayList<TextureData>> textureMap = new HashMap<String, ArrayList<TextureData>>();
 
         for (WikiTextures wt : wikiTextures) {
             String key = wt.getKey();
 
-            kendzi.josm.kendzi3d.dto.xsd.TextureData td = new kendzi.josm.kendzi3d.dto.xsd.TextureData();
+            TextureData td = new TextureData();
 
             td.setTex0("/textures/" +  wt.getFileKey());
             td.setHeight(StringUtil.parseDouble(wt.getHeight()));
@@ -247,12 +250,12 @@ public class WikiTextureLoaderService {
       return list;
     }
 
-    private void addTextureToMap(String key, kendzi.josm.kendzi3d.dto.xsd.TextureData data,
-            Map<String, ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>> textureMap) {
-        ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData> set = textureMap.get(key);
+    private void addTextureToMap(String key, TextureData data,
+            Map<String, ArrayList<TextureData>> textureMap) {
+        ArrayList<TextureData> set = textureMap.get(key);
 
         if (set == null) {
-            set = new ArrayList<kendzi.josm.kendzi3d.dto.xsd.TextureData>();
+            set = new ArrayList<TextureData>();
             textureMap.put(key, set);
         }
 

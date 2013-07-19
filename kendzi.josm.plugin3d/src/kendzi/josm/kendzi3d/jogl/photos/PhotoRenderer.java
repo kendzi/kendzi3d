@@ -14,9 +14,9 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.camera.Camera;
+import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
 import kendzi.math.geometry.point.PointUtil;
 
 import org.openstreetmap.josm.Main;

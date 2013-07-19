@@ -20,6 +20,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -33,6 +34,7 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
 
@@ -87,9 +89,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     /**
      * Perspective used by OpenGl. Transforming coordinates from EastNorth to OpenGl .
      */
-    private static Perspective3D perspective3D;
+    private static Perspective perspective3D;
 
-    public static Perspective3D getPerspective3D() {
+    public static Perspective getPerspective3D() {
         return perspective3D;
     }
 

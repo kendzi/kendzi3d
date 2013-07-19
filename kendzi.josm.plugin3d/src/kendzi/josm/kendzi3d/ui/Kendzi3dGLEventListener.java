@@ -22,13 +22,15 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
+import kendzi.jogl.camera.Camera;
+import kendzi.jogl.camera.CameraMoveListener;
+import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.Camera;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
@@ -38,8 +40,6 @@ import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
 import kendzi.josm.kendzi3d.jogl.selection.draw.SelectionDrawUtil;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
-import kendzi.josm.kendzi3d.service.TextureCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
@@ -69,26 +69,22 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Model renderer.
      */
-    @Inject
     private ModelRender modelRender;
 
     /**
      * Renderer of josm opengl object.
      */
-    @Inject
     private RenderJOSM renderJosm;
 
     /**
      * Texture cache service.
      */
-    @Inject
     private TextureCacheService textureCacheService;
 
     /**
      * Texture library service.
      */
-    @Inject
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Position of sun. XXX
@@ -153,13 +149,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Photos as layer in 3d.
      */
-    @Inject
     private PhotoRenderer photoRenderer;
 
 
     private List<FpsListener> fpsChangeListenerList = new ArrayList<FpsListener>();
 
-    @Inject
+
     SkyBox skyBox;
 
 
@@ -185,11 +180,16 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
 
 
-
-    /**
-     * Default constructor.
-     */
-    public Kendzi3dGLEventListener() {
+    @Inject
+    public Kendzi3dGLEventListener(ModelRender modelRender, RenderJOSM renderJosm, TextureCacheService textureCacheService,
+            TextureLibraryStorageService textureLibraryStorageService, PhotoRenderer photoRenderer, SkyBox skyBox) {
+        super();
+        this.modelRender = modelRender;
+        this.renderJosm = renderJosm;
+        this.textureCacheService = textureCacheService;
+        this.textureLibraryStorageService = textureLibraryStorageService;
+        this.skyBox = skyBox;
+        this.photoRenderer = photoRenderer;
 
         setGroundType(false);
 
@@ -199,12 +199,31 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
-        this.skyBox = new SkyBox();
-
         this.selectionDrawUtil = new SelectionDrawUtil();
 
         initObjectSelectionListener();
     }
+
+
+//    /**
+//     * Default constructor.
+//     */
+//    public Kendzi3dGLEventListener() {
+//
+//        setGroundType(false);
+//
+//        this.axisLabels = new AxisLabels();
+//
+//        this.simpleMoveAnimator = new SimpleMoveAnimator();
+//
+//        this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
+//
+//        this.skyBox = new SkyBox();
+//
+//        this.selectionDrawUtil = new SelectionDrawUtil();
+//
+//        initObjectSelectionListener();
+//    }
 
 
     private void initObjectSelectionListener() {
@@ -820,13 +839,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
     /**
-     * @param ground type of the ground to set
+     * @param pType type of the ground to set
      */
     public void setGroundType(boolean pType) {
         if (pType) {
             this.ground = new StyledTitleGround(this.textureCacheService);
         } else {
-            this.ground = new Ground(this.textureCacheService, this.textureLibraryService);
+            this.ground = new Ground(this.textureCacheService, this.textureLibraryStorageService);
         }
     }
 
@@ -921,6 +940,38 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     public void closeEvent(CloseEvent closeEvent) {
         this.closeEvent = closeEvent;
+    }
+
+
+    /**
+     * @return the textureCacheService
+     */
+    public TextureCacheService getTextureCacheService() {
+        return textureCacheService;
+    }
+
+
+    /**
+     * @param textureCacheService the textureCacheService to set
+     */
+    public void setTextureCacheService(TextureCacheService textureCacheService) {
+        this.textureCacheService = textureCacheService;
+    }
+
+
+    /**
+     * @return the textureLibraryStorageService
+     */
+    public TextureLibraryStorageService getTextureLibraryStorageService() {
+        return textureLibraryStorageService;
+    }
+
+
+    /**
+     * @param textureLibraryStorageService the textureLibraryStorageService to set
+     */
+    public void setTextureLibraryStorageService(TextureLibraryStorageService textureLibraryStorageService) {
+        this.textureLibraryStorageService = textureLibraryStorageService;
     }
 
 

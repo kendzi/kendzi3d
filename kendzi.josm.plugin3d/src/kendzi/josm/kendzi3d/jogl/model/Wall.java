@@ -19,6 +19,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MaterialFactory;
@@ -29,15 +30,14 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.dto.TextureData;
-import kendzi.josm.kendzi3d.jogl.Camera;
-import kendzi.josm.kendzi3d.jogl.ModelUtil;
-import kendzi.josm.kendzi3d.jogl.model.clone.RelationCloneHeight;
+import kendzi.jogl.texture.dto.TextureData;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureLibraryService;
+import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.math.geometry.Bool.CSG;
 import kendzi.math.geometry.Bool.CSG.Polygon;
 import kendzi.math.geometry.Bool.CSG.Vector;
@@ -96,7 +96,7 @@ public class Wall extends AbstractWayModel {
     /**
      * Texture library service.
      */
-    private TextureLibraryService textureLibraryService;
+    private TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Fence constructor.
@@ -108,13 +108,13 @@ public class Wall extends AbstractWayModel {
      */
     public Wall(Way pWay, Perspective3D pPerspective3D,
             ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryService pTextureLibraryService) {
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pWay, pPerspective3D);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryService = pTextureLibraryService;
+        this.textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
 
@@ -140,7 +140,7 @@ public class Wall extends AbstractWayModel {
         MeshFactory testMesh = modelBuilder.addMesh("test");
         //MeshFactory meshBorder = modelBuilder.addMesh("box");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryService);
+        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
