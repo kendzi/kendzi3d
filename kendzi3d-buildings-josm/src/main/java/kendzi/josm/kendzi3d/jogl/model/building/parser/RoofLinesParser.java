@@ -61,7 +61,13 @@ public class RoofLinesParser {
 
         Collection<Way> roofLinesWays = findRoofLinesWays(way);
 
-        Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), 1d);
+        Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), null);
+        if (roofHeight == null) {
+            roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_ROOF_HEIGHT.primitiveValue(primitive), null);
+        }
+        if (roofHeight == null) {
+            roofHeight = 1d;
+        }
 
 
         List<Way> edgesWay = new ArrayList<Way>();

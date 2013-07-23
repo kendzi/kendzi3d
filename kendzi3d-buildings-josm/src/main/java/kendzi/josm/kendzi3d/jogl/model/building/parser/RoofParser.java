@@ -100,6 +100,10 @@ public class RoofParser {
         if (measurements.get(MeasurementKey.HEIGHT_1) == null) {
 
             Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), null);
+            if (roofHeight == null) {
+                roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_ROOF_HEIGHT.primitiveValue(primitive), null);
+            }
+
             Double roofAngle = ModelUtil.getNumberAttribute(primitive, OsmAttributeKeys.ROOF_ANGLE.getKey(), null);
 
             if (roofHeight != null) {

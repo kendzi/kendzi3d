@@ -44,6 +44,8 @@ public enum OsmAttributeKeys {
 
     ROOF_HEIGHT("roof:height"),
 
+    BUILDING_ROOF_HEIGHT("building:roof:height"),
+
     ROOF_MATERIAL("roof:material"),
 
     ROOF_SLOPE_DIRECTION("roof:slope:direction"),
@@ -115,7 +117,7 @@ public enum OsmAttributeKeys {
     }
 
     public boolean primitiveKeyHaveValue(OsmPrimitive primitive, OsmAttributeValues value) {
-        return value.getValue().equals(OsmAttributeUtil.primitiveKeyHaveAnyValue(primitive, this));
+        return value.getValue().equals(OsmAttributeUtil.primitiveValue(primitive, this));
     }
 
 }
