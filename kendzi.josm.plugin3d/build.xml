@@ -84,7 +84,7 @@
 			<src path="../kendzi3d-jogl-textures/src/main/java"/>
 			<src path="../kendzi3d-jogl-textures-josm/src/main/java"/>
 			<src path="../kendzi3d-jogl-textures-library/src/main/java"/>
-        	<!-- !!! FIXME !!! -->
+        	<!-- !!! FIXME this is usage of output from temporary maven build !!! -->
 			<src path="../kendzi3d-jogl-textures-library-bindings/target/generated-sources/xjc"/>
 			<src path="../kendzi3d-jogl-textures-library-res/src/main/java"/>
 			<src path="../kendzi3d-josm-core/src/main/java"/>

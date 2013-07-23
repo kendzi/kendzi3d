@@ -47,7 +47,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>kendzi3d-jogl-model-render</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

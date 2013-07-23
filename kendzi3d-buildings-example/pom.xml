@@ -54,7 +54,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>kendzi3d-buildings-example</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
