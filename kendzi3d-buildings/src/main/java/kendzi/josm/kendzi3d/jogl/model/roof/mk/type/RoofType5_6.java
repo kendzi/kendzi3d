@@ -75,8 +75,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
             double height,
             RoofMaterials pRoofTextureData) {
 
-//            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-//            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+        //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
+        //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
@@ -90,7 +90,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         Double angle = null;
         Measurement measurement = pRoof.getMeasurements().get(MeasurementKey.HEIGHT_1);
         if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-//            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
+            //            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
             angle = measurement.getValue();
         } else {
             h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
@@ -110,8 +110,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
-        Double h1, Double angle, double l1, double l2,
-        RoofMaterials pRoofTextureData) {
+            Double height, Double angle, double l1, double l2,
+            RoofMaterials pRoofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
         MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
@@ -123,17 +123,17 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
         MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
-       // build flat
+        // build flat
         Point3d planeRightTopPoint =  new Point3d(
-              0 ,
-              0,
-              0);
+                0 ,
+                0,
+                0);
 
         Vector3d nt = new Vector3d(0, 1  , 0);
 
         Plane3d planeTop = new Plane3d(
-              planeRightTopPoint,
-              nt);
+                planeRightTopPoint,
+                nt);
 
         Vector3d roofTopLineVector = new Vector3d(
                 -1d,
@@ -144,6 +144,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
         //build circle
         Circle circle = CircleInsidePolygon.iterativeNonConvex(borderPolygon, 0.01);
+        circle.setRadius(Math.min(height, circle.getRadius()));
+
         int pIcross = 5;
         int pIsection = 9;
         buildRotaryShape(meshBorder, circle, pIcross, pIsection, true);
@@ -188,7 +190,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
     public static void buildRotaryShape(
             MeshFactory meshFactory,
-//            Circle circle,
+            //            Circle circle,
             Point2d center,
             int pIsection,
             Point2d [] crossSection,
@@ -248,19 +250,19 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         // add soft normals vectors
         int [][] softNormalsIntex = new int[isection][];
         if (soft) {
-//            double circleX = circle.getPoint().x;
-//            double circleY = circle.getPoint().y;
-//            for (int i = 0; i < isection; i++) {
-//                softNormalsIntex[i] = new int[icross];
-//                for (int j = 0; j < icross; j++) {
-//                    Point3d p =  mesh[i][j];
-//
-//                    Vector3d n = new Vector3d(p.x - circleX, p.y,  p.z  + circleY);
-//
-//                    int in = meshFactory.addNormal(n);
-//                    softNormalsIntex[i][j] = in;
-//                }
-//            }
+            //            double circleX = circle.getPoint().x;
+            //            double circleY = circle.getPoint().y;
+            //            for (int i = 0; i < isection; i++) {
+            //                softNormalsIntex[i] = new int[icross];
+            //                for (int j = 0; j < icross; j++) {
+            //                    Point3d p =  mesh[i][j];
+            //
+            //                    Vector3d n = new Vector3d(p.x - circleX, p.y,  p.z  + circleY);
+            //
+            //                    int in = meshFactory.addNormal(n);
+            //                    softNormalsIntex[i][j] = in;
+            //                }
+            //            }
 
             for (int i = 0; i< isection; i++) {
                 double a = Math.toRadians(360) / isection * i;
@@ -297,10 +299,10 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                 int ic2p1 = pointsIntex[i2][j];
                 int ic1p2 = pointsIntex[i][j+1];
                 int ic2p2 = pointsIntex[i2][j+1];
-//                int ic1p1 = meshFactory.addVertex(c1p1);
-//                int ic2p1 = meshFactory.addVertex(c2p1);
-//                int ic1p2 = meshFactory.addVertex(c1p2);
-//                int ic2p2 = meshFactory.addVertex(c2p2);
+                //                int ic1p1 = meshFactory.addVertex(c1p1);
+                //                int ic2p1 = meshFactory.addVertex(c2p1);
+                //                int ic1p2 = meshFactory.addVertex(c1p2);
+                //                int ic2p2 = meshFactory.addVertex(c2p2);
 
                 int ic1p1n;
                 int ic2p1n;
@@ -327,16 +329,16 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                     ic2p1n = softNormalsIntex[i2][j];
                     ic1p2n = softNormalsIntex[i][j+1];
                     ic2p2n = softNormalsIntex[i2][j+1];
-//                 // XXX doubled normals
-//                    Vector3d c1p1n = new Vector3d(c1p1.x - circle.getPoint().x, c1p1.y,  c1p1.z  + circle.getPoint().y);
-//                    Vector3d c2p1n = new Vector3d(c2p1.x - circle.getPoint().x, c2p1.y,  c2p1.z  + circle.getPoint().y);
-//                    Vector3d c1p2n = new Vector3d(c1p2.x - circle.getPoint().x, c1p2.y,  c1p2.z  + circle.getPoint().y);
-//                    Vector3d c2p2n = new Vector3d(c2p2.x - circle.getPoint().x, c2p2.y,  c2p2.z  + circle.getPoint().y);
-//
-//                    ic1p1n = meshFactory.addNormal(c1p1n);
-//                    ic2p1n = meshFactory.addNormal(c2p1n);
-//                    ic1p2n = meshFactory.addNormal(c1p2n);
-//                    ic2p2n = meshFactory.addNormal(c2p2n);
+                    //                 // XXX doubled normals
+                    //                    Vector3d c1p1n = new Vector3d(c1p1.x - circle.getPoint().x, c1p1.y,  c1p1.z  + circle.getPoint().y);
+                    //                    Vector3d c2p1n = new Vector3d(c2p1.x - circle.getPoint().x, c2p1.y,  c2p1.z  + circle.getPoint().y);
+                    //                    Vector3d c1p2n = new Vector3d(c1p2.x - circle.getPoint().x, c1p2.y,  c1p2.z  + circle.getPoint().y);
+                    //                    Vector3d c2p2n = new Vector3d(c2p2.x - circle.getPoint().x, c2p2.y,  c2p2.z  + circle.getPoint().y);
+                    //
+                    //                    ic1p1n = meshFactory.addNormal(c1p1n);
+                    //                    ic2p1n = meshFactory.addNormal(c2p1n);
+                    //                    ic1p2n = meshFactory.addNormal(c1p2n);
+                    //                    ic2p2n = meshFactory.addNormal(c2p2n);
                 }
 
                 TextQuadsIndex tq = tc[j];
@@ -388,7 +390,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         TextQuadsIndex [] tc = new TextQuadsIndex[icross];
         // texture mapping
         double textHeightD = 0;
-//        for (int i = 0; i< isection; i++) {
+        //        for (int i = 0; i< isection; i++) {
         {
             int i = 0;
             Point3d [] c1 = mesh[i];
@@ -570,9 +572,9 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                 p3 = p;
             }
 
-//            if (d3 > 1) {
-//                break;
-//            }
+            //            if (d3 > 1) {
+            //                break;
+            //            }
         }
 
         Double d1 = distance.get(p1);
@@ -580,7 +582,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
         // Due Bug in skeleton algorithm recalculate distance
         // XXX
-//        d3 = calcDistance(p3, edge);
+        //        d3 = calcDistance(p3, edge);
 
 
         Vector3d v1 = new Vector3d(p2.x - p1.x, d2 - d1, -p2.y + p1.y);
