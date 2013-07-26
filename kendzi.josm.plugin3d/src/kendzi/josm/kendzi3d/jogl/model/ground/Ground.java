@@ -18,7 +18,7 @@ import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.perspective.Perspective;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
 import com.jogamp.opengl.util.texture.Texture;
 

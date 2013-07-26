@@ -34,7 +34,7 @@ import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
-import kendzi.josm.kendzi3d.perspective.Perspective;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
 

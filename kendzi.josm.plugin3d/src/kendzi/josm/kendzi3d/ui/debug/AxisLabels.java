@@ -11,6 +11,8 @@ package kendzi.josm.kendzi3d.ui.debug;
 
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL2;
 
@@ -59,6 +61,8 @@ public class AxisLabels {
      */
     private int lenghtZ;
 
+    private List<TextToRender> textToRender;
+
 
     /**
      * Creates axis labels for AXIS_LENGHT unit.
@@ -95,19 +99,42 @@ public class AxisLabels {
 
         pGl.glDisable(GL2.GL_LIGHTING);
 
+        if (this.textToRender == null) {
+            this.textToRender = createLabels();
+        }
+
+        drawAxisText(pGl, this.textToRender);
+
+        pGl.glEnable(GL2.GL_LIGHTING);
+    }
+
+    /**
+     * @return
+     */
+    private List<TextToRender> createLabels() {
+
+        List<TextToRender> textToRender = new ArrayList<AxisLabels.TextToRender>();
+
+
         for (int i = -this.lenghtX / 2; i <= this.lenghtX / 2; i++) {
-            drawAxisText(pGl, "x: " + i, i, 0.0f, 0.0f); // along x-axis
+            // along x-axis
+            //drawAxisText(pGl, "x: " + i, i, 0.0f, 0.0f);
+            textToRender.add(new TextToRender("x: " + i, i, 0.0f, 0.0f));
         }
 
         for (int i = -this.lenghtY / 2; i <= this.lenghtY / 2; i++) {
-            drawAxisText(pGl, "z: " + i, 0.0f, 0.0f, i); // along z-axis
+            // along z-axis
+            //drawAxisText(pGl, "z: " + i, 0.0f, 0.0f, i);
+            textToRender.add(new TextToRender("z: " + i, 0.0f, 0.0f, i));
         }
 
         for (int i = -this.lenghtZ / 2; i <= this.lenghtZ / 2; i++) {
-            drawAxisText(pGl, "y: " + i, 0.0f, i, 0.0f); // along y-axis
+            // along y-axis
+            //drawAxisText(pGl, "y: " + i, 0.0f, i, 0.0f);
+            textToRender.add(new TextToRender("y: " + i, 0.0f, i, 0.0f));
         }
 
-        pGl.glEnable(GL2.GL_LIGHTING);
+        return textToRender;
     }
 
     /**
@@ -128,6 +155,93 @@ public class AxisLabels {
         this.axisLabelRenderer.begin3DRendering();
         this.axisLabelRenderer.draw3D(pText, x - width / 2, y, z, SCALE_FACTOR);
         this.axisLabelRenderer.end3DRendering();
+    }
+
+    /**
+     * Draw list of texts described by pText. Each text have (x,y,z), with the
+     * text centered in the x-direction, facing along the +z axis.
+     *
+     * @param pGl gl2
+     * @param pText text to draw
+     */
+    private void drawAxisText(GL2 pGl, List<TextToRender> pText) {
+
+        this.axisLabelRenderer.begin3DRendering();
+
+        for (TextToRender textToRender : pText) {
+
+            Rectangle2D dim = this.axisLabelRenderer.getBounds(textToRender.getText());
+            float width = (float) dim.getWidth() * SCALE_FACTOR;
+
+            this.axisLabelRenderer.draw3D(textToRender.getText(), textToRender.getX() - width / 2, textToRender.getY(), textToRender.getZ(), SCALE_FACTOR);
+        }
+
+        this.axisLabelRenderer.end3DRendering();
+    }
+
+    class TextToRender {
+        private String text;
+        private float x;
+        private float y;
+        private float z;
+
+        public TextToRender(String text, float x, float y, float z) {
+            super();
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        /**
+         * @return the text
+         */
+        public String getText() {
+            return text;
+        }
+        /**
+         * @param text the text to set
+         */
+        public void setText(String text) {
+            this.text = text;
+        }
+        /**
+         * @return the x
+         */
+        public float getX() {
+            return x;
+        }
+        /**
+         * @param x the x to set
+         */
+        public void setX(float x) {
+            this.x = x;
+        }
+        /**
+         * @return the y
+         */
+        public float getY() {
+            return y;
+        }
+        /**
+         * @param y the y to set
+         */
+        public void setY(float y) {
+            this.y = y;
+        }
+        /**
+         * @return the z
+         */
+        public float getZ() {
+            return z;
+        }
+        /**
+         * @param z the z to set
+         */
+        public void setZ(float z) {
+            this.z = z;
+        }
+
+
     }
 
 }

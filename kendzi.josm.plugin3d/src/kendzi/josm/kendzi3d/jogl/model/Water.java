@@ -31,11 +31,9 @@ import kendzi.jogl.texture.library.TextureLibraryKey;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
-import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil;
-import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil.AreaWithHoles;
-import kendzi.kendzi3d.josm.model.polygon.ReversableWay;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
@@ -150,64 +148,12 @@ public class Water extends AbstractModel {
 
     List<PolygonWithHolesList2d> getMultiPolygonWithHolesRelation(Relation pRelation, Perspective pPerspective) {
 
-        List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
-
-        List<AreaWithHoles> waysPolygon = PolygonWithHolesUtil.findAreaWithHoles(pRelation);
-
-
-        for (AreaWithHoles waysPolygon2 : waysPolygon) {
-            List<PolygonList2d> inner  = new ArrayList<PolygonList2d>();
-
-            PolygonList2d outer = parse(waysPolygon2.getOuter(), pPerspective);
-
-            if (waysPolygon2.getInner() != null) {
-//                List<PolygonList2d> inner = new ArrayList<PolygonList2d>();
-                for (List<ReversableWay> rwList : waysPolygon2.getInner()) {
-                    inner.add(parse(rwList, pPerspective));
-                }
-
-            }
-            ret.add(new PolygonWithHolesList2d(outer,inner));
-        }
-        return ret;
+        return PolygonWithHolesUtil.findPolygonsWithHoles(pRelation, pPerspective);
     }
 
-	private PolygonList2d parse(List<ReversableWay> outer, Perspective pPerspective) {
-	    List<Point2d> poly = new ArrayList<Point2d>();
-
-	    for (ReversableWay rw : outer) {
-
-    	    Way way = rw.getWay();
 
 
-    	    int size =  way.getNodesCount();
-            if (size > 0) {
 
-                if (way.getNode(0).equals(way.getNode(way.getNodesCount() - 1))) {
-                    size--;
-                }
-
-                if (!rw.isReversed()) {
-
-                    for (int i = 0; i < size; i++) {
-                        Point2d p = pPerspective.calcPoint(way.getNode(i));
-    //                    WallNode wn = parseWallNode(way.getNode(i), pPerspective);
-    //
-                        poly.add(p);
-                    }
-                } else {
-
-                    for (int i = size - 1; i >= 0; i--) {
-
-                        Point2d p = pPerspective.calcPoint(way.getNode(i));
-
-                      poly.add(p);
-                    }
-                }
-            }
-	    }
-        return new PolygonList2d(poly);
-    }
 
     @Override
 	public void buildModel() {

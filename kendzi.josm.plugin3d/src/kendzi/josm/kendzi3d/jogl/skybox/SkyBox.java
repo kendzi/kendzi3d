@@ -6,7 +6,7 @@ import javax.vecmath.Point3d;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.perspective.Perspective;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
 import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;

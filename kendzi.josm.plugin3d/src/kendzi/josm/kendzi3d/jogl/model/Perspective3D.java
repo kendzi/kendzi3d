@@ -11,7 +11,7 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import javax.vecmath.Point2d;
 
-import kendzi.josm.kendzi3d.perspective.Perspective;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.coor.EastNorth;
