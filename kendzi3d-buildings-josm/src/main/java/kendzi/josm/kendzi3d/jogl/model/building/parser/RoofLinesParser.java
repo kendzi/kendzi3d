@@ -11,10 +11,10 @@ import java.util.Set;
 import javax.vecmath.Point2d;
 
 import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofLinesModel;
-import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.line.LineSegment2d;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -22,7 +22,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class RoofLinesParser {
-
+    private static final double MAX_HEIGHT = Double.MAX_VALUE;
+    private static final double MIN_HEIGHT = 0d;//-Double.MAX_VALUE;
 
 
     public static boolean hasRoofLines(OsmPrimitive primitive) {
@@ -48,6 +49,7 @@ public class RoofLinesParser {
             }
         } else {
             // TODO for relations
+            //PolygonWithHolesUtil.findPolygonsWithHoles(pRelation, pPerspective)
         }
         return false;
 
@@ -66,20 +68,16 @@ public class RoofLinesParser {
             roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_ROOF_HEIGHT.primitiveValue(primitive), null);
         }
         if (roofHeight == null) {
-            roofHeight = 1d;
+            roofHeight = 5d;
         }
-
 
         List<Way> edgesWay = new ArrayList<Way>();
         List<Way> ridgesWay = new ArrayList<Way>();
         List<Node> apexNode = new ArrayList<Node>();
 
 
-
         for (Way roofLine : roofLinesWays) {
-            Double wayHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(roofLine), null);
-
-
+            //            Double wayHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(roofLine), null);
 
             if (isEdge(roofLine)) {
                 edgesWay.add(roofLine);
@@ -107,7 +105,7 @@ public class RoofLinesParser {
 
         for (Way ridgeWay : ridgesWay) {
             String height = OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(ridgeWay);
-            Double ridgeHeight = ModelUtil.parseHeight(height, 0d);
+            Double ridgeHeight = ModelUtil.parseHeight(height, roofHeight);
 
             Point2d [] points = transform(ridgeWay, perspective);
             for (int i = 0; i < points.length; i++) {
@@ -124,6 +122,13 @@ public class RoofLinesParser {
             Point2d point = perspective.calcPoint(apexNodee);
             roofHeightMap.put(point, roofHeight);
 
+        }
+
+        Point2d [] points = transform(way, perspective);
+        for (Point2d point2d : points) {
+            if (roofHeightMap.get(point2d) == null) {
+                roofHeightMap.put(point2d, MIN_HEIGHT);
+            }
         }
 
         return new RoofLinesModel(roofHeightMap, innerSegments, roofHeight);

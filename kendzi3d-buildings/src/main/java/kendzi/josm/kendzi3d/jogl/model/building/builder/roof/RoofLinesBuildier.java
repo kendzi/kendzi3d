@@ -2,8 +2,11 @@ package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -28,8 +31,12 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriUtil2;
 
-public class RoofLinesBuildier {
+import org.apache.log4j.Logger;
 
+public class RoofLinesBuildier {
+    /** Log. */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofLinesBuildier.class);
 
     public static RoofOutput build(BuildingPart bp, double maxHeight, ModelFactory mf, TextureData roofTextureData,
             Color roofColor) {
@@ -38,20 +45,22 @@ public class RoofLinesBuildier {
             throw new RuntimeException("wrong type of roof model, should be RoofLinesModel");
         }
 
+
         RoofLinesModel roof =  (RoofLinesModel) bp.getRoof();
         PolygonWithHolesList2d polygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
 
+        Map<Point2d, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
 
 
         PolygonList2d outer = polygon.getOuter();
         Collection<PolygonList2d> holes = polygon.getInner();
 
         Collection<LineSegment2d> segments = roof.getInnerSegments();
-        Map<Point2d, Double> heights = roof.getHeights();
 
         MeshFactory roofMesh = createRoofMesh(mf, roofTextureData, roofColor);
 
-        List<Triangle2d> triangles = Poly2TriUtil2.triangulate(outer, holes, segments, null);
+        List<Triangle2d> triangles = Poly2TriUtil2.triangulate(outer, holes, segments,
+                Collections.<Point2d> emptyList());
 
         Vector3d up = new Vector3d(0d, 1d, 0d);
         for (Triangle2d triangle : triangles) {
@@ -94,20 +103,43 @@ public class RoofLinesBuildier {
         return ro;
     }
 
+    private static Map<Point2d, Double> normalizeRoofHeights(double maxHeight, double roofHeight, Map<Point2d, Double> heights) {
+        Map<Point2d, Double> ret = new HashMap<Point2d, Double>();
+
+        double cullisHeight = maxHeight - roofHeight;
+        for (Entry<Point2d, Double> entry : heights.entrySet()) {
+
+            Double value = entry.getValue();
+            if (value < 0) {
+                log.error("roof height map can't have value less then 0");
+                value = 0d;
+            }
+            if (value > roofHeight) {
+                log.error("roof height map can't have value greter then roof height");
+                value = roofHeight;
+            }
+
+            ret.put(entry.getKey(), cullisHeight + value);
+        }
+
+        return ret;
+    }
+
     protected static MeshFactory createRoofMesh( ModelFactory mf, TextureData td, Color color) {
 
         Material mat = MaterialFactory.createTextureColorMaterial(td.getTex0(), color);
 
         int materialIndex = mf.addMaterial(mat);
 
-        MeshFactory meshRoof = new MeshFactory("roof_top");
+        MeshFactory meshRoof = mf.addMesh("roof_top");
 
-//        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-//        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-//        int roofMaterialIndex = model.addMaterial(roofMaterial);
+        //        TextureData roofTexture = pRoofTextureData.getRoofTexture();
+        //        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
+        //        int roofMaterialIndex = model.addMaterial(roofMaterial);
 
         meshRoof.materialID = materialIndex;
         meshRoof.hasTexture = true;
+
         return meshRoof;
     }
 

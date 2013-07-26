@@ -14,12 +14,12 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
-import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.direction.Direction;
 import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Node;

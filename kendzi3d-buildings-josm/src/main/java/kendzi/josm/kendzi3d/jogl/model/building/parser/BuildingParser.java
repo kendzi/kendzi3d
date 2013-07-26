@@ -23,11 +23,11 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.element.BuildingNodeElemen
 import kendzi.josm.kendzi3d.jogl.model.building.model.element.EntranceBuildingElement;
 import kendzi.josm.kendzi3d.jogl.model.building.model.element.WindowBuildingElement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.perspective.Perspective;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil;
 import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil.AreaWithHoles;
 import kendzi.kendzi3d.josm.model.polygon.ReversableWay;
