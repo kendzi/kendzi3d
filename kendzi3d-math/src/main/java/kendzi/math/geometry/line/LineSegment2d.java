@@ -60,6 +60,44 @@ public class LineSegment2d {
 
         return LineUtil.intersectLineSegments(this.begin, lineSegment.begin, v1, v2);
     }
+    /** Test
+     * @param lineSegment
+     * @return
+     */
+    // FIXME
+    public Point2d intersectOpen(LineSegment2d lineSegment) {
+        Vector2d v1 = Vector2dUtil.fromTo(this.begin, this.end);
+        Vector2d v2 = Vector2dUtil.fromTo(lineSegment.begin, lineSegment.end);
+
+        if (this.begin.equals(lineSegment.begin) || this.begin.equals(lineSegment.end) || this.end.equals(lineSegment.begin)
+                || this.end.equals(lineSegment.end)) {
+            return null;
+        }
+        return LineUtil.intersectLineSegments(this.begin, lineSegment.begin, v1, v2);
+    }
+
+    /** Test
+     * @param lineSegment
+     * @return
+     */
+    public Point2d intersectEpsilon(LineSegment2d lineSegment, double epslilon) {
+        Vector2d v1 = Vector2dUtil.fromTo(this.begin, this.end);
+        Vector2d v2 = Vector2dUtil.fromTo(lineSegment.begin, lineSegment.end);
+
+        if (this.begin.equals(lineSegment.begin) || this.begin.equals(lineSegment.end) || this.end.equals(lineSegment.begin)
+                || this.end.equals(lineSegment.end)) {
+            return null;
+        }
+
+        double sqlEps = epslilon * epslilon;
+        if (this.begin.distanceSquared(lineSegment.begin) < sqlEps || this.begin.distanceSquared(lineSegment.end) < sqlEps
+                || this.end.distanceSquared(lineSegment.begin) < sqlEps || this.end.distanceSquared(lineSegment.end) < sqlEps) {
+            return null;
+        }
+
+
+        return LineUtil.intersectLineSegments(this.begin, lineSegment.begin, v1, v2);
+    }
 
 
     private static double det(double x, double y, double A, double B, double C) {
@@ -123,14 +161,14 @@ public class LineSegment2d {
     }
 
 
- // dist_Point_to_Segment(): get the distance of a point to a segment.
-//  Input:  a Point P and a Segment S (in any dimension)
-//  Return: the shortest distance from P to S
+    // dist_Point_to_Segment(): get the distance of a point to a segment.
+    //  Input:  a Point P and a Segment S (in any dimension)
+    //  Return: the shortest distance from P to S
 
     //http://softsurfer.com/Archive/algorithm_0102/algorithm_0102.htm#References
     public static double distancePointToSegment(Point2d P, LineSegment2d S) {
-//        Vector v = S.P1 - S.P0;
-//        Vector w = P - S.P0;
+        //        Vector v = S.P1 - S.P0;
+        //        Vector w = P - S.P0;
 
         Vector2d v = new Vector2d(S.getEnd());
         v.sub(S.getBegin());
@@ -179,7 +217,7 @@ public class LineSegment2d {
                 + ", "
                 + end
                 + (openEnd ? ")" : ">")
-               ;
+                ;
     }
 
 
