@@ -9,55 +9,52 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 
-import kendzi.jogl.model.geometry.Model;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 
 /**
  * Roof builder output.
- *
+ * 
  * @author Tomasz Kedziora (kendzi)
- *
+ * 
  */
 public class RoofOutput {
 
-    RoofDebugOut debug;
     /**
-     * Roof model.
+     * Debug information.
      */
-    Model model;
+    private RoofDebugOut debug;
+
+    /**
+     * Heights of wall parts under roof.
+     */
+    private HeightCalculator heightCalculator;
+
     /**
      * Roof height.
      */
-    double height;
-    /**
-     * @return the model
-     */
-    public Model getModel() {
-        return this.model;
-    }
-    /**
-     * @param model the model to set
-     */
-    public void setModel(Model model) {
-        this.model = model;
-    }
+    private double height;
+
     /**
      * @return the height
      */
     public double getHeight() {
         return this.height;
     }
+
     /**
      * @param height the height to set
      */
     public void setHeight(double height) {
         this.height = height;
     }
+
     /**
      * @return the debug
      */
     public RoofDebugOut getDebug() {
         return this.debug;
     }
+
     /**
      * @param debug the debug to set
      */
@@ -65,5 +62,18 @@ public class RoofOutput {
         this.debug = debug;
     }
 
+    /**
+     * @return the heightCalculator
+     */
+    public HeightCalculator getHeightCalculator() {
+        return this.heightCalculator;
+    }
+
+    /**
+     * @param heightCalculator the heightCalculator to set
+     */
+    public void setHeightCalculator(HeightCalculator heightCalculator) {
+        this.heightCalculator = heightCalculator;
+    }
 
 }

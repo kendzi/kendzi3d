@@ -74,7 +74,7 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
             ) {
 
 
-//        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight);
+        //        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight);
 
         Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, pRecHeight);
 
@@ -150,13 +150,13 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
 
         int segments = 6;
         List<Double> splitPoint = calcSplitPoint(true, segments);
-//        List<LinePoints2d> lines = createLines(splitPoint, pRecHeight);
+        //        List<LinePoints2d> lines = createLines(splitPoint, pRecHeight);
 
         List<CrossSectionElement> crossSection = createCrossSection(height, pRecHeight);
         final LinePoints2d[] lines = createLines(crossSection);
 
         MultiPolygonList2d [] mps = createMP(borderPolygon, lines);
-//        Segment[] createSegments = createSegments(crossSection);
+        //        Segment[] createSegments = createSegments(crossSection);
 
         final Plane3d[] planes = createPlanes(crossSection);
 
@@ -176,49 +176,49 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes );
 
 
-        List<Point2d> borderSplit = new ArrayList<Point2d>();
-        List<Double> borderHeights = new ArrayList<Double>();
-        {
-            // This is only temporary, border generation code will be moved
-            for (int i = 0; i< pBorderList.size(); i++) {
-                Point2d p1 = pBorderList.get(i) ;
-                Point2d p2 = pBorderList.get((i+1) %pBorderList.size()) ;
-
-                SegmentHeight[] height2 = hc.height(p1, p2);
-
-                for (int j = 0; j < height2.length; j++) {
-                    borderSplit.add(height2[j].getBegin());
-                    borderHeights.add(height2[j].getBeginHeight());
-                }
-
-            }
-        }
-
-        RoofTypeUtil.makeRoofBorderMesh(
-
-                               borderSplit,
-                               borderHeights,
-
-                               meshBorder,
-                               facadeTexture
-                               );
-
+        //        List<Point2d> borderSplit = new ArrayList<Point2d>();
+        //        List<Double> borderHeights = new ArrayList<Double>();
+        //        {
+        //            // This is only temporary, border generation code will be moved
+        //            for (int i = 0; i< pBorderList.size(); i++) {
+        //                Point2d p1 = pBorderList.get(i) ;
+        //                Point2d p2 = pBorderList.get((i+1) %pBorderList.size()) ;
+        //
+        //                SegmentHeight[] height2 = hc.height(p1, p2);
+        //
+        //                for (int j = 0; j < height2.length; j++) {
+        //                    borderSplit.add(height2[j].getBegin());
+        //                    borderHeights.add(height2[j].getBeginHeight());
+        //                }
+        //
+        //            }
+        //        }
+        //
+        //        RoofTypeUtil.makeRoofBorderMesh(
+        //
+        //                               borderSplit,
+        //                               borderHeights,
+        //
+        //                               meshBorder,
+        //                               facadeTexture
+        //                               );
+        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
-//
+        //
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
-//
-//        RectangleRoofHooksSpaces rhs =
-//                buildRectRoofHooksSpace(
-//                        pRectangleContur,
-//                        new PolygonPlane(bottomMP, planeBottom),
-//                        null,
-//                        new PolygonPlane(topMP, planeTop),
-//                        null
-//                      );
-//
-//        rto.setRoofHooksSpaces(rhs);
+        //
+        //        RectangleRoofHooksSpaces rhs =
+        //                buildRectRoofHooksSpace(
+        //                        pRectangleContur,
+        //                        new PolygonPlane(bottomMP, planeBottom),
+        //                        null,
+        //                        new PolygonPlane(topMP, planeTop),
+        //                        null
+        //                      );
+        //
+        //        rto.setRoofHooksSpaces(rhs);
 
         return rto;
     }

@@ -21,6 +21,7 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.texture.dto.TextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
@@ -196,6 +197,38 @@ public class RoofTypeUtil {
         return (splitPolygon);
     }
 
+    /**
+     * This is temporary method. It group code for wall generation under roof gutters.
+     * Walls are generated from building_max_height - roof_height to building_max_height.
+     * This code will be removed in future.
+     * 
+     * @param pOutline
+     * @param pHeightCalculator
+     * @param pWallMesh
+     * @param pFacadeTextureData
+     */
+    @Deprecated
+    public static void makeWallsFromHeightCalculator(List<Point2d> pOutline, HeightCalculator pHeightCalculator, MeshFactory pWallMesh,
+            TextureData pFacadeTextureData) {
+        List<Point2d> borderSplit = new ArrayList<Point2d>();
+        List<Double> borderHeights = new ArrayList<Double>();
+        {
+            // This is only temporary, border generation code will be moved
+            for (int i = 0; i < pOutline.size(); i++) {
+                Point2d p1 = pOutline.get(i);
+                Point2d p2 = pOutline.get((i + 1) % pOutline.size());
 
+                SegmentHeight[] height2 = pHeightCalculator.height(p1, p2);
+
+                for (int j = 0; j < height2.length; j++) {
+                    borderSplit.add(height2[j].getBegin());
+                    borderHeights.add(height2[j].getBeginHeight());
+                }
+
+            }
+        }
+
+        RoofTypeUtil.makeRoofBorderMesh(borderSplit, borderHeights, pWallMesh, pFacadeTextureData);
+    }
 
 }

@@ -22,6 +22,9 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
 import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofLinesModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeUtil;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.SegmentHeight;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.line.LineSegment2d;
@@ -49,7 +52,7 @@ public class RoofLinesBuildier {
         RoofLinesModel roof =  (RoofLinesModel) bp.getRoof();
         PolygonWithHolesList2d polygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
 
-        Map<Point2d, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
+        final Map<Point2d, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
 
 
         PolygonList2d outer = polygon.getOuter();
@@ -58,6 +61,8 @@ public class RoofLinesBuildier {
         Collection<LineSegment2d> segments = roof.getInnerSegments();
 
         MeshFactory roofMesh = createRoofMesh(mf, roofTextureData, roofColor);
+        //XXX
+        MeshFactory outlineMesh = createRoofMesh(mf, roofTextureData, roofColor);
 
         List<Triangle2d> triangles = Poly2TriUtil2.triangulate(outer, holes, segments,
                 Collections.<Point2d> emptyList());
@@ -96,9 +101,20 @@ public class RoofLinesBuildier {
 
         }
 
+        HeightCalculator hc = new HeightCalculator() {
+
+            @Override
+            public SegmentHeight[] height(Point2d p1, Point2d p2) {
+
+                return new SegmentHeight[] { new SegmentHeight(p1, heights.get(p1), p2, heights.get(p2)) };
+            }
+        };
+
+        RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, outlineMesh, roofTextureData);
 
         RoofOutput ro = new RoofOutput();
         ro.setHeight(roof.getRoofHeight());
+        ro.setHeightCalculator(hc);
 
         return ro;
     }

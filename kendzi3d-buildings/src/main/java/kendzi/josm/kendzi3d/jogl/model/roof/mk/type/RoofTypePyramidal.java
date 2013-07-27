@@ -9,7 +9,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -121,31 +120,13 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
         for (int i = 0; i < mp.length; i++) {
 
             MeshFactoryUtil
-                    .addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
+            .addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
 
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
-        List<Point2d> borderSplit = new ArrayList<Point2d>();
-        List<Double> borderHeights = new ArrayList<Double>();
-        {
-            // This is only temporary, border generation code will be moved
-            for (int i = 0; i < outlineList.size(); i++) {
-                Point2d p1 = outlineList.get(i);
-                Point2d p2 = outlineList.get((i + 1) % outlineList.size());
-
-                SegmentHeight[] height2 = hc.height(p1, p2);
-
-                for (int j = 0; j < height2.length; j++) {
-                    borderSplit.add(height2[j].getBegin());
-                    borderHeights.add(height2[j].getBeginHeight());
-                }
-
-            }
-        }
-
-        RoofTypeUtil.makeRoofBorderMesh(borderSplit, borderHeights, meshBorder, facadeTexture);
+        RoofTypeUtil.makeWallsFromHeightCalculator(outlineList, hc, meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(h1);
@@ -154,6 +135,8 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
 
         return rto;
     }
+
+
 
     /**
      * @param outlineConvexHull

@@ -73,7 +73,7 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
             ) {
 
 
-//        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight);
+        //        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecHeight, pRecHeight);
 
         Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, pRecHeight/2d);
 
@@ -174,7 +174,7 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
         final LinePoints2d[] lines = RoofType5_2.createLines(crossSection);
 
         MultiPolygonList2d [] mps = RoofType5_2.createMP(borderPolygon, lines);
-//        Segment[] createSegments = createSegments(crossSection);
+        //        Segment[] createSegments = createSegments(crossSection);
 
         final Plane3d[] planes = RoofType5_2.createPlanes(crossSection);
 
@@ -192,33 +192,33 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
-        List<Point2d> borderSplit = new ArrayList<Point2d>();
-        List<Double> borderHeights = new ArrayList<Double>();
-        {
-            // This is only temporary, border generation code will be moved
-            for (int i = 0; i< pBorderList.size(); i++) {
-                Point2d p1 = pBorderList.get(i) ;
-                Point2d p2 = pBorderList.get((i+1) %pBorderList.size()) ;
-
-                SegmentHeight[] height2 = hc.height(p1, p2);
-
-                for (int j = 0; j < height2.length; j++) {
-                    borderSplit.add(height2[j].getBegin());
-                    borderHeights.add(height2[j].getBeginHeight());
-                }
-
-            }
-        }
-
-        RoofTypeUtil.makeRoofBorderMesh(
-
-                               borderSplit,
-                               borderHeights,
-
-                               meshBorder,
-                               facadeTexture
-                               );
-
+        //        List<Point2d> borderSplit = new ArrayList<Point2d>();
+        //        List<Double> borderHeights = new ArrayList<Double>();
+        //        {
+        //            // This is only temporary, border generation code will be moved
+        //            for (int i = 0; i< pBorderList.size(); i++) {
+        //                Point2d p1 = pBorderList.get(i) ;
+        //                Point2d p2 = pBorderList.get((i+1) %pBorderList.size()) ;
+        //
+        //                SegmentHeight[] height2 = hc.height(p1, p2);
+        //
+        //                for (int j = 0; j < height2.length; j++) {
+        //                    borderSplit.add(height2[j].getBegin());
+        //                    borderHeights.add(height2[j].getBeginHeight());
+        //                }
+        //
+        //            }
+        //        }
+        //
+        //        RoofTypeUtil.makeRoofBorderMesh(
+        //
+        //                               borderSplit,
+        //                               borderHeights,
+        //
+        //                               meshBorder,
+        //                               facadeTexture
+        //                               );
+        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
