@@ -33,7 +33,7 @@
    
 	<property name="commit.message" value="Commit message" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="5241" />
+	<property name="plugin.main.version" value="6088" />
 	<property name="plugin.author" value="Tomasz Kędziora (Kendzi)" />
 	
     <!--
