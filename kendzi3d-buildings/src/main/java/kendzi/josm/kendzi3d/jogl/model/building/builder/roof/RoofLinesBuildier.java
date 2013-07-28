@@ -110,7 +110,9 @@ public class RoofLinesBuildier {
             }
         };
 
-        RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, outlineMesh, roofTextureData);
+        double minHeight = maxHeight - roof.getRoofHeight();
+
+        RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, minHeight,  outlineMesh, roofTextureData);
 
         RoofOutput ro = new RoofOutput();
         ro.setHeight(roof.getRoofHeight());

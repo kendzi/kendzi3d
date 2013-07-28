@@ -202,7 +202,7 @@ public class RoofType5_2 extends RectangleRoofTypeBuilder{
         //                               meshBorder,
         //                               facadeTexture
         //                               );
-        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, meshBorder, facadeTexture);
+        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, 0d, meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);

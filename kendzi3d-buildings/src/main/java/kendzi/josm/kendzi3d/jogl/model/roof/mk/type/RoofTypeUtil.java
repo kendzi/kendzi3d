@@ -204,11 +204,12 @@ public class RoofTypeUtil {
      * 
      * @param pOutline
      * @param pHeightCalculator
+     * @param minHeight
      * @param pWallMesh
      * @param pFacadeTextureData
      */
     @Deprecated
-    public static void makeWallsFromHeightCalculator(List<Point2d> pOutline, HeightCalculator pHeightCalculator, MeshFactory pWallMesh,
+    public static void makeWallsFromHeightCalculator(List<Point2d> pOutline, HeightCalculator pHeightCalculator, double minHeight, MeshFactory pWallMesh,
             TextureData pFacadeTextureData) {
         List<Point2d> borderSplit = new ArrayList<Point2d>();
         List<Double> borderHeights = new ArrayList<Double>();
@@ -228,7 +229,7 @@ public class RoofTypeUtil {
             }
         }
 
-        RoofTypeUtil.makeRoofBorderMesh(borderSplit, borderHeights, pWallMesh, pFacadeTextureData);
+        RoofTypeUtil.makeRoofBorderMesh(borderSplit, minHeight, borderHeights, pWallMesh, pFacadeTextureData);
     }
 
 }
