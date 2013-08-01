@@ -11,11 +11,12 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.math.geometry.Plane3d;
+import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.triangulate.Poly2TriUtil;
+import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
 
 import org.apache.log4j.Logger;
 
@@ -144,11 +145,15 @@ public class MeshFactoryUtil {
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
             Vector3d textureDirection, boolean top) {
 
-        MultiPolygonList2d topMP = Poly2TriUtil.triangulate(polygonWithHolesList2d);
-        Vector3d yt = new Vector3d(0, top ? 1 : -1, 0);
+        List<Triangle2d> topMP = Poly2TriSimpleUtil.triangulate(polygonWithHolesList2d);
+        Vector3d yt = new Vector3d(0, 1, 0);
+        if (!top) {
+            yt.negate();
+        }
         Point3d textureStartPoint = new Point3d(textureStartPointX, height, -textureStartPointY);
         Plane3d planeTop = new Plane3d(textureStartPoint, yt);
-        addPolygonToRoofMesh(meshFactory, topMP, planeTop, textureDirection, textureData);
+
+        addPolygonToRoofMesh(meshFactory, topMP, planeTop, textureDirection, textureData, 0, 0);
     }
 
     /** Add polygons to roof mesh.
@@ -254,6 +259,73 @@ public class MeshFactoryUtil {
                 face.addCoordIndex(tci);
             }
         }
+    }
+
+    /**
+     * Add 2d triangles list to mesh. Triangle height is calculate from plane.
+     * Texture offset is taken from plane point, textureVector and
+     * textureOffset.
+     * 
+     * @param pMeshRoof roof mesh
+     * @param pTriangles point of polygons
+     * @param pPlane
+     * @param pTextureVector
+     * @param pTextureData
+     * @param textureOffsetU offset for texture U
+     * @param textureOffsetV offset for texture V
+     * 
+     */
+    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, List<Triangle2d> pTriangles,
+            Plane3d pPlane, Vector3d pTextureVector, TextureData pTextureData, double textureOffsetU, double textureOffsetV) {
+
+        int normalIndex = pMeshRoof.addNormal(pPlane.getNormal());
+
+        FaceFactory face = pMeshRoof.addFace(FaceType.TRIANGLES);
+
+        for (Triangle2d triangle : pTriangles) {
+
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
+                    normalIndex, face, triangle.getP1());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
+                    normalIndex, face, triangle.getP2());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
+                    normalIndex, face, triangle.getP3());
+
+        }
+    }
+
+    /**
+     * @param pMeshRoof
+     * @param pPlane
+     * @param pTextureVector
+     * @param pTextureData
+     * @param textureOffsetU
+     * @param textureOffsetV
+     * @param normalIndex
+     * @param face
+     * @param point2d
+     */
+    private static void addPointToTriangleFace(MeshFactory pMeshRoof, Plane3d pPlane, Vector3d pTextureVector,
+            TextureData pTextureData, double textureOffsetU, double textureOffsetV, int normalIndex, FaceFactory face,
+            Point2d point2d) {
+
+        double h = pPlane.calcYOfPlane(point2d.x, -point2d.y);
+
+        Point3d point3d = new Point3d(point2d.x, h, -point2d.y);
+
+        int vi = pMeshRoof.addVertex(point3d);
+
+        //        Point3d point3d = pMeshRoof.vertices.get(vi);
+
+        face.addVertIndex(vi);
+
+        face.addNormalIndex(normalIndex);
+
+        TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, pPlane.getNormal(), pTextureVector, pPlane.getPoint(), pTextureData, textureOffsetU, textureOffsetV);
+
+        int tci = pMeshRoof.addTextCoord(calcUV);
+
+        face.addCoordIndex(tci);
     }
 
     @Deprecated

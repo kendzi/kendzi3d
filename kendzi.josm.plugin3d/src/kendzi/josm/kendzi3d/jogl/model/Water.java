@@ -35,10 +35,10 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil;
 import kendzi.math.geometry.Plane3d;
-import kendzi.math.geometry.polygon.MultiPolygonList2d;
+import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.triangulate.Poly2TriUtil;
+import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -170,34 +170,19 @@ public class Water extends AbstractModel {
 
         Vector3d nt = new Vector3d(0, 1, 0);
 
-		Point3d planeRightTopPoint =  new Point3d(
-	             0 ,
-	             0.05,
-	             0);
-
-//        MultiPolygonList2d topMP = new MultiPolygonList2d(new PolygonList2d(this.points));
+        Point3d planeRightTopPoint = new Point3d(0, 0.05, 0);
 
         List<PolygonWithHolesList2d> polyList = getMultiPolygonWithHoles();
+
         for (PolygonWithHolesList2d poly : polyList) {
 
-//            List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
-//            List<List<Point2d>> innerLists = innerLists(buildingPolygon);
+            List<Triangle2d> triangles = Poly2TriSimpleUtil.triangulate(poly);
 
-            MultiPolygonList2d topMP = Poly2TriUtil.triangulate(poly);
+            Plane3d planeTop = new Plane3d(planeRightTopPoint, nt);
 
+            Vector3d roofTopLineVector = new Vector3d(-1, 0, 0);
 
-            Plane3d planeTop = new Plane3d(
-                   planeRightTopPoint,
-                   nt);
-
-            Vector3d roofTopLineVector = new Vector3d(
-                   -1,
-                   0,
-                   0);
-
-
-
-            MeshFactoryUtil.addPolygonToRoofMesh(mesh, topMP, planeTop, roofTopLineVector, waterTexture);
+            MeshFactoryUtil.addPolygonToRoofMesh(mesh, triangles, planeTop, roofTopLineVector, waterTexture, 0, 0);
         }
 
 	    this.model = model.toModel();

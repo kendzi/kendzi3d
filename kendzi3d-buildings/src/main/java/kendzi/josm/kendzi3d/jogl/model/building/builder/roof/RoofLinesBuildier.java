@@ -32,7 +32,7 @@ import kendzi.math.geometry.point.Vector3dUtil;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.triangulate.Poly2TriUtil2;
+import kendzi.math.geometry.triangulate.Poly2TriUtil;
 
 import org.apache.log4j.Logger;
 
@@ -64,7 +64,7 @@ public class RoofLinesBuildier {
         //XXX
         MeshFactory outlineMesh = createRoofMesh(mf, roofTextureData, roofColor);
 
-        List<Triangle2d> triangles = Poly2TriUtil2.triangulate(outer, holes, segments,
+        List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments,
                 Collections.<Point2d> emptyList());
 
         Vector3d up = new Vector3d(0d, 1d, 0d);
