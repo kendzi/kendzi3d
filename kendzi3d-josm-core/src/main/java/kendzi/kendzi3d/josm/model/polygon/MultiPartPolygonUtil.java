@@ -1,4 +1,4 @@
-package kendzi.math.geometry.polygon;
+package kendzi.kendzi3d.josm.model.polygon;
 
 import java.util.ArrayList;
 import java.util.HashMap;

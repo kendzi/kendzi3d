@@ -15,10 +15,13 @@ import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.josm.model.polygon.RelationUtil;
 import kendzi.math.geometry.line.LineSegment2d;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class RoofLinesParser {
@@ -31,20 +34,18 @@ public class RoofLinesParser {
         if (primitive instanceof Way) {
             Way way = (Way) primitive;
 
-            for (int i = 0; i < way.getNodesCount(); i++) {
-                Node node = way.getNode(i);
-                List<OsmPrimitive> referrers = node.getReferrers();
-                for (OsmPrimitive ref : referrers) {
-                    if (ref.equals(way)) {
-                        continue;
-                    }
-                    if (!(ref instanceof Way)) {
-                        continue;
-                    }
-                    if (isEdge((Way) ref) || isRidge((Way) ref)) {
-                        return true;
-                    }
+            return hasWayRoofLines(way);
+        } else if(primitive instanceof Relation && ((Relation) primitive).isMultipolygon()) {
+            Relation mp = (Relation) primitive;
 
+            for (RelationMember relationMember : mp.getMembers()) {
+                Way way = relationMember.getWay();
+                if (way == null) {
+                    continue;
+                }
+
+                if (hasWayRoofLines(way)) {
+                    return true;
                 }
             }
         } else {
@@ -55,26 +56,82 @@ public class RoofLinesParser {
 
     }
 
+    /**
+     * @param way
+     */
+    private static boolean hasWayRoofLines(Way way) {
+        for (int i = 0; i < way.getNodesCount(); i++) {
+            Node node = way.getNode(i);
+            List<OsmPrimitive> referrers = node.getReferrers();
+            for (OsmPrimitive ref : referrers) {
+                if (ref.equals(way)) {
+                    continue;
+                }
+                if (!(ref instanceof Way)) {
+                    continue;
+                }
+                if (isEdge((Way) ref) || isRidge((Way) ref)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static RoofLinesModel parse(OsmPrimitive primitive, Perspective perspective) {
 
         Map<Point2d, Double> roofHeightMap = new HashMap<Point2d, Double>();
-
-        Way way = (Way) primitive;
-
-        Collection<Way> roofLinesWays = findRoofLinesWays(way);
-
-        Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), null);
-        if (roofHeight == null) {
-            roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_ROOF_HEIGHT.primitiveValue(primitive), null);
-        }
-        if (roofHeight == null) {
-            roofHeight = 5d;
-        }
 
         List<Way> edgesWay = new ArrayList<Way>();
         List<Way> ridgesWay = new ArrayList<Way>();
         List<Node> apexNode = new ArrayList<Node>();
 
+        Collection<Way> roofLinesWays = new ArrayList<Way>();
+        Double roofHeight = 0d;
+
+        List<Way> outerWay = new ArrayList<Way>();
+        List<Way> innerWay = new ArrayList<Way>();
+
+        if (primitive instanceof Way) {
+            Way way = (Way) primitive;
+            outerWay.add(way);
+
+            roofLinesWays = findRoofLinesWays(way);
+            findApexNodes(apexNode, way);
+
+            roofHeight = parseRoofHeight(primitive);
+        } else if (primitive instanceof Relation && ((Relation) primitive).isMultipolygon()) {
+            Relation mp = (Relation) primitive;
+            roofHeight = parseRoofHeight(primitive);
+
+            //            for (RelationMember relationMember : mp.getMembers()) {
+            //                Way way = relationMember.getWay();
+            //                if (way == null) {
+            //                    continue;
+            //                }
+            //
+            //                roofLinesWays.addAll(findRoofLinesWays(way));
+            //
+            //                findApexNodes(apexNode, way);
+            //
+            //            }
+
+            outerWay = RelationUtil.filterOuterWays(mp);
+            innerWay = RelationUtil.filterInnerWays(mp);
+
+            for (Way way : outerWay) {
+                roofLinesWays.addAll(findRoofLinesWays(way));
+                findApexNodes(apexNode, way);
+            }
+
+            for (Way way : innerWay) {
+                roofLinesWays.addAll(findRoofLinesWays(way));
+                findApexNodes(apexNode, way);
+            }
+
+        } else {
+            throw new RuntimeException("unsupported primitive");
+        }
 
         for (Way roofLine : roofLinesWays) {
             //            Double wayHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(roofLine), null);
@@ -85,12 +142,7 @@ public class RoofLinesParser {
                 ridgesWay.add(roofLine);
             }
 
-            for (int i = 0; i < way.getNodesCount(); i++) {
-                Node node = way.getNode(i);
-                if (isApex(node)) {
-                    apexNode.add(node);
-                }
-            }
+            findApexNodes(apexNode, roofLine);
         }
 
         List<LineSegment2d> innerSegments = new ArrayList<LineSegment2d>();
@@ -124,14 +176,57 @@ public class RoofLinesParser {
 
         }
 
+        for (Way way : outerWay) {
+            setNodesAsMinHeight(perspective, roofHeightMap, way);
+        }
+
+        for (Way way : innerWay) {
+            setNodesAsMinHeight(perspective, roofHeightMap, way);
+        }
+
+        return new RoofLinesModel(roofHeightMap, innerSegments, roofHeight);
+    }
+
+    /**
+     * @param perspective
+     * @param roofHeightMap
+     * @param way
+     */
+    private static void setNodesAsMinHeight(Perspective perspective, Map<Point2d, Double> roofHeightMap, Way way) {
         Point2d [] points = transform(way, perspective);
         for (Point2d point2d : points) {
             if (roofHeightMap.get(point2d) == null) {
                 roofHeightMap.put(point2d, MIN_HEIGHT);
             }
         }
+    }
 
-        return new RoofLinesModel(roofHeightMap, innerSegments, roofHeight);
+    /**
+     * @param apexNode
+     * @param roofLine
+     */
+    private static void findApexNodes(List<Node> apexNode, Way roofLine) {
+        for (int i = 0; i < roofLine.getNodesCount(); i++) {
+            Node node = roofLine.getNode(i);
+            if (isApex(node)) {
+                apexNode.add(node);
+            }
+        }
+    }
+
+    /**
+     * @param primitive
+     * @return
+     */
+    private static Double parseRoofHeight(OsmPrimitive primitive) {
+        Double roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(primitive), null);
+        if (roofHeight == null) {
+            roofHeight = ModelUtil.parseHeight(OsmAttributeKeys.BUILDING_ROOF_HEIGHT.primitiveValue(primitive), null);
+        }
+        if (roofHeight == null) {
+            roofHeight = 5d;
+        }
+        return roofHeight;
     }
 
 

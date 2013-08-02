@@ -5,9 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.Edge;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.EdgeOut;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.Vertex;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Edge;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.EdgeOut;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Vertex;
 
 import org.junit.Test;
 

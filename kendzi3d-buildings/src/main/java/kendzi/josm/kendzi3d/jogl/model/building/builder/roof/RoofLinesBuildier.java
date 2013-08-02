@@ -73,9 +73,9 @@ public class RoofLinesBuildier {
             Point2d p2 = triangle.getP2();
             Point2d p3 = triangle.getP3();
 
-            double h1 = heights.get(p1);
-            double h2 = heights.get(p2);
-            double h3 = heights.get(p3);
+            double h1 = getHeight(heights, p1);
+            double h2 = getHeight(heights, p2);
+            double h3 = getHeight(heights, p3);
 
             Point3d pp1 = new Point3d(p1.x, h1, -p1.y);
             Point3d pp2 = new Point3d(p2.x, h2, -p2.y);
@@ -106,7 +106,7 @@ public class RoofLinesBuildier {
             @Override
             public SegmentHeight[] height(Point2d p1, Point2d p2) {
 
-                return new SegmentHeight[] { new SegmentHeight(p1, heights.get(p1), p2, heights.get(p2)) };
+                return new SegmentHeight[] { new SegmentHeight(p1, getHeight(heights, p1), p2, getHeight(heights, p2)) };
             }
         };
 
@@ -119,6 +119,20 @@ public class RoofLinesBuildier {
         ro.setHeightCalculator(hc);
 
         return ro;
+    }
+
+    /**
+     * @param heights
+     * @param p1
+     * @return
+     */
+    private static double getHeight(final Map<Point2d, Double> heights, Point2d p1) {
+        Double height = heights.get(p1);
+        if (height == null) {
+            log.error("unmaped height for point: " + p1);
+            return -1;
+        }
+        return height;
     }
 
     private static Map<Point2d, Double> normalizeRoofHeights(double maxHeight, double roofHeight, Map<Point2d, Double> heights) {

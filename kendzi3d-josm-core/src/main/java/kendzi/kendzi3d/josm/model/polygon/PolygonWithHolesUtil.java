@@ -7,19 +7,15 @@ import java.util.List;
 import javax.vecmath.Point2d;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.Edge;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.EdgeOut;
-import kendzi.math.geometry.polygon.MultiPartPolygonUtil.Vertex;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Edge;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.EdgeOut;
+import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Vertex;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class PolygonWithHolesUtil {
@@ -93,14 +89,11 @@ public class PolygonWithHolesUtil {
     public static List<AreaWithHoles> findAreaWithHoles(Relation pRelation) {
 
         // outers
-        List<OsmPrimitive> outersClosed = filterByRoleAndKey(pRelation, OsmPrimitiveType.CLOSEDWAY, "outer", null);
-        outersClosed.addAll(filterByRoleAndKey(pRelation, OsmPrimitiveType.CLOSEDWAY, null, null));
+        List<Way> outersClosed = RelationUtil.filterOuterClosedWays(pRelation);
+        List<Way> outersParts = RelationUtil.filterOuterOpenWays(pRelation);
 
-        List<OsmPrimitive> outersParts = filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, "outer", null);
-        outersParts.addAll(filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, null, null));
-
-        List<OsmPrimitive> innersClosed = filterByRoleAndKey(pRelation, OsmPrimitiveType.CLOSEDWAY, "inner", null);
-        List<OsmPrimitive> innersParts = filterByRoleAndKey(pRelation, OsmPrimitiveType.WAY, "inner", null);
+        List<Way> innersClosed = RelationUtil.filterInnerClosedWay(pRelation);
+        List<Way> innersParts = RelationUtil.filterInnerOpenWay(pRelation);
 
         List<List<ReversableWay>> outers = convertWay(outersClosed);
         List<List<ReversableWay>> outerWallParts = connectMultiPolygonParts(outersParts);
@@ -112,6 +105,8 @@ public class PolygonWithHolesUtil {
 
         return connectPolygonHoles(outers, inners);
     }
+
+
 
     private static List<AreaWithHoles> connectPolygonHoles(List<List<ReversableWay>> outers, List<List<ReversableWay>> inners) {
         List<AreaWithHoles> ret = new ArrayList<AreaWithHoles>();
@@ -131,7 +126,7 @@ public class PolygonWithHolesUtil {
      * @param outersParts
      * @return
      */
-    private static List<List<ReversableWay>> connectMultiPolygonParts(List<OsmPrimitive> outersParts) {
+    private static List<List<ReversableWay>> connectMultiPolygonParts(List<? extends OsmPrimitive> outersParts) {
         List<Edge<Way, Node>> in = new ArrayList<MultiPartPolygonUtil.Edge<Way, Node>>();
         for (OsmPrimitive osmPrimitive : outersParts) {
             Way w = ((Way) osmPrimitive);
@@ -169,29 +164,9 @@ public class PolygonWithHolesUtil {
         return outerWallParts;
     }
 
-    private static List<OsmPrimitive> filterByRoleAndKey(Relation pRelation, OsmPrimitiveType type, String role, String key) {
-        List<OsmPrimitive> ret = new ArrayList<OsmPrimitive>();
 
-        for (int i = 0; i < pRelation.getMembersCount(); i++) {
-            RelationMember member = pRelation.getMember(i);
 
-            if (!type.equals(member.getDisplayType())) {
-                continue;
-            }
-
-            if (StringUtil.isBlankOrNull(member.getRole()) && StringUtil.isBlankOrNull(role)) {
-                ret.add(member.getMember());
-                continue;
-            }
-
-            if (StringUtil.equalsOrNulls(role, member.getRole())) {
-                ret.add(member.getMember());
-            }
-        }
-        return ret;
-    }
-
-    private static List<List<ReversableWay>> convertWay(List<OsmPrimitive> outersClosed) {
+    private static List<List<ReversableWay>> convertWay(List<? extends OsmPrimitive> outersClosed) {
         List<List<ReversableWay>> ret = new ArrayList<List<ReversableWay>>();
         for (OsmPrimitive osmPrimitive : outersClosed) {
             ret.add(Arrays.asList(new ReversableWay((Way) osmPrimitive, false)));
