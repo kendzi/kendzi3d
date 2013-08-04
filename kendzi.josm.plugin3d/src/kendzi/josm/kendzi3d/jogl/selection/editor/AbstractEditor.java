@@ -1,14 +1,17 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.selection.editor;
 
-import kendzi.math.geometry.ray.Ray3d;
-import kendzi.math.geometry.ray.Ray3dUtil;
 
 public abstract class AbstractEditor implements Editor {
 
-    @Override
-    public Double intersect(Ray3d selectionRay) {
-        return Ray3dUtil.intersect(selectionRay, getEditorCenter(), getEditorRadius());
-    }
+
 
     @Override
     public double getEditorRadius() {

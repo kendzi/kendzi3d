@@ -331,7 +331,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 //            drawPoint(gl, this.closestPointOnBaseRay);
 //        }
 
-        selectionDrawUtil.draw(gl, this.objectSelectionListener);
+        selectionDrawUtil.draw(gl, this.objectSelectionListener, this.simpleMoveAnimator);
 
 
         // Flush all drawing operations to the graphics card

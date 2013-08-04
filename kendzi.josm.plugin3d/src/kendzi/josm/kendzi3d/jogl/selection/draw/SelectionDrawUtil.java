@@ -1,3 +1,11 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.selection.draw;
 
 import java.awt.Color;
@@ -10,6 +18,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
+import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
 import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditor;
@@ -28,7 +37,7 @@ public class SelectionDrawUtil {
         this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH); // Create Smooth Normals
     }
 
-    public void draw(GL2 gl, ObjectSelectionManager manager) {
+    public void draw(GL2 gl, ObjectSelectionManager manager, Camera camera) {
 
         if (manager.getLastClosestPointOnBaseRay() != null) {
             drawPoint(gl, manager.getLastClosestPointOnBaseRay());
@@ -39,15 +48,17 @@ public class SelectionDrawUtil {
             drawSelectRay(gl, select);
         }
 
-        drawEditors(gl, manager.getLastSelection(), manager.getLastActiveEditor());
+        drawEditors(gl, manager.getLastSelection(), manager.getLastActiveEditor(), camera);
 
 
     }
 
-    private void drawEditors(GL2 gl, Selection selection, Editor activeEditor) {
+    private void drawEditors(GL2 gl, Selection selection, Editor activeEditor, Camera camera) {
         if (selection == null) {
             return;
         }
+
+        Point3d cameraPoint = camera.getPoint();
 
         List<Editor> editors = selection.getEditors();
 
@@ -59,10 +70,11 @@ public class SelectionDrawUtil {
 
             if (editor instanceof ArrowEditor) {
                 ArrowEditor ae = (ArrowEditor) editor;
-                Point3d p = ae.getPoint();
+                Point3d p = ae.getEditorOrigin();
                 Vector3d v = ae.getVector();
                 double l = ae.getLength();
 
+                double camDistanceRatio = cameraPoint.distance(p) * Editor.SELECTION_ETITOR_CAMERA_RATIO;
 
                 if (isActiveEditor) {
                     gl.glColor3fv(Color.RED.darker().darker().darker().getRGBComponents(new float[4]), 0);
@@ -82,11 +94,11 @@ public class SelectionDrawUtil {
                 gl.glPushMatrix();
                 gl.glTranslated(p.x + v.x * l, p.y + v.y * l, p.z + v.z * l);
 
-                double lenght = 2;
+                double lenght = 2d * camDistanceRatio;
                 int section = 16;
-                double arrowLenght = 1;
-                double baseRadius = 0.1d;
-                double arrowRadius = 0.6d;
+                double arrowLenght = 1d * camDistanceRatio;
+                double baseRadius = 0.1d * camDistanceRatio;
+                double arrowRadius = 0.6d * camDistanceRatio;
                 drawArrow(gl, this.glu, this.quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
                 // DrawUtil.drawDotY(gl, 0.3, 6);
@@ -103,12 +115,11 @@ public class SelectionDrawUtil {
 
     private void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic2, double lenght, double arrowLenght, double baseRadius, double arrowRadius, int section) {
         gl.glPushMatrix();
-        gl.glTranslated(0, -1d,0);
+        gl.glTranslated(0, -lenght/2d, 0);
         gl.glRotated(-90d, 1d, 0d, 0d);
 
         double baseLenght = lenght - arrowLenght;
 
-        // TODO Auto-generated method stub
         glu.gluDisk(this.quadratic, 0, baseRadius, section, 2);
         glu.gluCylinder(this.quadratic, baseRadius, baseRadius, baseLenght, section, 2);
 

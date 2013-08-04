@@ -1,3 +1,11 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.selection;
 
 import java.awt.event.MouseEvent;
@@ -81,10 +89,10 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
 
         Ray3d moveRay = viewportPicking(x, y);
 
-        Ray3d arrowRay = new Ray3d(arrow.getPoint(), arrow.getVector());
+        Ray3d arrowRay = new Ray3d(arrow.getEditorOrigin(), arrow.getVector());
         Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
-        double height = arrow.getPoint().distance(closestPointOnBaseRay);
+        double height = arrow.getEditorOrigin().distance(closestPointOnBaseRay);
 
         this.raiseEditorChange(new ArrowEditorChangeEvent(finish, arrow, height, closestPointOnBaseRay));
 
@@ -121,7 +129,8 @@ public abstract class ObjectSelectionManager extends ObjectSelectionListener {
             if (e instanceof ArrowEditor) {
                 ArrowEditor ae = (ArrowEditor) e;
 
-                Double intersect = ae.intersect(selectRay);
+                //Double intersect = ae.intersect(selectRay);
+                Double intersect = ae.intersect(selectRay, Editor.SELECTION_ETITOR_CAMERA_RATIO);
 
                 if (intersect == null) {
                     continue;
