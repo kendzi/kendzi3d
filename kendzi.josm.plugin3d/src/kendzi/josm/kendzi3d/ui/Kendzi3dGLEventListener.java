@@ -29,6 +29,7 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
+import kendzi.josm.kendzi3d.jogl.compas.Compass;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
 import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
@@ -177,6 +178,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     private boolean error;
 
+    private Compass compass;
+
 
 
 
@@ -200,6 +203,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
         this.selectionDrawUtil = new SelectionDrawUtil();
+
+        this.compass = new Compass();
 
         initObjectSelectionListener();
     }
@@ -333,13 +338,29 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         selectionDrawUtil.draw(gl, this.objectSelectionListener, this.simpleMoveAnimator);
 
+        drawCompass(gl);
 
         // Flush all drawing operations to the graphics card
         gl.glFlush();
     }
 
 
+    void drawCompass(GL2 gl) {
 
+        int distance = 70;
+
+        Ray3d ray3d = this.viewport.picking(distance, this.viewport.height - distance);
+
+        Point3d point = ray3d.getPoint();
+
+        Vector3d vector = ray3d.getVector();
+        vector.normalize();
+        //vector.scale(2);
+        point.add(vector);
+
+        this.compass.draw(gl, point, this.simpleMoveAnimator.getAngle());
+
+    }
 
 
 
@@ -417,7 +438,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.axisLabels.init();
         this.renderJosm.init(gl);
         this.selectionDrawUtil.init(gl);
-
+        this.compass.init(gl);
 
 
 

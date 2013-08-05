@@ -99,7 +99,7 @@ public class SelectionDrawUtil {
                 double arrowLenght = 1d * camDistanceRatio;
                 double baseRadius = 0.1d * camDistanceRatio;
                 double arrowRadius = 0.6d * camDistanceRatio;
-                drawArrow(gl, this.glu, this.quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+                drawArrowInMiddle(gl, this.glu, this.quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
                 // DrawUtil.drawDotY(gl, 0.3, 6);
                 // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
@@ -113,20 +113,28 @@ public class SelectionDrawUtil {
         }
     }
 
-    private void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic2, double lenght, double arrowLenght, double baseRadius, double arrowRadius, int section) {
+    public static void drawArrowInMiddle(GL2 gl, GLU glu, GLUquadric quadratic, double lenght, double arrowLenght, double baseRadius, double arrowRadius, int section) {
         gl.glPushMatrix();
         gl.glTranslated(0, -lenght/2d, 0);
+        drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        gl.glPopMatrix();
+    }
+
+
+    public static void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic, double lenght, double arrowLenght, double baseRadius, double arrowRadius, int section) {
+        gl.glPushMatrix();
+        //gl.glTranslated(0, -lenght/2d, 0);
         gl.glRotated(-90d, 1d, 0d, 0d);
 
         double baseLenght = lenght - arrowLenght;
 
-        glu.gluDisk(this.quadratic, 0, baseRadius, section, 2);
-        glu.gluCylinder(this.quadratic, baseRadius, baseRadius, baseLenght, section, 2);
+        glu.gluDisk(quadratic, 0, baseRadius, section, 2);
+        glu.gluCylinder(quadratic, baseRadius, baseRadius, baseLenght, section, 2);
 
         gl.glTranslated(0, 0, baseLenght);
 
-        glu.gluDisk(this.quadratic, 0, arrowRadius, section, 2);
-        glu.gluCylinder(this.quadratic, arrowRadius, 0, arrowLenght, section, 2);
+        glu.gluDisk(quadratic, 0, arrowRadius, section, 2);
+        glu.gluCylinder(quadratic, arrowRadius, 0, arrowLenght, section, 2);
 
         gl.glPopMatrix();
 
