@@ -839,6 +839,10 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.simpleMoveAnimator.setPoint(pCamPosX, pCamPosY, pCamPosZ);
     }
 
+    public Camera getCamera() {
+        return simpleMoveAnimator;
+    }
+
     /**
      * @return the fps
      */

@@ -19,6 +19,7 @@ import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
+import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
@@ -30,6 +31,7 @@ import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
+import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -102,6 +104,24 @@ public class Kendzi3dModule extends AbstractModule {
         ModelRender modelRender = new ModelRender();
         modelRender.setTextureCacheService(pTextureCacheService);
         return modelRender;
+    }
+
+    @Provides @Singleton
+    CameraLayer provideCameraLayer(final Kendzi3dGLEventListener kendzi3dGLEventListener) {
+
+        // XXX TODO FIXME Temporary !!!!
+        Perspective3D p = new Perspective3D(0, 0, 0) {
+            @Override
+            public org.openstreetmap.josm.data.coor.EastNorth toEastNorth(double x, double y) {
+                RenderJOSM renderJosm = kendzi3dGLEventListener.getRenderJosm();
+
+                return renderJosm.getPerspective().toEastNorth(x, y);
+            };
+        };
+
+        CameraLayer cl = new CameraLayer(kendzi3dGLEventListener.getCamera(), p);
+
+        return cl;
     }
 
 //    @Provides

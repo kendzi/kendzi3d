@@ -32,6 +32,7 @@ import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
+import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -250,6 +251,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
                 frame.setVisible(true);
 
                 this.ogl = frame;
+
+                CameraLayer oglListener = injector.getInstance(CameraLayer.class);
+                initializeKendzi3dLayer(oglListener);
             }
             // else {
             // this.ogl.resume();
@@ -263,6 +267,27 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             e.printStackTrace();
             throw new RuntimeException("error opening kendzi3d window", e);
         }
+
+
+    }
+
+    /** The preferences prefix */
+    public static final String PREFIX = "kendzi3d";
+
+    /** The preferences key for error layer */
+    public static final String PREF_LAYER = PREFIX + ".layer";
+
+    private CameraLayer cameraLayer = null;//new CameraLayer();
+
+    public void initializeKendzi3dLayer(CameraLayer cameraLayer) {
+        if (!Main.pref.getBoolean(PREF_LAYER, true)) {
+            return;
+        }
+
+        cameraLayer.addCameraLayer();
+
+       // Main.main.addLayer(cameraLayer);
+
     }
 
 }
