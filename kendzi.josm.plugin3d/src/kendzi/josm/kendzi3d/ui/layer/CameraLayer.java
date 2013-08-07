@@ -92,7 +92,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      */
     @Override
     public Icon getIcon() {
-        return ImageProvider.get(/* "layer",* */"stock_3d-effects24");
+        return new ImageProvider("stock_3d-effects24").setMaxSize(16).get();
     }
 
     @Override
@@ -120,22 +120,35 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         Point2D point2d = mv.getPoint2D(eastNorth);
 
         int x = (int) point2d.getX();
-        ;
         int y = (int) point2d.getY();
 
-        int lenght = 15;
-        int endX = x + (int) (Math.cos(cameraAngle) * lenght);
-        int endY = y - (int) (Math.sin(cameraAngle) * lenght);
-
         g.setColor(color);
+
+        double drawAngle1 = cameraAngle - Math.PI/4d;
+        double drawAngle2 = cameraAngle + Math.PI/4d;
+
+        int lenght = 30;
+        int lenght2 = lenght + lenght;
+
+        g.drawArc(x - lenght, y - lenght, lenght2, lenght2, (int) Math.toDegrees(drawAngle1), 90);
+
+        int endX = x + (int) (Math.cos(drawAngle1) * lenght);
+        int endY = y - (int) (Math.sin(drawAngle1) * lenght);
+        g.drawLine(x, y, endX, endY);
+
+        int end2X = x + (int) (Math.cos(drawAngle2) * lenght);
+        int end2Y = y - (int) (Math.sin(drawAngle2) * lenght);
+        g.drawLine(x, y, end2X, end2Y);
+
+//        g.drawLine(endX, endY, end2X, end2Y);
+
         boolean selected = true;
         if (selected) {
-            g.fillOval(x - 5, y - 5, 10, 10);
+            g.fillOval(x - 7, y - 7, 14, 14);
         } else {
-            g.drawOval(x - 5, y - 5, 10, 10);
+            g.drawOval(x - 7, y - 7, 14, 14);
         }
 
-        g.drawLine(x, y, endX, endY);
 
         this.lastX = cameraX;
         this.lastY = cameraY;
