@@ -9,6 +9,8 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
+import generated.PointModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.ModelCacheService;

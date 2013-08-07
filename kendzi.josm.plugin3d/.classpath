@@ -42,5 +42,8 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library-bindings"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-textures-library-res"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library-bindings"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library-layer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

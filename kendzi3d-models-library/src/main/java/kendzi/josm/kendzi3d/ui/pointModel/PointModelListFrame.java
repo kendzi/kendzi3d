@@ -1,5 +1,7 @@
 package kendzi.josm.kendzi3d.ui.pointModel;
 
+import generated.PointModel;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -19,7 +21,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.ui.pointModel.action.PointModelListFrameAction;
 
 public class PointModelListFrame extends JFrame {
@@ -62,8 +63,8 @@ public class PointModelListFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
 
-                table = new JTable();
-                scrollPane.setViewportView(table);
+        table = new JTable();
+        scrollPane.setViewportView(table);
         table.setModel(dataModel);
 
         JLabel lblPointModelList = new JLabel("Point Model List");
@@ -136,8 +137,8 @@ public class PointModelListFrame extends JFrame {
     public class ModelsTableModel extends AbstractTableModel {
 
         /**
-        *
-        */
+         *
+         */
         private static final long serialVersionUID = 1L;
 
         private List<PointModel> data =
@@ -182,9 +183,9 @@ public class PointModelListFrame extends JFrame {
                 return null;
             }
 
-//            row[3] = pm.getTranslateX();
-//            row[4] = pm.getTranslateY();
-//            row[5] = pm.getTranslateZ();
+            //            row[3] = pm.getTranslateX();
+            //            row[4] = pm.getTranslateY();
+            //            row[5] = pm.getTranslateZ();
         }
 
         Class[] columnTypes = new Class[] { String.class, String.class, String.class };

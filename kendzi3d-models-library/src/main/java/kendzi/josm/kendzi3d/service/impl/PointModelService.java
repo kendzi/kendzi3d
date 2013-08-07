@@ -1,5 +1,9 @@
 package kendzi.josm.kendzi3d.service.impl;
 
+import generated.ObjectFactory;
+import generated.PointModel;
+import generated.PointModels;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.vecmath.Vector3d;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -18,22 +23,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import kendzi.josm.kendzi3d.dto.xsd.ObjectFactory;
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
-import kendzi.josm.kendzi3d.dto.xsd.PointModels;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
-
-import com.google.inject.Inject;
 
 public class PointModelService {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(PointModelService.class);
 
-  //@Inject
+    //@Inject
     private UrlReciverService urlReciverService;
 
     private List<PointModelDataChange> pointModelDataChange = new ArrayList<PointModelDataChange>();
@@ -51,9 +51,9 @@ public class PointModelService {
     }
 
 
-//    private Map<String, PointModel> pointModelsMap = new HashMap<String, PointModel>();
+    //    private Map<String, PointModel> pointModelsMap = new HashMap<String, PointModel>();
 
-//    private Set<String> internalPointModelsSet = new HashSet<String>();
+    //    private Set<String> internalPointModelsSet = new HashSet<String>();
 
     /** Constructor.
      * @param urlReciverService url reciver service
@@ -71,7 +71,7 @@ public class PointModelService {
     private Map<Long, PointModel> pointModelsUserMap = new LinkedHashMap<Long, PointModel>();
     private Map<Long, PointModel> pointModelsInternalMap = new LinkedHashMap<Long, PointModel>();
 
-//    private List<PointModel> pointModelsList;
+    //    private List<PointModel> pointModelsList;
 
     public List<PointModel> findAll() {
 
@@ -120,61 +120,61 @@ public class PointModelService {
 
     public boolean isUser(String key) {
 
-//        for (PointModel p : this.pointModelsList) {
-//            if (key.equals(p.getKey())) {
-//                return true;
-//            }
-//        }
+        //        for (PointModel p : this.pointModelsList) {
+        //            if (key.equals(p.getKey())) {
+        //                return true;
+        //            }
+        //        }
         return false;
     }
 
 
-//    private static List<PointModel> parseXmlFile(String pFileUrl) {
-//
-//        List<PointModel> ret = new ArrayList<PointModel>();
-//
-//        // get the factory
-//        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//
-//        try {
-//
-//            // Using factory get an instance of document builder
-//            DocumentBuilder db = dbf.newDocumentBuilder();
-//
-//            // parse using builder to get DOM representation of the XML file
-//            Document dom = db.parse(pFileUrl);
-//
-//            // get the root element
-//            Element docEle = dom.getDocumentElement();
-//
-//            // get a nodelist of elements
-//            NodeList nl = docEle.getElementsByTagName("pointModel");
-//
-//            if (nl != null && nl.getLength() > 0) {
-//                for (int i = 0; i < nl.getLength(); i++) {
-//
-//                    Element el = (Element) nl.item(i);
-//
-//                    PointModel pm = new PointModel();
-//                    pm.setModel(el.getAttribute("model"));
-//                    pm.setMatcher(el.getAttribute("matcher"));
-//
-//                    pm.setTranslateX(parseDouble(el.getAttribute("translateX"), null));
-//                    pm.setTranslateY(parseDouble(el.getAttribute("translateY"), null));
-//                    pm.setTranslateZ(parseDouble(el.getAttribute("translateZ"), null));
-//
-//                    pm.setScale(el.getAttribute("scale"));
-//
-//                    ret.add(pm);
-//
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            log.error("error parsing point model xml config: " + pFileUrl, e);
-//        }
-//        return ret;
-//    }
+    //    private static List<PointModel> parseXmlFile(String pFileUrl) {
+    //
+    //        List<PointModel> ret = new ArrayList<PointModel>();
+    //
+    //        // get the factory
+    //        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    //
+    //        try {
+    //
+    //            // Using factory get an instance of document builder
+    //            DocumentBuilder db = dbf.newDocumentBuilder();
+    //
+    //            // parse using builder to get DOM representation of the XML file
+    //            Document dom = db.parse(pFileUrl);
+    //
+    //            // get the root element
+    //            Element docEle = dom.getDocumentElement();
+    //
+    //            // get a nodelist of elements
+    //            NodeList nl = docEle.getElementsByTagName("pointModel");
+    //
+    //            if (nl != null && nl.getLength() > 0) {
+    //                for (int i = 0; i < nl.getLength(); i++) {
+    //
+    //                    Element el = (Element) nl.item(i);
+    //
+    //                    PointModel pm = new PointModel();
+    //                    pm.setModel(el.getAttribute("model"));
+    //                    pm.setMatcher(el.getAttribute("matcher"));
+    //
+    //                    pm.setTranslateX(parseDouble(el.getAttribute("translateX"), null));
+    //                    pm.setTranslateY(parseDouble(el.getAttribute("translateY"), null));
+    //                    pm.setTranslateZ(parseDouble(el.getAttribute("translateZ"), null));
+    //
+    //                    pm.setScale(el.getAttribute("scale"));
+    //
+    //                    ret.add(pm);
+    //
+    //                }
+    //            }
+    //
+    //        } catch (Exception e) {
+    //            log.error("error parsing point model xml config: " + pFileUrl, e);
+    //        }
+    //        return ret;
+    //    }
 
     static Vector3d parseVector(String x, String y, String z) {
         return new Vector3d(
@@ -251,7 +251,7 @@ public class PointModelService {
 
         JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd", PointModelService.class.getClassLoader());
         Marshaller marshaller=jaxbContext.
-               createMarshaller();
+                createMarshaller();
 
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -292,7 +292,7 @@ public class PointModelService {
 
         @SuppressWarnings("unchecked")
         JAXBElement<PointModels> c = (JAXBElement<PointModels>)
-                unmarshaller.unmarshal(url);
+        unmarshaller.unmarshal(url);
 
         return c.getValue().getPointModel();
     }
@@ -309,7 +309,7 @@ public class PointModelService {
 
 
 
-//    public static void main(String[] args) throws FileNotFoundException, JAXBException {
-//        PointModelService.saveXml();
-//    }
+    //    public static void main(String[] args) throws FileNotFoundException, JAXBException {
+    //        PointModelService.saveXml();
+    //    }
 }

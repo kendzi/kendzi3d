@@ -1,10 +1,9 @@
 package kendzi.josm.kendzi3d.ui.pointModel.action;
 
-import java.awt.EventQueue;
+import generated.PointModel;
+
 import java.util.List;
 
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
-import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.pointModel.PointModelListFrame;
 
@@ -20,24 +19,24 @@ public class PointModelListFrameAction extends PointModelListFrame {
      */
     private PointModelService pointModelService;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PointModelListFrameAction frame = new PointModelListFrameAction();
-                    frame.setPointModelService(new PointModelService(new FileUrlReciverService(".")));
-                    frame.loadTableData();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e);
-                }
-            }
-        });
-    }
+    //    /**
+    //     * Launch the application.
+    //     */
+    //    public static void main(String[] args) {
+    //        EventQueue.invokeLater(new Runnable() {
+    //            @Override
+    //            public void run() {
+    //                try {
+    //                    PointModelListFrameAction frame = new PointModelListFrameAction();
+    //                    frame.setPointModelService(new PointModelService(new FileUrlReciverService(".")));
+    //                    frame.loadTableData();
+    //                    frame.setVisible(true);
+    //                } catch (Exception e) {
+    //                    log.error(e);
+    //                }
+    //            }
+    //        });
+    //    }
 
 
 

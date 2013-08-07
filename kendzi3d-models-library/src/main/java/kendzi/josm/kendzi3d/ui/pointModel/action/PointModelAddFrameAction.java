@@ -1,8 +1,9 @@
 package kendzi.josm.kendzi3d.ui.pointModel.action;
 
+import generated.PointModel;
+
 import java.awt.EventQueue;
 
-import kendzi.josm.kendzi3d.dto.xsd.PointModel;
 import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.pointModel.PointModelAddFrame;
 import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
