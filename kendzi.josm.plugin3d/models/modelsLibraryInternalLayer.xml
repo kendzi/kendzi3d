@@ -1,0 +1,85 @@
+<modelsLibrary>
+<!-- 
+	
+*nodeModel - allow to define models on node.
+attributes:
+	- matcher 	- selector for way (JOSM search format)
+	- model 	- location of model (obj format supported), it is relatively from plugin directory!
+	- translate - translation of model in MODEL SPACE
+	- scale 	- function for model scale, it can be normalized WORLD SPACE
+
+* wayNodeModel - allow to define models on way nodes. This models have way context like direction.
+attributes: 
+	- matcher 	- selector for way (JOSM search format)
+	- filter 	- filter for selected way nodes (JOSM search format)
+	- model 	- location of model (obj format supported), it is relatively from plugin directory!
+	- translate - translation of model in MODEL SPACE
+	- scale 	- function for model scale, it can be normalized WORLD SPACE
+	- direction - function for direction of model WORLD SPACE
+	- offset 	- model offset from way
+
+
+	Functions
+Functions depends on context! Currently validation for them maybe not working!
+
+* scale - scale functions:
+	- scaleHeight(a,default)
+	- normalHeight(a, default)
+	- number
+	
+* direction
+	- wayNodeDirection({angle}) - for nodes located on ways it read way direction (orthogonal to bisector)
+		{angle} - optional parameter, if specified it is added to direction from way
+	
+* vector
+	- vector() 		- create 3d vector (0, 0, 0)
+	- vector({x}, {y}, {z}) - create 3d vector ({x}, {y}, {z})
+	- vectorX({x}) 	- crate 3d vector ({x}, 0, 0) 
+	- vectorY({y}) 	- crate 3d vector (0, {y}, 0) 
+	- vectorZ({z})	- crate 3d vector (0, 0, {z}) 
+ -->
+	<nodeModel matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+		translateX="0" translateY="65" translateZ="0" scale="0.154" />
+	<nodeModel matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+		translateX="0" translateY="65" translateZ="0" scale="scaleHeight(0.0154,20)" />
+	<nodeModel matcher="(power_source=wind3)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+		translateX="0" translateY="65" translateZ="0" scale="scaleHeight(0.0154,20)" />
+	<nodeModel matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
+		translateX="0" translateY="65" translateZ="0" scale="normalHeight(0.8,20)" />
+	
+	<nodeModel matcher="(emergency=fire_hydrant)" model="/models/pd/fire_hydrant.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1)" />
+		
+	<nodeModel matcher="tomb=*" model="/models/cc/tombstone/tombstone_stone.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(0.8,0.8)" direction="90"/>
+		
+	<nodeModel matcher="highway=street_lamp" model="/models/pd/lamp.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,5.5)" direction="0"/>
+	
+	<nodeModel matcher="highway=street_lamp1" model="/models/pd/StreetlampM2_Height323cm.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,5.5)" direction="0"/>
+	
+	
+	
+	<nodeModel matcher="amenity=bench" model="/models/pd/bench.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.2)" direction="0"/>
+		
+	<nodeModel matcher="amenity=waste_basket" model="/models/pd/waste_basket.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,0.6)" direction="0"/>
+		
+	<nodeModel matcher="amenity=post_box" model="/models/pd/post_box.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.1)" direction="0"/>
+		
+	<nodeModel matcher="test=tree1" model="/models/pd/tree1/christian_nietsche_tree.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(7,1)" direction="0"/>
+		
+	<nodeModel matcher="test=tree2" model="/models/pd/new_tree_lod_packed/New_Tree_Lod_Packed.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(7,1)" direction="0"/>
+	
+	<!-- Example only -->
+	<wayNodeModel matcher="highway=*" filter="hightway=bench" 
+		model="/models/pd/bench.obj"
+		translate="vector()" scale="normalHeight(1,1)" direction="wayNodeDirection(90)" offset="3" />
+	
+		
+</modelsLibrary> 

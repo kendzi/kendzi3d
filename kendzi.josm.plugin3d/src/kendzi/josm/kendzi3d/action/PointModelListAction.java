@@ -12,8 +12,6 @@ package kendzi.josm.kendzi3d.action;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.action.ModelLibraryResourcesListFrameAction;
@@ -38,16 +36,6 @@ public class PointModelListAction extends JosmAction {
     private static final long serialVersionUID = 1L;
 
     /**
-     * JOSM 3D Render.
-     */
-    private RenderJOSM renderJosm;
-
-    /**
-     * Texture cache service.
-     */
-    private TextureCacheService textureCacheService;
-
-    /**
      * Point model service.
      */
     private ModelsLibraryService modelsLibraryService;
@@ -60,19 +48,15 @@ public class PointModelListAction extends JosmAction {
      */
     @Inject
     public PointModelListAction(
-            RenderJOSM renderJosm,
-            TextureCacheService textureCacheService,
             ModelsLibraryService modelsLibraryService) {
         super(
-                tr("List of models"),
+                tr("Models library"),
                 "1306318208_rebuild__24",
-                tr("Models defined in point model layer"),
+                tr("Models library allow to define model for nodes"),
                 null,
                 false
         );
 
-        this.renderJosm = renderJosm;
-        this.textureCacheService = textureCacheService;
         this.modelsLibraryService = modelsLibraryService;
     }
 
@@ -86,6 +70,8 @@ public class PointModelListAction extends JosmAction {
 
         ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(this.modelsLibraryService,
                 new LibraryResourcesMemoryDao());
+        frame.loadTableData();
+
         frame.setVisible(true);
     }
 

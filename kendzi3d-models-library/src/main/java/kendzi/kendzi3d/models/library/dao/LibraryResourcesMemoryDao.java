@@ -47,6 +47,6 @@ public class LibraryResourcesMemoryDao implements LibraryResourcesDao {
     }
 
     private static List<String> defaultResources() {
-        return Arrays.asList("plugin:/models/pointModelLayerInternal.xml", "plugin:/models/pointModelLayer.xml");
+        return Arrays.asList("plugin:/models/modelsLibraryInternalLayer.xml", "plugin:/models/modelsLibraryLayer.xml");
     }
 }
