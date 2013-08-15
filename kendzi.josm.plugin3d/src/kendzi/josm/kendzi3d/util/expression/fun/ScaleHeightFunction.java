@@ -12,18 +12,18 @@ package kendzi.josm.kendzi3d.util.expression.fun;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
-import kendzi.josm.kendzi3d.util.expression.ModelScaleContext;
+import kendzi.josm.kendzi3d.util.expression.DoubleContext;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class ScaleHeightFunction implements SimpleFunction {
 
-    ModelScaleContext context;
+    DoubleContext context;
 
     String[] args;
 
-    public ScaleHeightFunction(ModelScaleContext context, String[] args) {
+    public ScaleHeightFunction(DoubleContext context, String[] args) {
         this.args = args;
         this.context = context;
     }
@@ -49,5 +49,10 @@ public class ScaleHeightFunction implements SimpleFunction {
     @Override
     public CompileContext getContext() {
         return this.context;
+    }
+
+    @Override
+    public String getDefaultName() {
+        return "scaleHeight";
     }
 }

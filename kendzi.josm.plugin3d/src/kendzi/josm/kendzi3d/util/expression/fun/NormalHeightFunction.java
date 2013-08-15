@@ -12,18 +12,18 @@ package kendzi.josm.kendzi3d.util.expression.fun;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
-import kendzi.josm.kendzi3d.util.expression.ModelScaleContext;
+import kendzi.josm.kendzi3d.util.expression.DoubleContext;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class NormalHeightFunction implements SimpleFunction {
 
-    ModelScaleContext context;
+    DoubleContext context;
 
     String[] args;
 
-    public NormalHeightFunction(ModelScaleContext context, String[] args) {
+    public NormalHeightFunction(DoubleContext context, String[] args) {
         this.args = args;
         this.context = context;
     }
@@ -51,5 +51,10 @@ public class NormalHeightFunction implements SimpleFunction {
     public CompileContext getContext() {
 
         return this.context;
+    }
+
+    @Override
+    public String getDefaultName() {
+        return "normalHeight";
     }
 }

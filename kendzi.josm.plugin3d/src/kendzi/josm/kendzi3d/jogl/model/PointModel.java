@@ -23,7 +23,7 @@ import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer.PointModelConf;
+import kendzi.josm.kendzi3d.jogl.layer.models.NodeModelConf;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
@@ -72,16 +72,16 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     /**
      * Model configuration.
      */
-    private PointModelConf pointModelConf;
+    private NodeModelConf nodeModelConf;
 
     private double rotateY;
 
     /** Constructor.
      * @param node node
-     * @param pPointModelConf model configuration
+     * @param pNodeModelConf model configuration
      * @param pPerspective3D perspective 3d
      */
-    public PointModel(Node node, PointModelConf pPointModelConf, Perspective3D pPerspective3D,
+    public PointModel(Node node, NodeModelConf pNodeModelConf, Perspective3D pPerspective3D,
             ModelRender pModelRender,
             ModelCacheService modelCacheService) {
         super(node, pPerspective3D);
@@ -92,7 +92,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         this.modelRenderer = pModelRender;
 
-        this.pointModelConf = pPointModelConf;
+        this.nodeModelConf = pNodeModelConf;
         this.modelCacheService = modelCacheService;
     }
 
@@ -107,11 +107,11 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     @Override
     public void buildModel(LOD pLod) {
 
-        Model model = getModel(this.pointModelConf, pLod, this.modelCacheService);
+        Model model = getModel(this.nodeModelConf, pLod, this.modelCacheService);
 
         double scale = 1d;
 
-        SimpleFunction scaleFun = this.pointModelConf.getScale();
+        SimpleFunction<Double> scaleFun = this.nodeModelConf.getScale();
         if (scaleFun != null) {
 
             Context context = new Context();
@@ -123,9 +123,9 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        this.translate = this.pointModelConf.getTranslate();
+        this.translate = this.nodeModelConf.getTranslate();
 
-        this.rotateY = this.pointModelConf.getDirection();
+        this.rotateY = this.nodeModelConf.getDirection();
 
         this.modelLod.put(pLod, model);
     }
@@ -137,11 +137,11 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         return 1d / (pModel.getBounds().max.y - pModel.getBounds().min.y);
     }
 
-    private static Model getModel(PointModelConf pointModelConf, LOD pLod, ModelCacheService modelCacheService) {
-        if (pointModelConf == null) {
+    private static Model getModel(NodeModelConf nodeModelConf, LOD pLod, ModelCacheService modelCacheService) {
+        if (nodeModelConf == null) {
             return null;
         }
-        String key = pointModelConf.getModel();
+        String key = nodeModelConf.getModel();
         try {
             Model loadModel = modelCacheService.loadModel(key);
             loadModel.useLight = true;

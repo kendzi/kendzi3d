@@ -12,26 +12,25 @@ package kendzi.josm.kendzi3d.util.expression.fun;
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
 
-public class DoubleFunction implements SimpleFunction {
+public class DoubleFunction extends AbstractSimpleFunction<Double> {
 
-    CompileContext context;
-
-    private Double num;
-
-    public DoubleFunction(CompileContext pContext, Double pDouble) {
-        this.num = pDouble;
-        this.context = pContext;
+    public DoubleFunction(CompileContext context, String [] args) {
+        super(context, args);
     }
 
     @Override
     public Double eval(Context context) {
+        return getRequiredArgument(0, Double.class);
+    }
 
-        return this.num;
+    @Override
+    public String getDefaultName() {
+        return "double_fun";
     }
 
     @Override
     public CompileContext getContext() {
-        return this.context;
+        return null;
     }
 
 }

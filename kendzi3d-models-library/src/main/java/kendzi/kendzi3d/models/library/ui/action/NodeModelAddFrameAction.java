@@ -1,26 +1,26 @@
-package kendzi.josm.kendzi3d.ui.pointModel.action;
+package kendzi.kendzi3d.models.library.ui.action;
 
-import generated.PointModel;
+import generated.NodeModel;
 
 import java.awt.EventQueue;
 
-import kendzi.josm.kendzi3d.service.impl.PointModelService;
-import kendzi.josm.kendzi3d.ui.pointModel.PointModelAddFrame;
 import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
+import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import kendzi.kendzi3d.models.library.ui.NodeModelAddFrame;
 import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
 
-public class PointModelAddFrameAction extends PointModelAddFrame {
+public class NodeModelAddFrameAction extends NodeModelAddFrame {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(PointModelAddFrameAction.class);
+    private static final Logger log = Logger.getLogger(NodeModelAddFrameAction.class);
 
     /**
      * Point model service.
      */
-    private PointModelService pointModelService;
+    private ModelsLibraryService modelsLibraryService;
 
 
     /**
@@ -31,7 +31,7 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
             @Override
             public void run() {
                 try {
-                    PointModelAddFrameAction frame = new PointModelAddFrameAction();
+                    NodeModelAddFrameAction frame = new NodeModelAddFrameAction();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -48,9 +48,9 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
 
         if (validateData()) {
 
-            PointModel pointModel = save();
-            pointModelService.saveOrUpdate(pointModel);
-
+            NodeModel pointModel = save();
+            //            modelsLibraryService.saveOrUpdate(fileKey, pointModel);
+            //
             dispose();
         }
 
@@ -70,18 +70,10 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
         return valid;
     }
 
-
-
-    public void load(Long id) {
-        PointModel pointModel = pointModelService.load(id);
-        load(pointModel);
-
-    }
-
     @Override
     protected void dictAction() {
         LocalModelsDictAction frame = new LocalModelsDictAction();
-        frame.setUrlReciverService(pointModelService.getUrlReciverService());
+        frame.setUrlReciverService(modelsLibraryService.getUrlReciverService());
         frame.setModal(true);
         frame.initUi();
         frame.setVisible(true);
@@ -91,8 +83,8 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
         }
     }
 
-    void load(PointModel pPointModel ) {
-        PointModel pm = pPointModel;
+    void load(NodeModel pNodeModel ) {
+        NodeModel pm = pNodeModel;
 
         txtId.setText("" + pm.getId());
         txtMatcher.setText(pm.getMatcher());
@@ -110,9 +102,9 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
         return "" + num;
     }
 
-    PointModel save() {
+    NodeModel save() {
 
-        PointModel pm = new PointModel();
+        NodeModel pm = new NodeModel();
         if (!StringUtil.isBlankOrNull(txtId.getText())) {
             pm.setId(Long.parseLong(txtId.getText()));
         }
@@ -128,10 +120,24 @@ public class PointModelAddFrameAction extends PointModelAddFrame {
 
 
     /**
-     * @param pointModelService the pointModelService to set
+     * @param modelsLibraryService the modelsLibraryService to set
      */
-    public void setPointModelService(PointModelService pointModelService) {
-        this.pointModelService = pointModelService;
+    public void setModelsLibraryService(ModelsLibraryService modelsLibraryService) {
+        this.modelsLibraryService = modelsLibraryService;
+    }
+
+    public void setEditable(boolean editable) {
+
+        txtId.setEditable(editable);
+        txtMatcher.setEditable(editable);
+        txtFilter.setEditable(editable);
+        txtModel.setEditable(editable);
+        txtScale.setEditable(editable);
+        txtTranslatex.setEditable(editable);
+        txtTranslatey.setEditable(editable);
+        txtTranslatez.setEditable(editable);
+
+        getBtnSave().setVisible(editable);
     }
 
 }

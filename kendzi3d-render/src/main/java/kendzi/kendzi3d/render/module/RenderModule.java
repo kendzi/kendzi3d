@@ -4,25 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.jogl.texture.builder.BwFileTextureBuilder;
+import kendzi.jogl.texture.builder.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.BuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
-import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
+import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
-import kendzi.josm.kendzi3d.service.impl.PointModelService;
-import kendzi.josm.kendzi3d.service.textures.BwFileTextureBuilder;
-import kendzi.josm.kendzi3d.service.textures.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 import kendzi.kendzi3d.render.conf.RenderEngineConf;
@@ -60,10 +59,10 @@ public class RenderModule  extends AbstractModule {
 
         bind(WikiTextureLoaderService.class).in(Singleton.class);
 
-        bind(PointModelService.class).in(Singleton.class);
+        bind(ModelsLibraryService.class).in(Singleton.class);
 
 
-        bind(PointModelsLayer.class);
+        bind(ModelsLibraryLayer.class);
         bind(BuildingLayer.class);
         bind(RoadLayer.class);
         bind(WaterLayer.class);
@@ -126,7 +125,7 @@ public class RenderModule  extends AbstractModule {
     @Provides @Singleton
     RenderJOSM provideRenderJOSM(
             ModelRender pModelRender,
-            PointModelsLayer pointModelsLayer,
+            ModelsLibraryLayer pointModelsLayer,
             NewBuildingLayer buildingLayer,
             RoadLayer roadLayer,
             WaterLayer waterLayer,

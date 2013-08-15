@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.ui.pointModel;
+package kendzi.kendzi3d.models.library.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

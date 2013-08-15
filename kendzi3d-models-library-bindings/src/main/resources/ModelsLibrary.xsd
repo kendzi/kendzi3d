@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+            jxb:version="2.0">
+            	
+    <xs:element name="modelsLibrary" type="ModelsLibrary"/>
+    <xs:complexType name="ModelsLibrary">
+    	<xs:sequence>
+    		<xs:element name="nodeModel" type="NodeModel" minOccurs="0" maxOccurs="unbounded"/>
+    		<xs:element name="wayNodeModel" type="WayNodeModel" minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="NodeModel">
+        <xs:attribute name="id" type="xs:long" use="optional"/>
+        <xs:attribute name="matcher" type="xs:string"/>
+        <xs:attribute name="model" type="xs:string"/>
+    	<xs:attribute name="translateX" type="xs:double"/>
+    	<xs:attribute name="translateY" type="xs:double"/>
+    	<xs:attribute name="translateZ" type="xs:double"/>
+    	<xs:attribute name="scale" type="xs:string"/>
+    	<xs:attribute name="direction" type="xs:string"/>
+    </xs:complexType>
+    
+    
+	<xs:complexType name="WayNodeModel">
+		<xs:attribute name="id" type="xs:long" use="optional" />
+
+		<xs:attribute name="matcher" type="xs:string" />
+		<xs:attribute name="filter" type="xs:string" />
+		<xs:attribute name="model" type="xs:string" />
+		<xs:attribute name="translate" type="xs:string" />
+		<xs:attribute name="scale" type="xs:string" />
+		<xs:attribute name="direction" type="xs:string" />
+		<xs:attribute name="offset" type="xs:string" />
+
+	</xs:complexType>
+<!--     <xs:complexType name="WayNode"> -->
+<!--         <xs:sequence> -->
+<!-- 	        <xs:element name="matcher" type="xs:string"/> -->
+<!-- 	        <xs:element name="model" type="xs:string"/> -->
+<!-- 	    	<xs:element name="scale" type="xs:string"/> -->
+<!-- 	    	<xs:element name="direction" type="xs:string"/>  -->
+<!-- 			<xs:element name="translate" type="Vector" />  -->
+<!-- 			<xs:element name="offset" type="Function" />  -->
+<!--         </xs:sequence> -->
+<!--         <xs:attribute name="id" type="xs:long" use="optional"/> -->
+<!--     </xs:complexType> -->
+    
+<!--     <xs:complexType name="Vector"> -->
+<!--     	<xs:attribute name="x" type="xs:double" /> -->
+<!--         <xs:attribute name="y" type="xs:double" /> -->
+<!--         <xs:attribute name="z" type="xs:double" /> -->
+<!--     </xs:complexType> -->
+
+<!-- 	<xs:complexType name="ValueFunction" type="Function"> -->
+<!-- 		<xs:complexContent> -->
+<!-- 			<xs:extension base="Function"> -->
+<!-- 				<xs:sequence> -->
+<!-- 					<xs:element name="value" type="xs:double" /> -->
+<!-- 				</xs:sequence> -->
+<!-- 			</xs:extension> -->
+<!-- 		</xs:complexContent> -->
+<!-- 	</xs:complexType> -->
+	
+<!-- 	<xs:complexType name="Function"> -->
+<!-- 		<xs:sequence> -->
+<!--   			<xs:element name="name" type="xs:string"/> --> 
+<!--   			<xs:element name="arg0" type="xs:string"/> -->  
+<!--   			<xs:element name="arg1" type="xs:string"/> --> 
+<!--   			<xs:element name="arg2" type="xs:string"/> -->  
+<!-- 		</xs:sequence> -->
+<!-- 	</xs:complexType> -->
+
+<!-- 	<xs:simpleType name="ListOfDouble"> -->
+<!-- 		<xs:list itemType="xs:double" /> -->
+<!-- 	</xs:simpleType> -->
+	
+<!-- 	<xs:simpleType name="ListOf3Double"> -->
+<!-- 		<xs:restriction base="ListOfDouble"> -->
+<!-- 			<xs:maxLength value="3" /> -->
+<!-- 		</xs:restriction> -->
+<!-- 	</xs:simpleType> -->
+
+</xs:schema>

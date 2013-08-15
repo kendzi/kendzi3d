@@ -1,6 +1,4 @@
-package kendzi.josm.kendzi3d.ui.pointModel;
-
-import generated.PointModel;
+package kendzi.kendzi3d.models.library.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -21,15 +19,15 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
-import kendzi.josm.kendzi3d.ui.pointModel.action.PointModelListFrameAction;
+import kendzi.kendzi3d.models.library.messages.Messages;
 
-public class PointModelListFrame extends JFrame {
+public class ModelLibraryResourcesListFrame extends JFrame {
 
     private JPanel contentPane;
 
     protected JTable table;
 
-    protected ModelsTableModel dataModel;
+    protected ModelsFilesTableModel dataModel;
 
     /**
      * Launch the application.
@@ -39,7 +37,7 @@ public class PointModelListFrame extends JFrame {
             @Override
             public void run() {
                 try {
-                    PointModelListFrameAction frame = new PointModelListFrameAction();
+                    ModelLibraryResourcesListFrame frame = new ModelLibraryResourcesListFrame();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -51,14 +49,14 @@ public class PointModelListFrame extends JFrame {
     /**
      * Create the frame.
      */
-    public PointModelListFrame() {
+    public ModelLibraryResourcesListFrame() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 640, 480);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
-        dataModel = new ModelsTableModel() {};
+        dataModel = new ModelsFilesTableModel() {};
 
         JScrollPane scrollPane = new JScrollPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
@@ -67,48 +65,71 @@ public class PointModelListFrame extends JFrame {
         scrollPane.setViewportView(table);
         table.setModel(dataModel);
 
-        JLabel lblPointModelList = new JLabel("Point Model List");
-        lblPointModelList.setFont(new Font("Tahoma", Font.BOLD, 16));
-        lblPointModelList.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblPointModelList, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.SOUTH);
+        JPanel panel_top = new JPanel();
+        contentPane.add(panel_top, BorderLayout.NORTH);
+        panel_top.setLayout(new BorderLayout(0, 0));
 
-        JButton btnAdd = new JButton("Add");
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addPointModel();
-            }
-        });
-        panel.add(btnAdd);
+        JLabel lblNodeModelList = new JLabel(Messages.getString("ModelLibraryResourcesListFrame.lblNodeModelList.text")); //$NON-NLS-1$
+        panel_top.add(lblNodeModelList, BorderLayout.NORTH);
+        lblNodeModelList.setFont(new Font("Tahoma", Font.BOLD, 16));
+        lblNodeModelList.setHorizontalAlignment(SwingConstants.CENTER);
+        JPanel panel_buttons = new JPanel();
+        contentPane.add(panel_buttons, BorderLayout.SOUTH);
 
-        JButton btnEdit = new JButton("Edit");
+        JButton btnEdit = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnEdit.text")); //$NON-NLS-1$
+        btnEdit.setEnabled(false);
         btnEdit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editPointModel();
+                //
             }
         });
-        panel.add(btnEdit);
 
-        JButton btnDelete = new JButton("Delete");
+        JButton btnView = new JButton(Messages.getString("NodeModelListFrame.btnView.text")); //$NON-NLS-1$
+        btnView.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                viewResourceDetails();
+            }
+        });
+
+        JButton btnViewAll = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnViewAll.text")); //$NON-NLS-1$
+        btnViewAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                viewFinalLibrary();
+            }
+        });
+        panel_buttons.add(btnViewAll);
+        panel_buttons.add(btnView);
+
+        JButton btnAdd = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnAdd.text")); //$NON-NLS-1$
+        btnAdd.setEnabled(false);
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
+        panel_buttons.add(btnAdd);
+        panel_buttons.add(btnEdit);
+
+        JButton btnDelete = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDelete.text")); //$NON-NLS-1$
+        btnDelete.setEnabled(false);
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removePointModel();
+                //
             }
 
 
         });
-        panel.add(btnDelete);
+        panel_buttons.add(btnDelete);
 
         JPanel panel_empty = new JPanel();
-        panel.add(panel_empty);
+        panel_buttons.add(panel_empty);
 
         JPanel panel_empty2 = new JPanel();
-        panel.add(panel_empty2);
+        panel_buttons.add(panel_empty2);
 
         JButton btnOk = new JButton("Ok");
         btnOk.addActionListener(new ActionListener() {
@@ -117,43 +138,34 @@ public class PointModelListFrame extends JFrame {
                 dispose();
             }
         });
-        panel.add(btnOk);
+        panel_buttons.add(btnOk);
     }
 
-
-
-    protected void addPointModel() {
+    protected void viewFinalLibrary() {
         //
     }
 
-    protected void editPointModel() {
+    protected void viewResourceDetails() {
         //
     }
 
-    protected void removePointModel() {
-        //
-    }
-
-    public class ModelsTableModel extends AbstractTableModel {
+    public class ModelsFilesTableModel extends AbstractTableModel {
 
         /**
          *
          */
         private static final long serialVersionUID = 1L;
 
-        private List<PointModel> data =
-                Collections.unmodifiableList(new ArrayList<PointModel>());
+        private List<String> data =
+                Collections.unmodifiableList(new ArrayList<String>());
 
-        public void setData(List<PointModel> data) {
-            this.data = Collections.unmodifiableList(new ArrayList<PointModel>(data));
+        public void setData(List<String> data) {
+            this.data = Collections.unmodifiableList(new ArrayList<String>(data));
             fireTableStructureChanged();
         }
 
-        public Long getId(int rowIndex) {
-
-            PointModel pm = this.data.get(rowIndex);
-
-            return pm.getId();
+        public String get(int rowIndex) {
+            return this.data.get(rowIndex);
         }
 
         @Override
@@ -163,32 +175,24 @@ public class PointModelListFrame extends JFrame {
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 1;
         }
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
 
-            PointModel pm = this.data.get(rowIndex);
+            String pm = this.data.get(rowIndex);
 
             switch (columnIndex) {
             case 0:
-                return pm.getMatcher();
-            case 1:
-                return pm.getModel();
-            case 2:
-                return pm.getScale();
+                return pm;
 
             default:
                 return null;
             }
-
-            //            row[3] = pm.getTranslateX();
-            //            row[4] = pm.getTranslateY();
-            //            row[5] = pm.getTranslateZ();
         }
 
-        Class[] columnTypes = new Class[] { String.class, String.class, String.class };
+        Class[] columnTypes = new Class[] { String.class };
 
         @Override
         public Class getColumnClass(int columnIndex) {
@@ -214,15 +218,12 @@ public class PointModelListFrame extends JFrame {
         public String getColumnName(int column) {
             switch (column) {
             case 0:
-                return "Matcher";
-            case 1:
-                return "Model";
-            case 2:
-                return "Scale";
+                return "Resource location";
 
             default:
                 return null;
             }
         }
     }
+
 }

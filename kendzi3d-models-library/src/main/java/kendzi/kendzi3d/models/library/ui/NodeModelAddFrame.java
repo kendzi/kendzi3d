@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.ui.pointModel;
+package kendzi.kendzi3d.models.library.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class PointModelAddFrame extends JDialog {
+public class NodeModelAddFrame extends JDialog {
 
     private JPanel contentPane;
     protected JTextField txtId;
@@ -28,6 +28,7 @@ public class PointModelAddFrame extends JDialog {
     protected JTextField txtTranslatey;
     protected JTextField txtTranslatez;
     protected JTextField txtMatcher;
+    private JButton btnSave;
 
     /**
      * Launch the application.
@@ -37,7 +38,7 @@ public class PointModelAddFrame extends JDialog {
             @Override
             public void run() {
                 try {
-                    PointModelAddFrame frame = new PointModelAddFrame();
+                    NodeModelAddFrame frame = new NodeModelAddFrame();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -49,7 +50,7 @@ public class PointModelAddFrame extends JDialog {
     /**
      * Create the frame.
      */
-    public PointModelAddFrame() {
+    public NodeModelAddFrame() {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 337);
         contentPane = new JPanel();
@@ -256,7 +257,7 @@ public class PointModelAddFrame extends JDialog {
         JPanel panelButtons = new JPanel();
         contentPane.add(panelButtons, BorderLayout.SOUTH);
 
-        JButton btnSave = new JButton("Save");
+        btnSave = new JButton("Save");
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -281,5 +282,8 @@ public class PointModelAddFrame extends JDialog {
 
     protected void saveAction() {
         //
+    }
+    public JButton getBtnSave() {
+        return btnSave;
     }
 }

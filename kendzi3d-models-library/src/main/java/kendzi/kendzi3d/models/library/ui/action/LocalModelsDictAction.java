@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.ui.pointModel.action;
+package kendzi.kendzi3d.models.library.ui.action;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import kendzi.josm.kendzi3d.service.UrlReciverService;
-import kendzi.josm.kendzi3d.ui.pointModel.LocalModelsDict;
+import kendzi.kendzi3d.models.library.ui.LocalModelsDict;
 
 import org.apache.log4j.Logger;
 

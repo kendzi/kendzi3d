@@ -21,9 +21,10 @@ import kendzi.util.StringUtil;
  * After function evalue it always return double as result.
  *
  * @author Tomasz Kędziora (kendzi)
+ * @param <T>
  *
  */
-public class SimpleDoubleExpressionParser {
+public class SimpleDoubleExpressionParser<T> {
 
     static Pattern functionName = Pattern.compile("^\\s*(\\w*)\\((.*)\\)\\s*$");
 
@@ -33,17 +34,17 @@ public class SimpleDoubleExpressionParser {
      * @return compiled functions
      * @throws Exception on errors
      */
-    public static SimpleFunction compile(String expression, CompileContext pContext) throws Exception {
+    public static <T> SimpleFunction<T> compile(String expression, CompileContext pContext) throws Exception {
         try {
             if (StringUtil.isBlankOrNull(expression)) {
                 return null;
             }
 
-            SimpleFunction function = getFunction(expression, pContext);
+            SimpleFunction<T> function = getFunction(expression, pContext);
             if (function != null) {
                 return function;
             }
-            return new DoubleFunction(pContext, evalueDouble(expression));
+            return (SimpleFunction<T>) new DoubleFunction(null, new String[] { expression });
 
         } catch (Exception e) {
             throw new Exception("error parsing expression: " + expression + " context: " + pContext, e);
@@ -59,7 +60,7 @@ public class SimpleDoubleExpressionParser {
         }
     }
 
-    private static SimpleFunction getFunction(String expression, CompileContext pContext) {
+    private static <T> SimpleFunction<T> getFunction(String expression, CompileContext pContext) {
         if (expression == null || "".equals(expression.trim())) {
             return null;
         }

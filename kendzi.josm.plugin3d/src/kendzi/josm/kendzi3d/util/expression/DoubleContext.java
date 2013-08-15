@@ -16,22 +16,26 @@ import kendzi.josm.kendzi3d.util.expression.fun.FunctionBuilder;
 import kendzi.josm.kendzi3d.util.expression.fun.NormalHeightFunction;
 import kendzi.josm.kendzi3d.util.expression.fun.ScaleHeightFunction;
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.josm.kendzi3d.util.expression.fun.WayNodeDirectionFunction;
 
 /**
- * Context for height.
+ * Context for node.
  *
  * @author Tomasz Kędziora (kendzi)
  *
  */
-public class ModelScaleContext implements CompileContext, FunctionBuilder {
+public class DoubleContext implements CompileContext, FunctionBuilder {
+
 
     @Override
     public Set<String> getFunctionsNames() {
         Set<String> fun = new HashSet<String>();
         fun.add("scaleHeight");
         fun.add("normalHeight");
+        fun.add("wayNodeDirection");
         return fun;
     }
+
 
     @Override
     public SimpleFunction build(String pName, String[] args) {
@@ -39,6 +43,8 @@ public class ModelScaleContext implements CompileContext, FunctionBuilder {
             return new ScaleHeightFunction(this, args);
         } else if ("normalHeight".equals(pName)) {
             return new NormalHeightFunction(this, args);
+        } else if ("wayNodeDirection".equals(pName)) {
+            return new WayNodeDirectionFunction(this, args);
         }
         return null;
     }

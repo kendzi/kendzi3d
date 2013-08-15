@@ -14,11 +14,11 @@ import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
-import kendzi.josm.kendzi3d.jogl.layer.PointModelsLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
+import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
@@ -28,10 +28,12 @@ import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
-import kendzi.josm.kendzi3d.service.impl.PointModelService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
+import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
+import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
+import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -61,9 +63,11 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(MetadataCacheService.class).in(Singleton.class);
         bind(WikiTextureLoaderService.class).in(Singleton.class);
-        bind(PointModelService.class).in(Singleton.class);
+        bind(ModelsLibraryService.class).in(Singleton.class);
 
         bind(ModelCacheService.class).in(Singleton.class);
+
+        bind(LibraryResourcesDao.class).to(LibraryResourcesMemoryDao.class).in(Singleton.class);
 
 //        bind(ModelRender.class).in(Singleton.class);
 
@@ -71,7 +75,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(RoadLayer.class);
         bind(WaterLayer.class);
         bind(TreeLayer.class);
-        bind(PointModelsLayer.class);
+        bind(ModelsLibraryLayer.class);
         bind(FenceLayer.class);
         bind(WallLayer.class);
 
@@ -142,7 +146,7 @@ public class Kendzi3dModule extends AbstractModule {
     @Provides @Singleton
     RenderJOSM provideRenderJOSM(
             ModelRender pModelRender,
-            PointModelsLayer pointModelsLayer,
+            ModelsLibraryLayer pointModelsLayer,
             NewBuildingLayer buildingLayer,
             RoadLayer roadLayer,
             WaterLayer waterLayer,
