@@ -145,6 +145,11 @@
     	<copy todir="${plugin.build.dir}">
             <fileset dir="../kendzi3d-models-library/src/main/resources"/>        	
         </copy>
+    	<copy todir="${plugin.build.dir}">
+            <fileset dir="../kendzi3d-models-library/src/main/java/">
+            	<include name="**/*.properties"/>
+    		</fileset>
+        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README" />
