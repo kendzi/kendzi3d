@@ -73,10 +73,26 @@ public class WaveFrontLoader implements iLoader {
     private String baseDir = null;
 
 
-    /** Creates a new instance of myWaveFrontLoader.
-     * @param urlReciverService */
+    /**
+     * Creates a new instance of myWaveFrontLoader.
+     * 
+     * @param urlReciverService
+     */
     public WaveFrontLoader(UrlReciverService urlReciverService) {
         this.urlReciverService = urlReciverService;
+    }
+
+    /**
+     * Creates a new instance of myWaveFrontLoader.
+     * @param replaceTextureMaterialName load and replace texture for given material name
+     * @param replaceTextureNewKey new texture for given material name
+     * 
+     * @param urlReciverService
+     */
+    public WaveFrontLoader(String replaceTextureMaterialName, String replaceTextureNewKey, UrlReciverService urlReciverService) {
+        this.urlReciverService = urlReciverService;
+        this.replaceTextureMaterialName = replaceTextureMaterialName;
+        this.replaceTextureNewKey = replaceTextureNewKey;
     }
 
     int numComments = 0;
@@ -89,6 +105,11 @@ public class WaveFrontLoader implements iLoader {
     private List<TextCoord> texCoordsList = new ArrayList<TextCoord>();
 
     private List<Vector3d> vectorList = new ArrayList<Vector3d>();
+
+
+    private String replaceTextureMaterialName;
+
+    private String replaceTextureNewKey;
 
     @Override
     public Model load(String path) throws ModelLoadException {
@@ -768,11 +789,11 @@ public class WaveFrontLoader implements iLoader {
                     mat.setDiffuseColor(parseColor(line));
                 } else if (parts[0].equals("map_Kd")) {
                     if (parts.length > 1) {
-                        mat.setTexture0(/* baseDir + */parts[1]);
+                        setTexture(mat, parts);
                     }
                 } else if (parts[0].equals("map_Ka")) {
                     if (parts.length > 1) {
-                        mat.setTexture0(/* baseDir + */parts[1]);
+                        setTexture(mat, parts);
                     }
                 }
             }
@@ -786,6 +807,18 @@ public class WaveFrontLoader implements iLoader {
             ioe.printStackTrace();
         }
         return mat;
+    }
+
+    /**
+     * @param mat
+     * @param parts
+     */
+    private void setTexture(EditableMaterial mat, String[] parts) {
+        if (replaceTextureMaterialName != null && replaceTextureMaterialName.equals(mat.getName())) {
+            mat.setTexture0(replaceTextureNewKey);
+        } else {
+            mat.setTexture0(/* baseDir + */parts[1]);
+        }
     }
 
     private class EditableMaterial extends Material {

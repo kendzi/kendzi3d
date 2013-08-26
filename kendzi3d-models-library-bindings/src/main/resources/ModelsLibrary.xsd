@@ -15,6 +15,7 @@
         <xs:attribute name="id" type="xs:long" use="optional"/>
         <xs:attribute name="matcher" type="xs:string"/>
         <xs:attribute name="model" type="xs:string"/>
+		<xs:attribute name="modelParameter" type="xs:string" use="optional"/>
     	<xs:attribute name="translateX" type="xs:double"/>
     	<xs:attribute name="translateY" type="xs:double"/>
     	<xs:attribute name="translateZ" type="xs:double"/>
@@ -29,6 +30,7 @@
 		<xs:attribute name="matcher" type="xs:string" />
 		<xs:attribute name="filter" type="xs:string" />
 		<xs:attribute name="model" type="xs:string" />
+		<xs:attribute name="modelParameter" type="xs:string" use="optional"/>
 		<xs:attribute name="translate" type="xs:string" />
 		<xs:attribute name="scale" type="xs:string" />
 		<xs:attribute name="direction" type="xs:string" />

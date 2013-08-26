@@ -19,6 +19,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class NormalHeightFunction implements SimpleFunction {
 
+    private static final Double DEFAULT = 1d;
+
     DoubleContext context;
 
     String[] args;
@@ -36,13 +38,15 @@ public class NormalHeightFunction implements SimpleFunction {
 
         OsmPrimitive osm = (OsmPrimitive) context.getVariable("osm");
         Double normal = (Double) context.getVariable("normal");
-
+        if (normal == null) {
+            return DEFAULT;
+        }
         Double height = ModelUtil.getHeight(osm, null);
         if (height == null) {
             height = ModelUtil.parseHeight(this.args[1], null);
         }
         if (height == null) {
-            return null;
+            return DEFAULT;
         }
         return normal * height * SimpleDoubleExpressionParser.evalueDouble(this.args[0]);
     }

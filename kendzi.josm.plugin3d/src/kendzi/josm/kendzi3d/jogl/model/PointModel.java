@@ -32,6 +32,7 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
@@ -142,8 +143,14 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             return null;
         }
         String key = nodeModelConf.getModel();
+        String parameter = nodeModelConf.getModelParameter();
         try {
-            Model loadModel = modelCacheService.loadModel(key);
+            Model loadModel = null;
+            if (StringUtil.isBlankOrNull(parameter)) {
+                loadModel = modelCacheService.loadModel(key);
+            } else {
+                loadModel = modelCacheService.generateModel(key, parameter);
+            }
             loadModel.useLight = true;
             setAmbientColor(loadModel);
             return loadModel;

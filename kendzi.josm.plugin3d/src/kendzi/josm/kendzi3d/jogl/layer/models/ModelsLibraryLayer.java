@@ -13,7 +13,10 @@ import generated.NodeModel;
 import generated.WayNodeModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
@@ -69,7 +72,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     //@Inject
     private ModelsLibraryService modelsLibraryService;
 
-    private List<WayNodeModelConf> wayNodeModelsList;
+    private Map<String, List<WayNodeModelConf>> wayNodeModelsMap;
 
     /**
      * Constructor.
@@ -146,7 +149,14 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
             }
         }
 
-        this.wayNodeModelsList = wayNodeModelsList;
+        wayNodeModelsMap = new HashMap<String, List<WayNodeModelConf>>();
+        for (WayNodeModelConf wayNodeModelConf : wayNodeModelsList) {
+            String key = wayNodeModelConf.getMatcher().toString();
+            if (!wayNodeModelsMap.containsKey(key)) {
+                wayNodeModelsMap.put(key, new ArrayList<WayNodeModelConf>());
+            }
+            wayNodeModelsMap.get(key).add(wayNodeModelConf);
+        }
     }
 
 
@@ -165,13 +175,14 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     @Override
     public Match getWayMatcher() {
-        List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
-        for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
-
-            matchersList.add(nodeModel.getMatcher());
-        }
-
-        return new OrList(matchersList);
+//        List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
+//        for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
+//
+//            matchersList.add(nodeModel.getMatcher());
+//        }
+//
+//        return new OrList(matchersList);
+        return new SearchCompiler.Always();
     }
 
     @Override
@@ -202,14 +213,41 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     @Override
-    public void addModel(Way pWay, Perspective3D pPerspective3D) {
-        for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
+    public void addModel(Way way, Perspective3D perspective3D) {
+        for (Entry<String, List<WayNodeModelConf>> entry : wayNodeModelsMap.entrySet()) {
+            List<WayNodeModelConf> wayNodeModelsList = entry.getValue();
 
-            if (nodeModel.getMatcher().match(pWay)) {
+            for (WayNodeModelConf nodeModel : wayNodeModelsList) {
 
-                this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.WayNodeModel(pWay, nodeModel, pPerspective3D, this.modelRender, this.modelCacheService));
+                if (nodeModel.getMatcher().match(way)) {
+
+                    List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), way);
+                    if (!selectedNodes.isEmpty()) {
+                        this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.WayNodeModel(way, selectedNodes, nodeModel,
+                                perspective3D, this.modelRender, this.modelCacheService));
+                    }
+                }
             }
         }
+    }
+
+    /**
+     * Finds indexes of nodes on way, match filter.
+     *
+     * @param filter filter for nodes on way
+     * @param way way
+     * @return indexes of nodes on way
+     */
+    private List<Integer> nodeFilter(Match filter, Way way) {
+        List<Integer> n = new ArrayList<Integer>();
+
+        for (int i = 0; i < way.getNodesCount(); i++) {
+            Node node = way.getNode(i);
+            if (filter.match(node)) {
+                n.add(i);
+            }
+        }
+        return n;
     }
 
     @Override

@@ -20,6 +20,11 @@ public class WayNodeModelConf {
     private String model;
 
     /**
+     * Model parameter values.
+     */
+    private String modelParameter;
+
+    /**
      * Model matcher.
      */
     private Match matcher;
@@ -146,6 +151,20 @@ public class WayNodeModelConf {
      */
     public void setTranslate(SimpleFunction<Vector3d> translate) {
         this.translate = translate;
+    }
+
+    /**
+     * @return the modelParameter
+     */
+    public String getModelParameter() {
+        return modelParameter;
+    }
+
+    /**
+     * @param modelParameter the modelParameter to set
+     */
+    public void setModelParameter(String modelParameter) {
+        this.modelParameter = modelParameter;
     }
 
 

@@ -36,9 +36,9 @@ import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
 import kendzi.math.geometry.point.Vector2dUtil;
+import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -80,27 +80,33 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
      */
     private WayNodeModelConf nodeModelConf;
 
-    private double rotateY;
-
     private List<ModelPoint> modelPoints;
 
+    private List<Integer> nodeFilter;
+
     /** Constructor.
-     * @param node node
-     * @param pNodeModelConf model configuration
-     * @param pPerspective3D perspective 3d
+     * @param way way
+     * @param nodeFilter selected nodes
+     * @param wayNodeModelConf model configuration
+     * @param perspective3D perspective 3d
+     * @param modelRender
+     * @param modelCacheService
      */
-    public WayNodeModel(Way node, WayNodeModelConf pNodeModelConf, Perspective3D pPerspective3D,
-            ModelRender pModelRender,
-            ModelCacheService modelCacheService) {
-        super(node, pPerspective3D);
+    public WayNodeModel(Way way, List<Integer> nodeFilter, WayNodeModelConf wayNodeModelConf, Perspective3D perspective3D,
+            ModelRender modelRender, ModelCacheService modelCacheService) {
+
+        super(way, perspective3D);
+
+        this.nodeFilter = nodeFilter;
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
         this.scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRenderer = pModelRender;
+        this.modelRenderer = modelRender;
 
-        this.nodeModelConf = pNodeModelConf;
+        this.nodeModelConf = wayNodeModelConf;
+
         this.modelCacheService = modelCacheService;
     }
 
@@ -157,28 +163,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         contextDouble.putVariable("osm_node", this.way);
         contextDouble.putVariable("normal", getModelNormal(model));
 
-
-
-
-        Match filter = nodeModelConf.getFilter();
-
-        List<Integer> n = new ArrayList<Integer>();
-       // List<Point2d> transform = new ArrayList<Point2d>();
-
-        for (int i = 0; i < this.way.getNodesCount(); i++){
-            Node node = this.way.getNode(i);
-            if (filter.match(node)) {
-                n.add(i);
-            }
-            //transform.add(transform(way.getNode(i), perspective));
-        }
-
-
         double offset = this.nodeModelConf.getOffset().eval(contextDouble);
 
         boolean closed = way.isClosed();
         List<ModelPoint> modelPoints = new ArrayList<ModelPoint>();
-        for (int i : n) {
+        for (int i : nodeFilter) {
             Node node = way.getNode(i);
 
 
@@ -230,8 +219,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         SimpleFunction<Double> scaleFun = this.nodeModelConf.getScale();
         if (scaleFun != null) {
 
-
-            scale = scaleFun.eval(contextDouble);
+            try {
+                scale = scaleFun.eval(contextDouble);
+            } catch (Exception e) {
+                throw new RuntimeException("error eval of scale function", e);
+            }
         }
 
 
@@ -248,6 +240,8 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
 
     }
+
+
 
     private Point2d transform(Node node, Perspective3D perspective) {
         return perspective.calcPoint(node);
@@ -297,8 +291,15 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             return null;
         }
         String key = nodeModelConf.getModel();
+        String parameter = nodeModelConf.getModelParameter();
+
         try {
-            Model loadModel = modelCacheService.loadModel(key);
+            Model loadModel = null;
+            if (StringUtil.isBlankOrNull(parameter)) {
+                loadModel = modelCacheService.loadModel(key);
+            } else {
+                loadModel = modelCacheService.generateModel(key, parameter);
+            }
             loadModel.useLight = true;
             setAmbientColor(loadModel);
             return loadModel;

@@ -9,7 +9,8 @@
 
 package kendzi.jogl.model.geometry;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -24,8 +25,7 @@ public class Model {
      */
     public Mesh [] mesh;
 
-    //FIXME
-    public Vector<Material> materials = new Vector<Material>();
+    public List<Material> materials = new ArrayList<Material>();
 
     /**
      * Model use textures.
