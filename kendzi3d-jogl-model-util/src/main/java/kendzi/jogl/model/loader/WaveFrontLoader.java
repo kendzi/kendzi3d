@@ -812,8 +812,10 @@ public class WaveFrontLoader implements iLoader {
     /**
      * @param mat
      * @param parts
+     * XXX this is not good pace for this method
      */
     private void setTexture(EditableMaterial mat, String[] parts) {
+
         if (replaceTextureMaterialName != null && replaceTextureMaterialName.equals(mat.getName())) {
             mat.setTexture0(replaceTextureNewKey);
         } else {

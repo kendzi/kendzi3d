@@ -77,16 +77,16 @@ public class ModelCacheService {
 
         // if (parameter.startsWith(MATERIAL)) {
         // material.mat_sign.map_Kd=/textures/tree.png
-        Pattern pattern = Pattern.compile("^material\\.(\\w*?)\\.map_Kd=([\\w/.]*?)$");
+        Pattern pattern = Pattern.compile("^material\\.(\\w*?)\\.texture0=([\\w/.]*?)$");
         Matcher matcher = pattern.matcher(parameter);
         if (matcher.find()) {
             String materialName = matcher.group(1);
-            String map_Kd = matcher.group(2);
+            String texture0 = matcher.group(2);
 
             // ret.materials = replaceMapKd(materialName, map_Kd,
             // model.materials);
 
-            return ModelLoader.load(key, materialName, map_Kd, urlReciverService);
+            return ModelLoader.load(key, materialName, texture0, urlReciverService);
 
         }
         return ModelLoader.load(key, urlReciverService);
