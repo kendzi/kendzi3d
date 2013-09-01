@@ -72,7 +72,8 @@ Functions depends on context! Currently validation for them maybe not working!
 	<nodeModel matcher="amenity=post_box" model="/models/pd/post_box.obj"
 		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1.1)" direction="0"/>
 		
-	
+	<nodeModel matcher="highway=milestone" model="/models/pd/milestone.obj"
+		translateX="0" translateY="0" translateZ="0" scale="normalHeight(1,1)" direction="0"/>
 
 
 	
