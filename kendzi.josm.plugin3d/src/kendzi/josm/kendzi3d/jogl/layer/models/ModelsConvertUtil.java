@@ -8,6 +8,7 @@ import javax.vecmath.Vector3d;
 import kendzi.josm.kendzi3d.util.expression.DoubleContext;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
 import kendzi.josm.kendzi3d.util.expression.Vector3dContext;
+import kendzi.kendzi3d.expressions.ExpressiongBuilder;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 
@@ -24,19 +25,10 @@ public class ModelsConvertUtil {
 
         String scale = nodeModel.getScale();
 
-        pm.setScale(SimpleDoubleExpressionParser.<Double>compile(scale, new DoubleContext()));
+        pm.setScale(ExpressiongBuilder.build(scale));
 
-        Double direction = 0d;
-        try {
-            direction = (Double.parseDouble(nodeModel.getDirection()));
-        } catch (Exception e) {
-            //
-        }
-        if (direction == null) {
-            direction = 0d;
-        }
+        pm.setDirection(ExpressiongBuilder.build(nodeModel.getDirection()));
 
-        pm.setDirection(direction);
         return pm;
     }
 
@@ -54,11 +46,11 @@ public class ModelsConvertUtil {
 
         pm.setTranslate(SimpleDoubleExpressionParser.<Vector3d>compile(wayNodeModel.getTranslate(), vContext));
 
-        pm.setScale(SimpleDoubleExpressionParser.<Double>compile(wayNodeModel.getScale(), pContext));
+        pm.setScale(ExpressiongBuilder.build(wayNodeModel.getScale()));
 
-        pm.setDirection(SimpleDoubleExpressionParser.<Double>compile(wayNodeModel.getDirection(), pContext));
+        pm.setDirection(ExpressiongBuilder.build(wayNodeModel.getDirection()));
 
-        pm.setOffset(SimpleDoubleExpressionParser.<Double>compile(wayNodeModel.getOffset(), vContext));
+        pm.setOffset(ExpressiongBuilder.build(wayNodeModel.getOffset()));
 
         return pm;
     }

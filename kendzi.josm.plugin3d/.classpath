@@ -45,5 +45,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library-bindings"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library-layer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-expressions-javacc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-expressions-josm"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

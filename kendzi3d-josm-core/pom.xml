@@ -19,12 +19,21 @@
 			<artifactId>kendzi-util</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-jogl-model-util</artifactId>
+			<artifactId>kendzi3d-math</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>kendzi.kendzi3d</groupId> -->
+<!-- 			<artifactId>kendzi3d-jogl-model-util</artifactId> -->
+<!-- 			<version>1.0.0-SNAPSHOT</version> -->
+<!-- 		</dependency> -->
 	</dependencies>
 
 	<build>

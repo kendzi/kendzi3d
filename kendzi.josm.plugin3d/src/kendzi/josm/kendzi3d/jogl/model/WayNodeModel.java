@@ -34,7 +34,9 @@ import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
-import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.expressions.functions.HeightFunction;
+import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
 
@@ -161,9 +163,22 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         contextDouble.putVariable("osm", this.way);
         contextDouble.putVariable("osm_way", this.way);
         contextDouble.putVariable("osm_node", this.way);
-        contextDouble.putVariable("normal", getModelNormal(model));
+        Double modelNormalFactor = getModelNormal(model);
+        contextDouble.putVariable("normal", modelNormalFactor);
 
-        double offset = this.nodeModelConf.getOffset().eval(contextDouble);
+        kendzi.kendzi3d.expressions.Context c = new kendzi.kendzi3d.expressions.Context();
+
+        c.getVariables().put("osm", this.way);
+        c.getVariables().put("osm_way", this.way);
+        c.getVariables().put("osm_node", this.way);
+        c.getVariables().put("normal", modelNormalFactor);
+
+        c.registerFunction(new HeightFunction());
+        c.registerFunction(new WayNodeDirectionFunction());
+
+
+
+        double offset = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getOffset(), c, 0);
 
         boolean closed = way.isClosed();
         List<ModelPoint> modelPoints = new ArrayList<ModelPoint>();
@@ -203,12 +218,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                 point.z += -bisector.y * offset;
             }
 
-            Context nodeContext = new Context();
-            nodeContext.putVariable("osm_way", this.way);
-            nodeContext.putVariable("osm_node", node);
-            nodeContext.putVariable("bisector", bisector);
+            c.getVariables().put("osm_way", this.way);
+            c.getVariables().put("osm_node", node);
+            c.getVariables().put("bisector", bisector);
 
-            Double direction = this.nodeModelConf.getDirection().eval(nodeContext);
+            Double direction = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
 
             modelPoints.add(new ModelPoint(point, direction));
         }
@@ -216,14 +230,14 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.modelPoints = modelPoints;
 
-        SimpleFunction<Double> scaleFun = this.nodeModelConf.getScale();
-        if (scaleFun != null) {
 
-            try {
-                scale = scaleFun.eval(contextDouble);
-            } catch (Exception e) {
-                throw new RuntimeException("error eval of scale function", e);
-            }
+
+
+        try {
+            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getScale(), c, 1);
+
+        } catch (Exception e) {
+            throw new RuntimeException("error eval of scale function", e);
         }
 
 
@@ -283,7 +297,8 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         if (pModel == null) {
             return null;
         }
-        return 1d / (pModel.getBounds().max.y - pModel.getBounds().min.y);
+        // normalize from origin to highest point in model
+        return 1d / (pModel.getBounds().max.y - 0);//pModel.getBounds().min.y);
     }
 
     private static Model getModel(WayNodeModelConf nodeModelConf, LOD pLod, ModelCacheService modelCacheService) {

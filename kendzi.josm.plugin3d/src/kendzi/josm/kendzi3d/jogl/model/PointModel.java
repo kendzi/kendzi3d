@@ -31,7 +31,9 @@ import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
-import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.expressions.functions.HeightFunction;
+import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -110,32 +112,44 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         Model model = getModel(this.nodeModelConf, pLod, this.modelCacheService);
 
+        kendzi.kendzi3d.expressions.Context c = new kendzi.kendzi3d.expressions.Context();
+
+        c.getVariables().put("osm", this.node);
+        c.getVariables().put("osm_node", this.node);
+        Double modelNormalFactor = getModelNormal(model);
+        c.getVariables().put("normal", modelNormalFactor);
+
+        c.registerFunction(new HeightFunction());
+        c.registerFunction(new WayNodeDirectionFunction());
+
+
+        Context context = new Context();
+        context.putVariable("osm", this.node);
+        context.putVariable("normal", modelNormalFactor);
+
         double scale = 1d;
 
-        SimpleFunction<Double> scaleFun = this.nodeModelConf.getScale();
-        if (scaleFun != null) {
+        try {
+            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getScale(), c, 1);
 
-            Context context = new Context();
-            context.putVariable("osm", this.node);
-            context.putVariable("normal", getModelNormal(model));
-
-            scale = scaleFun.eval(context);
+        } catch (Exception e) {
+            throw new RuntimeException("error eval of scale function", e);
         }
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        this.translate = this.nodeModelConf.getTranslate();
+        translate = this.nodeModelConf.getTranslate();
 
-        this.rotateY = this.nodeModelConf.getDirection();
+        rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
 
-        this.modelLod.put(pLod, model);
+        modelLod.put(pLod, model);
     }
 
     private Double getModelNormal(Model pModel) {
         if (pModel == null) {
             return null;
         }
-        return 1d / (pModel.getBounds().max.y - pModel.getBounds().min.y);
+        return 1d / (pModel.getBounds().max.y - 0);// pModel.getBounds().min.y);
     }
 
     private static Model getModel(NodeModelConf nodeModelConf, LOD pLod, ModelCacheService modelCacheService) {

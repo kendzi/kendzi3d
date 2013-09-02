@@ -3,6 +3,7 @@ package kendzi.josm.kendzi3d.jogl.layer.models;
 import javax.vecmath.Vector3d;
 
 import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.kendzi3d.expressions.expression.Expression;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 
@@ -37,17 +38,17 @@ public class WayNodeModelConf {
     /**
      * Model scale.
      */
-    private SimpleFunction<Double> scale;
+    private Expression scale;
 
     /**
      * Model direction.
      */
-    private SimpleFunction<Double> direction;
+    private Expression direction;
 
     /**
      * Model offset.
      */
-    private SimpleFunction<Double> offset;
+    private Expression offset;
 
     /**
      * Model translation.
@@ -86,15 +87,15 @@ public class WayNodeModelConf {
     /**
      * @return the scale
      */
-    public SimpleFunction<Double> getScale() {
+    public Expression getScale() {
         return this.scale;
     }
 
     /**
      * @param simpleFunction the scale to set
      */
-    public void setScale(SimpleFunction<Double> simpleFunction) {
-        this.scale = simpleFunction;
+    public void setScale(Expression expression) {
+        this.scale = expression;
     }
 
     /**
@@ -114,28 +115,28 @@ public class WayNodeModelConf {
     /**
      * @return the direction
      */
-    public SimpleFunction<Double> getDirection() {
+    public Expression getDirection() {
         return direction;
     }
 
     /**
      * @param direction the direction to set
      */
-    public void setDirection(SimpleFunction<Double> direction) {
+    public void setDirection(Expression direction) {
         this.direction = direction;
     }
 
     /**
      * @return the offset
      */
-    public SimpleFunction<Double> getOffset() {
+    public Expression getOffset() {
         return offset;
     }
 
     /**
      * @param offset the offset to set
      */
-    public void setOffset(SimpleFunction<Double> offset) {
+    public void setOffset(Expression offset) {
         this.offset = offset;
     }
 

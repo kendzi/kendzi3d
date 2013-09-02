@@ -2,7 +2,7 @@ package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import javax.vecmath.Vector3d;
 
-import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
+import kendzi.kendzi3d.expressions.expression.Expression;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 
@@ -32,7 +32,7 @@ public class NodeModelConf {
     /**
      * Model scale.
      */
-    private SimpleFunction<Double> scale;
+    private Expression scale;
 
     /**
      * Model translation.
@@ -42,7 +42,7 @@ public class NodeModelConf {
     /**
      * Model direction.
      */
-    private double direction;
+    private Expression direction;
 
     /**
      * @return the model
@@ -75,14 +75,14 @@ public class NodeModelConf {
     /**
      * @return the scale
      */
-    public SimpleFunction<Double> getScale() {
+    public Expression getScale() {
         return this.scale;
     }
 
     /**
      * @param simpleFunction the scale to set
      */
-    public void setScale(SimpleFunction<Double> simpleFunction) {
+    public void setScale(Expression simpleFunction) {
         this.scale = simpleFunction;
     }
 
@@ -103,14 +103,14 @@ public class NodeModelConf {
     /**
      * @return the direction
      */
-    public double getDirection() {
+    public Expression getDirection() {
         return direction;
     }
 
     /**
      * @param direction the direction to set
      */
-    public void setDirection(double direction) {
+    public void setDirection(Expression direction) {
         this.direction = direction;
     }
 

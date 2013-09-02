@@ -1,0 +1,179 @@
+options 
+{ 
+   LOOKAHEAD=1; 
+    STATIC                =false;
+}
+PARSER_BEGIN(ExpressionCalc)
+
+package kendzi.kendzi3d.expressions.jj;
+
+import kendzi.kendzi3d.expressions.expression.ExpressionFactory;
+import kendzi.kendzi3d.expressions.expression.Expression;
+import kendzi.kendzi3d.expressions.Context;
+import java.util.List;
+import java.util.ArrayList;
+
+public class ExpressionCalc 
+{
+
+// TODO http://www.cs.nmsu.edu/~rth/cs/cs471/InterpretersJavaCC.html
+	// java.util.Map<String, Double> var = new java.util.HashMap<String, Double>();
+
+    public static void main(String args[]) 
+    { 
+    	try { 
+        	java.util.Map<String, Object> var = new java.util.HashMap<String, Object>();
+       		var.put("A", 5d);
+       		Context context = new Context();
+       		context.setVariables(var);
+       		
+          	ExpressionCalc parser = new ExpressionCalc(System.in); 
+          	System.out.print("Enter Expression: "); 
+          	System.out.flush(); 
+          	Expression res = parser.expr(); 
+          	System.out.println("Result: " + res);
+          	System.out.println("Result: " + res.evaluate(null)); 
+       	} catch (ParseException e) { 
+          System.out.println("Exception: " + e); 
+       	} 
+    } 
+     
+}
+
+PARSER_END(ExpressionCalc)
+
+SKIP : 
+{ 
+  " " 
+| "\r" 
+| "\t" 
+}
+
+TOKEN : 
+{ 
+ < EOL: "\n" > 
+}
+
+TOKEN : 
+{ 
+ < PLUS: "+" > 
+| < MINUS: "-" > 
+| < MULTIPLY: "*" > 
+| < DIVIDE: "/" > 
+| < LPAREN: "(" > 
+| < RPAREN: ")" > 
+}
+
+TOKEN : 
+{ 
+    < INT: ( <DIGIT> )+ > 
+|   < #DIGIT: ["0" - "9"] >  
+}
+
+TOKEN :
+{
+	<NUMBER : <DIGITS> | <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>>
+}
+
+TOKEN :
+{
+	<#DIGITS : (["0"-"9"])+>
+}
+TOKEN :
+{
+	<#CHAR : ["a" - "z"] | ["A"-"Z"]>
+}
+
+TOKEN :
+{
+	<FUN_START: ( <CHAR> )+<LPAREN>>   
+}
+TOKEN : 
+{ 
+    <VARIABLE: ( <CHAR> )+ >   
+}
+
+Expression expr() : 
+{ 
+  Expression e; 
+} 
+{ 
+    ( 
+       e=sum() 
+       ( <EOL> )* 
+       <EOF> 
+    ) 
+  
+    { 
+       return e; 
+    } 
+}
+
+Expression sum() : 
+{ 
+  Expression f1; 
+  Expression f2; 
+  Expression e;
+  
+  //List<Expression> args = new ArrayList<Expression>();
+} 
+{ 
+    f1=term() { e=f1;}
+    ( 
+       ( 
+            <PLUS> f2=term()   { e = ExpressionFactory.sum(f1, f2); } 
+         | <MINUS> f2=term()   { e = ExpressionFactory.sum(f1, f2);  } 
+       ) 
+    )? 
+  
+    { 
+       return e; 
+    } 
+}
+
+Expression term() : 
+{ 
+	Expression f1;
+	Expression f2;  
+  	Expression expr;
+} 
+{ 
+    f1=element() {expr = f1; }
+    ( 
+       ( 
+            <MULTIPLY> f2=element()  { expr = ExpressionFactory.multiply(f1, f2); } 
+          |   <DIVIDE> f2=element()  { expr = ExpressionFactory.divide(f1, f2);  } 
+       ) 
+    )?
+  
+    { 
+        return expr; 
+    } 
+}
+
+Expression element() : 
+{ 
+  double f = 0; 
+  Token t;  
+  Double x; 
+	Expression expr;
+	Expression fun = null;
+	List<Expression> funArgs = new ArrayList<Expression>();
+} 
+{ 
+   ( 
+      t=<INT> 				{	expr = ExpressionFactory.doubleValue(Double.parseDouble(t.image));	} 
+      | t = <NUMBER> 		{	expr = ExpressionFactory.doubleValue(Double.parseDouble(t.image));	}
+      | t = <FUN_START> 
+      		(
+      			fun=sum() {funArgs.add(fun);}
+      		)*
+      		<RPAREN>  		{	expr = ExpressionFactory.fun(t.image.substring(0, t.image.length()-1), funArgs);	}
+      | t=<VARIABLE> 		{	expr = ExpressionFactory.variable(t.image);	} 
+      |    <LPAREN> expr=sum() <RPAREN> 
+   )
+
+   { 
+      return expr; 
+   } 
+}
