@@ -96,6 +96,10 @@
 			<src path="../kendzi3d-models-library-bindings/src/main/java"/>
         	<src path="../kendzi3d-models-library-bindings/target/generated-sources/xjc"/>
 			<src path="../kendzi3d-models-library-layer/src/main/java"/>
+			
+        	<src path="../kendzi3d-expressions-javacc/src/main/java"/>
+        	<src path="../kendzi3d-expressions-javacc/target/generated-sources/javacc"/>
+			<src path="../kendzi3d-expressions-josm/src/main/java"/>
 
        	    <src path="src_xsd"/>
             <compilerarg value="-Xlint:deprecation"/>

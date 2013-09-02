@@ -1,0 +1,889 @@
+<modelsLibrary>
+<!-- 
+ For description see file: modelsLibraryInternalLayer.xml
+ -->
+	
+	<!-- Traffic_signs-Danger -->
+	
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p1.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p1.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+	
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p1a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p1a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p1b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p1b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1c" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p1c.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1c" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p1c.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1d" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p1d.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p1d" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p1d.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p2" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p2.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p2" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p2.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p3" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p3.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p3" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p3.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p4" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p4.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p4" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p4.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p4" highway=give_way direction=backward side=left' 
+		model="/models/traffic_signs/ES_p4_r1.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p4" highway=give_way direction=forward side=right' 
+		model="/models/traffic_signs/ES_p4_r1.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p5" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p5.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p5" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p5.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p6" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p6.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p6" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p6.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p7" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p7.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p7" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p7.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p8" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p8.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p8" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p8.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p9a.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p9a.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p9b.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p9b.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9c" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p9c.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p9c" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p9c.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p10a.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p10a.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p10b.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p10b.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10c" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p10c.obj"
+		translate="vector(12,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p10c" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p10c.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p11" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p11.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p11" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p11.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p12" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p12.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p12" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p12.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p13a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p13a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p13a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p13a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p13b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p13b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p13b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p13b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p14a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p14a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p14a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p14a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p14b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p14b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p14b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p14b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p15" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p15.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p15" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p15.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p15a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p15a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p15a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p15a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p16a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p16a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p16a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p16a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p16b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p16b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p16b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p16b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p17.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p17.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17a" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p17a.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17a" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p17a.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p17b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p17b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p17b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p19" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p19.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p19" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p19.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p20" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p20.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p20" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p20.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p21" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p21.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p21" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p21.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p22" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p22.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p22" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p22.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p23" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p23.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p23" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p23.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p24" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p24.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p24" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p24.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p25" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p25.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p25" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p25.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p26" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p26.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p26" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p26.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p27" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p27.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p27" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p27.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p28" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p28.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p28" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p28.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p29" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p29.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p29" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p29.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p30" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p30.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p30" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p30.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p31" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p31.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p31" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p31.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p32" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p32.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p32" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p32.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p33" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p33.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p33" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p33.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p34" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p34.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p34" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p34.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p50" direction=backward side=left' 
+		model="/models/traffic_signs/ES_p50.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:p50" direction=forward side=right' 
+		model="/models/traffic_signs/ES_p50.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<!-- Traffic_signs-Restriction-->
+		
+		<wayNodeModel matcher="highway=*" filter="highway=give_way direction=backward side=left" 
+		model="/models/traffic_signs/ES_r1.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="highway=give_way direction=forward side=right" 
+		model="/models/traffic_signs/ES_r1.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="highway=give_way oneway=yes" 
+		model="/models/traffic_signs/ES_r1.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />					
+		
+		<wayNodeModel matcher="highway=*" filter="highway=stop direction=backward side=left" 
+		model="/models/traffic_signs/ES_r2.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="highway=stop direction=forward side=right" 
+		model="/models/traffic_signs/ES_r2.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="highway=stop oneway=yes" 
+		model="/models/traffic_signs/ES_r2.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r3" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r3.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r3" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r3.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r4" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r4.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r4" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r4.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r5" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r5.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r5" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r5.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r6" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r6.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r6" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r6.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r100" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r100.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r100" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r100.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+			
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r101" oneway=yes direction=backward side=left' 
+		model="/models/traffic_signs/ES_r101.obj"
+		translate="vector(0,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r102" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r102.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r102" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r102.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r103" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r103.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r103" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r103.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r104" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r104.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r104" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r104.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r105" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r105.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r105" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r105.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r106" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r106.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r106" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r106.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r107" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r107.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r107" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r107.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r108" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r108.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r108" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r108.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r109" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r109.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r109" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r109.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r110" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r110.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r110" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r110.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r111" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r111.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r111" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r111.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r112" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r112.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r112" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r112.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r113" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r113.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r113" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r113.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r114" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r114.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r114" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r114.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r115" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r115.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r115" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r115.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r116" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r116.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r116" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r116.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r117" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r117.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r117" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r117.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r200" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r200.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r200" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r200.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r201" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r201.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r201" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r201.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r202" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r202.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r202" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r202.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r203" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r203.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r203" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r203.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r204" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r204.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r204" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r204.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r205" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r205.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r205" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r205.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r300" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r300.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r300" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r300.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=10' 
+		model="/models/traffic_signs/ES_r301-10.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=10'
+		model="/models/traffic_signs/ES_r301-10.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=20' 
+		model="/models/traffic_signs/ES_r301-20.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=20'
+		model="/models/traffic_signs/ES_r301-20.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=30' 
+		model="/models/traffic_signs/ES_r301-30.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=30'
+		model="/models/traffic_signs/ES_r301-30.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=40' 
+		model="/models/traffic_signs/ES_r301-40.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=40'
+		model="/models/traffic_signs/ES_r301-40.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=50' 
+		model="/models/traffic_signs/ES_r301-50.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=50'
+		model="/models/traffic_signs/ES_r301-50.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=60' 
+		model="/models/traffic_signs/ES_r301-60.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=60'
+		model="/models/traffic_signs/ES_r301-60.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=70' 
+		model="/models/traffic_signs/ES_r301-70.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=70'
+		model="/models/traffic_signs/ES_r301-70.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=80' 
+		model="/models/traffic_signs/ES_r301-80.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=80'
+		model="/models/traffic_signs/ES_r301-80.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=90' 
+		model="/models/traffic_signs/ES_r301-90.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=90'
+		model="/models/traffic_signs/ES_r301-90.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=100' 
+		model="/models/traffic_signs/ES_r301-100.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=100'
+		model="/models/traffic_signs/ES_r301-100.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=110' 
+		model="/models/traffic_signs/ES_r301-110.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=110'
+		model="/models/traffic_signs/ES_r301-110.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=120' 
+		model="/models/traffic_signs/ES_r301-120.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=120'
+		model="/models/traffic_signs/ES_r301-120.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=130' 
+		model="/models/traffic_signs/ES_r301-130.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=130'
+		model="/models/traffic_signs/ES_r301-130.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=backward side=left maxspeed=140' 
+		model="/models/traffic_signs/ES_r301-140.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="maxspeed" direction=forward side=right maxspeed=140'
+		model="/models/traffic_signs/ES_r301-140.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+				
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r302" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r302.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r302" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r302.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r303" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r303.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r303" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r303.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r304" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r304.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r304" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r304.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=backward side=left" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=backward side=both" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=backward side=both" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(-2,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=forward side=right" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=forward side=both" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=no direction=forward side=both" 
+		model="/models/traffic_signs/ES_r305.obj"
+		translate="vector(-12,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r306" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r306.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r306" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r306.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r307" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r307.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r307" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r307.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r308" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r308.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r308" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r308.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r401e" direction=backward side=left' 
+		model="/models/traffic_signs/ES_r401e.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:r401e" direction=forward side=right' 
+		model="/models/traffic_signs/ES_r401e.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+	<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=yes direction=backward side=left" 
+		model="/models/traffic_signs/ES_r502.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter="traffic_sign=overtaking overtaking=yes direction=forward side=right" 
+		model="/models/traffic_signs/ES_r502.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+		
+				
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s50b" direction=backward side=left' 
+		model="/models/traffic_signs/ES_s50b.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s50b" direction=forward side=right' 
+		model="/models/traffic_signs/ES_s50b.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s50d" direction=backward side=left' 
+		model="/models/traffic_signs/ES_s50d.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s50d" direction=forward side=right' 
+		model="/models/traffic_signs/ES_s50d.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+			
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s200" direction=backward side=left' 
+		model="/models/traffic_signs/ES_s200.obj"
+		translate="vector(10,0,0)" scale="height(4)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s200" direction=forward side=right' 
+		model="/models/traffic_signs/ES_s200.obj"
+		translate="vector(2,0,0)" scale="height(4)" direction="wayNodeDirection() + 270" offset="3" />
+	
+		<wayNodeModel matcher="highway=*" filter='traffic_sign="ES:s572" direction=backward side=left' 
+		model="/models/traffic_signs/ES_s572.obj"
+		translate="vector(10,0,0)" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
+		
+		<wayNodeModel matcher="highway=*" filter='highway=milestone' 
+		model="/models/traffic_signs/ES_s572.obj"
+		translate="vector(2,0,0)" scale="height(1)" direction="wayNodeDirection() + 270" offset="3" />
+ 
+	
+</modelsLibrary> 
