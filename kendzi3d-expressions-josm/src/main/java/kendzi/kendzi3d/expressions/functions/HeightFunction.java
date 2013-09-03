@@ -8,7 +8,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 public class HeightFunction extends OneParamFunction implements NamedFunction {
 
     @Override
-    public double evalOneParam(Context context, double defaultValue) {
+    public Object evalOneParam(Context context, double defaultValue) {
         OsmPrimitive primitive = Context.getRequiredContextVariable("osm", context, OsmPrimitive.class);
 
         Double height = ModelUtil.getHeight(primitive, null);

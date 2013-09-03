@@ -98,7 +98,7 @@ public class ExpressiongBuilderTest extends TestCase {
         fun.put("funArgPlusOne", new OneParamFunction() {
 
             @Override
-            public double evalOneParam(Context context, double param) {
+            public Object evalOneParam(Context context, double param) {
                 return 1 + param;
             }
         });
@@ -121,8 +121,8 @@ public class ExpressiongBuilderTest extends TestCase {
         fun.put("funTree", new ZeroParamFunction() {
 
             @Override
-            public double evalZeroParam(Context context) {
-                return 3;
+            public Object evalZeroParam(Context context) {
+                return 3d;
             }
         });
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.expressions.exeption.FunctionExeption;
+import kendzi.kendzi3d.expressions.functions.AnyParamFunction;
 import kendzi.kendzi3d.expressions.functions.Function;
 import kendzi.kendzi3d.expressions.functions.OneParamFunction;
 import kendzi.kendzi3d.expressions.functions.ZeroParamFunction;
@@ -61,6 +62,10 @@ public class ExpressionFactory {
                     //                    Object evaluate = value.evaluate(context);
                     return ((OneParamFunction) fun).evalOneParam(context, param);
 
+                } else if (fun instanceof AnyParamFunction) {
+                    Double param = convert(arg1, context);
+                    return fun.eval(context, param);
+
                 } else {
                     throw new RuntimeException("wrong number of parameters");
                 }
@@ -87,6 +92,9 @@ public class ExpressionFactory {
                 if (fun instanceof ZeroParamFunction) {
                     return ((ZeroParamFunction) fun).evalZeroParam(context);
 
+                } else if (fun instanceof AnyParamFunction) {
+                    return fun.eval(context);
+
                 } else {
                     throw new RuntimeException("wrong number of parameters for function: " + name);
                 }
@@ -107,7 +115,7 @@ public class ExpressionFactory {
 
                 Object ret = context.getVariables().get(name);
                 if (ret instanceof Double) {
-                    return doubleValue((Double) ret);
+                    return ret;
                 }
                 throw new RuntimeException("unsupported variable type: " + ret);
             }

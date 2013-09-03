@@ -9,7 +9,7 @@ import kendzi.math.geometry.point.Vector2dUtil;
 public class WayNodeDirectionFunction extends ZeroParamFunction implements NamedFunction {
 
     @Override
-    public double evalZeroParam(Context context) {
+    public Object evalZeroParam(Context context) {
 
         Vector2d bisector = Context.getRequiredContextVariable("bisector", context, Vector2d.class);
 
