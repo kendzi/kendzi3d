@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -37,6 +38,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public abstract class NativeLibPlugin extends Plugin {
 
+    /** Log. */
+    private static final Logger log = Logger.getLogger(NativeLibPlugin.class);
 
     /**
      * Name of plugin properties file.
@@ -402,10 +405,11 @@ public abstract class NativeLibPlugin extends Plugin {
         try {
             ret = url != null ? url.openStream() : null;
         } catch (IOException e) {
-            //
+            log.error("can't open stream: " + pName, e);
         }
         if (ret == null) {
-            System.out.println("Can't open stream to resource: " + pName);
+            URL current = getResourceUrl(".");
+            log.info(String.format("Can't open stream to resource: %1s url is: %2s current location is: %3s", pName, url, current));
         }
         return ret;
     }
@@ -419,7 +423,13 @@ public abstract class NativeLibPlugin extends Plugin {
             }
         }
 
-        return getPluginResourceClassLoader().getResource(pResName);
+        URL url = getPluginResourceClassLoader().getResource(pResName);
+        if (url == null) {
+            URL current = getPluginResourceClassLoader().getResource(".");
+            log.warn(String.format("can't find resource name: %1s in current location: %2s", pResName, current));
+        }
+
+        return url;
     }
 
     /**
