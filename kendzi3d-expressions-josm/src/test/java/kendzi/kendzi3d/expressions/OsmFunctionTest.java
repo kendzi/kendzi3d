@@ -7,6 +7,9 @@ import kendzi.kendzi3d.expressions.exeption.ExpressionExeption;
 import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.expressions.functions.HeightFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 
 import org.junit.Test;
@@ -117,4 +120,66 @@ public class OsmFunctionTest {
         Object value = build.evaluate(c);
         assertEquals(new Vector3d(0, 0, 0), value);
     }
+
+
+    @Test
+    public void testExpression8() throws ExpressionExeption {
+
+        Context c = new Context();
+
+        c.registerFunction(new Vector3dFunction());
+
+        Expression build = ExpressiongBuilder.build("vector(1,2,3)");
+        Object value = build.evaluate(c);
+        assertEquals(new Vector3d(1, 2, 3), value);
+    }
+
+    @Test
+    public void testExpression9() throws ExpressionExeption {
+
+        Context c = new Context();
+
+        c.registerFunction(new Vector3dXFunction());
+
+        Expression build = ExpressiongBuilder.build("vectorX(11)");
+        Object value = build.evaluate(c);
+        assertEquals(new Vector3d(11, 0, 0), value);
+    }
+
+    @Test
+    public void testExpression10() throws ExpressionExeption {
+
+        Context c = new Context();
+
+        c.registerFunction(new Vector3dYFunction());
+
+        Expression build = ExpressiongBuilder.build("vectorY(11)");
+        Object value = build.evaluate(c);
+        assertEquals(new Vector3d(0, 11, 0), value);
+    }
+
+    @Test
+    public void testExpression11() throws ExpressionExeption {
+
+        Context c = new Context();
+
+        c.registerFunction(new Vector3dZFunction());
+
+        Expression build = ExpressiongBuilder.build("vectorZ(11)");
+        Object value = build.evaluate(c);
+        assertEquals(new Vector3d(0, 0, 11), value);
+    }
+
+    @Test()
+    public void testExpression12() throws ExpressionExeption {
+
+        Context c = new Context();
+
+        c.registerFunction(new Vector3dFunction());
+
+        Expression build = ExpressiongBuilder.build("vector(-12,0,0)");
+        Object value = build.evaluate(c);
+        assertEquals(new Vector3d(-12, 0, 0), value);
+    }
+
 }

@@ -62,17 +62,18 @@ TOKEN :
 | < DIVIDE: "/" > 
 | < LPAREN: "(" > 
 | < RPAREN: ")" > 
+| < COMMA: "," > 
 }
 
 TOKEN : 
 { 
-    < INT: ( <DIGIT> )+ > 
+    < INT: (<MINUS>)? ( <DIGIT> )+ > 
 |   < #DIGIT: ["0" - "9"] >  
 }
 
 TOKEN :
 {
-	<NUMBER : <DIGITS> | <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>>
+	<NUMBER : (<MINUS>)? <DIGITS> | (<MINUS>)? <DIGITS> "." <DIGITS> | (<MINUS>)? <DIGITS> "." | "." <DIGITS>>
 }
 
 TOKEN :
@@ -167,7 +168,11 @@ Expression element() :
       | t = <FUN_START> 
       		(
       			fun=sum() {funArgs.add(fun);}
-      		)*
+      			(
+      				<COMMA>
+      				fun=sum() {funArgs.add(fun);}
+      			)*
+      		)?
       		<RPAREN>  		{	expr = ExpressionFactory.fun(t.image.substring(0, t.image.length()-1), funArgs);	}
       | t=<VARIABLE> 		{	expr = ExpressionFactory.variable(t.image);	} 
       |    <LPAREN> expr=sum() <RPAREN> 

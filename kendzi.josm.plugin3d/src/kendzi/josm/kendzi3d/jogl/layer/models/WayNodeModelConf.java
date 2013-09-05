@@ -1,8 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
-import javax.vecmath.Vector3d;
-
-import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
 import kendzi.kendzi3d.expressions.expression.Expression;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -53,7 +50,7 @@ public class WayNodeModelConf {
     /**
      * Model translation.
      */
-    private SimpleFunction<Vector3d> translate;
+    private Expression translate;
 
 
     /**
@@ -143,14 +140,14 @@ public class WayNodeModelConf {
     /**
      * @return the translate
      */
-    public SimpleFunction<Vector3d> getTranslate() {
+    public Expression getTranslate() {
         return translate;
     }
 
     /**
      * @param translate the translate to set
      */
-    public void setTranslate(SimpleFunction<Vector3d> translate) {
+    public void setTranslate(Expression translate) {
         this.translate = translate;
     }
 

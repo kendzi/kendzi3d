@@ -5,9 +5,6 @@ import generated.WayNodeModel;
 
 import javax.vecmath.Vector3d;
 
-import kendzi.josm.kendzi3d.util.expression.DoubleContext;
-import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
-import kendzi.josm.kendzi3d.util.expression.Vector3dContext;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -41,10 +38,7 @@ public class ModelsConvertUtil {
         pm.setMatcher(SearchCompiler.compile(wayNodeModel.getMatcher(), false, false));
         pm.setFilter(SearchCompiler.compile(wayNodeModel.getFilter(), false, false));
 
-        DoubleContext pContext = new DoubleContext();
-        Vector3dContext vContext = new Vector3dContext();
-
-        pm.setTranslate(SimpleDoubleExpressionParser.<Vector3d>compile(wayNodeModel.getTranslate(), vContext));
+        pm.setTranslate(ExpressiongBuilder.build(wayNodeModel.getTranslate()));
 
         pm.setScale(ExpressiongBuilder.build(wayNodeModel.getScale()));
 

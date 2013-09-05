@@ -46,4 +46,16 @@ public class ExpressiongBuilder {
         return Converter.toDouble(res);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T evaluateExpectedDefault(Expression expression, Context context, T defaultValue) {
+        Object res = expression.evaluate(context);
+        if (res == null) {
+            return defaultValue;
+        }
+
+        if (res.getClass().isInstance(defaultValue)) {
+            return (T) res;
+        }
+        throw new RuntimeException("expression result is wrong class: " + res.getClass() + " but expected is class: " + defaultValue.getClass());
+    }
 }

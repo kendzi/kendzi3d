@@ -37,8 +37,35 @@ public class ExpressionFactory {
             return fun(name);
         } else if (value.size() == 1) {
             return fun(name, value.get(0));
+        } else {
+            return funExpression(name, value);
         }
-        throw new RuntimeException("wrong num of params");
+        //          throw new RuntimeException("wrong num of params");
+    }
+
+    private static Expression funExpression(final String name, final List<Expression> value) {
+        return new MultiArgExpression<Double>(value, Double.class) {
+
+            public Object evaluate(Context context) {
+                Function fun = getFunctionByName(name, context);
+
+                if (fun instanceof AnyParamFunction) {
+                    double [] param = new double[value.size()];
+                    //                    List<double> in  = new ArrayList<double>();
+                    int i = 0;
+                    for (Expression expression : value) {
+                        param[i] = convert(expression, context);
+                        i++;
+                    }
+                    return fun.eval(context, param);
+
+                } else {
+                    // TODO marger with fun()
+                    throw new RuntimeException("TODO");
+                }
+            }
+
+        };
     }
 
     public static Expression fun(final String name, Expression value) {
@@ -46,17 +73,8 @@ public class ExpressionFactory {
         return new OneArgExpression<Double>(value, Double.class) {
 
             public Object evaluate(Context context) {
-                if (context == null) {
-                    throw new RuntimeException("can't find function " + name + " context is null");
-                }
-                if (context.getFunctions() == null) {
-                    throw new RuntimeException("can't find function " + name + " context functions are null");
-                }
+                Function fun = getFunctionByName(name, context);
 
-                Function fun = context.getFunctions().get(name);
-                if (fun == null) {
-                    throw new FunctionExeption("can't find in context function with name: " + name);
-                }
                 if (fun instanceof OneParamFunction) {
                     Double param = convert(arg1, context);
                     //                    Object evaluate = value.evaluate(context);
@@ -78,17 +96,8 @@ public class ExpressionFactory {
         return new ArgExpression<Double>(Double.class) {
 
             public Object evaluate(Context context) {
-                if (context == null) {
-                    throw new RuntimeException("can't find function " + name + " context is null");
-                }
-                if (context.getFunctions() == null) {
-                    throw new RuntimeException("can't find function " + name + " context functions are null");
-                }
+                Function fun = getFunctionByName(name, context);
 
-                Function fun = context.getFunctions().get(name);
-                if (fun == null) {
-                    throw new FunctionExeption("can't find in context function with name: " + name);
-                }
                 if (fun instanceof ZeroParamFunction) {
                     return ((ZeroParamFunction) fun).evalZeroParam(context);
 
@@ -159,6 +168,26 @@ public class ExpressionFactory {
                 return convert(arg1, context) - convert(arg2, context);
             }
         };
+    }
+
+    /**
+     * @param name
+     * @param context
+     * @return
+     */
+    private static Function getFunctionByName(final String name, Context context) {
+        if (context == null) {
+            throw new RuntimeException("can't find function " + name + " context is null");
+        }
+        if (context.getFunctions() == null) {
+            throw new RuntimeException("can't find function " + name + " context functions are null");
+        }
+
+        Function fun = context.getFunctions().get(name);
+        if (fun == null) {
+            throw new FunctionExeption("can't find in context function with name: " + name);
+        }
+        return fun;
     }
 
 }

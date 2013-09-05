@@ -36,6 +36,10 @@ import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
 import kendzi.kendzi3d.expressions.functions.HeightFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
@@ -176,6 +180,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         c.registerFunction(new HeightFunction());
         c.registerFunction(new WayNodeDirectionFunction());
 
+        c.registerFunction(new Vector3dFunction());
+        c.registerFunction(new Vector3dXFunction());
+        c.registerFunction(new Vector3dYFunction());
+        c.registerFunction(new Vector3dZFunction());
+
 
 
         double offset = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getOffset(), c, 0);
@@ -185,8 +194,6 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         for (int i : nodeFilter) {
             Node node = way.getNode(i);
 
-
-//            getPrevious(i)
             Integer prev = getPrevious(i, way.getNodesCount(), closed);
             Integer next = getNext(i, way.getNodesCount(), closed);
 
@@ -234,7 +241,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
 
         try {
-            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getScale(), c, 1);
+            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getScale(), c, 1);
 
         } catch (Exception e) {
             throw new RuntimeException("error eval of scale function", e);
@@ -245,17 +252,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        this.translate =  this.nodeModelConf.getTranslate().eval(new Context());
-
+        this.translate =  ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
 
         this.modelLod.put(pLod, model);
 
-
-
-
     }
-
-
 
     private Point2d transform(Node node, Perspective3D perspective) {
         return perspective.calcPoint(node);
