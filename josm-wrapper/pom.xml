@@ -26,6 +26,12 @@
 
 	<profiles>
 		<profile>
+			<id>jankins</id>
+			<properties>
+				<josm.dir>/var/lib/jenkins/jobs/JOSM/workspace</josm.dir>
+			</properties>
+		</profile>
+		<profile>
 			<id>tools.jar</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
