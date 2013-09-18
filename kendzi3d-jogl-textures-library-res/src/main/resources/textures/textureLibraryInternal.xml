@@ -51,6 +51,12 @@
 	<textureSet key="buildings.facade_glass">
 		<textureData tex0="/textures/cc0/KnerrGlassWallGrey0001.jpg" height="2.5" width="2.1"/>
 	</textureSet>
+	<textureSet key="buildings.facade_marble">
+		<textureData tex0="/textures/pd/MarekWall0001.jpg" height="0.4" width="0.8"/>
+	</textureSet>
+	<textureSet key="buildings.facade_asphalt">
+		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
+	</textureSet>
 	
 	<textureSet key="buildings.facade_test2">
 		<textureData 
@@ -97,9 +103,22 @@
 	<textureSet key="buildings.roof_copper">
 		<textureData tex0="/textures/pd/Copper_roof_texture.png" height="1.5" width="1.5"/>
 	</textureSet>
+	<textureSet key="buildings.roof_marble">
+		<textureData tex0="/textures/pd/MarekWall0001.jpg" height="0.4" width="0.8"/>
+	</textureSet>
+	<textureSet key="buildings.roof_asphalt">
+		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
+	</textureSet>
+	
 	
 	<textureSet key="buildings.floor_unknown">
 		<textureData tex0="/textures/pd/floor_unknown.png" height="1" width="1"/>
+	</textureSet>
+	<textureSet key="buildings.floor_marble">
+		<textureData tex0="/textures/pd/MarekWall0001.jpg" height="0.4" width="0.8"/>
+	</textureSet>
+	<textureSet key="buildings.floor_asphalt">
+		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
 	</textureSet>
 	
 	<!-- Buildings windows -->
