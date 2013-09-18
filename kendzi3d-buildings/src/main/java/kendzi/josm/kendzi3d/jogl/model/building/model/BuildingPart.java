@@ -236,20 +236,20 @@ public class BuildingPart {
         this.minLevel = minLevel;
     }
 
-//    /**
-//     * @return the dormerRoofModel
-//     */
-//    public DormerRoofModel getDormerRoofModel() {
-//        return this.dormerRoofModel;
-//    }
-//
-//    /**
-//     * @param dormerRoofModel
-//     *            the dormerRoofModel to set
-//     */
-//    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
-//        this.dormerRoofModel = dormerRoofModel;
-//    }
+    //    /**
+    //     * @return the dormerRoofModel
+    //     */
+    //    public DormerRoofModel getDormerRoofModel() {
+    //        return this.dormerRoofModel;
+    //    }
+    //
+    //    /**
+    //     * @param dormerRoofModel
+    //     *            the dormerRoofModel to set
+    //     */
+    //    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
+    //        this.dormerRoofModel = dormerRoofModel;
+    //    }
 
     // /**
     // * @return the roofTextureData
@@ -367,5 +367,4 @@ public class BuildingPart {
     public void setFloorColor(Color floorColor) {
         this.floorColor = floorColor;
     }
-
 }

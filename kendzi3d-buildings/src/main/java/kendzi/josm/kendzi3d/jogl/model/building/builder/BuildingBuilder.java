@@ -38,6 +38,8 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingWallElement;
+import kendzi.josm.kendzi3d.jogl.model.building.model.NodeBuildingPart;
+import kendzi.josm.kendzi3d.jogl.model.building.model.SphereNodeBuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.Wall;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallNode;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallPart;
@@ -50,6 +52,7 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofLinesModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -85,6 +88,13 @@ public class BuildingBuilder {
             }
         }
 
+        if (buildingModel.getNodeParts() != null) {
+
+            for (NodeBuildingPart bp : buildingModel.getNodeParts()) {
+                partsOut.add(builNodePart(bp, buildingModel, mf, tm));
+            }
+        }
+
         BuildingOutput out = new BuildingOutput();
         out.setModel( mf.toModel());
         out.setBuildingPartOutput(partsOut);
@@ -106,6 +116,44 @@ public class BuildingBuilder {
             return true;
         }
         return false;
+    }
+
+    private static BuildingPartOutput builNodePart(NodeBuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureManager tm) {
+
+        if (bp instanceof SphereNodeBuildingPart )
+        {
+            Color floorColor = takeFacadeColor(buildingModel, bp, tm);
+            TextureData floorTD = takeFacadeTextureData(buildingModel, bp, tm, floorColor != null);
+
+            String tex0Key = floorTD.getTex0();
+            Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, floorColor);
+
+
+            MeshFactory mesh = mf.addMesh("NodePart");
+            mesh.hasTexture = true;
+            mesh.materialID = mf.cacheMaterial(mat);
+
+            SphereNodeBuildingPart sphere = (SphereNodeBuildingPart ) bp;
+            int pIcross = 12;
+            int icross = pIcross  + 1;
+
+            double height = sphere.getHeight();
+            double radius = sphere.getRadius();
+            Point2d point = sphere.getPoint();
+
+            // create cross section
+            Point2d [] crossSection = new Point2d[icross];
+            for (int i = 0; i < icross; i++) {
+                double a = (Math.toRadians(180) / (icross - 1) * i) - Math.toRadians(90);
+
+                crossSection[i] = new Point2d(Math.cos(a) * radius, Math.sin(a) * radius + height);
+            }
+
+            int pIsection = 12;
+            RoofType5_6.buildRotaryShape(mesh, point, pIsection, crossSection, true);
+
+        }
+        return new BuildingPartOutput();
     }
 
     private static BuildingPartOutput buildPart(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureManager tm) {
@@ -425,6 +473,26 @@ public class BuildingBuilder {
         return td;
     }
 
+    private static TextureData takeFacadeTextureData(BuildingModel buildingModel, NodeBuildingPart bp,
+            BuildingElementsTextureManager tm, boolean colorable) {
+
+        String mt = null;
+
+        if (bp.getFacadeMaterialType() != null) {
+            mt = bp.getFacadeMaterialType();
+        } else if (buildingModel.getFacadeMaterialType() != null) {
+            mt = buildingModel.getFacadeMaterialType();
+        }
+
+        TextureData td = tm.findTexture(new TextureFindCriteria(Type.FACADE, mt, null, null, null, colorable));
+
+        if (td == null) {
+            td = new TextureData(null, 1, 1);
+        }
+
+        return td;
+    }
+
     private static TextureData takeFacadeTextureData(BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp,
             BuildingElementsTextureManager tm, boolean colorable) {
 
@@ -467,6 +535,19 @@ public class BuildingBuilder {
         }
 
         return td;
+    }
+
+    private static Color takeFacadeColor(BuildingModel buildingModel, NodeBuildingPart bp, BuildingElementsTextureManager tm) {
+
+        Color c = null;
+
+        if (bp.getFacadeColor() != null) {
+            c = bp.getFacadeColor();
+        } else if (buildingModel.getFacadeColor() != null) {
+            c = buildingModel.getFacadeColor();
+        }
+
+        return c;
     }
 
     private static Color takeFacadeColor(BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp,

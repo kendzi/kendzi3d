@@ -5,7 +5,9 @@ import java.util.List;
 
 public class BuildingModel {
 
-    List<BuildingPart> parts;
+    private List<BuildingPart> parts;
+
+    private List<NodeBuildingPart> nodeParts;
 
     private String facadeMaterialType;
 
@@ -120,5 +122,19 @@ public class BuildingModel {
      */
     public void setFloorColor(Color floorColor) {
         this.floorColor = floorColor;
+    }
+
+    /**
+     * @return the nodeParts
+     */
+    public List<NodeBuildingPart> getNodeParts() {
+        return nodeParts;
+    }
+
+    /**
+     * @param nodeParts the nodeParts to set
+     */
+    public void setNodeParts(List<NodeBuildingPart> nodeParts) {
+        this.nodeParts = nodeParts;
     }
 }

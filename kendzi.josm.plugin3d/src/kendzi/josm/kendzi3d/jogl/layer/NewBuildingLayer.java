@@ -62,10 +62,18 @@ public class NewBuildingLayer implements Layer {
     @Inject
     private TextureLibraryStorageService textureLibraryStorageService;
 
+    private Match buildingNodeMatcher;
     private Match buildingMatcher;
     private Match buildingRelationMatcher;
 
     {
+        try {
+            this.buildingNodeMatcher = SearchCompiler.compile("((building=* & -building=no) | building\\:part=yes) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))", false, false);
+
+        } catch (ParseError e) {
+            this.buildingNodeMatcher = new SearchCompiler.Never();
+            log.error(e);
+        }
         try {
             this.buildingMatcher = SearchCompiler.compile("((building=* & -building=no) | building\\:part=yes) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))", false, false);
 
@@ -88,7 +96,7 @@ public class NewBuildingLayer implements Layer {
     @Override
     public
     Match getNodeMatcher() {
-        return null;
+        return this.buildingNodeMatcher;
     }
 
     @Override
@@ -113,7 +121,8 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public void addModel(Node node, Perspective3D pPerspective3D) {
-        //
+        this.modelList.add(new NewBuilding(node, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.List;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingWallElement;
+import kendzi.josm.kendzi3d.jogl.model.building.model.NodeBuildingPart;
+import kendzi.josm.kendzi3d.jogl.model.building.model.SphereNodeBuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.Wall;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallNode;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallPart;
@@ -135,9 +137,20 @@ public class BuildingParser {
      */
     public static BuildingModel parseBuildingWay(Way way, Perspective perspective) {
         BuildingModel bm = new BuildingModel();
+        bm.setParts(parseBuildingPart(way, perspective));
+        return bm;
+    }
 
-        List<BuildingPart> bpList = parseBuildingPart(way, perspective);
-        bm.setParts(bpList);
+    /**
+     * Parse building model from node.
+     *
+     * @param node
+     * @param perspective
+     * @return
+     */
+    public static BuildingModel parseBuildingNode(Node node, Perspective perspective) {
+        BuildingModel bm = new BuildingModel();
+        bm.setNodeParts(parseBuildingPart(node, perspective));
         return bm;
     }
 
@@ -159,6 +172,9 @@ public class BuildingParser {
         List<BuildingPart> bps = new ArrayList<BuildingPart>();
         bm.setParts(bps);
 
+        List<NodeBuildingPart> nbps = new ArrayList<NodeBuildingPart>();
+        bm.setNodeParts(nbps);
+
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);
 
@@ -173,6 +189,8 @@ public class BuildingParser {
 
             if (primitive instanceof Way) {
                 bps.addAll(parseBuildingPart((Way) primitive, pers));
+            } else if (primitive instanceof Node && isNodeBuildingPart((Node) primitive)) {
+                nbps.addAll(parseBuildingPart((Node) primitive, pers));
 
             } else if (primitive instanceof Relation) {
                 Relation r = (Relation) primitive;
@@ -185,6 +203,16 @@ public class BuildingParser {
             }
         }
         return bm;
+    }
+
+    private static boolean isNodeBuildingPart(Node node) {
+
+        if (OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(node)
+                && OsmAttributeKeys.BUILDING_SHAPE.primitiveKeyHaveValue(node, OsmAttributeValues.SPHERE)) {
+            return true;
+        }
+
+        return false;
     }
 
     private DormerRoofModel marge(DormerRoofModel roof, DormerRoofModel roofClosedWay) {
@@ -282,6 +310,18 @@ public class BuildingParser {
             return true;
         }
         return false;
+    }
+
+    private static List<NodeBuildingPart> parseBuildingPart(Node node, Perspective pPerspective) {
+        SphereNodeBuildingPart bp = new SphereNodeBuildingPart();
+
+        bp.setPoint(pPerspective.calcPoint(node));
+        bp.setHeight(ModelUtil.getHeight(node, 0d));
+        bp.setRadius(ModelUtil.parseHeight(node.get("radius"), 1d));
+        bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(node));
+        bp.setFacadeColor(BuildingAttributeParser.parseFacadeColor(node));
+
+        return Arrays.asList((NodeBuildingPart) bp);
     }
 
     private static List<BuildingPart> parseBuildingPart(Way primitive, Perspective pPerspective) {

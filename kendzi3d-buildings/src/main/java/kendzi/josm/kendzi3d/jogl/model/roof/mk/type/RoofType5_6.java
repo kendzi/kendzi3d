@@ -190,7 +190,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
     public static void buildRotaryShape(
             MeshFactory meshFactory,
-            //            Circle circle,
             Point2d center,
             int pIsection,
             Point2d [] crossSection,
@@ -283,9 +282,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
             }
         }
 
-
-
-
         // add faces to mesh
         for (int i = 0; i < isection; i++) {
             Point3d [] c1 = mesh[i];
@@ -299,10 +295,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                 int ic2p1 = pointsIntex[i2][j];
                 int ic1p2 = pointsIntex[i][j+1];
                 int ic2p2 = pointsIntex[i2][j+1];
-                //                int ic1p1 = meshFactory.addVertex(c1p1);
-                //                int ic2p1 = meshFactory.addVertex(c2p1);
-                //                int ic1p2 = meshFactory.addVertex(c1p2);
-                //                int ic2p2 = meshFactory.addVertex(c2p2);
 
                 int ic1p1n;
                 int ic2p1n;
@@ -329,16 +321,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                     ic2p1n = softNormalsIntex[i2][j];
                     ic1p2n = softNormalsIntex[i][j+1];
                     ic2p2n = softNormalsIntex[i2][j+1];
-                    //                 // XXX doubled normals
-                    //                    Vector3d c1p1n = new Vector3d(c1p1.x - circle.getPoint().x, c1p1.y,  c1p1.z  + circle.getPoint().y);
-                    //                    Vector3d c2p1n = new Vector3d(c2p1.x - circle.getPoint().x, c2p1.y,  c2p1.z  + circle.getPoint().y);
-                    //                    Vector3d c1p2n = new Vector3d(c1p2.x - circle.getPoint().x, c1p2.y,  c1p2.z  + circle.getPoint().y);
-                    //                    Vector3d c2p2n = new Vector3d(c2p2.x - circle.getPoint().x, c2p2.y,  c2p2.z  + circle.getPoint().y);
-                    //
-                    //                    ic1p1n = meshFactory.addNormal(c1p1n);
-                    //                    ic2p1n = meshFactory.addNormal(c2p1n);
-                    //                    ic1p2n = meshFactory.addNormal(c1p2n);
-                    //                    ic2p2n = meshFactory.addNormal(c2p2n);
                 }
 
                 TextQuadsIndex tq = tc[j];

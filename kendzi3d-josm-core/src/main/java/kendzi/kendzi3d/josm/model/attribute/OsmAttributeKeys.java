@@ -96,6 +96,8 @@ public enum OsmAttributeKeys {
 
     ROOF_APEX("roof:apex"),
 
+    BUILDING_SHAPE("building:shape"),
+
     ;
 
     String key;

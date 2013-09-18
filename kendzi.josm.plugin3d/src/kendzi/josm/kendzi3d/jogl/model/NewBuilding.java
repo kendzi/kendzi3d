@@ -33,7 +33,6 @@ import kendzi.jogl.texture.library.BuildingElementsTextureManager;
 import kendzi.jogl.texture.library.OsmBuildingElementsTextureMenager;
 import kendzi.jogl.texture.library.TextureFindCriteria;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingBuilder;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingOutput;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingPartOutput;
@@ -51,6 +50,7 @@ import kendzi.josm.kendzi3d.jogl.selection.editor.Editor;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -88,6 +88,8 @@ public class NewBuilding extends AbstractModel {
     private Model model;
 
     private Relation relation;
+
+    private Node node;
 
     private Way way;
 
@@ -136,6 +138,18 @@ public class NewBuilding extends AbstractModel {
         this.way = pWay;
     }
 
+    public NewBuilding(Node node, Perspective3D pPerspective,
+            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
+        super(pPerspective);
+
+        this.modelRender = pModelRender;
+        this.metadataCacheService = pMetadataCacheService;
+        this.textureLibraryStorageService = pTextureLibraryStorageService;
+
+        this.node = node;
+    }
+
 
 
 
@@ -160,9 +174,12 @@ public class NewBuilding extends AbstractModel {
                 bm = BuildingParser.parseBuildingWay(this.way, this.perspective);
 
                 this.selection = parseSelection(this.way.getId(), bm);
+            } else if (this.node != null) {
+                bm = BuildingParser.parseBuildingNode(this.node, this.perspective);
 
-
+                this.selection = parseSelection(this.node.getId(), bm);
             }
+
             this.preview = false;
             this.bm = bm;
         }
@@ -198,6 +215,7 @@ public class NewBuilding extends AbstractModel {
         BoundsFactory bf = new BoundsFactory();
 
         List<BuildingPart> parts = bm.getParts();
+        if (parts != null) {
         for (BuildingPart bp : parts) {
             List<WallPart> wallParts = bp.getWall().getWallParts();
             for (WallPart wp : wallParts) {
@@ -210,6 +228,7 @@ public class NewBuilding extends AbstractModel {
                 }
             }
         }
+    }
 
         Bounds bounds = bf.toBounds();
 
