@@ -19,17 +19,21 @@ import java.lang.reflect.Field;
  */
 public class ColorUtil {
 
-    public static Color parseColor(String pColor) {
+    public static Color parseColor(String colorName) {
 
-        Color color = getColor(pColor);
+        Color color = NamedColorsEnum.getColorByName(colorName);
+        if (color == null) {
+            color = getColorByJava(colorName);
+        }
 
         if (color != null) {
-            color = color.brighter().brighter().brighter().brighter();
+            color = brighter(color);
+            //color = color.brighter().brighter().brighter().brighter();
         }
 
         if (color == null) {
             try {
-                color = Color.decode(pColor);
+                color = Color.decode(colorName);
             } catch (Exception e) {
                 //
             }
@@ -38,13 +42,25 @@ public class ColorUtil {
         return color;
     }
 
+    private static Color brighter(Color color) {
+        // brighter black give value 7,7,7
+        float factor = 0.97265625f;
+
+        // into white color
+        float r = 256f - factor * (256 - color.getRed());
+        float g = 256f - factor * (256 - color.getGreen());
+        float b = 256f - factor * (256 - color.getBlue());
+
+        return new Color((int) r, (int) g, (int) b);
+    }
+
     /**
      * Returns a Color based on 'colorName' which must be one of the predefined colors in
      * java.awt.Color. Returns null if colorName is not valid.
      * @param colorName
      * @return
      */
-    public static Color getColor(String colorName) {
+    public static Color getColorByJava(String colorName) {
         try {
             // Find the field and value of colorName
             Field field = Class.forName("java.awt.Color").getField(colorName);
