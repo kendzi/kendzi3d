@@ -26,7 +26,7 @@
 
 	<profiles>
 		<profile>
-			<id>jankins</id>
+			<id>jenkins</id>
 			<properties>
 				<josm.dir>/var/lib/jenkins/jobs/JOSM/workspace</josm.dir>
 			</properties>
@@ -76,6 +76,24 @@
 						</goals>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>commons-net</groupId>
+						<artifactId>commons-net</artifactId>
+						<version>1.4.1</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-commons-net</artifactId>
+						<version>1.8.1</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-nodeps</artifactId>
+						<version>1.8.1</version>
+					</dependency>
+			
+				</dependencies>
 				<!-- <dependencies> -->
 				<!-- This will work only with oracle jdk! http://docs.codehaus.org/display/MAVENUSER/Running+ant+tasks+that+use+the+JDK -->
 				<!-- <dependency> -->
