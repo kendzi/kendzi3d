@@ -104,8 +104,17 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
 
     public static TextureData colorableTextureData(TextureData textureData) {
 
+        String tex0 = null;
+        String tex1 = null;
+        double width = 1d;
+        double height = 1d;
 
-        String tex0 = textureData.getTex0();
+        if (textureData != null) {
+            tex0 = textureData.getTex0();
+            tex1 = textureData.getTex1();
+            width = textureData.getWidth();
+            height = textureData.getHeight();
+        }
 
         if (tex0 == null) {
             tex0 = "#c=0xffffff";
@@ -113,14 +122,9 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
             tex0 = "#bw=" + tex0;
         }
 
-        return new TextureData(
-                tex0,
-                textureData.getTex1(),
-                textureData.getWidth(),
-                textureData.getHeight(),
-                true);
-
+        return new TextureData(tex0, tex1, width, height, true);
     }
+
     /**
      * @param pTextureFindCriteria
      * @param textureSet
