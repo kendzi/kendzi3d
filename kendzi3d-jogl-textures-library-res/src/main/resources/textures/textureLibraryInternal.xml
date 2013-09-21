@@ -57,6 +57,9 @@
 	<textureSet key="buildings.facade_asphalt">
 		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
 	</textureSet>
+	<textureSet key="buildings.facade_steel">
+		<textureData tex0="/textures/pd/Metal_wall.jpg" height="0.28" width="0.28"/>
+	</textureSet>
 	
 	<textureSet key="buildings.facade_test2">
 		<textureData 
@@ -109,7 +112,9 @@
 	<textureSet key="buildings.roof_asphalt">
 		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
 	</textureSet>
-	
+	<textureSet key="buildings.roof_steel">
+		<textureData tex0="/textures/pd/Metal_wall.jpg" height="0.28" width="0.28"/>
+	</textureSet>
 	
 	<textureSet key="buildings.floor_unknown">
 		<textureData tex0="/textures/pd/floor_unknown.png" height="1" width="1"/>
@@ -119,6 +124,9 @@
 	</textureSet>
 	<textureSet key="buildings.floor_asphalt">
 		<textureData tex0="/textures/pd/asphalt.png" height="6" width="6"/>
+	</textureSet>
+	<textureSet key="buildings.floor_steel">
+		<textureData tex0="/textures/pd/Metal_wall.jpg" height="0.28" width="0.28"/>
 	</textureSet>
 	
 	<!-- Buildings windows -->
