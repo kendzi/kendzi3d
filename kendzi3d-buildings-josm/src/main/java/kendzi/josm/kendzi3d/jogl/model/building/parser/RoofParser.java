@@ -20,6 +20,7 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.direction.Direction;
 import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -220,18 +221,44 @@ public class RoofParser {
     }
 
     private static Vector2d findDirectionByPoints(Way pWay, Perspective pPerspective) {
-        Point2d directionBegin = findPoint(OsmAttributeKeys._3DR_DIRECTION.getKey(), OsmAttributeValues.BEGIN.getValue(), pWay, pPerspective);
-        if (directionBegin == null) {
-            directionBegin = pPerspective.calcPoint(pWay.getNode(0));
+        Point2d direction3drBegin = null;
+        Point2d direction3drEnd = null;
+
+        Point2d directionBegin = null;
+        Point2d directionEnd = null;
+
+        for (int i = pWay.getNodesCount() - 1; i >=0; i--) {
+            Node node = pWay.getNode(i);
+            if (OsmAttributeKeys._3DR_DIRECTION.primitiveKeyHaveValue(node, OsmAttributeValues.BEGIN)) {
+                direction3drBegin = pPerspective.calcPoint(node);
+            }
+            if (OsmAttributeKeys._3DR_DIRECTION.primitiveKeyHaveValue(node, OsmAttributeValues.END)) {
+                direction3drEnd = pPerspective.calcPoint(node);
+            }
+
+            if (OsmAttributeKeys.ROOF_DIRECTION.primitiveKeyHaveValue(node, OsmAttributeValues.BEGIN)) {
+                directionBegin = pPerspective.calcPoint(node);
+            }
+            if (OsmAttributeKeys.ROOF_DIRECTION.primitiveKeyHaveValue(node, OsmAttributeValues.END)) {
+                directionEnd = pPerspective.calcPoint(node);
+            }
         }
 
+        if (direction3drBegin == null) {
+            direction3drBegin = pPerspective.calcPoint(pWay.getNode(0));
+        }
 
+        if (direction3drBegin != null && direction3drEnd != null) {
+            Vector2d direction = new Vector2d(direction3drEnd);
+            direction.sub(direction3drBegin);
+            return direction;
+        }
 
-        Point2d directionEnd = findPoint(OsmAttributeKeys._3DR_DIRECTION.getKey(), OsmAttributeValues.END.getValue(), pWay, pPerspective);
         if (directionBegin != null && directionEnd != null) {
             Vector2d direction = new Vector2d(directionEnd);
             direction.sub(directionBegin);
-            return direction;
+
+            return Vector2dUtil.orthogonal(direction);
         }
 
         return null;
