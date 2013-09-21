@@ -198,6 +198,11 @@ public enum NamedColorsEnum {
 
         name = name.toLowerCase();
 
-        return NamedColorsEnum.valueOf(name).getColor();
+        try {
+            return NamedColorsEnum.valueOf(name).getColor();
+        } catch (IllegalArgumentException e) {
+            //
+        }
+        return null;
     }
 }
