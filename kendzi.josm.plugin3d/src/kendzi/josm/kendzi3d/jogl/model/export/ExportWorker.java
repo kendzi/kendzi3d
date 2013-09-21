@@ -162,7 +162,7 @@ public class ExportWorker extends Thread {
                     logFrame = new ExportOutput();
                     ExportWorker.this.logFrame.setVisible(true);
                 } catch (Exception e) {
-                    log.error(e);
+                    log.error(e, e);
                 }
             }
         });

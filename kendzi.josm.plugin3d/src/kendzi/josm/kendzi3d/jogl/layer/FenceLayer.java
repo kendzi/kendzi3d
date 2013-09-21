@@ -72,13 +72,13 @@ public class FenceLayer implements Layer {
             this.fenceMatcher = SearchCompiler.compile("(barrier=fence) | (barrier\\:part=fence)", false, false);
         } catch (ParseError e) {
             this.fenceMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
         try {
            this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
         } catch (ParseError e) {
             this.fenceMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
 
     }

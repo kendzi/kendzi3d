@@ -70,7 +70,7 @@ public class WallLayer implements Layer {
             this.fenceMatcher = SearchCompiler.compile("(test=wall)", false, false);
         } catch (ParseError e) {
             this.fenceMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
 
 

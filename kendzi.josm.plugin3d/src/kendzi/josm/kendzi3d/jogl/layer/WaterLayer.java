@@ -71,19 +71,19 @@ public class WaterLayer implements Layer {
             this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false, false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
         try {
             this.waterMatcher = SearchCompiler.compile("((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon", false, false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
         try {
             this.waterRelationMatcher = SearchCompiler.compile("type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))", false, false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
 
     }

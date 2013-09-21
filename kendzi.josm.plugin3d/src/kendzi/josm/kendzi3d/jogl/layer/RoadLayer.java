@@ -63,7 +63,7 @@ public class RoadLayer implements Layer {
             this.roadMatcher = SearchCompiler.compile("(highway=*)", false, false);
        } catch (ParseError e) {
             this.roadMatcher = new SearchCompiler.Never();
-            log.error(e);
+            log.error(e, e);
         }
 
     }
