@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kendzi.kendzi3d</groupId>
+	<artifactId>kendzi3d-plugin-build</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>kendzi3d-plugin-build</name>
+	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<properties>
+		<java.version>1.6</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<modules>
+		<module>../kendzi-util</module>
+		
+		<module>../kendzi3d-math</module>
+		<module>../kendzi3d-file-util</module>
+		
+		
+		<module>../kendzi3d-buildings</module>
+		<module>../kendzi3d-buildings-josm</module>
+		<module>../kendzi3d-collada-bindings</module>
+		<module>../kendzi3d-collada-exporter</module>
+		<module>../kendzi3d-josm-core</module>
+		<module>../kendzi3d-expressions</module>
+		<module>../kendzi3d-jogl-model</module>
+		<module>../kendzi3d-jogl-model-render</module>
+		<module>../kendzi3d-jogl-model-util</module>
+		
+		<module>../kendzi3d-jogl-textures</module>
+		<module>../kendzi3d-jogl-textures-josm</module>
+		<module>../kendzi3d-jogl-textures-library</module>
+		<module>../kendzi3d-jogl-textures-library-bindings</module>
+		<module>../kendzi3d-jogl-textures-library-res</module>
+		<module>../kendzi3d-models-library</module>
+		<module>../kendzi3d-models-library-bindings</module>
+		<module>../kendzi3d-models-library-layer</module> 
+		
+	</modules>
+</project>
