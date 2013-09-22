@@ -211,7 +211,7 @@ public class BuildingParser {
      */
     private static boolean isPrimitiveBuildingPart(OsmPrimitive osmPrimitive) {
         return OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(osmPrimitive)
-                && OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveValue(osmPrimitive, OsmAttributeValues.NO);
+                && !OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveValue(osmPrimitive, OsmAttributeValues.NO);
     }
 
     private static boolean isNodeBuildingPart(Node node) {
