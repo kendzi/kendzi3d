@@ -3,7 +3,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>kendzi.kendzi3d</groupId>
 	<artifactId>kendzi3d-math</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
@@ -11,7 +10,7 @@
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 
 	<properties>
-		<java.version>1.6</java.version>
+		 
 	</properties>
 
 	<dependencies>
@@ -37,6 +36,20 @@
 		</dependency>
 
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>repo</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>file://${basedir}/../repo</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<finalName>kendzi3d-jogl-model-render</finalName>
@@ -52,4 +65,10 @@
 			</plugin>
 		</plugins>
 	</build>
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 </project>

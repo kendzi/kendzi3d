@@ -23,6 +23,21 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>repo</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	
+	</repositories>
 
 	<modules>
 		<module>../kendzi-util</module>
