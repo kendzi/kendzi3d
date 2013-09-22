@@ -352,7 +352,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     public void draw(GL2 gl, Camera camera, LOD pLod) {
         Model model2 = this.modelLod.get(pLod);
         if (model2 != null) {
-            Fence.enableTransparentText(gl);
+            BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
            // gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
             gl.glEnable(GL2.GL_NORMALIZE); //XXX
@@ -377,7 +377,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             gl.glDisable(GL2.GL_NORMALIZE);
 
             gl.glPopMatrix();
-            Fence.disableTransparentText(gl);
+            BarrierFence.disableTransparentText(gl);
         }
     }
 

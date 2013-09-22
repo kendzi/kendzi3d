@@ -9,6 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -52,11 +53,11 @@ import org.openstreetmap.josm.data.osm.RelationMember;
  *
  * @author Tomasz Kędziora (Kendzi)
  */
-public class FenceRelation extends AbstractRelationModel {
+public class BarrierFenceRelation extends AbstractRelationModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FenceRelation.class);
+    private static final Logger log = Logger.getLogger(BarrierFenceRelation.class);
 
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 
@@ -106,7 +107,7 @@ public class FenceRelation extends AbstractRelationModel {
      * @param pMetadataCacheService metadata cache service
      * @param pTextureLibraryStorageService texture library service
      */
-    public FenceRelation(Relation pRelation, Perspective3D pers,
+    public BarrierFenceRelation(Relation pRelation, Perspective3D pers,
             ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
             TextureLibraryStorageService pTextureLibraryStorageService) {
 
@@ -179,18 +180,11 @@ public class FenceRelation extends AbstractRelationModel {
 
         this.minHeight = ModelUtil.getMinHeight(this.relation, 0d);
 
+        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryStorageService);
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryStorageService);
-        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
-
-        int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
-
-        meshBorder.materialID = facadeMaterialIndex;
-        meshBorder.hasTexture = true;
-
+        MeshFactory meshBorder = createMesh(facadeTexture.getTex0(), null, "fence_border", modelBuilder);
 
         buildWallModel(this.points, this.heights, this.minHeight, this.hight, 0, meshBorder, facadeTexture);
 
@@ -199,8 +193,27 @@ public class FenceRelation extends AbstractRelationModel {
         this.model.setUseTexture(true);
 
         this.buildModel = true;
+    }
 
+    /**
+     * @param tex0Key
+     * @param textColor
+     * @param meshName
+     * @param modelBuilder
+     * @return
+     */
+    public static MeshFactory createMesh(String tex0Key, Color textColor, String meshName, ModelFactory modelBuilder) {
+        MeshFactory meshBorder = modelBuilder.addMesh(meshName);
 
+//        Material fenceMaterial = MaterialFactory.createTextureMaterial(tex0);
+
+        Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, textColor);
+
+        int facadeMaterialIndex = modelBuilder.addMaterial(mat);
+
+        meshBorder.materialID = facadeMaterialIndex;
+        meshBorder.hasTexture = true;
+        return meshBorder;
     }
 
     /** Build wall model.
@@ -301,6 +314,7 @@ public class FenceRelation extends AbstractRelationModel {
     public static  TextureData getFenceTexture(String fenceType, OsmPrimitive pOsmPrimitive,
             TextureLibraryStorageService TextureLibraryStorageService) {
 
+        // FIXME add colored textures!
         String facadeColor = OsmAttributeKeys.FENCE_COLOR.primitiveValue(pOsmPrimitive);
 
         if (!StringUtil.isBlankOrNull(fenceType) || StringUtil.isBlankOrNull(facadeColor)) {

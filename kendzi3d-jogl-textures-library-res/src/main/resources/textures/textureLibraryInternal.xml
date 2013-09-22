@@ -156,7 +156,11 @@
 	<textureSet key="barrier.fence_balustrade">
 		<textureData tex0="/textures/fence_balustrade.png" width="0.2"/>
 	</textureSet>
-
+	
+	<textureSet key="barrier.wall_unknown">
+		<textureData tex0="/textures/pd/MarekWall0003.jpg" height="1" width="1"/>
+	</textureSet>
+	
 	<!-- Ground -->
 	<textureSet key="ground.unknown">
 		<textureData tex0="/textures/pd/600px-MarekGrassDehydrated0001.jpg" width="2" height="2" />

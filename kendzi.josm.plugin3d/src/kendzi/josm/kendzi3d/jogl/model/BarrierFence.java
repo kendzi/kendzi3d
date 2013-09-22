@@ -17,11 +17,9 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Camera;
-import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
-import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
@@ -40,11 +38,11 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  * @author Tomasz Kędziora (Kendzi)
  */
-public class Fence extends AbstractWayModel {
+public class BarrierFence extends AbstractWayModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(Fence.class);
+    private static final Logger log = Logger.getLogger(BarrierFence.class);
 
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 
@@ -92,7 +90,7 @@ public class Fence extends AbstractWayModel {
      * @param pMetadataCacheService metadata cache service
      * @param pTextureLibraryStorageService texture library service
      */
-    public Fence(Way pWay, Perspective3D pPerspective3D,
+    public BarrierFence(Way pWay, Perspective3D pPerspective3D,
             ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
             TextureLibraryStorageService pTextureLibraryStorageService) {
         super(pWay, pPerspective3D);
@@ -110,7 +108,7 @@ public class Fence extends AbstractWayModel {
             return;
         }
 
-        String fenceType = FenceRelation.getFenceType(this.way);
+        String fenceType = BarrierFenceRelation.getFenceType(this.way);
 
         double fenceHeight = this.metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
@@ -119,21 +117,13 @@ public class Fence extends AbstractWayModel {
 
         this.minHeight = ModelUtil.getMinHeight(this.way, 0d);
 
+        TextureData facadeTexture = BarrierFenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
-        MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
-        Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
+        MeshFactory meshBorder = BarrierFenceRelation.createMesh(facadeTexture.getTex0(), null, "fence_border", modelBuilder);
 
-        int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
-
-        meshBorder.materialID = facadeMaterialIndex;
-        meshBorder.hasTexture = true;
-
-
-        FenceRelation.buildWallModel(this.points, null, this.minHeight, this.hight, 0, meshBorder, facadeTexture);
-
+        BarrierFenceRelation.buildWallModel(this.points, null, this.minHeight, this.hight, 0, meshBorder, facadeTexture);
 
         this.model = modelBuilder.toModel();
         this.model.setUseLight(true);
@@ -143,7 +133,6 @@ public class Fence extends AbstractWayModel {
 
         this.heightClone = RelationCloneHeight.buildHeightClone(this.way);
     }
-
 
 
     @Override
@@ -192,6 +181,10 @@ public class Fence extends AbstractWayModel {
 
     }
 
+    /**
+     * @param pGl
+     * FIXME move to util!
+     */
     public static void enableTransparentText(GL2 pGl) {
         // do not draw the transparent parts of the texture
         pGl.glEnable(GL2.GL_BLEND);
@@ -203,6 +196,10 @@ public class Fence extends AbstractWayModel {
         pGl.glAlphaFunc(GL2.GL_GREATER, 0); // only render if alpha > 0
     }
 
+    /**
+     * @param pGl
+     * FIXME move to util!
+     */
     public static void disableTransparentText(GL2 pGl) {
         pGl.glDisable(GL2.GL_ALPHA_TEST);
         pGl.glDisable(GL2.GL_BLEND);

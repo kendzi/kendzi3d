@@ -14,10 +14,9 @@ import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.BarrierFence;
-import kendzi.josm.kendzi3d.jogl.model.BarrierFenceRelation;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.Wall;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
@@ -35,10 +34,10 @@ import com.google.inject.Inject;
  *
  * @author Tomasz Kędziora (Kendzi)
  */
-public class FenceLayer implements Layer {
+public class TestWallLayer implements Layer {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(FenceLayer.class);
+    private static final Logger log = Logger.getLogger(TestWallLayer.class);
 
     /**
      * Model renderer.
@@ -65,21 +64,15 @@ public class FenceLayer implements Layer {
     private List<Model> modelList = new ArrayList<Model>();
 
     private Match fenceMatcher;
-    private Match fenceRelationMatcher;
 
     {
         try {
-            this.fenceMatcher = SearchCompiler.compile("(barrier=fence) | (barrier\\:part=fence)", false, false);
+            this.fenceMatcher = SearchCompiler.compile("(test=wall)", false, false);
         } catch (ParseError e) {
             this.fenceMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
-        try {
-           this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
-        } catch (ParseError e) {
-            this.fenceRelationMatcher = new SearchCompiler.Never();
-            log.error(e, e);
-        }
+
 
     }
 
@@ -96,7 +89,7 @@ public class FenceLayer implements Layer {
 
     @Override
     public Match getRelationMatcher() {
-        return this.fenceRelationMatcher;
+        return null;
     }
 
     @Override
@@ -118,16 +111,13 @@ public class FenceLayer implements Layer {
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new BarrierFence(
-                way, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryStorageService));
+        this.modelList.add(new Wall(way, pPerspective3D, this.modelRender, this.metadataCacheService,
+                this.textureLibraryStorageService));
     }
 
     @Override
     public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new BarrierFenceRelation(
-                relation, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryStorageService));
+        //
     }
 
     @Override

@@ -15,6 +15,7 @@ import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
+import kendzi.josm.kendzi3d.jogl.layer.TestWallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.TreeLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WallLayer;
 import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
@@ -77,7 +78,7 @@ public class Kendzi3dModule extends AbstractModule {
         bind(TreeLayer.class);
         bind(ModelsLibraryLayer.class);
         bind(FenceLayer.class);
-        bind(WallLayer.class);
+        bind(TestWallLayer.class);
 
         bind(PhotoRenderer.class);
         bind(SkyBox.class);
@@ -128,21 +129,6 @@ public class Kendzi3dModule extends AbstractModule {
         return cl;
     }
 
-//    @Provides
-//    PointModelsLayer providePointModelsLayer(
-//            UrlReciverService pUrlReciverService,
-//            ModelRender pModelRender,
-//            ModelCacheService modelCacheService) {
-//
-//        PointModelsLayer pointModelsLayer = new PointModelsLayer();
-//        pointModelsLayer.setUrlReciverService(pUrlReciverService);
-//        pointModelsLayer.setModelRender(pModelRender);
-//        pointModelsLayer.setModelCacheService(modelCacheService);
-//        pointModelsLayer.init();
-//
-//        return pointModelsLayer;
-//    }
-
     @Provides @Singleton
     RenderJOSM provideRenderJOSM(
             ModelRender pModelRender,
@@ -152,30 +138,8 @@ public class Kendzi3dModule extends AbstractModule {
             WaterLayer waterLayer,
             TreeLayer treeLayer,
             FenceLayer fenceLayer,
-            WallLayer wallLayer
-
-    ) {
-
-        // PointModelsLayer pointModelsLayer = new PointModelsLayer();
-        // pointModelsLayer.setModelRender(modelRender);
-        // pointModelsLayer.setFileUrlReciverService(fileUrlReciverService);
-        // <bean id="exampleInitBean" class="examples.ExampleBean" init-method="init"/>
-        // pointModelsLayer.init();
-
-        // BuildingLayer buildingLayer = new BuildingLayer();
-        // buildingLayer.setModelRender(modelRender);
-
-        // RoadLayer roadLayer = new RoadLayer();
-        // roadLayer.setModelRender(modelRender);
-        //
-        // WaterLayer waterLayer = new WaterLayer();
-        // waterLayer.setModelRender(modelRender);
-
-        // TreeLayer treeLayer = new TreeLayer();
-        // treeLayer.setModelRender(modelRender);
-
-        // FenceLayer fenceLayer = new FenceLayer();
-        // fenceLayer.setModelRender(modelRender);
+            WallLayer wallLayer,
+            TestWallLayer testWallLayer) {
 
         List<Layer> layerList = new ArrayList<Layer>();
         layerList.add(buildingLayer);
@@ -185,6 +149,7 @@ public class Kendzi3dModule extends AbstractModule {
         layerList.add(treeLayer);
         layerList.add(fenceLayer);
         layerList.add(wallLayer);
+        layerList.add(testWallLayer);
 
         RenderJOSM renderJOSM = new RenderJOSM();
         renderJOSM.setModelRender(pModelRender);

@@ -125,7 +125,7 @@ public class Wall extends AbstractWayModel {
             return;
         }
 
-        String fenceType = FenceRelation.getFenceType(this.way);
+        String fenceType = BarrierFenceRelation.getFenceType(this.way);
 
         double fenceHeight = this.metadataCacheService.getPropertitesDouble(
                 "barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
@@ -140,7 +140,7 @@ public class Wall extends AbstractWayModel {
         MeshFactory testMesh = modelBuilder.addMesh("test");
         //MeshFactory meshBorder = modelBuilder.addMesh("box");
 
-        TextureData facadeTexture = FenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
+        TextureData facadeTexture = BarrierFenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);

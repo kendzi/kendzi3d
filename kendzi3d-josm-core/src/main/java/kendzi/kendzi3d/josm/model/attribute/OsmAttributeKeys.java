@@ -98,6 +98,12 @@ public enum OsmAttributeKeys {
 
     BUILDING_SHAPE("building:shape"),
 
+    WALL("wall"),
+
+    COLOUR("colour"),
+
+    COLOR("color"),
+
     ;
 
     String key;

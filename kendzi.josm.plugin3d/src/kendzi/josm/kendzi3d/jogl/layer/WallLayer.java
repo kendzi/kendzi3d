@@ -14,9 +14,9 @@ import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.BarrierWall;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
-import kendzi.josm.kendzi3d.jogl.model.Wall;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 
 import org.apache.log4j.Logger;
@@ -63,17 +63,15 @@ public class WallLayer implements Layer {
      */
     private List<Model> modelList = new ArrayList<Model>();
 
-    private Match fenceMatcher;
+    private Match wallMatcher;
 
     {
         try {
-            this.fenceMatcher = SearchCompiler.compile("(test=wall)", false, false);
+            this.wallMatcher = SearchCompiler.compile("(barrier=wall)", false, false);
         } catch (ParseError e) {
-            this.fenceMatcher = new SearchCompiler.Never();
+            this.wallMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
-
-
     }
 
     @Override
@@ -84,7 +82,7 @@ public class WallLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.fenceMatcher;
+        return this.wallMatcher;
     }
 
     @Override
@@ -104,15 +102,14 @@ public class WallLayer implements Layer {
 
     @Override
     public void addModel(Node node, Perspective3D pPerspective3D) {
-//        this.modelList.add(new Tree(node, pPerspective3D));
-//        this.modelList.add(new Tree(node, pPerspective3D));
-
+        //
     }
 
     @Override
     public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Wall(way, pPerspective3D, this.modelRender, this.metadataCacheService,
-                this.textureLibraryStorageService));
+        this.modelList.add(new BarrierWall(
+                way, pPerspective3D, this.modelRender,
+                this.metadataCacheService, this.textureLibraryStorageService));
     }
 
     @Override
