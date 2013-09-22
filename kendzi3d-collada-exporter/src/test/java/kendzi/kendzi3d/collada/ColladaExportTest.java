@@ -12,7 +12,9 @@ import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.material.Material;
-import kendzi.josm.kendzi3d.dto.TextureData;
+import kendzi.jogl.texture.dto.TextureData;
+import kendzi.jogl.texture.library.BuildingElementsTextureManager;
+import kendzi.jogl.texture.library.TextureFindCriteria;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingBuilder;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingOutput;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
@@ -20,8 +22,6 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.Wall;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallNode;
 import kendzi.josm.kendzi3d.jogl.model.building.model.WallPart;
-import kendzi.josm.kendzi3d.jogl.model.building.texture.BuildingElementsTextureMenager;
-import kendzi.josm.kendzi3d.jogl.model.building.texture.TextureFindCriteria;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
@@ -89,7 +89,7 @@ public class ColladaExportTest {
         bm.setParts(parts);
         parts.add(bp);
 
-        BuildingElementsTextureMenager tm = new BuildingElementsTextureMenager() {
+        BuildingElementsTextureManager tm = new BuildingElementsTextureManager() {
 
             @Override
             public TextureData findTexture(

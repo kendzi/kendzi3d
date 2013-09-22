@@ -52,7 +52,7 @@
                     -->
                     <!-- 
                     <args>
-                    	<arg>src/main/resources/simpleMode.xsd</arg>
+                    	<arg>${basedir}/src/main/resources/simpleMode.xsd</arg>
                     </args> 
                      -->
 				</configuration>
