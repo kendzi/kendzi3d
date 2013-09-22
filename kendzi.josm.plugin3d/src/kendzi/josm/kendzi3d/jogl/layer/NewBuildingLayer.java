@@ -68,7 +68,7 @@ public class NewBuildingLayer implements Layer {
 
     {
         try {
-            this.buildingNodeMatcher = SearchCompiler.compile("((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))", false, false);
+            this.buildingNodeMatcher = SearchCompiler.compile("building\\:shape=* & ((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))", false, false);
 
         } catch (ParseError e) {
             this.buildingNodeMatcher = new SearchCompiler.Never();
