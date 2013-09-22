@@ -44,14 +44,16 @@
 		
 		<module>../kendzi3d-math</module>
 		<module>../kendzi3d-file-util</module>
-		
+		<module>../kendzi3d-josm-core</module>
 		
 		<module>../kendzi3d-buildings</module>
 		<module>../kendzi3d-buildings-josm</module>
+		
 		<module>../kendzi3d-collada-bindings</module>
 		<module>../kendzi3d-collada-exporter</module>
-		<module>../kendzi3d-josm-core</module>
+
 		<module>../kendzi3d-expressions</module>
+		
 		<module>../kendzi3d-jogl-model</module>
 		<module>../kendzi3d-jogl-model-render</module>
 		<module>../kendzi3d-jogl-model-util</module>
@@ -61,6 +63,7 @@
 		<module>../kendzi3d-jogl-textures-library</module>
 		<module>../kendzi3d-jogl-textures-library-bindings</module>
 		<module>../kendzi3d-jogl-textures-library-res</module>
+		
 		<module>../kendzi3d-models-library</module>
 		<module>../kendzi3d-models-library-bindings</module>
 		<module>../kendzi3d-models-library-layer</module> 
