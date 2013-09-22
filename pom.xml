@@ -34,8 +34,8 @@
 <!-- 			<snapshots> -->
 <!-- 				<enabled>true</enabled> -->
 <!-- 			</snapshots> -->
-<!-- <!-- 			it is not working, maven don't allow to get paretn directiory! --> -->
-<!-- <!-- 			<url>file://${project.parent.relativePath}/repo</url> --> -->
+<!--  			it is not working, maven don't allow to get paretn directiory! --> 
+<!--   			<url>file://${project.parent.relativePath}/repo</url> --> 
 <!-- 			<url>file://${repo.main.dir}/repo</url> -->
 <!-- 		</repository> -->
 	
