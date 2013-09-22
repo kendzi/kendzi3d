@@ -183,7 +183,7 @@ public class BuildingParser {
             if (BuildingType.OUTLINE.equals(bt) && !OsmAttributeKeys.BUILDING.primitiveKeyHaveAnyValue(member.getMember())) {
                 continue;
             } else if (BuildingType.PARTS.equals(bt)
-                    && !OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(member.getMember())) {
+                    && !isPrimitiveBuildingPart(member.getMember())) {
                 continue;
             }
 
@@ -205,9 +205,18 @@ public class BuildingParser {
         return bm;
     }
 
+    /**
+     * @param osmPrimitive
+     * @return
+     */
+    private static boolean isPrimitiveBuildingPart(OsmPrimitive osmPrimitive) {
+        return OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(osmPrimitive)
+                && OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveValue(osmPrimitive, OsmAttributeValues.NO);
+    }
+
     private static boolean isNodeBuildingPart(Node node) {
 
-        if (OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(node)
+        if (isPrimitiveBuildingPart(node)
                 && OsmAttributeKeys.BUILDING_SHAPE.primitiveKeyHaveValue(node, OsmAttributeValues.SPHERE)) {
             return true;
         }
@@ -282,7 +291,7 @@ public class BuildingParser {
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);
 
-            if (OsmAttributeKeys.BUILDING_PART.primitiveKeyHaveAnyValue(member.getMember())) {
+            if (isPrimitiveBuildingPart(member.getMember())) {
                 haveParts = true;
                 break;
             }

@@ -9,6 +9,7 @@ public enum OsmAttributeValues{
     CLONE_LEVEL("clone:level"),
     YES("yes"),
     SPHERE("sphere"),
+    NO("no"),
     ;
 
     String value;
