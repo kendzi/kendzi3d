@@ -12,11 +12,16 @@ package kendzi.math.geometry.rectangle;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
+/**
+ * Rectangle made from point, vector, width, height.
+ * 
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class RectanglePointVector2d {
-    double width;
-    double height;
-    Point2d point;
-    Vector2d vector;
+    private double width;
+    private double height;
+    private Point2d point;
+    private Vector2d vector;
 
     public RectanglePointVector2d(double width, double height, Point2d point, Vector2d vector) {
         this(width, height, point, vector, false);
@@ -89,18 +94,4 @@ public class RectanglePointVector2d {
     public void setVector(Vector2d vector) {
         this.vector = vector;
     }
-
-//    RectanglePoint2d toRectanglePoint2d() {
-//        RectanglePoint2d ret = new RectanglePoint2d();
-////        ret.
-//        return null;
-//    }
-
-//
-//    //TODO
-//    Point2d p1;
-//    Point2d p2;
-//    Point2d p3;
-//    Point2d p4;
-
 }

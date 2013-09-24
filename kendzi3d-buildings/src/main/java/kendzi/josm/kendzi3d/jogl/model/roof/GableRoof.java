@@ -23,7 +23,6 @@ import kendzi.jogl.model.factory.TextCordFactory;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.math.geometry.Plane3d;
-import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.Triangulate;
 
 import org.apache.log4j.Logger;
@@ -279,9 +278,9 @@ public class GableRoof {
     public static java.lang.Double calcHeight(Point2d p, Point3d planePoint, Vector3d planeNormal1, Vector3d planeNormal2) {
 
         return Math.min(
-                RectangleUtil.calcYOfPlane(p.x, -p.y, planePoint, planeNormal1),
-                RectangleUtil.calcYOfPlane(p.x, -p.y, planePoint, planeNormal2)
-        );
+                new Plane3d(planePoint, planeNormal1).calcYOfPlane(p.x, -p.y),
+                new Plane3d(planePoint, planeNormal2).calcYOfPlane(p.x, -p.y)
+                );
 
     }
 

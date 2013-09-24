@@ -39,7 +39,7 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
-import kendzi.math.geometry.Normal;
+import kendzi.math.geometry.NormalUtil;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.point.PointUtil;
 
@@ -233,7 +233,7 @@ public class BaseJoglFrame implements GLEventListener {
 
                 Point2d endPoint = border.get(i);
 
-                Vector3d norm = Normal.calcNormalNorm2(
+                Vector3d norm = NormalUtil.normal(
                         beginPoint.x, 0.0f, beginPoint.y,
                         endPoint.x, 0.0f, endPoint.y,
                         beginPoint.x, 1.0, beginPoint.y);

@@ -32,12 +32,12 @@ public class Plane3d {
     private Vector3d normal;
 
     /** Default constructor.
-     * @param pPoint point on plane
-     * @param pNormal normal vector of plane
+     * @param point point on plane
+     * @param normal normal vector of plane
      */
-    public Plane3d(Point3d pPoint, Vector3d pNormal) {
-        this.point = pPoint;
-        this.normal = pNormal;
+    public Plane3d(Point3d point, Vector3d normal) {
+        this.point = point;
+        this.normal = normal;
     }
 
     /**
@@ -47,10 +47,10 @@ public class Plane3d {
         return this.point;
     }
     /**
-     * @param pPoint the point to set
+     * @param point the point to set
      */
-    public void setPoint(Point3d pPoint) {
-        this.point = pPoint;
+    public void setPoint(Point3d point) {
+        this.point = point;
     }
     /**
      * @return the normal
@@ -59,42 +59,42 @@ public class Plane3d {
         return this.normal;
     }
     /**
-     * @param pNormal the normal to set
+     * @param normal the normal to set
      */
-    public void setNormal(Vector3d pNormal) {
-        this.normal = pNormal;
+    public void setNormal(Vector3d normal) {
+        this.normal = normal;
     }
 
 
-    /** Calculate Y value on given coordinates X, Z.
-     * TODO when point is no exist.
-     * @param pX coordinates X
-     * @param pZ coordinates Z
+    /**
+     * Calculate Y value on given coordinates X, Z. TODO when point is no exist.
+     * 
+     * @param x coordinates X
+     * @param z coordinates Z
      * @return Y value of plane
      */
-    public double calcYOfPlane(double pX, double pZ) {
+    public double calcYOfPlane(double x, double z) {
         double a = this.normal.x;
         double b = this.normal.y;
         double c = this.normal.z;
         double d = -a * this.point.x - b * this.point.y - c * this.point.z;
 
-        return (-a * pX - c * pZ - d) / b;
+        return (-a * x - c * z - d) / b;
     }
 
-    /** Calculate Z value on given coordinates X, Y.
-     * TODO when point is no exist.
-     * @param pX coordinates X
-     * @param pY coordinates Y
+    /**
+     * Calculate Z value on given coordinates X, Y. TODO when point is no exist.
+     * 
+     * @param x coordinates X
+     * @param y coordinates Y
      * @return Z value of plane
      */
-    public double calcZOfPlane(double pX, double pY) {
+    public double calcZOfPlane(double x, double y) {
         double a = this.normal.x;
         double b = this.normal.y;
         double c = this.normal.z;
         double d = -a * this.point.x - b * this.point.y - c * this.point.z;
 
-        return (-a * pX - b * pY - d) / c;
+        return (-a * x - b * y - d) / c;
     }
-
-
 }

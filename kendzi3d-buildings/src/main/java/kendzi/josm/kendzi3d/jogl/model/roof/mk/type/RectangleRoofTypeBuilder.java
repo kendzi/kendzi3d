@@ -56,9 +56,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
-            //            List<Point2d> graham = Graham.grahamScan(outerPolygon.getPoints());
-            //            rectangleContur = RectangleUtil.findRectangleConturOld(graham);
-
             rectangleContur = rectToList(RectangleUtil.findRectangleContur(outerPolygon.getPoints()));
             rectangleContur = findStartPoint(pStartPoint, rectangleContur);
 

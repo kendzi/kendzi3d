@@ -11,7 +11,7 @@ import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.Face;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
-import kendzi.math.geometry.Normal;
+import kendzi.math.geometry.NormalUtil;
 
 public class ObjLoader {
 
@@ -59,7 +59,7 @@ public class ObjLoader {
                     Point3d p2 = vertices[face.vertIndex[t + 1]];
                     Point3d p3 = vertices[face.vertIndex[t + 2]];
 
-                    Vector3d normal = Normal.calcNormalNorm(p1, p2, p3);;
+                    Vector3d normal = NormalUtil.normal(p1, p2, p3);;
 
                     normals.add(normal);
                     int ni = normals.indexOf(normal);
@@ -86,7 +86,7 @@ public class ObjLoader {
                     Point3d p2 = vertices[face.vertIndex[t - 1]];
                     Point3d p3 = vertices[face.vertIndex[t]];
 
-                    Vector3d normal = Normal.calcNormalNorm(p1, p2, p3);;
+                    Vector3d normal = NormalUtil.normal(p1, p2, p3);;
 
                     normals.add(normal);
                     int ni = normals.indexOf(normal);
