@@ -40,7 +40,7 @@ public class ColladaExportTest {
 
         exporter.addModel(model);
 
-        exporter.marsall("/multiText/test.dae");
+        exporter.marsall("test.dae");
 
     }
 
@@ -53,7 +53,7 @@ public class ColladaExportTest {
 
         exporter.addModel(model);
 
-        exporter.marsall("/multiText/test.dae");
+        exporter.marsall("test.dae");
         //        System.out.println(marshaller);
         //   exporter.saveFile("/multiText/test.dae", marshaller);
     }
