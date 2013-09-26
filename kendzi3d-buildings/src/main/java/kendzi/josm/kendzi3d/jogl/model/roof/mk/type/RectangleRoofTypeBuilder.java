@@ -11,7 +11,6 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -22,8 +21,6 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
 import kendzi.math.geometry.Plane3d;
@@ -40,18 +37,16 @@ import org.ejml.simple.SimpleMatrix;
 public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(RectangleRoofTypeBuilder.class);
 
     @Override
     public RoofTypeOutput buildRoof(
-            Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height, RoofMaterials pRoofTextureData) {
-
-        //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-        //            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+            Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof, double height, RoofMaterials roofTextureData) {
 
         Point2d[] rectangleContur = null;
 
-        RoofDirection direction = pRoof.getDirection();
+        RoofDirection direction = roof.getDirection();
         if (direction == null) {
 
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
@@ -59,11 +54,11 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             rectangleContur = rectToList(RectangleUtil.findRectangleContur(outerPolygon.getPoints()));
             rectangleContur = findStartPoint(pStartPoint, rectangleContur);
 
-            if (pRoof.getOrientation() == null) {
+            if (roof.getOrientation() == null) {
                 //
             } else {
                 // TODO
-                rectangleContur = findOrientation(pRoof.getOrientation(), rectangleContur);
+                rectangleContur = findOrientation(roof.getOrientation(), rectangleContur);
 
             }
 
@@ -73,11 +68,11 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
             if (direction.isSoft()) {
-                Vector2d alignedDirection = alignedDirectionToOutline(pRoof.getDirection().getDirection(), outerPolygon);
+                Vector2d alignedDirection = alignedDirectionToOutline(roof.getDirection().getDirection(), outerPolygon);
                 rectangleContur = calcRectangle(outerPolygon.getPoints(), alignedDirection);
 
             } else {
-                rectangleContur = calcRectangle(outerPolygon.getPoints(), pRoof.getDirection().getDirection());
+                rectangleContur = calcRectangle(outerPolygon.getPoints(), roof.getDirection().getDirection());
             }
         }
 
@@ -87,48 +82,25 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         double alpha = Math.atan2(
                 rectangleContur[1].y - rectangleContur[0].y,
                 rectangleContur[1].x - rectangleContur[0].x);
-        //XXX
-        //        log.info(Math.toDegrees(alpha));
 
-        boolean normalizeAB = normalizeAB();
+        double recHeight = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[3].x)
+                + pow(rectangleContur[0].y - rectangleContur[3].y));
+        double recWidth = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[1].x)
+                + pow(rectangleContur[0].y - rectangleContur[1].y));
 
-        @Deprecated
-        double scaleA = 1;
-        @Deprecated
-        double scaleB = 1;
-        double recHeight = 1;
-        double recWidth = 1;
 
-        if (normalizeAB) {
-
-            scaleA = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[1].x)
-                    + pow(rectangleContur[0].y - rectangleContur[1].y));
-            scaleB = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[3].x)
-                    + pow(rectangleContur[0].y - rectangleContur[3].y));
-        } else {
-
-            recHeight = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[3].x)
-                    + pow(rectangleContur[0].y - rectangleContur[3].y));
-            recWidth = Math.sqrt(pow(rectangleContur[0].x - rectangleContur[1].x)
-                    + pow(rectangleContur[0].y - rectangleContur[1].y));
-        }
-
-        SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, scaleA, scaleB);
+        SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, 1d, 1d);
         //        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
         PolygonWithHolesList2d transfBuildingPolygon = transformationPolygonWithHoles(buildingPolygon, transformLocal);
         rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
 
-        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(
-                transfBuildingPolygon,
-                rectangleContur,
-                scaleA, scaleB,
-                recHeight, recWidth,
-                pRoof.getRoofTypeParameter(),
-                pRoof.getMeasurements(),
-                pRoofTextureData);
+        RectangleRoofTypeConf conf = new RectangleRoofTypeConf(transfBuildingPolygon, rectangleContur, recHeight,
+                recWidth, roof.getRoofTypeParameter(), roof.getMeasurements(), roofTextureData);
 
-        SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, scaleA, scaleB);
+        RoofTypeOutput buildRectangleRoof = buildRectangleRoof(conf);
+
+        SimpleMatrix tr = transformToGlobalMatrix(newStartPoint, height - buildRectangleRoof.getHeight(), alpha, 1d, 1d);
 
         buildRectangleRoof.setTransformationMatrix(tr);
 
@@ -138,12 +110,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     }
 
-
-
-
-
     private Vector2d alignedDirectionToOutline(Vector2d direction, PolygonList2d outerPolygon) {
-
 
         List<Point2d> points = outerPolygon.getPoints();
 
@@ -175,10 +142,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         return maxV;
     }
 
-
-
-
-
     /**
      * @param rectangleContur
      * @return
@@ -191,10 +154,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         rect.add(new Point3d(rectangleContur[3].x, 0, -rectangleContur[3].y));
         return rect;
     }
-
-
-
-
 
     private PolygonWithHolesList2d transformationPolygonWithHoles(PolygonWithHolesList2d polygonWithHoles,
             SimpleMatrix transformLocal) {
@@ -215,9 +174,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         return new PolygonList2d(TransformationMatrix2d.transformList(polygon.getPoints(), transformLocal));
     }
 
-
-
-
     private Point2d[] calcRectangle(List<Point2d> pPolygon, Vector2d pDirection) {
 
         RectanglePointVector2d contur = RectangleUtil.findRectangleContur(pPolygon,  pDirection);
@@ -226,7 +182,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
         return ret;
     }
-
 
     /**
      * @param contur
@@ -254,8 +209,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         return ret;
     }
 
-
-
     /**
      * @param startPoint
      * @param height
@@ -273,12 +226,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         //XXX test me
         SimpleMatrix tr = transf.mult(rot).mult(scale);
         return tr;
-    }
-
-
-
-    protected boolean normalizeAB() {
-        return true;
     }
 
     /**
@@ -305,27 +252,10 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
     }
 
     /**
-     * @param border
-     * @param rectangleContur
-     * @param scaleA
-     * @param scaleB
-     * @param sizeB2
-     * @param sizeA
-     * @param prefixParameter
-     * @param pMeasurements
-     * @param model
-     * @param pRoofTextureData
+     * @param conf builder configuration
      * @return build roof
      */
-    public abstract RoofTypeOutput buildRectangleRoof(
-            PolygonWithHolesList2d buildingPolygon,
-            Point2d[] rectangleContur,
-            double scaleA, double scaleB,
-            double sizeA, double sizeB2,
-            Integer prefixParameter,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofMaterials pRoofTextureData);
-
+    public abstract RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf);
 
     private Point2d[] findStartPoint(Point2d pStartPoint, Point2d[] pRectangleContur) {
         int minI = 0;
@@ -341,10 +271,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         return swapRectangle(pRectangleContur, minI);
     }
 
-
-
-
-
     /**
      * @param pRectangleContur
      * @param pSwap
@@ -357,7 +283,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         }
         return ret;
     }
-
 
     private Point2d[] findOrientation(RoofOrientation orientation, Point2d[] pRectangleContur) {
         if (orientation == null) {
@@ -381,7 +306,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         }
         return pRectangleContur;
     }
-
 
     /**
      * @param pRectangleContur rectangle
@@ -462,7 +386,5 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
                 plane);
         return rrhs1;
     }
-
-
 
 }

@@ -71,12 +71,12 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRoof(
             Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height,
-            RoofMaterials pRoofTextureData) {
+            RoofMaterials roofTextureData) {
 
         List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
 
 //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-//            Map<MeasurementKey, Measurement> pMeasurements, RoofTextureData pRoofTextureData) {
+//            Map<MeasurementKey, Measurement> conf.getMeasurements(), RoofTextureData roofTextureData) {
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
@@ -96,7 +96,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
 
 
-        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, roofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -109,13 +109,13 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
         Double h1, Double angle, double l1, double l2,
-        RoofMaterials pRoofTextureData) {
+        RoofMaterials roofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
+        MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
 
         // XXX temporary ?

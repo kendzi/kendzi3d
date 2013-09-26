@@ -62,7 +62,7 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRoof(
             Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof, double height,
-            RoofMaterials pRoofTextureData) {
+            RoofMaterials roofTextureData) {
 
 
         List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
@@ -115,7 +115,7 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
         Bend[] bends = getBends(pRoof.getMeasurements(), circle);
 
 
-        RoofTypeOutput rto = build(pPolygon, circle.getPoint(), bends, isection, soft, pRoofTextureData);
+        RoofTypeOutput rto = build(pPolygon, circle.getPoint(), bends, isection, soft, roofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -127,13 +127,13 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
     protected RoofTypeOutput build(List<Point2d> pBorderList,
             Point2d point, Bend[] bends, int pIsection, boolean pSoft,
-            RoofMaterials pRoofTextureData) {
+            RoofMaterials roofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
+        MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 

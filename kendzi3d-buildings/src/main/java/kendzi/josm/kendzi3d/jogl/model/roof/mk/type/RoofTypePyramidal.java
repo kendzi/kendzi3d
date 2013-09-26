@@ -11,7 +11,6 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -22,7 +21,6 @@ import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.BetweenLinesHeightCalculator;
@@ -63,19 +61,12 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
     }
 
     @Override
-    public RoofTypeOutput buildRectangleRoof(PolygonWithHolesList2d buildingPolygon, Point2d[] rectangleContur,
-            double scaleA, double scaleB, double pRecHeight, double pRecWidth, Integer prefixParameter,
-            Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData) {
+    public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
+        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
 
-        return build(buildingPolygon, pRecHeight, pRecWidth, rectangleContur, h1, pRoofTextureData);
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, conf.getRoofTextureData());
 
-    }
-
-    @Override
-    protected boolean normalizeAB() {
-        return false;
     }
 
     /**
@@ -86,17 +77,17 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      * @param pRecWidth
      * @param pRectangleContur
      * @param h1
-     * @param pRoofTextureData
+     * @param roofTextureData
      * @return
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
-            Point2d[] pRectangleContur, double h1, RoofMaterials pRoofTextureData) {
+            Point2d[] pRectangleContur, double h1, RoofMaterials roofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
+        MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         List<Point2d> outlineList = buildingPolygon.getOuter().getPoints();
 

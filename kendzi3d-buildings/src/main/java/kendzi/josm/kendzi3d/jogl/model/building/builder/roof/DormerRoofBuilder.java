@@ -96,68 +96,63 @@ public class DormerRoofBuilder {
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
 
     protected static RoofTypeBuilder[] roofTypeBuilders = {
-            // word alias for types
-            new RoofTypeFlat(), new RoofTypePitched(), new RoofTypeSkillion(), new RoofTypeGabled(), new RoofTypeGambrel(),
-            new RoofTypeHalfHipped(), new RoofTypeHipped(),
+        // word alias for types
+        new RoofTypeFlat(), new RoofTypePitched(), new RoofTypeSkillion(), new RoofTypeGabled(), new RoofTypeGambrel(),
+        new RoofTypeHalfHipped(), new RoofTypeHipped(),
 
-            new RoofTypeSquarePyramidal(), new RoofTypePyramidal(), new RoofTypeTented(),
+        new RoofTypeSquarePyramidal(), new RoofTypePyramidal(), new RoofTypeTented(),
 
-            new RoofTypeDome(), new RoofTypeOnion(), new RoofTypeMansard(), new RoofTypeHalfRound(), new RoofTypeRound(),
+        new RoofTypeDome(), new RoofTypeOnion(), new RoofTypeMansard(), new RoofTypeHalfRound(), new RoofTypeRound(),
 
-            // normal types
-            new RoofType0_0(), new RoofType0_1(), new RoofType0_2(), new RoofType0_3(), new RoofType0_4(),
+        // normal types
+        new RoofType0_0(), new RoofType0_1(), new RoofType0_2(), new RoofType0_3(), new RoofType0_4(),
 
-            new RoofType1_0(), new RoofType1_1(),
+        new RoofType1_0(), new RoofType1_1(),
 
-            new RoofType2_0(), new RoofType2_1(), new RoofType2_2(), new RoofType2_3(), new RoofType2_4(), new RoofType2_5(),
-            new RoofType2_6(), new RoofType2_7(), new RoofType2_9(), new RoofType2_8(),
+        new RoofType2_0(), new RoofType2_1(), new RoofType2_2(), new RoofType2_3(), new RoofType2_4(), new RoofType2_5(),
+        new RoofType2_6(), new RoofType2_7(), new RoofType2_9(), new RoofType2_8(),
 
-            new RoofType3_0(),
+        new RoofType3_0(),
 
-            new RoofType4_0(), new RoofType4_2(),
+        new RoofType4_0(), new RoofType4_2(),
 
-            new RoofType5_0(), new RoofType5_2(), new RoofType5_6(),
+        new RoofType5_0(), new RoofType5_2(), new RoofType5_6(),
 
-            new RoofType8_0(),
+        new RoofType8_0(),
 
-            new RoofType9_0(),
+        new RoofType9_0(),
 
     };
 
     /**
      * Dormer roof builder.
-     *
+     * 
      * @param pBuildingPart
-     *
+     * 
      * @param height roof maximal height. Taken from building
      * @param mf
      * @param pRoofTextureData texture data
      * @return roof model
      */
-    public static RoofOutput build(BuildingPart pBuildingPart,
-    // DormerRoofModel roof,
-
-            double height,
-
-            ModelFactory mf, RoofTextureData pRoofTextureData) {
+    public static RoofOutput build(BuildingPart pBuildingPart, double height, ModelFactory mf, RoofTextureData pRoofTextureData) {
 
         RoofMaterials roofMaterials = addMaterials(pRoofTextureData, mf);
 
         // XXX
         DormerRoofModel roof = (DormerRoofModel) pBuildingPart.getRoof();
 
-        if (roof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null && pBuildingPart.getRoofLevels() != null) {
+        {
+            // FIXME
+            if (roof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null && pBuildingPart.getRoofLevels() != null) {
 
-            double roofHeight = pBuildingPart.getDefaultRoofHeight();
-            if (pBuildingPart.getRoofLevels() < 1) {
-                roofHeight = 1d;
+                double roofHeight = pBuildingPart.getDefaultRoofHeight();
+                if (pBuildingPart.getRoofLevels() < 1) {
+                    roofHeight = 1d;
+                }
+                roof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
             }
-
-            roof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
         }
 
-        // PolygonList2d wallPolygon =
-        // BuildingUtil.wallToOuterPolygon(pBuildingPart.getWall());
         PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(pBuildingPart);
 
         List<Point2d> polygon = buildingPolygon.getOuter().getPoints();// cleanPolygon(roof.getBuilding().getPoints());
@@ -173,10 +168,7 @@ public class DormerRoofBuilder {
         RoofTypeOutput rto = roofType.buildRoof(startPoint, buildingPolygon, roof, height, roofMaterials);
 
         List<RoofDormerTypeOutput> roofExtensionsList = DormerTypeBuilder.build(rto.getRoofHooksSpaces(),
-
-        roof,
-
-        roof.getMeasurements(), roofMaterials);
+                roof, roof.getMeasurements(), roofMaterials);
 
         double minHeight = height - rto.getHeight();
 
@@ -185,7 +177,6 @@ public class DormerRoofBuilder {
         RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList, startPoint, minHeight);
 
         RoofOutput out = new RoofOutput();
-        // out.setModel(model);
         out.setHeight(rto.getHeight());
         out.setDebug(debug);
 
@@ -303,8 +294,8 @@ public class DormerRoofBuilder {
     //
     // }
     private static void transformMeshFactory(MeshFactory pMeshFactory, SimpleMatrix pTransformationMatrix
-    // SimpleMatrix pNormalTransformationMatrix
-    ) {
+            // SimpleMatrix pNormalTransformationMatrix
+            ) {
         MeshFactory mesh = pMeshFactory;
 
         SimpleMatrix normalMatrix = pTransformationMatrix.invert().transpose();

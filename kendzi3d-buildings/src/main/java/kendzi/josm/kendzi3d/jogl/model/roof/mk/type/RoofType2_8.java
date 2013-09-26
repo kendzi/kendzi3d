@@ -12,7 +12,6 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -24,7 +23,6 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
@@ -59,25 +57,15 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
     }
 
     @Override
-    public RoofTypeOutput buildRectangleRoof(
-            PolygonWithHolesList2d buildingPolygon,
-            Point2d[] rectangleContur,
-            double scaleA,
-            double scaleB,
-            double pRecHeight,
-            double pRecWidth,
-            Integer prefixParameter,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofMaterials pRoofTextureData
-            ) {
+    public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
 
 
-        Double h1 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_1, 2.5d);
-        Double h2 = getHeightMeters(pMeasurements, MeasurementKey.HEIGHT_2, h1);
+        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
+        Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, h1);
 
-//        Double l1 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_1, pRecWidth, pRecWidth / 2d);
-//        Double l2 = getLenghtMetersPersent(pMeasurements, MeasurementKey.LENGTH_2, pRecHeight, pRecHeight / 2d);
+        //        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecWidth(), conf.getRecWidth() / 2d);
+        //        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecHeight(), conf.getRecHeight() / 2d);
 
 
         double middleLineHeight = getMiddleLineHeight(h1, h2);
@@ -85,7 +73,7 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
         h1 = getHeight1(h1);
         h2 = getHeight2(h2);
 
-        return build(buildingPolygon, scaleA, scaleB, pRecHeight, pRecWidth, rectangleContur, h1, h2, middleLineHeight, pRoofTextureData);
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, middleLineHeight, conf.getRoofTextureData());
 
     }
 
@@ -101,18 +89,8 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
         return h2;
     }
 
-    @Override
-    protected boolean normalizeAB() {
-        return false;
-    }
-
     /**
-     *
-     *
-     *
      * @param pBorderList
-     * @param pScaleA
-     * @param pScaleB
      * @param pRecHeight
      * @param pRecWidth
      * @param pRectangleContur
@@ -120,30 +98,28 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
      * @param h2
      * @param middleLineHeight
      * @param h3
-     * @param pRoofTextureData
+     * @param roofTextureData
 
      * @return
      */
     protected RoofTypeOutput build(
             PolygonWithHolesList2d buildingPolygon,
-            double pScaleA,
-            double pScaleB,
             double pRecHeight,
             double pRecWidth,
             Point2d[] pRectangleContur,
             double h1,
             double h2,
             double middleLineHeight,
-            RoofMaterials pRoofTextureData
-           ) {
+            RoofMaterials roofTextureData
+            ) {
 
 
 
-        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
+        MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         Point2d rightTopPoint = new Point2d(pRecWidth, pRecHeight);
         Point2d rightBottomPoint = new Point2d(pRecWidth, 0);
@@ -153,17 +129,17 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
 
 
         LinePoints2d lLine = new LinePoints2d(rightBottomPoint, leftTopPoint);
-      //  LinePoints2d rLine = new LinePoints2d(rightTopPoint, rightBottomPoint);
+        //  LinePoints2d rLine = new LinePoints2d(rightTopPoint, rightBottomPoint);
 
 
-//        Vector3d nl = new Vector3d(-h1 , l2 , 0);
-//        nl.normalize();
-//        Vector3d nr = new Vector3d(h1, l1 , 0);
-//        nr.normalize();
-//        Vector3d nb = new Vector3d(pRecWidth, pRecHeight  , h1);
-//        nb.normalize();
-//        Vector3d nt = new Vector3d(pRecWidth, pRecHeight  , h2);
-//        nt.normalize();
+        //        Vector3d nl = new Vector3d(-h1 , l2 , 0);
+        //        nl.normalize();
+        //        Vector3d nr = new Vector3d(h1, l1 , 0);
+        //        nr.normalize();
+        //        Vector3d nb = new Vector3d(pRecWidth, pRecHeight  , h1);
+        //        nb.normalize();
+        //        Vector3d nt = new Vector3d(pRecWidth, pRecHeight  , h2);
+        //        nt.normalize();
 
         List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
 
@@ -234,24 +210,24 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
 
 
 
-//        Vector3d roofLeftLineVector = new Vector3d(
-//                0,
-//                0,
-//                pRecHeight);
-//
-//        Vector3d roofRightLineVector = new Vector3d(
-//                0,
-//                0,
-//                -pRecHeight);
+        //        Vector3d roofLeftLineVector = new Vector3d(
+        //                0,
+        //                0,
+        //                pRecHeight);
+        //
+        //        Vector3d roofRightLineVector = new Vector3d(
+        //                0,
+        //                0,
+        //                -pRecHeight);
 
-//        Vector3d roofTopLineVector = new Vector3d(
-//                -pRecWidth,
-//                0,
-//                0);
-//        Vector3d roofButtomLineVector = new Vector3d(
-//                pRecWidth,
-//                0,
-//                0);
+        //        Vector3d roofTopLineVector = new Vector3d(
+        //                -pRecWidth,
+        //                0,
+        //                0);
+        //        Vector3d roofButtomLineVector = new Vector3d(
+        //                pRecWidth,
+        //                0,
+        //                0);
 
         if (middleLineHeight <= 0) {
             // for texturing
@@ -275,12 +251,12 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
 
         RoofTypeUtil.makeRoofBorderMesh(
 
-               borderSplit,
-               borderHeights,
+                borderSplit,
+                borderHeights,
 
-               meshBorder,
-               facadeTexture
-               );
+                meshBorder,
+                facadeTexture
+                );
 
 
 
@@ -290,13 +266,13 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         RectangleRoofHooksSpaces rhs =
-            buildRectRoofHooksSpace(
-                    pRectangleContur,
-                    new PolygonPlane(bottomMP, planeBottom),
-                    new PolygonPlane(topMP, planeTop),
-                    new PolygonPlane(topMP, planeTop),
-                    new PolygonPlane(bottomMP, planeBottom)
-                  );
+                buildRectRoofHooksSpace(
+                        pRectangleContur,
+                        new PolygonPlane(bottomMP, planeBottom),
+                        new PolygonPlane(topMP, planeTop),
+                        new PolygonPlane(topMP, planeTop),
+                        new PolygonPlane(bottomMP, planeBottom)
+                        );
 
         rto.setRoofHooksSpaces(rhs);
 
@@ -314,9 +290,9 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
         List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
         for (Point2d point : pSplitBorder) {
 
-           double height = calcHeight(point, lLine, planeButtom, planeTop);
+            double height = calcHeight(point, lLine, planeButtom, planeTop);
 
-           borderHeights.add(height);
+            borderHeights.add(height);
 
         }
 
@@ -334,7 +310,7 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
      * @return
      */
     private double calcHeight(Point2d point,
-           LinePoints2d lLine,
+            LinePoints2d lLine,
             Plane3d planeButtom, Plane3d planeTop) {
 
         double x = point.x;

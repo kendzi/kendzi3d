@@ -56,8 +56,6 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
     /**
      * @param pBorderList
-     * @param pScaleA
-     * @param pScaleB
      * @param pRecHeight
      * @param pRecWidth
      * @param pRectangleContur
@@ -69,20 +67,20 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
      * @param l4
      * @param type
      * @param model
-     * @param pRoofTextureData
+     * @param roofTextureData
      * @return
      */
-    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pScaleA, double pScaleB,
+    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon,
             double pRecHeight, double pRecWidth, Point2d[] pRectangleContur, double h1, double h2, double l1,
             double l2, double l3, double l4, int type,
             // ModelFactory model,
-            RoofMaterials pRoofTextureData) {
+            RoofMaterials roofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(pRoofTextureData);
-        MeshFactory meshRoof = createRoofMesh(pRoofTextureData);
+        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
+        MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
+        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
+        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         Vector3d nt = new Vector3d(0, 1, 0);
 
