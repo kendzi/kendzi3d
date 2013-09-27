@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Kendzi 3D
+    Checkstyle-Configuration: kendzi3d
     Description: none
 -->
 <module name="Checker">
@@ -13,6 +13,7 @@
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
     <module name="JavadocMethod">
+      <property name="scope" value="protected"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
     <module name="JavadocType"/>
@@ -24,9 +25,7 @@
     <module name="MemberName"/>
     <module name="MethodName"/>
     <module name="PackageName"/>
-    <module name="ParameterName">
-      <property name="format" value="^p[A-Z][a-zA-Z0-9]*$"/>
-    </module>
+    <module name="ParameterName"/>
     <module name="StaticVariableName"/>
     <module name="TypeName"/>
     <module name="AvoidStarImport"/>
@@ -34,7 +33,7 @@
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
     <module name="LineLength">
-      <property name="max" value="120"/>
+      <property name="max" value="130"/>
     </module>
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
@@ -57,7 +56,6 @@
     <module name="NeedBraces"/>
     <module name="RightCurly"/>
     <module name="AvoidInlineConditionals"/>
-    
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
     <module name="HiddenField"/>
