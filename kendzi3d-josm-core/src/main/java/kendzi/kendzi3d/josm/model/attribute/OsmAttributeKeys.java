@@ -54,6 +54,10 @@ public enum OsmAttributeKeys {
 
     ROOF_DIRECTION("roof:direction"),
 
+    ROOF_DIRECTION_BEGIN("roof:direction:begin"),
+
+    ROOF_DIRECTION_END("roof:direction:end"),
+
     DIRECTION("direction"),
 
     BUILDING_ROOF_MATERIAL("building:roof:material"),

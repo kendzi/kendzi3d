@@ -25,6 +25,8 @@ import kendzi.util.StringUtil;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -196,9 +198,11 @@ public class RoofParser {
         Vector2d direction = null;
         boolean soft = false;
 
-        direction = findDirectionByRelation(pWay);
+        direction = findDirectionByRelation(pWay, pPerspective);
         if (direction != null) {
-            return new RoofDirection(direction, soft);
+            // adjust to 3dr direction
+            direction = Vector2dUtil.orthogonal(direction);
+            return new RoofDirection(direction, false);
         }
         if (pWay instanceof Way) {
             direction = findDirectionByPoints((Way) pWay, pPerspective);
@@ -214,9 +218,39 @@ public class RoofParser {
     }
 
 
-    private static Vector2d findDirectionByRelation(OsmPrimitive pWay) {
-        // TODO
-        // XXX add support for relations
+    private static Vector2d findDirectionByRelation(OsmPrimitive osmPrimitive, Perspective perspective) {
+        if (osmPrimitive instanceof Relation) {
+            Relation rel = (Relation) osmPrimitive;
+
+            Node begin = null;
+            Node end = null;
+
+            for (int i = rel.getMembersCount() - 1; i >= 0; i--) {
+
+                RelationMember member = rel.getMember(i);
+
+                if (member.isNode()) {
+
+                    if (OsmAttributeKeys.ROOF_DIRECTION_BEGIN.getKey().equals(member.getRole())) {
+                        begin = member.getNode();
+                    }
+                    if (OsmAttributeKeys.ROOF_DIRECTION_END.getKey().equals(member.getRole())) {
+                        end = member.getNode();
+                    }
+                }
+            }
+
+            if (begin != null && end != null) {
+
+                Point2d directionBegin = perspective.calcPoint(begin);
+                Point2d directionEnd = perspective.calcPoint(end);
+
+                Vector2d direction = new Vector2d(directionEnd);
+                direction.sub(directionBegin);
+
+                return direction;
+            }
+        }
         return null;
     }
 
