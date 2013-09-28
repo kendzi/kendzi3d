@@ -93,6 +93,7 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class DormerRoofBuilder {
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(DormerRoofBuilder.class);
 
     protected static RoofTypeBuilder[] roofTypeBuilders = {
@@ -155,7 +156,8 @@ public class DormerRoofBuilder {
 
         PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(pBuildingPart);
 
-        List<Point2d> polygon = buildingPolygon.getOuter().getPoints();// cleanPolygon(roof.getBuilding().getPoints());
+        List<Point2d> polygon = buildingPolygon.getOuter().getPoints();
+        // cleanPolygon(roof.getBuilding().getPoints());
 
         Point2d startPoint = polygon.get(0);
 
@@ -183,12 +185,7 @@ public class DormerRoofBuilder {
         return out;
     }
 
-    /**
-     * @param pRoofTextureData
-     * @param model
-     * @return
-     */
-    public static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
+    private static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
         RoofTextureIndex facadeTextureIndex = addMateraialTexture(pRoofTextureData.getFacadeTexture(),
                 pRoofTextureData.getFacadeColor(), model);
         RoofTextureIndex roofTextureIndex = addMateraialTexture(pRoofTextureData.getRoofTexture(),
@@ -261,44 +258,11 @@ public class DormerRoofBuilder {
 
     }
 
-    // private static void transformModel(RoofTypeOutput rto) {
-    // Model model = rto.getModel();
-    //
-    // SimpleMatrix normalMatrix =
-    // rto.getTransformationMatrix().invert().transpose();
-    //
-    // Set<Vector3d> procesed = new HashSet<Vector3d>();
-    // for (Mesh mesh : model.mesh) {
-    // for (int i = 0; i < mesh.vertices.length; i++) {
-    // Point3d p = mesh.vertices[i];
-    // mesh.vertices[i] = TransformationMatrix3d.transform(p,
-    // rto.getTransformationMatrix());
-    // }
-    //
-    // for (int i = 0; i < mesh.normals.length; i++) {
-    // Vector3d v = mesh.normals[i];
-    // // if (procesed.contains(v)) {
-    // // continue;
-    // // }
-    // procesed.add(v);
-    //
-    //
-    //
-    // v = TransformationMatrix3d.transform(v, normalMatrix);
-    // // XXX !!!;
-    // v.normalize();
-    //
-    // mesh.normals[i] = v;
-    // }
-    // }
-    //
-    // }
-    private static void transformMeshFactory(MeshFactory pMeshFactory, SimpleMatrix pTransformationMatrix
-            // SimpleMatrix pNormalTransformationMatrix
-            ) {
-        MeshFactory mesh = pMeshFactory;
+    private static void transformMeshFactory(MeshFactory meshFactory, SimpleMatrix transformationMatrix) {
 
-        SimpleMatrix normalMatrix = pTransformationMatrix.invert().transpose();
+        MeshFactory mesh = meshFactory;
+
+        SimpleMatrix normalMatrix = transformationMatrix.invert().transpose();
 
         Set<Vector3d> procesed = new HashSet<Vector3d>();
 
@@ -306,7 +270,7 @@ public class DormerRoofBuilder {
         for (int i = 0; i < mesh.vertices.size(); i++) {
             Point3d p = mesh.vertices.get(i);
 
-            vertices.add(TransformationMatrix3d.transform(p, pTransformationMatrix));
+            vertices.add(TransformationMatrix3d.transform(p, transformationMatrix));
         }
         mesh.vertices = vertices;
 
@@ -330,9 +294,6 @@ public class DormerRoofBuilder {
     private static RoofDebugOut buildDebugInfo(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList,
             Point2d startPoint, double height) {
 
-        // Point3d startPointMark = TransformationMatrix3d.transform(new
-        // Point3d(startPoint.x, 0, -startPoint.y),
-        // rto.getTransformationMatrix());
         Point3d startPointMark = new Point3d(startPoint.x, height, -startPoint.y);
 
         List<Point3d> rectangleTransf = new ArrayList<Point3d>();
@@ -353,8 +314,6 @@ public class DormerRoofBuilder {
     private static ModelFactory buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList,
             ModelFactory modelFactory) {
 
-        // ModelFactory modelFactory = rto.getModel();
-
         for (MeshFactory mf : rto.getMesh()) {
             transformMeshFactory(mf, rto.getTransformationMatrix());
             modelFactory.addMesh(mf);
@@ -364,10 +323,9 @@ public class DormerRoofBuilder {
             if (e == null) {
                 continue;
             }
-            // SimpleMatrix roofMatrix =
-            // e.getTransformationMatrix().mult(rto.getTransformationMatrix());
+
             SimpleMatrix roofMatrix = rto.getTransformationMatrix().mult(e.getTransformationMatrix());
-            // SimpleMatrix roofMatrix = e.getTransformationMatrix();
+
             for (MeshFactory mf : e.getMesh()) {
 
                 transformMeshFactory(mf, roofMatrix);
@@ -375,12 +333,6 @@ public class DormerRoofBuilder {
                 modelFactory.addMesh(mf);
             }
         }
-
-        // Model model = modelFactory.toModel();
-        // model.useLight = true;
-        //
-        // List<String> validate = ValidationUtil.validate(model);
-        // log.info(ValidationUtil.errorToString(validate));
 
         return modelFactory;
     }

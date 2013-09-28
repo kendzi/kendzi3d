@@ -1,3 +1,11 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.model.building.builder;
 
 import java.util.List;
@@ -5,14 +13,21 @@ import java.util.List;
 import kendzi.jogl.model.geometry.Model;
 
 /**
- *
+ * Building model build by builder. Contains additional debug information.
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BuildingOutput {
 
-    Model model;
+    /**
+     * Building output model.
+     */
+    private Model model;
 
-    List<BuildingPartOutput> BuildingPartOutput;
+    /**
+     * Debug information for all building parts.
+     */
+    private List<BuildingPartOutput> buildingPartOutput;
 
     /**
      * @return the model
@@ -32,13 +47,13 @@ public class BuildingOutput {
      * @return the buildingPartOutput
      */
     public List<BuildingPartOutput> getBuildingPartOutput() {
-        return this.BuildingPartOutput;
+        return this.buildingPartOutput;
     }
 
     /**
      * @param buildingPartOutput the buildingPartOutput to set
      */
     public void setBuildingPartOutput(List<BuildingPartOutput> buildingPartOutput) {
-        this.BuildingPartOutput = buildingPartOutput;
+        this.buildingPartOutput = buildingPartOutput;
     }
 }

@@ -1,3 +1,11 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
 
 import java.awt.Color;
@@ -36,18 +44,31 @@ import kendzi.math.geometry.triangulate.Poly2TriUtil;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Roof builder for roof described using RoofLines tagging schema.
+ * 
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class RoofLinesBuildier {
     /** Log. */
-    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(RoofLinesBuildier.class);
 
+    /**
+     * Builds roof. Roof is build into given model factory.
+     * 
+     * @param bp building part
+     * @param maxHeight maximal height
+     * @param mf model factory
+     * @param roofTextureData roof texture data
+     * @param roofColor roof color
+     * @return debbug infromation about builded roof
+     */
     public static RoofOutput build(BuildingPart bp, double maxHeight, ModelFactory mf, TextureData roofTextureData,
             Color roofColor) {
 
         if (!(bp.getRoof() instanceof RoofLinesModel)) {
             throw new RuntimeException("wrong type of roof model, should be RoofLinesModel");
         }
-
 
         RoofLinesModel roof =  (RoofLinesModel) bp.getRoof();
         PolygonWithHolesList2d polygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
@@ -157,17 +178,13 @@ public class RoofLinesBuildier {
         return ret;
     }
 
-    protected static MeshFactory createRoofMesh( ModelFactory mf, TextureData td, Color color) {
+    private static MeshFactory createRoofMesh( ModelFactory mf, TextureData td, Color color) {
 
         Material mat = MaterialFactory.createTextureColorMaterial(td.getTex0(), color);
 
         int materialIndex = mf.addMaterial(mat);
 
         MeshFactory meshRoof = mf.addMesh("roof_top");
-
-        //        TextureData roofTexture = pRoofTextureData.getRoofTexture();
-        //        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-        //        int roofMaterialIndex = model.addMaterial(roofMaterial);
 
         meshRoof.materialID = materialIndex;
         meshRoof.hasTexture = true;

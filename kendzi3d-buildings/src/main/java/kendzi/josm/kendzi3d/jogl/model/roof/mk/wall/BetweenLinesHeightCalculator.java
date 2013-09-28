@@ -1,3 +1,11 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.wall;
 
 import java.util.Arrays;
@@ -23,12 +31,19 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
     /** Log. */
     private static final Logger log = Logger.getLogger(BetweenLinesHeightCalculator.class);
 
-    LinePoints2d[] lines;
-    Plane3d[] planes;
+    /**
+     * Lines splitting 2d surface on smaller parts.
+     */
+    private LinePoints2d[] lines;
 
     /**
-     * @param lines
-     * @param planes
+     * Planes assigned for smaller parts.
+     */
+    private Plane3d[] planes;
+
+    /**
+     * @param lines 2d lines splitting surface
+     * @param planes 3d planes assigned for divided surface
      */
     public BetweenLinesHeightCalculator(LinePoints2d[] lines, Plane3d[] planes) {
         super();

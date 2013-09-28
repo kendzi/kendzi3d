@@ -1,32 +1,35 @@
 package kendzi.josm.kendzi3d.jogl.model.building.model.element;
 
-import kendzi.jogl.texture.dto.TextureData;
 
-
+/**
+ * Window on building part outline.
+ * 
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class WindowBuildingElement extends SquareHoleElement {
 
-    String windowType;
+    /**
+     * Default height of window.
+     */
+    private static final double DEFAULT_WINDOW_HEIGHT = 1.5;
 
-    @Deprecated
-    TextureData textureData;
+    /**
+     * Default width of window.
+     */
+    private static final double DEFAULT_WINDOW_WIDTH = 1.8;
+
+    /**
+     * Window type.
+     */
+    private String windowType;
 
     /**
      *
      */
     public WindowBuildingElement() {
 
-        super(1, 1.5, 1.8);
+        super(1, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH);
 
-
-
-
-//        super();
-//        this.minHeight = 1;
-//
-//        double height = 1.5;
-//        this.height = this.minHeight + height;
-//
-//        this.width = 1.8;
     }
 
     /**
@@ -56,22 +59,4 @@ public class WindowBuildingElement extends SquareHoleElement {
     public void setWindowType(String windowType) {
         this.windowType = windowType;
     }
-
-    /**
-     * @return the textureData
-     */
-    @Deprecated
-    public TextureData getTextureData() {
-        return textureData;
-    }
-
-    /**
-     * @param textureData the textureData to set
-     */
-    @Deprecated
-    public void setTextureData(TextureData textureData) {
-        this.textureData = textureData;
-    }
-
-
 }

@@ -96,18 +96,10 @@ public class BuildingBuilder {
         }
 
         BuildingOutput out = new BuildingOutput();
-        out.setModel( mf.toModel());
+        out.setModel(mf.toModel());
         out.setBuildingPartOutput(partsOut);
         return out;
     }
-
-    ModelFactory CreateModelFactory() {
-
-        ModelFactory model = ModelFactory.modelBuilder();
-
-        return model;
-    }
-
 
     private static boolean isWallCounterClockwise(Wall wall) {
         PolygonList2d wallToPolygon = BuildingUtil.wallToOuterPolygon(wall);
@@ -118,10 +110,10 @@ public class BuildingBuilder {
         return false;
     }
 
-    private static BuildingPartOutput builNodePart(NodeBuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureManager tm) {
+    private static BuildingPartOutput builNodePart(NodeBuildingPart bp, BuildingModel buildingModel, ModelFactory mf,
+            BuildingElementsTextureManager tm) {
 
-        if (bp instanceof SphereNodeBuildingPart )
-        {
+        if (bp instanceof SphereNodeBuildingPart) {
             Color floorColor = takeFacadeColor(buildingModel, bp, tm);
             TextureData floorTD = takeFacadeTextureData(buildingModel, bp, tm, floorColor != null);
 
@@ -133,7 +125,7 @@ public class BuildingBuilder {
             mesh.hasTexture = true;
             mesh.materialID = mf.cacheMaterial(mat);
 
-            SphereNodeBuildingPart sphere = (SphereNodeBuildingPart ) bp;
+            SphereNodeBuildingPart sphere = (SphereNodeBuildingPart) bp;
             int pIcross = 12;
             int icross = pIcross  + 1;
 
@@ -144,7 +136,7 @@ public class BuildingBuilder {
             // create cross section
             Point2d [] crossSection = new Point2d[icross];
             for (int i = 0; i < icross; i++) {
-                double a = (Math.toRadians(180) / (icross - 1) * i) - Math.toRadians(90);
+                double a = Math.toRadians(180) / (icross - 1) * i - Math.toRadians(90);
 
                 crossSection[i] = new Point2d(Math.cos(a) * radius, Math.sin(a) * radius + height);
             }
@@ -156,7 +148,8 @@ public class BuildingBuilder {
         return new BuildingPartOutput();
     }
 
-    private static BuildingPartOutput buildPart(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf, BuildingElementsTextureManager tm) {
+    private static BuildingPartOutput buildPart(BuildingPart bp, BuildingModel buildingModel, ModelFactory mf,
+            BuildingElementsTextureManager tm) {
 
         BuildingPartOutput partOutput = new BuildingPartOutput();
 
@@ -267,7 +260,7 @@ public class BuildingBuilder {
             return null;
         }
 
-        if(w.getWallParts() != null && w.getWallParts().size() > 0) {
+        if (w.getWallParts() != null && w.getWallParts().size() > 0) {
             return w.getWallParts().get(0);
         }
 
@@ -293,7 +286,7 @@ public class BuildingBuilder {
             String tex0Key = facadeTD.getTex0();
             Material mat = MaterialFactory.createTextureColorMaterial(tex0Key, facadeColor);
 
-            if (facadeTD.getTex1()!= null) {
+            if (facadeTD.getTex1() != null) {
                 mat.getTexturesComponent().add(facadeTD.getTex1());
             }
 
@@ -301,7 +294,7 @@ public class BuildingBuilder {
             //windowsCols = 0;
             boolean isWindows = windowsCols != null && windowsCols != 0;
             TextureData windowsTexture = null;
-            if (isWindows){
+            if (isWindows) {
 
                 TextureData windowsTD = takeWindowsColumnsTextureData(buildingModel, bp, w, wp, tm);
                 if (windowsTD.getTex0() != null) {
@@ -309,10 +302,10 @@ public class BuildingBuilder {
                 }
 
 
-                double windowsSegmetLength = wallLength / ((double)windowsCols);
+                double windowsSegmetLength = wallLength / (double)windowsCols;
 
                 int facadeLevels = getFacadeLevels(w, bp);
-                double windowsSegmentHeight = (wallHeight - minHeight) / (facadeLevels);
+                double windowsSegmentHeight = (wallHeight - minHeight) / facadeLevels;
 
 
                 windowsTexture = new TextureData(null, windowsSegmetLength, windowsSegmentHeight);
@@ -334,7 +327,7 @@ public class BuildingBuilder {
 
             for (int i = 0; i < size - 1; i++) {
                 WallNode n1 = nodes.get(i);
-                WallNode n2 = nodes.get((i+1) % size);
+                WallNode n2 = nodes.get((i + 1) % size);
 
                 //List<WallHole> holesEnd = createEndHoles(n2);
 
@@ -393,7 +386,7 @@ public class BuildingBuilder {
                     }
 
 
-                    for(Point2d p: points) {
+                    for (Point2d p : points) {
                         //addPointToMesh(p, start, direction, mesh, face, iN, facadeTexture);
                         int vi = segmentPointToVertex3dIndex(p, start, direction, mesh);
 
@@ -406,10 +399,10 @@ public class BuildingBuilder {
                         }
 
                         if (isWindows) {
-                            tex[texNum-1]  = segmentPointToTextureDataIndex(p, wallDistance, 0d,  mesh, windowsTexture);
+                            tex[texNum - 1] = segmentPointToTextureDataIndex(p, wallDistance, 0d, mesh, windowsTexture);
                         }
 
-                        face.addVert(vi,iN,tex);
+                        face.addVert(vi, iN, tex);
                     }
                 }
                 //FaceFactory face = pMeshBorder.addFace(FaceType.QUADS);
@@ -517,8 +510,8 @@ public class BuildingBuilder {
         return td;
     }
 
-    private static TextureData takeFloorTextureData(BuildingModel buildingModel, BuildingPart bp, BuildingElementsTextureManager tm,
-            boolean colorable) {
+    private static TextureData takeFloorTextureData(BuildingModel buildingModel, BuildingPart bp,
+            BuildingElementsTextureManager tm, boolean colorable) {
 
         String mt = null;
 
@@ -599,8 +592,8 @@ public class BuildingBuilder {
         return c;
     }
 
-    private static TextureData takeRoofTextureData(BuildingModel buildingModel, BuildingPart bp, Wall w, BuildingElementsTextureManager tm,
-            boolean colorable) {
+    private static TextureData takeRoofTextureData(BuildingModel buildingModel, BuildingPart bp, Wall w,
+            BuildingElementsTextureManager tm, boolean colorable) {
 
         String mt = null;
 
@@ -619,21 +612,6 @@ public class BuildingBuilder {
         }
 
         return td;
-    }
-
-    private static MultiPolygonList2d applyBuildingElements(MultiPolygonList2d mPoly, WallNode n1, int i, boolean b) {
-
-        if (n1.getBuildingNodeElements() != null) {
-            for (BuildingNodeElement be : n1.getBuildingNodeElements()) {
-                if (be instanceof SquareHoleElement) {
-                    //                    WindowBuildingElement wbe = (WindowBuildingElement) be;
-
-
-                }
-            }
-        }
-
-        return null;
     }
 
     private static MultiPolygonList2d applyWindows(MultiPolygonList2d mPoly, List<BuildingNodeElement> pBuildingNodeElements,
@@ -660,29 +638,16 @@ public class BuildingBuilder {
         if (be instanceof SquareHoleElement) {
             SquareHoleElement she = (SquareHoleElement) be;
 
-            Point2d mbp = new Point2d(0 , she.getMinHeight());
-            Point2d rbp = new Point2d(she.getWidth()/2.0 , she.getMinHeight());;
-            Point2d rtp = new Point2d(she.getWidth()/2.0 , she.getMaxHeight());;
-            Point2d mtp = new Point2d(0 , she.getMaxHeight());;
+            Point2d mbp = new Point2d(0, she.getMinHeight());
+            Point2d rbp = new Point2d(she.getWidth() / 2.0, she.getMinHeight());
+            Point2d rtp = new Point2d(she.getWidth() / 2.0, she.getMaxHeight());
+            Point2d mtp = new Point2d(0 , she.getMaxHeight());
 
             mPoly = PolygonSplitUtil.unionOfFrontPart(mPoly,
                     new LinePoints2d(rtp, rbp),
                     new LinePoints2d(mtp, rtp),
                     new LinePoints2d(rbp, mbp)
                     );
-
-            //            Point2d lbp = new Point2d(nodeDisplacement - she.getWidth()/2.0 , she.getMinHeight());
-            //            Point2d mbp = new Point2d(nodeDisplacement , she.getMinHeight());;
-            //            Point2d mtp = new Point2d(nodeDisplacement  , she.getMaxHeight());;
-            //            Point2d ltp = new Point2d(nodeDisplacement  - she.getWidth()/2.0 , she.getMaxHeight());;
-            //
-            //            mPoly = PolygonSplitUtil.unionOfFrontPart(mPoly,
-            //                    new LinePoints2d(lbp, ltp),
-            //                    new LinePoints2d(ltp, mtp),
-            //                    new LinePoints2d(mbp, lbp)
-            //                    );
-
-
 
             TextureData td = findWindowTextureData(be, pTextureMenager);
 
@@ -810,8 +775,8 @@ public class BuildingBuilder {
 
 
     static class CatchFaceFactory {
-        Map<String, MeshFactory> catchMesh = new HashMap<String, MeshFactory>();
-        ModelFactory mf;
+        private Map<String, MeshFactory> catchMesh = new HashMap<String, MeshFactory>();
+        private ModelFactory mf;
 
         public CatchFaceFactory(ModelFactory mf) {
             this.mf = mf;
@@ -864,11 +829,11 @@ public class BuildingBuilder {
     }
 
 
-    class WallHole {
-        Point2d ldp;
-        Point2d rdp;
-        Point2d rtp;
-        Point2d ltp;
+    static class WallHole {
+        private Point2d ldp;
+        private Point2d rdp;
+        private Point2d rtp;
+        private Point2d ltp;
 
         /**
          * @return the ldp

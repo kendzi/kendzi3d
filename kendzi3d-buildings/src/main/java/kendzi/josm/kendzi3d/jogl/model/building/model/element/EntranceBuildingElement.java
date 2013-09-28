@@ -1,27 +1,41 @@
+/*
+ * This software is provided "AS IS" without a warranty of any kind.
+ * You use it on your own risk and responsibility!!!
+ *
+ * This file is shared under BSD v3 license.
+ * See readme.txt and BSD3 file for details.
+ *
+ */
 package kendzi.josm.kendzi3d.jogl.model.building.model.element;
 
-
+/**
+ * Entrance on building part outline.
+ * 
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public class EntranceBuildingElement extends SquareHoleElement {
 
-    String entranceType;
+    /**
+     * Default height of entrance.
+     */
+    private static final double DEFAULT_ENTRANCE_HEIGHT = 2.36;
 
     /**
-     *
+     * Default width of entrance.
+     */
+    private static final double DEFAULT_ENTRANCE_WIDTH = 1.2;
+
+    /**
+     * Entrance type.
+     */
+    private String entranceType;
+
+    /**
+     * Con.
      */
     public EntranceBuildingElement() {
 
-        super(0, 2.36, 1.2);
-
-
-
-
-//        super();
-//        this.minHeight = 1;
-//
-//        double height = 1.5;
-//        this.height = this.minHeight + height;
-//
-//        this.width = 1.8;
+        super(0, DEFAULT_ENTRANCE_HEIGHT, DEFAULT_ENTRANCE_WIDTH);
     }
 
     /**
@@ -38,7 +52,6 @@ public class EntranceBuildingElement extends SquareHoleElement {
         return wbe;
     }
 
-
     /**
      * @return the entranceType
      */
@@ -52,5 +65,4 @@ public class EntranceBuildingElement extends SquareHoleElement {
     public void setEntranceType(String entranceType) {
         this.entranceType = entranceType;
     }
-
 }
