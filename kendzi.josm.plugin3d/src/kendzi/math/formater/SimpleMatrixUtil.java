@@ -55,18 +55,9 @@ public class SimpleMatrixUtil {
 
 		DenseMatrix64F mat = m.getMatrix();
 		StringBuilder sb = new StringBuilder();
-		// Send all output to the Appendable object sb
-		Formatter formatter = new Formatter(sb, Locale.US);
 
 		String space = "        ";
 
-		// Explicit argument indices may be used to re-order output.
-
-		int numChar = 6;
-		int precision = 3;
-		//sb.append("DenseMatrix64F  numRows = " + mat.numRows + " numCols = " + mat.numCols + "\n");
-
-		String format = "%" + numChar + "." + precision + "f ";
 		sb.append(space);
 		sb.append("[ ");
 		for (int y = 0; y < mat.numRows; y++) {

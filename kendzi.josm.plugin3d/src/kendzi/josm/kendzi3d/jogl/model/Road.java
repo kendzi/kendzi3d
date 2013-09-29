@@ -48,7 +48,6 @@ import org.openstreetmap.josm.data.osm.Way;
 public class Road extends AbstractModel {
 
     /** Log. */
-    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Road.class);
 
 	/**
@@ -377,23 +376,12 @@ public class Road extends AbstractModel {
 
     }
 
-//    /** Create material for texture.
-//     * @param pTexId texture id
-//     * @return material
-//     */
-//    private Material createTextureMaterial(String pTexId) {
-//	        Material m = new Material();
-//	        m.strFile = pTexId;
-//	        m.strName = pTexId;
-//	        return m;
-//	    }
-
-	/** Finds road width.
-	 * @return road width
-	 */
+    /**
+     * Finds road width.
+     *
+     * @return road width
+     */
 	private double getRoadWidth() {
-	    double roadWidth = DEFAULT_ROAD_WIDTH;
-
 
 	    String highway = this.way.get("highway");
         if (highway == null) {
@@ -404,11 +392,9 @@ public class Road extends AbstractModel {
         String widthStr = this.way.get("width");
         if (widthStr != null) {
             try {
-                roadWidth = Long.parseLong(widthStr);
-                return roadWidth;
-
+                return Long.parseLong(widthStr);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
 
