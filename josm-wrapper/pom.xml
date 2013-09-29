@@ -26,6 +26,12 @@
 
 	<profiles>
 		<profile>
+			<id>ubuntu</id>
+			<properties>
+				<josm.dir>/home/kendzi/java/workspace/JOSM</josm.dir>
+			</properties>
+		</profile>
+		<profile>
 			<id>jenkins</id>
 			<properties>
 				<josm.dir>/var/lib/jenkins/jobs/JOSM/workspace</josm.dir>
