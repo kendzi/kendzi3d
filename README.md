@@ -17,10 +17,10 @@ Only one of subproject is build by ant all others are maven project.
 * Install java JDK 1.6 64bit from java.oracle.com
 * Install Eclipse EE form eclipse.org
 * Install Eclipse plugins from marketplace: "Help > Eclipse Marketplace"
-** Subversive
-** Checkstyle
-** FindBugs
-** If it is not Eclipse EE don't forget about m2e plugin
+ * Subversive
+ * Checkstyle
+ * FindBugs
+ * If it is not Eclipse EE don't forget about m2e plugin
 * Download sources for JOSM as new java project with the same name. Svn url: 
 http://josm.openstreetmap.de/svn/trunk
 * Check if JOSM is building correctly by running ant:
@@ -28,25 +28,25 @@ http://josm.openstreetmap.de/svn/trunk
 * Download sources of kendzi3d-josm-jogl project. It is container for JOSM native libraries for JOSM. Git link:
 https://github.com/kendzi/kendzi3d-josm-jogl.git
 * Setup path for JOSM builded jar in file (line 42):
-{kendzi3d-josm-jogl}/build.xml
+```{kendzi3d-josm-jogl}/build.xml```
 * Compile kendzi3d-josm-jogl by calling ant script
-{kendzi3d-josm-jogl}/build.xml clean dist
+```{kendzi3d-josm-jogl}/build.xml clean dist```
 * Download source of kendzi3d. Git link: 
 https://github.com/kendzi/kendzi3d.git
-** import from local git repo as java ant project: kendzi.josm.plugin3d
-** import all other sub projects from local git repo as java maven projects. If need you can import it as general project and later convert to maven by clicking on project: "Convigure>Convert to Maven"
+ * import from local git repo as java ant project: kendzi.josm.plugin3d
+ * import all other sub projects from local git repo as java maven projects. If need you can import it as general project and later convert to maven by clicking on project: "Convigure>Convert to Maven"
 * Setup project josm-wrapper and set path for JOSM builded jar in file (line 16, property josm.dir):
-{josm-wrapper}/pom.xml
+```{josm-wrapper}/pom.xml```
 * Compile josm-wrapper and check if result is the same as by using ant script:
-{josm-wrapper}/pom.xml clean install
-(Always use tools.jar profile!)
+```{josm-wrapper}/pom.xml clean install```
+Always use tools.jar profile!
 * Compile all maven project by using command:
-{kendzi3d-plugin-build}/pom.xml clean install
+``` {kendzi3d-plugin-build}/pom.xml clean install ```
 This step is important. It will generate temporary directors used by and script! All subproject should pass!
 * Finally build plugin by using ant:
-{kendzi.josm.plugin3d}/build.xml clean dist
+```{kendzi.josm.plugin3d}/build.xml clean dist```
 * Output will be generated to file:
-{JOSM}/dist/kendzi3d.jar
+```{JOSM}/dist/kendzi3d.jar```
 
 
 # License
