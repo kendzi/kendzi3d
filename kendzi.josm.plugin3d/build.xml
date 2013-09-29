@@ -40,7 +40,7 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-    <property name="josm.project"           value="C:/java/workspace/sun/JOSM"/>
+    <property name="josm.project"           value="/home/kendzi/java/workspace/JOSM"/>
 	
     <property name="josm"                   location="${josm.project}/dist/josm-custom.jar"/>
     <property name="kendzi-josm-jogl" 		location="${josm.project}/dist/kendzi3d-jogl.jar"/>
@@ -98,15 +98,14 @@
 			<src path="../kendzi3d-file-util/src/main/java"/>
 
         	<src path="../kendzi3d-models-library/src/main/java"/>
-			<src path="../kendzi3d-models-library-bindings/src/main/java"/>
-        	<src path="../kendzi3d-models-library-bindings/target/generated-sources/xjc"/>
-			<src path="../kendzi3d-models-library-layer/src/main/java"/>
+			<src path="../kendzi3d-models-library-bindings/target/generated-sources/xjc"/>
+			<!-- <src path="../kendzi3d-models-library-layer/src/main/java"/> -->
 			
         	<src path="../kendzi3d-expressions-javacc/src/main/java"/>
         	<src path="../kendzi3d-expressions-javacc/target/generated-sources/javacc"/>
 			<src path="../kendzi3d-expressions-josm/src/main/java"/>
 
-       	    <src path="src_xsd"/>
+       	    <!-- <src path="src_xsd"/> -->
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
 
@@ -145,15 +144,19 @@
             	<exclude name="max3ds/*"/>
             </fileset>
         </copy>
+    	<!--
         <copy todir="${plugin.build.dir}/textures">
             <fileset dir="textures"/>        	
         </copy>
+        -->
         <copy todir="${plugin.build.dir}/textures">
             <fileset dir="../kendzi3d-jogl-textures-library-res/src/main/resources/textures"/>        	
         </copy>
+    	<!--
     	<copy todir="${plugin.build.dir}">
             <fileset dir="../kendzi3d-models-library/src/main/resources"/>        	
         </copy>
+        -->
     	<copy todir="${plugin.build.dir}">
             <fileset dir="../kendzi3d-models-library/src/main/java/">
             	<include name="**/*.properties"/>
