@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType1_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType1v0;
 
 /**
  * Roof type skillion.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType1_0;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeSkillion extends RoofType1_0 {
+public class RoofTypeSkillion extends RoofType1v0 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

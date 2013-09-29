@@ -17,19 +17,29 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
+/**
+ * Interface for roof type buildier.
+ * 
+ * @author Tomasz Kędziora (Kendzi)
+ */
 public interface RoofTypeBuilder {
 
+    @Deprecated
     public RoofTypeAliasEnum getPrefixKey();
 
     public boolean isPrefixParameter();
 
-    public RoofTypeOutput buildRoof(
-            Point2d pStartPoint,
-//            PolygonList2d outerPolygon,
-            PolygonWithHolesList2d wallPolygon,
-//            List<Point2d> pPolygon,
-            DormerRoofModel pRoof,
-            double height,
-            RoofMaterials roofMaterials);
+    /**
+     * Build roof from given roof parameters.
+     * 
+     * @param pStartPoint roof starting point
+     * @param wallPolygon building wall polygon
+     * @param roof roof parameters
+     * @param height roof height
+     * @param roofMaterials roof material
+     * @return builded roof
+     */
+    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d wallPolygon, DormerRoofModel roof,
+            double height, RoofMaterials roofMaterials);
 
 }

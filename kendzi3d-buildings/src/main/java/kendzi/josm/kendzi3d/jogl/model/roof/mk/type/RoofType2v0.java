@@ -41,10 +41,11 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_0 extends RectangleRoofTypeBuilder{
+public class RoofType2v0 extends RectangleRoofTypeBuilder{
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2_0.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofType2v0.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -59,14 +60,13 @@ public class RoofType2_0 extends RectangleRoofTypeBuilder{
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(), conf.getRecHeight() / 2d);
+        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+                conf.getRecHeight() / 2d);
 
         Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, l1, 30);
 
-
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, l1, conf.getRoofTextureData());
-
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, l1,
+                conf.getRoofTextureData());
     }
 
     /**

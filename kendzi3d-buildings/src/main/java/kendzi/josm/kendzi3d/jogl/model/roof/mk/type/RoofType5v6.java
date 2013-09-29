@@ -47,15 +47,15 @@ import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * Roof type 5.6
- *
+ * Roof type 5.6.
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
  */
-public class RoofType5_6 extends AbstractRoofTypeBuilder {
+public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType5_6.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofType5v6.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -74,9 +74,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
             DormerRoofModel pRoof,
             double height,
             RoofMaterials roofTextureData) {
-
-        //            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-        //            Map<MeasurementKey, Measurement> conf.getMeasurements(), RoofTextureData roofTextureData) {
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
@@ -159,7 +156,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
         rto.setRoofHooksSpaces(null);
 
-        rto.setRectangle(RoofType9_0.findRectangle(pBorderList, 0));
+        rto.setRectangle(RoofType9v0.findRectangle(pBorderList, 0));
 
         return rto;
     }
@@ -208,7 +205,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
         // create points
         Point3d [][] mesh = new Point3d[isection][];
-        for (int i = 0; i< isection; i++) {
+        for (int i = 0; i < isection; i++) {
             double a = Math.toRadians(360) / isection * i;
 
             SimpleMatrix tranA = TransformationMatrix3d.tranA(center.x, 0, -center.y);
@@ -263,7 +260,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
             //                }
             //            }
 
-            for (int i = 0; i< isection; i++) {
+            for (int i = 0; i < isection; i++) {
                 double a = Math.toRadians(360) / isection * i;
 
                 SimpleMatrix rotY = TransformationMatrix3d.rotYA(a);
@@ -293,8 +290,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
                 int ic1p1 = pointsIntex[i][j];
                 int ic2p1 = pointsIntex[i2][j];
-                int ic1p2 = pointsIntex[i][j+1];
-                int ic2p2 = pointsIntex[i2][j+1];
+                int ic1p2 = pointsIntex[i][j + 1];
+                int ic2p2 = pointsIntex[i2][j + 1];
 
                 int ic1p1n;
                 int ic2p1n;
@@ -319,8 +316,8 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                 } else { // soft
                     ic1p1n = softNormalsIntex[i][j];
                     ic2p1n = softNormalsIntex[i2][j];
-                    ic1p2n = softNormalsIntex[i][j+1];
-                    ic2p2n = softNormalsIntex[i2][j+1];
+                    ic1p2n = softNormalsIntex[i][j + 1];
+                    ic2p2n = softNormalsIntex[i2][j + 1];
                 }
 
                 TextQuadsIndex tq = tc[j];
@@ -340,14 +337,14 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
 
         Vector2d [] normals = new Vector2d[crossSection.length - 1];
         for (int i = 0; i < crossSection.length - 1; i++) {
-            Vector2d n = new Vector2d(crossSection[i+1]);
+            Vector2d n = new Vector2d(crossSection[i + 1]);
             n.sub(crossSection[i]);
             n.normalize();
             normals[i] = n;
         }
 
         for (int i = 1; i < crossSection.length - 1; i++) {
-            Vector2d n1 = normals[i-1];
+            Vector2d n1 = normals[i - 1];
             Vector2d n2 = normals[i];
 
             Vector2d n = Vector2dUtil.bisectorNormalized(n1, n2);
@@ -357,11 +354,11 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         }
 
         ret[0] = Vector2dUtil.orthogonal(normals[0]);
-        //ret[crossSection.length-1] = Vector2dUtil.orthogonal(normals[0]);
-        ret[crossSection.length-1] = Vector2dUtil.orthogonal(normals[normals.length-1]);
 
-        for (int i = 0; i < ret.length; i++) {
-            ret[i].negate();
+        ret[crossSection.length - 1] = Vector2dUtil.orthogonal(normals[normals.length - 1]);
+
+        for (Vector2d element : ret) {
+            element.negate();
         }
 
         return ret;
@@ -372,7 +369,6 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
         TextQuadsIndex [] tc = new TextQuadsIndex[icross];
         // texture mapping
         double textHeightD = 0;
-        //        for (int i = 0; i< isection; i++) {
         {
             int i = 0;
             Point3d [] c1 = mesh[i];
@@ -404,8 +400,7 @@ public class RoofType5_6 extends AbstractRoofTypeBuilder {
                 tq.setRt(meshFactory.addTextCoord(new TextCoord(widthT, textHeightT)));
                 tq.setLt(meshFactory.addTextCoord(new TextCoord(-widthT, textHeightT)));
 
-
-                tc[j-1] = tq;
+                tc[j - 1] = tq;
 
                 middleD = middleT;
                 widthD = widthT;

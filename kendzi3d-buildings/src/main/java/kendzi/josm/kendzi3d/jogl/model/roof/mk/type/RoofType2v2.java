@@ -23,11 +23,11 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_2 extends RoofType2_3{
+public class RoofType2v2 extends RoofType2v3{
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType2_2.class);
+    private static final Logger log = Logger.getLogger(RoofType2v2.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -43,7 +43,4 @@ public class RoofType2_2 extends RoofType2_3{
     protected boolean getSkipLeft() {
         return true;
     }
-
-
-
 }

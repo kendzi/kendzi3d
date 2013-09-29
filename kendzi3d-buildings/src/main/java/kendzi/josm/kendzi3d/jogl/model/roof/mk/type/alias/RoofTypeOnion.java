@@ -13,7 +13,7 @@ import java.util.Map;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType8v0;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 
 /**
@@ -22,7 +22,7 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeOnion extends RoofType8_0 {
+public class RoofTypeOnion extends RoofType8v0 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

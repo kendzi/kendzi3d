@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_5;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2v5;
 
 /**
  * Roof type pyramidal.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_5;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeSquarePyramidal extends RoofType2_5 {
+public class RoofTypeSquarePyramidal extends RoofType2v5 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

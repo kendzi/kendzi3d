@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_2;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4v2;
 
 /**
  * Roof type mansard.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_2;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeMansard extends RoofType4_2 {
+public class RoofTypeMansard extends RoofType4v2 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

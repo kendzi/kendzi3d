@@ -44,10 +44,11 @@ import org.ejml.simple.SimpleMatrix;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType8_0 extends AbstractRoofTypeBuilder {
+public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType8_0.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofType8v0.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -78,42 +79,8 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
         int isection = getIsection(pRoof.getRoofTypeParameter());
         boolean soft = isSoft(pRoof.getRoofTypeParameter());
-//        int numOfBend = getNumOfBend(pRoof.getMeasurements());
-//
-//        double ratius =  circle.getRadius();
-//
-//        Double h1 = getHeightDegreesMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 0, ratius, 60);
-//        Double l1 = getLenghtMetersPersent(pRoof.getMeasurements(), MeasurementKey.LENGTH_1, ratius, ratius);
-//
-//
-//        Double h2 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_2,
-//                h1 * 1 / numOfBend);
-//        Double l2 = getLenghtMetersPersent(pRoof.getMeasurements(), MeasurementKey.LENGTH_2, ratius,
-//                ratius * (numOfBend - 1) / numOfBend);
-//
-//        Double h3 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_3,
-//                h1 * 2 / numOfBend);
-//        Double l3 = getLenghtMetersPersent(pRoof.getMeasurements(), MeasurementKey.LENGTH_3, ratius,
-//                ratius * (numOfBend - 2) / numOfBend);
-//
-//        Double h4 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_4,
-//                h1 * 3 / numOfBend);
-//        Double l4 = getLenghtMetersPersent(pRoof.getMeasurements(), MeasurementKey.LENGTH_4, ratius,
-//                ratius * (numOfBend - 3) / numOfBend);
-
-//        Double h1 = null;
-//        Double angle = null;
-//        Measurement measurement = pRoof.getMeasurements().get(MeasurementKey.HEIGHT_1);
-//        if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-////            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
-//           // angle = measurement.getValue();
-//            h1 = circle.getRadius()
-//        } else {
-//            h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
-//        }
 
         Bend[] bends = getBends(pRoof.getMeasurements(), circle);
-
 
         RoofTypeOutput rto = build(pPolygon, circle.getPoint(), bends, isection, soft, roofTextureData);
 
@@ -132,23 +99,22 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
         MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
-       // build flat
+        // build flat
         Point3d planeRightTopPoint =  new Point3d(
-              0 ,
-              0,
-              0);
+                0 ,
+                0,
+                0);
 
         Vector3d nt = new Vector3d(0, 1  , 0);
 
         Plane3d planeTop = new Plane3d(
-              planeRightTopPoint,
-              nt);
+                planeRightTopPoint,
+                nt);
 
         Vector3d roofTopLineVector = new Vector3d(
                 -1d,
@@ -157,22 +123,17 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
 
-
-
-
-
-       // buildRotaryShape(meshBorder, circle, pIcross, true);
-        double height = bends[bends.length-1].getHeight();
+        double height = bends[bends.length - 1].getHeight();
 
         Point2d [] crossSection = new Point2d [bends.length];
         crossSection[0] = new Point2d(bends[0].getRadius(), 0);
         crossSection[crossSection.length - 1] = new Point2d(0, height);
 
-        for (int i = 1; i < bends.length; i++){
+        for (int i = 1; i < bends.length; i++) {
             crossSection[i] = new Point2d(bends[i].getRadius(), bends[i].getHeight());
         }
 
-        RoofType5_6.buildRotaryShape(meshRoof, point, pIsection, crossSection, pSoft);
+        RoofType5v6.buildRotaryShape(meshRoof, point, pIsection, crossSection, pSoft);
 
 
 
@@ -183,7 +144,7 @@ public class RoofType8_0 extends AbstractRoofTypeBuilder {
 
         rto.setRoofHooksSpaces(null);
 
-        rto.setRectangle(RoofType9_0.findRectangle(pBorderList, 0));
+        rto.setRectangle(RoofType9v0.findRectangle(pBorderList, 0));
 
         return rto;
     }

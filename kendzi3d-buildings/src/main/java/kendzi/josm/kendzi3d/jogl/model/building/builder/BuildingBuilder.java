@@ -52,7 +52,7 @@ import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofLinesModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofTextureData;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5v6;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -142,7 +142,7 @@ public class BuildingBuilder {
             }
 
             int pIsection = 12;
-            RoofType5_6.buildRotaryShape(mesh, point, pIsection, crossSection, true);
+            RoofType5v6.buildRotaryShape(mesh, point, pIsection, crossSection, true);
 
         }
         return new BuildingPartOutput();

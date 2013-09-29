@@ -14,21 +14,21 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 /**
- * Roof type 0.4.
- *
+ * Roof type 0.3.
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
-public class RoofType0_4 extends RoofType0 {
+public class RoofType0v3 extends RoofType0 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.ROOF_TYPE0_4;
+        return RoofTypeAliasEnum.ROOF_TYPE0_3;
     }
 
     @Override
     int getType() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -37,13 +37,16 @@ public class RoofType0_4 extends RoofType0 {
         Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0.5d);
         Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 2.5d);
 
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(), conf.getRecHeight() / 3d);
-        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(), conf.getRecWidth() / 3d);
-        Double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(), conf.getRecHeight() / 3d);
-        Double l4 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_4, conf.getRecWidth(), conf.getRecWidth() / 3d);
+        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+                conf.getRecHeight() / 3d);
+        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(),
+                conf.getRecWidth() / 3d);
+        Double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(),
+                conf.getRecHeight() / 3d);
 
         int type = getType();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1, l2, l3, l4, type, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
+                l2, l3, 0, type, conf.getRoofTextureData());
     }
 }

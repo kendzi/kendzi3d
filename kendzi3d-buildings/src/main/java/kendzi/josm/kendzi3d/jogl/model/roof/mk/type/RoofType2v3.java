@@ -40,13 +40,15 @@ import org.apache.log4j.Logger;
  * Roof type 2.3.
  *
  * @author Tomasz Kędziora (Kendzi)
- *
  */
-public class RoofType2_3 extends RectangleRoofTypeBuilder{
+public class RoofType2v3 extends RectangleRoofTypeBuilder{
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2_3.class);
+    private static final Logger log = Logger.getLogger(RoofType2v3.class);
 
+    /**
+     * Error epsilon.
+     */
     private static final double EPSILON = 0.001;
 
     @Override
@@ -66,11 +68,15 @@ public class RoofType2_3 extends RectangleRoofTypeBuilder{
 
         Double h2 = getHeight2(conf.getMeasurements());
 
-        //        Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 1.5d);
+        // Double h2 = getHeightMeters(conf.getMeasurements(),
+        // MeasurementKey.HEIGHT_2, 1.5d);
 
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(), conf.getRecHeight() /2d);
-        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(), conf.getRecWidth() /4d);
-        Double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(), conf.getRecHeight() /2d);
+        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+                conf.getRecHeight() / 2d);
+        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(),
+                conf.getRecWidth() / 4d);
+        Double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(),
+                conf.getRecHeight() / 2d);
 
         if (h2 > h1) {
             throw new RuntimeException("bad parameters: h1 is biger then h2");
@@ -78,8 +84,8 @@ public class RoofType2_3 extends RectangleRoofTypeBuilder{
 
         boolean skipLeft = getSkipLeft();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(),
-                h1, h2, l1, l2, l3, skipLeft, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
+                l2, l3, skipLeft, conf.getRoofTextureData());
 
     }
 
@@ -100,7 +106,7 @@ public class RoofType2_3 extends RectangleRoofTypeBuilder{
      * @param pScaleB
      * @param recHeight
      * @param recWidth
-     * @param conf.getRectangleContur()
+     * @param rectangleContur
      * @param h1
      * @param h2
      * @param l1

@@ -14,21 +14,21 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 /**
- * Roof type 0.2.
- *
+ * Roof type 0.1.
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
-public class RoofType0_2 extends RoofType0 {
+public class RoofType0v1 extends RoofType0 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.ROOF_TYPE0_2;
+        return RoofTypeAliasEnum.ROOF_TYPE0_1;
     }
 
     @Override
     int getType() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -37,11 +37,12 @@ public class RoofType0_2 extends RoofType0 {
         Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0.5d);
         Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 2.5d);
 
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(), conf.getRecHeight() / 3d);
-        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(), conf.getRecWidth() / 3d);
+        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+                conf.getRecHeight() / 3d);
 
         int type = getType();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1, l2, 0, 0, type, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
+                0, 0, 0, type, conf.getRoofTextureData());
     }
 }

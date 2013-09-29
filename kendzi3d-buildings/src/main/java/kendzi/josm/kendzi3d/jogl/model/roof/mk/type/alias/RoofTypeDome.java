@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5v6;
 
 /**
  * Roof type dome.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_6;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeDome extends RoofType5_6 {
+public class RoofTypeDome extends RoofType5v6 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

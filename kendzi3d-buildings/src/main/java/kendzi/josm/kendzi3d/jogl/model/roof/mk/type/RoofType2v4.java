@@ -9,30 +9,33 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
+import java.util.Map;
+
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 
 import org.apache.log4j.Logger;
 
 /**
- * Roof type 2.6.
+ * Roof type 2.4.
  *
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_6 extends RoofType2_7 {
+public class RoofType2v4 extends RoofType2v3{
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2_6.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofType2v4.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.ROOF_TYPE2_6;
+        return RoofTypeAliasEnum.ROOF_TYPE2_4;
     }
-
 
     @Override
-    public boolean isLeft() {
-        return false;
+    protected double getHeight2(Map<MeasurementKey, Measurement> pMeasurements) {
+        return 0d;
     }
-
 }

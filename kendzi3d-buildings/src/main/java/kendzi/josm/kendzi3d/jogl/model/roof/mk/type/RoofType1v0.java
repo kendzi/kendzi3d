@@ -21,10 +21,11 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType1_0 extends RoofType1_1 {
+public class RoofType1v0 extends RoofType1v1 {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType1_0.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RoofType1v0.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -34,14 +35,13 @@ public class RoofType1_0 extends RoofType1_1 {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        //        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, conf.getRecHeight(), 20d);
 
         if (h1 < 0) {
             h1 = 0d;
         }
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), 0, h1, 0, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), 0, h1, 0,
+                conf.getRoofTextureData());
     }
-
 }

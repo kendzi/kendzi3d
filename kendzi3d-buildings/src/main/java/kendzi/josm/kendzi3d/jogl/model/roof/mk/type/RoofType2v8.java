@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_8 extends RectangleRoofTypeBuilder{
+public class RoofType2v8 extends RectangleRoofTypeBuilder{
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2_8.class);
+    private static final Logger log = Logger.getLogger(RoofType2v8.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -59,22 +59,16 @@ public class RoofType2_8 extends RectangleRoofTypeBuilder{
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-
-
         Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, h1);
-
-        //        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecWidth(), conf.getRecWidth() / 2d);
-        //        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecHeight(), conf.getRecHeight() / 2d);
-
 
         double middleLineHeight = getMiddleLineHeight(h1, h2);
 
         h1 = getHeight1(h1);
         h2 = getHeight2(h2);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, middleLineHeight, conf.getRoofTextureData());
-
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2,
+                middleLineHeight, conf.getRoofTextureData());
     }
 
     protected double getMiddleLineHeight(Double h1, Double h2) {

@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_4;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2v4;
 
 /**
  * Roof type hipped.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2_4;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeHipped extends RoofType2_4 {
+public class RoofTypeHipped extends RoofType2v4 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

@@ -14,34 +14,23 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import org.apache.log4j.Logger;
 
 /**
- * Roof type 2.9.
+ * Roof type 2.6.
  *
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType2_9 extends RoofType2_8 {
+public class RoofType2v6 extends RoofType2v7 {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2_9.class);
+    private static final Logger log = Logger.getLogger(RoofType2v6.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.ROOF_TYPE2_9;
+        return RoofTypeAliasEnum.ROOF_TYPE2_6;
     }
 
     @Override
-    protected double getMiddleLineHeight(Double h1, Double h2) {
-        return Math.max(h1, h2);
+    public boolean isLeft() {
+        return false;
     }
-
-    @Override
-    protected Double getHeight1(Double h1) {
-        return -h1;
-    }
-
-    @Override
-    protected Double getHeight2(Double h2) {
-        return -h2;
-    }
-
 }

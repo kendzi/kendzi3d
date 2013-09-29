@@ -23,7 +23,7 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_2.CrossSectionElement;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5v2.CrossSectionElement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.BetweenLinesHeightCalculator;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
@@ -41,11 +41,11 @@ import org.apache.log4j.Logger;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType5_0 extends RectangleRoofTypeBuilder{
+public class RoofType5v0 extends RectangleRoofTypeBuilder{
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType5_0.class);
+    private static final Logger log = Logger.getLogger(RoofType5v0.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -60,13 +60,10 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
+        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight() / 2d);
 
-        //        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(), conf.getRecHeight());
-
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight()/2d);
-
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, conf.getRoofTextureData());
-
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
+                conf.getRoofTextureData());
     }
 
     /**
@@ -154,21 +151,21 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
         List<CrossSectionElement> crossSection = createCrossSection(height, pRecHeight, segments);
 
 
-        final LinePoints2d[] lines = RoofType5_2.createLines(crossSection);
+        final LinePoints2d[] lines = RoofType5v2.createLines(crossSection);
 
-        MultiPolygonList2d [] mps = RoofType5_2.createMP(borderPolygon, lines);
+        MultiPolygonList2d [] mps = RoofType5v2.createMP(borderPolygon, lines);
         //        Segment[] createSegments = createSegments(crossSection);
 
-        final Plane3d[] planes = RoofType5_2.createPlanes(crossSection);
+        final Plane3d[] planes = RoofType5v2.createPlanes(crossSection);
 
-        double [] offsets = RoofType5_2.createTextureOffsets(crossSection);
+        double [] offsets = RoofType5v2.createTextureOffsets(crossSection);
 
         Vector3d roofLineVector = new Vector3d(
                 pRecWidth,
                 0,
                 0);
 
-        for (int i = 0; i< mps.length; i++) {
+        for (int i = 0; i < mps.length; i++) {
 
             MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
         }
@@ -242,7 +239,7 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
     }
 
 
-    private List<RoofType5_2.CrossSectionElement> createCrossSection(double height,  double pRecHeight, int segments) {
+    private List<RoofType5v2.CrossSectionElement> createCrossSection(double height,  double pRecHeight, int segments) {
 
         double c = pRecHeight;
         double h = height;
@@ -254,17 +251,17 @@ public class RoofType5_0 extends RectangleRoofTypeBuilder{
 
 
 
-        List<RoofType5_2.CrossSectionElement> split = new ArrayList<RoofType5_2.CrossSectionElement>();
+        List<RoofType5v2.CrossSectionElement> split = new ArrayList<RoofType5v2.CrossSectionElement>();
 
         for (Point2d p : round) {
             double x = p.x;
             double y = p.y;
 
-            split.add(new RoofType5_2.CrossSectionElement(new Point2d(x, y), new Vector2d(p.x-1d, p.y)));
+            split.add(new RoofType5v2.CrossSectionElement(new Point2d(x, y), new Vector2d(p.x - 1d, p.y)));
         }
 
         if (height < pRecHeight) {
-            split.add(new RoofType5_2.CrossSectionElement(new Point2d(pRecHeight, height), new Vector2d(0,1)));
+            split.add(new RoofType5v2.CrossSectionElement(new Point2d(pRecHeight, height), new Vector2d(0,1)));
         }
 
         return split;

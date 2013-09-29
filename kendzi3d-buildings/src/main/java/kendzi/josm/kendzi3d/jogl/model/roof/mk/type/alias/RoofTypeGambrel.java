@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4v0;
 
 /**
  * Roof type gambrel.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType4_0;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeGambrel extends RoofType4_0 {
+public class RoofTypeGambrel extends RoofType4v0 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {

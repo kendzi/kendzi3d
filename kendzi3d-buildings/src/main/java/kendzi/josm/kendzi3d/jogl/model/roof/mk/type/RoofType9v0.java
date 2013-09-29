@@ -53,10 +53,10 @@ import org.ejml.simple.SimpleMatrix;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofType9_0 extends AbstractRoofTypeBuilder {
+public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType9_0.class);
+    private static final Logger log = Logger.getLogger(RoofType9v0.class);
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
@@ -75,26 +75,18 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
         List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
 
-//            Point2d pStartPoint, List<Point2d> border, Integer prefixParameter, double height,
-//            Map<MeasurementKey, Measurement> conf.getMeasurements(), RoofTextureData roofTextureData) {
-
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
         pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
-
-        // rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
         Double h1 = null;
         Double angle = null;
         Measurement measurement = pRoof.getMeasurements().get(MeasurementKey.HEIGHT_1);
         if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-//            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
             angle = measurement.getValue();
         } else {
             h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         }
-
-
 
         RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, roofTextureData);
 
@@ -108,13 +100,12 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
     protected RoofTypeOutput build(List<Point2d> pBorderList,
 
-        Double h1, Double angle, double l1, double l2,
-        RoofMaterials roofTextureData) {
+            Double h1, Double angle, double l1, double l2,
+            RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
 
@@ -127,7 +118,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
         log.info("** TO TEST IN JUNIT TEST: **");
         for (Point2d p : pBorderList) {
-            log.info("polygon.add(new Point2d("+p.x+",  "+p.y+"));");
+            log.info("polygon.add(new Point2d(" + p.x + ",  " + p.y + "));");
         }
         log.info("****");
 
@@ -176,15 +167,15 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
 
-      //FIXME
+        //FIXME
         //TODO
         //XXX
         // !!!
         rto.setRoofHooksSpaces(null);
 
-//        rto.setRoofHooksSpaces(
-//                polygonRoofHooksSpace.toArray(
-//                        new RoofHooksSpace [polygonRoofHooksSpace.size()]));
+        //        rto.setRoofHooksSpaces(
+        //                polygonRoofHooksSpace.toArray(
+        //                        new RoofHooksSpace [polygonRoofHooksSpace.size()]));
 
         rto.setRectangle(findRectangle(pBorderList, 0));
 
@@ -198,7 +189,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
         if (angle != null) {
             correction = Math.tan(Math.toRadians(angle));
 
-        } else if (h1 != null){
+        } else if (h1 != null) {
             double maxDistance = findMaxDistance(distance);
 
             correction = h1 / maxDistance;
@@ -261,9 +252,9 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
                 p3 = p;
             }
 
-//            if (d3 > 1) {
-//                break;
-//            }
+            //            if (d3 > 1) {
+            //                break;
+            //            }
         }
 
         Double d1 = distance.get(p1);
@@ -271,7 +262,7 @@ public class RoofType9_0 extends AbstractRoofTypeBuilder {
 
         // Due Bug in skeleton algorithm recalculate distance
         // XXX
-//        d3 = calcDistance(p3, edge);
+        //        d3 = calcDistance(p3, edge);
 
 
         Vector3d v1 = new Vector3d(p2.x - p1.x, d2 - d1, -p2.y + p1.y);

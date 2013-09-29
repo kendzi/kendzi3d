@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_2;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5v2;
 
 /**
  * Roof type half_round.
@@ -17,7 +17,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType5_2;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class RoofTypeHalfRound extends RoofType5_2 {
+public class RoofTypeHalfRound extends RoofType5v2 {
 
     @Override
     public RoofTypeAliasEnum getPrefixKey() {
