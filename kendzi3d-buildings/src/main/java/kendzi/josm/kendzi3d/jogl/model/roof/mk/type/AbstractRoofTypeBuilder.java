@@ -131,10 +131,6 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
         MeshFactory meshRoof = new MeshFactory("roof_top");
 
-//        TextureData roofTexture = roofTextureData.getRoofTexture();
-//        Material roofMaterial = MaterialFactory.createTextureMaterial(roofTexture.getFile());
-//        int roofMaterialIndex = model.addMaterial(roofMaterial);
-
         meshRoof.materialID = roofTextureData.getRoof().getMaterialIndexInModel();
         meshRoof.hasTexture = true;
         return meshRoof;
@@ -143,9 +139,6 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
     protected MeshFactory createFacadeMesh(RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = new MeshFactory("roof_facade");
-//        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
-//        Material facadeMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getFile());
-//        int facadeMaterialIndex = model.addMaterial(facadeMaterial);
 
         meshBorder.materialID = roofTextureData.getFacade().getMaterialIndexInModel();
         meshBorder.hasTexture = true;

@@ -110,32 +110,22 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
             Double height, Double angle, double l1, double l2,
             RoofMaterials roofTextureData) {
 
-        MeshFactory meshBorder = createFacadeMesh(roofTextureData);
-        MeshFactory meshRoof = createRoofMesh(roofTextureData);
+		MeshFactory meshDome = createRoofMesh(roofTextureData);
+		MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
-        TextureData roofTexture = roofTextureData.getRoof().getTextureData();
+		TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
+		PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-        PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
+		MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
+		// build flat
+		Point3d planeRightTopPoint = new Point3d(0, 0, 0);
 
-        MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
-        // build flat
-        Point3d planeRightTopPoint =  new Point3d(
-                0 ,
-                0,
-                0);
+		Vector3d nt = new Vector3d(0, 1, 0);
 
-        Vector3d nt = new Vector3d(0, 1  , 0);
+		Plane3d planeTop = new Plane3d(planeRightTopPoint, nt);
 
-        Plane3d planeTop = new Plane3d(
-                planeRightTopPoint,
-                nt);
-
-        Vector3d roofTopLineVector = new Vector3d(
-                -1d,
-                0,
-                0);
+		Vector3d roofTopLineVector = new Vector3d(-1d, 0, 0);
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
 
@@ -145,14 +135,14 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
         int pIcross = 5;
         int pIsection = 9;
-        buildRotaryShape(meshBorder, circle, pIcross, pIsection, true);
+        buildRotaryShape(meshDome, circle, pIcross, pIsection, true);
 
 
-
+        
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(circle.getRadius());
 
-        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
+        rto.setMesh(Arrays.asList(meshDome, meshRoof));
 
         rto.setRoofHooksSpaces(null);
 
@@ -161,14 +151,8 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         return rto;
     }
 
-
-    private void buildRotaryShape(
-            MeshFactory meshFactory,
-            Circle circle,
-            int pIcross,
-            int pIsection,
-            boolean soft
-            ) {
+	private void buildRotaryShape(MeshFactory meshFactory, Circle circle,
+			int pIcross, int pIsection, boolean soft) {
 
 
         int icross = pIcross + 1;
@@ -185,17 +169,12 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         buildRotaryShape(meshFactory, circle.getPoint(), pIsection, crossSection, soft);
     }
 
-    public static void buildRotaryShape(
-            MeshFactory meshFactory,
-            Point2d center,
-            int pIsection,
-            Point2d [] crossSection,
-            boolean soft
-            ) {
+	public static void buildRotaryShape(MeshFactory meshFactory,
+			Point2d center, int pIsection, Point2d[] crossSection, boolean soft) {
 
         int icross = crossSection.length;
 
-        int isection = pIsection;//= 9;
+        int isection = pIsection;
 
         Vector2d [] crossSectionSoftNormals = null;
         if (soft) {
@@ -423,10 +402,10 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
     }
 
     static class TextQuadsIndex {
-        int ld;
-        int rd;
-        int rt;
-        int lt;
+        private int ld;
+        private int rd;
+        private int rt;
+        private int lt;
         /**
          * @return the ld
          */
@@ -477,113 +456,5 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         }
 
 
-    }
-    static class TextQuat {
-        TextCoord ld;
-        TextCoord rd;
-        TextCoord rt;
-        TextCoord lt;
-        /**
-         * @return the ld
-         */
-        public TextCoord getLd() {
-            return ld;
-        }
-        /**
-         * @param ld the ld to set
-         */
-        public void setLd(TextCoord ld) {
-            this.ld = ld;
-        }
-        /**
-         * @return the rd
-         */
-        public TextCoord getRd() {
-            return rd;
-        }
-        /**
-         * @param rd the rd to set
-         */
-        public void setRd(TextCoord rd) {
-            this.rd = rd;
-        }
-        /**
-         * @return the rt
-         */
-        public TextCoord getRt() {
-            return rt;
-        }
-        /**
-         * @param rt the rt to set
-         */
-        public void setRt(TextCoord rt) {
-            this.rt = rt;
-        }
-        /**
-         * @return the lt
-         */
-        public TextCoord getLt() {
-            return lt;
-        }
-        /**
-         * @param lt the lt to set
-         */
-        public void setLt(TextCoord lt) {
-            this.lt = lt;
-        }
-    }
-
-
-    private Vector3d calcNormal(LineSegment2d edge, List<Point2d> points, Map<Point2d, Double> distance) {
-
-        Point2d p1 = edge.getBegin();
-        Point2d p2 = edge.getEnd();
-        Point2d p3 = null;
-
-        double d3 = -Double.MAX_VALUE;
-        for (Point2d p : points) {
-            Double d = distance.get(p);
-
-            if (d3 < d) {
-                d3 = d;
-                p3 = p;
-            }
-
-            //            if (d3 > 1) {
-            //                break;
-            //            }
-        }
-
-        Double d1 = distance.get(p1);
-        Double d2 = distance.get(p2);
-
-        // Due Bug in skeleton algorithm recalculate distance
-        // XXX
-        //        d3 = calcDistance(p3, edge);
-
-
-        Vector3d v1 = new Vector3d(p2.x - p1.x, d2 - d1, -p2.y + p1.y);
-        Vector3d v2 = new Vector3d(p3.x - p2.x, d3 - d2, -p3.y + p2.y);
-
-        v1.cross(v1, v2);
-        v1.normalize();
-        return v1;
-    }
-
-
-    /**
-     * Computes the distance between this point and point p1.
-     * @param p0
-     *
-     * @param p1
-     *            the other point
-     * @return
-     */
-    private static double distance(Tuple2d p0, Tuple2d p1) {
-        double dx, dy;
-
-        dx = p0.x - p1.x;
-        dy = p0.y - p1.y;
-        return Math.sqrt(dx * dx + dy * dy);
     }
 }

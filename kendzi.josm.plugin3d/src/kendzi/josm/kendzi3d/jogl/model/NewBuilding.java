@@ -64,7 +64,6 @@ import org.openstreetmap.josm.data.osm.Way;
 public class NewBuilding extends AbstractModel {
 
     /** Log. */
-    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(NewBuilding.class);
 
     /**
@@ -108,50 +107,65 @@ public class NewBuilding extends AbstractModel {
     /**
      * Constructor for building.
      *
-     * @param pWay way describing building
-     * @param pPerspective perspective3
-     * @param pModelRender model render
-     * @param pMetadataCacheService metadata cache service
-     * @param pTextureLibraryStorageService texture library service
+     * @param relation relation describing building
+     * @param perspective perspective3
+     * @param modelRender model render
+     * @param metadataCacheService metadata cache service
+     * @param textureLibraryStorageService texture library service
      */
-    public NewBuilding(Relation pRelation, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
-        super(pPerspective);
+    public NewBuilding(Relation relation, Perspective3D perspective,
+            ModelRender modelRender, MetadataCacheService metadataCacheService,
+            TextureLibraryStorageService textureLibraryStorageService) {
+        super(perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        this.modelRender = modelRender;
+        this.metadataCacheService = metadataCacheService;
+        this.textureLibraryStorageService = textureLibraryStorageService;
 
-        this.relation = pRelation;
+        this.relation = relation;
     }
 
-    public NewBuilding(Way pWay, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
-        super(pPerspective);
+    /**
+     * Constructor for building.
+     *
+     * @param way way describing building
+     * @param perspective perspective3
+     * @param modelRender model render
+     * @param metadataCacheService metadata cache service
+     * @param textureLibraryStorageService texture library service
+     */
+    public NewBuilding(Way way, Perspective3D perspective,
+            ModelRender modelRender, MetadataCacheService metadataCacheService,
+            TextureLibraryStorageService textureLibraryStorageService) {
+        super(perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        this.modelRender = modelRender;
+        this.metadataCacheService = metadataCacheService;
+        this.textureLibraryStorageService = textureLibraryStorageService;
 
-        this.way = pWay;
+        this.way = way;
     }
 
-    public NewBuilding(Node node, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
-        super(pPerspective);
+    /**
+     * Constructor for building.
+     *
+     * @param node node describing building
+     * @param perspective perspective3
+     * @param modelRender model render
+     * @param metadataCacheService metadata cache service
+     * @param textureLibraryStorageService texture library service
+     */
+    public NewBuilding(Node node, Perspective3D perspective,
+            ModelRender modelRender, MetadataCacheService metadataCacheService,
+            TextureLibraryStorageService textureLibraryStorageService) {
+        super(perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        this.modelRender = modelRender;
+        this.metadataCacheService = metadataCacheService;
+        this.textureLibraryStorageService = textureLibraryStorageService;
 
         this.node = node;
     }
-
-
-
 
 
     @Override
