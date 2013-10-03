@@ -14,7 +14,7 @@ public class LocalResourceReciver implements UrlReciverService {
     private static final Logger log = Logger.getLogger(LocalResourceReciver.class);
 
     //FIXME TODO XXX
-    private String locationOfResources = "C:/Users/kendzi/git/kendzi3d/kendzi3d-jogl-textures-library-res/src/main/resources";
+    private String locationOfResources = "/home/kendzi/git/kendzi3d/kendzi3d-jogl-textures-library-res/src/main/resources";
 
     private String getFile(String str) {
 

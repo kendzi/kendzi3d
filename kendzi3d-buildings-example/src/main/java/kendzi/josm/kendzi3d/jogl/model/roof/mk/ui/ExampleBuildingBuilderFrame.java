@@ -158,7 +158,7 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
     @Override
     public void display(GLAutoDrawable drawable) {
         super.display(drawable);
-
+        
         GL2 gl = drawable.getGL().getGL2();
         this.modelRender.render(gl, this.model);
     }
