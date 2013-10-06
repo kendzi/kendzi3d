@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 
 public class RoofTypeUtil {
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(RoofTypeUtil.class);
 
 
@@ -194,7 +195,7 @@ public class RoofTypeUtil {
             splitPolygon = PolygonSplit.splitLineSegmentsOnLine(line, splitPolygon);
         }
 
-        return (splitPolygon);
+        return splitPolygon;
     }
 
     /**
@@ -232,4 +233,44 @@ public class RoofTypeUtil {
         RoofTypeUtil.makeRoofBorderMesh(borderSplit, minHeight, borderHeights, pWallMesh, pFacadeTextureData);
     }
 
+    /** Find minimal rectangle containing list of points.
+     * Save as list of 3d points to display.
+     *
+     * XXX this should by changed!
+     *
+     * @param pPolygon list of points
+     * @param height height
+     * @return minimal rectangle
+     */
+    public static List<Point3d> findRectangle(List<Point2d> pPolygon, double height) {
+
+        double minx = Double.MAX_VALUE;
+        double miny = Double.MAX_VALUE;
+        double maxx = -Double.MAX_VALUE;
+        double maxy = -Double.MAX_VALUE;
+
+        for (Point2d p : pPolygon) {
+            if (minx > p.x) {
+                minx = p.x;
+            }
+            if (miny > p.y) {
+                miny = p.y;
+            }
+            if (maxx < p.x) {
+                maxx = p.x;
+            }
+            if (maxy < p.y) {
+                maxy = p.y;
+            }
+        }
+
+
+        List<Point3d> rect = new ArrayList<Point3d>();
+        rect.add(new Point3d(minx, height, -miny));
+        rect.add(new Point3d(minx, height, -maxy));
+        rect.add(new Point3d(maxx, height, -maxy));
+        rect.add(new Point3d(maxx, height, -miny));
+
+        return rect;
+    }
 }

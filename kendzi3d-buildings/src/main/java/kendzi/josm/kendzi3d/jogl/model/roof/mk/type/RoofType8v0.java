@@ -14,11 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
@@ -26,12 +23,10 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
-import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.CircleInsidePolygon;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
-import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
@@ -92,8 +87,8 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
     }
 
-    protected RoofTypeOutput build(List<Point2d> pBorderList,
-            Point2d point, Bend[] bends, int pIsection, boolean pSoft,
+    protected RoofTypeOutput build(List<Point2d> borderList,
+            Point2d point, Bend[] bends, int sectionCount, boolean pSoft,
             RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
@@ -101,27 +96,9 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
+        PolygonList2d borderPolygon = new PolygonList2d(borderList);
 
-        MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
-        // build flat
-        Point3d planeRightTopPoint =  new Point3d(
-                0 ,
-                0,
-                0);
-
-        Vector3d nt = new Vector3d(0, 1  , 0);
-
-        Plane3d planeTop = new Plane3d(
-                planeRightTopPoint,
-                nt);
-
-        Vector3d roofTopLineVector = new Vector3d(
-                -1d,
-                0,
-                0);
-
-        MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
+        RoofType5v6.buildFlatRoof(borderPolygon, meshRoof, roofTexture);
 
         double height = bends[bends.length - 1].getHeight();
 
@@ -133,9 +110,7 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
             crossSection[i] = new Point2d(bends[i].getRadius(), bends[i].getHeight());
         }
 
-        RoofType5v6.buildRotaryShape(meshRoof, point, pIsection, crossSection, pSoft);
-
-
+        RoofType5v6.buildRotaryShape(meshRoof, point, sectionCount, crossSection, pSoft);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
@@ -144,7 +119,7 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         rto.setRoofHooksSpaces(null);
 
-        rto.setRectangle(RoofType9v0.findRectangle(pBorderList, 0));
+        rto.setRectangle(RoofTypeUtil.findRectangle(borderList, 0));
 
         return rto;
     }

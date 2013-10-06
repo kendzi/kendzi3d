@@ -24,6 +24,8 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
  */
 public interface RoofTypeBuilder {
 
+    public static double DEFAULT_ROOF_HEIGHT = 2.5d;
+
     @Deprecated
     public RoofTypeAliasEnum getPrefixKey();
 
