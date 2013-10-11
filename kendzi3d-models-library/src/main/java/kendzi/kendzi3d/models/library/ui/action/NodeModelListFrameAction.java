@@ -6,7 +6,6 @@ import java.awt.EventQueue;
 import java.util.List;
 
 import kendzi.josm.kendzi3d.service.UrlReciverService;
-import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.NodeModelListFrame;
@@ -134,12 +133,7 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
         this.modelsLibraryService = modelsLibraryService;
     }
 
-
-    public static NodeModelListFrameAction buildFrame(
-            String fileKey,
-            boolean readOnly,
-            ModelsLibraryService modelsLibraryService,
-            LibraryResourcesDao libraryResourcesDao) {
+    public static NodeModelListFrameAction buildFrame(String fileKey, boolean readOnly, ModelsLibraryService modelsLibraryService) {
 
         NodeModelListFrameAction frame = new NodeModelListFrameAction();
         frame.setNodeModelService(modelsLibraryService);

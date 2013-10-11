@@ -100,6 +100,7 @@
         	<src path="../kendzi3d-models-library/src/main/java"/>
 			<src path="../kendzi3d-models-library-bindings/target/generated-sources/xjc"/>
 			<!-- <src path="../kendzi3d-models-library-layer/src/main/java"/> -->
+        	<src path="../kendzi3d-models-library-josm/src/main/java"/>
 			
         	<src path="../kendzi3d-expressions-javacc/src/main/java"/>
         	<src path="../kendzi3d-expressions-javacc/target/generated-sources/javacc"/>

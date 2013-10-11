@@ -96,34 +96,12 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
         init();
     }
 
-
-
-//    static Vector3d parseVector(String x, String y, String z) {
-//        return new Vector3d(
-//                parseDouble(x, 0d),
-//                parseDouble(y, 0d),
-//                parseDouble(z, 0d));
-//    }
-
-//    private static Double parseDouble(String z, Double d) {
-//        if (z == null || "".equals(z)) {
-//            return d;
-//        }
-//
-//        try {
-//            return Double.parseDouble(z);
-//        } catch (Exception e) {
-//            log.error(e,e);
-//        }
-//        return d;
-//    }
-
     /**
      * Initialize layer.
      */
     public void init() {
-
-        this.modelsLibraryService.addPointModelDataChangeListener(this);
+        modelsLibraryService.removePointModelDataChangeListener(this);
+        modelsLibraryService.addPointModelDataChangeListener(this);
 
         loadData();
     }

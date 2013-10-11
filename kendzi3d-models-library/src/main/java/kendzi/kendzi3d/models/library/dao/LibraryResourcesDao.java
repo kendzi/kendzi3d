@@ -4,8 +4,10 @@ import java.util.List;
 
 public interface LibraryResourcesDao {
 
-    public abstract List<String> loadResourcesPath();
+    void setDefaultResourcesPaths();
 
-    public abstract void saveResourcesPath(List<String> fileKeys);
+    List<String> loadResourcesPath();
+
+    void saveResourcesPath(List<String> fileKeys);
 
 }

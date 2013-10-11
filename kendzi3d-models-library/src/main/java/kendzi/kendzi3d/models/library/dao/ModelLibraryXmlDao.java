@@ -58,8 +58,10 @@ public class ModelLibraryXmlDao {
 
             if (fileKey.startsWith(PLUGIN_FILE_PREFIX)) {
                 url = this.urlReciverService.receiveFileUrl(fileKey.substring(PLUGIN_FILE_PREFIX.length()));
-            } else {
+            } else if (fileKey.startsWith("file://") || fileKey.startsWith("http://") || fileKey.startsWith("https://")) {
                 url = new URL(fileKey);
+            } else {
+                url = new File(fileKey).toURI().toURL();
             }
 
             if (!UrlUtil.existUrl(url)) {
@@ -97,7 +99,7 @@ public class ModelLibraryXmlDao {
 
         ObjectFactory factory = new ObjectFactory();
 
-        ModelsLibrary pointModels = (factory.createModelsLibrary());
+        ModelsLibrary pointModels = factory.createModelsLibrary();
 
         pointModels.getNodeModel().addAll(modelsLibrary.getNodeModel());
         pointModels.getWayNodeModel().addAll(modelsLibrary.getWayNodeModel());

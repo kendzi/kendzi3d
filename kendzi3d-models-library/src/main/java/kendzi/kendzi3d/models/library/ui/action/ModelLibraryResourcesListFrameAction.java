@@ -9,10 +9,13 @@
 package kendzi.kendzi3d.models.library.ui.action;
 
 import java.awt.EventQueue;
+import java.io.File;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
 import kendzi.josm.kendzi3d.service.UrlReciverService;
-import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.ModelLibraryResourcesListFrame;
@@ -34,15 +37,9 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
      */
     private ModelsLibraryService modelsLibraryService;
 
-    /**
-     * Resources for library DAO.
-     */
-    private LibraryResourcesDao libraryResourcesDao;
-
-    public ModelLibraryResourcesListFrameAction(ModelsLibraryService modelsLibraryService, LibraryResourcesDao libraryResourcesDao) {
+    public ModelLibraryResourcesListFrameAction(ModelsLibraryService modelsLibraryService) {
         super();
         this.modelsLibraryService = modelsLibraryService;
-        this.libraryResourcesDao = libraryResourcesDao;
     }
 
     /**
@@ -56,9 +53,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
                     UrlReciverService urlReciverService = new UrlReciverServiceTest();
                     ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
                     pms.init();
-                    ModelLibraryResourcesListFrameAction frame
-                    = new ModelLibraryResourcesListFrameAction(pms, new LibraryResourcesMemoryDao());
-
+                    ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
 
                     frame.loadTableData();
                     frame.setVisible(true);
@@ -82,10 +77,10 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
      */
     @Override
     protected void viewFinalLibrary() {
-        NodeModelListFrameAction frame = NodeModelListFrameAction.buildFrame(
-                ModelsLibraryService.GLOBAL, true, modelsLibraryService, libraryResourcesDao);
-        frame.setVisible(true);
+        NodeModelListFrameAction frame = NodeModelListFrameAction.buildFrame(ModelsLibraryService.GLOBAL, true,
+                modelsLibraryService);
 
+        frame.setVisible(true);
     }
 
     /**
@@ -102,8 +97,8 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
             return;
         }
 
-        NodeModelListFrameAction frame = NodeModelListFrameAction.buildFrame(
-                fileKey, true, modelsLibraryService, libraryResourcesDao);
+        NodeModelListFrameAction frame = NodeModelListFrameAction.buildFrame(fileKey, true, modelsLibraryService);
+
         frame.setVisible(true);
     }
 
@@ -117,5 +112,54 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         }
 
         return this.dataModel.get(selectedRow);
+    }
+
+    @Override
+    protected void onAddResourceFile() {
+        final JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new ModelLibraryFilter());
+        fc.setAcceptAllFileFilterUsed(false);
+
+
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+
+            File selectedFile = fc.getSelectedFile();
+            if (selectedFile != null) {
+                this.modelsLibraryService.addResourcesPath(selectedFile.getAbsolutePath());
+                loadTableData();
+            }
+        }
+    }
+
+    private class ModelLibraryFilter extends FileFilter {
+        @Override
+        public boolean accept(File f) {
+            if (f == null) {
+                return true;
+            }
+            if (f.isDirectory()) {
+                return true;
+            }
+            return f.getAbsolutePath().endsWith(".xml");
+        }
+
+        @Override
+        public String getDescription() {
+            return "Model library";
+        }
+    }
+
+    @Override
+    protected void onRemoveResourceFile() {
+        String fileName = getSelected();
+
+        modelsLibraryService.removeResourcesPath(fileName);
+        loadTableData();
+    }
+
+    @Override
+    protected void onDefaultResources() {
+        modelsLibraryService.setDefaultResourcesPaths();
+        loadTableData();
     }
 }

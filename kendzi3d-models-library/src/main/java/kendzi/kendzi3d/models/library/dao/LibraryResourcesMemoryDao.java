@@ -46,7 +46,13 @@ public class LibraryResourcesMemoryDao implements LibraryResourcesDao {
         resources.addAll(fileKeys);
     }
 
+    @Override
+    public void setDefaultResourcesPaths() {
+        resources = defaultResources();
+    }
+
     private static List<String> defaultResources() {
         return Arrays.asList("plugin:/models/modelsLibraryInternalLayer.xml", "plugin:/models/modelsLibraryLayer.xml", "plugin:/models/trafficSignsLibraryInternalLayer.xml");
     }
+
 }

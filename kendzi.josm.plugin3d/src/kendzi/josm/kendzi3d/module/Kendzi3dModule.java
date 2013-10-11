@@ -33,7 +33,7 @@ import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
-import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
+import kendzi.kendzi3d.models.library.dao.LibraryResourcesJosmDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 
 import com.google.inject.AbstractModule;
@@ -68,7 +68,7 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(ModelCacheService.class).in(Singleton.class);
 
-        bind(LibraryResourcesDao.class).to(LibraryResourcesMemoryDao.class).in(Singleton.class);
+        bind(LibraryResourcesDao.class).to(LibraryResourcesJosmDao.class).in(Singleton.class);
 
 //        bind(ModelRender.class).in(Singleton.class);
 

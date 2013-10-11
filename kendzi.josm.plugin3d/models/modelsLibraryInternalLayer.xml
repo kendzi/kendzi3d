@@ -25,9 +25,6 @@ attributes:
 Functions depends on context! Currently validation for them maybe not working!
 
 * scale - scale functions:
-OLD	- scaleHeight(a,default)
-OLD	- normalHeight(a, default)
-OLD	- number
 
 	- height({default}) 	- receive height from OsmPrivitive tags, if tag height is not set it return default value 
 	- {number}				- receive double value
@@ -37,7 +34,7 @@ Example:
 
 	
 * direction
-	- wayNodeDirection() 	- for nodes located on ways it read way direction (orthogonal to bisector in this point)
+	- wayNodeDirection() 	- for nodes located on ways it read way direction (orthogonal to bisector in this point
 		
 Example:
 	90 + wayNodeDirection()	

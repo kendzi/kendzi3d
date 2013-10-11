@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
@@ -50,8 +51,8 @@ public class ModelLibraryResourcesListFrame extends JFrame {
      * Create the frame.
      */
     public ModelLibraryResourcesListFrame() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 640, 480);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 807, 532);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
@@ -88,6 +89,7 @@ public class ModelLibraryResourcesListFrame extends JFrame {
 
         JButton btnView = new JButton(Messages.getString("NodeModelListFrame.btnView.text")); //$NON-NLS-1$
         btnView.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 viewResourceDetails();
             }
@@ -95,6 +97,7 @@ public class ModelLibraryResourcesListFrame extends JFrame {
 
         JButton btnViewAll = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnViewAll.text")); //$NON-NLS-1$
         btnViewAll.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 viewFinalLibrary();
             }
@@ -102,28 +105,33 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         panel_buttons.add(btnViewAll);
         panel_buttons.add(btnView);
 
-        JButton btnAdd = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnAdd.text")); //$NON-NLS-1$
-        btnAdd.setEnabled(false);
+        JButton btnAdd = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnAdd.text"));
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                onAddResourceFile();
             }
         });
         panel_buttons.add(btnAdd);
         panel_buttons.add(btnEdit);
 
-        JButton btnDelete = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDelete.text")); //$NON-NLS-1$
-        btnDelete.setEnabled(false);
+        JButton btnDelete = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDelete.text"));
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                onRemoveResourceFile();
             }
-
-
         });
         panel_buttons.add(btnDelete);
+
+        JButton btnDefault = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDefault.text")); //$NON-NLS-1$
+        btnDefault.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onDefaultResources();
+            }
+        });
+        panel_buttons.add(btnDefault);
 
         JPanel panel_empty = new JPanel();
         panel_buttons.add(panel_empty);
@@ -146,6 +154,18 @@ public class ModelLibraryResourcesListFrame extends JFrame {
     }
 
     protected void viewResourceDetails() {
+        //
+    }
+
+    protected void onAddResourceFile() {
+        //
+    }
+
+    protected void onRemoveResourceFile() {
+        //
+    }
+
+    protected void onDefaultResources() {
         //
     }
 

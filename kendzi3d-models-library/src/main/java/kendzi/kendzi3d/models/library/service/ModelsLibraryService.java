@@ -29,15 +29,18 @@ public class ModelsLibraryService {
 
     private ModelLibraryXmlDao modelLibraryXmlDao;
 
-    private LibraryResourcesDao libraryResourcesMemoryDao;
+    private LibraryResourcesDao libraryResourcesDao;
 
     private List<ModelsLibraryDataChangeEvent> pointModelDataChange = new ArrayList<ModelsLibraryDataChangeEvent>();
 
 
-    public void addPointModelDataChangeListener(ModelsLibraryDataChangeEvent pPointModelDataChange) {
-        this.pointModelDataChange.add(pPointModelDataChange);
+    public void addPointModelDataChangeListener(ModelsLibraryDataChangeEvent pointModelDataChange) {
+        this.pointModelDataChange.add(pointModelDataChange);
     }
 
+    public void removePointModelDataChangeListener(ModelsLibraryDataChangeEvent ppointModelDataChange) {
+        this.pointModelDataChange.remove(pointModelDataChange);
+    }
 
     protected void firePointModelDataChange() {
         for (ModelsLibraryDataChangeEvent l : this.pointModelDataChange) {
@@ -52,7 +55,7 @@ public class ModelsLibraryService {
     public ModelsLibraryService(UrlReciverService urlReciverService, LibraryResourcesDao libraryResourcesMemoryDao) {
         super();
         this.urlReciverService = urlReciverService;
-        this.libraryResourcesMemoryDao = libraryResourcesMemoryDao;
+        this.libraryResourcesDao = libraryResourcesMemoryDao;
 
         modelLibraryXmlDao = new ModelLibraryXmlDao(urlReciverService);
 
@@ -80,27 +83,6 @@ public class ModelsLibraryService {
         }
         return ret;
     }
-
-    //    static Vector3d parseVector(String x, String y, String z) {
-    //        return new Vector3d(
-    //                parseDouble(x, 0d),
-    //                parseDouble(y, 0d),
-    //                parseDouble(z, 0d));
-    //    }
-    //
-    //    private static Double parseDouble(String z, Double d) {
-    //        if (z == null || "".equals(z)) {
-    //            return d;
-    //        }
-    //
-    //        try {
-    //            return Double.parseDouble(z);
-    //        } catch (Exception e) {
-    //            log.error(e,e);
-    //        }
-    //        return d;
-    //    }
-
     private void saveModelLibrary(String fileKey, ModelsLibrary models) {
         this.modelLibrary.put(fileKey, models);
     }
@@ -110,17 +92,24 @@ public class ModelsLibraryService {
      */
     public void init() {
 
-        for (String fileKey : libraryResourcesMemoryDao.loadResourcesPath()) {
+        for (String fileKey : libraryResourcesDao.loadResourcesPath()) {
             try {
                 ModelsLibrary models = modelLibraryXmlDao.loadXml(fileKey);
 
                 saveModelLibrary(fileKey, models);
 
             } catch (ModelLibraryLoadException e) {
-                log.error("faild to load file key: "+ fileKey,e);
+                log.error("faild to load file key: " + fileKey, e);
             }
-
         }
+    }
+
+    /**
+     * Clear all cache data and reload configuration.
+     */
+    public void clear() {
+        modelLibrary.clear();
+        init();
     }
 
     /**
@@ -130,16 +119,25 @@ public class ModelsLibraryService {
         return urlReciverService;
     }
 
-
-    //    public void remove(String fileKey, PointModel pointModel) {
-    //        throw new RuntimeException("TODO");
-    //    }
-
-
     public List<String> loadResourcesPath() {
-        return libraryResourcesMemoryDao.loadResourcesPath();
+        return libraryResourcesDao.loadResourcesPath();
     }
 
+    public void addResourcesPath(String path) {
+        List<String> paths = libraryResourcesDao.loadResourcesPath();
+        paths.add(path);
+        libraryResourcesDao.saveResourcesPath(paths);
+
+        firePointModelDataChange();
+    }
+
+    public void removeResourcesPath(String path) {
+        List<String> paths = libraryResourcesDao.loadResourcesPath();
+        paths.remove(path);
+        libraryResourcesDao.saveResourcesPath(paths);
+
+        firePointModelDataChange();
+    }
 
     public List<NodeModel> findNodeModels(String fileKey) {
         if (GLOBAL.equals(fileKey)) {
@@ -148,4 +146,10 @@ public class ModelsLibraryService {
         return modelLibrary.get(fileKey).getNodeModel();
     }
 
+
+    public void setDefaultResourcesPaths() {
+        libraryResourcesDao.setDefaultResourcesPaths();
+
+        firePointModelDataChange();
+    }
 }
