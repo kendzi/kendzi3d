@@ -5,10 +5,10 @@ import generated.NodeModel;
 import java.awt.EventQueue;
 import java.util.List;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.NodeModelListFrame;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +39,7 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
             public void run() {
                 try {
                     NodeModelListFrameAction frame = new NodeModelListFrameAction();
-                    UrlReciverService urlReciverService = new UrlReciverServiceTest();
+                    ResourceService urlReciverService = new UrlReciverServiceTest();
                     ModelsLibraryService temp = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
                     temp.init();
 

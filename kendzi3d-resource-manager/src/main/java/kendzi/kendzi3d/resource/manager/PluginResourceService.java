@@ -7,72 +7,38 @@
  *
  */
 
-package kendzi.josm.kendzi3d.service.impl;
+package kendzi.kendzi3d.resource.manager;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
-import com.google.inject.Inject;
-
 /**
- * Receive files stored locally in resources and plugin directory.
+ * Receive files stored locally in resources or plugin directory.
  *
  * @author Tomasz Kedziora (Kendzi)
  */
-public final class FileUrlReciverService implements UrlReciverService {
+public final class PluginResourceService implements ResourceService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(FileUrlReciverService.class);
+    private static final Logger log = Logger.getLogger(PluginResourceService.class);
 
     /**
-     * Plugin directory.
+     * Plug-in directory.
      */
-    private final String pluginDir;
+    private final String pluginDirectory;
 
 
     /** Constructor.
-     * @param pPluginDir location of resources
-     *
-     * XXX rename to JoglPluginUrlReciverService
+     * @param pluginDirectory location of resources
+     * 
      */
-    @Inject
-    public FileUrlReciverService(@Kendzi3dPluginDirectory String pPluginDir) {
-        this.pluginDir = pPluginDir;
-    }
-//    /**
-//     * Constructor.
-//     */
-//    public FileUrlReciverService() {
-//        //
-//    }
-
-//    /**
-//     * Setup plugin directory.
-//     * @param pPluginDir plugin directory
-//     */
-//    public static void initFileReciver(String pPluginDir) {
-//        pluginDir = pPluginDir;
-//    }
-    /**
-     * {@inheritDoc}
-     *
-     * @see kendzi.josm.kendzi3d.service.UrlReciverService#receiveFileUrl(java.lang.String)
-     */
-    @Override
-    public URL receiveFileUrl(String pFileName) {
-
-        URL url = receivePluginDirUrl(pFileName);
-        if (url != null) {
-            return url;
-        }
-
-        return getResourceUrl(pFileName);
+    public PluginResourceService(String pluginDirectory) {
+        this.pluginDirectory = pluginDirectory;
     }
 
     /**
@@ -80,7 +46,7 @@ public final class FileUrlReciverService implements UrlReciverService {
      */
     @Override
     public URL receivePluginDirUrl(String pFileName) {
-        File f = new File(this.pluginDir, pFileName);
+        File f = new File(this.pluginDirectory, pFileName);
         System.out.println("reciveFileUrl: " + f.getAbsoluteFile());
         if (f.exists()) {
             try {
@@ -105,21 +71,21 @@ public final class FileUrlReciverService implements UrlReciverService {
      * @return url to resource
      */
     public static URL getResourceUrl(String pResName) {
-//        ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
-//        CodeSource codeSource = pDomain.getCodeSource();
-//        //        if (codeSource == null) throw new CannotFindDirException();
-//        URL loc = codeSource.getLocation();
-//        log.info("loc: " + loc);
+        //        ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
+        //        CodeSource codeSource = pDomain.getCodeSource();
+        //        //        if (codeSource == null) throw new CannotFindDirException();
+        //        URL loc = codeSource.getLocation();
+        //        log.info("loc: " + loc);
 
-        URL resource = FileUrlReciverService.class.getResource("");
-//        log.info("resource: " + resource);
+        URL resource = PluginResourceService.class.getResource("");
+        //        log.info("resource: " + resource);
 
         String resUrl = resource.toString();
         if (resUrl.startsWith("jar:")) {
             // if we are in jar
             try {
                 String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
-//                log.info("new url: " + newURL);
+                //                log.info("new url: " + newURL);
                 return new URL(newURL);
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -128,7 +94,7 @@ public final class FileUrlReciverService implements UrlReciverService {
 
         } else {
             // if we run from eclipse ide
-            URL res = FileUrlReciverService.class.getResource(pResName);
+            URL res = PluginResourceService.class.getResource(pResName);
             if (res != null) {
                 return res;
             }
@@ -147,20 +113,19 @@ public final class FileUrlReciverService implements UrlReciverService {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see kendzi.josm.kendzi3d.service.UrlReciverService#getPluginDir()
-     */
     @Override
     public String getPluginDir() {
-        return this.pluginDir;
+        throw new RuntimeException("DEPRICATED");
     }
 
-//    /**
-//     * @param pluginDir the pluginDir to set
-//     */
-//    public void setPluginDir(String pluginDir) {
-//        this.pluginDir = pluginDir;
-//    }
+
+    @Override
+    public URL resourceToUrl(String resourceName) {
+        URL url = receivePluginDirUrl(resourceName);
+        if (url != null) {
+            return url;
+        }
+
+        return getResourceUrl(resourceName);
+    }
 }

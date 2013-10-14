@@ -6,8 +6,11 @@ import generated.WayNodeModel;
 import javax.vecmath.Vector3d;
 
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.resource.inter.ResourceUtil;
+import kendzi.util.StringUtil;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler;
+import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 
 public class ModelsConvertUtil {
 
@@ -16,7 +19,7 @@ public class ModelsConvertUtil {
         NodeModelConf pm = new NodeModelConf();
         pm.setModel(nodeModel.getModel());
         pm.setModelParameter(nodeModel.getModelParameter());
-        pm.setMatcher(SearchCompiler.compile(nodeModel.getMatcher(), false, false));
+        pm.setMatcher(compileMatch(nodeModel.getMatcher()));
 
         pm.setTranslate(new Vector3d(nodeModel.getTranslateX(), nodeModel.getTranslateY(), nodeModel.getTranslateZ()));
 
@@ -35,8 +38,8 @@ public class ModelsConvertUtil {
 
         pm.setModel(wayNodeModel.getModel());
         pm.setModelParameter(wayNodeModel.getModelParameter());
-        pm.setMatcher(SearchCompiler.compile(wayNodeModel.getMatcher(), false, false));
-        pm.setFilter(SearchCompiler.compile(wayNodeModel.getFilter(), false, false));
+        pm.setMatcher(compileMatch(wayNodeModel.getMatcher()));
+        pm.setFilter(compileMatch(wayNodeModel.getFilter()));
 
         pm.setTranslate(ExpressiongBuilder.build(wayNodeModel.getTranslate()));
 
@@ -48,4 +51,43 @@ public class ModelsConvertUtil {
 
         return pm;
     }
+
+    private static Match compileMatch(String match) throws Exception {
+        try {
+            return SearchCompiler.compile(match, false, false);
+        } catch (Exception e) {
+            throw new Exception("can't compile expression for: " + match, e);
+        }
+    }
+
+    public static String reciveModelPath(String fileUrl, String configurationFile) {
+
+        if (StringUtil.isBlankOrNull(fileUrl)) {
+            return fileUrl;
+        }
+
+        String directory = ResourceUtil.getUrlDrectory(configurationFile);
+
+        if (StringUtil.isBlankOrNull(directory)) {
+            return fileUrl;
+        }
+
+        fileUrl = removeRoot(fileUrl);
+
+        return directory + "/" + fileUrl;
+    }
+
+    private static String removeRoot(String fileName) {
+        if (StringUtil.isBlankOrNull(fileName)) {
+            return fileName;
+        }
+        fileName = fileName.trim();
+        if (fileName.startsWith("\\") || fileName.startsWith("/")) {
+            return fileName.substring(1);
+        }
+        return fileName;
+    }
+
+
+
 }

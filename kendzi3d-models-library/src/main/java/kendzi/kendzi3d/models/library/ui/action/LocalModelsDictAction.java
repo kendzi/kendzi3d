@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.ui.LocalModelsDict;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
     /** Log. */
     private static final Logger log = Logger.getLogger(LocalModelsDictAction.class);
 
-    private UrlReciverService urlReciverService;
+    private ResourceService urlReciverService;
 
     private String model;
 
@@ -120,7 +120,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
      * @param urlReciverService
      *            the urlReciverService to set
      */
-    public void setUrlReciverService(UrlReciverService urlReciverService) {
+    public void setUrlReciverService(ResourceService urlReciverService) {
         this.urlReciverService = urlReciverService;
     }
 
@@ -129,13 +129,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
      */
     public static void main(String[] args) {
 
-        UrlReciverService urlReciverService = new UrlReciverService() {
-
-            @Override
-            public URL receiveFileUrl(String pFileName) {
-                // TODO Auto-generated method stub
-                return null;
-            }
+        ResourceService urlReciverService = new ResourceService() {
 
             @Override
             public URL receivePluginDirUrl(String pFileName) {
@@ -148,6 +142,12 @@ public class LocalModelsDictAction extends LocalModelsDict {
                 return ".";
             }
 
+            @Override
+            public URL resourceToUrl(String resourceName) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
         };
 
         try {
@@ -155,7 +155,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
 
             dialog.setUrlReciverService(urlReciverService);
 
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
             dialog.initUi();
         } catch (Exception e) {

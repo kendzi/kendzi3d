@@ -294,9 +294,9 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         return null;
     }
 
-    private Double getModelNormal(Model pModel) {
+    private double getModelNormal(Model pModel) {
         if (pModel == null) {
-            return null;
+            return 1d;
         }
         // normalize from origin to highest point in model
         return 1d / (pModel.getBounds().max.y - 0);//pModel.getBounds().min.y);

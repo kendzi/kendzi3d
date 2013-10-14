@@ -23,9 +23,9 @@ import kendzi.josm.kendzi3d.jogl.layer.Layer;
 import kendzi.josm.kendzi3d.jogl.model.Model;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryDataChangeEvent;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -60,16 +60,16 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     /**
      * Model renderer.
      */
-    //@Inject
+    // @Inject
     private ModelRender modelRender;
 
-    //@Inject
+    // @Inject
     private ModelCacheService modelCacheService;
 
-    //@Inject
-    private UrlReciverService urlReciverService;
+    // @Inject
+    private ResourceService urlReciverService;
 
-    //@Inject
+    // @Inject
     private ModelsLibraryService modelsLibraryService;
 
     private Map<String, List<WayNodeModelConf>> wayNodeModelsMap;
@@ -83,12 +83,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
      * @param modelsLibraryService
      */
     @Inject
-    public ModelsLibraryLayer(
-            ModelRender modelRender,
-            ModelCacheService modelCacheService,
-            UrlReciverService urlReciverService,
-            ModelsLibraryService modelsLibraryService
-            ) {
+    public ModelsLibraryLayer(ModelRender modelRender, ModelCacheService modelCacheService, ResourceService urlReciverService,
+            ModelsLibraryService modelsLibraryService) {
         this.modelRender = modelRender;
         this.modelCacheService = modelCacheService;
         this.modelsLibraryService = modelsLibraryService;
@@ -108,24 +104,48 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     private void loadData() {
         List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
-        for (NodeModel nodeModel : this.modelsLibraryService.findAllNodeModels()) {
-            try {
-                nodeModelsList.add(ModelsConvertUtil.convert(nodeModel));
-            } catch (Exception e) {
-                log.error(e, e);
+        for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
+            List<NodeModel> nodeModels = modelsLibraryService.findAllNodeModels(configurationFile);
+
+            for (NodeModel nodeModel : nodeModels) {
+                try {
+                    NodeModelConf nodeModelConf = ModelsConvertUtil.convert(nodeModel);
+                    nodeModelConf.setModel(ModelsConvertUtil.reciveModelPath(nodeModelConf.getModel(), configurationFile));
+
+                    nodeModelsList.add(nodeModelConf);
+                } catch (Exception e) {
+                    log.error(e, e);
+                }
             }
         }
 
         this.nodeModelsList = nodeModelsList;
 
         List<WayNodeModelConf> wayNodeModelsList = new ArrayList<WayNodeModelConf>();
-        for (WayNodeModel nodeModel : this.modelsLibraryService.findAllWayNodeModels()) {
-            try {
-                wayNodeModelsList.add(ModelsConvertUtil.convert(nodeModel));
-            } catch (Exception e) {
-                log.error(e, e);
+
+        for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
+            List<WayNodeModel> wayNodeModels = modelsLibraryService.findAllWayNodeModels(configurationFile);
+            for (WayNodeModel nodeModel : wayNodeModels) {
+                try {
+                    WayNodeModelConf nodeModelConf = ModelsConvertUtil.convert(nodeModel);
+                    nodeModelConf.setModel(ModelsConvertUtil.reciveModelPath(nodeModelConf.getModel(), configurationFile));
+
+                    wayNodeModelsList.add(nodeModelConf);
+
+                } catch (Exception e) {
+                    log.error("can't load configuration", e);
+                }
             }
         }
+
+        // for (WayNodeModel nodeModel :
+        // modelsLibraryService.findAllWayNodeModels()) {
+        // try {
+        // wayNodeModelsList.add(ModelsConvertUtil.convert(nodeModel));
+        // } catch (Exception e) {
+        // log.error(e, e);
+        // }
+        // }
 
         wayNodeModelsMap = new HashMap<String, List<WayNodeModelConf>>();
         for (WayNodeModelConf wayNodeModelConf : wayNodeModelsList) {
@@ -137,11 +157,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
         }
     }
 
-
-
     @Override
-    public
-    Match getNodeMatcher() {
+    public Match getNodeMatcher() {
         List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
         for (NodeModelConf nodeModel : this.nodeModelsList) {
 
@@ -153,13 +170,13 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     @Override
     public Match getWayMatcher() {
-//        List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
-//        for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
-//
-//            matchersList.add(nodeModel.getMatcher());
-//        }
-//
-//        return new OrList(matchersList);
+        // List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
+        // for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
+        //
+        // matchersList.add(nodeModel.getMatcher());
+        // }
+        //
+        // return new OrList(matchersList);
         return new SearchCompiler.Always();
     }
 
@@ -185,7 +202,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
             if (nodeModel.getMatcher().match(pNode)) {
 
-                this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.PointModel(pNode, nodeModel, pPerspective3D, this.modelRender, this.modelCacheService));
+                this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.PointModel(pNode, nodeModel, pPerspective3D,
+                        this.modelRender, this.modelCacheService));
             }
         }
     }
@@ -264,7 +282,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     /**
      * @param urlReciverService the urlReciverService to set
      */
-    public void setUrlReciverService(UrlReciverService urlReciverService) {
+    public void setUrlReciverService(ResourceService urlReciverService) {
         this.urlReciverService = urlReciverService;
     }
 

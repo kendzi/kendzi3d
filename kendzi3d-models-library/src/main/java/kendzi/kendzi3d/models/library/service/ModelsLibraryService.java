@@ -11,10 +11,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.ModelLibraryXmlDao;
 import kendzi.kendzi3d.models.library.exception.ModelLibraryLoadException;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +25,7 @@ public class ModelsLibraryService {
 
     public static final String GLOBAL = "global";
 
-    private UrlReciverService urlReciverService;
+    private ResourceService urlReciverService;
 
     private ModelLibraryXmlDao modelLibraryXmlDao;
 
@@ -52,7 +52,7 @@ public class ModelsLibraryService {
      * @param urlReciverService url reciver service
      */
     @Inject
-    public ModelsLibraryService(UrlReciverService urlReciverService, LibraryResourcesDao libraryResourcesMemoryDao) {
+    public ModelsLibraryService(ResourceService urlReciverService, LibraryResourcesDao libraryResourcesMemoryDao) {
         super();
         this.urlReciverService = urlReciverService;
         this.libraryResourcesDao = libraryResourcesMemoryDao;
@@ -74,6 +74,17 @@ public class ModelsLibraryService {
         return ret;
     }
 
+    public List<NodeModel> findAllNodeModels(String configurationFile) {
+
+        List<NodeModel> ret = new ArrayList<NodeModel>();
+
+        ModelsLibrary modelsLibrary = modelLibrary.get(configurationFile);
+        if (modelsLibrary != null) {
+            ret.addAll(modelsLibrary.getNodeModel());
+        }
+        return ret;
+    }
+
     public List<WayNodeModel> findAllWayNodeModels() {
 
         List<WayNodeModel> ret = new ArrayList<WayNodeModel>();
@@ -83,6 +94,22 @@ public class ModelsLibraryService {
         }
         return ret;
     }
+
+    public List<WayNodeModel> findAllWayNodeModels(String configurationFile) {
+
+        List<WayNodeModel> ret = new ArrayList<WayNodeModel>();
+
+        ModelsLibrary modelsLibrary = modelLibrary.get(configurationFile);
+        if (modelsLibrary != null) {
+            ret.addAll(modelsLibrary.getWayNodeModel());
+        }
+        return ret;
+    }
+
+    public List<String> findAllConfigurationFiles() {
+        return new ArrayList<String>(modelLibrary.keySet());
+    }
+
     private void saveModelLibrary(String fileKey, ModelsLibrary models) {
         this.modelLibrary.put(fileKey, models);
     }
@@ -115,7 +142,7 @@ public class ModelsLibraryService {
     /**
      * @return the urlReciverService
      */
-    public UrlReciverService getUrlReciverService() {
+    public ResourceService getUrlReciverService() {
         return urlReciverService;
     }
 

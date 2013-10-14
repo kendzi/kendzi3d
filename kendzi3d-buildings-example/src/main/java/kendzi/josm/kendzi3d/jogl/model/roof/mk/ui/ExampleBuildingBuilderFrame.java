@@ -31,7 +31,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -65,16 +65,16 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
         // this is required only for textures file finding. It is used in renderer do load files.
         // if textures are not used but only colored materials it is not required!
         // service to take files url's
-        UrlReciverService fileUrlReciverService = new LocalResourceReciver();
+        ResourceService resourceService = new LocalResourceReciver();
         //FileUrlReciverService(locationOfResources);
         // cache for textures files.
         TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFilter(true);
 
         // manual injection
-        textureCacheService.setFileUrlReciverService(fileUrlReciverService);
+        textureCacheService.setFileUrlReciverService(resourceService);
 
-        this.textureLibraryStorageService = new TextureLibraryService(fileUrlReciverService);
+        this.textureLibraryStorageService = new TextureLibraryService(resourceService);
 
         // Set up of my model renderer to display my model
         this.modelRender = new ModelRender();

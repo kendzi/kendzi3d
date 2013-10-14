@@ -29,7 +29,7 @@ import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +45,7 @@ public class WaveFrontLoader implements iLoader {
 
 
     //  = ApplicationContextUtil.getFileUrlReciverService();
-    UrlReciverService urlReciverService;
+    ResourceService urlReciverService;
 
 
 
@@ -78,7 +78,7 @@ public class WaveFrontLoader implements iLoader {
      * 
      * @param urlReciverService
      */
-    public WaveFrontLoader(UrlReciverService urlReciverService) {
+    public WaveFrontLoader(ResourceService urlReciverService) {
         this.urlReciverService = urlReciverService;
     }
 
@@ -89,7 +89,7 @@ public class WaveFrontLoader implements iLoader {
      * 
      * @param urlReciverService
      */
-    public WaveFrontLoader(String replaceTextureMaterialName, String replaceTextureNewKey, UrlReciverService urlReciverService) {
+    public WaveFrontLoader(String replaceTextureMaterialName, String replaceTextureNewKey, ResourceService urlReciverService) {
         this.urlReciverService = urlReciverService;
         this.replaceTextureMaterialName = replaceTextureMaterialName;
         this.replaceTextureNewKey = replaceTextureNewKey;
@@ -120,33 +120,35 @@ public class WaveFrontLoader implements iLoader {
 
 
         this.baseDir = "";
-        path = path.replaceAll("\\\\", "/");
+        path = replacePathSign(path);
         String [] tokens = path.split("/");
         for (int i = 0; i < tokens.length - 1; i++) {
             this.baseDir += tokens[i] + "/";
         }
 
         InputStream stream = null;
+        String fileName = this.model.getSource();
         try {
 
             //            stream = ResourceRetriever.getResourceAsInputStream(model.getSource());
-            URL modelURL = this.urlReciverService.receiveFileUrl(this.model.getSource());
+            URL modelURL = this.urlReciverService.resourceToUrl(fileName);
 
             if (modelURL != null) {
                 stream = modelURL.openStream();
             }
             if (stream == null) {
-                throw new ModelLoadException("Stream is null");
+                throw new ModelLoadException("Stream is null for resource: " + this.model.getSource());
             }
         } catch (IOException e) {
-            throw new ModelLoadException("Caught IO exception: " + e);
+            //FIXME
+            throw new ModelLoadException("Caught IO exception for file : " + fileName + " " + e);
         }
 
         try {
             // Open a file handle and read the models data
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
             String  line = null;
-            while (((line = this.lastLineToProcess) != null) || ((line = br.readLine()) != null)) {
+            while ((line = this.lastLineToProcess) != null || (line = br.readLine()) != null) {
                 this.lastLineToProcess = null;
 
                 if (lineIs(COMMENT, line)) {
@@ -700,7 +702,7 @@ public class WaveFrontLoader implements iLoader {
         Material mat = new Material();
         InputStream stream = null;
         try {
-            URL materialURL = this.urlReciverService.receiveFileUrl(this.baseDir + s[1]);
+            URL materialURL = this.urlReciverService.resourceToUrl(this.baseDir + s[1]);
             stream = materialURL.openStream();
 
             //            stream = ResourceRetriever.getResourceAsInputStream(this.baseDir + s[1]);
@@ -731,8 +733,8 @@ public class WaveFrontLoader implements iLoader {
             EditableMaterial mat = (EditableMaterial) this.model.getMaterial(i);
 
             if(
-                    (mat.getName() != null && mat.getName().equals(materialName))
-                    || (mat.getName() == null && materialName == null)
+                    mat.getName() != null && mat.getName().equals(materialName)
+                    || mat.getName() == null && materialName == null
                     ){
 
                 materialID = i;
@@ -819,8 +821,15 @@ public class WaveFrontLoader implements iLoader {
         if (replaceTextureMaterialName != null && replaceTextureMaterialName.equals(mat.getName())) {
             mat.setTexture0(replaceTextureNewKey);
         } else {
-            mat.setTexture0(/* baseDir + */parts[1]);
+            mat.setTexture0(replacePathSign(parts[1]));
         }
+    }
+
+    private String replacePathSign(String path) {
+        if (path == null) {
+            return null;
+        }
+        return  path = path.replaceAll("\\\\", "/");
     }
 
     private class EditableMaterial extends Material {

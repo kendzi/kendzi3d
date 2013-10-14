@@ -7,7 +7,6 @@
  *
  */
 
-
 package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -76,13 +75,7 @@ public class CleanUpAction extends JosmAction {
             TextureLibraryStorageService TextureLibraryStorageService, ModelCacheService modelCacheService,
             ModelsLibraryService modelsLibraryService) {
 
-        super(
-                tr("Clean up"),
-                "1306318208_rebuild__24",
-                tr("Rebuild models, textures and wold offset"),
-                null,
-                false
-        );
+        super(tr("Clean up"), "1306318208_rebuild__24", tr("Rebuild models, textures and wold offset"), null, false);
 
         this.renderJosm = renderJosm;
         this.textureCacheService = textureCacheService;
@@ -103,11 +96,6 @@ public class CleanUpAction extends JosmAction {
         modelCacheService.clear();
 
         // XXX add event
-        this.renderJosm.processDatasetEvent(null);
-    }
-
-    @Override
-    protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
+        renderJosm.processDatasetEvent(null);
     }
 }

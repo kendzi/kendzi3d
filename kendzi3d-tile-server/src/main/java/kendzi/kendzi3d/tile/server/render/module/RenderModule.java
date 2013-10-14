@@ -17,14 +17,16 @@ import kendzi.josm.kendzi3d.jogl.layer.WaterLayer;
 import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
+import kendzi.josm.kendzi3d.service.ColorTextureBuilder;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
+import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.render.conf.RenderEngineConf;
 import kendzi.kendzi3d.render.dataset.DataSetProvider;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.tile.server.render.worker.TitleJobRender;
 import kendzi.kendzi3d.tile.server.render.worker.impl.Kendzi3dTileRenderWorker;
 
@@ -51,7 +53,7 @@ public class RenderModule  extends AbstractModule {
          * This tells Guice that whenever it sees a dependency on a TransactionLog, it should satisfy the dependency
          * using a DatabaseTransactionLog.
          */
-        bind(UrlReciverService.class).to(FileUrlReciverService.class);
+        bind(ResourceService.class).to(FileUrlReciverService.class);
 
         //        bind(ColorTextureBuilder.class);
 
@@ -110,7 +112,7 @@ public class RenderModule  extends AbstractModule {
 
 
     @Provides @Singleton
-    TextureCacheServiceImpl provideTextureCacheService(UrlReciverService pUrlReciverService) {
+    TextureCacheServiceImpl provideTextureCacheService(ResourceService pUrlReciverService) {
         TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
         textureCacheService.addTextureBuilder(new ColorTextureBuilder());

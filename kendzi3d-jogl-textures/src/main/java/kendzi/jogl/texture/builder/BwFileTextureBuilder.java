@@ -9,7 +9,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -23,10 +23,10 @@ public class BwFileTextureBuilder implements TextureBuilder {
     /**
      * File url reciver service.
      */
-    UrlReciverService fileUrlReciverService;
+    ResourceService resourceService;
 
-    public BwFileTextureBuilder(UrlReciverService fileUrlReciverService) {
-        this.fileUrlReciverService = fileUrlReciverService;
+    public BwFileTextureBuilder(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -67,14 +67,14 @@ public class BwFileTextureBuilder implements TextureBuilder {
         return loadBufferedImage(pKey);
     }
 
-    public BufferedImage loadBufferedImage(String pKey) {
-        if (pKey == null) {
+    public BufferedImage loadBufferedImage(String key) {
+        if (key == null) {
             return null;
         }
 
-        URL url = this.fileUrlReciverService.receiveFileUrl(pKey);
+        URL url = this.resourceService.resourceToUrl(key);
         if (url == null) {
-            log.info("No file to load: " + pKey);
+            log.info("No file to load: " + key);
             return null;
         }
 
@@ -82,7 +82,7 @@ public class BwFileTextureBuilder implements TextureBuilder {
         try {
             img = ImageIO.read(url);
         } catch (IOException e) {
-            log.warn("cant load image: " + pKey, e);
+            log.warn("cant load image: " + key, e);
             return null;
         }
 
@@ -123,12 +123,12 @@ public class BwFileTextureBuilder implements TextureBuilder {
         for(int x = 0; x < raster.getWidth(); x++) {
             for(int y = 0; y < raster.getHeight(); y++){
                 int argb = colorFrame.getRGB(x,y);
-                int r = (argb >> 16) & 0xff;
-                int g = (argb >>  8) & 0xff;
-                int b = (argb      ) & 0xff;
+                int r = argb >> 16 & 0xff;
+            int g = argb >>  8 & 0xff;
+            int b = argb & 0xff;
 
-                int l = (int) (.299 * r + .587 * g + .114 * b);
-                raster.setSample(x, y, 0, l);
+            int l = (int) (.299 * r + .587 * g + .114 * b);
+            raster.setSample(x, y, 0, l);
             }
         }
     }

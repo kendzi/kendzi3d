@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.loader.ModelLoader;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import com.google.inject.Inject;
 
@@ -25,7 +26,7 @@ public class ModelCacheService {
     private static final String MATERIAL = "material.";
 
     @Inject
-    UrlReciverService urlReciverService;
+    ResourceService urlReciverService;
 
     private Map<String, Model> modelCache = new HashMap<String, Model>();
 

@@ -4,11 +4,11 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
-public class LocalResourceReciver implements UrlReciverService {
+public class LocalResourceReciver implements ResourceService {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(LocalResourceReciver.class);
@@ -32,7 +32,7 @@ public class LocalResourceReciver implements UrlReciverService {
     @Override
     public URL receivePluginDirUrl(String pFileName) {
         try {
-            return (new File(getFile(pFileName)).toURI().toURL());
+            return new File(getFile(pFileName)).toURI().toURL();
         } catch (MalformedURLException e) {
             log.error(e, e);
         }
@@ -40,12 +40,12 @@ public class LocalResourceReciver implements UrlReciverService {
     }
 
     @Override
-    public URL receiveFileUrl(String pFileName) {
-        return receivePluginDirUrl(pFileName);
+    public String getPluginDir() {
+        return this.locationOfResources;
     }
 
     @Override
-    public String getPluginDir() {
-        return this.locationOfResources;
+    public URL resourceToUrl(String resourceName) {
+        return receivePluginDirUrl(resourceName);
     }
 }

@@ -19,13 +19,12 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
 import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 
 import kendzi.jogl.texture.builder.TextureBuilder;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -41,7 +40,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
     /**
      * File url reciver service.
      */
-    UrlReciverService fileUrlReciverService;
+    ResourceService resourceService;
 
     private Map<String, Texture> cache = new HashMap<String, Texture>();
 
@@ -84,6 +83,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
      *            2. from resources from jar in dir {PLUGIN_JAR}/ <br>
      * @return texture
      */
+    @Override
     public BufferedImage getImage(String pName) {
         return loadImage(pName);
     }
@@ -117,15 +117,15 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return null;
     }
 
-    public BufferedImage loadTextureImageFile(String pName) throws GLException, IOException {
+    public BufferedImage loadTextureImageFile(String name) throws GLException, IOException {
 
-        if (pName == null) {
+        if (name == null) {
             return null;
         }
 
-        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        URL textUrl = this.resourceService.resourceToUrl(name);
         if (textUrl == null) {
-            log.info("No file to load: " + pName);
+            log.info("No file to load: " + name);
             return null;
         }
 
@@ -165,6 +165,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
      * @param pName name of texture
      * @return if texture exist
      */
+    @Override
     public boolean isTexture(String pName) {
         return null != this.cache.get(pName);
     }
@@ -173,6 +174,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
     /**
      * Clean up all textures from cache.
      */
+    @Override
     public void clear() {
         this.cache.clear();
     }
@@ -222,8 +224,8 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
             // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 
         } else {
-            texture.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-            texture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+            texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+            texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         }
     }
 
@@ -247,7 +249,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
                         // gl.getGL4().glGetErrorString
                         int errorCode = gl.glGetError();
                         String errorStr = new String();
-                        errorStr = (new GLU().gluErrorString(errorCode));
+                        errorStr = new GLU().gluErrorString(errorCode);
                         System.err.println(errorStr);
                         log.error("Error loading texture: " + pName + " texture url: " + pName, e);
                     }
@@ -269,15 +271,15 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return null;
     }
 
-    public Texture loadTextureFile(String pName, boolean filter) throws GLException, IOException {
+    public Texture loadTextureFile(String name, boolean filter) throws GLException, IOException {
 
-        if (pName == null) {
+        if (name == null) {
             return null;
         }
 
-        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        URL textUrl = this.resourceService.resourceToUrl(name);
         if (textUrl == null) {
-            log.info("No file to load: " + pName);
+            log.info("No file to load: " + name);
             return null;
         }
 
@@ -319,8 +321,8 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
             if (filter) {
 
             } else {
-                tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-                tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+                tex.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+                tex.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
             }
 
         }
@@ -363,17 +365,17 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
 
     /**
-     * @return the fileUrlReciverService
+     * @return the resourceService
      */
-    public UrlReciverService getFileUrlReciverService() {
-        return this.fileUrlReciverService;
+    public ResourceService getFileUrlReciverService() {
+        return this.resourceService;
     }
 
 
     /**
-     * @param fileUrlReciverService the fileUrlReciverService to set
+     * @param resourceService the resourceService to set
      */
-    public void setFileUrlReciverService(UrlReciverService fileUrlReciverService) {
-        this.fileUrlReciverService = fileUrlReciverService;
+    public void setFileUrlReciverService(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 }

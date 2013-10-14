@@ -10,19 +10,22 @@
 package kendzi.kendzi3d.render.listener;
 
 import javax.inject.Inject;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.CameraMoveListener;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.ui.SimpleMoveAnimator;
-import kendzi.josm.kendzi3d.service.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.service.TextureLibraryService;
 import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
 import kendzi.math.geometry.point.PointUtil;
@@ -129,7 +132,7 @@ public class Kendzi3dTitleGLEventListener {
         GLU glu = new GLU();
 
         // _direction_
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
 
 
         //        // Clear the drawing area
@@ -147,23 +150,23 @@ public class Kendzi3dTitleGLEventListener {
 
         gl.glClearColor( 0,0,0, 0.0f );
         // clear colour and depth buffers
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
         // dla przezroczystosci tla
-        gl.glEnable(GL2.GL_BLEND);
+        gl.glEnable(GL.GL_BLEND);
         //        gl.glBlendFunc(GL2.GL_DST_ALPHA, GL2.GL_ONE_MINUS_DST_ALPHA);
         //        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-        gl. glBlendFunc(GL2.GL_ONE, GL2.GL_ZERO);
+        gl. glBlendFunc(GL.GL_ONE, GL.GL_ZERO);
 
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
 
         //
         setCamera(glu, camraCenter, cameraAngleX, cameraAngleY);
 
 
-        gl.glEnable(GL2.GL_MULTISAMPLE);
+        gl.glEnable(GL.GL_MULTISAMPLE);
 
 
         //        this.ground.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());
@@ -210,17 +213,17 @@ public class Kendzi3dTitleGLEventListener {
         //        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
         gl.glClearColor(0f, 0f, 0f, 0.0f);
 
-        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glEnable(GL.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL2.GL_DEPTH_BITS, depth_bits, 0);
+        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
 
-        gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
 
         addLight(gl);
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
+        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
 
         RenderJOSM.lod1 = Double.MAX_VALUE;
     }
@@ -247,7 +250,7 @@ public class Kendzi3dTitleGLEventListener {
 
         gl.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
         //        glu.gluPerspective(45.0, (float)width / (float) height, 1.0, 1500.0); // 5
 
@@ -278,25 +281,25 @@ public class Kendzi3dTitleGLEventListener {
      */
     private void addLight(GL2 pGl) {
 
-        pGl.glMatrixMode(GL2.GL_MODELVIEW);
+        pGl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         // enable a single light source
-        pGl.glEnable(GL2.GL_LIGHTING);
-        pGl.glEnable(GL2.GL_LIGHT0);
+        pGl.glEnable(GLLightingFunc.GL_LIGHTING);
+        pGl.glEnable(GLLightingFunc.GL_LIGHT0);
 
 
         float gray = 0.5f;
         float[] grayLight = {gray, gray, gray, 1.0f }; // weak gray ambient
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, grayLight, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
 
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
         // & specular
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, whiteLight, 0);
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, whiteLight, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
 
         //      float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
         float [] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
 
 
         //        gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
@@ -362,7 +365,7 @@ public class Kendzi3dTitleGLEventListener {
 
 
     private void drawFloor(GL2 gl) {
-        gl.glDisable(GL2.GL_LIGHTING);
+        gl.glDisable(GLLightingFunc.GL_LIGHTING);
 
         //blue
         gl.glColor3f(0.0f, 0.1f, 0.4f);
@@ -371,7 +374,7 @@ public class Kendzi3dTitleGLEventListener {
         gl.glColor3f(0.0f, 0.5f, 0.1f);
         DrawUtil.drawTiles(gl, 50, false);
 
-        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GLLightingFunc.GL_LIGHTING);
     }
 
 

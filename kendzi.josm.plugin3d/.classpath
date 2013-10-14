@@ -31,7 +31,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-model-render"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-jogl-model-util"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-math"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-file-util"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-resource-interface"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-buildings"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi3d-buildings-josm"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/kendzi-util"/>
@@ -47,5 +47,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-expressions-javacc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-expressions-josm"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-models-library-josm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kendzi3d-resource-manager"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

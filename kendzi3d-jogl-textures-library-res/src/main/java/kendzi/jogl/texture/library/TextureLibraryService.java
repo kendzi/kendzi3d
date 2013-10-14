@@ -28,7 +28,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import kendzi.jogl.texture.dto.TextureData;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
@@ -48,7 +48,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
     Map<String, ArrayList<TextureData>> textureMap = new HashMap<String, ArrayList<TextureData>>();
 
-    private UrlReciverService urlReciverService;
+    private ResourceService urlReciverService;
 
     private Random randomNumberGenerator = new Random();
 
@@ -57,7 +57,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     /** Constructor.
      * @param urlReciverService url reciver service
      */
-    public TextureLibraryService(UrlReciverService urlReciverService) {
+    public TextureLibraryService(ResourceService urlReciverService) {
         super();
         this.urlReciverService = urlReciverService;
 
@@ -106,6 +106,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
      * @param key texture key
      * @return texture list for key
      */
+    @Override
     public List<TextureData> findTextureData(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
         if (set == null) {
@@ -195,13 +196,13 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
 
-    private void load(String pUrl) throws FileNotFoundException, JAXBException {
+    private void load(String url) throws FileNotFoundException, JAXBException {
         //        this.textureMap.clear();
 
-        URL pointModelConf = this.urlReciverService.receiveFileUrl(pUrl);
+        URL pointModelConf = this.urlReciverService.resourceToUrl(url);
 
         if (!UrlUtil.existUrl(pointModelConf)) {
-            log.warn("cant load texture configuration from: " + pUrl + " url don't exist: " + pointModelConf);
+            log.warn("cant load texture configuration from: " + url + " url don't exist: " + pointModelConf);
             return;
         }
 
@@ -223,6 +224,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         }
     }
 
+    @Override
     public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException {
 
         if (pUrlTextureLibrary == null) {
@@ -306,6 +308,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
     }
 
+    @Override
     public void reload() {
         this.textureMap.clear();
         init();

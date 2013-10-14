@@ -43,7 +43,7 @@
 		<module>../kendzi-util</module>
 		
 		<module>../kendzi3d-math</module>
-		<module>../kendzi3d-file-util</module>
+		<module>../kendzi3d-resource-interface</module>
 		<module>../kendzi3d-josm-core</module>
 		
 		<module>../kendzi3d-buildings</module>

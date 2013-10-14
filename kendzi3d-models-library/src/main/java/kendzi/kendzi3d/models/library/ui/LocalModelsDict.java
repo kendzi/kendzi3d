@@ -15,11 +15,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 public class LocalModelsDict extends JDialog {
 
-    private UrlReciverService urlReciverService;
+    private ResourceService urlReciverService;
 
     private final JPanel contentPanel = new JPanel();
 

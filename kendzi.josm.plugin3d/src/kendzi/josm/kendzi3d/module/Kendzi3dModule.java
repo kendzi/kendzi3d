@@ -26,15 +26,16 @@ import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
-import kendzi.josm.kendzi3d.service.impl.FileUrlReciverService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesJosmDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
+import kendzi.kendzi3d.resource.manager.PluginResourceService;
+import kendzi.kendzi3d.resource.manager.ResourceManagerService;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -60,7 +61,7 @@ public class Kendzi3dModule extends AbstractModule {
          * This tells Guice that whenever it sees a dependency on a UrlReciverService, it should satisfy the dependency
          * using a FileUrlReciverService.
          */
-        bind(UrlReciverService.class).to(FileUrlReciverService.class);
+        bind(ResourceService.class).to(ResourceManagerService.class);
 
         bind(MetadataCacheService.class).in(Singleton.class);
         bind(WikiTextureLoaderService.class).in(Singleton.class);
@@ -90,13 +91,13 @@ public class Kendzi3dModule extends AbstractModule {
     }
 
     @Provides @Singleton
-    TextureLibraryStorageService provideTextureLibraryStorageService(UrlReciverService pUrlReciverService) {
+    TextureLibraryStorageService provideTextureLibraryStorageService(ResourceService pUrlReciverService) {
         TextureLibraryService textureLibraryService = new TextureLibraryService(pUrlReciverService);
         return textureLibraryService;
     }
 
     @Provides @Singleton
-    TextureCacheService provideTextureCacheService(UrlReciverService pUrlReciverService) {
+    TextureCacheService provideTextureCacheService(ResourceService pUrlReciverService) {
         TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
         textureCacheService.addTextureBuilder(new ColorTextureBuilder());
@@ -156,5 +157,10 @@ public class Kendzi3dModule extends AbstractModule {
         renderJOSM.setLayerList(layerList);
 
         return renderJOSM;
+    }
+
+    @Provides @Singleton
+    PluginResourceService providePluginResourceService() {
+        return new PluginResourceService(pluginDirectory);
     }
 }

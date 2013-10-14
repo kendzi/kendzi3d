@@ -17,6 +17,7 @@ import java.util.Properties;
 
 import kendzi.josm.kendzi3d.metadata.ModelMetadata;
 import kendzi.josm.kendzi3d.metadata.TextureMetadata;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
@@ -38,7 +39,7 @@ public class MetadataCacheService {
     /**
      * File url reciver service.
      */
-    private UrlReciverService urlReciverService;
+    private ResourceService urlReciverService;
 
     private Map<String, TextureMetadata> cacheTexture = new HashMap<String, TextureMetadata>();
 
@@ -52,7 +53,7 @@ public class MetadataCacheService {
      * @param pUrlReciverService url reciver service
      */
     @Inject
-    private MetadataCacheService(UrlReciverService pUrlReciverService) {
+    private MetadataCacheService(ResourceService pUrlReciverService) {
         this.urlReciverService = pUrlReciverService;
 
         init();
@@ -77,22 +78,22 @@ public class MetadataCacheService {
     }
 
     /**
-     * @param pFileName
+     * @param fileName
      */
-    public void loadFile(String pFileName) {
+    public void loadFile(String fileName) {
 
         try {
-            URL fileUrl = this.urlReciverService.receiveFileUrl(pFileName);
+            URL fileUrl = this.urlReciverService.resourceToUrl(fileName);
 
             if (!UrlUtil.existUrl(fileUrl)) {
-                log.warn("cant find url for file: " + pFileName);
+                log.warn("cant find url for file: " + fileName);
                 return;
             }
 
             this.metadataProperties.load(fileUrl.openStream());
 
         } catch (Exception e) {
-            log.error("error loading metadata file: " + pFileName, e);
+            log.error("error loading metadata file: " + fileName, e);
         }
     }
 
@@ -241,19 +242,19 @@ public class MetadataCacheService {
 
 
     /**
-     * @return the fileUrlReciverService
+     * @return the resourceService
      */
-    public UrlReciverService getFileUrlReciverService() {
+    public ResourceService getFileUrlReciverService() {
         return this.urlReciverService;
     }
 
 
 
     /**
-     * @param fileUrlReciverService the fileUrlReciverService to set
+     * @param resourceService the resourceService to set
      */
-    public void setFileUrlReciverService(UrlReciverService fileUrlReciverService) {
-        this.urlReciverService = fileUrlReciverService;
+    public void setFileUrlReciverService(ResourceService resourceService) {
+        this.urlReciverService = resourceService;
     }
 
 }

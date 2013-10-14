@@ -1,10 +1,10 @@
 package kendzi.jogl.model.loader;
 
 import kendzi.jogl.model.geometry.Model;
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 public class ModelLoader {
-    public static Model load(String source, UrlReciverService urlReciverService) throws ModelLoadException {
+    public static Model load(String source, ResourceService urlReciverService) throws ModelLoadException {
         return (new WaveFrontLoader(urlReciverService)).load(source);
     }
 
@@ -20,7 +20,7 @@ public class ModelLoader {
      * it should not be part of loading code.
      */
     @Deprecated
-    public static Model load(String source, String replaceTextureMaterialName, String replaceTextureNewKey, UrlReciverService urlReciverService) throws ModelLoadException {
+    public static Model load(String source, String replaceTextureMaterialName, String replaceTextureNewKey, ResourceService urlReciverService) throws ModelLoadException {
         return (new WaveFrontLoader(replaceTextureMaterialName, replaceTextureNewKey, urlReciverService)).load(source);
     }
 

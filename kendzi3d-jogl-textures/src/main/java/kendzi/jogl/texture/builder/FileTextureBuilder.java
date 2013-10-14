@@ -6,7 +6,7 @@ import java.net.URL;
 
 import javax.media.opengl.GLException;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class FileTextureBuilder implements TextureBuilder {
     /**
      * File url reciver service.
      */
-    UrlReciverService fileUrlReciverService;
+    ResourceService resourceService;
 
     @Override
     public String getBuilderPrefix() {
@@ -38,15 +38,15 @@ public class FileTextureBuilder implements TextureBuilder {
         return null;
     }
 
-    public Texture loadTexture(String pName) throws GLException, IOException {
+    public Texture loadTexture(String name) throws GLException, IOException {
 
-        if (pName == null) {
+        if (name == null) {
             return null;
         }
 
-        URL textUrl = this.fileUrlReciverService.receiveFileUrl(pName);
+        URL textUrl = this.resourceService.resourceToUrl(name);
         if (textUrl == null) {
-            log.info("No file to load: " + pName);
+            log.info("No file to load: " + name);
             return null;
         }
 

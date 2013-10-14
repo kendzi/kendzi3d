@@ -24,7 +24,7 @@
 	     
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-file-util</artifactId>
+			<artifactId>kendzi3d-resource-interface</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 

@@ -22,9 +22,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.exception.ModelLibraryLoadException;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.UrlUtil;
 
 import org.apache.log4j.Logger;
@@ -38,31 +38,22 @@ public class ModelLibraryXmlDao {
 
     private static final String XSD_PACKAGE = "generated";
 
-    private static final String PLUGIN_FILE_PREFIX = "plugin:";
 
     /** Log. */
     private static final Logger log = Logger.getLogger(ModelsLibraryService.class);
 
-    private UrlReciverService urlReciverService;
+    private ResourceService resourceManager;
 
-    public ModelLibraryXmlDao(UrlReciverService urlReciverService) {
+    public ModelLibraryXmlDao(ResourceService resourceManager) {
         super();
-        this.urlReciverService = urlReciverService;
+        this.resourceManager = resourceManager;
     }
 
     public ModelsLibrary loadXml(String fileKey) throws ModelLibraryLoadException {
 
         try {
 
-            URL url = null;
-
-            if (fileKey.startsWith(PLUGIN_FILE_PREFIX)) {
-                url = this.urlReciverService.receiveFileUrl(fileKey.substring(PLUGIN_FILE_PREFIX.length()));
-            } else if (fileKey.startsWith("file://") || fileKey.startsWith("http://") || fileKey.startsWith("https://")) {
-                url = new URL(fileKey);
-            } else {
-                url = new File(fileKey).toURI().toURL();
-            }
+            URL url = resourceManager.resourceToUrl(fileKey);
 
             if (!UrlUtil.existUrl(url)) {
                 log.warn("cant load point motel configuration from: " + fileKey + " url don't exist: " + url);
@@ -70,6 +61,7 @@ public class ModelLibraryXmlDao {
             }
 
             return loadXml(url);
+
         } catch (Exception e) {
             throw new ModelLibraryLoadException("cant load model library from file key: " + fileKey, e);
         }

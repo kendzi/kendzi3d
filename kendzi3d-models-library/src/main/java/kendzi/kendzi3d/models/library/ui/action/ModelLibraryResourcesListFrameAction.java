@@ -15,10 +15,10 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import kendzi.josm.kendzi3d.service.UrlReciverService;
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.ModelLibraryResourcesListFrame;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 import org.apache.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
             @Override
             public void run() {
                 try {
-                    UrlReciverService urlReciverService = new UrlReciverServiceTest();
+                    ResourceService urlReciverService = new UrlReciverServiceTest();
                     ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
                     pms.init();
                     ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
@@ -124,8 +124,11 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
             File selectedFile = fc.getSelectedFile();
+
             if (selectedFile != null) {
-                this.modelsLibraryService.addResourcesPath(selectedFile.getAbsolutePath());
+                String path = selectedFile.getAbsoluteFile().toURI().toString();
+
+                this.modelsLibraryService.addResourcesPath(path);
                 loadTableData();
             }
         }

@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>kendzi.kendzi3d</groupId>
-	<artifactId>kendzi3d-file-util</artifactId>
+	<artifactId>kendzi3d-resource-interface</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>kendzi3d-file-util</name>
+	<name>kendzi3d-resource-interface</name>
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 
 	<properties>
@@ -14,7 +14,11 @@
 	</properties>
 
 	<dependencies>
-		
+		<dependency>
+			<groupId>kendzi</groupId>
+			<artifactId>kendzi-util</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
