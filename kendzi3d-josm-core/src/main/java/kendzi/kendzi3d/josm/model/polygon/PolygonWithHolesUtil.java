@@ -18,7 +18,17 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class PolygonWithHolesUtil {
+/**
+ * Util for polygons with holes.
+ * 
+ * @author Tomasz Kedziora (Kendzi)
+ * 
+ */
+public final class PolygonWithHolesUtil {
+
+    private PolygonWithHolesUtil() {
+        //
+    }
 
     /**
      * @param pRelation
@@ -38,7 +48,7 @@ public class PolygonWithHolesUtil {
             PolygonList2d outer = parse(waysPolygon2.getOuter(), pPerspective);
 
             if (waysPolygon2.getInner() != null) {
-                // List<PolygonList2d> inner = new ArrayList<PolygonList2d>();
+
                 for (List<ReversableWay> rwList : waysPolygon2.getInner()) {
                     inner.add(parse(rwList, pPerspective));
                 }
@@ -67,9 +77,7 @@ public class PolygonWithHolesUtil {
 
                     for (int i = 0; i < size; i++) {
                         Point2d p = pPerspective.calcPoint(way.getNode(i));
-                        // WallNode wn = parseWallNode(way.getNode(i),
-                        // pPerspective);
-                        //
+
                         poly.add(p);
                     }
                 } else {
@@ -129,7 +137,7 @@ public class PolygonWithHolesUtil {
     private static List<List<ReversableWay>> connectMultiPolygonParts(List<? extends OsmPrimitive> outersParts) {
         List<Edge<Way, Node>> in = new ArrayList<MultiPartPolygonUtil.Edge<Way, Node>>();
         for (OsmPrimitive osmPrimitive : outersParts) {
-            Way w = ((Way) osmPrimitive);
+            Way w = (Way) osmPrimitive;
             if (w.getNodesCount() < 2) {
                 // when relation is incomplete
                 continue;
@@ -175,8 +183,8 @@ public class PolygonWithHolesUtil {
     }
 
     public static class AreaWithHoles {
-        List<ReversableWay> outer;
-        List<List<ReversableWay>> inner;
+        private List<ReversableWay> outer;
+        private List<List<ReversableWay>> inner;
 
         /**
          * @return the outer
@@ -206,5 +214,4 @@ public class PolygonWithHolesUtil {
             this.inner = inner;
         }
     }
-
 }

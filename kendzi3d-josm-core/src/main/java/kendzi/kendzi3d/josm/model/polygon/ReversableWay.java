@@ -3,8 +3,8 @@ package kendzi.kendzi3d.josm.model.polygon;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class ReversableWay {
-    Way way;
-    boolean reversed;
+    private Way way;
+    private boolean reversed;
 
     public ReversableWay(Way way, boolean reversed) {
         super();
@@ -20,7 +20,8 @@ public class ReversableWay {
     }
 
     /**
-     * @param way the way to set
+     * @param way
+     *            the way to set
      */
     public void setWay(Way way) {
         this.way = way;
@@ -34,7 +35,8 @@ public class ReversableWay {
     }
 
     /**
-     * @param reversed the reversed to set
+     * @param reversed
+     *            the reversed to set
      */
     public void setReversed(boolean reversed) {
         this.reversed = reversed;

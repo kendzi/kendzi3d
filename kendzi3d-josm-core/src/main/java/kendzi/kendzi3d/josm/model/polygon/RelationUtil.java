@@ -9,7 +9,17 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class RelationUtil {
+/**
+ * Util for relation processing.
+ * 
+ * @author Tomasz Kedziora (Kendzi)
+ * 
+ */
+public final class RelationUtil {
+
+    private RelationUtil() {
+        //
+    }
 
     /**
      * @param pRelation
@@ -93,5 +103,4 @@ public class RelationUtil {
         }
         return ret;
     }
-
 }
