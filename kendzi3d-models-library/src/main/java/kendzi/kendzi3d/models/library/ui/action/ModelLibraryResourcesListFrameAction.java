@@ -10,15 +10,19 @@ package kendzi.kendzi3d.models.library.ui.action;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.ModelLibraryResourcesListFrame;
 import kendzi.kendzi3d.resource.inter.ResourceService;
+import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
 
@@ -134,6 +138,24 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         }
     }
 
+    @Override
+    protected void onAddResourceUrl() {
+
+        String ret = (String) JOptionPane.showInputDialog(this, "Enter url for models library", "Add URL resource",
+                JOptionPane.PLAIN_MESSAGE, null, null, "http://foo.com/modelLibrary.xml");
+
+        if (!StringUtil.isBlankOrNull(ret)) {
+            URL url;
+            try {
+                url = new URL(ret);
+                this.modelsLibraryService.addResourcesPath(url.toString());
+                loadTableData();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private class ModelLibraryFilter extends FileFilter {
         @Override
         public boolean accept(File f) {
@@ -159,6 +181,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         modelsLibraryService.removeResourcesPath(fileName);
         loadTableData();
     }
+
 
     @Override
     protected void onDefaultResources() {

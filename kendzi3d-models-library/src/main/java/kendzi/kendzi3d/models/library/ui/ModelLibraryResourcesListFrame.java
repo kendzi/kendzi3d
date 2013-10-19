@@ -78,12 +78,11 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         JPanel panel_buttons = new JPanel();
         contentPane.add(panel_buttons, BorderLayout.SOUTH);
 
-        JButton btnEdit = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnEdit.text")); //$NON-NLS-1$
-        btnEdit.setEnabled(false);
-        btnEdit.addActionListener(new ActionListener() {
+        JButton btnAddUrl = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnEdit.text"));
+        btnAddUrl.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                onAddResourceUrl();
             }
         });
 
@@ -113,7 +112,7 @@ public class ModelLibraryResourcesListFrame extends JFrame {
             }
         });
         panel_buttons.add(btnAdd);
-        panel_buttons.add(btnEdit);
+        panel_buttons.add(btnAddUrl);
 
         JButton btnDelete = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDelete.text"));
         btnDelete.addActionListener(new ActionListener() {
@@ -158,6 +157,10 @@ public class ModelLibraryResourcesListFrame extends JFrame {
     }
 
     protected void onAddResourceFile() {
+        //
+    }
+
+    protected void onAddResourceUrl() {
         //
     }
 

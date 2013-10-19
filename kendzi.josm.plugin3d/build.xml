@@ -249,6 +249,7 @@
         <delete file="REVISION"/>
         -->
     	
+    	<echo>Build number!!!</echo>
     	<copy file="build.number" tofile="build.number.last"/>
     	
     	<buildnumber/>

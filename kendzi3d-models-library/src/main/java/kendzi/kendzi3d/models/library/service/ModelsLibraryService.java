@@ -38,11 +38,13 @@ public class ModelsLibraryService {
         this.pointModelDataChange.add(pointModelDataChange);
     }
 
-    public void removePointModelDataChangeListener(ModelsLibraryDataChangeEvent ppointModelDataChange) {
+    public void removePointModelDataChangeListener(ModelsLibraryDataChangeEvent pointModelDataChange) {
         this.pointModelDataChange.remove(pointModelDataChange);
     }
 
     protected void firePointModelDataChange() {
+        init();
+
         for (ModelsLibraryDataChangeEvent l : this.pointModelDataChange) {
             l.fireModelsLibraryDataChange();
         }
@@ -118,7 +120,7 @@ public class ModelsLibraryService {
      * Initialize.
      */
     public void init() {
-
+        modelLibrary.clear();
         for (String fileKey : libraryResourcesDao.loadResourcesPath()) {
             try {
                 ModelsLibrary models = modelLibraryXmlDao.loadXml(fileKey);
