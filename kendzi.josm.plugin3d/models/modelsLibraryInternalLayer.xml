@@ -79,6 +79,9 @@ Example:
 	<nodeModel matcher="highway=milestone" model="/models/pd/milestone.obj"
 		translateX="0" translateY="0" translateZ="0" scale="height(1)" direction="0"/>
 
+	<nodeModel matcher="artwork=statue | monument=statue" model="/models/cc/Statu_LowPoly/Statu_lowpoly.obj"		
+		translateX="0" translateY="0" translateZ="0" scale="height(4)" direction="0"/>
+
 
 	
 	<!-- Example only -->
