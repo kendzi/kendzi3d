@@ -9,6 +9,9 @@
 
 package kendzi.josm.kendzi3d;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -43,9 +46,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.*;
-import static org.openstreetmap.josm.tools.I18n.*;
-
 public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
@@ -66,6 +66,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      */
     public Kendzi3DPlugin(PluginInformation pInfo) {
         super(pInfo);
+
+        ExceptionHandler.registerExceptionHandler();
 
         // // requre to set up before library are loaded
         // FileUrlReciverService.initFileReciver(getPluginDir());
@@ -237,10 +239,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
                 Kendzi3dGLFrame frame = injector.getInstance(Kendzi3dGLFrame.class);
 
-                // Kendzi3dGLFrame frame = new Kendzi3dGLFrame();
-                // // frame.setCanvasListener(ApplicationContextUtil.getKendzi3dGLEventListener());
-                // frame.setCanvasListener(injector.getInstance(Kendzi3dGLEventListener.class));
-
                 frame.initUI();
 
                 ImageIcon img = ImageProvider.get("stock_3d-effects24");
@@ -255,10 +253,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
                 CameraLayer oglListener = injector.getInstance(CameraLayer.class);
                 initializeKendzi3dLayer(oglListener);
             }
-            // else {
-            // this.ogl.resume();
-            // this.ogl.setVisible(true);
-            // }
+
         } catch (NoClassDefFoundError e) {
             e.printStackTrace();
             throw e;
@@ -267,8 +262,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             e.printStackTrace();
             throw new RuntimeException("error opening kendzi3d window", e);
         }
-
-
     }
 
     /** The preferences prefix */

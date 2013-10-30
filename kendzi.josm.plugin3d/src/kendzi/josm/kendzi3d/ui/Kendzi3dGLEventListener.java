@@ -18,6 +18,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -265,7 +266,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         this.simpleMoveAnimator.updateState();
 
-
         GL2 gl = pDrawable.getGL().getGL2();
        // System.err.println("INIT GL IS: " + gl.getClass().getName());
 
@@ -458,10 +458,19 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             // "Unavailable extension", JOptionPane.ERROR_MESSAGE);
 
             // Check if the extension ARB_multitexture is supported by the Graphic card
-            JOptionPane.showMessageDialog(
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    
+                    JOptionPane.showMessageDialog(
                             null,
                             "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
                             "Extension not supported", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            );
+
             this.error = true;
 
             if (this.closeEvent != null) {

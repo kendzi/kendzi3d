@@ -12,10 +12,10 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import kendzi.josm.kendzi3d.jogl.photos.PhotoParmPanel;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
@@ -279,25 +279,42 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         log.info("GLCapabilities: " + capabilities);
     }
 
-    /**
-     * Display time spent.
-     *
-     * @param pTime
-     *            time
-     */
-    public void setTimeSpent(long pTime) {
-        this.jTFTime.setText("Time Spent: " + pTime + " secs");
-    }
+    public void setTimeAndFps(final long time, final int fps) {
+        // in some configuration it is called from outside event queue
+        // and with out generated EDT violation
+        final JTextField textField = this.jTFFps;
+        final JTextField timeField = this.jTFTime;
 
-    /**
-     * Display fps.
-     *
-     * @param pFps
-     *            fps
-     */
-    public void setFps(int pFps) {
-        this.jTFFps.setText("Fps: " + pFps);
+//        GuiHelper.runInEDT(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
+            // always in by query, with out it it could create dead lock in AWT
+            @Override
+            public void run() {
+                textField.setText("Fps: " + fps);
+                timeField.setText("Time Spent: " + time + " secs");
+            }
+        }
+        );
     }
+//    /**
+//     * Display time spent.
+//     *
+//     * @param pTime
+//     *            time
+//     */
+//    public void setTimeSpent(long pTime) {
+//        this.jTFTime.setText("Time Spent: " + pTime + " secs");
+//    }
+
+//    /**
+//     * Display fps.
+//     *
+//     * @param pFps
+//     *            fps
+//     */
+//    public void setFps(final int pFps) {
+//        jTFFps.setText("Fps: " + pFps);
+//    }
 
     // ----------------- window listener methods -------------
 
@@ -371,8 +388,10 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
     public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
 
         if (fpsChangeEvent != null) {
-            setFps(fpsChangeEvent.getFps());
-            setTimeSpent(fpsChangeEvent.getTime());
+            setTimeAndFps(fpsChangeEvent.getTime(), fpsChangeEvent.getFps());
+
+//            setFps(fpsChangeEvent.getFps());
+//            setTimeSpent(fpsChangeEvent.getTime());
         }
     }
 
