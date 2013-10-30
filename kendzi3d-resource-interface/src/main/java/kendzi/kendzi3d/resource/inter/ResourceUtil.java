@@ -30,9 +30,9 @@
 
          fileUrl = fileUrl.trim();
 
-         if (fileUrl.startsWith(ResourceService.PLUGIN_FILE_PREFIX)) {
-             return fileUrl;
-         }
+         //         if (fileUrl.startsWith(ResourceService.PLUGIN_FILE_PREFIX)) {
+         //             return fileUrl;
+         //         }
 
          if (fileUrl.endsWith("\\") || fileUrl.endsWith("/")) {
              return fileUrl;

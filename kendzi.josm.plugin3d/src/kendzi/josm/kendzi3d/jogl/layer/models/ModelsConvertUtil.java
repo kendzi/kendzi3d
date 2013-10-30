@@ -6,6 +6,7 @@ import generated.WayNodeModel;
 import javax.vecmath.Vector3d;
 
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.inter.ResourceUtil;
 import kendzi.util.StringUtil;
 
@@ -64,6 +65,11 @@ public class ModelsConvertUtil {
 
         if (StringUtil.isBlankOrNull(fileUrl)) {
             return fileUrl;
+        }
+
+        if (configurationFile.startsWith(ResourceService.PLUGIN_FILE_PREFIX)) {
+            // if configuration is stored inside plug-in, all resources should be taken from plug-in jar root
+            return ResourceService.PLUGIN_FILE_PREFIX + "/" + removeRoot(fileUrl);
         }
 
         String directory = ResourceUtil.getUrlDrectory(configurationFile);

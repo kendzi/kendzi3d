@@ -255,8 +255,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     public void clear() {
         // clean up model data
         this.modelList.clear();
-        this.nodeModelsList.clear();
-        
+
         // don't re-download configuration data each time.
     }
 
