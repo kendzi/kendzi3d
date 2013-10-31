@@ -35,7 +35,9 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.expressions.functions.DirectionFunction;
 import kendzi.kendzi3d.expressions.functions.HeightFunction;
+import kendzi.kendzi3d.expressions.functions.MinHeightFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
@@ -178,6 +180,8 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         c.getVariables().put("normal", modelNormalFactor);
 
         c.registerFunction(new HeightFunction());
+        c.registerFunction(new MinHeightFunction());
+        c.registerFunction(new DirectionFunction());
         c.registerFunction(new WayNodeDirectionFunction());
 
         c.registerFunction(new Vector3dFunction());
@@ -361,14 +365,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             for (ModelPoint modelPoint : this.modelPoints)
             {
                 gl.glPushMatrix();
-                gl.glTranslated(
-                         modelPoint.getPoint().x,
-                        modelPoint.getPoint().y,
-                         modelPoint.getPoint().z);
+                gl.glTranslated(modelPoint.getPoint().x, modelPoint.getPoint().y, modelPoint.getPoint().z);
+                gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
                 gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
                 gl.glRotated(modelPoint.getDirection(), 0d, 1d, 0d);
-                gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
                 this.modelRenderer.render(gl, model2);
                 gl.glPopMatrix();

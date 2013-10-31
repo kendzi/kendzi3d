@@ -5,7 +5,8 @@
 attributes:
 	- matcher 	- selector for way (JOSM search format)
 	- model 	- location of model (obj format supported), it is relatively from plugin directory!
-	- translate - translation of model in MODEL SPACE
+	- translate{X,Y,Z} - !! Deprecated !! translation of model in MODEL SPACE ?after? scale function is applied 
+	- translate - translation of model in MODEL SPACE, after scaling function is applied
 	- scale 	- function for model scale, it can be normalized WORLD SPACE
 	- modelParameter - see in wayNodeModel
 
@@ -80,7 +81,7 @@ Example:
 		translateX="0" translateY="0" translateZ="0" scale="height(1)" direction="0"/>
 
 	<nodeModel matcher="artwork=statue | monument=statue" model="/models/cc/Statu_LowPoly/Statu_lowpoly.obj"		
-		translateX="0" translateY="0" translateZ="0" scale="height(4)" direction="0"/>
+		 translate="vectorY(minHeight(0))" scale="height(4) - minHeight(0)" direction="direction(0)"/>
 
 
 	

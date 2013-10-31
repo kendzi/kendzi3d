@@ -1,7 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.expressions.expression.Expression;
 
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -35,14 +33,15 @@ public class NodeModelConf {
     private Expression scale;
 
     /**
-     * Model translation.
-     */
-    private Vector3d translate;
-
-    /**
      * Model direction.
      */
     private Expression direction;
+
+    /**
+     * Model translation after scale function is applied.
+     */
+    private Expression translate;
+
 
     /**
      * @return the model
@@ -87,20 +86,6 @@ public class NodeModelConf {
     }
 
     /**
-     * @return the translate
-     */
-    public Vector3d getTranslate() {
-        return this.translate;
-    }
-
-    /**
-     * @param translate the translate to set
-     */
-    public void setTranslate(Vector3d translate) {
-        this.translate = translate;
-    }
-
-    /**
      * @return the direction
      */
     public Expression getDirection() {
@@ -126,6 +111,14 @@ public class NodeModelConf {
      */
     public void setModelParameter(String modelParameter) {
         this.modelParameter = modelParameter;
+    }
+
+    public Expression getTranslate() {
+        return translate;
+    }
+
+    public void setTranslate(Expression translate) {
+        this.translate = translate;
     }
 
 }

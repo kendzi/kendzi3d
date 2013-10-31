@@ -32,7 +32,13 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractPointModel;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.expressions.functions.DirectionFunction;
 import kendzi.kendzi3d.expressions.functions.HeightFunction;
+import kendzi.kendzi3d.expressions.functions.MinHeightFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
+import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.util.StringUtil;
 
@@ -120,8 +126,14 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         c.getVariables().put("normal", modelNormalFactor);
 
         c.registerFunction(new HeightFunction());
+        c.registerFunction(new MinHeightFunction());
+        c.registerFunction(new DirectionFunction());
         c.registerFunction(new WayNodeDirectionFunction());
 
+        c.registerFunction(new Vector3dFunction());
+        c.registerFunction(new Vector3dXFunction());
+        c.registerFunction(new Vector3dYFunction());
+        c.registerFunction(new Vector3dZFunction());
 
         Context context = new Context();
         context.putVariable("osm", this.node);
@@ -138,7 +150,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        translate = this.nodeModelConf.getTranslate();
+        translate =  ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
 
         rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
 
@@ -204,11 +216,11 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
             gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+            gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
             gl.glEnable(GL2.GL_NORMALIZE); //XXX
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
             gl.glRotated(this.rotateY, 0d, 1d, 0d);
-            gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
             this.modelRenderer.render(gl, model2);
 

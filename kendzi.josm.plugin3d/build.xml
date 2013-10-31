@@ -29,52 +29,55 @@
 -->
 <project name="kendzi3d" default="dist" basedir=".">
 
-    <!-- enter the SVN commit message -->
-   
+	<!-- enter the SVN commit message -->
+
 	<property name="commit.message" value="Commit message" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="6088" />
 	<property name="plugin.author" value="Tomasz Kędziora (Kendzi)" />
-	
-    <!--
+
+	<!--
       ************************************************
       ** should not be necessary to change the following properties
      -->
-    <property name="josm.project"           value="/home/kendzi/java/workspace/JOSM"/>
-	
-    <property name="josm"                   location="${josm.project}/dist/josm-custom.jar"/>
-    <property name="kendzi-josm-jogl" 		location="${josm.project}/dist/kendzi3d-jogl.jar"/>
-		
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.src.dir"         value="src"/>
-    <!-- this is the directory where the plugin jar is copied to -->
-    <property name="ant.build.javac.target" value="1.6"/>
-    <property name="plugin.dist.dir"        value="${josm.project}/dist"/>
-<!--    <property name="plugin.dist.dir"        value="../JOSM/dist"/> -->
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+	<property name="josm.project"           value="/home/kendzi/java/workspace/JOSM"/>
 
-    <!--
+	<property name="josm"                   location="${josm.project}/dist/josm-custom.jar"/>
+	<property name="kendzi-josm-jogl" 		location="${josm.project}/dist/kendzi3d-jogl.jar"/>
+
+	<property name="plugin.build.dir"       value="build"/>
+	<property name="plugin.src.dir"         value="src"/>
+	<!-- this is the directory where the plugin jar is copied to -->
+	<property name="ant.build.javac.target" value="1.6"/>
+	<property name="plugin.dist.dir"        value="${josm.project}/dist"/>
+	<!--    <property name="plugin.dist.dir"        value="../JOSM/dist"/> -->
+	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+
+	<!--
     **********************************************************
     ** init - initializes the build
     **********************************************************
     -->
-    <target name="init">
-        <mkdir dir="${plugin.build.dir}"/>
-    </target>
+	<target name="init">
+		<mkdir dir="${plugin.build.dir}"/>
+	</target>
 
-    <!--
+	<!--
     **********************************************************
     ** compile - complies the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
-    	
-    	<!-- <unzip src="${kendzi-josm-jogl}" dest="./jogl_jars" /> -->
-    	
-    	
-    	<echo message="${jogl.jars.dir}"></echo>
-        <javac source="1.6" target="1.6" srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+	<target name="compile" depends="init">
+		<echo message="compiling sources for  ${plugin.jar} ... "/>
+
+		<!-- <unzip src="${kendzi-josm-jogl}" dest="./jogl_jars" /> -->
+
+
+		<echo message="${jogl.jars.dir}">
+		</echo>
+		<javac source="1.6" target="1.6" srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" nowarn="true">
+
+
 			<src path="src"/>
 			<src path="../kendzi-util/src/main/java"/>
 			<src path="../kendzi3d-math/src/main/java"/>
@@ -84,37 +87,39 @@
 			<src path="../kendzi3d-jogl-textures/src/main/java"/>
 			<src path="../kendzi3d-jogl-textures-josm/src/main/java"/>
 			<src path="../kendzi3d-jogl-textures-library/src/main/java"/>
-        	
-        	<!-- !!! FIXME this is usage of output from temporary maven build !!! -->
+
+			<!-- !!! FIXME this is usage of output from temporary maven build !!! -->
 			<src path="../kendzi3d-collada-bindings/target/generated-sources/xjc"/>
 			<src path="../kendzi3d-collada-exporter/src/main/java"/>
-        	
-        	<!-- !!! FIXME this is usage of output from temporary maven build !!! -->
+
+			<!-- !!! FIXME this is usage of output from temporary maven build !!! -->
 			<src path="../kendzi3d-jogl-textures-library-bindings/target/generated-sources/xjc"/>
 			<src path="../kendzi3d-jogl-textures-library-res/src/main/java"/>
 			<src path="../kendzi3d-josm-core/src/main/java"/>
 			<src path="../kendzi3d-buildings/src/main/java"/>
 			<src path="../kendzi3d-buildings-josm/src/main/java"/>
 			<src path="../kendzi3d-resource-interface/src/main/java"/>
-        	<src path="../kendzi3d-resource-manager/src/main/java"/>
+			<src path="../kendzi3d-resource-manager/src/main/java"/>
 
-        	<src path="../kendzi3d-models-library/src/main/java"/>
+			<src path="../kendzi3d-models-library/src/main/java"/>
 			<src path="../kendzi3d-models-library-bindings/target/generated-sources/xjc"/>
 			<!-- <src path="../kendzi3d-models-library-layer/src/main/java"/> -->
-        	<src path="../kendzi3d-models-library-josm/src/main/java"/>
-			
-        	<src path="../kendzi3d-expressions-javacc/src/main/java"/>
-        	<src path="../kendzi3d-expressions-javacc/target/generated-sources/javacc"/>
+			<src path="../kendzi3d-models-library-josm/src/main/java"/>
+
+			<src path="../kendzi3d-expressions-javacc/src/main/java"/>
+			<src path="../kendzi3d-expressions-javacc/target/generated-sources/javacc"/>
 			<src path="../kendzi3d-expressions-josm/src/main/java"/>
 
-       	    <!-- <src path="src_xsd"/> -->
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
 
-        	<classpath>
+			<!--
+        	<compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+			-->
+
+			<classpath>
 				<pathelement location="${josm}"/>
 				<pathelement location="${kendzi-josm-jogl}"/>
-				  
+
 				<fileset dir="lib_build">
 					<include name="**/*.jar"/>
 				</fileset>
@@ -122,79 +127,79 @@
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
-        </javac>
-    </target>
+		</javac>
+	</target>
 
-    <!--
+	<!--
     **********************************************************
     ** dist - creates the plugin jar
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy tofile="${plugin.build.dir}/log4j.properties">
-            <fileset file="resources/log4j.properties"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/models">
-            <fileset dir="models">
-            	<exclude name="max3ds/*"/>
-            </fileset>
-        </copy>
-    	<!--
+	<target name="dist" depends="compile,revision">
+		<echo message="creating ${ant.project.name}.jar ... "/>
+		<copy todir="${plugin.build.dir}/resources">
+			<fileset dir="resources"/>
+		</copy>
+		<copy tofile="${plugin.build.dir}/log4j.properties">
+			<fileset file="resources/log4j.properties"/>
+		</copy>
+		<copy todir="${plugin.build.dir}/images">
+			<fileset dir="images"/>
+		</copy>
+		<copy todir="${plugin.build.dir}/models">
+			<fileset dir="models">
+				<exclude name="max3ds/*"/>
+			</fileset>
+		</copy>
+		<!--
         <copy todir="${plugin.build.dir}/textures">
             <fileset dir="textures"/>        	
         </copy>
         -->
-        <copy todir="${plugin.build.dir}/textures">
-            <fileset dir="../kendzi3d-jogl-textures-library-res/src/main/resources/textures"/>        	
-        </copy>
-    	<!--
+		<copy todir="${plugin.build.dir}/textures">
+			<fileset dir="../kendzi3d-jogl-textures-library-res/src/main/resources/textures"/>
+		</copy>
+		<!--
     	<copy todir="${plugin.build.dir}">
             <fileset dir="../kendzi3d-models-library/src/main/resources"/>        	
         </copy>
         -->
-    	<copy todir="${plugin.build.dir}">
-            <fileset dir="../kendzi3d-models-library/src/main/java/">
-            	<include name="**/*.properties"/>
-    		</fileset>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README" />
-                <include name="LICENSE" />
-            </fileset>
-        </copy>
-    	<copy todir="${plugin.build.dir}/lib">
-    	   <fileset dir="lib">
-    	   		<exclude name="**/jogl-java-src.zip"/>
-    	   		<exclude name="**/gluegen-java-src.zip"/>
-    	   		<exclude name="**/skip_build/**"/>
-    	   		<exclude name="**/jogl-all-natives-*.jar"/>
-    	   		<exclude name="**/gluegen-rt-natives-*.jar"/>
-    	   		
-    	   		<exclude name="**/log4j-1*.jar"/>
-    		</fileset>
-    	</copy>
-    	
-    	<echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
-    	<echo>{build.number}: ${build.number}</echo>
-    	<echo>{build.number}: ${build.number}</echo>
-    	
-    	<echo>{plugin.jar}: ${plugin.jar}</echo>
-    	<echo>{plugin.build.dir}: ${plugin.build.dir}</echo>
-    	
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-        	
-        	
-        	
-        
-        	<!--
+		<copy todir="${plugin.build.dir}">
+			<fileset dir="../kendzi3d-models-library/src/main/java/">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+		<copy todir="${plugin.build.dir}">
+			<fileset dir=".">
+				<include name="README" />
+				<include name="LICENSE" />
+			</fileset>
+		</copy>
+		<copy todir="${plugin.build.dir}/lib">
+			<fileset dir="lib">
+				<exclude name="**/jogl-java-src.zip"/>
+				<exclude name="**/gluegen-java-src.zip"/>
+				<exclude name="**/skip_build/**"/>
+				<exclude name="**/jogl-all-natives-*.jar"/>
+				<exclude name="**/gluegen-rt-natives-*.jar"/>
+
+				<exclude name="**/log4j-1*.jar"/>
+			</fileset>
+		</copy>
+
+		<echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
+		<echo>{build.number}: ${build.number}</echo>
+		<echo>{build.number}: ${build.number}</echo>
+
+		<echo>{plugin.jar}: ${plugin.jar}</echo>
+		<echo>{plugin.build.dir}: ${plugin.build.dir}</echo>
+
+		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+
+
+
+
+			<!--
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins
         ** manifest file. Property values will also show up in the list available
@@ -202,43 +207,43 @@
         **
         ************************************************
     -->
-            <manifest>
-                <attribute name="Author" value="Tomasz Kędziora (kendzi)"/>
-                <attribute name="Plugin-Class" value="kendzi.josm.kendzi3d.Kendzi3DPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Simple 3D view of osm data. It is highly experimental. It may crash! Use with caution!"/>
-            	<attribute name="Plugin-Icon" value="images/stock_3d-effects24.png"/>
-            	<!--attribute name="Plugin-Icon" value="images/dialogs/icon_error24.png"/ -->
-            	<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D"/>
-            	
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${build.number}"/>
-            	
-            	<!-- <attribute name="Plugin-Requires" value="log4j;kendzi3d-josm-jogl"/> -->
-            	<attribute name="Plugin-Requires" value="log4j;kendzi3d-jogl"/> 
-            	
-            </manifest>
-        </jar>
-    	
-    	<mkdir dir="${plugin.dist.dir}/${ant.project.name}_v${build.number}"/>
-    	<copy todir="${plugin.dist.dir}/${ant.project.name}_v${build.number}" file="${plugin.jar}" /> 
-    	    	
-    	<!-- <copy tofile="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" file="${plugin.jar}" /> -->
-    	
-    	
-    	
-    		
-    </target>
+			<manifest>
+				<attribute name="Author" value="Tomasz Kędziora (kendzi)"/>
+				<attribute name="Plugin-Class" value="kendzi.josm.kendzi3d.Kendzi3DPlugin"/>
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+				<attribute name="Plugin-Description" value="Simple 3D view of osm data. It is highly experimental. It may crash! Use with caution!"/>
+				<attribute name="Plugin-Icon" value="images/stock_3d-effects24.png"/>
+				<!--attribute name="Plugin-Icon" value="images/dialogs/icon_error24.png"/ -->
+				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D"/>
 
-    <!--
+				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+				<attribute name="Plugin-Version" value="${build.number}"/>
+
+				<!-- <attribute name="Plugin-Requires" value="log4j;kendzi3d-josm-jogl"/> -->
+				<attribute name="Plugin-Requires" value="log4j;kendzi3d-jogl"/>
+
+			</manifest>
+		</jar>
+
+		<mkdir dir="${plugin.dist.dir}/${ant.project.name}_v${build.number}"/>
+		<copy todir="${plugin.dist.dir}/${ant.project.name}_v${build.number}" file="${plugin.jar}" />
+
+		<!-- <copy tofile="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" file="${plugin.jar}" /> -->
+
+
+
+
+	</target>
+
+	<!--
     **********************************************************
     ** revision - extracts the current revision number for the
     **    file build.number and stores it in the XML property
     **    version.*
     **********************************************************
     -->
-    <target name="revision">
-    	 <!--
+	<target name="revision">
+		<!--
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -248,125 +253,126 @@
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
         -->
-    	
-    	<echo>Build number!!!</echo>
-    	<copy file="build.number" tofile="build.number.last"/>
-    	
-    	<buildnumber/>
-    	 
+
+		<echo>Build number!!!</echo>
+		<delete file="build.number.last"/>
+		<copy file="build.number" tofile="build.number.last"/>
+
+		<buildnumber/>
+
 		<tstamp>
-		  	<format property="version.entry.commit.date" pattern="yyyy-MM-dd hh:mm aa"/>
+			<format property="version.entry.commit.date" pattern="yyyy-MM-dd hh:mm aa"/>
 		</tstamp>
-    	<!-- <property name="build.number" value="${build.number}" /> -->
-    	
-    	 <echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
-    	 <echo>{build.number}: ${build.number}</echo>
-    	 <echo>{build.number}: ${build.number}</echo>
-    	       
+		<!-- <property name="build.number" value="${build.number}" /> -->
 
-    </target>
+		<echo>{version.entry.commit.date}: ${version.entry.commit.date}</echo>
+		<echo>{build.number}: ${build.number}</echo>
+		<echo>{build.number}: ${build.number}</echo>
 
-    <!--
+
+	</target>
+
+	<!--
     **********************************************************
     ** clean - clean up the build environment
     **********************************************************
     -->
-    <target name="clean">
-        <delete dir="${plugin.build.dir}"/>
-        <delete file="${plugin.jar}"/>
-    </target>
+	<target name="clean">
+		<delete dir="${plugin.build.dir}"/>
+		<delete file="${plugin.jar}"/>
+	</target>
 
-    <!--
+	<!--
     **********************************************************
     ** install - install the plugin in your local JOSM installation
     **********************************************************
     -->
-    <target name="install" depends="dist">
-        <property environment="env"/>
-    	  	 
-    	<!--
+	<target name="install" depends="dist">
+		<property environment="env"/>
+
+		<!--
         <condition property="josm.plugins.dir" value="c:\josm_dev\plugins\" else="${user.home}/.josm/plugins">
     	<condition property="josm.plugins.dir" value="${env.APPDATA}\Roaming\JOSM\plugins\" else="${user.home}/.josm/plugins">
  		-->
-    	<condition property="josm.plugins.dir" value="${env.APPDATA}\JOSM\plugins\" else="${user.home}/.josm/plugins">
-            <and>
-                <os family="windows"/>
-            </and>
-        </condition>
-    	<echo>{josm.plugins.dir}: ${josm.plugins.dir}</echo>
-        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
-    </target>
+		<condition property="josm.plugins.dir" value="${env.APPDATA}\JOSM\plugins\" else="${user.home}/.josm/plugins">
+			<and>
+				<os family="windows"/>
+			</and>
+		</condition>
+		<echo>{josm.plugins.dir}: ${josm.plugins.dir}</echo>
+		<copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+	</target>
 
 
-	  <!--
+	<!--
     ************************** Publishing the plugin *********************************** 
     -->
 	<target name="publish-local-ftp-dir" depends="dist">
-		
-	    <property name="local-ftp-dir" location="c:/projekty/osmWeb/Kendzi3d/snapshot"/>
-	
+
+		<property name="local-ftp-dir" location="c:/projekty/osmWeb/Kendzi3d/snapshot"/>
+
 		<copy file="${plugin.jar}" todir="${local-ftp-dir}/current"/>
-        <mkdir dir="${local-ftp-dir}/${build.number}"/>
+		<mkdir dir="${local-ftp-dir}/${build.number}"/>
 		<copy file="${plugin.jar}" todir="${local-ftp-dir}/${build.number}"/>
-				
+
 	</target>
-	
-	
-    	
-    <!--
+
+
+
+	<!--
         ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
         ** property ${coreversion.info.entry.revision}
         **
         -->
-    <target name="core-info">
-        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="../../core"/>
-        </exec>
-        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
-        <echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
-        <echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
-        <delete file="core.info.xml" />
-    </target>
+	<target name="core-info">
+		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="--xml"/>
+			<arg value="../../core"/>
+		</exec>
+		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+		<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
+		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
+		<delete file="core.info.xml" />
+	</target>
 
-    <!--
+	<!--
         ** commits the source tree for this plugin
         -->
-    <target name="commit-current">
-        <echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="commit"/>
-            <arg value="-m '${commit.message}'"/>
-            <arg value="."/>
-        </exec>
-    </target>
+	<target name="commit-current">
+		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="commit"/>
+			<arg value="-m '${commit.message}'"/>
+			<arg value="."/>
+		</exec>
+	</target>
 
-    <!--
+	<!--
         ** updates (svn up) the source tree for this plugin
         -->
-    <target name="update-current">
-        <echo>Updating plugin source ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="up"/>
-            <arg value="."/>
-        </exec>
-        <echo>Updating ${plugin.jar} ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="up"/>
-            <arg value="../dist/${plugin.jar}"/>
-        </exec>
-    </target>
+	<target name="update-current">
+		<echo>Updating plugin source ...</echo>
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="up"/>
+			<arg value="."/>
+		</exec>
+		<echo>Updating ${plugin.jar} ...</echo>
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="up"/>
+			<arg value="../dist/${plugin.jar}"/>
+		</exec>
+	</target>
 
-    <!--
+	<!--
         ** commits the plugin.jar 
         -->
-    <target name="commit-dist">
-        <echo>
+	<target name="commit-dist">
+		<echo>
     ***** Properties of published ${plugin.jar} *****
     Commit message    : '${commit.message}'                    
     Plugin-Mainversion: ${plugin.main.version}
@@ -376,57 +382,57 @@
                         
     Now commiting ${plugin.jar} ...
     </echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="-m '${commit.message}'"/>
-            <arg value="commit"/>
-            <arg value="${plugin.jar}"/>
-        </exec>
-    </target>
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="-m '${commit.message}'"/>
+			<arg value="commit"/>
+			<arg value="${plugin.jar}"/>
+		</exec>
+	</target>
 
-    <!-- ** make sure svn is present as a command line tool ** -->
-    <target name="ensure-svn-present">
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
-            <env key="LANG" value="C" />
-            <arg value="--version" />
-        </exec>
-        <fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
-            <!-- return code not set at all? Most likely svn isn't installed -->
-            <condition>
-                <not>
-                    <isset property="svn.exit.code" />
-                </not>
-            </condition>
-        </fail>
-        <fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
-            <!-- error code from SVN? Most likely svn is not what we are looking on this system -->
-            <condition>
-                <isfailure code="${svn.exit.code}" />
-            </condition>
-        </fail>
-    </target>
+	<!-- ** make sure svn is present as a command line tool ** -->
+	<target name="ensure-svn-present">
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
+			<env key="LANG" value="C" />
+			<arg value="--version" />
+		</exec>
+		<fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
+			<!-- return code not set at all? Most likely svn isn't installed -->
+			<condition>
+				<not>
+					<isset property="svn.exit.code" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
+			<!-- error code from SVN? Most likely svn is not what we are looking on this system -->
+			<condition>
+				<isfailure code="${svn.exit.code}" />
+			</condition>
+		</fail>
+	</target>
 
-    <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
-    </target>
-	
-	
-    <target name="publish_osm.zibi" depends="">
-    	<!-- publish-local-ftp-dir -->
-    	<property name="zibi.host" value="zibi.openstreetmap.org.pl" />    		
-    	
-    	<property file="/bin/osm.zibi.properties"/>
-   
-    	<property file="build.number.last"/>
-    	
-    	<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
-    		  
-    	<echo>${plugin_version.jar}</echo>
-    	<echo>${osm.zibi.username}</echo>
-    	<!-- <echo>${osm.vxm.password}</echo> -->
-    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}"</echo>
-    	
-    	
-    	<ftp server="${zibi.host}"
+	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+	</target>
+
+
+	<target name="publish_osm.zibi" depends="">
+		<!-- publish-local-ftp-dir -->
+		<property name="zibi.host" value="zibi.openstreetmap.org.pl" />
+
+		<property file="/bin/osm.zibi.properties"/>
+
+		<property file="build.number.last"/>
+
+		<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
+
+		<echo>${plugin_version.jar}</echo>
+		<echo>${osm.zibi.username}</echo>
+		<!-- <echo>${osm.vxm.password}</echo> -->
+		<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}"</echo>
+
+
+		<ftp server="${zibi.host}"
     	      
 	        remotedir="/Kendzi3d/snapshot/current"
 	        userid="${osm.zibi.username}"
@@ -437,18 +443,18 @@
     		verbose="yes"
     		chmod="755"
     	>
-    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />    	
-    	</ftp>
-    	
-    	<ftp action="mkdir"
+			<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />
+		</ftp>
+
+		<ftp action="mkdir"
     	    server="${zibi.host}"
     	   	userid="${osm.zibi.username}"
     	    password="${osm.zibi.password}"
     	    remotedir="/Kendzi3d/snapshot/${build.number}"
     		chmod="755"
     	/>
-    	
-    	<ftp server="${zibi.host}"
+
+		<ftp server="${zibi.host}"
     	    	      
 	        remotedir="/Kendzi3d/snapshot/${build.number}"
 	        userid="${osm.zibi.username}"
@@ -459,28 +465,28 @@
     		verbose="yes"
     		chmod="755"
     	>
-    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" /> 
-    	</ftp>
-    	
-    </target>
-	
-	
-    <target name="publish_osm.vxm.pl" depends="">
-    	<!-- publish-local-ftp-dir -->
-    	
-    	<property file="/bin/osm.vxm.properties"/>
-   
-    	<property file="build.number.last"/>
-    	
-    	<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
-    		  
-    	<echo>${plugin_version.jar}</echo>
-    	<echo>${osm.vxm.username}</echo>
-    	<!-- <echo>${osm.vxm.password}</echo> -->
-    	<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${plugin.jar}"</echo>
-    	
-    	
-    	<ftp server="openstreetmap.vxm.pl"
+			<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />
+		</ftp>
+
+	</target>
+
+
+	<target name="publish_osm.vxm.pl" depends="">
+		<!-- publish-local-ftp-dir -->
+
+		<property file="/bin/osm.vxm.properties"/>
+
+		<property file="build.number.last"/>
+
+		<property name="plugin_version.jar" value="${plugin.dist.dir}/${ant.project.name}_v${build.number}.jar" />
+
+		<echo>${plugin_version.jar}</echo>
+		<echo>${osm.vxm.username}</echo>
+		<!-- <echo>${osm.vxm.password}</echo> -->
+		<echo>"${plugin.dist.dir}/${ant.project.name}_v${build.number}/${plugin.jar}"</echo>
+
+
+		<ftp server="openstreetmap.vxm.pl"
     	      
 	        remotedir="/Kendzi3d/snapshot/current"
 	        userid="${osm.vxm.username}"
@@ -490,16 +496,16 @@
 	        binary="yes"
     		verbose="yes"
     	>
-    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />    	
-    	</ftp>
-    	
-    	<ftp action="mkdir"
+			<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />
+		</ftp>
+
+		<ftp action="mkdir"
     	       server="openstreetmap.vxm.pl"
     	       userid="${osm.vxm.username}"
     	       password="${osm.vxm.password}"
     	       remotedir="/Kendzi3d/snapshot/${build.number}"/>
-    	
-    	<ftp server="openstreetmap.vxm.pl"
+
+		<ftp server="openstreetmap.vxm.pl"
     	    	      
 	        remotedir="/Kendzi3d/snapshot/${build.number}"
 	        userid="${osm.vxm.username}"
@@ -509,27 +515,27 @@
 	        binary="yes"
     		verbose="yes"
     	>
-    		<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" /> 
-    	</ftp>
-    	
-    </target>
-	
-    <target name="publish_osm.pl" depends="">
-    	<tstamp>
+			<fileset file="${plugin.dist.dir}/${ant.project.name}_v${build.number}/${ant.project.name}.jar" />
+		</ftp>
+
+	</target>
+
+	<target name="publish_osm.pl" depends="">
+		<tstamp>
 			<format property="date" pattern="yyyy-MM-dd" locale="pl" />
 			<format property="time" pattern="HH:mm:ss" locale="pl" />
 		</tstamp>
-    	
-    	<property file="/bin/osm.properties"/>
-    	
 
-        <property name="osm.keyfile.loc" location="${osm.keyfile}"/>
-    	
-    	
+		<property file="/bin/osm.properties"/>
 
-        <echo>${osm.username} ${osm.passphrase} ${osm.keyfile}</echo>
-    	
-    	<sshexec host="openstreetmap.pl"
+
+		<property name="osm.keyfile.loc" location="${osm.keyfile}"/>
+
+
+
+		<echo>${osm.username} ${osm.passphrase} ${osm.keyfile}</echo>
+
+		<sshexec host="openstreetmap.pl"
     		
     		username="${osm.username}"
     		keyfile="${osm.keyfile}"
@@ -537,18 +543,18 @@
     		command="mkdir -p /home/kendzi/Kendzi3d/snapshot/${date}"    		
     		trust="true"
     	/>
-    	
-    	<scp remoteTodir="${osm.username}@openstreetmap.pl:/home/kendzi/Kendzi3d/snapshot/${date}"
+
+		<scp remoteTodir="${osm.username}@openstreetmap.pl:/home/kendzi/Kendzi3d/snapshot/${date}"
     		keyfile="${osm.keyfile}"
     		passphrase="${osm.passphrase}"
     	  	trust="yes"
     	  	sftp="false"
     		verbose="true"
-    		>    		
-    	    <fileset file="${plugin.jar}"/>    
-    	</scp>
-    	
-    	<sshexec host="openstreetmap.pl"
+    		>
+			<fileset file="${plugin.jar}"/>
+		</scp>
+
+		<sshexec host="openstreetmap.pl"
     	    		
     		username="${osm.username}"
     		keyfile="${osm.keyfile}"
@@ -556,8 +562,8 @@
     		command="ln -s -f -T /home/kendzi/Kendzi3d/snapshot/${date} /home/kendzi/Kendzi3d/snapshot/current"    		
     		trust="true"
     	/>
-    	
-    	
-    		
-    </target>
+
+
+
+	</target>
 </project>

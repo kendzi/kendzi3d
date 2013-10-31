@@ -5,7 +5,9 @@ import generated.WayNodeModel;
 
 import javax.vecmath.Vector3d;
 
+import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
+import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.inter.ResourceUtil;
 import kendzi.util.StringUtil;
@@ -15,14 +17,25 @@ import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 
 public class ModelsConvertUtil {
 
-    public static NodeModelConf convert(NodeModel nodeModel) throws Exception {
+    public static NodeModelConf convert(final NodeModel nodeModel) throws Exception {
 
         NodeModelConf pm = new NodeModelConf();
         pm.setModel(nodeModel.getModel());
         pm.setModelParameter(nodeModel.getModelParameter());
         pm.setMatcher(compileMatch(nodeModel.getMatcher()));
 
-        pm.setTranslate(new Vector3d(nodeModel.getTranslateX(), nodeModel.getTranslateY(), nodeModel.getTranslateZ()));
+        if (nodeModel.getTranslateX() != null && nodeModel.getTranslateY() != null && nodeModel.getTranslateZ() != null) {
+
+            pm.setTranslate(new Expression() {
+                @Override
+                public Object evaluate(Context context) {
+
+                    return new Vector3d(nodeModel.getTranslateX(), nodeModel.getTranslateY(), nodeModel.getTranslateZ());
+                }
+            });
+        } else {
+            pm.setTranslate(ExpressiongBuilder.build(nodeModel.getTranslate()));
+        }
 
         String scale = nodeModel.getScale();
 
