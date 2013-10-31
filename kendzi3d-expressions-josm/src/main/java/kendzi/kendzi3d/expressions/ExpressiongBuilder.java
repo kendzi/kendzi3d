@@ -37,13 +37,16 @@ public class ExpressiongBuilder {
     }
 
     public static double evaluateExpectedDouble(Expression expression, Context context, double defaultValue) {
+        try {
+            Object res = expression.evaluate(context);
+            if (res == null) {
+                return defaultValue;
+            }
 
-        Object res = expression.evaluate(context);
-        if (res == null) {
-            return defaultValue;
+            return Converter.toDouble(res);
+        } catch (Exception e) {
+            throw new RuntimeException("error parsing expression: " + expression, e);
         }
-
-        return Converter.toDouble(res);
     }
 
     @SuppressWarnings("unchecked")

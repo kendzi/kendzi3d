@@ -5,13 +5,13 @@ import kendzi.kendzi3d.expressions.Context;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public class HeightFunction extends OneParamFunction implements NamedFunction {
+public class MinHeightFunction extends OneParamFunction implements NamedFunction {
 
     @Override
     public Object evalOneParam(Context context, double defaultValue) {
         OsmPrimitive primitive = Context.getRequiredContextVariable("osm", context, OsmPrimitive.class);
 
-        Double height = ModelUtil.getHeight(primitive, null);
+        Double height = ModelUtil.getMinHeight(primitive, null);
 
         if (height == null) {
             return defaultValue;
@@ -21,6 +21,6 @@ public class HeightFunction extends OneParamFunction implements NamedFunction {
 
     @Override
     public String functionName() {
-        return "height";
+        return "minHeight";
     }
 }

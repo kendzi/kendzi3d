@@ -69,6 +69,8 @@ public class ExpressiongBuilderTest extends TestCase {
         assertEquals(6d, value);
     }
 
+
+
     //    class DoubleFunction extends ArgExpression<Double> {
     //
     //        public DoubleFunction(Class<Double> expectedParamType) {
@@ -136,6 +138,12 @@ public class ExpressiongBuilderTest extends TestCase {
         Expression build = ExpressiongBuilder.build("1.1+2.2*3.3");
         Object value = build.evaluate(null);
         assertEquals(8.36d, value);
+    }
+
+    public void testExpression8() throws ExpressionExeption {
+        Expression build = ExpressiongBuilder.build("5 - 2");
+        Object value = build.evaluate(null);
+        assertEquals(3d, value);
     }
 
 }
