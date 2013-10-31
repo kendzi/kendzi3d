@@ -123,7 +123,7 @@ Expression sum() :
     ( 
        ( 
             <PLUS> f2=term()   { e = ExpressionFactory.sum(f1, f2); } 
-         | <MINUS> f2=term()   { e = ExpressionFactory.sum(f1, f2);  } 
+         | <MINUS> f2=term()   { e = ExpressionFactory.sub(f1, f2);  } 
        ) 
     )? 
   
