@@ -152,7 +152,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         translate =  ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
 
-        rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
+        rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 180);
 
         modelLod.put(pLod, model);
     }

@@ -21,7 +21,7 @@ public class DirectionFunction extends OneParamFunction implements NamedFunction
             return defaultValue;
         }
 
-        return Math.toDegrees(direction.getAngle());
+        return direction.getAngle();
     }
 
     @Override

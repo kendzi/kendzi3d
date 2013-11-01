@@ -149,6 +149,7 @@
 		<copy todir="${plugin.build.dir}/models">
 			<fileset dir="models">
 				<exclude name="max3ds/*"/>
+				<exclude name="**/*.blend"/>
 			</fileset>
 		</copy>
 		<!--

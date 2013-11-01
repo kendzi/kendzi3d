@@ -47,41 +47,41 @@ Example:
 	- vectorY({y}) 			- create 3d vector (0, {y}, 0) 
 	- vectorZ({z})			- create 3d vector (0, 0, {z}) 
  -->
-	<nodeModel matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
-		translateX="0" translateY="65" translateZ="0" scale="0.154" />
-	<nodeModel matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
-		translateX="0" translateY="65" translateZ="0" scale="height(20)" />
-	<nodeModel matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3.obj"
-		translateX="0" translateY="65" translateZ="0" scale="0.8 * height(20)" />
+	<nodeModel matcher="(power_source=wind)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3_simple.obj"
+		scale="height(20)" />
+	<nodeModel matcher="(power_source=wind2)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3_simple.obj"
+		scale="height(20)" />
+	<nodeModel matcher="(power_source=wind4)" model="/models/cc/fullTurbine_v3.blend/fullTurbine_v3_simple.obj"
+		scale="0.8 * height(20)" />
 	
 	<nodeModel matcher="(emergency=fire_hydrant)" model="/models/pd/fire_hydrant.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(1)" />
+		scale="height(1)" />
 		
 	<nodeModel matcher="tomb=*" model="/models/cc/tombstone/tombstone_stone.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(0.8)" direction="90"/>
+		scale="height(0.8)" direction="90"/>
 		
 	<nodeModel matcher="highway=street_lamp" model="/models/pd/lamp.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(5.5)" direction="0"/>
+		scale="height(5.5)" direction="0"/>
 	
 	<nodeModel matcher="highway=street_lamp1" model="/models/pd/StreetlampM2_Height323cm.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(5.5)" direction="0"/>
+		scale="height(5.5)" direction="0"/>
 	
 	
 	
 	<nodeModel matcher="amenity=bench" model="/models/pd/bench.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(1.2)" direction="0"/>
+		scale="height(1.2)" direction="0"/>
 		
 	<nodeModel matcher="amenity=waste_basket" model="/models/pd/waste_basket.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(0.6)" direction="0"/>
+		scale="height(0.6)" direction="0"/>
 		
 	<nodeModel matcher="amenity=post_box" model="/models/pd/post_box.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(1.1)" direction="0"/>
+		scale="height(1.1)" direction="0"/>
 		
 	<nodeModel matcher="highway=milestone" model="/models/pd/milestone.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(1)" direction="0"/>
+		scale="height(1)" direction="0"/>
 
 	<nodeModel matcher="artwork=statue | monument=statue" model="/models/cc/Statu_LowPoly/Statu_lowpoly.obj"		
-		 translate="vectorY(minHeight(0))" scale="height(4) - minHeight(0)" direction="direction(0)"/>
+		translate="vectorY(minHeight(0))" scale="height(4) - minHeight(0)" direction="180 - direction(0)"/>
 
 
 	
