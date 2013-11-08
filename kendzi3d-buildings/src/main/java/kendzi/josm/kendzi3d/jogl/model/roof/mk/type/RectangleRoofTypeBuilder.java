@@ -22,7 +22,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofFrontDirection;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.point.TransformationMatrix2d;
@@ -46,7 +46,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
         Point2d[] rectangleContur = null;
 
-        RoofDirection direction = roof.getDirection();
+        RoofFrontDirection direction = roof.getDirection();
         if (direction == null) {
 
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
@@ -68,11 +68,11 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
             if (direction.isSoft()) {
-                Vector2d alignedDirection = alignedDirectionToOutline(roof.getDirection().getDirection(), outerPolygon);
+                Vector2d alignedDirection = RectangleTypeRoofUtil.snapsDirectionToOutline(direction.getDirection(), outerPolygon);
                 rectangleContur = calcRectangle(outerPolygon.getPoints(), alignedDirection);
 
             } else {
-                rectangleContur = calcRectangle(outerPolygon.getPoints(), roof.getDirection().getDirection());
+                rectangleContur = calcRectangle(outerPolygon.getPoints(), direction.getDirection());
             }
         }
 
@@ -110,37 +110,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     }
 
-    private Vector2d alignedDirectionToOutline(Vector2d direction, PolygonList2d outerPolygon) {
 
-        List<Point2d> points = outerPolygon.getPoints();
-
-        double maxD = -Double.MAX_VALUE;
-        Vector2d maxV = null;
-
-        Point2d end = points.get(points.size() - 1);
-        for (Point2d begin : points) {
-            Vector2d v = new Vector2d(end);
-            v.sub(begin);
-            v.normalize();
-
-            double d = v.dot(direction);
-            if (d > maxD) {
-                maxD = d;
-                maxV = v;
-            }
-
-            v.negate();
-            d = v.dot(direction);
-            if (d > maxD) {
-                maxD = d;
-                v.negate();
-                maxV = v;
-            }
-
-            end = begin;
-        }
-        return maxV;
-    }
 
     /**
      * @param rectangleContur
@@ -174,13 +144,11 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
         return new PolygonList2d(TransformationMatrix2d.transformList(polygon.getPoints(), transformLocal));
     }
 
-    private Point2d[] calcRectangle(List<Point2d> pPolygon, Vector2d pDirection) {
+    private Point2d[] calcRectangle(List<Point2d> polygon, Vector2d direction) {
 
-        RectanglePointVector2d contur = RectangleUtil.findRectangleContur(pPolygon,  pDirection);
+        RectanglePointVector2d contur = RectangleUtil.findRectangleContur(polygon,  direction);
 
-        Point2d[] ret = rectToList(contur);
-
-        return ret;
+        return rectToList(contur);
     }
 
     /**
@@ -202,10 +170,10 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
 
         Point2d[] ret = new Point2d[4];
-        ret[0] = p1;
-        ret[1] = p2;
-        ret[2] = p3;
-        ret[3] = p4;
+        ret[0] = p2;
+        ret[1] = p3;
+        ret[2] = p4;
+        ret[3] = p1;
         return ret;
     }
 

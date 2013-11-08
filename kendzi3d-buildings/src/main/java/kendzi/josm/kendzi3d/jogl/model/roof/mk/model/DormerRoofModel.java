@@ -19,7 +19,7 @@ public class DormerRoofModel implements RoofModel {
     // starting point ?
 
     // direction
-    RoofDirection direction;
+    RoofFrontDirection direction;
 
     /**
      * Only for simple buildings.
@@ -60,7 +60,7 @@ public class DormerRoofModel implements RoofModel {
     /**
      * @return the direction
      */
-    public RoofDirection getDirection() {
+    public RoofFrontDirection getDirection() {
         return this.direction;
     }
 
@@ -68,7 +68,7 @@ public class DormerRoofModel implements RoofModel {
     /**
      * @param direction the direction to set
      */
-    public void setDirection(RoofDirection direction) {
+    public void setDirection(RoofFrontDirection direction) {
         this.direction = direction;
     }
 

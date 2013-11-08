@@ -2,17 +2,17 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.model;
 
 import javax.vecmath.Vector2d;
 
-public class RoofDirection {
+public class RoofFrontDirection {
 
     private Vector2d direction;
 
     private boolean soft;
 
-    public RoofDirection() {
+    public RoofFrontDirection() {
         this(new Vector2d(), false);
     }
 
-    public RoofDirection(Vector2d direction, boolean soft) {
+    public RoofFrontDirection(Vector2d direction, boolean soft) {
         super();
         this.direction = direction;
         this.soft = soft;

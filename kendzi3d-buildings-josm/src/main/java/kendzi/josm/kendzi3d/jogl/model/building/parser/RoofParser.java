@@ -12,11 +12,12 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofDirection;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofFrontDirection;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
+import kendzi.kendzi3d.josm.model.direction.AngleDirection;
 import kendzi.kendzi3d.josm.model.direction.Direction;
 import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
@@ -137,31 +138,31 @@ public class RoofParser {
      * @param pWay way
      * @return roof direction
      */
-    private static RoofDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
+    private static RoofFrontDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
 
-        RoofDirection roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
-
-        if (roofDirection != null) {
-            return roofDirection;
-        }
-
-        roofDirection = parseDirectionStr(
-                OsmAttributeKeys.DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
+        RoofFrontDirection roofDirection = parseDirectionStr(
+                OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         if (roofDirection != null) {
             return roofDirection;
         }
 
         roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay), Ortagonal.NONE, true);
+                OsmAttributeKeys.DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         if (roofDirection != null) {
             return roofDirection;
         }
 
         roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.RIGHT, true);
+                OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay), Ortagonal.LEFT);
+
+        if (roofDirection != null) {
+            return roofDirection;
+        }
+
+        roofDirection = parseDirectionStr(
+                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         return roofDirection;
 
@@ -173,16 +174,19 @@ public class RoofParser {
      * @param soft
      * @return
      */
-    private static RoofDirection parseDirectionStr(String directionValue, Ortagonal orthogonal, boolean soft) {
+    private static RoofFrontDirection parseDirectionStr(String directionValue, Ortagonal orthogonal) {
+        boolean soft = false;
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
             Vector2d directionVector = direction.getVector();
+            soft = !(direction instanceof AngleDirection);
+
             if (Ortagonal.LEFT.equals(orthogonal)) {
                 directionVector = new Vector2d(-directionVector.y, directionVector.x);
             } else if (Ortagonal.RIGHT.equals(orthogonal)) {
                 directionVector = new Vector2d(directionVector.y, -directionVector.x);
             }
-            return new RoofDirection(directionVector, soft);
+            return new RoofFrontDirection(directionVector, soft);
         }
         return null;
     }
@@ -193,21 +197,19 @@ public class RoofParser {
         RIGHT
     }
 
-    private static RoofDirection findDirection(OsmPrimitive pWay, Perspective pPerspective) {
+    private static RoofFrontDirection findDirection(OsmPrimitive pWay, Perspective pPerspective) {
 
         Vector2d direction = null;
         boolean soft = false;
 
         direction = findDirectionByRelation(pWay, pPerspective);
         if (direction != null) {
-            // adjust to 3dr direction
-            direction = Vector2dUtil.orthogonal(direction);
-            return new RoofDirection(direction, false);
+            return new RoofFrontDirection(direction, false);
         }
         if (pWay instanceof Way) {
             direction = findDirectionByPoints((Way) pWay, pPerspective);
             if (direction != null) {
-                return new RoofDirection(direction, soft);
+                return new RoofFrontDirection(direction, soft);
             }
         } else {
             //TODO
@@ -285,14 +287,14 @@ public class RoofParser {
         if (direction3drBegin != null && direction3drEnd != null) {
             Vector2d direction = new Vector2d(direction3drEnd);
             direction.sub(direction3drBegin);
-            return direction;
+            return Vector2dUtil.ortagonalRight(direction);
         }
 
         if (directionBegin != null && directionEnd != null) {
             Vector2d direction = new Vector2d(directionEnd);
             direction.sub(directionBegin);
 
-            return Vector2dUtil.orthogonal(direction);
+            return direction;
         }
 
         return null;
