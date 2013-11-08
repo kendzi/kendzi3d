@@ -9,7 +9,10 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk;
 
+import java.util.List;
+
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.math.geometry.line.LineSegment3d;
 
 /**
  * Roof builder output.
@@ -23,6 +26,8 @@ public class RoofOutput {
      * Debug information.
      */
     private RoofDebugOut debug;
+
+    private List<LineSegment3d> edges;
 
     /**
      * Heights of wall parts under roof.
@@ -76,4 +81,11 @@ public class RoofOutput {
         this.heightCalculator = heightCalculator;
     }
 
+    public List<LineSegment3d> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(List<LineSegment3d> edges) {
+        this.edges = edges;
+    }
 }

@@ -189,6 +189,7 @@ public class BuildingBuilder {
         }
 
         partOutput.setRoofDebugOut(roofOutput.getDebug());
+        partOutput.setEdges(roofOutput.getEdges());
         // partOutput.setFirstPoint(getFirstWallPoint(w));
 
         return partOutput;

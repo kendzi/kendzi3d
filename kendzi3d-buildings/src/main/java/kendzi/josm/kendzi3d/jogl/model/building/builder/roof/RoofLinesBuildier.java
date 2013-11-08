@@ -9,6 +9,7 @@
 package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.line.LineSegment2d;
+import kendzi.math.geometry.line.LineSegment3d;
 import kendzi.math.geometry.point.Vector3dUtil;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
@@ -135,19 +137,24 @@ public class RoofLinesBuildier {
 
         RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, minHeight,  outlineMesh, roofTextureData);
 
+
+
         RoofOutput ro = new RoofOutput();
         ro.setHeight(roof.getRoofHeight());
         ro.setHeightCalculator(hc);
+        ro.setEdges(createEdgesDebug(segments, heights));
 
         return ro;
     }
+
+
 
     /**
      * @param heights
      * @param p1
      * @return
      */
-    private static double getHeight(final Map<Point2d, Double> heights, Point2d p1) {
+    public static double getHeight(final Map<Point2d, Double> heights, Point2d p1) {
         Double height = heights.get(p1);
         if (height == null) {
             log.error("unmaped height for point: " + p1);
@@ -190,6 +197,27 @@ public class RoofLinesBuildier {
         meshRoof.hasTexture = true;
 
         return meshRoof;
+    }
+
+    private static List<LineSegment3d> createEdgesDebug(Collection<LineSegment2d> segments, Map<Point2d, Double> heights) {
+
+        List<LineSegment3d> ret = new ArrayList<LineSegment3d>();
+
+        if (segments == null) {
+            return ret;
+        }
+
+        for (LineSegment2d line : segments) {
+
+            double heightBegin = RoofLinesBuildier.getHeight(heights, line.getBegin());
+            double heightEnd = RoofLinesBuildier.getHeight(heights, line.getEnd());
+            Point3d begin = new Point3d(line.getBegin().x, heightBegin, -line.getBegin().y);
+            Point3d end = new Point3d(line.getEnd().x, heightEnd, -line.getEnd().y);
+
+            ret.add(new LineSegment3d(begin, end));
+
+        }
+        return ret;
     }
 
 }

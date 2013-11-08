@@ -8,7 +8,10 @@
  */
 package kendzi.josm.kendzi3d.jogl.model.building.builder;
 
+import java.util.List;
+
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
+import kendzi.math.geometry.line.LineSegment3d;
 
 /**
  * Additional debug information for building part.
@@ -22,6 +25,8 @@ public class BuildingPartOutput {
      */
     private RoofDebugOut roofDebugOut;
 
+    private List<LineSegment3d> edges;
+
     /**
      * @return the roofDebugOut
      */
@@ -34,5 +39,13 @@ public class BuildingPartOutput {
      */
     public void setRoofDebugOut(RoofDebugOut roofDebugOut) {
         this.roofDebugOut = roofDebugOut;
+    }
+
+    public List<LineSegment3d> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(List<LineSegment3d> edges) {
+        this.edges = edges;
     }
 }

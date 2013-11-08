@@ -48,6 +48,7 @@ import kendzi.josm.kendzi3d.jogl.selection.Selection;
 import kendzi.josm.kendzi3d.jogl.selection.editor.ArrowEditorJosmImp;
 import kendzi.josm.kendzi3d.jogl.selection.editor.Editor;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.math.geometry.line.LineSegment3d;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
@@ -103,6 +104,8 @@ public class NewBuilding extends AbstractModel {
     protected boolean preview;
 
     private BuildingModel bm;
+
+    private List<LineSegment3d> edges;
 
     /**
      * Constructor for building.
@@ -212,15 +215,15 @@ public class NewBuilding extends AbstractModel {
 
             this.debug.clear();
 
+            this.edges = new ArrayList<LineSegment3d>();
+
             if (buildModel.getBuildingPartOutput() != null) {
                 for (BuildingPartOutput bo: buildModel.getBuildingPartOutput()) {
                     this.debug.add(new NewBuildingDebug(bo.getRoofDebugOut()));
+                    if (bo.getEdges() != null) {
+                        edges.addAll(bo.getEdges());
+                    }
                 }
-
-////                    && buildModel.getBuildingPartOutput().size() > 0) {
-//                //debug inf o for first part
-//                BuildingPartOutput buildingPartOutput = buildModel.getBuildingPartOutput().get(0);
-
             }
         }
     }
@@ -314,38 +317,6 @@ public class NewBuilding extends AbstractModel {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-//    private List<Wall> parseWallParts(List<OsmPrimitive> parts, Perspective3D pPerspective) {
-//
-//        List<Wall> ret = new ArrayList<Wall>();
-//
-//        for (OsmPrimitive p : parts) {
-//            if (OsmPrimitiveType.CLOSEDWAY.equals(p.getType())) {
-//                ret.add(parseWall((Way) p, pPerspective));
-//            } else {
-//                // TODO
-//            }
-//        }
-//
-//        return null;
-//    }
-
-
-
-
-
-
-
-
     @Override
     public void draw(GL2 pGl, Camera pCamera) {
 
@@ -364,6 +335,23 @@ public class NewBuilding extends AbstractModel {
             pGl.glLineWidth(6);
 
             DrawUtil.drawBox(pGl, this.bounds.getMax(), this.bounds.getMin());
+        }
+
+        if (edges != null) {
+            pGl.glTranslated(0, 0.1, 0);
+
+            pGl.glLineWidth(6);
+
+            for (LineSegment3d line : edges) {
+                pGl.glColor3fv(Color.RED.darker().getRGBComponents(new float[4]), 0);
+
+                pGl.glBegin(GL2.GL_LINES);
+
+                pGl.glVertex3d(line.getBegin().x, line.getBegin().y, line.getBegin().z);
+                pGl.glVertex3d(line.getEnd().x, line.getEnd().y, line.getEnd().z);
+
+                pGl.glEnd();
+            }
         }
 
         pGl.glPopMatrix();
