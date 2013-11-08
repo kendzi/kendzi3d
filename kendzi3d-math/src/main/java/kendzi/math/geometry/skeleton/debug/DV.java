@@ -10,6 +10,7 @@ import kendzi.math.geometry.debug.DebugDisplay;
 import kendzi.math.geometry.debug.DebugLayer;
 import kendzi.math.geometry.debug.DisplayLineParametric2d;
 import kendzi.math.geometry.debug.DisplayLineSegment2d;
+import kendzi.math.geometry.debug.DisplayObject;
 import kendzi.math.geometry.debug.DisplayPoints;
 import kendzi.math.geometry.debug.DisplayPolygon;
 import kendzi.math.geometry.debug.DisplaySkeletonOut;
@@ -88,10 +89,21 @@ public class DV {
         }
     }
 
+    public static void debug(DisplayObject displayObject) {
+        if (debug) {
+            dv.addDebug(displayObject);
+        }
+    }
+
     public static void clear() {
         if (debug) {
             dv.clear();
         }
     }
 
+    public static void block() {
+        if (debug) {
+            DebugDisplay.getDebugDisplay().block();
+        }
+    }
 }

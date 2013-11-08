@@ -28,48 +28,8 @@ import org.apache.log4j.Logger;
 public class RectangleUtil {
 
     /** Log. */
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(RectangleUtil.class);
-
-    /**
-     * Change order of points. Longer side of rectangle will by always first
-     * 
-     * @param points points
-     * @return changed points if needed
-     */
-    public static Point2d[] longerSideFirst(Point2d[] points) {
-        if (points == null || points.length < 4) {
-            throw new IllegalArgumentException("only for Rectangle");
-        }
-        if (points[0].distanceSquared(points[1]) < points[1].distanceSquared(points[2])) {
-
-            points = swapOnePoint(points);
-        }
-        return points;
-    }
-
-    /** Swap one point.
-     * @param points list of points
-     * @return swap by one list of points
-     */
-    public static Point2d[] swapOnePoint(Point2d[] points) {
-
-        if (points.length < 2) {
-            return points;
-        }
-
-        Point2d p = points[0];
-
-
-        for (int i = 0; i < points.length - 1; i++) {
-            points[i] = points[i + 1];
-
-        }
-        points[points.length - 1] = p;
-
-        return points;
-    }
-
-
 
 
     /**
@@ -129,8 +89,9 @@ public class RectangleUtil {
      * @param v1 first vector
      * @param v2 second vector
      * @return dot product
+     * XXX
      */
-    public final static double dot(Tuple2d v1, Tuple2d v2) {
+    private final static double dot(Tuple2d v1, Tuple2d v2) {
         return v1.x*v2.x + v1.y*v2.y;
     }
 
