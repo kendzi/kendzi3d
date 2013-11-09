@@ -15,25 +15,26 @@ import javax.vecmath.Vector2d;
 import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
 
-/** Math ray. Defined by point and vector.
+/**
+ * Math ray. Defined by point and vector.
+ * 
  * @author kendzi
- *
+ * 
  */
 public class Ray2d extends LineParametric2d {
     public Ray2d(Point2d pA, Vector2d pU) {
         super(pA, pU);
-        // TODO Auto-generated constructor stub
     }
 
 
 
-//    public Ray2d(Point2d p2, Vector2d pV) {
-//        A = p2;
-//        U = pV;
-//    }
+    //    public Ray2d(Point2d p2, Vector2d pV) {
+    //        A = p2;
+    //        U = pV;
+    //    }
 
     public static Point2d collide(Ray2d ray, LineLinear2d line) {
-
+        // FIXME rewrite?
         Point2d collide = LineLinear2d.collide(ray.getLinearForm(), line);
         if (collide == null) {
             return null;
@@ -54,5 +55,14 @@ public class Ray2d extends LineParametric2d {
         return collide;
 
     }
+
+
+
+    @Override
+    public String toString() {
+        return "Ray2d [A=" + A + ", U=" + U + "]";
+    }
+
+
 
 }

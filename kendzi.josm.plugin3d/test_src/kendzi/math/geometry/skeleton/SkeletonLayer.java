@@ -15,9 +15,9 @@ import kendzi.swing.ui.panel.equation.EquationDisplay;
 import kendzi.swing.ui.panel.equation.EquationLayer;
 
 public class SkeletonLayer extends EquationLayer {
-	private Skeleton.Output output;
+	private Skeleton.SkeletonOutput output;
 
-	public SkeletonLayer(Skeleton.Output output) {
+	public SkeletonLayer(Skeleton.SkeletonOutput output) {
 		this.output = output;
 	}
 

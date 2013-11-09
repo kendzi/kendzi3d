@@ -1,6 +1,6 @@
 package kendzi.math.geometry.point;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import javax.vecmath.Vector2d;
 
@@ -63,6 +63,25 @@ public class Vector2dUtilTest {
 
         // fail("Not yet implemented");
     }
+
+
+    @Test
+    public void testBisector_2() {
+
+        Vector2d v0 = new Vector2d(-0.7,                0.7);
+
+        Vector2d v1 = new Vector2d(-1, 0);
+
+        Vector2d z = new Vector2d(1,0);
+        System.out.println(Math.toDegrees(z.angle(v0)));
+        System.out.println(Math.toDegrees(z.angle(v1)));
+
+
+        Vector2d bisector = Vector2dUtil.bisector(v1, v0);
+        assertAngle(Math.toRadians(112.5), v0.angle(bisector));
+        assertLenght(bisector);
+    }
+
 
     double angle(Vector2d v) {
         return Math.atan2(v.y, v.x);

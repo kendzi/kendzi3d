@@ -20,7 +20,7 @@ import kendzi.math.geometry.skeleton.CircularList;
 import kendzi.math.geometry.skeleton.Skeleton.FaceNode;
 import kendzi.math.geometry.skeleton.Skeleton.FaceQueue;
 import kendzi.math.geometry.skeleton.Skeleton.IntersectEntry;
-import kendzi.math.geometry.skeleton.Skeleton.Output;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
 import kendzi.math.geometry.skeleton.Skeleton.VertexEntry2;
 
 public class DV {
@@ -59,7 +59,7 @@ public class DV {
         }
     }
 
-    public static void debug(Output pOutput) {
+    public static void debug(SkeletonOutput pOutput) {
         if (debug) {
             dv.addDebug(new DisplaySkeletonOut(pOutput));
         }

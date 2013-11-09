@@ -26,7 +26,7 @@ import kendzi.math.geometry.debug.DebugDisplay;
 import kendzi.math.geometry.debug.DebugLayer;
 import kendzi.math.geometry.debug.DisplaySkeletonOut;
 import kendzi.math.geometry.polygon.PolygonList2d;
-import kendzi.math.geometry.skeleton.Skeleton.Output;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
 import kendzi.math.geometry.skeleton.debug.DV;
 import kendzi.swing.ui.panel.equation.EquationDisplay;
 import kendzi.swing.ui.panel.equation.EquationLayer;
@@ -61,12 +61,12 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
+        visualizeResults(polygon, sk);
         validate(polygon, sk);
 
 
-        visualizeResults(polygon, sk);
 
         // showResult2(polygon, sk);
 
@@ -102,7 +102,7 @@ public class SkeletonTest {
         DV.debug(outer);
         DV.debug(inner);
 
-        Output sk = Skeleton.sk(outer, innerList);
+        SkeletonOutput sk = Skeleton.skeleton(outer, innerList);
 
         validate(outer, sk);
 
@@ -140,7 +140,7 @@ public class SkeletonTest {
         DV.debug(outer);
         DV.debug(inner);
 
-        Output sk = Skeleton.sk(outer, innerList);
+        SkeletonOutput sk = Skeleton.skeleton(outer, innerList);
 
         validate(outer, sk);
 
@@ -186,7 +186,7 @@ public class SkeletonTest {
         // DV.debug(outer));
         DV.debug(inner);
 
-        Output sk = Skeleton.sk(inner);
+        SkeletonOutput sk = Skeleton.sk(inner);
 
         validate(inner, sk);
 
@@ -211,7 +211,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -239,7 +239,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -273,7 +273,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -306,7 +306,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -331,7 +331,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -354,7 +354,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -377,7 +377,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -402,7 +402,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -426,7 +426,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -449,7 +449,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -475,7 +475,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -503,7 +503,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -537,7 +537,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -571,7 +571,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -579,11 +579,11 @@ public class SkeletonTest {
 
     }
 
-    private void validate(List<Point2d> polygon, Output sk) {
+    private void validate(List<Point2d> polygon, SkeletonOutput sk) {
         assertInBbox(polygon, sk);
         assertOutlineInSkelet(polygon, sk);
     }
-    private void assertInBbox(List<Point2d> polygon, Output sk) {
+    private void assertInBbox(List<Point2d> polygon, SkeletonOutput sk) {
 
         Bbox2d bbox = new Bbox2d();
         for (Point2d point2d : polygon) {
@@ -600,7 +600,7 @@ public class SkeletonTest {
     }
 
 
-    private void assertOutlineInSkelet(List<Point2d> polygon, Output sk) {
+    private void assertOutlineInSkelet(List<Point2d> polygon, SkeletonOutput sk) {
         Set<Point2d> outline = new HashSet<Point2d>(polygon);
 
         outPoint: for (Point2d out : outline) {
@@ -616,7 +616,7 @@ public class SkeletonTest {
         }
     }
 
-    private void visualizeResults(List<Point2d> polygon, Output sk) {
+    private void visualizeResults(List<Point2d> polygon, SkeletonOutput sk) {
         DV.debug(polygon);
         DV.debug(new DisplaySkeletonOut(sk));
 
@@ -653,7 +653,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -678,7 +678,7 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         visualizeResults(polygon, sk);
 
@@ -692,7 +692,7 @@ public class SkeletonTest {
         polygon.add(new Point2d(150, 100));
         polygon.add(new Point2d(50, 100));
 
-        Output sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.sk(polygon);
 
         validate(polygon, sk);
 
@@ -708,7 +708,7 @@ public class SkeletonTest {
     // polygon.add(new Point2d(122, 142));
     // polygon.add(new Point2d(84, 152));
     //
-    // Output sk = Skeleton.sk(polygon);
+    // SkeletonOutput sk = Skeleton.sk(polygon);
     //
     // assertInBbox(polygon, sk);
     //
@@ -720,7 +720,7 @@ public class SkeletonTest {
     // * @param polygon
     // * @param sk
     // */
-    // public void showResult(List<Point2d> polygon, Output sk) {
+    // public void showResult(List<Point2d> polygon, SkeletonOutput sk) {
     // SkeletonTestUi ui = new SkeletonTestUi();
     // ui.init();
     // ui.start();
@@ -774,7 +774,7 @@ public class SkeletonTest {
      * @param polygon
      * @param sk
      */
-    public void showResult2(final List<Point2d> polygon, Output sk) {
+    public void showResult2(final List<Point2d> polygon, SkeletonOutput sk) {
 
         MapComponent mc = new MapComponent();
         mc.addLayer(new EquationLayer() {

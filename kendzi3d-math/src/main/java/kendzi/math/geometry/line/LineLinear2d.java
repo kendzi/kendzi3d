@@ -105,6 +105,7 @@ public class LineLinear2d {
      * @return point is under line
      */
     public boolean pointIsUnder(Tuple2d pPoint) {
+        // XXX veryfy if it have sense
         return A * pPoint.x + B * pPoint.y + C > 0;
     }
 
@@ -114,6 +115,7 @@ public class LineLinear2d {
      * @return point is over line
      */
     public boolean pointIsOver(Tuple2d pPoint) {
+        // XXX veryfy if it have sense
         return A * pPoint.x + B * pPoint.y + C < 0;
     }
 
@@ -133,6 +135,7 @@ public class LineLinear2d {
      * @return point is over line or on line
      */
     public boolean pointInFront(Tuple2d pPoint) {
+        // XXX veryfy if it have sense
         return A * pPoint.x + B * pPoint.y + C >= 0;
     }
 
@@ -142,6 +145,7 @@ public class LineLinear2d {
      * @return point is under line or on line
      */
     public boolean pointInBack(Tuple2d pPoint) {
+        // XXX veryfy if it have sense
         return A * pPoint.x + B * pPoint.y + C <= 0;
     }
 }

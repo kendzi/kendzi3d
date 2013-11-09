@@ -10,7 +10,7 @@
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 
 	<properties>
-		 
+
 	</properties>
 
 	<dependencies>
@@ -30,9 +30,9 @@
 			<version>0.20</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.poly2tri</groupId>
-		    <artifactId>poly2tri-core</artifactId>
-		    <version>0.1.1-SNAPSHOT</version>
+			<groupId>org.poly2tri</groupId>
+			<artifactId>poly2tri-core</artifactId>
+			<version>0.1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -40,8 +40,15 @@
 			<version>1.7.5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
-	
+
 	<repositories>
 		<repository>
 			<id>repo</id>

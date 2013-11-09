@@ -42,7 +42,7 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.skeleton.Skeleton;
-import kendzi.math.geometry.skeleton.Skeleton.Output;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
 
 import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
@@ -122,7 +122,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         }
         log.info("****");
 
-        Output sk = Skeleton.sk(pBorderList);
+        SkeletonOutput sk = Skeleton.sk(pBorderList);
 
         Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
         calcDistance(sk, distance);
@@ -217,7 +217,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         return maxDistance;
     }
 
-    private void calcDistance(Output sk, Map<Point2d, Double> distance) {
+    private void calcDistance(SkeletonOutput sk, Map<Point2d, Double> distance) {
         for (PolygonList2d polygon : sk.getFaces2()) {
             LineSegment2d edge = sk.getEdges().get(polygon);
             List<Point2d> points = polygon.getPoints();

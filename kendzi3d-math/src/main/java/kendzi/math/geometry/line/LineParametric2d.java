@@ -12,6 +12,8 @@ package kendzi.math.geometry.line;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
+import kendzi.math.geometry.point.Vector2dUtil;
+
 /**
  * Geometry line in parametric form.
  *
@@ -47,4 +49,30 @@ public class LineParametric2d {
         double C = - (A * x + B * y);
         return new LineLinear2d(A, B, C);
     }
+
+    public boolean isOnLeftSite(Point2d point, double epsilon) {
+        Vector2d direction = new Vector2d(point);
+        direction.sub(A);
+
+        Vector2d ortagonalRight = Vector2dUtil.ortagonalRight(U);
+
+        return ortagonalRight.dot(direction) < epsilon;
+    }
+
+    public boolean isOnRightSite(Point2d point, double epsilon) {
+        Vector2d direction = new Vector2d(point);
+        direction.sub(A);
+
+        Vector2d ortagonalRight = Vector2dUtil.ortagonalRight(U);
+
+        return ortagonalRight.dot(direction) > -epsilon;
+    }
+
+    @Override
+    public String toString() {
+        return "LineParametric2d [A=" + A + ", U=" + U + "]";
+    }
+
+
+
 }

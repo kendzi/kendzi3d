@@ -14,15 +14,15 @@ public class DebugLayer extends EquationLayer {
     public void draw(Graphics2D g2d, EquationDisplay disp) {
         try {
 
-        for (Object key : this.objects.keySet()) {
-            DisplayObject displayObject = this.objects.get(key);
+            for (Object key : this.objects.keySet()) {
+                DisplayObject displayObject = this.objects.get(key);
 
-            displayObject.draw(g2d, disp, false);
-        }
+                displayObject.draw(g2d, disp, false);
+            }
 
-        if (this.lastObjects != null) {
-            this.lastObjects.draw(g2d, disp, true);
-        }
+            if (this.lastObjects != null) {
+                this.lastObjects.draw(g2d, disp, true);
+            }
         } catch (java.util.ConcurrentModificationException ce) {
             // FIXME !!!!!!
             //
@@ -31,7 +31,7 @@ public class DebugLayer extends EquationLayer {
     }
 
     Map<Object, DisplayObject> objects = Collections.synchronizedMap(new LinkedHashMap<Object, DisplayObject>());
-    DisplayObject lastObjects = null;
+    volatile DisplayObject lastObjects = null;
 
     public void addDebug(String pKey, DisplayObject object) {
         addDebug((Object) pKey, object);
@@ -63,7 +63,7 @@ public class DebugLayer extends EquationLayer {
             return;
         }
 
-        double ratio = (bounds.maxX - bounds.minX) - (bounds.maxY - bounds.minY);
+        double ratio = bounds.maxX - bounds.minX - (bounds.maxY - bounds.minY);
         if (ratio > 0) {
             bounds.maxY += ratio;
         } else {
@@ -76,9 +76,9 @@ public class DebugLayer extends EquationLayer {
                 bounds.minX - 1, bounds.maxX + 1, bounds.minY - 1, bounds.maxY + 1);
 
         //XXX
-//        DebugDisplay.getDebugDisplay().getMapComponent().setParms(
-//                bounds.minX  + bounds.maxX / 2,bounds.minY + bounds.maxY  /2,
-//                bounds.minX - 1, bounds.maxX + 1, bounds.minY - 1, bounds.maxY + 1);
+        //        DebugDisplay.getDebugDisplay().getMapComponent().setParms(
+        //                bounds.minX  + bounds.maxX / 2,bounds.minY + bounds.maxY  /2,
+        //                bounds.minX - 1, bounds.maxX + 1, bounds.minY - 1, bounds.maxY + 1);
         // XXX do with events!
         DebugDisplay.getDebugDisplay().getMapComponent().repaint(300);
     }

@@ -122,14 +122,14 @@ public class SkeletonTestUi extends Applet {
     }
 
     boolean SkeletonScanApp() {
-        Skeleton.Output ret = Skeleton.sk(this.points);
+        Skeleton.SkeletonOutput ret = Skeleton.sk(this.points);
 
         setupResults(ret);
 
         return true;
     }
 
-    public void setupResults(Skeleton.Output ret) {
+    public void setupResults(Skeleton.SkeletonOutput ret) {
         this.drawableObjects.clear();
 
 //        for (List<Point2d> list : ret.faces) {

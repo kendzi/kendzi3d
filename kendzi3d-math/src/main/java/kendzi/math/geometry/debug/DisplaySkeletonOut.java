@@ -19,13 +19,12 @@ import kendzi.swing.ui.panel.equation.EquationDisplay;
  */
 public class DisplaySkeletonOut extends DisplayObject {
 
-    private Skeleton.Output skeletonOut;
-//    private List<Polygon> drawableObjects;
+    private Skeleton.SkeletonOutput skeletonOut;
 
     /**
      * @param polygon
      */
-    public DisplaySkeletonOut(Skeleton.Output skeletonOut) {
+    public DisplaySkeletonOut(Skeleton.SkeletonOutput skeletonOut) {
         super();
         this.skeletonOut = skeletonOut;
     }
@@ -37,81 +36,61 @@ public class DisplaySkeletonOut extends DisplayObject {
             return;
         }
 
-//        if (this.drawableObjects == null) {
-//            this.drawableObjects = new ArrayList<Polygon>();
+        //        if (this.drawableObjects == null) {
+        //            this.drawableObjects = new ArrayList<Polygon>();
 
-            for (List<Point2d> list : this.skeletonOut.getFaces()) {
+        for (List<Point2d> list : this.skeletonOut.getFaces()) {
 
-                Polygon polygon = new Polygon();
-                for (Point2d point : list) {
-                    int x = (int) disp.xPositionToPixel(point.x);
-                    int y = (int) disp.yPositionToPixel(point.y);
+            Polygon polygon = new Polygon();
+            for (Point2d point : list) {
+                int x = (int) disp.xPositionToPixel(point.x);
+                int y = (int) disp.yPositionToPixel(point.y);
 
-                    polygon.addPoint(x, y);
-                }
-
-                g2d.setColor(Color.yellow.brighter());
-                g2d.fillPolygon(polygon);
-
-                if (selected) {
-                    Stroke stroke = g2d.getStroke();
-                    g2d.setStroke(new BasicStroke(3));
-                    g2d.setColor(Color.GREEN.brighter());
-                    g2d.drawPolygon(polygon);
-                    g2d.setStroke(stroke);
-                }
-                g2d.setColor(Color.yellow.darker());
-                g2d.drawPolygon(polygon);
-
-//                this.drawableObjects.add(polygon);
+                polygon.addPoint(x, y);
             }
 
+            g2d.setColor(Color.yellow.brighter());
+            g2d.fillPolygon(polygon);
 
-
-            for (PolygonList2d list : this.skeletonOut.getFaces2()) {
-
-                Polygon polygon = new Polygon();
-                for (Point2d point : list.getPoints()) {
-                    int x = (int) disp.xPositionToPixel(point.x);
-                    int y = (int) disp.yPositionToPixel(point.y);
-
-                    polygon.addPoint(x, y);
-                }
-
-                g2d.setColor(Color.blue.brighter());
-                g2d.fillPolygon(polygon);
-
-                if (selected) {
-                    Stroke stroke = g2d.getStroke();
-                    g2d.setStroke(new BasicStroke(3));
-                    g2d.setColor(Color.GREEN.brighter());
-                    g2d.drawPolygon(polygon);
-                    g2d.setStroke(stroke);
-                }
-                g2d.setColor(Color.yellow.darker());
+            if (selected) {
+                Stroke stroke = g2d.getStroke();
+                g2d.setStroke(new BasicStroke(3));
+                g2d.setColor(Color.GREEN.brighter());
                 g2d.drawPolygon(polygon);
+                g2d.setStroke(stroke);
+            }
+            g2d.setColor(Color.yellow.darker());
+            g2d.drawPolygon(polygon);
+
+            //                this.drawableObjects.add(polygon);
+        }
 
 
+
+        for (PolygonList2d list : this.skeletonOut.getFaces2()) {
+
+            Polygon polygon = new Polygon();
+            for (Point2d point : list.getPoints()) {
+                int x = (int) disp.xPositionToPixel(point.x);
+                int y = (int) disp.yPositionToPixel(point.y);
+
+                polygon.addPoint(x, y);
             }
 
+            g2d.setColor(Color.blue.brighter());
+            g2d.fillPolygon(polygon);
 
-//        }
+            if (selected) {
+                Stroke stroke = g2d.getStroke();
+                g2d.setStroke(new BasicStroke(3));
+                g2d.setColor(Color.GREEN.brighter());
+                g2d.drawPolygon(polygon);
+                g2d.setStroke(stroke);
+            }
+            g2d.setColor(Color.yellow.darker());
+            g2d.drawPolygon(polygon);
 
-//        for (Shape p : this.drawableObjects) {
-//
-//            if (this.drawableObjects != null) {
-//
-//                for (Polygon polygon : this.drawableObjects) {
-//
-//                    g2d.setColor(Color.yellow.brighter());
-//                    g2d.fillPolygon(polygon);
-//
-//                    g2d.setColor(Color.yellow.darker());
-//                    g2d.drawPolygon(polygon);
-//                }
-//            }
-//
-//        }
+        }
     }
 
     @Override

@@ -97,4 +97,8 @@ public class Vector2dUtil {
         return new Vector2d(end.x - begin.x, end.y - begin.y);
     }
 
+    public static Vector2d negate(Vector2d vector) {
+        return new Vector2d(-vector.x, -vector.y);
+    }
+
 }
