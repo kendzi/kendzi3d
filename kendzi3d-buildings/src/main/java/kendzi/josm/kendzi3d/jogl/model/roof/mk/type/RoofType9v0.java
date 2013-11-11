@@ -122,7 +122,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         }
         log.info("****");
 
-        SkeletonOutput sk = Skeleton.sk(pBorderList);
+        SkeletonOutput sk = Skeleton.skeleton(pBorderList);
 
         Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
         calcDistance(sk, distance);
@@ -132,7 +132,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new ArrayList<PolygonRoofHooksSpace>();
 
 
-        for (PolygonList2d polygon : sk.getFaces2()) {
+        for (PolygonList2d polygon : sk.getFaces()) {
             List<Point2d> points = polygon.getPoints();
 
             if (points.size() < 3) {
@@ -218,7 +218,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
     }
 
     private void calcDistance(SkeletonOutput sk, Map<Point2d, Double> distance) {
-        for (PolygonList2d polygon : sk.getFaces2()) {
+        for (PolygonList2d polygon : sk.getFaces()) {
             LineSegment2d edge = sk.getEdges().get(polygon);
             List<Point2d> points = polygon.getPoints();
             calcDistance(edge, points, distance);

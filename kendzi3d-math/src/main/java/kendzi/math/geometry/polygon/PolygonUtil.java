@@ -10,6 +10,7 @@
 package kendzi.math.geometry.polygon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.vecmath.Point2d;
 
@@ -74,7 +75,7 @@ public class PolygonUtil {
             double x = point.x;
             double y = point.y;
 
-            if ((node1.y < y && node2.y >= y) || (node2.y < y && node1.y >= y)) {
+            if (node1.y < y && node2.y >= y || node2.y < y && node1.y >= y) {
                 if (node1.x + (y - node1.y) / (node2.y - node1.y) * (node2.x - node1.x) < x) {
                     oddNodes = !oddNodes;
                 }
@@ -128,6 +129,56 @@ public class PolygonUtil {
         }
 
         return new Point2d(maxX, maxY);
+    }
+
+    /**
+     * Calculate area of polygon outline. For clockwise are will be less then
+     * zero, for counter-clockwise polygons area will be greter then zero.
+     * 
+     * @param polygon
+     *            list of polygon points
+     * @return area
+     */
+    public static float area(List<Point2d> polygon) {
+
+        int n = polygon.size();
+
+        float A = 0.0f;
+
+        for (int p = n - 1, q = 0; q < n; p = q++) {
+            A += polygon.get(p).x * polygon.get(q).y - polygon.get(q).x * polygon.get(p).y;
+        }
+        return A * 0.5f;
+    }
+
+    /**
+     * Check if polygon is clockwise.
+     * 
+     * @param polygon
+     *            list of polygon points
+     * @return if polygon is clockwise
+     */
+    public static boolean isClockwisePolygon(List<Point2d> polygon) {
+        return area(polygon) < 0;
+    }
+
+    /**
+     * Reverse point order in list
+     * 
+     * @param polygon
+     * @return
+     */
+    public static List<Point2d> reverse(List<Point2d> polygon) {
+        if (polygon == null) {
+            return null;
+        }
+
+        List<Point2d> list = new ArrayList<Point2d>(polygon.size());
+
+        for (int i = polygon.size() - 1; i >= 0; i--) {
+            list.add(polygon.get(i));
+        }
+        return list;
     }
 
 }

@@ -122,7 +122,7 @@ public class SkeletonTestUi extends Applet {
     }
 
     boolean SkeletonScanApp() {
-        Skeleton.SkeletonOutput ret = Skeleton.sk(this.points);
+        Skeleton.SkeletonOutput ret = Skeleton.skeleton(this.points);
 
         setupResults(ret);
 
@@ -142,7 +142,7 @@ public class SkeletonTestUi extends Applet {
 //            this.drawableObjects.add(polygon);
 //        }
 
-        for (PolygonList2d list : ret.getFaces2()) {
+        for (PolygonList2d list : ret.getFaces()) {
 
             Polygon polygon = new Polygon();
             for (Point2d point : list.getPoints()) {

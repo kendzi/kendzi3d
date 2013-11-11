@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,16 +61,26 @@ public class SkeletonTest {
         polygon.add(new Point2d(1, 1));
         polygon.add(new Point2d(-1, 1));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-1.000000, 0.000000));
+        expected.add(p(-0.707107, 0.292893));
+        expected.add(p(0.000000, 0.585786));
+        expected.add(p(0.707107, 0.292893));
+        expected.add(p(1.000000, 0.000000));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         visualizeResults(polygon, sk);
         validate(polygon, sk);
 
 
 
-        // showResult2(polygon, sk);
+        assertExpectedPoints(expected, getFacePoints(sk));
+
+//        writeExpectedOutput(polygon, sk);
 
     }
 
@@ -96,6 +108,14 @@ public class SkeletonTest {
         List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
         innerList.add(inner);
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-1.500000, -1.500000));
+        expected.add(p(-1.500000, 1.500000));
+        expected.add(p(1.500000, -1.500000));
+        expected.add(p(1.500000, 1.500000));
+        expected.addAll(outer);
+        expected.addAll(inner);
+
         // polygon.add(new Point2d(1, 1));
         // polygon.add(new Point2d(-1, 1));
 
@@ -104,11 +124,14 @@ public class SkeletonTest {
 
         SkeletonOutput sk = Skeleton.skeleton(outer, innerList);
 
+        writeExpectedOutput(outer, sk);
+
+        visualizeResults(outer, sk);
+
         validate(outer, sk);
 
-        visualizeResults(inner, sk);
+        assertExpectedPoints(expected, getFacePoints(sk));
 
-        // showResult2(polygon, sk);
 
     }
 
@@ -142,58 +165,42 @@ public class SkeletonTest {
 
         SkeletonOutput sk = Skeleton.skeleton(outer, innerList);
 
-        validate(outer, sk);
 
         visualizeResults(inner, sk);
+        validate(outer, sk);
 
         // showResult2(polygon, sk);
 
     }
 
-    // @Test
+     @Test
     public void skeletonTest6_9() {
 
         DV.clear();
 
-        List<Point2d> inner = new ArrayList<Point2d>();
+        List<Point2d> polygon = new ArrayList<Point2d>();
 
-        //
-        // inner.add(new Point2d(-1,1));
-        // inner.add(new Point2d(1, 1));
-        // inner.add(new Point2d(1, -1));
-        // inner.add(new Point2d(-1, -1));
-        // inner.add(new Point2d(-2, 0));
+        polygon.add(new Point2d(119, 158));
+        polygon.add(new Point2d(259, 159));
+        polygon.add(new Point2d(248, 63));
+        polygon.add(new Point2d(126, 60));
+        polygon.add(new Point2d(90, 106));
 
-        inner.add(new Point2d(119, 158));
-        inner.add(new Point2d(259, 159));
-        inner.add(new Point2d(248, 63));
-        inner.add(new Point2d(126, 60));
-        inner.add(new Point2d(90, 106));
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(147.156672, 110.447627));
+        expected.add(p(149.322770, 109.401806));
+        expected.add(p(204.771536, 110.281518));
+        expected.addAll(polygon);
 
-        // List<Point2d> outer = new ArrayList<Point2d>();
-        // outer.add(new Point2d(-2, -2));
-        // outer.add(new Point2d(2, -2));
-        // outer.add(new Point2d(2, 2));
-        // outer.add(new Point2d(-2, 2));
-        //
-        //
-        // List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
-        // innerList.add(inner);
+        DV.debug(polygon);
 
-        // polygon.add(new Point2d(1, 1));
-        // polygon.add(new Point2d(-1, 1));
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
-        // DV.debug(outer));
-        DV.debug(inner);
+        validate(polygon, sk);
 
-        SkeletonOutput sk = Skeleton.sk(inner);
+        visualizeResults(polygon, sk);
 
-        validate(inner, sk);
-
-        visualizeResults(inner, sk);
-
-        // showResult2(polygon, sk);
-
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -209,16 +216,21 @@ public class SkeletonTest {
         polygon.add(new Point2d(1, 1));
         polygon.add(new Point2d(-1, 1));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(0.414214, 0.414214));
+        expected.add(p(0.500000, -0.500000));
+        expected.add(p(0.500000, 0.207107));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
-        // showResult2(polygon, sk);
-
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -237,14 +249,24 @@ public class SkeletonTest {
         polygon.add(new Point2d(-2, 1.2));
         polygon.add(new Point2d(-2, -0.2));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-1.383546, 0.551953));
+        expected.add(p(-0.436065, 0.621927));
+        expected.add(p(0.011951, -0.903199));
+        expected.add(p(0.021802, 0.089862));
+        expected.add(p(0.784764, 0.875962));
+        expected.add(p(1.582159, 0.602529));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -271,14 +293,32 @@ public class SkeletonTest {
         polygon.add(new Point2d(5.808494957384097, 10.589997844496661));
         polygon.add(new Point2d(-0.13214359029800526, 10.603466113057067));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(0.359453, 8.976136));
+        expected.add(p(0.918471, 9.563508));
+        expected.add(p(6.008508, -4.080606));
+        expected.add(p(6.729881, 9.664425));
+        expected.add(p(6.760642, 9.696273));
+        expected.add(p(6.858071, 9.623241));
+        expected.add(p(7.394289, -4.083747));
+        expected.add(p(7.779411, 2.141718));
+        expected.add(p(7.923726, -3.556706));
+        expected.add(p(7.933442, 0.729015));
+        expected.add(p(7.966811, -6.039966));
+        expected.add(p(7.972330, -3.605531));
+        expected.add(p(8.562422, 1.355149));
+        expected.add(p(11.147441, 1.349289));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -304,14 +344,31 @@ public class SkeletonTest {
         polygon.add(new Point2d(9.840828592998651, 10.391220834155359));
         polygon.add(new Point2d(-0.24573045314637643, 10.433085818392197));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(0.311377, 9.026957));
+        expected.add(p(0.732142, 9.474000));
+        expected.add(p(6.008508, -4.080606));
+        expected.add(p(6.810341, 9.573824));
+        expected.add(p(7.394289, -4.083747));
+        expected.add(p(7.498680, 2.423725));
+        expected.add(p(7.813149, 8.564560));
+        expected.add(p(7.923726, -3.556706));
+        expected.add(p(7.933442, 0.729015));
+        expected.add(p(7.966811, -6.039966));
+        expected.add(p(7.972330, -3.605531));
+        expected.add(p(8.562422, 1.355149));
+        expected.add(p(11.147441, 1.349289));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -329,14 +386,23 @@ public class SkeletonTest {
         polygon.add(new Point2d(3.2418946694662925, 6.589997178682357));
         polygon.add(new Point2d(-0.4480081827933864, 6.565094698194268));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(1.860585, 3.485326));
+        expected.add(p(1.972676, 0.083065));
+        expected.add(p(1.996554, -3.386722));
+        expected.add(p(2.146278, 4.158152));
+        expected.add(p(2.251879, 3.903281));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -352,14 +418,21 @@ public class SkeletonTest {
         polygon.add(new Point2d(6.511671744737513, 1.0659572436626021));
         polygon.add(new Point2d(-1.7258603912355601, 6.252730824609899));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(1.427912, -3.517645));
+        expected.add(p(2.804480, 0.085324));
+        expected.add(p(2.812173, 0.146026));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -375,14 +448,21 @@ public class SkeletonTest {
         polygon.add(new Point2d(7.051209343876594, 2.9401404828825903));
         polygon.add(new Point2d(-1.7258603912355601, 6.252730824609899));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(1.381369, -3.555284));
+        expected.add(p(2.671019, 0.081263));
+        expected.add(p(2.795365, 1.297294));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -400,14 +480,23 @@ public class SkeletonTest {
         polygon.add(new Point2d(-6.297731626436729, -3.6293262553813097));
         polygon.add(new Point2d(-3.4580600517873807, 1.3968924313579514));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-4.254893, 3.676216));
+        expected.add(p(-3.720036, 4.025044));
+        expected.add(p(1.173593, -3.723313));
+        expected.add(p(1.493460, 2.941709));
+        expected.add(p(2.345444, 1.248630));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -424,14 +513,22 @@ public class SkeletonTest {
         polygon.add(new Point2d(0.8357970425329011, -1.0288592710693223));
         polygon.add(new Point2d(7.360455718922119, -6.229013606285628));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(0.159929, -0.432595));
+        expected.add(p(0.228431, -0.371176));
+        expected.add(p(1.434035, -6.223122));
+        expected.add(p(6.380715, -11.177062));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -447,14 +544,21 @@ public class SkeletonTest {
         polygon.add(new Point2d(11.739705976732338, -17.194940549920428));
         polygon.add(new Point2d(0.8357970425329011, -1.0288592710693223));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(0.367496, -1.375942));
+        expected.add(p(1.434035, -6.223122));
+        expected.add(p(6.380715, -11.177062));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -473,14 +577,24 @@ public class SkeletonTest {
         polygon.add(new Point2d(125, 130));
         polygon.add(new Point2d(68, 118));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(91.320644, 103.749308));
+        expected.add(p(126.066597, 107.367125));
+        expected.add(p(134.360696, 98.011826));
+        expected.add(p(136.287191, 159.442502));
+        expected.add(p(138.938550, 121.416104));
+        expected.add(p(175.597143, 106.588481));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -501,14 +615,26 @@ public class SkeletonTest {
         polygon.add(new Point2d(10.196014852102863, 4.475707108744242));
         polygon.add(new Point2d(8.782756714583655, 1.5573908412810287));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(9.496922, 0.613365));
+        expected.add(p(10.882442, 1.437594));
+        expected.add(p(11.471020, 0.671521));
+        expected.add(p(11.720280, 6.390569));
+        expected.add(p(12.241556, 6.845124));
+        expected.add(p(12.291810, 5.518617));
+        expected.add(p(12.847638, 6.893686));
+        expected.add(p(16.331903, 6.498860));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -535,14 +661,32 @@ public class SkeletonTest {
         polygon.add(new Point2d(4.729419759102431, 16.070563983220485));
         polygon.add(new Point2d(-1.2112187885796715, 16.08403225178089));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-0.689093, 14.379124));
+        expected.add(p(-0.093795, 15.045234));
+        expected.add(p(4.929433, 1.399960));
+        expected.add(p(5.650806, 15.144991));
+        expected.add(p(5.681567, 15.176839));
+        expected.add(p(5.778996, 15.103807));
+        expected.add(p(6.315214, 1.396819));
+        expected.add(p(6.700336, 7.622285));
+        expected.add(p(6.844651, 1.923860));
+        expected.add(p(6.854367, 6.209582));
+        expected.add(p(6.887736, -0.559400));
+        expected.add(p(6.893255, 1.875035));
+        expected.add(p(7.483346, 6.835716));
+        expected.add(p(10.068366, 6.829855));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     @Test
@@ -569,20 +713,40 @@ public class SkeletonTest {
         polygon.add(new Point2d(6.626295676252851, 17.465326408838887));
         polygon.add(new Point2d(0.6856567883022331, 17.478794675312955));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(1.140824, 15.895738));
+        expected.add(p(1.684220, 16.437933));
+        expected.add(p(6.826309, 2.794722));
+        expected.add(p(7.547682, 16.539753));
+        expected.add(p(7.578443, 16.571601));
+        expected.add(p(7.675872, 16.498570));
+        expected.add(p(8.212090, 2.791580));
+        expected.add(p(8.597212, 9.017047));
+        expected.add(p(8.741527, 3.318622));
+        expected.add(p(8.751243, 7.604343));
+        expected.add(p(8.784612, 0.835361));
+        expected.add(p(8.790131, 3.269796));
+        expected.add(p(9.380222, 8.230478));
+        expected.add(p(11.965243, 8.224617));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         validate(polygon, sk);
 
         visualizeResults(polygon, sk);
 
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
     private void validate(List<Point2d> polygon, SkeletonOutput sk) {
+        writeExpectedOutput(polygon, sk);
         assertInBbox(polygon, sk);
         assertOutlineInSkelet(polygon, sk);
     }
+
     private void assertInBbox(List<Point2d> polygon, SkeletonOutput sk) {
 
         Bbox2d bbox = new Bbox2d();
@@ -590,7 +754,7 @@ public class SkeletonTest {
             bbox.addPoint(point2d);
         }
 
-        List<PolygonList2d> faces2 = sk.getFaces2();
+        List<PolygonList2d> faces2 = sk.getFaces();
         for (PolygonList2d polygonList2d : faces2) {
             List<Point2d> points = polygonList2d.getPoints();
             for (Point2d point2d : points) {
@@ -604,7 +768,7 @@ public class SkeletonTest {
         Set<Point2d> outline = new HashSet<Point2d>(polygon);
 
         outPoint: for (Point2d out : outline) {
-            List<PolygonList2d> faces2 = sk.getFaces2();
+            List<PolygonList2d> faces2 = sk.getFaces();
             for (PolygonList2d polygonList2d : faces2) {
                 List<Point2d> points = polygonList2d.getPoints();
                 for (Point2d point2d : points) {
@@ -653,12 +817,143 @@ public class SkeletonTest {
 
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
 
-        validate(polygon, sk);
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(-5.225081993006608, 23.070007924404237));
+        expected.add(p(-5.213502422879821, 25.317557848847482));
+        expected.add(p(-5.208893794753686, 23.086263132900537));
+        expected.add(p(-5.188103636084189, 5.166716270119771));
+        expected.add(p(-3.1015352470932616, 20.98759193064646));
+        expected.add(p(9.208321529781248, -2.9315800507494063));
+        expected.add(p(11.648322280432005, -2.9263727729378277));
+        expected.add(p(12.445462580412869, 21.019703480686516));
+        expected.add(p(12.606101682729628, -3.818739927261688));
+        expected.add(p(13.428106603203808, -3.789677802721639));
+        expected.add(p(14.19596815545603, 19.27641416469292));
+        expected.add(p(14.234418043971877, 26.012897887101527));
+        expected.add(p(14.237504608711998, -0.83370695637133));
+        expected.add(p(14.248223537950237, 19.328885855734843));
+        expected.add(p(14.557918451002058, -1.1527999293121498));
+        expected.add(p(14.561015138561665, -2.652079649029039));
+        expected.add(p(17.108480813881517, 1.4083203585579516));
+        expected.add(p(20.974406567920894, 1.4163052362523167));
+
+        expected.addAll(polygon);
+
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         visualizeResults(polygon, sk);
 
+        validate(polygon, sk);
+
+        assertExpectedPoints(expected, getFacePoints(sk));
+    }
+
+    private void assertExpectedPoints(List<Point2d> expectedList, List<Point2d> givenList) {
+        StringBuffer sb = new StringBuffer();
+        for (Point2d expected : expectedList) {
+            if (!containsEpsilon(givenList, expected)) {
+                sb.append(String.format("can't find expected point (%s, %s) in given list\n", expected.x, expected.y));
+            }
+        }
+
+        for (Point2d given : givenList) {
+            if (!containsEpsilon(expectedList, given)) {
+                sb.append(String.format("can't find given point (%s, %s) in expected list\n", given.x, given.y));
+            }
+        }
+
+        if (sb.length() > 0) {
+            fail(sb.toString());
+        }
+
+        System.out.println("assert ok");
+    }
+
+    private List<Point2d> getFacePoints(SkeletonOutput sk) {
+
+        List<Point2d> ret = new ArrayList<Point2d>();
+
+        for (PolygonList2d polygonList2d : sk.getFaces()) {
+            List<Point2d> points = polygonList2d.getPoints();
+            for (Point2d point2d : points) {
+
+                if (!containsEpsilon(ret, point2d)) {
+                    ret.add(point2d);
+                }
+            }
+        }
+        return ret;
+    }
+
+    private void writeExpectedOutput(List<Point2d> polygon, SkeletonOutput sk) {
+        // to generate expected output
+
+        List<Point2d> ret = new ArrayList<Point2d>();
+
+        List<PolygonList2d> faces = sk.getFaces();
+        for (PolygonList2d polygonList2d : faces) {
+            for (Point2d point2d : polygonList2d.getPoints()) {
+                if (!containsEpsilon(polygon, point2d)) {
+
+                    if (!containsEpsilon(ret, point2d)) {
+                        ret.add(point2d);
+                    }
+                }
+            }
+        }
+
+        Comparator c = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Point2d p1 = (Point2d) o1;
+                Point2d p2 = (Point2d) o2;
+
+                if (p1.x == p2.x) {
+                    if (p1.y == p2.y) {
+                        return 0;
+                    } else {
+                        return p1.y < p2.y ? -1 : 1;
+                    }
+                } else {
+                    return p1.x < p2.x ? -1 : 1;
+                }
+            }
+
+        };
+
+        Collections.sort(ret, c);
+
+        System.out.println("List<Point2d> expected = new ArrayList<Point2d>();");
+        for (Point2d point2d : ret) {
+            System.out.println(String.format("expected.add(p(%.6f, %.6f));", point2d.x, point2d.y));
+        }
+        System.out.println("expected.addAll(polygon);");
+    }
+
+    public static String fmt(double d) {
+        if (d == (int) d) {
+            return String.format("%d", (int) d);
+        } else {
+            return String.format("%s", d);
+        }
+    }
+
+    private boolean containsEpsilon(List<Point2d> list, Point2d p) {
+        for (Point2d l : list) {
+            if (equalEpsilon(l.x, p.x) && equalEpsilon(l.y, p.y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean equalEpsilon(double d1, double d2) {
+        return Math.abs(d1 - d2) < 5E-6;
+    }
+
+    private Point2d p(double x, double y) {
+        return new Point2d(x, y);
     }
 
     @Test
@@ -676,14 +971,22 @@ public class SkeletonTest {
         polygon.add(new Point2d(100, 100));
         polygon.add(new Point2d(50, 100));
 
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(75.000000, 75.000000));
+        expected.addAll(polygon);
+
         DV.debug(polygon);
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
 
         visualizeResults(polygon, sk);
 
+        validate(polygon, sk);
+
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
 
+    @Test
     public void circularAddTest2() {
         List<Point2d> polygon = new ArrayList<Point2d>();
 
@@ -692,52 +995,19 @@ public class SkeletonTest {
         polygon.add(new Point2d(150, 100));
         polygon.add(new Point2d(50, 100));
 
-        SkeletonOutput sk = Skeleton.sk(polygon);
+        List<Point2d> expected = new ArrayList<Point2d>();
+        expected.add(p(75.000000, 75.000000));
+        expected.add(p(125.000000, 75.000000));
+        expected.addAll(polygon);
+
+        SkeletonOutput sk = Skeleton.skeleton(polygon);
+
+        visualizeResults(polygon, sk);
 
         validate(polygon, sk);
 
-        visualizeResults(polygon, sk);
+        assertExpectedPoints(expected, getFacePoints(sk));
     }
-
-    // @Test
-    // public void circularAddTest3() {
-    // List<Point2d> polygon = new ArrayList<Point2d>();
-    //
-    // polygon.add(new Point2d(32, 67));
-    // polygon.add(new Point2d(184, 60));
-    // polygon.add(new Point2d(122, 142));
-    // polygon.add(new Point2d(84, 152));
-    //
-    // SkeletonOutput sk = Skeleton.sk(polygon);
-    //
-    // assertInBbox(polygon, sk);
-    //
-    // showResult(polygon, sk);
-    //
-    // }
-
-    // /**
-    // * @param polygon
-    // * @param sk
-    // */
-    // public void showResult(List<Point2d> polygon, SkeletonOutput sk) {
-    // SkeletonTestUi ui = new SkeletonTestUi();
-    // ui.init();
-    // ui.start();
-    // ui.points = polygon;
-    // ui.setupResults(sk);
-    //
-    // JDialog frame = new JDialog();
-    // frame.add(ui);
-    // frame.pack();
-    // frame.setSize(300, 300);
-    //
-    //
-    // ui.repaint();
-    //
-    // frame.setModal(true);
-    // frame.setVisible(true);
-    // }
 
     DebugLayer createDebugView() {
         // DebugLayer ret1 = null;
@@ -762,8 +1032,6 @@ public class SkeletonTest {
                 //
                 frame.setModal(false);
                 frame.setVisible(true);
-
-                // ret1 = ret;
             }
         });
 
@@ -794,55 +1062,16 @@ public class SkeletonTest {
                     // g2d.translate(x, y);
                     g2d.fillOval(-10 + x, -10 + y, 20, 20);
                 }
-
-                // // Graphics2D g2d = (Graphics2D)g.create();
-                //
-                // // g2d.setColor(Color.WHITE);
-                // // g2d.fillRect(0, 0, 30, 30);
-                // String str = "x: " + RoboUtil.ff(lokalizacja.getX()) + " y: "
-                // + RoboUtil.ff(lokalizacja.getY()) + " th: "
-                // + RoboUtil.ff(lokalizacja.getTh());
-                //
-                // g2d.drawString(str, 100, 20);
-                //
-                // g2d.setColor(Color.RED.brighter());
-                //
-                // int x = (int) disp.xPositionToPixel(lokalizacja.getX());
-                // int y = (int) disp.yPositionToPixel(lokalizacja.getY());
-                // g2d.translate(x, y);
-                // g2d.rotate(-lokalizacja.getTh());
-                // g2d.fillOval(-10, -10, 20, 20);
-                //
-                // g2d.setColor(Color.BLUE.brighter());
-                // g2d.fillRect(0, -3, 15, 6);
-
             }
-
         });
 
-        // mc.createAndShowGUI();
 
-        // MapComponent eq = new MapComponent();
-        //
-        //
-        // eq.l
-        //
-        // // SkeletonTestUi ui = new SkeletonTestUi();
-        // // ui.init();
-        // // ui.start();
-        // // ui.points = polygon;
-        // // ui.setupResults(sk);
-        //
         JDialog frame = new JDialog();
         frame.add(mc);
         frame.pack();
         frame.setSize(600, 600);
-        //
-        //
-        // // ui.repaint();
-        //
+
         frame.setModal(true);
         frame.setVisible(true);
     }
-
 }

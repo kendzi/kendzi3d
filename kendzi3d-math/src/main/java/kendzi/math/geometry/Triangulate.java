@@ -22,6 +22,9 @@ public class Triangulate {
 
     public static final float EPSILON = 0.0000000001f;
 
+    /**
+     *  @see kendzi.math.geometry.polygon.PolygonUtil.area(List<Point2d>)
+     */
     public static float area(List<Point2d> contour) {
 
         int n = contour.size();

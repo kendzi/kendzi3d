@@ -1,24 +1,11 @@
-/*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
- */
-
-package kendzi.math.geometry.skeleton;
+package kendzi.math.geometry.line;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
-/**
- * Operations on rays.
- * 
- * @author Tomasz Kedziora (Kendzi)
- * 
- */
-public class RayUtil {
+import kendzi.math.geometry.point.Vector2dUtil;
+
+public class LineSegmentUtil2d {
 
     /**
      * Error epsilon. Anything that avoids division.
@@ -31,36 +18,30 @@ public class RayUtil {
     static final IntersectPoints EMPTY = new IntersectPoints();
 
 
-    private RayUtil() {
-
-    }
-
     /**
-     * Calculate intersection points for rays. It can return more then one
-     * intersection point when rays overlaps.
+     * Calculate intersection points for two line segments. It can return more then one
+     * intersection point when line segments overlaps.
      * 
      * 
      * @see http://geomalgorithms.com/a05-_intersect-1.html
      * @see http://softsurfer.com/Archive/algorithm_0102/algorithm_0102.htm
      * 
      * @param r1
-     *            first ray
+     *            first line segment
      * @param r2
-     *            second ray
+     *            second line segment
      * @return class with intersection points. It never return null.
      */
-    public static IntersectPoints intersectRays2d(Ray2d r1, Ray2d r2) {
+    public static IntersectPoints intersectRays2d(LineSegment2d r1, LineSegment2d r2) {
 
-        Point2d s1p0 = r1.A;
-        Point2d s1p1 = new Point2d(r1.A);
-        s1p1.add(r1.U);
+        Point2d s1p0 = r1.getBegin();
+        Point2d s1p1 = r1.getEnd();
 
-        Point2d s2p0 = r2.A;
-        Point2d s2p1 = new Point2d(r2.A);
-        s2p1.add(r2.U);
+        Point2d s2p0 = r2.getBegin();
+        Point2d s2p1 = r2.getEnd();
 
-        Vector2d u = r1.U;
-        Vector2d v = r2.U;
+        Vector2d u = Vector2dUtil.fromTo(r1.getBegin(), r1.getEnd());
+        Vector2d v = Vector2dUtil.fromTo(r2.getBegin(), r2.getEnd());
 
         Vector2d w = new Vector2d();
         w.sub(s1p0, s2p0);
@@ -92,7 +73,7 @@ public class RayUtil {
             }
             if (du == 0) {
                 // S1 is a single point
-                if (!inRay(s1p0, s2p0, v)) {
+                if (!inSegment(s1p0, s2p0, s2p1)) {
                     // return 0;
                     return EMPTY;
                 }
@@ -102,7 +83,7 @@ public class RayUtil {
             }
             if (dv == 0) {
                 // S2 a single point
-                if (!inRay(s2p0, s1p0, u)) {
+                if (!inSegment(s2p0, s1p0, s1p1)) {
                     // return 0;
                     return EMPTY;
                 }
@@ -128,7 +109,7 @@ public class RayUtil {
                 t0 = t1;
                 t1 = t; // swap if not
             }
-            if (/*t0 > 1 ||*/ t1 < 0) {
+            if (t0 > 1 || t1 < 0) {
                 // return 0; // NO overlap
                 return null;
             }
@@ -136,7 +117,7 @@ public class RayUtil {
             // clip to min 0
             t0 = t0 < 0 ? 0 : t0;
             // clip to max 1
-            //t1 = t1 > 1 ? 1 : t1;
+            t1 = t1 > 1 ? 1 : t1;
 
             if (t0 == t1) {
                 // intersect is a point
@@ -169,14 +150,14 @@ public class RayUtil {
         // the segments are skew and may intersect in a point
         // get the intersect parameter for S1
         double sI = perp(v, w) / d;
-        if (sI < 0/* || sI > 1 */) {
+        if (sI < 0 || sI > 1) {
             // return 0;
             return EMPTY;
         }
 
         // get the intersect parameter for S2
         double tI = perp(u, w) / d;
-        if (tI < 0 /* || tI > 1 */) {
+        if (tI < 0 || tI > 1) {
             // return 0;
             return EMPTY;
         }
@@ -190,20 +171,6 @@ public class RayUtil {
     }
 
     // ===================================================================
-
-    private static boolean inRay(Point2d p, Point2d rayStart, Vector2d rayDirection) {
-        //        test if point is on ray
-        Vector2d collideVector = new Vector2d(p);
-        collideVector.sub(rayStart);
-
-        double dot = rayDirection.dot(collideVector);
-
-        if (dot < 0) {
-            return false;
-        }
-
-        return true;
-    }
 
     // inSegment(): determine if a point is inside a segment
     // Input: a point P, and a collinear segment S

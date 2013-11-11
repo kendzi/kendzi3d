@@ -79,12 +79,12 @@ public class PolygonList2d {
 
     public void union(PolygonList2d pPolygon) {
         // TODO !!!
-//        suma
+        //        suma
         throw new RuntimeException("TODO");
     }
     public void difference(PolygonList2d pPolygon) {
         // TODO !!!
-//        roznica
+        //        roznica
         throw new RuntimeException("TODO");
     }
 
@@ -99,22 +99,13 @@ public class PolygonList2d {
         throw new RuntimeException("TODO");
     }
 
-
-    /** Reverse point order in list
+    /**
+     * Reverse point order in list
+     * 
      * @param polygon
      * @return
      */
     public static List<Point2d> reverse(List<Point2d> polygon) {
-        if (polygon == null) {
-            return null;
-        }
-
-        List<Point2d> list = new ArrayList<Point2d>(polygon.size());
-
-        for (int i = polygon.size() - 1; i >= 0; i--) {
-            list.add(polygon.get(i));
-        }
-        return list;
+        return PolygonUtil.reverse(polygon);
     }
-
 }

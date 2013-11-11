@@ -33,7 +33,7 @@ public class Ray2d extends LineParametric2d {
     //        U = pV;
     //    }
 
-    public static Point2d collide(Ray2d ray, LineLinear2d line) {
+    public static Point2d collide(Ray2d ray, LineLinear2d line, double epsilon) {
         // FIXME rewrite?
         Point2d collide = LineLinear2d.collide(ray.getLinearForm(), line);
         if (collide == null) {
@@ -48,7 +48,7 @@ public class Ray2d extends LineParametric2d {
 
         double dot = ray.U.dot(collideVector);
 
-        if (dot < 0) {
+        if (dot < epsilon) {
             return null;
         }
 

@@ -24,7 +24,7 @@ public class DisplayIntersectEntry extends DisplayObject {
 
 
 
-    public DisplayIntersectEntry( IntersectEntry f , Color pColor) {
+    public DisplayIntersectEntry(IntersectEntry f , Color pColor) {
         super();
         this.intersect = f;
         this.color = pColor;
@@ -40,7 +40,7 @@ public class DisplayIntersectEntry extends DisplayObject {
         }
 
 
-//        Point2d last = this.points.get(this.points.size() - 1);
+        //        Point2d last = this.points.get(this.points.size() - 1);
 
 
 
