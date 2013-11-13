@@ -12,6 +12,34 @@ import org.junit.Test;
 public class RayUtilTest {
 
     @Test
+    public void testIsPointOnRay_1() {
+
+        Point2d point = new Point2d(-2.0, 2.0);
+        Ray2d ray = new Ray2d(new Point2d(-1.0, 1.0), new Vector2d(-1.0, 1.0));
+
+        assertTrue(RayUtil.isPointOnRay(point, ray, 0.0000001));
+    }
+
+    @Test
+    public void testIsPointOnRay_2() {
+
+        Point2d point = new Point2d(-2.1, 2.0);
+        Ray2d ray = new Ray2d(new Point2d(-1.0, 1.0), new Vector2d(-1.0, 1.0));
+
+        assertFalse(RayUtil.isPointOnRay(point, ray, 0.0000001));
+    }
+
+    @Test
+    public void testIsPointOnRay_3() {
+
+        Point2d point = new Point2d(2.0, -2.0);
+        Ray2d ray = new Ray2d(new Point2d(-1.0, 1.0), new Vector2d(-1.0, 1.0));
+
+        assertFalse(RayUtil.isPointOnRay(point, ray, 0.0000001));
+    }
+
+
+    @Test
     public void testIntersectRays2d_1() {
         Ray2d r1 = new Ray2d(new Point2d(0, 0), new Vector2d(1, 0));
         Ray2d r2 = new Ray2d(new Point2d(0, -1), new Vector2d(1, 1));

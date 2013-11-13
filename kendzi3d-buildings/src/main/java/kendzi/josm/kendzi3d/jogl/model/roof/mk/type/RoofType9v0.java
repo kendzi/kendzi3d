@@ -34,15 +34,16 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Algebra;
 import kendzi.math.geometry.Plane3d;
-import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import kendzi.math.geometry.polygon.PolygonWithHolesList2dUtil;
 import kendzi.math.geometry.skeleton.Skeleton;
 import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
+import kendzi.math.geometry.skeleton.debug.DV;
 
 import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
@@ -74,10 +75,11 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
             RoofMaterials roofTextureData) {
 
         List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
+        List<PolygonList2d> inners = buildingPolygon.getInner();
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
-        pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
+        PolygonWithHolesList2d buildingTransformed = PolygonWithHolesList2dUtil.transform(buildingPolygon, transformLocal);
 
         Double h1 = null;
         Double angle = null;
@@ -88,7 +90,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
             h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         }
 
-        RoofTypeOutput rto = build(pPolygon, h1, angle, 0, 0, roofTextureData);
+        RoofTypeOutput rto = build(buildingTransformed, h1, angle, 0, 0, roofTextureData);
 
         SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(),
                 -pStartPoint.y);
@@ -98,9 +100,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
     }
 
-    protected RoofTypeOutput build(List<Point2d> pBorderList,
-
-            Double h1, Double angle, double l1, double l2,
+    protected RoofTypeOutput build(PolygonWithHolesList2d buildingTransformed, Double h1, Double angle, double l1, double l2,
             RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
@@ -109,27 +109,42 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
 
-        // XXX temporary ?
-        if (0.0f > Triangulate.area(pBorderList)) {
-
-            pBorderList = PolygonList2d.reverse(pBorderList);
-        }
+        //        // XXX temporary ?
+        //        if (0.0f > Triangulate.area(pBorderList)) {
+        //
+        //            pBorderList = PolygonList2d.reverse(pBorderList);
+        //        }
 
 
         log.info("** TO TEST IN JUNIT TEST: **");
-        for (Point2d p : pBorderList) {
+        List<Point2d> outer = buildingTransformed.getOuter().getPoints();
+        for (Point2d p : outer) {
             log.info("polygon.add(new Point2d(" + p.x + ",  " + p.y + "));");
         }
+
+        List<List<Point2d>> inners = PolygonWithHolesList2dUtil.getListOfHolePoints(buildingTransformed);
+
+        int holeCount = 0;
+        for (List<Point2d> polygonList2d : inners) {
+            holeCount++;
+            log.info("hole: " + holeCount);
+            for (Point2d p : polygonList2d) {
+                log.info("hole.add(new Point2d(" + p.x + ",  " + p.y + "));");
+            }
+        }
+
         log.info("****");
 
-        SkeletonOutput sk = Skeleton.skeleton(pBorderList);
+        DV.enableDebug();
 
+        SkeletonOutput sk = Skeleton.skeleton(outer, inners);
+
+        List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new ArrayList<PolygonRoofHooksSpace>();
         Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
         calcDistance(sk, distance);
 
         calcDistanceToHeight(distance, h1, angle);
 
-        List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new ArrayList<PolygonRoofHooksSpace>();
 
 
         for (PolygonList2d polygon : sk.getFaces()) {
@@ -177,7 +192,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         //                polygonRoofHooksSpace.toArray(
         //                        new RoofHooksSpace [polygonRoofHooksSpace.size()]));
 
-        rto.setRectangle(RoofTypeUtil.findRectangle(pBorderList, 0));
+        rto.setRectangle(RoofTypeUtil.findRectangle(outer, 0));
 
         return rto;
     }

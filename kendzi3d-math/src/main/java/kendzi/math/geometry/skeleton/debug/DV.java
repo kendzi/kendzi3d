@@ -17,6 +17,7 @@ import kendzi.math.geometry.debug.DisplaySkeletonOut;
 import kendzi.math.geometry.line.LineParametric2d;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.skeleton.CircularList;
+import kendzi.math.geometry.skeleton.Skeleton.EdgeEntry;
 import kendzi.math.geometry.skeleton.Skeleton.FaceNode;
 import kendzi.math.geometry.skeleton.Skeleton.FaceQueue;
 import kendzi.math.geometry.skeleton.Skeleton.IntersectEntry;
@@ -25,9 +26,18 @@ import kendzi.math.geometry.skeleton.Skeleton.VertexEntry2;
 
 public class DV {
 
-    public static boolean debug;
+    private static boolean debug;
 
-    static DebugLayer dv = DebugDisplay.getDebugDisplay().getDebugLayer();
+    private static DebugLayer dv = null;
+
+    public static void enableDebug() {
+        if (dv == null) {
+            dv = DebugDisplay.getDebugDisplay().getDebugLayer();
+        }
+        debug = true;
+    }
+
+
 
     public static void debug(FaceNode fn) {
         if (debug) {
@@ -104,6 +114,12 @@ public class DV {
     public static void block() {
         if (debug) {
             DebugDisplay.getDebugDisplay().block();
+        }
+    }
+
+    public static void debug(EdgeEntry edge) {
+        if (debug) {
+            dv.addDebug(new DisplayLineSegment2d(edge.p1, edge.p2, Color.GRAY.darker()));
         }
     }
 }

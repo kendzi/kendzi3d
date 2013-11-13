@@ -43,7 +43,7 @@ public class SkeletonTest {
 
     @Before
     public void init() {
-        DV.debug = true;
+        DV.enableDebug();
     }
 
     @Test
@@ -88,7 +88,7 @@ public class SkeletonTest {
 
 
     @Test
-    public void skeletonTest6() {
+    public void skeletonTest_hole_1() {
 
         DV.clear();
 
@@ -116,9 +116,6 @@ public class SkeletonTest {
         expected.addAll(outer);
         expected.addAll(inner);
 
-        // polygon.add(new Point2d(1, 1));
-        // polygon.add(new Point2d(-1, 1));
-
         DV.debug(outer);
         DV.debug(inner);
 
@@ -129,6 +126,56 @@ public class SkeletonTest {
         visualizeResults(outer, sk);
 
         validate(outer, sk);
+
+        assertExpectedPoints(expected, getFacePoints(sk));
+
+
+    }
+
+
+    @Test
+    public void skeletonTest_hole_2() {
+
+        DV.clear();
+
+        List<Point2d> polygon = new ArrayList<Point2d>();
+        List<Point2d> hole = new ArrayList<Point2d>();
+
+        polygon.add(new Point2d(0.0, 0.0));
+        polygon.add(new Point2d(7.087653026630875, -0.0572739636795121));
+        polygon.add(new Point2d(7.035244566479503, -6.5428208800475005));
+        polygon.add(new Point2d(-0.052408459722688594, -6.485546915224834));
+
+        hole.add(new Point2d(1.4849939588531493, -1.5250224044562133));
+        hole.add(new Point2d(1.4341762422598874, -5.1814705083480606));
+        hole.add(new Point2d(5.747532319228888, -5.241418004618678));
+        hole.add(new Point2d(5.798350035536362, -1.5849699030131408));
+
+
+        List<List<Point2d>> innerList = new ArrayList<List<Point2d>>();
+        innerList.add(hole);
+
+        List<Point2d> expected = new ArrayList<Point2d>();
+//        expected.add(p(-1.500000, -1.500000));
+//        expected.add(p(-1.500000, 1.500000));
+//        expected.add(p(1.500000, -1.500000));
+//        expected.add(p(1.500000, 1.500000));
+//        expected.addAll(polygon);
+//        expected.addAll(hole);
+
+        // polygon.add(new Point2d(1, 1));
+        // polygon.add(new Point2d(-1, 1));
+
+        DV.debug(polygon);
+        DV.debug(hole);
+
+        SkeletonOutput sk = Skeleton.skeleton(polygon, innerList);
+
+        writeExpectedOutput(polygon, sk);
+
+        visualizeResults(polygon, sk);
+
+        validate(polygon, sk);
 
         assertExpectedPoints(expected, getFacePoints(sk));
 

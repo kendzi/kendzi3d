@@ -36,6 +36,37 @@ public class RayUtil {
     }
 
     /**
+     * Test if point is on ray with epsilon.
+     * 
+     * @param p
+     *            point
+     * @param ray
+     *            ray
+     * @return is point on ray
+     */
+    public static boolean isPointOnRay(Point2d point, Ray2d ray, double epsilon) {
+
+        Vector2d rayDirection = new Vector2d(ray.U);
+        rayDirection.normalize();
+        // test if point is on ray
+        Vector2d pointVector = new Vector2d(point);
+        pointVector.sub(ray.A);
+
+        double dot = rayDirection.dot(pointVector);
+
+        if (dot < epsilon) {
+            return false;
+        }
+        double x = rayDirection.x;
+        rayDirection.x = rayDirection.y;
+        rayDirection.y = -x;
+
+        dot = rayDirection.dot(pointVector);
+
+        return -epsilon < dot && dot < epsilon;
+    }
+
+    /**
      * Calculate intersection points for rays. It can return more then one
      * intersection point when rays overlaps.
      * 
@@ -92,7 +123,7 @@ public class RayUtil {
             }
             if (du == 0) {
                 // S1 is a single point
-                if (!inRay(s1p0, s2p0, v)) {
+                if (!inCollinearRay(s1p0, s2p0, v)) {
                     // return 0;
                     return EMPTY;
                 }
@@ -102,7 +133,7 @@ public class RayUtil {
             }
             if (dv == 0) {
                 // S2 a single point
-                if (!inRay(s2p0, s1p0, u)) {
+                if (!inCollinearRay(s2p0, s1p0, u)) {
                     // return 0;
                     return EMPTY;
                 }
@@ -191,7 +222,7 @@ public class RayUtil {
 
     // ===================================================================
 
-    private static boolean inRay(Point2d p, Point2d rayStart, Vector2d rayDirection) {
+    private static boolean inCollinearRay(Point2d p, Point2d rayStart, Vector2d rayDirection) {
         //        test if point is on ray
         Vector2d collideVector = new Vector2d(p);
         collideVector.sub(rayStart);

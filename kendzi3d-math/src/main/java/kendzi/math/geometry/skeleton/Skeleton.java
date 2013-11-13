@@ -694,12 +694,7 @@ public class Skeleton {
         //e
         va.processed = true;
 
-        boolean isOpositeEdgeVertex;
 
-        if (va.v.epsilonEquals(I.opositeEdge.p1, SPLIT_EPSILON) || va.v.epsilonEquals(I.opositeEdge.p2, SPLIT_EPSILON)) {
-            // special case when the neerest point is on edge vertex, in that case we need handle it when generating new split vertex
-            isOpositeEdgeVertex = true;
-        }
 
         VertexEntry2 v1 = new VertexEntry2();
         v1.v = I.v;
@@ -769,6 +764,8 @@ public class Skeleton {
 
 
         VertexEntry2 v = I.V;
+        Ray2d bisector = I.V.bisector;
+
         CircularList<CircularNode> lav = v.list();
 
         int sizeLav = lav.size();
@@ -776,8 +773,37 @@ public class Skeleton {
         CircularList<VertexEntry2> newLawA = new CircularList<VertexEntry2>();
         CircularList<VertexEntry2> newLawB = new CircularList<VertexEntry2>();
 
-        v1.e_a = opositeEdge;
-        v2.e_b = opositeEdge;
+
+        EdgeEntry opositeEdgeBegin = opositeEdge;
+        EdgeEntry opositeEdgeEnd = opositeEdge;
+
+        boolean isOpositeEdgeBegin = RayUtil.isPointOnRay(I.opositeEdge.p1, bisector, SPLIT_EPSILON);
+        boolean isOpositeEdgeEnd = RayUtil.isPointOnRay(I.opositeEdge.p2, bisector, SPLIT_EPSILON);
+
+        DV.debug(bisector);
+        DV.debug(I.opositeEdge.p1);
+        DV.debug(I.opositeEdge.p2);
+
+        //        xxxxxx
+        //        boolean isOpositeEdgeBegin = va.v.epsilonEquals(I.opositeEdge.p1, SPLIT_EPSILON);
+        //        boolean isOpositeEdgeEnd = va.v.epsilonEquals(I.opositeEdge.p2, SPLIT_EPSILON);
+        if (isOpositeEdgeBegin) {
+            // special case when the neerest point is on edge vertex, in that case we need handle it when generating new split vertex
+            opositeEdgeBegin = (EdgeEntry) opositeEdge.previous();
+            opositeEdgeEnd = opositeEdge;
+            DV.debug(opositeEdgeBegin);
+            DV.debug(opositeEdgeEnd);
+
+        } else if (isOpositeEdgeEnd) {
+            opositeEdgeBegin = opositeEdge;
+            opositeEdgeEnd = (EdgeEntry) opositeEdge.next();
+        }
+
+
+
+
+        v1.e_a = opositeEdgeBegin;
+        v2.e_b = opositeEdgeEnd;
 
         newLawA.addLast(v1);
         newLawB.addLast(v2);
