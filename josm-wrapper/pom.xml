@@ -6,10 +6,21 @@
 	<groupId>josm</groupId>
 	<artifactId>josm-wrapper</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-
-	<name>josm-wrapper</name>
-	<url>http://josm.openstreetmap.de</url>
+	
 	<packaging>pom</packaging>
+ 
+	<url>http://josm.openstreetmap.de</url>
+	
+	<scm>
+		<url>https://github.com/kendzi/kendzi3d.git</url>
+		<connection>scm:git:https://github.com:kendzi/kendzi3d.git</connection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>zibi-ftp-repository</id>
+			<url>ftp://kendzi@zibi.openstreetmap.org.pl/k/repo</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>1.6</java.version>
@@ -63,7 +74,14 @@
 	</profiles>
 
 	<build>
-		<finalName>josm-custom</finalName>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>2.5</version>
+			</extension>
+		</extensions>
 		<plugins>
 
 			<plugin>
@@ -98,7 +116,7 @@
 						<artifactId>ant-nodeps</artifactId>
 						<version>1.8.1</version>
 					</dependency>
-			
+
 				</dependencies>
 				<!-- <dependencies> -->
 				<!-- This will work only with oracle jdk! http://docs.codehaus.org/display/MAVENUSER/Running+ant+tasks+that+use+the+JDK -->
@@ -118,7 +136,7 @@
 				<version>1.8</version>
 				<executions>
 					<execution>
-						<id>attach-artifacts</id>
+						<id>add-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>attach-artifact</goal>
