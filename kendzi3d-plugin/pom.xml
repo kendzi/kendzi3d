@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>kendzi3d-plugin</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>josm</groupId>
+			<artifactId>josm-wrapper</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-josm-jogl</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-buildings-josm</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-textures-josm</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-textures-library</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-expressions-josm</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model-render</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-models-library</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-collada-exporter</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model-util</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-models-library-josm</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-resource-manager</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model-render</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-buildings</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-textures-library-res</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+	</dependencies>
+
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+</project>

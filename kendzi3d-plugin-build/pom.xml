@@ -2,71 +2,189 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>kendzi.kendzi3d</groupId>
 	<artifactId>kendzi3d-plugin-build</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>kendzi3d-plugin-build</name>
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 
-	<properties>
-		<java.version>1.6</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
+	<scm>
+		<url>https://github.com/kendzi/kendzi3d.git</url>
+		<connection>scm:git:https://github.com:kendzi/kendzi3d.git</connection>
+	</scm>
+		
+	<distributionManagement>
+		<repository>
+			<id>zibi-ftp-repository</id>
+			<url>ftp://kendzi@zibi.openstreetmap.org.pl/k/repo</url>
+		</repository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
+			<groupId>josm</groupId>
+			<artifactId>josm-wrapper</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-josm-jogl</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-main</artifactId>
+			<version>${gluegen.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-main</artifactId>
+			<version>${jogl.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-plugin</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-plugin</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	
-	<repositories>
-		<repository>
-			<id>repo</id>
-			<releases>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>file://${project.basedir}/repo</url>
-		</repository>
-	
-	</repositories>
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<build>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>2.5</version>
+			</extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
 
-	<modules>
-		<module>../kendzi-util</module>
-		
-		<module>../kendzi3d-math</module>
-		<module>../kendzi3d-resource-interface</module>
-		<module>../kendzi3d-josm-core</module>
-		
-		<module>../kendzi3d-buildings</module>
-		<module>../kendzi3d-buildings-josm</module>
-		
-		<module>../kendzi3d-collada-bindings</module>
-		<module>../kendzi3d-collada-exporter</module>
+						</manifest>
+						<manifestEntries>
+							<Author>Tomasz Kędziora (kendzi)</Author>
+							<Plugin-Class>kendzi.josm.kendzi3d.Kendzi3DPlugin</Plugin-Class>
+							<Plugin-Date></Plugin-Date>
+							<Plugin-Description>Simple 3D view of osm data. It is highly experimental. It may crash! Use with caution!</Plugin-Description>
+							<Plugin-Icon>images/stock_3d-effects24.png</Plugin-Icon>
+							<Plugin-Link>http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
+							<Plugin-Mainversion>6088</Plugin-Mainversion>
+							<Plugin-Version>${project.version}</Plugin-Version>
+							<Plugin-Requires>log4j;kendzi3d-jogl</Plugin-Requires>
+							<url>${project.url}</url>
+						</manifestEntries>
+					</archive>
+					<descriptor>src/main/assembly/dep.xml</descriptor>
+<!-- 					<descriptorRefs> -->
+<!-- 						<descriptorRef>jar-with-dependencies</descriptorRef> -->
+<!-- 					</descriptorRefs> -->
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+<!-- 			${buildNumber} -->
+<!-- 			<plugin>				 -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>buildnumber-maven-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<phase>validate</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>create</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 				<configuration> -->
+<!-- 					<format>{0,number}</format> -->
+<!-- 					<items> -->
+<!-- 						<item>buildNumber</item> -->
+<!-- 					</items> -->
+<!-- 					<doCheck>false</doCheck> -->
+<!-- 					<doUpdate>false</doUpdate> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+			
+			
+			 <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>deploy</phase>
+							<configuration>
+							<tasks>
+								<echo message="******> start uploading new version of kendzi3d-core" />
+								<!-- JOSM plugin scanner require the same location for new version -->
+								<copy file="${project.build.directory}/${project.build.finalName}-dep.jar" tofile="${project.build.directory}/kendzi3d.jar"/> 
+								<ftp action="send" server="zibi.openstreetmap.org.pl" remotedir="/Kendzi3d/snapshot-core"
+									userid="${zibi-ftp-repository.username}" password="${zibi-ftp-repository.password}"
+									depends="yes" verbose="yes">
+									<fileset dir="${project.build.directory}">
+										<include name="kendzi3d.jar" />
+									</fileset>
+								</ftp>						
+								<!-- <taskdef name="myTask" classname="com.acme.MyTask" -->
+								<!-- classpathref="maven.plugin.classpath" /> -->
+								<!-- <myTask a="b" /> -->						
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>commons-net</groupId>
+						<artifactId>commons-net</artifactId>
+						<version>1.4.1</version>
+					</dependency>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-commons-net</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-nodeps</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+				</dependencies>
+			</plugin> 
+		</plugins>
+	</build> 
 
-		<module>../kendzi3d-expressions</module>
-		
-		<module>../kendzi3d-jogl-model</module>
-		<module>../kendzi3d-jogl-model-render</module>
-		<module>../kendzi3d-jogl-model-util</module>
-		
-		<module>../kendzi3d-jogl-textures</module>
-		<module>../kendzi3d-jogl-textures-josm</module>
-		<module>../kendzi3d-jogl-textures-library</module>
-		<module>../kendzi3d-jogl-textures-library-bindings</module>
-		<module>../kendzi3d-jogl-textures-library-res</module>
-		
-		<module>../kendzi3d-models-library</module>
-		<module>../kendzi3d-models-library-bindings</module>
-		<module>../kendzi3d-models-library-layer</module> 
-		
-	</modules>
 </project>

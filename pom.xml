@@ -12,14 +12,18 @@
 
 	<properties>
 		<java.version>1.6</java.version>
+		<jogl.version>2.1.3</jogl.version>
+		<gluegen.version>2.1.3</gluegen.version>
+		<vecmath.version>1.3.1</vecmath.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>4.11</junit.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -40,4 +44,17 @@
 <!-- 		</repository> -->
 	
 <!-- 	</repositories> -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

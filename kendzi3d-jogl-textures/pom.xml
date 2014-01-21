@@ -3,19 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>kendzi.kendzi3d</groupId>
 	<artifactId>kendzi3d-jogl-textures</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>kendzi3d-jogl-textures</name>
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
-
-	<properties>
-		<java.version>1.6</java.version>
-	</properties>
-
+	
 	<dependencies>
-		
+			
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -31,27 +25,20 @@
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
-			<version>2.0.2-rc12</version>
+			<version>${gluegen.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>2.0.2-rc12</version>
+			<version>${jogl.version}</version>
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 </project>

@@ -5,13 +5,7 @@
   <artifactId>kendzi3d-expressions-javacc</artifactId>
   <packaging>jar</packaging>
 
-  <name>kendzi3d-expressions-javacc</name>
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
-
-
-  <dependencies>
-    
-  </dependencies>
   
   <build>
 	<plugins>

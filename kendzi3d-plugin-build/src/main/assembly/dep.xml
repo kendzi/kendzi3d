@@ -1,0 +1,29 @@
+<assembly>
+  <!-- TODO: a jarjar format would be better -->
+  <id>dep</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <fileSet>
+    <directory>${basedir}</directory>
+      <includes>
+        <include>*.txt</include>
+      </includes>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <unpack>true</unpack>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>commons-lang:commons-lang</exclude>
+        <exclude>commons-logging:commons-logging</exclude>
+        <exclude>commons-cli:commons-cli</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
