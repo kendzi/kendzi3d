@@ -21,6 +21,7 @@ import kendzi.math.geometry.line.LineParametric2d;
  * @author kendzi
  * 
  */
+@Deprecated
 public class Ray2d extends LineParametric2d {
     public Ray2d(Point2d pA, Vector2d pU) {
         super(pA, pU);

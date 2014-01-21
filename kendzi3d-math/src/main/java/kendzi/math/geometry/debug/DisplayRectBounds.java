@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.vecmath.Point2d;
 
+@Deprecated
 public class DisplayRectBounds {
     double minX = Double.MAX_VALUE;
     double minY = Double.MAX_VALUE;

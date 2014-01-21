@@ -18,6 +18,7 @@ import javax.vecmath.Vector2d;
  * @author Tomasz Kedziora (Kendzi)
  * 
  */
+@Deprecated
 public class RayUtil {
 
     /**
@@ -161,7 +162,7 @@ public class RayUtil {
             }
             if (/*t0 > 1 ||*/ t1 < 0) {
                 // return 0; // NO overlap
-                return null;
+                return EMPTY;
             }
 
             // clip to min 0

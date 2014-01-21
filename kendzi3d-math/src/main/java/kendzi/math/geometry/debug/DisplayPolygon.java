@@ -11,7 +11,7 @@ import javax.vecmath.Point2d;
 import kendzi.swing.ui.panel.equation.EquationDisplay;
 
 /**
- *
+ * 
  * @author Tomasz Kędziora (kendzi)
  */
 public class DisplayPolygon extends DisplayObject {
@@ -77,7 +77,7 @@ public class DisplayPolygon extends DisplayObject {
 
     @Override
     public Object drawObject() {
-        return polygon;
+        return this;
     }
 
     @Override

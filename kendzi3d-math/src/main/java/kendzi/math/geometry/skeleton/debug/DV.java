@@ -3,6 +3,7 @@ package kendzi.math.geometry.skeleton.debug;
 import java.awt.Color;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import javax.vecmath.Point2d;
 
@@ -13,6 +14,7 @@ import kendzi.math.geometry.debug.DisplayLineSegment2d;
 import kendzi.math.geometry.debug.DisplayObject;
 import kendzi.math.geometry.debug.DisplayPoints;
 import kendzi.math.geometry.debug.DisplayPolygon;
+import kendzi.math.geometry.debug.DisplayPolygonNames;
 import kendzi.math.geometry.debug.DisplaySkeletonOut;
 import kendzi.math.geometry.line.LineParametric2d;
 import kendzi.math.geometry.line.LineSegment2d;
@@ -20,7 +22,7 @@ import kendzi.math.geometry.skeleton.CircularList;
 import kendzi.math.geometry.skeleton.Skeleton.EdgeEntry;
 import kendzi.math.geometry.skeleton.Skeleton.FaceNode;
 import kendzi.math.geometry.skeleton.Skeleton.FaceQueue;
-import kendzi.math.geometry.skeleton.Skeleton.IntersectEntry;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonEvent;
 import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
 import kendzi.math.geometry.skeleton.Skeleton.VertexEntry2;
 
@@ -41,7 +43,9 @@ public class DV {
 
     public static void debug(FaceNode fn) {
         if (debug) {
-            dv.addDebug(new DisplayFaceNode(fn, Color.red));
+            if (fn != null) {
+                dv.addDebug(new DisplayFaceNode(fn, Color.red));
+            }
         }
     }
 
@@ -51,18 +55,27 @@ public class DV {
         }
     }
 
-    public static void debug(IntersectEntry I) {
+    public static void debug(SkeletonEvent I) {
         if (debug) {
             dv.addDebug(new DisplayIntersectEntry(I, Color.red));
         }
     }
 
-    public static void debug(PriorityQueue<IntersectEntry> queue) {
+    public static void debug(PriorityQueue<SkeletonEvent> queue) {
         if (debug) {
             dv.addDebug(new DisplayEventQueue(queue));
         }
     }
 
+    public static void debug(Set<CircularList<VertexEntry2>> set) {
+        if (debug) {
+            for (CircularList<VertexEntry2> circularList : set) {
+                if (circularList.size() > 0) {
+                    debug(circularList);
+                }
+            }
+        }
+    }
     public static void debug(CircularList<VertexEntry2> l) {
         if (debug) {
             dv.addDebug(new DisplayLav2(l, Color.ORANGE.darker().darker()));
@@ -93,9 +106,15 @@ public class DV {
         }
     }
 
-    public static void debug(List<Point2d> pPolygon) {
+    public static void debug(List<Point2d> polygon) {
         if (debug) {
-            dv.addDebug(new DisplayPolygon(pPolygon));
+            dv.addDebug(new DisplayPolygon(polygon));
+        }
+    }
+
+    public static void debugNames(List<Point2d> polygon) {
+        if (debug) {
+            dv.addDebug(new DisplayPolygonNames(polygon));
         }
     }
 
@@ -104,6 +123,13 @@ public class DV {
             dv.addDebug(displayObject);
         }
     }
+
+    public static void debugProcessedEvents(List<SkeletonEvent> processedEvents) {
+        if (debug) {
+            dv.addDebug(new DisplayEventNames(processedEvents));
+        }
+    }
+
 
     public static void clear() {
         if (debug) {

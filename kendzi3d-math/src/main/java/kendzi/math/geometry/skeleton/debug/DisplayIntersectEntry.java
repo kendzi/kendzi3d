@@ -8,7 +8,7 @@ import kendzi.math.geometry.debug.DisplayRectBounds;
 import kendzi.math.geometry.debug.DrawUtil;
 import kendzi.math.geometry.skeleton.Skeleton;
 import kendzi.math.geometry.skeleton.Skeleton.EdgeEvent;
-import kendzi.math.geometry.skeleton.Skeleton.IntersectEntry;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonEvent;
 import kendzi.math.geometry.skeleton.Skeleton.SplitEvent;
 import kendzi.swing.ui.panel.equation.EquationDisplay;
 
@@ -18,13 +18,13 @@ import kendzi.swing.ui.panel.equation.EquationDisplay;
  */
 public class DisplayIntersectEntry extends DisplayObject {
 
-    private  IntersectEntry intersect;
+    private  SkeletonEvent intersect;
 
     private Color color;
 
 
 
-    public DisplayIntersectEntry(IntersectEntry f , Color pColor) {
+    public DisplayIntersectEntry(SkeletonEvent f , Color pColor) {
         super();
         this.intersect = f;
         this.color = pColor;
@@ -57,18 +57,18 @@ public class DisplayIntersectEntry extends DisplayObject {
         if (intersect instanceof Skeleton.SplitEvent) {
             SplitEvent split = (SplitEvent) this.intersect;
 
-            if (split.V.processed) {
+            if (split.isObsolete()) {
                 g2d.setColor(Color.GRAY.brighter());
             } else {
                 g2d.setColor(Color.GRAY.darker());
             }
 
-            DrawUtil.drawPoint(split.V.v, selected, g2d, disp);
+            DrawUtil.drawPoint(split.getParent().v, selected, g2d, disp);
 
-            DrawUtil.drawLine(intersect.v, split.V.v, selected, g2d, disp);
+            DrawUtil.drawLine(intersect.v, split.getParent().v, selected, g2d, disp);
 
             g2d.setColor(Color.GRAY);
-            DrawUtil.drawLine(split.opositeEdge.p1, split.opositeEdge.p2, selected, g2d, disp);
+            DrawUtil.drawLine(split.oppositeEdge.p1, split.oppositeEdge.p2, selected, g2d, disp);
         }
 
         if (intersect instanceof EdgeEvent) {

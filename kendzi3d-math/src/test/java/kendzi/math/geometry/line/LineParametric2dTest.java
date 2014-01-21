@@ -27,4 +27,13 @@ public class LineParametric2dTest {
 
     }
 
+    @Test
+    public void test_3() {
+
+        LineParametric2d l = new LineParametric2d(p(-3, 1), v(1, -1));
+
+        assertTrue(l.isOnLeftSite(p(-2, -0), 1E-10));
+        assertTrue(l.isOnRightSite(p(-2, -0), 1E-10));
+
+    }
 }

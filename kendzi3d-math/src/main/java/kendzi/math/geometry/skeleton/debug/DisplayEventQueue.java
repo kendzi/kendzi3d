@@ -11,7 +11,7 @@ import javax.vecmath.Point2d;
 import kendzi.math.geometry.debug.DisplayObject;
 import kendzi.math.geometry.debug.DisplayRectBounds;
 import kendzi.math.geometry.skeleton.Skeleton;
-import kendzi.math.geometry.skeleton.Skeleton.IntersectEntry;
+import kendzi.math.geometry.skeleton.Skeleton.SkeletonEvent;
 import kendzi.swing.ui.panel.equation.EquationDisplay;
 
 /**
@@ -20,7 +20,7 @@ import kendzi.swing.ui.panel.equation.EquationDisplay;
  */
 public class DisplayEventQueue extends DisplayObject {
 
-    private PriorityQueue<IntersectEntry> points;
+    private PriorityQueue<SkeletonEvent> points;
 
     public final static Color EDGE_COLOR = Color.PINK;
     public final static Color SPLIT_COLOR = new Color(127, 0, 255);
@@ -30,7 +30,7 @@ public class DisplayEventQueue extends DisplayObject {
      * @param polygon
      * @param pColor
      */
-    public DisplayEventQueue(PriorityQueue<IntersectEntry> polygon) {
+    public DisplayEventQueue(PriorityQueue<SkeletonEvent> polygon) {
         super();
         this.points = polygon;
 
@@ -69,7 +69,7 @@ public class DisplayEventQueue extends DisplayObject {
 //        }
 
 
-        for (IntersectEntry e : this.points ) {
+        for (SkeletonEvent e : this.points ) {
 
             Point2d p = e.v;
 
@@ -133,7 +133,7 @@ public class DisplayEventQueue extends DisplayObject {
     @Override
     public DisplayRectBounds getBounds() {
         DisplayRectBounds b = new DisplayRectBounds();
-        for (IntersectEntry e : this.points) {
+        for (SkeletonEvent e : this.points) {
 
             Point2d p = e.v;
 
