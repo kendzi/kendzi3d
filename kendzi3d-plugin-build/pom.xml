@@ -48,11 +48,6 @@
 			<artifactId>kendzi3d-plugin</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-plugin</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>

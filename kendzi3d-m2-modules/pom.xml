@@ -17,8 +17,8 @@
 		<dependency>
 			<!-- artifact in local repo -->
 			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-jogl</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<artifactId>kendzi3d-josm-jogl</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<!-- artifact in local repo -->
@@ -31,6 +31,7 @@
 	<repositories>
 		<repository>
 			<id>repo</id>
+			<name>repo</name>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -40,10 +41,22 @@
 			</snapshots>
 			<url>file://${project.basedir}/repo</url>
 		</repository>
-
+		<repository>
+			<id>repo_remote</id>
+			<name>repo_remote</name>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>http://zibi.openstreetmap.org.pl/kendzi/k/repo/</url>
+		</repository>
 	</repositories>
-
 	<modules>
+<!-- 		only to load artifacts from local repository -->
+<!--		<module>../repo</module> -->
 		<module>../kendzi-util</module>
 
 		<module>../kendzi3d-math</module>
