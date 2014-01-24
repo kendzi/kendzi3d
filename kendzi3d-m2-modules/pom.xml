@@ -41,18 +41,6 @@
 			</snapshots>
 			<url>file://${project.basedir}/repo</url>
 		</repository>
-		<repository>
-			<id>repo_remote</id>
-			<name>repo_remote</name>
-			<releases>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>http://zibi.openstreetmap.org.pl/kendzi/k/repo/</url>
-		</repository>
 	</repositories>
 	<modules>
 <!-- 		only to load artifacts from local repository -->

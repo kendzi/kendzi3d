@@ -28,7 +28,20 @@
 		</dependency>
 	</dependencies>
 	
-<!-- 	<repositories> -->
+	<repositories>
+		<repository>
+			<id>repo_remote</id>
+			<name>repo_remote</name>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>http://zibi.openstreetmap.org.pl/kendzi/k/repo/</url>
+		</repository>
+	</repositories>
 <!-- 		<repository> -->
 <!-- 			<id>repo</id> -->
 <!-- 			<releases> -->
