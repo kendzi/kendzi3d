@@ -73,6 +73,7 @@
 		<module>../kendzi3d-models-library-bindings</module>
 		<module>../kendzi3d-models-library-layer</module>
 		<module>../kendzi3d-models-library-josm</module>
+		<module>../kendzi3d-models-library-res</module>
 		
 		<module>../kendzi3d-resource-manager</module>
 		

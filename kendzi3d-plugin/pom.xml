@@ -73,6 +73,11 @@
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-models-library-res</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>		
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-resource-manager</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>

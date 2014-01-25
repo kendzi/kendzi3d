@@ -1,0 +1,31 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl None
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.327680 0.327680 0.327680
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\negre.png
+
+newmtl None_NONE
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.209715 0.209715 0.209715
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl mat_sign
+Ns 76.470588
+Ka 0.000000 0.000000 0.000000
+Kd 0.134218 0.134218 0.134218
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\sign.png
