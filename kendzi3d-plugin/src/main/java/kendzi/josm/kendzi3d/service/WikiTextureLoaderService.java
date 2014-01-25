@@ -41,7 +41,7 @@ import com.google.inject.Inject;
 
 /**
  * Downloads and setup textures and metadata from wiki page.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class WikiTextureLoaderService {
@@ -52,7 +52,8 @@ public class WikiTextureLoaderService {
     /**
      * Plugin directory.
      */
-    @Inject @Kendzi3dPluginDirectory
+    @Inject
+    @Kendzi3dPluginDirectory
     private String pluginDir;
 
     /**
@@ -85,10 +86,14 @@ public class WikiTextureLoaderService {
         //
     }
 
-    /** Downloads and setup textures and metadata from wiki page.
+    /**
+     * Downloads and setup textures and metadata from wiki page.
+     * 
      * @return list of errors
-     * @throws MalformedURLException error
-     * @throws IOException error
+     * @throws MalformedURLException
+     *             error
+     * @throws IOException
+     *             error
      * @throws JAXBException
      */
     public LoadRet load() throws MalformedURLException, IOException, JAXBException {
@@ -101,7 +106,6 @@ public class WikiTextureLoaderService {
         WikiRet wikiRet = parseXmlFile(wikiUrl);
         ret.setTimestamp(wikiRet.getTimestamp());
         log.debug(wikiRet.getText());
-
 
         List<WikiTextures> wikiTextures = parseWikiTextures(wikiRet.getText());
 
@@ -122,20 +126,13 @@ public class WikiTextureLoaderService {
         return ret;
     }
 
-
-
-
-
-
-
     public class LoadRet {
 
         List<String> errors;
         String timestamp;
 
-
-
-        /** Constructor.
+        /**
+         * Constructor.
          */
         public LoadRet() {
             this.errors = new ArrayList<String>();
@@ -147,20 +144,25 @@ public class WikiTextureLoaderService {
         public List<String> getErrors() {
             return this.errors;
         }
+
         /**
-         * @param errors the errors to set
+         * @param errors
+         *            the errors to set
          */
         public void setErrors(List<String> errors) {
             this.errors = errors;
         }
+
         /**
          * @return the timestamp
          */
         public String getTimestamp() {
             return this.timestamp;
         }
+
         /**
-         * @param timestamp the timestamp to set
+         * @param timestamp
+         *            the timestamp to set
          */
         public void setTimestamp(String timestamp) {
             this.timestamp = timestamp;
@@ -169,8 +171,7 @@ public class WikiTextureLoaderService {
 
     private void saveProperties(Properties prop) throws FileNotFoundException, IOException {
 
-        File textureProp = new File(getTexturesPath() +
-                "/wikimetadata.properties");
+        File textureProp = new File(getTexturesPath() + "/wikimetadata.properties");
 
         prop.store(new FileOutputStream(textureProp), null);
 
@@ -181,7 +182,7 @@ public class WikiTextureLoaderService {
         for (WikiTextures wt : parseWiki) {
             String key = wt.getKey();
 
-            prop.setProperty(key + ".texture.file", "/textures/" +  wt.getFileKey());
+            prop.setProperty(key + ".texture.file", "/textures/" + wt.getFileKey());
             prop.setProperty(key + ".texture.height", StringUtil.blankOnNull(wt.getHeight()));
             prop.setProperty(key + ".texture.lenght", StringUtil.blankOnNull(wt.getLenght()));
             prop.setProperty(key + ".texture.url", StringUtil.blankOnNull(wt.getFileUrl()));
@@ -194,18 +195,8 @@ public class WikiTextureLoaderService {
         TextureLibrary textureLiblary = createWikiTextureLiblary(wikiTextures);
 
         File textureFile = new File(this.pluginDir + TextureLibraryService.TEXTURE_LIBRARY_WIKI_XML);
-//              "/wikimetadata.properties");
 
         TextureLibraryService.saveXml(textureFile, textureLiblary);
-
-//        private void saveProperties(Properties prop) throws FileNotFoundException, IOException {
-//
-//            File textureProp = new File(getTexturesPath() +
-//                    "/wikimetadata.properties");
-//
-//            prop.store(new FileOutputStream(textureProp), null);
-//
-//        }
     }
 
     private TextureLibrary createWikiTextureLiblary(List<WikiTextures> wikiTextures) {
@@ -217,7 +208,7 @@ public class WikiTextureLoaderService {
 
             TextureData td = new TextureData();
 
-            td.setTex0("/textures/" +  wt.getFileKey());
+            td.setTex0("/textures/" + wt.getFileKey());
             td.setHeight(StringUtil.parseDouble(wt.getHeight()));
             td.setWidth(StringUtil.parseDouble(wt.getLenght()));
 
@@ -245,13 +236,12 @@ public class WikiTextureLoaderService {
     }
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
-      List<T> list = new ArrayList<T>(c);
-      java.util.Collections.sort(list);
-      return list;
+        List<T> list = new ArrayList<T>(c);
+        java.util.Collections.sort(list);
+        return list;
     }
 
-    private void addTextureToMap(String key, TextureData data,
-            Map<String, ArrayList<TextureData>> textureMap) {
+    private void addTextureToMap(String key, TextureData data, Map<String, ArrayList<TextureData>> textureMap) {
         ArrayList<TextureData> set = textureMap.get(key);
 
         if (set == null) {
@@ -267,8 +257,7 @@ public class WikiTextureLoaderService {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void createAndSaveTextureProperties(List<WikiTextures> wikiTextures) throws FileNotFoundException,
-            IOException {
+    public void createAndSaveTextureProperties(List<WikiTextures> wikiTextures) throws FileNotFoundException, IOException {
         Properties properties = createProperties(wikiTextures);
 
         if (properties != null) {
@@ -278,8 +267,6 @@ public class WikiTextureLoaderService {
             this.metadataCacheService.loadMetadataProperties();
         }
     }
-
-
 
     private List<String> downloadTexturesFiles(List<WikiTextures> parseWiki) throws FileNotFoundException, IOException {
 
@@ -299,8 +286,7 @@ public class WikiTextureLoaderService {
                 // no home dir
                 fileKey = fileKey.replaceAll("~", "");
 
-                File textureDir = new File(
-                        getTexturesPath());
+                File textureDir = new File(getTexturesPath());
 
                 if (!textureDir.exists()) {
                     textureDir.mkdirs();
@@ -310,7 +296,7 @@ public class WikiTextureLoaderService {
 
                 URL u = new URL(fileUrl);
 
-                copy(u.openStream(),  new FileOutputStream(textureFile));
+                copy(u.openStream(), new FileOutputStream(textureFile));
 
             } catch (Exception e) {
                 String errorStr = "Error downloadinig texture from url: " + fileUrl;
@@ -367,15 +353,15 @@ public class WikiTextureLoaderService {
             return null;
         }
 
-        line = line.substring(line.indexOf("|")+1);
+        line = line.substring(line.indexOf("|") + 1);
 
         String[] split = line.split("\\|\\|");
 
-        String key = get(split,0);
-        String height = get(split,1);
-        String lenght  = get(split,2);
-        String fileKey  = get(split,3);
-        String fileUrl  = get(split,4);
+        String key = get(split, 0);
+        String height = get(split, 1);
+        String lenght = get(split, 2);
+        String fileKey = get(split, 3);
+        String fileUrl = get(split, 4);
 
         if (!StringUtil.isBlankOrNull(key)) {
             WikiTextures wt = new WikiTextures();
@@ -391,67 +377,82 @@ public class WikiTextureLoaderService {
     }
 
     static class WikiTextures {
-        String key ;
+        String key;
         String height;
-        String lenght ;
-        String fileKey ;
-        String fileUrl ;
+        String lenght;
+        String fileKey;
+        String fileUrl;
+
         /**
          * @return the key
          */
         public String getKey() {
             return this.key;
         }
+
         /**
-         * @param key the key to set
+         * @param key
+         *            the key to set
          */
         public void setKey(String key) {
             this.key = key;
         }
+
         /**
          * @return the height
          */
         public String getHeight() {
             return this.height;
         }
+
         /**
-         * @param height the height to set
+         * @param height
+         *            the height to set
          */
         public void setHeight(String height) {
             this.height = height;
         }
+
         /**
          * @return the lenght
          */
         public String getLenght() {
             return this.lenght;
         }
+
         /**
-         * @param lenght the lenght to set
+         * @param lenght
+         *            the lenght to set
          */
         public void setLenght(String lenght) {
             this.lenght = lenght;
         }
+
         /**
          * @return the fileKey
          */
         public String getFileKey() {
             return this.fileKey;
         }
+
         /**
-         * @param fileKey the fileKey to set
+         * @param fileKey
+         *            the fileKey to set
          */
         public void setFileKey(String fileKey) {
             this.fileKey = fileKey;
         }
+
         /**
          * @return the fileUrl
          */
         public String getFileUrl() {
             return this.fileUrl;
         }
+
         /**
-         * @param fileUrl the fileUrl to set
+         * @param fileUrl
+         *            the fileUrl to set
          */
         public void setFileUrl(String fileUrl) {
             this.fileUrl = fileUrl;
@@ -474,7 +475,6 @@ public class WikiTextureLoaderService {
 
         return split[i];
     }
-
 
     public static WikiRet parseXmlFile(String wikiUrl) {
 
@@ -533,26 +533,32 @@ public class WikiTextureLoaderService {
     public static class WikiRet {
         String text;
         String timestamp;
+
         /**
          * @return the text
          */
         public String getText() {
             return this.text;
         }
+
         /**
-         * @param text the text to set
+         * @param text
+         *            the text to set
          */
         public void setText(String text) {
             this.text = text;
         }
+
         /**
          * @return the timestamp
          */
         public String getTimestamp() {
             return this.timestamp;
         }
+
         /**
-         * @param timestamp the timestamp to set
+         * @param timestamp
+         *            the timestamp to set
          */
         public void setTimestamp(String timestamp) {
             this.timestamp = timestamp;
@@ -581,7 +587,9 @@ public class WikiTextureLoaderService {
         return sb;
     }
 
-    /** Local path for textures.
+    /**
+     * Local path for textures.
+     * 
      * @return path for textures
      */
     public String getTexturesPath() {
@@ -596,7 +604,8 @@ public class WikiTextureLoaderService {
     }
 
     /**
-     * @param pluginDir the pluginDir to set
+     * @param pluginDir
+     *            the pluginDir to set
      */
     public void setPluginDir(String pluginDir) {
         this.pluginDir = pluginDir;
@@ -610,14 +619,16 @@ public class WikiTextureLoaderService {
     }
 
     /**
-     * @param textureCacheService the textureCacheService to set
+     * @param textureCacheService
+     *            the textureCacheService to set
      */
     public void setTextureCacheService(TextureCacheService textureCacheService) {
         this.textureCacheService = textureCacheService;
     }
 
     /**
-     * @param metadataCacheService the metadataCacheService to set
+     * @param metadataCacheService
+     *            the metadataCacheService to set
      */
     public void setMetadataCacheService(MetadataCacheService metadataCacheService) {
         this.metadataCacheService = metadataCacheService;
