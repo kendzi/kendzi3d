@@ -6,6 +6,12 @@
 	<packaging>pom</packaging>
 
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<scm>
+		<connection>scm:git:git@github.com/kendzi/kendzi3d.git</connection>
+		<developerConnection>scm:git:git@github.com:kendzi/kendzi3d.git</developerConnection>
+		<url>http://github.com/kendzi/kendzi3d</url>
+	</scm>
  
 	<dependencies>
 		<dependency>
