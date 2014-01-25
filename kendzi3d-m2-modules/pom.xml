@@ -51,6 +51,7 @@
 	<modules>
 <!-- 		only to load artifacts from local repository -->
 <!--		<module>../repo</module> -->
+		<module>..</module>
 		<module>../kendzi-util</module>
 
 		<module>../kendzi3d-math</module>
