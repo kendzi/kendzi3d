@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.math.geometry.skeleton;
@@ -18,35 +15,35 @@ import java.util.NoSuchElementException;
 
 /**
  * @author Kendzi
- *
+ * 
  * @param <E>
  */
 public class CircularLinkedList<E extends CircularLinkedList.Entry> extends AbstractSequentialList<E> {
 
-    private E header = null; //new E(null, null, null);
+    private E header = null; // new E(null, null, null);
     private int size = 0;
 
     @Override
     public int hashCode() {
-        return (header !=null ? header.hashCode() : 0 ) + size;
+        return (header != null ? header.hashCode() : 0) + size;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (this == obj);
-        }
+        return this == obj;
+    }
 
     /**
      * Constructs an empty list.
      */
     public CircularLinkedList() {
-//        this.header.next = this.header.previous = this.header;
+        // this.header.next = this.header.previous = this.header;
         this.header = null;
     }
 
     /**
      * Returns the first element in this list.
-     *
+     * 
      * @return the first element in this list
      * @throws NoSuchElementException
      *             if this list is empty
@@ -60,20 +57,22 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
     /**
      * Returns the last element in this list.
-     *
+     * 
      * @return the last element in this list
-     * @throws NoSuchElementException if this list is empty
+     * @throws NoSuchElementException
+     *             if this list is empty
      */
     public E getLast() {
-        if (this.size == 0)
+        if (this.size == 0) {
             throw new NoSuchElementException();
+        }
 
         return (E) this.header.previous;
     }
 
     /**
      * Returns the number of elements in this list.
-     *
+     * 
      * @return the number of elements in this list
      */
     @Override
@@ -83,10 +82,10 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
     /**
      * Appends the specified element to the end of this list.
-     *
+     * 
      * <p>
      * This method is equivalent to {@link #addLast}.
-     *
+     * 
      * @param e
      *            element to be appended to this list
      * @return <tt>true</tt> (as specified by {@link Collection#add})
@@ -97,31 +96,33 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         return true;
     }
 
-//    /**
-//     * Appends the specified element to the end of this list.
-//     *
-//     * <p>
-//     * This method is equivalent to {@link #addLast}.
-//     *
-//     * @param e
-//     *            element to be appended to this list
-//     * @return <tt>true</tt> (as specified by {@link Collection#add})
-//     */
-//    @Override
-//    public boolean addBefore(E en) {
-//        E e = new E();
-//        addBefore(e, en);
-//        return true;
-//    }
-
+    // /**
+    // * Appends the specified element to the end of this list.
+    // *
+    // * <p>
+    // * This method is equivalent to {@link #addLast}.
+    // *
+    // * @param e
+    // * element to be appended to this list
+    // * @return <tt>true</tt> (as specified by {@link Collection#add})
+    // */
+    // @Override
+    // public boolean addBefore(E en) {
+    // E e = new E();
+    // addBefore(e, en);
+    // return true;
+    // }
 
     /**
-     * Removes the first occurrence of the specified element from this list, if it is present. If this list does not
-     * contain the element, it is unchanged. More formally, removes the element with the lowest index <tt>i</tt> such
-     * that <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt> (if such an element exists).
-     * Returns <tt>true</tt> if this list contained the specified element (or equivalently, if this list changed as a
-     * result of the call).
-     *
+     * Removes the first occurrence of the specified element from this list, if
+     * it is present. If this list does not contain the element, it is
+     * unchanged. More formally, removes the element with the lowest index
+     * <tt>i</tt> such that
+     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>
+     * (if such an element exists). Returns <tt>true</tt> if this list contained
+     * the specified element (or equivalently, if this list changed as a result
+     * of the call).
+     * 
      * @param pObject
      *            element to be removed from this list, if present
      * @return <tt>true</tt> if this list contained the specified element
@@ -136,9 +137,9 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
                 remove((E) pObject);
 
-//                if (this.size == 0) {
-//                    this.header = null;
-//                }
+                // if (this.size == 0) {
+                // this.header = null;
+                // }
                 return true;
             }
 
@@ -156,23 +157,27 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
      * Returns the indexed entry.
      */
     private E entry(int index) {
-        if (index < 0 || index >= this.size)
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + this.size);
+        }
         E e = this.header;
-        if (index < (this.size >> 1)) {
-            for (int i = 0; i <= index; i++)
+        if (index < this.size >> 1) {
+            for (int i = 0; i <= index; i++) {
                 e = (E) e.next;
+            }
         } else {
-            for (int i = this.size; i > index; i--)
+            for (int i = this.size; i > index; i--) {
                 e = (E) e.previous;
+            }
         }
         return e;
     }
 
     /**
-     * Inserts the specified element at the specified position in this list. Shifts the element currently at that
-     * position (if any) and any subsequent elements to the right (adds one to their indices).
-     *
+     * Inserts the specified element at the specified position in this list.
+     * Shifts the element currently at that position (if any) and any subsequent
+     * elements to the right (adds one to their indices).
+     * 
      * @param index
      *            index at which the specified element is to be inserted
      * @param element
@@ -182,13 +187,14 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
      */
     @Override
     public void add(int index, E element) {
-        addBefore(element, (index == this.size ? this.header : entry(index)));
+        addBefore(element, index == this.size ? this.header : entry(index));
     }
 
     /**
-     * Removes the element at the specified position in this list. Shifts any subsequent elements to the left (subtracts
-     * one from their indices). Returns the element that was removed from the list.
-     *
+     * Removes the element at the specified position in this list. Shifts any
+     * subsequent elements to the left (subtracts one from their indices).
+     * Returns the element that was removed from the list.
+     * 
      * @param index
      *            the index of the element to be removed
      * @return the element previously at the specified position
@@ -210,7 +216,7 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
             return this.header;
         }
-        E newEntry = e; //new E(e, current, current.previous);
+        E newEntry = e; // new E(e, current, current.previous);
 
         newEntry.next = current;
         newEntry.previous = current.previous;
@@ -230,8 +236,7 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         if (e == this.header) {
             if (this.size > 1) {
                 this.header = (E) this.header.next;
-            }
-            else {
+            } else {
                 this.header = null;
             }
         }
@@ -240,8 +245,8 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         e.previous.next = e.next;
         e.next.previous = e.previous;
 
-//        e.next = e.previous = null;
-//        e.element = null;
+        // e.next = e.previous = null;
+        // e.element = null;
         this.size--;
         this.modCount++;
         return result;
@@ -249,7 +254,6 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
     /*
      * (non-Javadoc)
-     *
      * @see java.util.AbstractSequentialList#iterator()
      */
     @Override
@@ -260,7 +264,6 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
 
     /*
      * (non-Javadoc)
-     *
      * @see java.util.LinkedList#listIterator(int)
      */
 
@@ -268,17 +271,17 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         return new CircularLinkedListItrerator(index);
     }
 
-
-
-//
-//    public class CircularLinkedListItrerator2 extends CircularLinkedListItrerator<E> {
-//
-//        CircularLinkedListItrerator2(CircularLinkedList<E> circularLinkedList, int index) {
-//            circularLinkedList.super(index);
-//        }
-//
-//
-//    }
+    //
+    // public class CircularLinkedListItrerator2 extends
+    // CircularLinkedListItrerator<E> {
+    //
+    // CircularLinkedListItrerator2(CircularLinkedList<E> circularLinkedList,
+    // int index) {
+    // circularLinkedList.super(index);
+    // }
+    //
+    //
+    // }
 
     public class CircularLinkedListItrerator implements ListIterator<E> {
         private E lastReturned = CircularLinkedList.this.header;
@@ -291,7 +294,7 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
             if (index < 0 || index > CircularLinkedList.this.size) {
                 throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + CircularLinkedList.this.size);
             }
-            if (index < (CircularLinkedList.this.size >> 1)) {
+            if (index < CircularLinkedList.this.size >> 1) {
                 this.current = CircularLinkedList.this.header;
                 for (this.nextIndex = 0; this.nextIndex < index; this.nextIndex++) {
                     this.current = (E) this.current.next;
@@ -371,22 +374,22 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
                 throw new IllegalStateException();
             }
 
-//            if (this.current == this.lastReturned) {
-                this.current = lastNext;
-//            } else {
-                this.nextIndex--;
-//            }
-//            this.lastReturned = CircularLinkedList.this.header;
+            // if (this.current == this.lastReturned) {
+            this.current = lastNext;
+            // } else {
+            this.nextIndex--;
+            // }
+            // this.lastReturned = CircularLinkedList.this.header;
             this.expectedModCount++;
         }
 
-//        @Override
-//        public void set(E e) {
-//            if (this.lastReturned == CircularLinkedList.this.header)
-//                throw new IllegalStateException();
-//            checkForComodification();
-//            this.lastReturned.element = e;
-//        }
+        // @Override
+        // public void set(E e) {
+        // if (this.lastReturned == CircularLinkedList.this.header)
+        // throw new IllegalStateException();
+        // checkForComodification();
+        // this.lastReturned.element = e;
+        // }
 
         @Override
         public void add(E e) {
@@ -398,8 +401,9 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         }
 
         final void checkForComodification() {
-            if (CircularLinkedList.this.modCount != this.expectedModCount)
+            if (CircularLinkedList.this.modCount != this.expectedModCount) {
                 throw new ConcurrentModificationException();
+            }
         }
 
         public E getPrevious() {
@@ -423,14 +427,12 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         return null;
     }
 
-
     public static class Entry {
         Object parent;
 
-//        E element;
-        private Entry next;
-        private Entry previous;
-
+        // E element;
+        public Entry next;
+        public Entry previous;
 
         public Entry() {
             this.next = null;
@@ -438,7 +440,7 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
         }
 
         Entry(Entry next, Entry previous) {
-//            this.element = element;
+            // this.element = element;
             this.next = next;
             this.previous = previous;
         }
@@ -451,6 +453,5 @@ public class CircularLinkedList<E extends CircularLinkedList.Entry> extends Abst
             return this.previous;
         }
     }
-
 
 }
