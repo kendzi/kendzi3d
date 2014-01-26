@@ -4,7 +4,7 @@
 
 	<groupId>kendzi</groupId>
 	<artifactId>kendzi-util</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.166</version>
 
 	<name>kendzi-util</name>
 	
@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.166</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
