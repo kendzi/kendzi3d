@@ -14,6 +14,12 @@
 		<developerConnection>scm:git:git@github.com:kendzi/kendzi3d.git</developerConnection>
 		<url>http://github.com/kendzi/kendzi3d</url>
   	</scm>
+	<distributionManagement>
+		<repository>
+			<id>zibi-ftp-repository</id>
+			<url>ftp://kendzi@zibi.openstreetmap.org.pl/k/repo</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>1.6</java.version>
