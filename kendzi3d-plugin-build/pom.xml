@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>kendzi3d-plugin-build</artifactId>
@@ -51,13 +52,13 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-plugin</artifactId>
-			<version>1.0.166</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.166</version>
+		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<build>
@@ -90,7 +91,7 @@
 						<manifestEntries>
 							<Author>Tomasz Kędziora (kendzi)</Author>
 							<Plugin-Class>kendzi.josm.kendzi3d.Kendzi3DPlugin</Plugin-Class>
-							<Plugin-Date />
+							<Plugin-Date></Plugin-Date>
 							<Plugin-Description>Simple 3D view of osm data. It is highly experimental. It may crash! Use with caution!</Plugin-Description>
 							<Plugin-Icon>images/stock_3d-effects24.png</Plugin-Icon>
 							<Plugin-Link>http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
@@ -146,10 +147,12 @@
 						<phase>deploy</phase>
 							<configuration>
 							<tasks>
-								<echo message="******&gt; start uploading new version of kendzi3d-core" />
+								<echo message="******> start uploading new version of kendzi3d-core" />
 								<!-- JOSM plugin scanner require the same location for new version -->
-								<copy file="${project.build.directory}/${project.build.finalName}-dep.jar" tofile="${project.build.directory}/kendzi3d.jar" /> 
-								<ftp action="send" server="zibi.openstreetmap.org.pl" remotedir="/Kendzi3d/snapshot-core" userid="${zibi-ftp-repository.username}" password="${zibi-ftp-repository.password}" depends="yes" verbose="yes">
+								<copy file="${project.build.directory}/${project.build.finalName}-dep.jar" tofile="${project.build.directory}/kendzi3d.jar"/> 
+								<ftp action="send" server="zibi.openstreetmap.org.pl" remotedir="/Kendzi3d/snapshot-core"
+									userid="${zibi-ftp-repository.username}" password="${zibi-ftp-repository.password}"
+									depends="yes" verbose="yes">
 									<fileset dir="${project.build.directory}">
 										<include name="kendzi3d.jar" />
 									</fileset>
