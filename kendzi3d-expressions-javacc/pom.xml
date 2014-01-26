@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>kendzi3d-expressions-javacc</artifactId>
@@ -34,7 +35,7 @@
 					<configuration>
 						<sources>
 <!-- 							<source>${project.build.directory}/generated-sources/javacc/</source> -->
-							<source>target/generated-sources/javacc/</source> --&gt;
+							<source>target/generated-sources/javacc/</source> -->
 						</sources>
 					</configuration>
 				</execution>
@@ -64,7 +65,7 @@
     								</goals>
     							</pluginExecutionFilter>
     							<action>
-    								<execute />
+    								<execute/>
     							</action>
     						</pluginExecution>
     						<pluginExecution>
@@ -79,7 +80,7 @@
     								</goals>
     							</pluginExecutionFilter>
     							<action>
-    								<execute />
+    								<execute/>
     							</action>
     						</pluginExecution>
     					</pluginExecutions>
@@ -92,7 +93,7 @@
   <parent>
   	<groupId>kendzi.kendzi3d</groupId>
   	<artifactId>kendzi3d-expressions</artifactId>
-  	<version>1.0.165</version>
+  	<version>0.0.1-SNAPSHOT</version>
   	<relativePath>../kendzi3d-expressions/pom.xml</relativePath>
   </parent>
 </project>
