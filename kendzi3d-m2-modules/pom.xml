@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>kendzi3d-m2-modules</artifactId>
@@ -10,8 +11,7 @@
 		<connection>scm:git:git@github.com/kendzi/kendzi3d.git</connection>
 		<developerConnection>scm:git:git@github.com:kendzi/kendzi3d.git</developerConnection>
 		<url>http://github.com/kendzi/kendzi3d</url>
-	  <tag>kendzi3d-m2-modules-1.0.165</tag>
-  </scm>
+	</scm>
  
 	<dependencies>
 		<dependency>
@@ -90,7 +90,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.165</version>
+		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
