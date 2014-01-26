@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>kendzi3d-render</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
 
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 
@@ -139,7 +138,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>

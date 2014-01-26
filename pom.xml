@@ -4,10 +4,9 @@
 
 	<groupId>kendzi.kendzi3d</groupId>
 	<artifactId>kendzi3d-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
-	<name>kendzi3d-parent</name>
+ 
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 	
 	
@@ -33,12 +32,66 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- artifact in local repo -->
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-josm-jogl</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<!-- artifact in local repo -->
+			<groupId>org.poly2tri</groupId>
+			<artifactId>poly2tri-core</artifactId>
+			<version>0.1.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
+	
+	<modules>
+		<module>kendzi-util</module>
+
+		<module>kendzi3d-math</module>
+		<module>kendzi3d-resource-interface</module>
+		<module>kendzi3d-josm-core</module>
+
+		<module>kendzi3d-buildings</module>
+		<module>kendzi3d-buildings-josm</module>
+
+		<module>kendzi3d-collada-bindings</module>
+		<module>kendzi3d-collada-exporter</module>
+
+		<module>kendzi3d-expressions</module>
+
+		<module>kendzi3d-jogl-model</module>
+		<module>kendzi3d-jogl-model-render</module>
+		<module>kendzi3d-jogl-model-util</module>
+
+		<module>kendzi3d-jogl-textures</module>
+		<module>kendzi3d-jogl-textures-josm</module>
+		<module>kendzi3d-jogl-textures-library</module>
+		<module>kendzi3d-jogl-textures-library-bindings</module>
+		<module>kendzi3d-jogl-textures-library-res</module>
+
+		<module>kendzi3d-models-library</module>
+		<module>kendzi3d-models-library-bindings</module>
+		<module>kendzi3d-models-library-layer</module>
+		<module>kendzi3d-models-library-josm</module>
+		<module>kendzi3d-models-library-res</module>
+		
+		<module>kendzi3d-resource-manager</module>
+		
+		<module>kendzi3d-plugin</module>
+		<module>kendzi3d-plugin-build</module>
+	</modules>
 	
 	<repositories>
 		<repository>
 			<id>repo_remote</id>
-			<name>repo_remote</name>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -48,22 +101,20 @@
 			</snapshots>
 			<url>http://zibi.openstreetmap.org.pl/kendzi/k/repo/</url>
 		</repository>
-	</repositories>
-<!-- 		<repository> -->
-<!-- 			<id>repo</id> -->
-<!-- 			<releases> -->
-<!-- 				<enabled>true</enabled> -->
-<!-- 				<checksumPolicy>ignore</checksumPolicy> -->
-<!-- 			</releases> -->
-<!-- 			<snapshots> -->
-<!-- 				<enabled>true</enabled> -->
-<!-- 			</snapshots> -->
-<!--  			it is not working, maven don't allow to get paretn directiory! --> 
-<!--   			<url>file://${project.parent.relativePath}/repo</url> --> 
-<!-- 			<url>file://${repo.main.dir}/repo</url> -->
-<!-- 		</repository> -->
 	
-<!-- 	</repositories> -->
+		<repository>
+			<id>repo_local</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	</repositories>
+	
 	<build>
 		<plugins>
 			<plugin>

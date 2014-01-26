@@ -6,11 +6,6 @@
 	<packaging>pom</packaging>
 
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
-
-	<scm>
-		<url>https://github.com/kendzi/kendzi3d.git</url>
-		<connection>scm:git:https://github.com:kendzi/kendzi3d.git</connection>
-	</scm>
 		
 	<distributionManagement>
 		<repository>
@@ -58,7 +53,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<build>
