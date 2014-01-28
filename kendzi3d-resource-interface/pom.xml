@@ -10,14 +10,14 @@
 		<dependency>
 			<groupId>kendzi</groupId>
 			<artifactId>kendzi-util</artifactId>
-			<version>1.0.171-SNAPSHOT</version>
+			<version>1.0.172</version>
 		</dependency>
 	</dependencies>
 
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.171-SNAPSHOT</version>
+		<version>1.0.172</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
