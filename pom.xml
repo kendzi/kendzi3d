@@ -37,13 +37,7 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<!-- artifact in local repo -->
 			<groupId>kendzi.kendzi3d</groupId>
