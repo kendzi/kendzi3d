@@ -32,69 +32,69 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-buildings-josm</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-josm</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-library</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-expressions-josm</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-models-library</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-collada-exporter</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model-util</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-models-library-josm</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-models-library-res</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-resource-manager</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model-render</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-buildings</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-library-res</artifactId>
-			<version>1.0.173</version>
+			<version>1.0.174-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
@@ -102,7 +102,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.173</version>
+		<version>1.0.174-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
