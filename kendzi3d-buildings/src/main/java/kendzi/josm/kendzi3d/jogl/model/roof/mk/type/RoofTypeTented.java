@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
@@ -21,7 +18,6 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.Triangulate;
@@ -29,41 +25,26 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
-import org.apache.log4j.Logger;
-
 /**
  * Roof type Tented.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
 public class RoofTypeTented extends RectangleRoofTypeBuilder {
-
-    /** Log. */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofTypeTented.class);
-
-    @Override
-    public RoofTypeAliasEnum getPrefixKey() {
-        return RoofTypeAliasEnum.TENTED;
-    }
-
-    @Override
-    public boolean isPrefixParameter() {
-        return false;
-    }
 
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
         Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
+                conf.getRoofTextureData());
 
     }
 
     /**
-     *
+     * 
      * @param buildingPolygon
      * @param pBorderList
      * @param pRecHeight
@@ -102,8 +83,7 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mp.length; i++) {
 
-            MeshFactoryUtil
-            .addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
 
         }
 
@@ -117,7 +97,7 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
 
     /**
      * Create roof surface polygons.
-     *
+     * 
      * @param outlinePolygon
      * @param middlePoint
      * @return

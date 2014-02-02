@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
@@ -31,28 +28,18 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
 import kendzi.math.geometry.polygon.split.SplitPolygons;
 
-import org.apache.log4j.Logger;
-
 /**
  * Roof type 0.X.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
 public abstract class RoofType0 extends RectangleRoofTypeBuilder {
-
-    /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType0.class);
 
     /**
      * @return roof type.
      */
-    abstract int getType();
-
-    @Override
-    public boolean isPrefixParameter() {
-        return false;
-    }
+    protected abstract int getType();
 
     /**
      * @param pBorderList
@@ -70,9 +57,8 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
      * @param roofTextureData
      * @return
      */
-    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon,
-            double pRecHeight, double pRecWidth, Point2d[] pRectangleContur, double h1, double h2, double l1,
-            double l2, double l3, double l4, int type,
+    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
+            Point2d[] pRectangleContur, double h1, double h2, double l1, double l2, double l3, double l4, int type,
             // ModelFactory model,
             RoofMaterials roofTextureData) {
 
@@ -117,8 +103,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
             MultiPolygonList2d centerMP = middleSplit.getTopMultiPolygons();
 
             if (type >= 2) {
-                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2,
-                        pRecHeight));
+                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2, pRecHeight));
 
                 SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, rLine);
 
@@ -128,8 +113,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             if (type >= 3) {
 
-                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0,
-                        pRecHeight - l3));
+                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0, pRecHeight - l3));
 
                 SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, tLine);
 

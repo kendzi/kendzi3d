@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
@@ -27,7 +24,6 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.texture.TextureQuadIndex;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.point.Vector3dUtil;
@@ -36,7 +32,6 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -45,21 +40,6 @@ import org.ejml.simple.SimpleMatrix;
  * @author Tomasz Kędziora (Kendzi)
  */
 public class RoofTypeDome extends AbstractRoofTypeBuilder {
-
-    /** Log. */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofTypeDome.class);
-
-    @Override
-    @Deprecated
-    public RoofTypeAliasEnum getPrefixKey() {
-        return null;
-    }
-
-    @Override
-    public boolean isPrefixParameter() {
-        return false;
-    }
 
     @Override
     public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
@@ -97,13 +77,11 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
 
         PolygonList2d borderPolygon = new PolygonList2d(borderList);
 
-        //build circle
+        // build circle
         Circle circle = CircleInsidePolygon.iterativeNonConvex(borderPolygon, 0.01);
 
         int pIcross = 5;
         buildRotaryShape(meshDome, borderList, circle.getPoint(), height, pIcross, roofTexture);
-
-
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
@@ -123,7 +101,7 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
         int crossCount = numberOfCrossSplits + 1;
 
         // create cross section
-        Point2d [] crossSection = new Point2d[crossCount];
+        Point2d[] crossSection = new Point2d[crossCount];
         for (int i = 0; i < crossCount; i++) {
 
             double a = Math.toRadians(90) / (crossCount - 1) * i;
@@ -187,13 +165,13 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
         int pointCount = borderList.size();
         int crossCount = crossSection.length;
 
-        Point3d [][] mesh = new Point3d[pointCount][];
+        Point3d[][] mesh = new Point3d[pointCount][];
         for (int i = 0; i < pointCount; i++) {
             Point2d outlinePoint = borderList.get(i);
 
             Point3d point = new Point3d(outlinePoint.x - center.x, 1, -(outlinePoint.y - center.y));
 
-            Point3d [] crossMesh = new Point3d[crossCount];
+            Point3d[] crossMesh = new Point3d[crossCount];
 
             for (int j = 0; j < crossCount; j++) {
                 // point
@@ -210,7 +188,7 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
     public static int[][] buildNormalsIndexs(MeshFactory meshFactory, Point3d[][] mesh, Point3d center3d, int pointCount,
             int crossCount) {
 
-        int [][] softNormalsIndexs = new int[pointCount][];
+        int[][] softNormalsIndexs = new int[pointCount][];
 
         for (int i = 0; i < pointCount; i++) {
 
@@ -230,23 +208,22 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
         return softNormalsIndexs;
     }
 
-    private static TextureQuadIndex[][] buildTextureMapping(MeshFactory meshFactory,
-            Point3d[][] mesh, int pointCount, int crossCount) {
+    private static TextureQuadIndex[][] buildTextureMapping(MeshFactory meshFactory, Point3d[][] mesh, int pointCount,
+            int crossCount) {
 
         // pointCount - number of points on outline
         // crossCount - number of cross segments
 
-        TextureQuadIndex [][] tc = new TextureQuadIndex[pointCount][];
+        TextureQuadIndex[][] tc = new TextureQuadIndex[pointCount][];
 
         // texture mapping for all points
         for (int i = 0; i < pointCount; i++) {
 
-            TextureQuadIndex [] crossTc = RoofType5v6.buildTextureMappingForCross(meshFactory, mesh, pointCount, crossCount, i);
+            TextureQuadIndex[] crossTc = RoofType5v6.buildTextureMappingForCross(meshFactory, mesh, pointCount, crossCount, i);
 
             tc[i] = crossTc;
         }
         return tc;
     }
-
 
 }

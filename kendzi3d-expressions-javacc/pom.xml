@@ -34,8 +34,8 @@
 					</goals>
 					<configuration>
 						<sources>
-<!-- 							<source>${project.build.directory}/generated-sources/javacc/</source> -->
-							<source>target/generated-sources/javacc/</source> --&gt;
+							<source>${project.build.directory}/generated-sources/javacc/</source>
+<!-- 							<source>target/generated-sources/javacc/</source> -->
 						</sources>
 					</configuration>
 				</execution>

@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
@@ -30,7 +27,6 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.texture.TextureQuadIndex;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
@@ -41,7 +37,6 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -51,27 +46,9 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
-    /** Log. */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType5v6.class);
-
     @Override
-    public RoofTypeAliasEnum getPrefixKey() {
-        return null;
-    }
-
-    @Override
-    public boolean isPrefixParameter() {
-        return false;
-    }
-
-    @Override
-    public RoofTypeOutput buildRoof(
-            Point2d pStartPoint,
-            PolygonWithHolesList2d buildingPolygon,
-            DormerRoofModel pRoof,
-            double height,
-            RoofMaterials roofTextureData) {
+    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
+            double height, RoofMaterials roofTextureData) {
 
         SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
 
@@ -232,11 +209,11 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
     }
 
     public static int[][] addVertexToMeshFactory(MeshFactory meshFactory, Point3d[][] mesh, int pointCount, int crossCount) {
-        int [][] pointsIntex = new int[pointCount][];
+        int[][] pointsIntex = new int[pointCount][];
         for (int i = 0; i < pointCount; i++) {
             pointsIntex[i] = new int[crossCount];
             for (int j = 0; j < crossCount; j++) {
-                Point3d p =  mesh[i][j];
+                Point3d p = mesh[i][j];
                 int ip = meshFactory.addVertex(p);
                 pointsIntex[i][j] = ip;
             }
@@ -257,7 +234,7 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
             SimpleMatrix trans = tranA.mult(rotY);
 
-            Point3d [] crossMesh = new Point3d[crossCount];
+            Point3d[] crossMesh = new Point3d[crossCount];
 
             for (int j = 0; j < crossSection.length; j++) {
                 // point
@@ -272,7 +249,8 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         return mesh;
     }
 
-    private static int[][] buildSoftNormalsIndexs(MeshFactory meshFactory, int sectionCount, Point2d[] crossSection, int crossCount) {
+    private static int[][] buildSoftNormalsIndexs(MeshFactory meshFactory, int sectionCount, Point2d[] crossSection,
+            int crossCount) {
 
         Vector2d[] crossSectionSoftNormals = calsSoftNormals(crossSection);
 
