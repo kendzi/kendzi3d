@@ -105,7 +105,7 @@ public class MeshFactoryUtil {
 
     /**
      * Add flat polygon to mesh.
-     *
+     * 
      * @param polygonWithHolesList2d
      * @param height
      * @param meshFactory
@@ -118,13 +118,14 @@ public class MeshFactoryUtil {
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
             Vector3d textureDirection) {
 
-        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX,
-                textureStartPointY, textureDirection, true);
+        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
+                textureDirection, true);
     }
 
     /**
-     * @see kendzi.jogl.model.factory.MeshFactoryUtil#addPolygonWithHolesInY(PolygonWithHolesList2d, double, MeshFactory, TextureData, double, double, Vector3d)
-     *
+     * @see kendzi.jogl.model.factory.MeshFactoryUtil#addPolygonWithHolesInY(PolygonWithHolesList2d,
+     *      double, MeshFactory, TextureData, double, double, Vector3d)
+     * 
      * @param polygonWithHolesList2d
      * @param height
      * @param meshFactory
@@ -137,8 +138,8 @@ public class MeshFactoryUtil {
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
             Vector3d textureDirection) {
 
-        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX,
-                textureStartPointY, textureDirection, false);
+        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
+                textureDirection, false);
     }
 
     private static void addPolygonWithHolesInY(PolygonWithHolesList2d polygonWithHolesList2d, double height,
@@ -156,47 +157,57 @@ public class MeshFactoryUtil {
         addPolygonToRoofMesh(meshFactory, topMP, planeTop, textureDirection, textureData, 0, 0);
     }
 
-    /** Add polygons to roof mesh.
-     * @param pMeshRoof roof mesh
-     * @param pMultiPolygons point of polygons
+    /**
+     * Add polygons to roof mesh.
+     * 
+     * @param pMeshRoof
+     *            roof mesh
+     * @param pMultiPolygons
+     *            point of polygons
      * @param plane2
      * @param pRoofLineVector
      * @param roofTexture
-     *
+     * 
      */
-    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons,
-            Plane3d plane2, Vector3d pRoofLineVector, TextureData roofTexture) {
+    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons, Plane3d plane2,
+            Vector3d pRoofLineVector, TextureData roofTexture) {
         addPolygonToRoofMesh(pMeshRoof, pMultiPolygons, plane2, pRoofLineVector, roofTexture, 0, 0);
     }
 
-    /** Add polygons to roof mesh.
-     * @param pMeshRoof roof mesh
-     * @param pMultiPolygons point of polygons
+    /**
+     * Add polygons to roof mesh.
+     * 
+     * @param pMeshRoof
+     *            roof mesh
+     * @param pMultiPolygons
+     *            point of polygons
      * @param plane2
      * @param pRoofLineVector
      * @param roofTexture
-     * @param textureOffsetU offset for texture U
-     * @param textureOffsetV offset for texture V
-     *
-     * FIXME this method need to be rewrite!
+     * @param textureOffsetU
+     *            offset for texture U
+     * @param textureOffsetV
+     *            offset for texture V
+     * 
+     * @deprecated FIXME this method need to be rewrite!
      */
     @Deprecated
-    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons,
-            Plane3d plane2, Vector3d pRoofLineVector, TextureData roofTexture, double textureOffsetU, double textureOffsetV) {
+    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons, Plane3d plane2,
+            Vector3d pRoofLineVector, TextureData roofTexture, double textureOffsetU, double textureOffsetV) {
 
         // FIXME this method need to be rewrite!
         int normalIndex = pMeshRoof.addNormal(plane2.getNormal());
 
-
-        //at last we create model
+        // at last we create model
         // connect all polygon in mesh
         for (PolygonList2d polygon : pMultiPolygons.getPolygons()) {
 
             List<Point2d> poly = polygon.getPoints();
 
-            Integer [] pointsIndex = new Integer[poly.size()];
+            Integer[] pointsIndex = new Integer[poly.size()];
 
-            //            List<Point2d> poly = makeListFromIndex(pPolygonsPoints, polyIndex);
+            // List<Point2d> poly = makeListFromIndex(pPolygonsPoints,
+            // polyIndex);
 
             if (poly.size() < 3) {
                 log.error("error polygon should have more then 3 vertex - skiping!");
@@ -204,7 +215,7 @@ public class MeshFactoryUtil {
             }
             int s1 = poly.size();
 
-            //XXX switch to PolygonUtil !!!
+            // XXX switch to PolygonUtil !!!
             Triangulate t = new Triangulate();
             poly = t.removeClosePoints1(poly);
 
@@ -216,7 +227,7 @@ public class MeshFactoryUtil {
 
             if (trianglePoly == null) {
                 log.error("******* trianglePoly: == null");
-                //XXX good joke
+                // XXX good joke
                 trianglePoly = trianglePolytriangulateSweeped(poly);
             }
 
@@ -247,12 +258,12 @@ public class MeshFactoryUtil {
 
                 Point3d point3d = pMeshRoof.vertices.get(vi);
 
-
                 face.addVertIndex(vi);
 
                 face.addNormalIndex(normalIndex);
 
-                TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, plane2.getNormal(), pRoofLineVector, plane2.getPoint(), roofTexture, textureOffsetU, textureOffsetV);
+                TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, plane2.getNormal(), pRoofLineVector,
+                        plane2.getPoint(), roofTexture, textureOffsetU, textureOffsetV);
 
                 int tci = pMeshRoof.addTextCoord(calcUV);
 
@@ -266,17 +277,21 @@ public class MeshFactoryUtil {
      * Texture offset is taken from plane point, textureVector and
      * textureOffset.
      * 
-     * @param pMeshRoof roof mesh
-     * @param pTriangles point of polygons
+     * @param pMeshRoof
+     *            roof mesh
+     * @param pTriangles
+     *            point of polygons
      * @param pPlane
      * @param pTextureVector
      * @param pTextureData
-     * @param textureOffsetU offset for texture U
-     * @param textureOffsetV offset for texture V
+     * @param textureOffsetU
+     *            offset for texture U
+     * @param textureOffsetV
+     *            offset for texture V
      * 
      */
-    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, List<Triangle2d> pTriangles,
-            Plane3d pPlane, Vector3d pTextureVector, TextureData pTextureData, double textureOffsetU, double textureOffsetV) {
+    public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, List<Triangle2d> pTriangles, Plane3d pPlane,
+            Vector3d pTextureVector, TextureData pTextureData, double textureOffsetU, double textureOffsetV) {
 
         int normalIndex = pMeshRoof.addNormal(pPlane.getNormal());
 
@@ -284,12 +299,12 @@ public class MeshFactoryUtil {
 
         for (Triangle2d triangle : pTriangles) {
 
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP1());
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP2());
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP3());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP1());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP2());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP3());
 
         }
     }
@@ -315,13 +330,14 @@ public class MeshFactoryUtil {
 
         int vi = pMeshRoof.addVertex(point3d);
 
-        //        Point3d point3d = pMeshRoof.vertices.get(vi);
+        // Point3d point3d = pMeshRoof.vertices.get(vi);
 
         face.addVertIndex(vi);
 
         face.addNormalIndex(normalIndex);
 
-        TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, pPlane.getNormal(), pTextureVector, pPlane.getPoint(), pTextureData, textureOffsetU, textureOffsetV);
+        TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, pPlane.getNormal(), pTextureVector, pPlane.getPoint(),
+                pTextureData, textureOffsetU, textureOffsetV);
 
         int tci = pMeshRoof.addTextCoord(calcUV);
 
@@ -331,17 +347,16 @@ public class MeshFactoryUtil {
     @Deprecated
     private static List<Integer> trianglePolytriangulateSweeped(List<Point2d> poly) {
 
-        //FIXME remove this method and switch to PolygonUtil
+        // FIXME remove this method and switch to PolygonUtil
         int size = poly.size();
 
         List<Point2d> polySweeped = new ArrayList<Point2d>();
         for (Point2d point2d : poly) {
-            polySweeped.add(new Point2d(point2d.x + 0.3 + Double.MIN_VALUE, point2d.y+0.3+Double.MIN_VALUE));
+            polySweeped.add(new Point2d(point2d.x + 0.3 + Double.MIN_VALUE, point2d.y + 0.3 + Double.MIN_VALUE));
         }
 
-        //sweep
+        // sweep
         polySweeped.add(polySweeped.remove(0));
-
 
         Triangulate t = new Triangulate();
         List<Integer> trianglePoly = t.processIndex(poly);

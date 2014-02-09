@@ -21,7 +21,6 @@ import org.poly2tri.triangulation.TriangulationPoint;
 import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
 import org.poly2tri.triangulation.point.TPoint;
 
-
 /**
  * @author Hannes Janetzek
  */
@@ -32,12 +31,9 @@ public class Poly2TriUtil {
         ArrayList<LineSegment2d> segmentSet = new ArrayList<LineSegment2d>();
 
         // it seems poly2tri requires points to be unique objects
-        HashMap<Point2d, TriangulationPoint> pointSet
-        = new HashMap<Point2d, TriangulationPoint>();
+        HashMap<Point2d, TriangulationPoint> pointSet = new HashMap<Point2d, TriangulationPoint>();
 
-        public CDTSet(PolygonList2d polygon,
-                Collection<PolygonList2d> holes,
-                Collection<LineSegment2d> cSegments,
+        public CDTSet(PolygonList2d polygon, Collection<PolygonList2d> holes, Collection<LineSegment2d> cSegments,
                 Collection<Point2d> cPoints) {
 
             List<Point2d> vertices = polygon.getPoints();
@@ -53,15 +49,13 @@ public class Poly2TriUtil {
             }
 
             for (int i = 0, n = vertices.size() - 1; i < n; i++) {
-                segmentSet.add(new LineSegment2d(vertices.get(i),
-                        vertices.get(i + 1)));
+                segmentSet.add(new LineSegment2d(vertices.get(i), vertices.get(i + 1)));
             }
 
             for (PolygonList2d hole : holes) {
                 vertices = hole.getPoints();
                 for (int i = 0, n = vertices.size() - 1; i < n; i++) {
-                    segmentSet.add(new LineSegment2d(vertices.get(i),
-                            vertices.get(i + 1)));
+                    segmentSet.add(new LineSegment2d(vertices.get(i), vertices.get(i + 1)));
                 }
             }
 
@@ -79,9 +73,9 @@ public class Poly2TriUtil {
                     Point2d crossing;
 
                     if ((crossing = l1.intersectEpsilon(l2, 10E9)) != null) {
-                        //					if ((crossing = l1.getIntersection(l2.getBegin(), l2.getEnd())) != null) {
-                        System.out.println("split " + l1 + " " + l2 + " at "
-                                + crossing);
+                        // if ((crossing = l1.getIntersection(l2.getBegin(),
+                        // l2.getEnd())) != null) {
+                        System.out.println("split " + l1 + " " + l2 + " at " + crossing);
                         foundIntersections = true;
 
                         segmentSet.remove(l1);
@@ -113,9 +107,9 @@ public class Poly2TriUtil {
                 for (int j = i + 1; j < size; j++) {
                     LineSegment2d l2 = segmentSet.get(j);
 
-                    if ((l1.getBegin().equals(l2.getBegin()) && l1.getEnd().equals(l2.getEnd()))
-                            || (l1.getBegin().equals(l2.getEnd()) && l1.getEnd().equals(l2.getBegin()))) {
-                        //System.out.println("remove dup " + l1 + " " + l2);
+                    if (l1.getBegin().equals(l2.getBegin()) && l1.getEnd().equals(l2.getEnd())
+                            || l1.getBegin().equals(l2.getEnd()) && l1.getEnd().equals(l2.getBegin())) {
+                        // System.out.println("remove dup " + l1 + " " + l2);
                         segmentSet.remove(j);
                         size--;
                     }
@@ -157,18 +151,17 @@ public class Poly2TriUtil {
         public void prepareTriangulation(TriangulationContext<?> tcx) {
             triangles.clear();
 
-
             for (LineSegment2d l : segmentSet) {
                 TriangulationPoint tp1, tp2;
 
-                if (!pointSet.containsKey(l.getBegin())){
+                if (!pointSet.containsKey(l.getBegin())) {
                     tp1 = new TPoint(l.getBegin().x, l.getBegin().y);
                     pointSet.put(l.getBegin(), tp1);
                     points.add(tp1);
                 } else {
                     tp1 = pointSet.get(l.getBegin());
                 }
-                if (!pointSet.containsKey(l.getEnd())){
+                if (!pointSet.containsKey(l.getEnd())) {
                     tp2 = new TPoint(l.getEnd().x, l.getEnd().y);
                     pointSet.put(l.getEnd(), tp2);
                     points.add(tp2);
@@ -186,13 +179,11 @@ public class Poly2TriUtil {
         }
     }
 
-    public static final List<Triangle2d> triangulate(PolygonList2d polygon,
-            Collection<PolygonList2d> holes,
+    public static final List<Triangle2d> triangulate(PolygonList2d polygon, Collection<PolygonList2d> holes,
             Collection<LineSegment2d> segments, Collection<Point2d> points) {
 
         CDTSet cdt = new CDTSet(polygon, holes, segments, points);
-        TriangulationContext<?> tcx = Poly2Tri
-                .createContext(TriangulationAlgorithm.DTSweep);
+        TriangulationContext<?> tcx = Poly2Tri.createContext(TriangulationAlgorithm.DTSweep);
         tcx.prepareTriangulation(cdt);
 
         Poly2Tri.triangulate(tcx);
@@ -212,15 +203,15 @@ public class Poly2TriUtil {
 
             boolean triangleInHole = false;
             for (PolygonList2d hole : holes) {
-                if (PolygonUtil.isInside(center, hole)) {
-                    //if (hole.contains(center)) {
+                if (PolygonUtil.isPointInsidePolygon(center, hole)) {
+                    // if (hole.contains(center)) {
                     triangleInHole = true;
                     break;
                 }
             }
 
-            if (triangleInHole || !PolygonUtil.isInside(center, polygon)) {
-                //			if (triangleInHole || !polygon.contains(center))
+            if (triangleInHole || !PolygonUtil.isPointInsidePolygon(center, polygon)) {
+                // if (triangleInHole || !polygon.contains(center))
                 continue;
             }
 

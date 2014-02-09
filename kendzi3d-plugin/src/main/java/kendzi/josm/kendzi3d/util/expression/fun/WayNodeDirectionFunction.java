@@ -31,7 +31,7 @@ public class WayNodeDirectionFunction extends AbstractSimpleFunction<Double> {
         }
         Vector2d bisector = getRequiredContextVariable("bisector", context, Vector2d.class);
 
-        return Math.toDegrees(AngleUtil.angle(Vector2dUtil.orthogonal(bisector))) + argument;
+        return Math.toDegrees(AngleUtil.angle(Vector2dUtil.orthogonalLeft(bisector))) + argument;
     }
 
     @Override

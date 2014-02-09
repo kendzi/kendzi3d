@@ -13,7 +13,7 @@ public class WayNodeDirectionFunction extends ZeroParamFunction implements Named
 
         Vector2d bisector = Context.getRequiredContextVariable("bisector", context, Vector2d.class);
 
-        return Math.toDegrees(AngleUtil.angle(Vector2dUtil.orthogonal(bisector)));
+        return Math.toDegrees(AngleUtil.angle(Vector2dUtil.orthogonalLeft(bisector)));
     }
 
     public String functionName() {

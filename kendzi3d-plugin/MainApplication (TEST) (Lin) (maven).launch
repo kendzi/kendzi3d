@@ -19,5 +19,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--language=en&#13;&#10;&quot;/home/kendzi/josm_dev/test.osm&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="kendzi3d-plugin"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms1024m -Xmx6048m&#13;&#10;-Djosm.home=/home/kendzi/josm_dev/&#13;&#10;-Dsun.java2d.noddraw=true&#13;&#10;-Djogl.debug.GraphicsConfiguration=true&#13;&#10;-Dkendzi3d.opengl.sampleBuffers=true&#13;&#10;-Dkendzi3d.opengl.zbuffer=16&#13;&#10;-Djogl.debug=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms1024m -Xmx6048m&#13;&#10;-Djosm.home=/home/kendzi/josm_dev/&#13;&#10;-Dsun.java2d.noddraw=true&#13;&#10;-D_jogl.debug.GraphicsConfiguration=true&#13;&#10;-Dkendzi3d.opengl.sampleBuffers=true&#13;&#10;-Dkendzi3d.opengl.zbuffer=16&#13;&#10;-Djogl.debug=true"/>
 </launchConfiguration>

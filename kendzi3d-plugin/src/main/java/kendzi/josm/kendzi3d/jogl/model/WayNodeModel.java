@@ -267,7 +267,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     private Vector2d getBisector(Point2d p1, Point2d p2) {
-        return Vector2dUtil.ortagonalRight(Vector2dUtil.fromTo(p1, p2));
+        return Vector2dUtil.orthogonalRight(Vector2dUtil.fromTo(p1, p2));
     }
 
     private Vector2d getBisector(Point2d p1, Point2d p2, Point2d p3) {

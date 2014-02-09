@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.trees;
@@ -18,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
@@ -46,7 +44,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing trees in row model.
- *
+ * 
  * @author Tomasz Kedziora (Kendzi)
  */
 public class Forest extends AbstractWayModel {
@@ -79,12 +77,12 @@ public class Forest extends AbstractWayModel {
     private List<HeightCluster> clusterHook;
 
     /**
-     * @param pWay way
-     * @param pPerspective3D perspective
+     * @param pWay
+     *            way
+     * @param pPerspective3D
+     *            perspective
      */
-    public Forest(Way pWay, Perspective3D pPerspective3D,
-            ModelRender pModelRender,
-            ModelCacheService modelCacheService,
+    public Forest(Way pWay, Perspective3D pPerspective3D, ModelRender pModelRender, ModelCacheService modelCacheService,
             MetadataCacheService metadataCacheService) {
         super(pWay, pPerspective3D);
 
@@ -130,8 +128,6 @@ public class Forest extends AbstractWayModel {
 
         this.numOfTrees = ModelUtil.parseInteger(this.way.get("tree"), null);
 
-
-
         if (this.hookPoints == null) {
             this.hookPoints = calsHookPoints(this.points, this.numOfTrees);
 
@@ -141,9 +137,7 @@ public class Forest extends AbstractWayModel {
 
             Point2d minBound = minBound(this.points);
 
-            this.clusterHook = calcClusterHooks(
-                    this.hookPoints, minBound, CLUSTER_SIZE,
-                    HeightCluster.class);
+            this.clusterHook = calcClusterHooks(this.hookPoints, minBound, CLUSTER_SIZE, HeightCluster.class);
 
             calcHeight(this.clusterHook);
 
@@ -156,7 +150,7 @@ public class Forest extends AbstractWayModel {
         for (HeightCluster heightCluster : clusterHooks) {
             List<Point2d> hook = heightCluster.getHook();
 
-            double [] heights = new double[hook.size()];
+            double[] heights = new double[hook.size()];
             for (int i = 0; i < hook.size(); i++) {
                 heights[i] = randHeight();
             }
@@ -170,10 +164,8 @@ public class Forest extends AbstractWayModel {
         return randomNumberGenerator.nextDouble() / 2d + 0.5;
     }
 
-
-    private <T extends Cluster> ArrayList<T> calcClusterHooks(
-            List<Point2d> pHookPoints2, Point2d pMinBound,
-            double pClusterSize, Class<T> clazz ) {
+    private <T extends Cluster> ArrayList<T> calcClusterHooks(List<Point2d> pHookPoints2, Point2d pMinBound, double pClusterSize,
+            Class<T> clazz) {
 
         Point2d minBound = pMinBound;
 
@@ -191,26 +183,25 @@ public class Forest extends AbstractWayModel {
         int clusterXMax = (int) Math.ceil(width / pClusterSize);
         int clusterYMax = (int) Math.ceil(height / pClusterSize);
 
-//        T [][] cluster = new T [clusterYMax][];
+        // T [][] cluster = new T [clusterYMax][];
 
+        T[] clusters = (T[]) Array.newInstance(clazz, clusterYMax * clusterXMax);
 
-        T [] clusters =
-                (T[]) Array.newInstance(clazz, clusterYMax * clusterXMax);
+        // new T [clusterYMax][];
 
-//                new T [clusterYMax][];
-
-//        for (int i = 0; i < clusterYMax; i++) {
-//
-//
-////            cluster[i] = new Cluster [clusterXMax];
-//            // Use Array native method to create arra of a type only known at run time
-//            cluster[i] = (T[]) Array.newInstance(clazz, clusterXMax);
-////            cluster[i] = (T[])new Object[clusterXMax];
-//        }
+        // for (int i = 0; i < clusterYMax; i++) {
+        //
+        //
+        // // cluster[i] = new Cluster [clusterXMax];
+        // // Use Array native method to create arra of a type only known at run
+        // time
+        // cluster[i] = (T[]) Array.newInstance(clazz, clusterXMax);
+        // // cluster[i] = (T[])new Object[clusterXMax];
+        // }
 
         for (int y = 0; y < clusterYMax; y++) {
             for (int x = 0; x < clusterXMax; x++) {
-//                Cluster c = new Cluster();
+                // Cluster c = new Cluster();
 
                 T c = null;
                 try {
@@ -223,20 +214,17 @@ public class Forest extends AbstractWayModel {
                     e.printStackTrace();
                 }
 
-                c.setCenter(new Point3d(
-                        minX + (pClusterSize/2) + pClusterSize * x,
-                        0,
-                        -(minY + (pClusterSize/2) + pClusterSize * y)
-                        ));
+                c.setCenter(new Point3d(minX + pClusterSize / 2 + pClusterSize * x, 0, -(minY + pClusterSize / 2 + pClusterSize
+                        * y)));
 
-//                cluster[y][x] = c;
+                // cluster[y][x] = c;
                 clusters[clusterXMax * y + x] = c;
             }
         }
 
         for (Point2d p : pHookPoints2) {
-            int clusterX = (int) Math.floor(( p.x - minX) / pClusterSize);
-            int clusterY = (int) Math.floor(( p.y - minY) / pClusterSize);
+            int clusterX = (int) Math.floor((p.x - minX) / pClusterSize);
+            int clusterY = (int) Math.floor((p.y - minY) / pClusterSize);
 
             clusters[clusterXMax * clusterY + clusterX].getHook().add(p);
 
@@ -253,7 +241,7 @@ public class Forest extends AbstractWayModel {
     }
 
     static class HeightCluster extends Cluster {
-        double [] height;
+        double[] height;
 
         /**
          * @return the height
@@ -263,7 +251,8 @@ public class Forest extends AbstractWayModel {
         }
 
         /**
-         * @param height the height to set
+         * @param height
+         *            the height to set
          */
         public void setHeight(double[] height) {
             this.height = height;
@@ -287,20 +276,25 @@ public class Forest extends AbstractWayModel {
         public List<Point2d> getHook() {
             return this.hook;
         }
+
         /**
-         * @param hook the hook to set
+         * @param hook
+         *            the hook to set
          */
         public void setHook(List<Point2d> hook) {
             this.hook = hook;
         }
+
         /**
          * @return the center
          */
         public Point3d getCenter() {
             return this.center;
         }
+
         /**
-         * @param center the center to set
+         * @param center
+         *            the center to set
          */
         public void setCenter(Point3d center) {
             this.center = center;
@@ -328,9 +322,10 @@ public class Forest extends AbstractWayModel {
     }
 
     /**
-     *  Minimal values in polygon. Minimal coordinates of bounding box.
-     *
-     * @param pPolygon polygon
+     * Minimal values in polygon. Minimal coordinates of bounding box.
+     * 
+     * @param pPolygon
+     *            polygon
      * @return minimal values
      */
     public static Point2d minBound(List<Point2d> points) {
@@ -351,9 +346,10 @@ public class Forest extends AbstractWayModel {
     }
 
     /**
-     *  Maximal values in polygon. Maximal coordinates of bounding box.
-     *
-     * @param pPolygon polygon
+     * Maximal values in polygon. Maximal coordinates of bounding box.
+     * 
+     * @param pPolygon
+     *            polygon
      * @return maximal values
      */
     public static Point2d maxBound(List<Point2d> points) {
@@ -373,10 +369,13 @@ public class Forest extends AbstractWayModel {
         return new Point2d(maxX, maxY);
     }
 
-
-    /** Generate hook for trees using monte carlo method.
-     * @param polygon polygon
-     * @param numOfTrees num of trees
+    /**
+     * Generate hook for trees using monte carlo method.
+     * 
+     * @param polygon
+     *            polygon
+     * @param numOfTrees
+     *            num of trees
      * @return hooks for trees
      */
     private List<Point2d> monteCarloHookGenerator(PolygonList2d polygon, Integer numOfTrees) {
@@ -399,9 +398,9 @@ public class Forest extends AbstractWayModel {
             double x = minX + randomNumberGenerator.nextDouble() * width;
             double y = minY + randomNumberGenerator.nextDouble() * height;
 
-            Point2d hook = new Point2d(x,y);
+            Point2d hook = new Point2d(x, y);
 
-            if (PolygonUtil.isInside(hook, polygon)) {
+            if (PolygonUtil.isPointInsidePolygon(hook, polygon)) {
                 ret.add(hook);
             }
 
@@ -431,17 +430,15 @@ public class Forest extends AbstractWayModel {
 
         Vector2d repeat = beginVector;
 
-
         do {
             ret.add(new Point2d(b.x + repeat.x, b.y + repeat.y));
 
             repeat.add(everyVector);
 
-
-        } while ( distance + EPSILON >= repeat.length());
+        } while (distance + EPSILON >= repeat.length());
 
         return repeat.length() - distance;
-//        return distance - (repeat.length() - everyVector.length());
+        // return distance - (repeat.length() - everyVector.length());
 
     }
 
@@ -453,7 +450,7 @@ public class Forest extends AbstractWayModel {
         double distance = 0;
 
         Point2d b = points.get(0);
-        for (int i = 1 ; i<points.size(); i ++) {
+        for (int i = 1; i < points.size(); i++) {
             Point2d e = points.get(i);
             distance = distance + e.distance(b);
 
@@ -478,13 +475,8 @@ public class Forest extends AbstractWayModel {
         this.scale.y = modelScaleHeight;
         this.scale.z = modelScaleWidht;
 
-//        model2.useScale = true;
+        // model2.useScale = true;
     }
-
-
-
-
-
 
     public boolean isModelBuild(LOD pLod) {
 
@@ -494,12 +486,8 @@ public class Forest extends AbstractWayModel {
         return false;
     }
 
-
-
-
     public void draw(GL2 gl, Camera camera, LOD pLod) {
         Model model2 = this.modelLod.get(pLod);
-
 
         if (model2 != null) {
 
@@ -509,7 +497,7 @@ public class Forest extends AbstractWayModel {
                 dl = createDisplayList(gl, model2);
             }
 
-            gl.glEnable(GL2.GL_NORMALIZE);
+            gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
             for (Point2d hook : this.hookPoints) {
 
@@ -519,16 +507,15 @@ public class Forest extends AbstractWayModel {
 
                 gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
 
-//                this.modelRender.render(gl, model2);
+                // this.modelRender.render(gl, model2);
                 gl.glCallList(dl);
 
                 gl.glPopMatrix();
             }
 
-            gl.glDisable(GL2.GL_NORMALIZE);
+            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
         }
     }
-
 
     private int createDisplayList(GL2 gl, Model model2) {
 
@@ -540,14 +527,14 @@ public class Forest extends AbstractWayModel {
 
         // compile the display list, store a triangle in it
         gl.glNewList(index, GL2.GL_COMPILE);
-//            glBegin(GL_TRIANGLES);
-//            glVertex3fv(v0);
-//            glVertex3fv(v1);
-//            glVertex3fv(v2);
-//            glEnd();
+        // glBegin(GL_TRIANGLES);
+        // glVertex3fv(v0);
+        // glVertex3fv(v1);
+        // glVertex3fv(v2);
+        // glEnd();
         this.modelRender.resetFaceCount();
         this.modelRender.render(gl, model2);
-        log.info("***> face count: " + this.modelRender.getFaceCount() );
+        log.info("***> face count: " + this.modelRender.getFaceCount());
 
         gl.glEndList();
 
@@ -564,13 +551,10 @@ public class Forest extends AbstractWayModel {
 
     @Override
     public void draw(GL2 gl, Camera camera) {
-//        draw(gl, camera, LOD.LOD1);
+        // draw(gl, camera, LOD.LOD1);
 
-        Point3d localCamera = new Point3d(
-                camera.getPoint().x - this.getGlobalX(),
-                camera.getPoint().y,
-                camera.getPoint().z + this.getGlobalY()
-                );
+        Point3d localCamera = new Point3d(camera.getPoint().x - this.getGlobalX(), camera.getPoint().y, camera.getPoint().z
+                + this.getGlobalY());
 
         for (HeightCluster c : this.clusterHook) {
 
@@ -590,7 +574,6 @@ public class Forest extends AbstractWayModel {
 
             Model model2 = this.modelLod.get(lod);
 
-
             if (model2 != null) {
 
                 Integer dl = getDisplayList(model2);
@@ -599,7 +582,7 @@ public class Forest extends AbstractWayModel {
                     dl = createDisplayList(gl, model2);
                 }
 
-                gl.glEnable(GL2.GL_NORMALIZE);
+                gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
                 int i = 0;
                 for (Point2d hook : hookPoints) {
@@ -612,21 +595,19 @@ public class Forest extends AbstractWayModel {
 
                     gl.glScaled(this.scale.x * height, this.scale.y * height, this.scale.z * height);
 
-//                    this.modelRender.render(gl, model2);
+                    // this.modelRender.render(gl, model2);
                     gl.glCallList(dl);
 
                     gl.glPopMatrix();
                     i++;
                 }
 
-                gl.glDisable(GL2.GL_NORMALIZE);
+                gl.glDisable(GLLightingFunc.GL_NORMALIZE);
             }
 
         }
 
-
     }
-
 
     public Point3d getPoint() {
         return new Point3d(this.x, 0, -this.y);
@@ -637,8 +618,5 @@ public class Forest extends AbstractWayModel {
         // TODO Auto-generated method stub
         return null;
     }
-
-
-
 
 }
