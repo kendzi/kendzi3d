@@ -36,7 +36,7 @@ public class RectangleTypeRoofUtil {
      */
     public static Vector2d snapsDirectionToOutline(Vector2d frontDirection, PolygonList2d polygon) {
 
-        Vector2d direction = Vector2dUtil.orthogonal(frontDirection);
+        Vector2d direction = Vector2dUtil.orthogonalLeft(frontDirection);
         List<Point2d> points = polygon.getPoints();
 
         double maxD = -Double.MAX_VALUE;
@@ -69,7 +69,7 @@ public class RectangleTypeRoofUtil {
             return null;
         }
 
-        maxV = Vector2dUtil.orthogonal(maxV);
+        maxV = Vector2dUtil.orthogonalLeft(maxV);
 
         if (maxV.dot(frontDirection) < 0) {
             maxV.negate();

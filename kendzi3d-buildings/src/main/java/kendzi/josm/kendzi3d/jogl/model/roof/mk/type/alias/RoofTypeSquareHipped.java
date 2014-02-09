@@ -9,11 +9,11 @@ package kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType2v4;
 
 /**
- * Roof type hipped.
+ * Roof type square hipped.
  * 
  * @author Tomasz Kędziora (Kendzi)
  * 
  */
-public class RoofTypeHipped extends RoofType2v4 {
+public class RoofTypeSquareHipped extends RoofType2v4 {
 
 }

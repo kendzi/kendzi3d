@@ -297,9 +297,9 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
             ret[i] = n;
         }
 
-        ret[0] = Vector2dUtil.orthogonal(normals[0]);
+        ret[0] = Vector2dUtil.orthogonalLeft(normals[0]);
 
-        ret[crossSection.length - 1] = Vector2dUtil.orthogonal(normals[normals.length - 1]);
+        ret[crossSection.length - 1] = Vector2dUtil.orthogonalLeft(normals[normals.length - 1]);
 
         for (Vector2d element : ret) {
             element.negate();

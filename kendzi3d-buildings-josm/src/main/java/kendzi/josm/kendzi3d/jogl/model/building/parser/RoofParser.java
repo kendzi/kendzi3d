@@ -31,12 +31,14 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class RoofParser {
 
-    /** Parse roof model from way.
+    /**
+     * Parse roof model from way.
+     * 
      * @param primitive
      * @param perspective
      * @return roof model
@@ -77,7 +79,7 @@ public class RoofParser {
      */
     private static DormerRoofModel parseDormerRoof(OsmPrimitive primitive, Perspective perspective) {
 
-        DormerRoofModel roof = new  DormerRoofModel();
+        DormerRoofModel roof = new DormerRoofModel();
 
         String type = parseRoofShape(primitive);
 
@@ -94,10 +96,10 @@ public class RoofParser {
         String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
 
         roof.setDormers(Parser.parseMultipleDormers(dormer));
-        roof.setDormersFront(Parser.parseSiteDormers("front",keys));
-        roof.setDormersLeft(Parser.parseSiteDormers("left",keys));
-        roof.setDormersBack(Parser.parseSiteDormers("back",keys));
-        roof.setDormersRight(Parser.parseSiteDormers("right",keys));
+        roof.setDormersFront(Parser.parseSiteDormers("front", keys));
+        roof.setDormersLeft(Parser.parseSiteDormers("left", keys));
+        roof.setDormersBack(Parser.parseSiteDormers("back", keys));
+        roof.setDormersRight(Parser.parseSiteDormers("right", keys));
 
         Map<MeasurementKey, Measurement> measurements = Parser.parseMeasurements(keys);
 
@@ -122,47 +124,40 @@ public class RoofParser {
 
         roof.setDirection(findDirection(primitive, perspective));
         RoofOrientation parseOrientation = Parser.parseOrientation(keys);
-        if (parseOrientation == null) {
-            parseOrientation = RoofOrientation.along;
-        }
 
         roof.setOrientation(parseOrientation);
-
 
         return roof;
     }
 
     /**
      * Find roof direction saved in tag.
-     *
-     * @param pWay way
+     * 
+     * @param pWay
+     *            way
      * @return roof direction
      */
     private static RoofFrontDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
 
-        RoofFrontDirection roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
+        RoofFrontDirection roofDirection = parseDirectionStr(OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         if (roofDirection != null) {
             return roofDirection;
         }
 
-        roofDirection = parseDirectionStr(
-                OsmAttributeKeys.DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
+        roofDirection = parseDirectionStr(OsmAttributeKeys.DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         if (roofDirection != null) {
             return roofDirection;
         }
 
-        roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay), Ortagonal.LEFT);
+        roofDirection = parseDirectionStr(OsmAttributeKeys.ROOF_RIDGE_DIRECTION.primitiveValue(pWay), Ortagonal.LEFT);
 
         if (roofDirection != null) {
             return roofDirection;
         }
 
-        roofDirection = parseDirectionStr(
-                OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
+        roofDirection = parseDirectionStr(OsmAttributeKeys.ROOF_SLOPE_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
 
         return roofDirection;
 
@@ -192,9 +187,7 @@ public class RoofParser {
     }
 
     enum Ortagonal {
-        NONE,
-        LEFT,
-        RIGHT
+        NONE, LEFT, RIGHT
     }
 
     private static RoofFrontDirection findDirection(OsmPrimitive pWay, Perspective pPerspective) {
@@ -212,13 +205,12 @@ public class RoofParser {
                 return new RoofFrontDirection(direction, soft);
             }
         } else {
-            //TODO
+            // TODO
         }
 
         return findDirectionByDirectionTag(pWay);
 
     }
-
 
     private static Vector2d findDirectionByRelation(OsmPrimitive osmPrimitive, Perspective perspective) {
         if (osmPrimitive instanceof Relation) {
@@ -263,7 +255,7 @@ public class RoofParser {
         Point2d directionBegin = null;
         Point2d directionEnd = null;
 
-        for (int i = pWay.getNodesCount() - 1; i >=0; i--) {
+        for (int i = pWay.getNodesCount() - 1; i >= 0; i--) {
             Node node = pWay.getNode(i);
             if (OsmAttributeKeys._3DR_DIRECTION.primitiveKeyHaveValue(node, OsmAttributeValues.BEGIN)) {
                 direction3drBegin = pPerspective.calcPoint(node);
@@ -287,7 +279,7 @@ public class RoofParser {
         if (direction3drBegin != null && direction3drEnd != null) {
             Vector2d direction = new Vector2d(direction3drEnd);
             direction.sub(direction3drBegin);
-            return Vector2dUtil.ortagonalRight(direction);
+            return Vector2dUtil.orthogonalRight(direction);
         }
 
         if (directionBegin != null && directionEnd != null) {

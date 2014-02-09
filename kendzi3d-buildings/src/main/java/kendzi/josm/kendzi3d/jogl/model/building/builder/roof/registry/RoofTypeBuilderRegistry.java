@@ -35,7 +35,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfRound;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHipped;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquareHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeMansard;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
@@ -57,7 +57,8 @@ public class RoofTypeBuilderRegistry {
     /**
      * Chose builder depending on roof type.
      * 
-     * @param roofTypeEnum roof type
+     * @param roofTypeEnum
+     *            roof type
      * @return roof builder
      */
     public static RoofTypeBuilder selectBuilder(RoofTypeAliasEnum roofTypeEnum) {
@@ -76,7 +77,11 @@ public class RoofTypeBuilderRegistry {
         case HALF_HIPPED:
             return new RoofTypeHalfHipped();
         case HIPPED:
-            return new RoofTypeHipped();
+            return new kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofTypeHipped();
+        case SQUARE_HIPPED:
+            return new RoofTypeSquareHipped();
+        case COMPLEX_HIPPED:
+            return new RoofType9v0();
         case SQUARE_PYRAMIDAL:
             return new RoofTypeSquarePyramidal();
         case PYRAMIDAL:

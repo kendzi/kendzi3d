@@ -6,15 +6,13 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
-import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
@@ -23,7 +21,6 @@ import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.PolygonRoofHooksSpace;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
@@ -33,12 +30,15 @@ import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
+import kendzi.math.geometry.point.Tuple2dUtil;
+import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2dUtil;
+import kendzi.math.geometry.skeleton.EdgeOutput;
 import kendzi.math.geometry.skeleton.Skeleton;
-import kendzi.math.geometry.skeleton.Skeleton.SkeletonOutput;
+import kendzi.math.geometry.skeleton.SkeletonOutput;
 
 import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
@@ -48,6 +48,7 @@ import org.ejml.simple.SimpleMatrix;
  * 
  * @author Tomasz Kędziora (Kendzi)
  * 
+ *         TODO rename to RoofTypeComplexHipped
  */
 public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
@@ -55,52 +56,108 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
     private static final Logger log = Logger.getLogger(RoofType9v0.class);
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
+    public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
             double height, RoofMaterials roofTextureData) {
 
-        List<Point2d> polygon = buildingPolygon.getOuter().getPoints();
-        List<PolygonList2d> inners = buildingPolygon.getInner();
-
-        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
-
+        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-startPoint.x, -startPoint.y);
         PolygonWithHolesList2d buildingTransformed = PolygonWithHolesList2dUtil.transform(buildingPolygon, transformLocal);
+
+        Measurement measurement = roof.getMeasurements().get(MeasurementKey.HEIGHT_1);
 
         Double h1 = null;
         Double angle = null;
-        Measurement measurement = pRoof.getMeasurements().get(MeasurementKey.HEIGHT_1);
+
         if (isUnit(measurement, MeasurementUnit.DEGREES)) {
             angle = measurement.getValue();
         } else {
-            h1 = getHeightMeters(pRoof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
+            h1 = getHeightMeters(roof.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
         }
 
         RoofTypeOutput rto = build(buildingTransformed, h1, angle, 0, 0, roofTextureData);
 
-        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(), -pStartPoint.y);
+        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(startPoint.x, height - rto.getHeight(), -startPoint.y);
         rto.setTransformationMatrix(transformGlobal);
 
         return rto;
-
     }
 
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingTransformed, Double h1, Double angle, double l1, double l2,
             RoofMaterials roofTextureData) {
+
+        log.info(debugPolygon(buildingTransformed));
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        // // XXX temporary ?
-        // if (0.0f > Triangulate.area(pBorderList)) {
-        //
-        // pBorderList = PolygonList2d.reverse(pBorderList);
-        // }
-
-        log.info("** TO TEST IN JUNIT TEST: **");
         List<Point2d> outer = buildingTransformed.getOuter().getPoints();
+        List<List<Point2d>> inners = PolygonWithHolesList2dUtil.getListOfHolePoints(buildingTransformed);
+
+        SkeletonOutput sk = Skeleton.skeleton(outer, inners);
+
+        // List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new
+        // ArrayList<PolygonRoofHooksSpace>();
+        Map<Point2d, Double> distance = new IdentityHashMap<Point2d, Double>();
+
+        calcDistances(sk, distance);
+
+        double heightFactor = calcDistanceToHeight(distance, h1, angle);
+
+        for (EdgeOutput edgeOutput : sk.getEdgeOutputs()) {
+            PolygonList2d polygon = edgeOutput.getPolygon();
+            List<Point2d> points = polygon.getPoints();
+
+            if (points.size() < 3) {
+                log.error("not enought vertex for face");
+                continue;
+            }
+
+            LineSegment2d edge = sk.getEdges().get(polygon);
+
+            Vector3d edgeNormal = new Vector3d(edge.getEnd().x - edge.getBegin().x, 0, -(edge.getEnd().y - edge.getBegin().y));
+
+            Plane3d plane = createEdgePlane(edge, heightFactor);
+
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, new MultiPolygonList2d(polygon), plane, edgeNormal, roofTexture);
+
+            // Vector2d v1 = new Vector2d(edge.getEnd());
+            // v1.sub(edge.getBegin());
+            //
+            // PolygonRoofHooksSpace hookSpace =
+            // RectangleRoofTypeBuilder.buildRecHookSpace(edge.getBegin(), v1,
+            // new PolygonPlane(
+            // multiPolygonList2d, plane));
+            // polygonRoofHooksSpace.add(hookSpace);
+        }
+
+        RoofTypeOutput rto = new RoofTypeOutput();
+
+        rto.setHeight(findMaxDistance(distance));
+
+        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
+
+        rto.setRectangle(RoofTypeUtil.findRectangle(outer, 0));
+
+        return rto;
+    }
+
+    private Plane3d createEdgePlane(LineSegment2d edge, double heightFactor) {
+
+        Vector3d faceNormal = calcFaceNormal(edge, heightFactor);
+
+        return new Plane3d(new Point3d(edge.getBegin().x, 0, -edge.getBegin().y), faceNormal);
+    }
+
+    private String debugPolygon(PolygonWithHolesList2d buildingTransformed) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("** Debug for polygon **\n");
+
+        List<Point2d> outer = buildingTransformed.getOuter().getPoints();
+        sb.append("List<Point2d> polygon = new ArrayList<Point2d>();\n");
+
         for (Point2d p : outer) {
-            log.info("polygon.add(new Point2d(" + p.x + ",  " + p.y + "));");
+            sb.append("polygon.add(new Point2d(" + p.x + ",  " + p.y + "));\n");
         }
 
         List<List<Point2d>> inners = PolygonWithHolesList2dUtil.getListOfHolePoints(buildingTransformed);
@@ -108,69 +165,17 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         int holeCount = 0;
         for (List<Point2d> polygonList2d : inners) {
             holeCount++;
-            log.info("hole: " + holeCount);
+            sb.append("\nList<Point2d> hole" + holeCount + " = new ArrayList<Point2d>();\n");
             for (Point2d p : polygonList2d) {
-                log.info("hole.add(new Point2d(" + p.x + ",  " + p.y + "));");
+                sb.append("hole" + holeCount + ".add(new Point2d(" + p.x + ",  " + p.y + "));\n");
             }
         }
 
-        log.info("****");
-
-        SkeletonOutput sk = Skeleton.skeleton(outer, inners);
-
-        List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new ArrayList<PolygonRoofHooksSpace>();
-        Map<Point2d, Double> distance = new HashMap<Point2d, Double>();
-        calcDistance(sk, distance);
-
-        calcDistanceToHeight(distance, h1, angle);
-
-        for (PolygonList2d polygon : sk.getFaces()) {
-            List<Point2d> points = polygon.getPoints();
-
-            if (points.size() < 3) {
-                log.error("blad za malo wiezcholkow !!!!!!");
-                continue;
-            }
-
-            LineSegment2d edge = sk.getEdges().get(polygon);
-            Vector3d faceNormal = calcNormal(edge, points, distance);
-
-            MultiPolygonList2d multiPolygonList2d = new MultiPolygonList2d(polygon);
-
-            Vector3d faceEdgeNormal = new Vector3d(edge.getEnd().x - edge.getBegin().x, 0, -(edge.getEnd().y - edge.getBegin().y));
-
-            Plane3d plane = new Plane3d(new Point3d(edge.getBegin().x, 0, -edge.getBegin().y), faceNormal);
-
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, multiPolygonList2d, plane, faceEdgeNormal, roofTexture);
-
-            Vector2d v1 = new Vector2d(edge.getEnd());
-            v1.sub(edge.getBegin());
-            PolygonRoofHooksSpace hookSpace = RectangleRoofTypeBuilder.buildRecHookSpace(edge.getBegin(), v1, new PolygonPlane(
-                    multiPolygonList2d, plane));
-            polygonRoofHooksSpace.add(hookSpace);
-        }
-
-        RoofTypeOutput rto = new RoofTypeOutput();
-        rto.setHeight(findMaxDistance(distance));
-
-        rto.setMesh(Arrays.asList(meshBorder, meshRoof));
-
-        // FIXME
-        // TODO
-        // XXX
-        // !!!
-        rto.setRoofHooksSpaces(null);
-
-        // rto.setRoofHooksSpaces(
-        // polygonRoofHooksSpace.toArray(
-        // new RoofHooksSpace [polygonRoofHooksSpace.size()]));
-
-        rto.setRectangle(RoofTypeUtil.findRectangle(outer, 0));
-
-        return rto;
+        sb.append("****");
+        return sb.toString();
     }
 
-    private void calcDistanceToHeight(Map<Point2d, Double> distance, Double h1, Double angle) {
+    private double calcDistanceToHeight(Map<Point2d, Double> distance, Double h1, Double angle) {
 
         double correction = 1;
 
@@ -189,6 +194,8 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
                 distance.put(p, d * correction);
             }
         }
+
+        return correction;
     }
 
     private double findMaxDistance(Map<Point2d, Double> distance) {
@@ -205,8 +212,10 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         return maxDistance;
     }
 
-    private void calcDistance(SkeletonOutput sk, Map<Point2d, Double> distance) {
-        for (PolygonList2d polygon : sk.getFaces()) {
+    private void calcDistances(SkeletonOutput sk, Map<Point2d, Double> distance) {
+
+        for (EdgeOutput edgeOutput : sk.getEdgeOutputs()) {
+            PolygonList2d polygon = edgeOutput.getPolygon();
             LineSegment2d edge = sk.getEdges().get(polygon);
             List<Point2d> points = polygon.getPoints();
             calcDistance(edge, points, distance);
@@ -225,39 +234,19 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         }
     }
 
-    private Vector3d calcNormal(LineSegment2d edge, List<Point2d> points, Map<Point2d, Double> distance) {
+    private Vector3d calcFaceNormal(LineSegment2d edge, double heightFactor) {
+        Vector2d edgeVector = Vector2dUtil.fromTo(edge.getBegin(), edge.getEnd());
+        edgeVector.normalize();
 
-        Point2d p1 = edge.getBegin();
-        Point2d p2 = edge.getEnd();
-        Point2d p3 = null;
+        Vector2d edgeOrthogonal = Vector2dUtil.orthogonalLeft(edgeVector);
 
-        double d3 = -Double.MAX_VALUE;
-        for (Point2d p : points) {
-            Double d = distance.get(p);
-
-            if (d3 < d) {
-                d3 = d;
-                p3 = p;
-            }
-
-            // if (d3 > 1) {
-            // break;
-            // }
-        }
-
-        Double d1 = distance.get(p1);
-        Double d2 = distance.get(p2);
-
-        // Due Bug in skeleton algorithm recalculate distance
-        // XXX
-        // d3 = calcDistance(p3, edge);
-
-        Vector3d v1 = new Vector3d(p2.x - p1.x, d2 - d1, -p2.y + p1.y);
-        Vector3d v2 = new Vector3d(p3.x - p2.x, d3 - d2, -p3.y + p2.y);
+        Vector3d v1 = new Vector3d(edgeVector.x, 0, -edgeVector.y);
+        Vector3d v2 = new Vector3d(edgeOrthogonal.x, heightFactor, -edgeOrthogonal.y);
 
         v1.cross(v1, v2);
         v1.normalize();
         return v1;
+
     }
 
     private static double calcDistance(Point2d pIntersect, LineSegment2d edgeLine) {
@@ -269,24 +258,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
         Vector2d pointOnVector = Algebra.orthogonalProjection(edge, intersect);
 
-        return distance(intersect, pointOnVector);
-    }
-
-    /**
-     * Computes the distance between this point and point p1.
-     * 
-     * @param p0
-     * 
-     * @param p1
-     *            the other point
-     * @return
-     */
-    private static double distance(Tuple2d p0, Tuple2d p1) {
-        double dx, dy;
-
-        dx = p0.x - p1.x;
-        dy = p0.y - p1.y;
-        return Math.sqrt(dx * dx + dy * dy);
+        return Tuple2dUtil.distance(intersect, pointOnVector);
     }
 
 }
