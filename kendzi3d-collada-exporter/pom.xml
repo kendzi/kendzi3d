@@ -17,17 +17,17 @@
 		<dependency> 
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.175-SNAPSHOT</version>
+			<version>1.0.175</version>
 		</dependency>
 		<dependency> 
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model-util</artifactId>
-			<version>1.0.175-SNAPSHOT</version>
+			<version>1.0.175</version>
 		</dependency>
 		<dependency> 
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-buildings</artifactId>
-			<version>1.0.175-SNAPSHOT</version>
+			<version>1.0.175</version>
 			<scope>test</scope>
 		</dependency>		
 		<dependency>
@@ -51,7 +51,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.175-SNAPSHOT</version>
+		<version>1.0.175</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
