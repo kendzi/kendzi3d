@@ -10,7 +10,7 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.model.PointModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
@@ -18,12 +18,12 @@ import org.openstreetmap.josm.actions.ToggleAction;
 import com.google.inject.Inject;
 
 /**
- * Debug toggle action.
+ * Debug model library toggle action.
  * 
  * @author Tomasz Kędziora (Kendzi)
  * 
  */
-public class DebugToggleAction extends ToggleAction {
+public class DebugPointModelToggleAction extends ToggleAction {
 
     /**
      *
@@ -33,12 +33,7 @@ public class DebugToggleAction extends ToggleAction {
     /**
      * Debug view property key.
      */
-    public final static String KENDZI_3D_DEBUG_VIEW = "kendzi3d.debug.view";
-
-    /**
-     * Model render.
-     */
-    private ModelRender modelRender;
+    public final static String KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW = "kendzi3d.model.library.debug";
 
     /**
      * Constructor of debug toggle action.
@@ -47,14 +42,15 @@ public class DebugToggleAction extends ToggleAction {
      *            model render
      */
     @Inject
-    public DebugToggleAction(ModelRender pModelRender) {
-        super(tr("Debug View"), "1306318261_debugger__24", tr("Enable/disable display debug information"), null, false);
+    public DebugPointModelToggleAction() {
+        super(tr("Debug models library"), "1306318261_debugger__24",
+                tr("Enable/disable display debug information for model library"), null, false);
 
-        this.modelRender = pModelRender;
-
+        // putValue("help", ht("/Action/FullscreenView"));
+        // putValue("toolbar", "fullscreen");
         Main.toolbar.register(this);
 
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_DEBUG_VIEW, false);
+        boolean selected = Main.pref.getBoolean(KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW, false);
 
         setSelected(selected);
 
@@ -67,23 +63,15 @@ public class DebugToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.put(KENDZI_3D_DEBUG_VIEW, selected);
+        Main.pref.put(KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW, selected);
         notifySelectedState();
 
         setState(selected);
-
     }
 
-    /**
-     * @param pEnable
-     *            enable debug
-     */
-    private void setState(boolean pEnable) {
-
-        this.modelRender.setDebugging(pEnable);
-        this.modelRender.setDrawEdges(pEnable);
-        this.modelRender.setDrawNormals(pEnable);
-
+    private void setState(boolean selected) {
+        // XXX
+        PointModel.debug = selected;
     }
 
 }

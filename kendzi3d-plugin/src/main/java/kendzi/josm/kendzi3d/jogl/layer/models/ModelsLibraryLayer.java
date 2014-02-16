@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.layer.models;
@@ -38,9 +35,9 @@ import com.google.inject.Inject;
 
 /**
  * Layer allow loading custom models.
- *
+ * 
  * @author Tomasz Kędziora (kendzi)
- *
+ * 
  */
 public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
@@ -76,7 +73,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /**
      * Constructor.
-     *
+     * 
      * @param modelRender
      * @param modelCacheService
      * @param urlReciverService
@@ -229,9 +226,11 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /**
      * Finds indexes of nodes on way, match filter.
-     *
-     * @param filter filter for nodes on way
-     * @param way way
+     * 
+     * @param filter
+     *            filter for nodes on way
+     * @param way
+     *            way
      * @return indexes of nodes on way
      */
     private List<Integer> nodeFilter(Match filter, Way way) {
@@ -259,6 +258,10 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
         // don't re-download configuration data each time.
     }
 
+    public void cleanUp() {
+        // re-download configuration data
+        loadData();
+    }
 
     /**
      * @return the modelRender
@@ -268,28 +271,32 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;
     }
 
     /**
-     * @param modelCacheService the modelCacheService to set
+     * @param modelCacheService
+     *            the modelCacheService to set
      */
     public void setModelCacheService(ModelCacheService modelCacheService) {
         this.modelCacheService = modelCacheService;
     }
 
     /**
-     * @param urlReciverService the urlReciverService to set
+     * @param urlReciverService
+     *            the urlReciverService to set
      */
     public void setUrlReciverService(ResourceService urlReciverService) {
         this.urlReciverService = urlReciverService;
     }
 
     /**
-     * @param modelsLibraryService the modelsLibraryService to set
+     * @param modelsLibraryService
+     *            the modelsLibraryService to set
      */
     public void setModelsLibraryService(ModelsLibraryService modelsLibraryService) {
         this.modelsLibraryService = modelsLibraryService;

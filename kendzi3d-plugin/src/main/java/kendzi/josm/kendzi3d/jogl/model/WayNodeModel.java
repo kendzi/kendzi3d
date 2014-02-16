@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model;
@@ -15,6 +12,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
@@ -52,9 +50,9 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Model builder for objects loaded from obj files.
- *
+ * 
  * @author Tomasz Kędziora (kendzi)
- *
+ * 
  */
 public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
@@ -92,11 +90,17 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
     private List<Integer> nodeFilter;
 
-    /** Constructor.
-     * @param way way
-     * @param nodeFilter selected nodes
-     * @param wayNodeModelConf model configuration
-     * @param perspective3D perspective 3d
+    /**
+     * Constructor.
+     * 
+     * @param way
+     *            way
+     * @param nodeFilter
+     *            selected nodes
+     * @param wayNodeModelConf
+     *            model configuration
+     * @param perspective3D
+     *            perspective 3d
      * @param modelRender
      * @param modelCacheService
      */
@@ -125,40 +129,59 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.buildModel = true;
     }
+
+    // XXX move
     static class ModelPoint {
         Point3d point;
         double direction;
+        Vector2d offsetVector;
 
-        public ModelPoint(Point3d point, double direction) {
+        public ModelPoint(Point3d point, double direction, Vector2d offsetVector) {
             super();
             this.point = point;
             this.direction = direction;
+            this.offsetVector = offsetVector;
         }
+
         /**
          * @return the point
          */
         public Point3d getPoint() {
             return point;
         }
+
         /**
-         * @param point the point to set
+         * @param point
+         *            the point to set
          */
         public void setPoint(Point3d point) {
             this.point = point;
         }
+
         /**
          * @return the direction
          */
         public double getDirection() {
             return direction;
         }
+
         /**
-         * @param direction the direction to set
+         * @param direction
+         *            the direction to set
          */
         public void setDirection(double direction) {
             this.direction = direction;
         }
+
+        public Vector2d getOffsetVector() {
+            return offsetVector;
+        }
+
+        public void setOffsetVector(Vector2d offsetVector) {
+            this.offsetVector = offsetVector;
+        }
     }
+
     @Override
     public void buildModel(LOD pLod) {
 
@@ -189,8 +212,6 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         c.registerFunction(new Vector3dYFunction());
         c.registerFunction(new Vector3dZFunction());
 
-
-
         double offset = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getOffset(), c, 0);
 
         boolean closed = way.isClosed();
@@ -203,30 +224,14 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
             Point2d p = transform(node, perspective);
 
-            Vector2d bisector = null;
-            if (prev != null && next != null) {
-                Point2d p1 = transform(way.getNode(prev), perspective);
-                Point2d p2 = p;
-                Point2d p3 = transform(way.getNode(next), perspective);
-
-                bisector = getBisector(p1, p2, p3);
-
-            } else if (prev != null) {
-                Point2d p1 = transform(way.getNode(prev), perspective);
-                Point2d p2 = p;
-                bisector = getBisector(p1, p2);
-            } else if (next != null) {
-                Point2d p1 = p;
-                Point2d p2 = transform(way.getNode(next), perspective);
-                bisector = getBisector(p1, p2);
-            }
+            Vector2d bisector = createBisector(prev, next, p);
 
             Point3d point = new Point3d(p.x, 0, -p.y);
 
             if (bisector != null) {
                 bisector.normalize();
-                point.x += bisector.x * offset;
-                point.z += -bisector.y * offset;
+                // point.x += bisector.x * offset;
+                // point.z += -bisector.y * offset;
             }
 
             c.getVariables().put("osm_way", this.way);
@@ -235,14 +240,10 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
             Double direction = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
 
-            modelPoints.add(new ModelPoint(point, direction));
+            modelPoints.add(new ModelPoint(point, direction, bisector));
         }
 
-
         this.modelPoints = modelPoints;
-
-
-
 
         try {
             scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getScale(), c, 1);
@@ -251,15 +252,37 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             throw new RuntimeException("error eval of scale function", e);
         }
 
-
-
-
         this.scale = new Vector3d(scale, scale, scale);
 
-        this.translate =  ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
+        Vector3d translateWithOffset = ExpressiongBuilder
+                .evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
+        translateWithOffset.z += offset;
+
+        this.translate = translateWithOffset;
 
         this.modelLod.put(pLod, model);
 
+    }
+
+    private Vector2d createBisector(Integer prev, Integer next, Point2d p) {
+        Vector2d bisector = null;
+        if (prev != null && next != null) {
+            Point2d p1 = transform(way.getNode(prev), perspective);
+            Point2d p2 = p;
+            Point2d p3 = transform(way.getNode(next), perspective);
+
+            bisector = getBisector(p1, p2, p3);
+
+        } else if (prev != null) {
+            Point2d p1 = transform(way.getNode(prev), perspective);
+            Point2d p2 = p;
+            bisector = getBisector(p1, p2);
+        } else if (next != null) {
+            Point2d p1 = p;
+            Point2d p2 = transform(way.getNode(next), perspective);
+            bisector = getBisector(p1, p2);
+        }
+        return bisector;
     }
 
     private Point2d transform(Node node, Perspective3D perspective) {
@@ -271,7 +294,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     private Vector2d getBisector(Point2d p1, Point2d p2, Point2d p3) {
-        Vector2d v = Vector2dUtil.bisector(p1, p2 ,p3);
+        Vector2d v = Vector2dUtil.bisector(p1, p2, p3);
         v.negate();
         return v;
     }
@@ -303,7 +326,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             return 1d;
         }
         // normalize from origin to highest point in model
-        return 1d / (pModel.getBounds().max.y - 0);//pModel.getBounds().min.y);
+        return 1d / (pModel.getBounds().max.y - 0);// pModel.getBounds().min.y);
     }
 
     private static Model getModel(WayNodeModelConf nodeModelConf, LOD pLod, ModelCacheService modelCacheService) {
@@ -342,15 +365,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     private static void setAmbientColor(Model pModel) {
         for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
             Material material = pModel.getMaterial(i);
-//            material.ambientColor = material.diffuseColor;
-            material.setAmbientDiffuse(new AmbientDiffuseComponent(
-                    material.getAmbientDiffuse().getDiffuseColor(),
-                    material.getAmbientDiffuse().getDiffuseColor()
-                    ));
+            // material.ambientColor = material.diffuseColor;
+            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(), material
+                    .getAmbientDiffuse().getDiffuseColor()));
         }
     }
-
-
 
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
@@ -358,14 +377,28 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         if (model2 != null) {
             BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
-           // gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
-            gl.glEnable(GL2.GL_NORMALIZE); //XXX
+            // gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+            gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
 
-            ;
-            for (ModelPoint modelPoint : this.modelPoints)
-            {
+            for (ModelPoint modelPoint : this.modelPoints) {
+
                 gl.glPushMatrix();
+
                 gl.glTranslated(modelPoint.getPoint().x, modelPoint.getPoint().y, modelPoint.getPoint().z);
+                // double cos = modelPoint.getOffsetVector().x;
+                // double sin = -modelPoint.getOffsetVector().y;
+
+                double cos = -modelPoint.getOffsetVector().y;
+                double sin = -modelPoint.getOffsetVector().x;
+
+                gl.glMultMatrixd(//
+                        new double[] { cos, 0, sin, 0, //
+                                0, 1, 0, 0,//
+                                -sin, 0, cos, 0,//
+                                0, 0, 0, 1 }, 0);
+
+                PointModel.drawDebug(gl, translate, modelPoint.getDirection());
+
                 gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
                 gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
@@ -375,7 +408,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                 gl.glPopMatrix();
             }
 
-            gl.glDisable(GL2.GL_NORMALIZE);
+            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
 
             gl.glPopMatrix();
             BarrierFence.disableTransparentText(gl);
@@ -398,6 +431,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             buildModel(LOD.LOD1);
         }
 
-        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
+                .getGlobalY()), new Vector3d(1, 1, 1)));
     }
 }

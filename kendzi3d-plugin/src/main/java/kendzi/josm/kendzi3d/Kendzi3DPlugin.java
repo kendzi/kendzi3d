@@ -1,16 +1,13 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.gui.help.HelpUtil.*;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -24,6 +21,7 @@ import javax.swing.JMenuItem;
 import kendzi.josm.jogl.JoglPlugin;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
+import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
@@ -39,6 +37,7 @@ import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -60,7 +59,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
-     *
+     * 
      * @param pInfo
      *            information about the plugin and its local installation
      */
@@ -68,9 +67,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         super(pInfo);
 
         ExceptionHandler.registerExceptionHandler();
-
-        // // requre to set up before library are loaded
-        // FileUrlReciverService.initFileReciver(getPluginDir());
 
         try {
 
@@ -80,21 +76,19 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // this.getClass().getClassLoader()
+
         Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDir()));
 
         refreshMenu(injector);
 
-        if (!Boolean.FALSE.equals(Main.pref.getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, true))) {
-            // Main.pref.put("kendzi3d.autostart", "true");
-            // Main.pref.put("kendzi3d.autostart", "false");
+        if (!Boolean.FALSE.equals(Main.pref.getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, false))) {
             openJOGLWindow(injector);
         }
     }
 
     /**
      * Check if file exist in plugin directory.
-     *
+     * 
      * @param pFileName
      *            file path
      * @return if file exist
@@ -105,12 +99,12 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
         }
-        return (new File(pluginDirName, pFileName)).exists();
+        return new File(pluginDirName, pFileName).exists();
     }
 
     /**
      * Refreshing menu.
-     *
+     * 
      * @param injector
      */
     public void refreshMenu(final Injector injector) {
@@ -125,8 +119,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         this.view3dJMenu.addSeparator();
         // wmsJMenu.add(new JMenuItem(new OpenViewAction()));
-        this.view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24",
-                tr("Open 3D View"), null, false) {
+        this.view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null,
+                false) {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,13 +133,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
-        if (autostartToggleAction.canDebug()) {
-            final JCheckBoxMenuItem action = new JCheckBoxMenuItem(autostartToggleAction);
-
-            this.view3dJMenu.add(action);
-            action.setAccelerator(autostartToggleAction.getShortcut().getKeyStroke());
-            autostartToggleAction.addButtonModel(action.getModel());
-        }
+        registerCheckBoxAction(autostartToggleAction, view3dJMenu);
 
         MoveCameraAction moveCameraAction = injector.getInstance(MoveCameraAction.class);
         final JMenuItem moveCameraItem = new JMenuItem(moveCameraAction);
@@ -162,35 +150,26 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         this.view3dJMenu.add(pointModelListItem);
         pointModelListItem.setAccelerator(pointModelListAction.getShortcut().getKeyStroke());
 
+        this.view3dJMenu.addSeparator();
+
         // -- Ground Toggle Action
         GroundToggleAction groundToggleAction = injector.getInstance(GroundToggleAction.class);
-        if (groundToggleAction.canDebug()) {
-            final JCheckBoxMenuItem debug = new JCheckBoxMenuItem(groundToggleAction);
-            this.view3dJMenu.addSeparator();
-            this.view3dJMenu.add(debug);
-            debug.setAccelerator(groundToggleAction.getShortcut().getKeyStroke());
-            groundToggleAction.addButtonModel(debug.getModel());
-        }
+        registerCheckBoxAction(groundToggleAction, view3dJMenu);
+
+        this.view3dJMenu.addSeparator();
 
         // -- debug toggle action
         DebugToggleAction debugToggleAction = injector.getInstance(DebugToggleAction.class);
-        if (debugToggleAction.canDebug()) {
-            final JCheckBoxMenuItem debug = new JCheckBoxMenuItem(debugToggleAction);
-            this.view3dJMenu.addSeparator();
-            this.view3dJMenu.add(debug);
-            debug.setAccelerator(debugToggleAction.getShortcut().getKeyStroke());
-            debugToggleAction.addButtonModel(debug.getModel());
-        }
+        registerCheckBoxAction(debugToggleAction, view3dJMenu);
+
+        DebugPointModelToggleAction debugPointModelToggleAction = injector.getInstance(DebugPointModelToggleAction.class);
+        registerCheckBoxAction(debugPointModelToggleAction, view3dJMenu);
+
+        this.view3dJMenu.addSeparator();
 
         // -- debug toggle action
         TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
-        if (filterToggleAction.canDebug()) {
-            final JCheckBoxMenuItem debug = new JCheckBoxMenuItem(filterToggleAction);
-            this.view3dJMenu.addSeparator();
-            this.view3dJMenu.add(debug);
-            debug.setAccelerator(filterToggleAction.getShortcut().getKeyStroke());
-            filterToggleAction.addButtonModel(debug.getModel());
-        }
+        registerCheckBoxAction(filterToggleAction, view3dJMenu);
 
         this.view3dJMenu.addSeparator();
 
@@ -221,6 +200,13 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         showPluginDirActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
 
         setEnabledAll(true);
+    }
+
+    private void registerCheckBoxAction(ToggleAction action, JMenu menu) {
+        final JCheckBoxMenuItem debugPointModel = new JCheckBoxMenuItem(action);
+        menu.add(debugPointModel);
+        debugPointModel.setAccelerator(action.getShortcut().getKeyStroke());
+        action.addButtonModel(debugPointModel.getModel());
     }
 
     private void setEnabledAll(boolean isEnabled) {
@@ -270,17 +256,12 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     /** The preferences key for error layer */
     public static final String PREF_LAYER = PREFIX + ".layer";
 
-    private CameraLayer cameraLayer = null;//new CameraLayer();
-
     public void initializeKendzi3dLayer(CameraLayer cameraLayer) {
         if (!Main.pref.getBoolean(PREF_LAYER, true)) {
             return;
         }
 
         cameraLayer.addCameraLayer();
-
-       // Main.main.addLayer(cameraLayer);
-
     }
 
 }

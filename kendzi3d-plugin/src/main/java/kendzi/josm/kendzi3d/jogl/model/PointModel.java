@@ -1,28 +1,32 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.DrawUtil;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.compas.Compass;
 import kendzi.josm.kendzi3d.jogl.layer.models.NodeModelConf;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
@@ -47,14 +51,16 @@ import org.openstreetmap.josm.data.osm.Node;
 
 /**
  * Model builder for objects loaded from obj files.
- *
+ * 
  * @author Tomasz Kędziora (kendzi)
- *
+ * 
  */
 public class PointModel extends AbstractPointModel implements DLODSuport {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(PointModel.class);
+
+    public static boolean debug = false;
 
     /**
      * Model renderer.
@@ -85,13 +91,17 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
     private double rotateY;
 
-    /** Constructor.
-     * @param node node
-     * @param pNodeModelConf model configuration
-     * @param pPerspective3D perspective 3d
+    /**
+     * Constructor.
+     * 
+     * @param node
+     *            node
+     * @param pNodeModelConf
+     *            model configuration
+     * @param pPerspective3D
+     *            perspective 3d
      */
-    public PointModel(Node node, NodeModelConf pNodeModelConf, Perspective3D pPerspective3D,
-            ModelRender pModelRender,
+    public PointModel(Node node, NodeModelConf pNodeModelConf, Perspective3D pPerspective3D, ModelRender pModelRender,
             ModelCacheService modelCacheService) {
         super(node, pPerspective3D);
 
@@ -150,7 +160,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        translate =  ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
+        translate = ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
 
         rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 180);
 
@@ -199,36 +209,125 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     private static void setAmbientColor(Model pModel) {
         for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
             Material material = pModel.getMaterial(i);
-//            material.ambientColor = material.diffuseColor;
-            material.setAmbientDiffuse(new AmbientDiffuseComponent(
-                    material.getAmbientDiffuse().getDiffuseColor(),
-                    material.getAmbientDiffuse().getDiffuseColor()
-                    ));
+            // material.ambientColor = material.diffuseColor;
+            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(), material
+                    .getAmbientDiffuse().getDiffuseColor()));
         }
     }
 
-
-
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
+        //
         Model model2 = this.modelLod.get(pLod);
         if (model2 != null) {
             BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
             gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+            drawDebug(gl, this.translate, 0);
+
             gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
 
-            gl.glEnable(GL2.GL_NORMALIZE); //XXX
+            gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
             gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
             gl.glRotated(this.rotateY, 0d, 1d, 0d);
 
             this.modelRenderer.render(gl, model2);
 
-            gl.glDisable(GL2.GL_NORMALIZE);
+            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
 
             gl.glPopMatrix();
             BarrierFence.disableTransparentText(gl);
         }
+    }
+
+    public static void drawDebug(GL2 gl, Vector3d translate, double direction) {
+
+        if (!debug) {
+            return;
+        }
+
+        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        gl.glDisable(GL.GL_TEXTURE_2D);
+
+        float[] colorArrays = new float[4];
+        Color color = Color.ORANGE.darker();
+        gl.glColor3fv(color.getRGBComponents(colorArrays), 0);
+
+        GLU glu = new GLU();
+        GLUquadric quadratic = glu.gluNewQuadric();
+
+        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+
+        glu.gluSphere(quadratic, 0.3, 9, 9);
+
+        DrawUtil.drawLine(gl, 0, 0, 0, //
+                translate.x, translate.y, translate.z);
+
+        // bottom Y
+        gl.glPushMatrix();
+        gl.glColor3fv(Compass.Y_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+
+        DrawUtil.drawLine(gl, translate.x, 0, translate.z, //
+                translate.x, translate.y, translate.z);
+
+        gl.glTranslated(translate.x, 0.15, translate.z);
+
+        DrawUtil.drawDotY(gl, 0.3, 9);
+
+        gl.glPopMatrix();
+
+        // back X
+        gl.glPushMatrix();
+
+        gl.glColor3fv(Compass.X_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+
+        DrawUtil.drawLine(gl, 0, translate.y, translate.z, //
+                translate.x, translate.y, translate.z);
+
+        gl.glTranslated(0, translate.y, translate.z);
+
+        // gl.glRotated(90, 0d, 0d, 1d);
+
+        DrawUtil.drawDotY(gl, 0.3, 9);
+
+        // XXX
+
+        gl.glPopMatrix();
+
+        // right Z
+        gl.glPushMatrix();
+
+        gl.glColor3fv(Compass.Z_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+
+        DrawUtil.drawLine(gl, translate.x, translate.y, 0, //
+                translate.x, translate.y, translate.z);
+
+        gl.glTranslated(translate.x, translate.y, 0);
+
+        gl.glRotated(90, 1d, 0d, 0d);
+
+        DrawUtil.drawDotY(gl, 0.3, 9);
+
+        gl.glPopMatrix();
+
+        // model center
+        gl.glPushMatrix();
+        gl.glColor3fv(color.darker().getRGBComponents(colorArrays), 0);
+
+        gl.glTranslated(translate.x, translate.y, translate.z);
+
+        // gl.glRotated(90, 0d, 1d, 0d);
+
+        glu.gluSphere(quadratic, 0.3, 9, 9);
+        // drawYArrow
+        double scale = 2;
+
+        gl.glRotated(direction, 0d, 1d, 0d);
+
+        DrawUtil.drawFlatArrowY(gl, scale * 1.2, scale * 0.3, scale * 0.11, scale * 0.3);
+
+        gl.glPopMatrix();
+
     }
 
     @Override
@@ -247,6 +346,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             buildModel(LOD.LOD1);
         }
 
-        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
+                .getGlobalY()), new Vector3d(1, 1, 1)));
     }
 }

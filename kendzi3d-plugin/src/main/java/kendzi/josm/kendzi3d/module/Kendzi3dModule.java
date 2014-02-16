@@ -58,8 +58,9 @@ public class Kendzi3dModule extends AbstractModule {
         bindConstant().annotatedWith(Kendzi3dPluginDirectory.class).to(this.pluginDirectory);
 
         /*
-         * This tells Guice that whenever it sees a dependency on a UrlReciverService, it should satisfy the dependency
-         * using a FileUrlReciverService.
+         * This tells Guice that whenever it sees a dependency on a
+         * UrlReciverService, it should satisfy the dependency using a
+         * FileUrlReciverService.
          */
         bind(ResourceService.class).to(ResourceManagerService.class);
 
@@ -71,13 +72,13 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(LibraryResourcesDao.class).to(LibraryResourcesJosmDao.class).in(Singleton.class);
 
-//        bind(ModelRender.class).in(Singleton.class);
+        // bind(ModelRender.class).in(Singleton.class);
 
         bind(NewBuildingLayer.class);
         bind(RoadLayer.class);
         bind(WaterLayer.class);
         bind(TreeLayer.class);
-        bind(ModelsLibraryLayer.class);
+        bind(ModelsLibraryLayer.class).in(Singleton.class);
         bind(FenceLayer.class);
         bind(TestWallLayer.class);
 
@@ -90,13 +91,15 @@ public class Kendzi3dModule extends AbstractModule {
 
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     TextureLibraryStorageService provideTextureLibraryStorageService(ResourceService pUrlReciverService) {
         TextureLibraryService textureLibraryService = new TextureLibraryService(pUrlReciverService);
         return textureLibraryService;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     TextureCacheService provideTextureCacheService(ResourceService pUrlReciverService) {
         TextureCacheServiceImpl textureCacheService = new TextureCacheServiceImpl();
         textureCacheService.setFileUrlReciverService(pUrlReciverService);
@@ -105,14 +108,16 @@ public class Kendzi3dModule extends AbstractModule {
         return textureCacheService;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     ModelRender provideModelRender(TextureCacheService pTextureCacheService) {
         ModelRender modelRender = new ModelRender();
         modelRender.setTextureCacheService(pTextureCacheService);
         return modelRender;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     CameraLayer provideCameraLayer(final Kendzi3dGLEventListener kendzi3dGLEventListener) {
 
         // XXX TODO FIXME Temporary !!!!
@@ -130,16 +135,10 @@ public class Kendzi3dModule extends AbstractModule {
         return cl;
     }
 
-    @Provides @Singleton
-    RenderJOSM provideRenderJOSM(
-            ModelRender pModelRender,
-            ModelsLibraryLayer pointModelsLayer,
-            NewBuildingLayer buildingLayer,
-            RoadLayer roadLayer,
-            WaterLayer waterLayer,
-            TreeLayer treeLayer,
-            FenceLayer fenceLayer,
-            WallLayer wallLayer,
+    @Provides
+    @Singleton
+    RenderJOSM provideRenderJOSM(ModelRender pModelRender, ModelsLibraryLayer pointModelsLayer, NewBuildingLayer buildingLayer,
+            RoadLayer roadLayer, WaterLayer waterLayer, TreeLayer treeLayer, FenceLayer fenceLayer, WallLayer wallLayer,
             TestWallLayer testWallLayer) {
 
         List<Layer> layerList = new ArrayList<Layer>();
@@ -159,7 +158,8 @@ public class Kendzi3dModule extends AbstractModule {
         return renderJOSM;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     PluginResourceService providePluginResourceService() {
         return new PluginResourceService(pluginDirectory);
     }

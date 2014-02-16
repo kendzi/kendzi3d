@@ -49,7 +49,7 @@ public class RoofTypeHipped extends AbstractRoofTypeBuilder {
 
         if (buildingPolygon.getInner() != null && buildingPolygon.getInner().size() > 0) {
             // has any holes
-            return false;
+            return true;
         }
 
         List<Point2d> points = buildingPolygon.getOuter().getPoints();

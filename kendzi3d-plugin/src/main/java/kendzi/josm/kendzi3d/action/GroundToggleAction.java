@@ -1,147 +1,77 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ButtonModel;
 
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
 
-import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ToggleAction;
 
 import com.google.inject.Inject;
 
 /**
  * Enable/disable display texture on ground toggle action.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
-public class GroundToggleAction extends JosmAction {
+public class GroundToggleAction extends ToggleAction {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Button models.
-     */
-    private final List<ButtonModel> buttonModels = new ArrayList<ButtonModel>();
-    //FIXME: replace with property Action.SELECTED_KEY when migrating to
-    // Java 6
-    private boolean selected;
+    private static final String KENDZI_3D_GROUND_TEXTURED = "kendzi3d.ground.textured";
 
     private Kendzi3dGLEventListener kendzi3dGLEventListener;
 
     /**
      * Constructor of ground toggle action.
-     *
+     * 
      * @param pKendzi3dGLEventListener
      */
     @Inject
     public GroundToggleAction(Kendzi3dGLEventListener pKendzi3dGLEventListener) {
-        super(
-                tr("Textured Ground"),
-                "1306318261_debugger__24",
-                tr("Enable/disable display texture on ground"),
-                null,
-                false /* register shortcut */
-        );
-        this.selected = false;
+        super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null, false);
+
+        Main.toolbar.register(this);
+
+        boolean selected = Main.pref.getBoolean(KENDZI_3D_GROUND_TEXTURED, false);
+
+        setSelected(selected);
+
+        notifySelectedState();
 
         this.kendzi3dGLEventListener = pKendzi3dGLEventListener;
 
-        // Main.pref.getBoolean("draw.wireframe", false);
+        setTexturedGround(selected);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        toggleSelectedState(e);
+        boolean selected = isSelected();
+        Main.pref.put(KENDZI_3D_GROUND_TEXTURED, selected);
         notifySelectedState();
 
-        setDebugMode(this.selected);
-
+        setTexturedGround(selected);
     }
 
     /**
-     * @param pModel button model
+     * @param pEnable
+     *            enable debug
      */
-    public void addButtonModel(ButtonModel pModel) {
-        if (pModel != null && !this.buttonModels.contains(pModel)) {
-            this.buttonModels.add(pModel);
-            pModel.setSelected(this.selected);
-        }
-    }
-
-    /**
-     * @param pModel button model
-     */
-    public void removeButtonModel(ButtonModel pModel) {
-        if (pModel != null && this.buttonModels.contains(pModel)) {
-            this.buttonModels.remove(pModel);
-        }
-    }
-
-    /**
-     *
-     */
-    protected void notifySelectedState() {
-        for (ButtonModel model : this.buttonModels) {
-            if (model.isSelected() != this.selected) {
-                model.setSelected(this.selected);
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    protected void toggleSelectedState() {
-        this.selected = !this.selected;
-//        Main.pref.put("draw.wireframe", this.selected);
-        notifySelectedState();
-
-        setDebugMode(this.selected);
-    }
-
-    /**
-     * @param pEnable enable debug
-     */
-    private void setDebugMode(boolean pEnable) {
-
+    private void setTexturedGround(boolean pEnable) {
         this.kendzi3dGLEventListener.setGroundType(pEnable);
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent pE) {
-        toggleSelectedState();
-    }
-
-    @Override
-    protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
-    }
-
-    /** Is selected.
-     * @return selected
-     */
-    public boolean isSelected() {
-        return this.selected;
-    }
-
-    /** If can be in debug mode.
-     * @return debug mode
-     */
-    public boolean canDebug() {
-        return true;
     }
 }

@@ -94,7 +94,10 @@ Example:
 		model="/models/pd/bench.obj"
 		translate="vector()" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
 
-	
+	<wayNodeModel matcher="highway=*" filter="hightway=bench2" 
+		model="/models/pd/bench.obj"
+		translate="vector(1,2,3)" scale="height(5)" direction="90" offset="-1" />
+		
 	
 	<nodeModel matcher="test=sign2" model="/models/traffic_signs/test/triangleSign.obj"
 		modelParameter="material.mat_sign.texture0=tree.png"
