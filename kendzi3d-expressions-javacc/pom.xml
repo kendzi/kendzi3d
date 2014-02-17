@@ -93,7 +93,7 @@
   <parent>
   	<groupId>kendzi.kendzi3d</groupId>
   	<artifactId>kendzi3d-expressions</artifactId>
-  	<version>1.0.176-SNAPSHOT</version>
+  	<version>1.0.176</version>
   	<relativePath>../kendzi3d-expressions/pom.xml</relativePath>
   </parent>
 </project>
