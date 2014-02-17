@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-collada-bindings</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.176-SNAPSHOT</version>
 		</dependency>
 		<dependency> 
 			<groupId>kendzi.kendzi3d</groupId>
