@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.ui;
@@ -13,9 +10,12 @@ import java.awt.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -54,17 +54,15 @@ import com.google.inject.Inject;
 
 /**
  * Draws 3d.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
- *
+ * 
  */
 public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {
 
     /** Log. */
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Kendzi3dGLEventListener.class);
-
-
 
     Viewport viewport = new Viewport(1, 1);
 
@@ -91,8 +89,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Position of sun. XXX
      */
-    private float [] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
-
+    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
     /**
      * Animator of camera movement.
@@ -103,8 +100,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * Key and mouse listener for camera movement.
      */
     private CameraMoveListener cameraMoveListener;
-
-
 
     private ObjectSelectionManager objectSelectionListener;
 
@@ -140,49 +135,29 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      */
     private long startTimeStamp = System.currentTimeMillis();
 
-
     /**
      * Time spend in render loop.
      */
     private long timeSpend;
-
-
 
     /**
      * Photos as layer in 3d.
      */
     private PhotoRenderer photoRenderer;
 
-
     private List<FpsListener> fpsChangeListenerList = new ArrayList<FpsListener>();
-
 
     SkyBox skyBox;
 
-
-
     private Ray3d lastSelectRay = null;
 
-
-
-
-
-
-
-//    private Point3d closestPointOnBaseRay;
-
-
+    // private Point3d closestPointOnBaseRay;
 
     private CloseEvent closeEvent;
-
-
 
     private boolean error;
 
     private Compass compass;
-
-
-
 
     @Inject
     public Kendzi3dGLEventListener(ModelRender modelRender, RenderJOSM renderJosm, TextureCacheService textureCacheService,
@@ -210,27 +185,26 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         initObjectSelectionListener();
     }
 
-
-//    /**
-//     * Default constructor.
-//     */
-//    public Kendzi3dGLEventListener() {
-//
-//        setGroundType(false);
-//
-//        this.axisLabels = new AxisLabels();
-//
-//        this.simpleMoveAnimator = new SimpleMoveAnimator();
-//
-//        this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
-//
-//        this.skyBox = new SkyBox();
-//
-//        this.selectionDrawUtil = new SelectionDrawUtil();
-//
-//        initObjectSelectionListener();
-//    }
-
+    // /**
+    // * Default constructor.
+    // */
+    // public Kendzi3dGLEventListener() {
+    //
+    // setGroundType(false);
+    //
+    // this.axisLabels = new AxisLabels();
+    //
+    // this.simpleMoveAnimator = new SimpleMoveAnimator();
+    //
+    // this.cameraMoveListener = new
+    // CameraMoveListener(this.simpleMoveAnimator);
+    //
+    // this.skyBox = new SkyBox();
+    //
+    // this.selectionDrawUtil = new SelectionDrawUtil();
+    //
+    // initObjectSelectionListener();
+    // }
 
     private void initObjectSelectionListener() {
 
@@ -247,13 +221,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             }
         };
 
-//        this.selectEditorListeners.add(this.objectSelectionListener);
-//        this.objectSelectionListener.addEditorChangeListener(this);
+        // this.selectEditorListeners.add(this.objectSelectionListener);
+        // this.objectSelectionListener.addEditorChangeListener(this);
 
         JosmEditorListener jel = new JosmEditorListener();
         this.objectSelectionListener.addEditorChangeListener(jel);
     }
-
 
     @Override
     public void display(GLAutoDrawable pDrawable) {
@@ -267,41 +240,36 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.simpleMoveAnimator.updateState();
 
         GL2 gl = pDrawable.getGL().getGL2();
-       // System.err.println("INIT GL IS: " + gl.getClass().getName());
+        // System.err.println("INIT GL IS: " + gl.getClass().getName());
 
         GLU glu = new GLU();
 
-     // _direction_
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
+        // _direction_
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
 
-
-//        // Clear the drawing area
-//        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-//
-//
-//
-//
-//        // Reset the current matrix to the "identity"
-//        gl.glLoadIdentity();
-//
-//        gl.glMatrixMode(GL2.GL_MODELVIEW);
-//        gl.glLoadIdentity();
+        // // Clear the drawing area
+        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        //
+        //
+        //
+        //
+        // // Reset the current matrix to the "identity"
+        // gl.glLoadIdentity();
+        //
+        // gl.glMatrixMode(GL2.GL_MODELVIEW);
+        // gl.glLoadIdentity();
 
         // clear color and depth buffers
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
-
 
         setCamera(glu, this.simpleMoveAnimator);
 
-
-        gl.glEnable(GL2.GL_MULTISAMPLE);
-
+        gl.glEnable(GL.GL_MULTISAMPLE);
 
         this.skyBox.draw(gl, this.simpleMoveAnimator, null);
-
 
         this.ground.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());
 
@@ -317,24 +285,18 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.renderJosm.draw(gl, this.simpleMoveAnimator);
 
         if (this.photoRenderer.isEnabled()) {
-              //  photo != null) {
-            //FIXME
+            // photo != null) {
+            // FIXME
 
-           this.photoRenderer.update(this.simpleMoveAnimator, this.renderJosm.getPerspective());
-
-
-
+            this.photoRenderer.update(this.simpleMoveAnimator, this.renderJosm.getPerspective());
 
             this.photoRenderer.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());
 
-
         }
 
-
-
-//        if (this.closestPointOnBaseRay != null) {
-//            drawPoint(gl, this.closestPointOnBaseRay);
-//        }
+        // if (this.closestPointOnBaseRay != null) {
+        // drawPoint(gl, this.closestPointOnBaseRay);
+        // }
 
         selectionDrawUtil.draw(gl, this.objectSelectionListener, this.simpleMoveAnimator);
 
@@ -343,7 +305,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         // Flush all drawing operations to the graphics card
         gl.glFlush();
     }
-
 
     void drawCompass(GL2 gl) {
 
@@ -355,17 +316,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         Vector3d vector = ray3d.getVector();
         vector.normalize();
-        //vector.scale(2);
+        // vector.scale(2);
         point.add(vector);
 
         this.compass.draw(gl, point, this.simpleMoveAnimator.getAngle());
 
     }
-
-
-
-
-
 
     /**
      * Counts fps. Save last result to variable fps.
@@ -394,7 +350,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     @Override
     public void dispose(GLAutoDrawable pDrawable) {
-       //
+        //
     }
 
     @Override
@@ -403,15 +359,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         // drawable.setGL(new DebugGL(drawable.getGL()));
 
         GL2 gl = pDrawable.getGL().getGL2();
-        //System.err.println("INIT GL IS: " + gl.getClass().getName());
+        // System.err.println("INIT GL IS: " + gl.getClass().getName());
 
         checkRequiredExtensions(gl);
 
-
         // Enable VSync
         gl.setSwapInterval(1);
-
-
 
         // Setup the drawing area and shading mode
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -420,31 +373,32 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         // sky blue color
         gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
 
-        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glEnable(GL.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL2.GL_DEPTH_BITS, depth_bits, 0);
+        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
 
-        gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to
+                                                   // GL_FLAT and see what
+                                                   // happens.
 
         addLight(gl);
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
+        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
 
-
-//        this.modelRender = ModelRender.getInstance();
+        // this.modelRender = ModelRender.getInstance();
 
         this.axisLabels.init();
         this.renderJosm.init(gl);
         this.selectionDrawUtil.init(gl);
         this.compass.init(gl);
 
-
-
     }
 
-    /** Check if all required openGl extensions are available.
+    /**
+     * Check if all required openGl extensions are available.
+     * 
      * @param gl
      * @return
      */
@@ -457,19 +411,18 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             // "GL_ARB_vertex_buffer_object extension not available",
             // "Unavailable extension", JOptionPane.ERROR_MESSAGE);
 
-            // Check if the extension ARB_multitexture is supported by the Graphic card
+            // Check if the extension ARB_multitexture is supported by the
+            // Graphic card
 
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    
-                    JOptionPane.showMessageDialog(
-                            null,
+
+                    JOptionPane.showMessageDialog(null,
                             "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
                             "Extension not supported", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            );
+            });
 
             this.error = true;
 
@@ -481,9 +434,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return this.error;
     }
 
-
-
-
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
@@ -493,25 +443,24 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             height = 1;
         }
 
-        //this.viewportAspectRatio = (double) width / (double) height;
+        // this.viewportAspectRatio = (double) width / (double) height;
 
         this.viewport = new Viewport(width, height);
 
-
         gl.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(
-                Viewport.PERSP_VIEW_ANGLE,
-                this.viewport.viewportAspectRatio(),
+        glu.gluPerspective(Viewport.PERSP_VIEW_ANGLE, this.viewport.viewportAspectRatio(),
                 Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE, 1500.0); // 5
 
     }
 
-
-    /** Register listener for camera move.
-     * @param pCanvas canvas for listener
+    /**
+     * Register listener for camera move.
+     * 
+     * @param pCanvas
+     *            canvas for listener
      */
     public void registerMoveListener(Canvas pCanvas) {
         pCanvas.addKeyListener(this.cameraMoveListener);
@@ -521,8 +470,11 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         pCanvas.addMouseListener(this.cameraMoveListener);
     }
 
-    /** Register listener for mouse selection.
-     * @param pCanvas canvas for listener
+    /**
+     * Register listener for mouse selection.
+     * 
+     * @param pCanvas
+     *            canvas for listener
      */
     public void registerMouseSelectionListener(Canvas pCanvas) {
 
@@ -533,38 +485,40 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     /**
      * Set up a point source with ambient, diffuse, and specular color.
      * components
-     * @param pGl gl
+     * 
+     * @param pGl
+     *            gl
      */
     private void addLight(GL2 pGl) {
 
-        pGl.glMatrixMode(GL2.GL_MODELVIEW);
+        pGl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         // enable a single light source
-        pGl.glEnable(GL2.GL_LIGHTING);
-        pGl.glEnable(GL2.GL_LIGHT0);
-
+        pGl.glEnable(GLLightingFunc.GL_LIGHTING);
+        pGl.glEnable(GLLightingFunc.GL_LIGHT0);
 
         float gray = 0.5f;
-        float[] grayLight = {gray, gray, gray, 1.0f }; // weak gray ambient
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, grayLight, 0);
+        float[] grayLight = { gray, gray, gray, 1.0f }; // weak gray ambient
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
 
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
         // & specular
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, whiteLight, 0);
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, whiteLight, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
 
-        //      float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
-        float [] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
+        // float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
+        float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
-        pGl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
+        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
     }
 
     /**
      * Sets camera position and rotation.
-     * @param pGlu GLU
+     * 
+     * @param pGlu
+     *            GLU
      * @param pCamera
      */
     private void setCamera(GLU pGlu, Camera pCamera) {
-
 
         Point3d position = pCamera.getPoint();
 
@@ -573,65 +527,52 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         Vector3d lookAt = this.viewport.getLookAt();
         Vector3d lookUp = this.viewport.getLookUp();
 
-//        Vector3d lookAt = new Vector3d(100, 0, 0);
-//        Vector3d lookUp = new Vector3d(0, 1, 0);
-//
-//        Vector3d rotate = pCamera.getAngle();
-//
-//        lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
-//        lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
-////        posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
-//
-//        lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
-//        lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
-//
-//        lookAt.add(position);
+        // Vector3d lookAt = new Vector3d(100, 0, 0);
+        // Vector3d lookUp = new Vector3d(0, 1, 0);
+        //
+        // Vector3d rotate = pCamera.getAngle();
+        //
+        // lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
+        // lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
+        // // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+        //
+        // lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
+        // lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
+        //
+        // lookAt.add(position);
 
+        pGlu.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, lookUp.x, lookUp.y, lookUp.z);
 
-        pGlu.gluLookAt(position.x, position.y, position.z,
-                lookAt.x, lookAt.y, lookAt.z,
-                lookUp.x, lookUp.y, lookUp.z);
-
-
-
-//        Vector3d view = new Vector3d();
-//        Vector3d screenHoritzontally = new Vector3d();
-//        Vector3d screenVertically = new Vector3d();
-//
-//        // look direction
-//        view.sub(lookAt, position);
-//        view.normalize();
-//
-//
-//        // screenX
-//        screenHoritzontally.cross(view, lookUp);
-//        screenHoritzontally.normalize();
-//
-//        // screenY
-//        screenVertically.cross(screenHoritzontally, view);
-//        screenVertically.normalize();
-//
-//        final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-//        float halfHeight = (float) (Math.tan(radians/2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
-//        float halfScaledAspectRatio = (float) (halfHeight * this.viewportAspectRatio);
-//
-//        screenVertically.scale(halfHeight);
-//        screenHoritzontally.scale(halfScaledAspectRatio);
+        // Vector3d view = new Vector3d();
+        // Vector3d screenHoritzontally = new Vector3d();
+        // Vector3d screenVertically = new Vector3d();
+        //
+        // // look direction
+        // view.sub(lookAt, position);
+        // view.normalize();
+        //
+        //
+        // // screenX
+        // screenHoritzontally.cross(view, lookUp);
+        // screenHoritzontally.normalize();
+        //
+        // // screenY
+        // screenVertically.cross(screenHoritzontally, view);
+        // screenVertically.normalize();
+        //
+        // final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
+        // float halfHeight = (float) (Math.tan(radians/2) *
+        // PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+        // float halfScaledAspectRatio = (float) (halfHeight *
+        // this.viewportAspectRatio);
+        //
+        // screenVertically.scale(halfHeight);
+        // screenHoritzontally.scale(halfScaledAspectRatio);
     }
-
-
-
-
-
-
 
     private void onEditorChanged() {
 
     }
-
-
-
-
 
     static class Viewport {
 
@@ -655,18 +596,15 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         private Vector3d screenHoritzontally = new Vector3d();
         private Vector3d screenVertically = new Vector3d();
 
-
-
         public Viewport(int width, int height) {
             super();
             this.width = width;
             this.height = height;
         }
 
-
         public double viewportAspectRatio() {
             return (double) this.width / (double) this.height;
-//
+            //
         }
 
         void updateViewport(Camera pCamera) {
@@ -679,13 +617,12 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
             lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
             lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
-//            posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+            // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
 
             lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
             lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
 
             lookAt.add(position);
-
 
             Vector3d view = new Vector3d();
             Vector3d screenHoritzontally = new Vector3d();
@@ -694,7 +631,6 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             // look direction
             view.sub(lookAt, position);
             view.normalize();
-
 
             // screenX
             screenHoritzontally.cross(view, lookUp);
@@ -705,12 +641,11 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             screenVertically.normalize();
 
             final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-            float halfHeight = (float) (Math.tan(radians/2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+            float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
             float halfScaledAspectRatio = (float) (halfHeight * this.viewportAspectRatio());
 
             screenVertically.scale(halfHeight);
             screenHoritzontally.scale(halfScaledAspectRatio);
-
 
             this.lookAt = lookAt;
             this.lookUp = lookUp;
@@ -727,8 +662,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             double viewportWidth = this.width;
             double viewportHeight = this.height;
 
-//            Camera camera = this.simpleMoveAnimator;
-
+            // Camera camera = this.simpleMoveAnimator;
 
             Point3d point = new Point3d(this.position);
             point.add(this.view);
@@ -736,23 +670,22 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             pickingRay.getPoint().set(this.position);
             pickingRay.getPoint().add(this.view);
 
-            screenX -= (float)viewportWidth/2f;
-            screenY = (float)viewportHeight/2f - screenY;
+            screenX -= (float) viewportWidth / 2f;
+            screenY = (float) viewportHeight / 2f - screenY;
 
             // normalize to 1
-            screenX /= ((float)viewportWidth/2f);
-            screenY /= ((float)viewportHeight/2f);
+            screenX /= (float) viewportWidth / 2f;
+            screenY /= (float) viewportHeight / 2f;
 
-            pickingRay.getPoint().x += this.screenHoritzontally.x*screenX + this.screenVertically.x*screenY;
-            pickingRay.getPoint().y += this.screenHoritzontally.y*screenX + this.screenVertically.y*screenY;
-            pickingRay.getPoint().z += this.screenHoritzontally.z*screenX + this.screenVertically.z*screenY;
+            pickingRay.getPoint().x += this.screenHoritzontally.x * screenX + this.screenVertically.x * screenY;
+            pickingRay.getPoint().y += this.screenHoritzontally.y * screenX + this.screenVertically.y * screenY;
+            pickingRay.getPoint().z += this.screenHoritzontally.z * screenX + this.screenVertically.z * screenY;
 
             pickingRay.getVector().set(pickingRay.getPoint());
             pickingRay.getVector().sub(this.position);
 
             return pickingRay;
         }
-
 
         /**
          * @return the width
@@ -761,14 +694,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             return this.width;
         }
 
-
         /**
-         * @param width the width to set
+         * @param width
+         *            the width to set
          */
         public void setWidth(int width) {
             this.width = width;
         }
-
 
         /**
          * @return the height
@@ -777,14 +709,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             return this.height;
         }
 
-
         /**
-         * @param height the height to set
+         * @param height
+         *            the height to set
          */
         public void setHeight(int height) {
             this.height = height;
         }
-
 
         /**
          * @return the lookAt
@@ -793,14 +724,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             return this.lookAt;
         }
 
-
         /**
-         * @param lookAt the lookAt to set
+         * @param lookAt
+         *            the lookAt to set
          */
         public void setLookAt(Vector3d lookAt) {
             this.lookAt = lookAt;
         }
-
 
         /**
          * @return the lookUp
@@ -809,15 +739,16 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
             return this.lookUp;
         }
 
-
         /**
-         * @param lookUp the lookUp to set
+         * @param lookUp
+         *            the lookUp to set
          */
         public void setLookUp(Vector3d lookUp) {
             this.lookUp = lookUp;
         }
 
     }
+
     /**
      * @return the renderJosm
      */
@@ -825,23 +756,31 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return this.renderJosm;
     }
 
-    /** Set up camera position.
-     * Warning this is 2d version!!!
-     * it convert z to -z!!!
+    /**
+     * Set up camera position. Warning this is 2d version!!! it convert z to
+     * -z!!!
+     * 
      * @deprecated
-     *
-     * @param pCamPosX x coordinate
-     * @param pCamPosY y coordinate
+     * 
+     * @param pCamPosX
+     *            x coordinate
+     * @param pCamPosY
+     *            y coordinate
      */
     @Deprecated
     public void setCamPos(double pCamPosX, double pCamPosY) {
         setCamPos(pCamPosX, Camera.CAM_HEIGHT, -pCamPosY);
     }
 
-    /** Set up camera position.
-     * @param pCamPosX x coordinate
-     * @param pCamPosY y coordinate
-     * @param pCamPosZ z coordinate
+    /**
+     * Set up camera position.
+     * 
+     * @param pCamPosX
+     *            x coordinate
+     * @param pCamPosY
+     *            y coordinate
+     * @param pCamPosZ
+     *            z coordinate
      */
     public void setCamPos(double pCamPosX, double pCamPosY, double pCamPosZ) {
 
@@ -860,20 +799,21 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
     }
 
     private void drawFloor(GL2 gl) {
-        gl.glDisable(GL2.GL_LIGHTING);
+        gl.glDisable(GLLightingFunc.GL_LIGHTING);
 
-        //blue
+        // blue
         gl.glColor3f(0.0f, 0.1f, 0.4f);
         DrawUtil.drawTiles(gl, 50, true);
         // green
         gl.glColor3f(0.0f, 0.5f, 0.1f);
         DrawUtil.drawTiles(gl, 50, false);
 
-        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GLLightingFunc.GL_LIGHTING);
     }
 
     /**
-     * @param pType type of the ground to set
+     * @param pType
+     *            type of the ground to set
      */
     public void setGroundType(boolean pType) {
         if (pType) {
@@ -883,38 +823,30 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         }
     }
 
-
     @Override
     public void dispatchCameraChange(CameraChangeEvent pEvent) {
-
 
         if (pEvent instanceof PhotoChangeEvent) {
 
             PhotoChangeEvent pce = (PhotoChangeEvent) pEvent;
-//            photo = pce.getPhoto();
+            // photo = pce.getPhoto();
 
             this.photoRenderer.setPhoto(pce.getPhoto());
 
-
-            //XXX
+            // XXX
 
         } else if (pEvent instanceof CameraChangeEvent) {
-            //XXX
+            // XXX
         }
     }
 
-
-
-
     /**
-     * @param renderJosm the renderJosm to set
+     * @param renderJosm
+     *            the renderJosm to set
      */
     public void setRenderJosm(RenderJOSM renderJosm) {
         this.renderJosm = renderJosm;
     }
-
-
-
 
     /**
      * @return the modelRender
@@ -923,18 +855,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return this.modelRender;
     }
 
-
-
-
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;
     }
-
-
-
 
     /**
      * @return the photoRenderer
@@ -943,17 +870,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return this.photoRenderer;
     }
 
-
-
-
     /**
-     * @param photoRenderer the photoRenderer to set
+     * @param photoRenderer
+     *            the photoRenderer to set
      */
     public void setPhotoRenderer(PhotoRenderer photoRenderer) {
         this.photoRenderer = photoRenderer;
     }
-
-
 
     public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
         for (FpsListener fl : this.fpsChangeListenerList) {
@@ -969,13 +892,9 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.fpsChangeListenerList.remove(pFpsListener);
     }
 
-
-
-
     public void closeEvent(CloseEvent closeEvent) {
         this.closeEvent = closeEvent;
     }
-
 
     /**
      * @return the textureCacheService
@@ -984,14 +903,13 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return textureCacheService;
     }
 
-
     /**
-     * @param textureCacheService the textureCacheService to set
+     * @param textureCacheService
+     *            the textureCacheService to set
      */
     public void setTextureCacheService(TextureCacheService textureCacheService) {
         this.textureCacheService = textureCacheService;
     }
-
 
     /**
      * @return the textureLibraryStorageService
@@ -1000,19 +918,19 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         return textureLibraryStorageService;
     }
 
-
     /**
-     * @param textureLibraryStorageService the textureLibraryStorageService to set
+     * @param textureLibraryStorageService
+     *            the textureLibraryStorageService to set
      */
     public void setTextureLibraryStorageService(TextureLibraryStorageService textureLibraryStorageService) {
         this.textureLibraryStorageService = textureLibraryStorageService;
     }
 
-
-//    @Override
-//    public void onEditorChange(EditorChangeEvent args) {
-//        if (args instanceof ArrowEditorChangeEvent) {
-//            this.closestPointOnBaseRay = ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
-//        }
-//    }
+    // @Override
+    // public void onEditorChange(EditorChangeEvent args) {
+    // if (args instanceof ArrowEditorChangeEvent) {
+    // this.closestPointOnBaseRay =
+    // ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
+    // }
+    // }
 }
