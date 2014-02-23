@@ -16,13 +16,13 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures</artifactId>
-			<version>1.0.177</version>
+			<version>1.0.178-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.177</version>
+			<version>1.0.178-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
@@ -30,7 +30,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.177</version>
+		<version>1.0.178-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
