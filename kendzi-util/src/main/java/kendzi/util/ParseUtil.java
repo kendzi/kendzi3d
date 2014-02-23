@@ -5,6 +5,8 @@
  */
 package kendzi.util;
 
+import java.awt.Color;
+
 /**
  * Util for most used parsers.
  * 
@@ -26,6 +28,22 @@ public final class ParseUtil {
     public static Double parseDouble(String string) {
         try {
             return Double.parseDouble(string);
+        } catch (Exception e) {
+            //
+        }
+        return null;
+    }
+
+    /**
+     * Parse string to color, if any error return null.
+     * 
+     * @param colorHex
+     *            string with color hex
+     * @return parsed double or null if can't be parsed
+     */
+    public static Color parseHexColor(String colorHex) {
+        try {
+            return Color.decode(colorHex);
         } catch (Exception e) {
             //
         }
