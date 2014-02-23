@@ -45,6 +45,7 @@ public class SkyBox {
         Point3d p = camera.getPoint();
 
         gl.glTranslated(p.x, p.y, p.z);
+        gl.glRotated(180d, 0, 1, 0);
 
         drawPolygon(gl, frontTextureName, new Point3d(-10, -10, -10), new Point3d(10, -10, -10), new Point3d(10, 10, -10),
                 new Point3d(-10, 10, -10));
