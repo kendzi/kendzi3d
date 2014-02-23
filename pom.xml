@@ -86,6 +86,7 @@
 		<module>kendzi3d-models-library-res</module>
 		
 		<module>kendzi3d-resource-manager</module>
+		<module>kendzi3d-light</module>
 		
 		<module>kendzi3d-plugin</module>
 		<module>kendzi3d-plugin-build</module>

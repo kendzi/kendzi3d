@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
@@ -100,10 +99,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     // */
     // private double centerY = 0;
 
-    /**
-     * Position of sun. XXX
-     */
-    private float lightPos[] = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    // /**
+    // * Position of sun. XXX
+    // */
+    // private float lightPos[] = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
     /**
      * Model displayed when error happen.
@@ -159,8 +158,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     public void draw(GL2 gl, Camera camera) {
 
-        // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
+        // // _direction_
+        // gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION,
+        // this.lightPos, 0);
 
         if (this.datasetChanged) {
             this.datasetChanged = false;

@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
-			<version>1</version>
+			<version>${inject.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
@@ -95,7 +95,13 @@
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-library-res</artifactId>
 			<version>1.0.177-SNAPSHOT</version>
+		</dependency>		
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-light</artifactId>
+			<version>1.0.177-SNAPSHOT</version>
 		</dependency>
+		
 
 	</dependencies>
 

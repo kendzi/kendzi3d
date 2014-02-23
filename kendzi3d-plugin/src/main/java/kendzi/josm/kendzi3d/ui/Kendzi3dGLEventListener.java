@@ -47,6 +47,7 @@ import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
 import kendzi.josm.kendzi3d.ui.fps.FpsListener;
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import kendzi3d.light.render.LightRender;
 
 import org.apache.log4j.Logger;
 
@@ -90,6 +91,11 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
      * Position of sun. XXX
      */
     private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+
+    /**
+     * Light render.
+     */
+    private LightRender lightRender;
 
     /**
      * Animator of camera movement.
@@ -161,7 +167,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
     @Inject
     public Kendzi3dGLEventListener(ModelRender modelRender, RenderJOSM renderJosm, TextureCacheService textureCacheService,
-            TextureLibraryStorageService textureLibraryStorageService, PhotoRenderer photoRenderer, SkyBox skyBox) {
+            TextureLibraryStorageService textureLibraryStorageService, PhotoRenderer photoRenderer, SkyBox skyBox,
+            LightRender lightRender) {
         super();
         this.modelRender = modelRender;
         this.renderJosm = renderJosm;
@@ -181,6 +188,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.selectionDrawUtil = new SelectionDrawUtil();
 
         this.compass = new Compass();
+
+        this.lightRender = lightRender;
 
         initObjectSelectionListener();
     }
@@ -244,8 +253,11 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
 
         GLU glu = new GLU();
 
+        lightRender.draw(gl);
+
         // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
+        // gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION,
+        // this.lightPos, 0);
 
         // // Clear the drawing area
         // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -381,7 +393,7 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
                                                    // GL_FLAT and see what
                                                    // happens.
 
-        addLight(gl);
+        // addLight(gl);
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
@@ -393,6 +405,8 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
         this.renderJosm.init(gl);
         this.selectionDrawUtil.init(gl);
         this.compass.init(gl);
+
+        lightRender.init(gl);
 
     }
 

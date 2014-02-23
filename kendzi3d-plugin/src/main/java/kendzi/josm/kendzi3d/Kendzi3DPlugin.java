@@ -25,6 +25,7 @@ import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
+import kendzi.josm.kendzi3d.action.LightConfigurationAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
 import kendzi.josm.kendzi3d.action.PointModelListAction;
@@ -117,96 +118,87 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             this.view3dJMenu.removeAll();
         }
 
-        this.view3dJMenu.addSeparator();
-        // wmsJMenu.add(new JMenuItem(new OpenViewAction()));
-        this.view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null,
-                false) {
+        view3dJMenu.addSeparator();
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                putValue("toolbar", "3dView_run");
+        view3dJMenu.add(new JMenuItem(
+                new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-                openJOGLWindow(injector);
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        putValue("toolbar", "3dView_run");
 
-            }
+                        openJOGLWindow(injector);
 
-        }));
+                    }
+
+                }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
 
         MoveCameraAction moveCameraAction = injector.getInstance(MoveCameraAction.class);
-        final JMenuItem moveCameraItem = new JMenuItem(moveCameraAction);
-        this.view3dJMenu.add(moveCameraItem);
-        moveCameraItem.setAccelerator(moveCameraAction.getShortcut().getKeyStroke());
+        registerAction(moveCameraAction, view3dJMenu);
 
         CleanUpAction cleanUpAction = injector.getInstance(CleanUpAction.class);
-        final JMenuItem cleanUpItem = new JMenuItem(cleanUpAction);
-        this.view3dJMenu.add(cleanUpItem);
-        cleanUpItem.setAccelerator(cleanUpAction.getShortcut().getKeyStroke());
+        registerAction(cleanUpAction, view3dJMenu);
 
         PointModelListAction pointModelListAction = injector.getInstance(PointModelListAction.class);
-        final JMenuItem pointModelListItem = new JMenuItem(pointModelListAction);
-        this.view3dJMenu.add(pointModelListItem);
-        pointModelListItem.setAccelerator(pointModelListAction.getShortcut().getKeyStroke());
+        registerAction(pointModelListAction, view3dJMenu);
 
-        this.view3dJMenu.addSeparator();
+        LightConfigurationAction lightConfigurationAction = injector.getInstance(LightConfigurationAction.class);
+        registerAction(lightConfigurationAction, view3dJMenu);
 
-        // -- Ground Toggle Action
+        view3dJMenu.addSeparator();
+
         GroundToggleAction groundToggleAction = injector.getInstance(GroundToggleAction.class);
         registerCheckBoxAction(groundToggleAction, view3dJMenu);
 
-        this.view3dJMenu.addSeparator();
+        view3dJMenu.addSeparator();
 
-        // -- debug toggle action
         DebugToggleAction debugToggleAction = injector.getInstance(DebugToggleAction.class);
         registerCheckBoxAction(debugToggleAction, view3dJMenu);
 
         DebugPointModelToggleAction debugPointModelToggleAction = injector.getInstance(DebugPointModelToggleAction.class);
         registerCheckBoxAction(debugPointModelToggleAction, view3dJMenu);
 
-        this.view3dJMenu.addSeparator();
+        view3dJMenu.addSeparator();
 
-        // -- debug toggle action
         TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
         registerCheckBoxAction(filterToggleAction, view3dJMenu);
 
-        this.view3dJMenu.addSeparator();
+        view3dJMenu.addSeparator();
 
-        // -- debug toggle action
         WikiTextureLoaderAction wikiTextureLoaderAction = injector.getInstance(WikiTextureLoaderAction.class);
-        final JMenuItem wikiTextureLoaderItem = new JMenuItem(wikiTextureLoaderAction);
-        this.view3dJMenu.add(wikiTextureLoaderItem);
-        wikiTextureLoaderItem.setAccelerator(wikiTextureLoaderAction.getShortcut().getKeyStroke());
+        registerAction(wikiTextureLoaderAction, view3dJMenu);
 
         LoadTextureLibraryAction loadTextureLibraryAction = injector.getInstance(LoadTextureLibraryAction.class);
-        final JMenuItem loadTextureLibraryItem = new JMenuItem(loadTextureLibraryAction);
-        this.view3dJMenu.add(loadTextureLibraryItem);
-        loadTextureLibraryItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
+        registerAction(loadTextureLibraryAction, view3dJMenu);
 
-        this.view3dJMenu.addSeparator();
+        view3dJMenu.addSeparator();
 
-        JMenu advMenu = new JMenu(tr("Adv"));
-        this.view3dJMenu.add(advMenu);
+        JMenu advanceMenu = new JMenu(tr("Advance"));
+        view3dJMenu.add(advanceMenu);
 
         ExportAction exportAction = injector.getInstance(ExportAction.class);
-        final JMenuItem exportActionItem = new JMenuItem(exportAction);
-        advMenu.add(exportActionItem);
-        exportActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
+        registerAction(exportAction, advanceMenu);
 
         ShowPluginDirAction showPluginDirAction = injector.getInstance(ShowPluginDirAction.class);
-        final JMenuItem showPluginDirActionItem = new JMenuItem(showPluginDirAction);
-        advMenu.add(showPluginDirActionItem);
-        showPluginDirActionItem.setAccelerator(loadTextureLibraryAction.getShortcut().getKeyStroke());
+        registerAction(showPluginDirAction, advanceMenu);
 
         setEnabledAll(true);
     }
 
+    private void registerAction(JosmAction josmAction, JMenu menu) {
+        final JMenuItem menuItem = new JMenuItem(josmAction);
+        menuItem.setAccelerator(josmAction.getShortcut().getKeyStroke());
+        menu.add(menuItem);
+    }
+
     private void registerCheckBoxAction(ToggleAction action, JMenu menu) {
-        final JCheckBoxMenuItem debugPointModel = new JCheckBoxMenuItem(action);
-        menu.add(debugPointModel);
-        debugPointModel.setAccelerator(action.getShortcut().getKeyStroke());
-        action.addButtonModel(debugPointModel.getModel());
+        final JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem(action);
+        checkBox.setAccelerator(action.getShortcut().getKeyStroke());
+        action.addButtonModel(checkBox.getModel());
+        menu.add(checkBox);
     }
 
     private void setEnabledAll(boolean isEnabled) {

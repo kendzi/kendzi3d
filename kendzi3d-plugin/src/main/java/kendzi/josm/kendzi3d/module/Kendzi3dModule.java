@@ -36,6 +36,11 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.manager.PluginResourceService;
 import kendzi.kendzi3d.resource.manager.ResourceManagerService;
+import kendzi3d.light.dao.JosmLightDao;
+import kendzi3d.light.dao.LightDao;
+import kendzi3d.light.service.LightRenderService;
+import kendzi3d.light.service.LightStorageService;
+import kendzi3d.light.service.impl.LightService;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -88,6 +93,11 @@ public class Kendzi3dModule extends AbstractModule {
         bind(Kendzi3dGLEventListener.class).in(Singleton.class);
 
         bind(Kendzi3dGLFrame.class);
+
+        bind(LightDao.class).to(JosmLightDao.class).in(Singleton.class);
+        bind(LightService.class).in(Singleton.class);
+        bind(LightStorageService.class).to(LightService.class);
+        bind(LightRenderService.class).to(LightService.class);
 
     }
 
