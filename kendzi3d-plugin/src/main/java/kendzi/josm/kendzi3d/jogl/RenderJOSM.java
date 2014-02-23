@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl;
@@ -14,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
@@ -58,8 +56,6 @@ import org.openstreetmap.josm.data.projection.Projection;
 
 public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
-
-
     /** Log. */
     private static final Logger log = Logger.getLogger(RenderJOSM.class);
 
@@ -73,21 +69,20 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     private static double lod4 = 1000 * 1000;
 
-
-
     /**
      * Request for rebuildin models.
      */
     private boolean datasetChanged = true;
 
     /**
-     * Perspective used by OpenGl. Transforming coordinates from EastNorth to OpenGl .
+     * Perspective used by OpenGl. Transforming coordinates from EastNorth to
+     * OpenGl .
      */
     private Perspective3D pers;
 
-
     /**
-     * Perspective used by OpenGl. Transforming coordinates from EastNorth to OpenGl .
+     * Perspective used by OpenGl. Transforming coordinates from EastNorth to
+     * OpenGl .
      */
     private static Perspective perspective3D;
 
@@ -95,17 +90,15 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         return perspective3D;
     }
 
-
-//    /**
-//     * X Offset of coordinate system used by openGl.
-//     */
-//    private double centerX = 0;
-//
-//    /**
-//     * Y Offset of coordinate system used by openGl.
-//     */
-//    private double centerY = 0;
-
+    // /**
+    // * X Offset of coordinate system used by openGl.
+    // */
+    // private double centerX = 0;
+    //
+    // /**
+    // * Y Offset of coordinate system used by openGl.
+    // */
+    // private double centerY = 0;
 
     /**
      * Position of sun. XXX
@@ -116,7 +109,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * Model displayed when error happen.
      */
     private kendzi.jogl.model.geometry.Model errorModel;
-
 
     /**
      * Renderer of model.
@@ -131,22 +123,21 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     private Selection lastSelection;
 
-    private GLUquadric quadratic;   // Storage For Our Quadratic Objects
+    private GLUquadric quadratic; // Storage For Our Quadratic Objects
     private GLU glu = new GLU();
 
     public Perspective3D getPerspective() {
         return this.pers;
     }
+
     public void setPerspective(Perspective3D pers) {
         this.pers = pers;
     }
 
     public RenderJOSM() {
 
-
         // FIXME TODO XXX
-        DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this),
-                FireMode.IMMEDIATELY);
+        DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this), FireMode.IMMEDIATELY);
 
         this.errorModel = createErrorModel();
 
@@ -159,26 +150,28 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public void init(GL2 gl) {
         //
         this.quadratic = this.glu.gluNewQuadric();
-        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH); // Create Smooth Normals
-       // glu.gluQuadricTexture(quadratic, true);
-       // glu.gluQuadricTexture(quadratic, true);
+        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH); // Create
+                                                                    // Smooth
+                                                                    // Normals
+        // glu.gluQuadricTexture(quadratic, true);
+        // glu.gluQuadricTexture(quadratic, true);
     }
 
     public void draw(GL2 gl, Camera camera) {
 
         // _direction_
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
 
         if (this.datasetChanged) {
             this.datasetChanged = false;
             rebuildData();
         }
 
-//        for (Model r : this.modelList) {
-//            drawModel(r, gl, camera);
-//        }
+        // for (Model r : this.modelList) {
+        // drawModel(r, gl, camera);
+        // }
 
-        for (Layer layer : this.layerList ) {
+        for (Layer layer : this.layerList) {
             List<Model> models = layer.getModels();
             for (Model r : models) {
                 drawModel(r, gl, camera);
@@ -189,10 +182,10 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             drawSelectable(gl);
 
         }
-//        Selection selection = this.lastSelection;
-//        if (selection != null) {
-//            drawEditors(gl, selection);
-//        }
+        // Selection selection = this.lastSelection;
+        // if (selection != null) {
+        // drawEditors(gl, selection);
+        // }
 
         this.modelRender.setupDefaultMaterial(gl);
     }
@@ -208,11 +201,11 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             return;
         }
 
-//            r.isInCamraRange(pCamraX, pCamraY, pCamraRange)
+        // r.isInCamraRange(pCamraX, pCamraY, pCamraRange)
         try {
 
             if (r instanceof DLODSuport) {
-                DLODSuport lodModel = ((DLODSuport) r);
+                DLODSuport lodModel = (DLODSuport) r;
                 LOD pLod = getLods(lodModel, camera);
                 if (!lodModel.isModelBuild(pLod)) {
                     lodModel.buildModel(pLod);
@@ -221,11 +214,11 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                 lodModel.draw(gl, camera, pLod);
 
             } else {
-                    if (!r.isBuildModel()) {
-                        r.buildModel();
-                    }
+                if (!r.isBuildModel()) {
+                    r.buildModel();
+                }
 
-                    r.draw(gl, camera);
+                r.draw(gl, camera);
 
             }
 
@@ -252,15 +245,15 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
         Material material = new Material(new AmbientDiffuseComponent(Color.RED, Color.RED));
-//        material.ambientColor = Color.RED;
-//        material.diffuseColor = Color.RED;
-//        material.specularColor = Color.RED;
-//
-//        material.emissive = Color.RED;
-//
-//        material.shininess = (float) 0.5;
+        // material.ambientColor = Color.RED;
+        // material.diffuseColor = Color.RED;
+        // material.specularColor = Color.RED;
+        //
+        // material.emissive = Color.RED;
+        //
+        // material.shininess = (float) 0.5;
 
-//        material.shininess2 = (float) 0.5;
+        // material.shininess2 = (float) 0.5;
 
         int mat = modelBuilder.addMaterial(material);
 
@@ -276,7 +269,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         int v5 = mesh.addVertex(new Point3d(-1, 1, 0));
         int v6 = mesh.addVertex(new Point3d(0, 2, 0));
 
-        //XXX recalculate normals!
+        // XXX recalculate normals!
 
         int n1 = mesh.addNormal(new Vector3d(0, 1, 0));
 
@@ -314,7 +307,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         face.addVertIndex(v2);
         face.addVertIndex(v5);
 
-
         kendzi.jogl.model.geometry.Model model = modelBuilder.toModel();
         model.setUseLight(true);
         model.setUseTexture(true);
@@ -323,24 +315,22 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     }
 
-
     private LOD getLods(DLODSuport r, Camera camera) {
         return getLods(r.getPoint(), camera.getPoint());
     }
 
-
     public static LOD getLods(Point3d point, Point3d camera) {
 
-//        double lod5 = 1000 * 1000;
+        // double lod5 = 1000 * 1000;
 
-//        //XXX temporary
-//        Point3d point = r.getPoint();
-//        Point3d c = camera.getPoint();
+        // //XXX temporary
+        // Point3d point = r.getPoint();
+        // Point3d c = camera.getPoint();
         double dx = camera.x - point.x;
         double dy = camera.y - point.y;
         double dz = camera.z - point.z;
 
-        double distance = dx * dx  + dy * dy + dz * dz;
+        double distance = dx * dx + dy * dy + dz * dz;
 
         if (distance < lod1) {
             return LOD.LOD1;
@@ -357,7 +347,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     public DataSet getDataSet() {
         return this.dataSet;
-//        return Main.main.getCurrentDataSet();
+        // return Main.main.getCurrentDataSet();
     }
 
     public void rebuildData() {
@@ -367,9 +357,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             return;
         }
 
-        //this.modelList.clear();
+        // this.modelList.clear();
 
-        for (Layer layer : this.layerList ) {
+        for (Layer layer : this.layerList) {
             layer.clear();
         }
 
@@ -380,7 +370,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             }
 
             // layers
-            for (Layer layer : this.layerList ) {
+            for (Layer layer : this.layerList) {
                 if (layer.getNodeMatcher() != null && layer.getNodeMatcher().match(node)) {
                     layer.addModel(node, this.pers);
                 }
@@ -394,7 +384,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             }
 
             // layers
-            for (Layer layer : this.layerList ) {
+            for (Layer layer : this.layerList) {
                 if (layer.getWayMatcher() != null && layer.getWayMatcher().match(way)) {
                     layer.addModel(way, this.pers);
                 }
@@ -429,9 +419,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.pers = new Perspective3D(scale, center.getX(), center.getY());
     }
 
-
-
-
     @Override
     public void processDatasetEvent(AbstractDatasetChangedEvent pEvent) {
         if (Main.map == null) {
@@ -439,13 +426,14 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             return;
         }
 
-//        if (pEvent != null && pEvent.getType() == DatasetEventType.TAGS_CHANGED){
-        if (pEvent instanceof TagsChangedEvent){
+        // if (pEvent != null && pEvent.getType() ==
+        // DatasetEventType.TAGS_CHANGED){
+        if (pEvent instanceof TagsChangedEvent) {
             updatePrimitive(((TagsChangedEvent) pEvent).getPrimitive());
         }
 
         if (this.center == null || pEvent == null) {
-        // for tests we change center only on menu button action
+            // for tests we change center only on menu button action
             this.center = Main.map.mapView.getCenter();
         }
 
@@ -456,16 +444,13 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         if (pEvent instanceof DataChangedEvent) {
             AbstractDatasetChangedEvent dce = pEvent;
 
-
-
             try {
-            if (Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().equals(this.dataSet)) {
-//                log.info("TESTTTT !!!!!!!!!!!!!!!!!!!! bad data set ?");
-            }
+                if (Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().equals(this.dataSet)) {
+                    // log.info("TESTTTT !!!!!!!!!!!!!!!!!!!! bad data set ?");
+                }
             } catch (Exception e) {
-//                e.printStackTrace();
+                // e.printStackTrace();
             }
-
 
             if (this.dataSet != null) {
 
@@ -483,12 +468,11 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.datasetChanged = true;
     }
 
-
-
     private void updatePrimitive(OsmPrimitive primitive) {
         // TODO Auto-generated method stub
 
     }
+
     public static Bounds boundsFromDataSet(DataSet dataset) {
         // XXX move to util
 
@@ -537,7 +521,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         } else {
             // it is newly created dataset not connected with OSM
             for (Node n : dataset.getNodes()) {
-             // create area from data bounds
+                // create area from data bounds
                 LatLon cord = n.getCoor();
 
                 if (cord == null) {
@@ -560,33 +544,34 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         }
 
-
-
-        return proj.latlon2eastNorth(new LatLon(
-                (maxY + minY) / 2d,
-                (maxX + minX) / 2d
-            ));
+        return proj.latlon2eastNorth(new LatLon((maxY + minY) / 2d, (maxX + minX) / 2d));
     }
+
     /**
      * @return the modelRender
      */
     public ModelRender getModelRender() {
         return this.modelRender;
     }
+
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;
     }
+
     /**
      * @return the layerList
      */
     public List<Layer> getLayerList() {
         return this.layerList;
     }
+
     /**
-     * @param layerList the layerList to set
+     * @param layerList
+     *            the layerList to set
      */
     public void setLayerList(List<Layer> layerList) {
         this.layerList = layerList;
@@ -596,14 +581,14 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
 
-        for (Layer layer : this.layerList ) {
+        for (Layer layer : this.layerList) {
             List<Model> models = layer.getModels();
             for (Model r : models) {
                 for (Selection s : r.getSelection()) {
-                   // Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
+                    // Double intersect = Ray3dUtil.intersect(selectRay,
+                    // s.getCenter(), s.getRadius());
 
                     gl.glPushMatrix();
-
 
                     Point3d p = s.getCenter();
 
@@ -619,7 +604,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                     gl.glRotated(90d, 1d, 0, 0);
                     DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-
                     gl.glRotated(90d, 0, 0, 1d);
                     DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
@@ -634,12 +618,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         Selection selection = null;
         double min = Double.MAX_VALUE;
 
-        for (Layer layer : this.layerList ) {
+        for (Layer layer : this.layerList) {
             List<Model> models = layer.getModels();
             for (Model r : models) {
                 for (Selection s : r.getSelection()) {
                     Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
-                    if (intersect ==null) {
+                    if (intersect == null) {
                         continue;
                     }
                     if (intersect < min) {
@@ -654,9 +638,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         if (selection != null) {
             log.info("selected object: " + selection);
-          //FIXME
+            // FIXME
             if (last != selection) {
-                //FIXME
+                // FIXME
                 selection.select(true);
                 if (last != null) {
                     last.select(false);
@@ -665,7 +649,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         } else {
             log.info("can't find selection");
-          //FIXME
+            // FIXME
             if (last != null) {
                 last.select(false);
             }
@@ -675,11 +659,5 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         return selection;
     }
-
-
-
-
-
-
 
 }
