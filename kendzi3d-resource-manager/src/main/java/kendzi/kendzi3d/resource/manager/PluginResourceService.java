@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.kendzi3d.resource.manager;
@@ -19,7 +16,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Receive files stored locally in resources or plugin directory.
- *
+ * 
  * @author Tomasz Kedziora (Kendzi)
  */
 public final class PluginResourceService implements ResourceService {
@@ -32,9 +29,11 @@ public final class PluginResourceService implements ResourceService {
      */
     private final String pluginDirectory;
 
-
-    /** Constructor.
-     * @param pluginDirectory location of resources
+    /**
+     * Constructor.
+     * 
+     * @param pluginDirectory
+     *            location of resources
      * 
      */
     public PluginResourceService(String pluginDirectory) {
@@ -47,7 +46,7 @@ public final class PluginResourceService implements ResourceService {
     @Override
     public URL receivePluginDirUrl(String pFileName) {
         File f = new File(this.pluginDirectory, pFileName);
-        System.out.println("reciveFileUrl: " + f.getAbsoluteFile());
+        log.info("reciveFileUrl: " + f.getAbsoluteFile());
         if (f.exists()) {
             try {
                 return f.toURI().toURL();
@@ -59,33 +58,35 @@ public final class PluginResourceService implements ResourceService {
     }
 
     /**
-     * Try to find URL of file in resources. In some reason getClass().getResource(...) can't find file if it is in jar
-     * and file in sub dir. So at this location it work fine: /res/file but if file is deeper like this: /res/dir/file
-     * url returned by getResource is bad. It is possible that it is bug in URLClassLoader or ClassLoader require some
+     * Try to find URL of file in resources. In some reason
+     * getClass().getResource(...) can't find file if it is in jar and file in
+     * sub dir. So at this location it work fine: /res/file but if file is
+     * deeper like this: /res/dir/file url returned by getResource is bad. It is
+     * possible that it is bug in URLClassLoader or ClassLoader require some
      * strange configuration. This function is overround for this bug.
-     *
+     * 
      * Function require resource name to be taken from root.
-     *
+     * 
      * @param pResName
      *            started from "/" of jar or project in eclipse
      * @return url to resource
      */
     public static URL getResourceUrl(String pResName) {
-        //        ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
-        //        CodeSource codeSource = pDomain.getCodeSource();
-        //        //        if (codeSource == null) throw new CannotFindDirException();
-        //        URL loc = codeSource.getLocation();
-        //        log.info("loc: " + loc);
+        // ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
+        // CodeSource codeSource = pDomain.getCodeSource();
+        // // if (codeSource == null) throw new CannotFindDirException();
+        // URL loc = codeSource.getLocation();
+        // log.info("loc: " + loc);
 
         URL resource = PluginResourceService.class.getResource("");
-        //        log.info("resource: " + resource);
+        // log.info("resource: " + resource);
 
         String resUrl = resource.toString();
         if (resUrl.startsWith("jar:")) {
             // if we are in jar
             try {
                 String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
-                //                log.info("new url: " + newURL);
+                // log.info("new url: " + newURL);
                 return new URL(newURL);
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -101,11 +102,13 @@ public final class PluginResourceService implements ResourceService {
         }
 
         // if it is not from root
-        //THIS MAGICALLY WORK:
+        // THIS MAGICALLY WORK:
 
-        // When the string was not a valid URL, try to load it as a resource using
+        // When the string was not a valid URL, try to load it as a resource
+        // using
         // an anonymous class in the tree.
-        Object objectpart = new Object() { };
+        Object objectpart = new Object() {
+        };
         Class classpart = objectpart.getClass();
         ClassLoader loaderpart = classpart.getClassLoader();
         URL result = loaderpart.getResource(pResName);
@@ -117,7 +120,6 @@ public final class PluginResourceService implements ResourceService {
     public String getPluginDir() {
         throw new RuntimeException("DEPRICATED");
     }
-
 
     @Override
     public URL resourceToUrl(String resourceName) {
