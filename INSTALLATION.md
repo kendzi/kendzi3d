@@ -5,9 +5,9 @@
 
 # Installation inside eclipse
 
-* Download and install java 1.6 JDK
+* download and install java 1.6 JDK
 
-* Download and install Eclipse 4.2 EE
+* download and install Eclipse 4.2 EE
 
 * download kendzi3d project using egit
 ```
@@ -21,13 +21,13 @@ Git Repositories > Clone Git repository
 
 * import git workspace as maven project and select all sub modules
 ```
-File>Import>Maven>Existing Maven Project
+File > Import > Maven > Existing Maven Project
 ```
 ![](https://raw.github.com/kendzi/kendzi3d/master/doc/install3.png)
 
 * compile and install artifacts using maven
 ```
-Click on file kendzi3d-parent >  pom.xml > Run as > Maven install
+Click on file kendzi3d-parent/pom.xml > Run as > Maven install
 ```
 ![](https://raw.github.com/kendzi/kendzi3d/master/doc/install4.png)
 
@@ -62,6 +62,6 @@ F12 > Plugins > Kendzi3d
 
 * restart JOSM
 
-* optional JOSM sources and kendzi-math sources can be download but they are not required to run application
+* optional sources for JOSM and kendzi-math can be download. But they are not required to compile and run application
 
 
