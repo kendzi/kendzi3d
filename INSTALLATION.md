@@ -63,5 +63,7 @@ F12 > Plugins > Kendzi3d
 * restart JOSM
 
 * optional sources for JOSM and kendzi-math can be download. But they are not required to compile and run application
+* optional check if egit is correctly attached to project if not right click on project team > git and follow wizard
+
 
 
