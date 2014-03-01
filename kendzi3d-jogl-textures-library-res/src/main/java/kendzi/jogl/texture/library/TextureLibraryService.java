@@ -304,7 +304,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
         marshaller.marshal(gl, new FileOutputStream(file));
 
-        log.info("saved textrure library: " + file.getAbsoluteFile());
+        log.info("saved texture library: " + file.getAbsoluteFile());
 
     }
 

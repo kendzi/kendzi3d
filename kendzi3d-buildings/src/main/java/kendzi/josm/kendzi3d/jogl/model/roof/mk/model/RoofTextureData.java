@@ -24,13 +24,13 @@ public class RoofTextureData {
     Color roofColor;
 
     /**
-     * @return the facadeTextrure
+     * @return the facadeTexture
      */
     public TextureData getFacadeTexture() {
         return this.facadeTexture;
     }
     /**
-     * @param facadeTexture the facadeTextrure to set
+     * @param facadeTexture the facadeTexture to set
      */
     public void setFacadeTexture(TextureData facadeTexture) {
         this.facadeTexture = facadeTexture;

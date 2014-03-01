@@ -101,7 +101,7 @@ public class FaceFactory {
 
 		this.vertIndex.add(vertIndex);
 
-		validateAddedTextrureCoordinates(1);
+		validateAddedTextureCoordinates(1);
 
 		this.coordIndexLayers.get(0).add(coordIndex);
 
@@ -110,7 +110,7 @@ public class FaceFactory {
 		this.count++;
 	}
 
-	private void validateAddedTextrureCoordinates(int numOfAddedTexturesCoordinates) {
+	private void validateAddedTextureCoordinates(int numOfAddedTexturesCoordinates) {
 	    if (this.coordIndexLayers.size() != numOfAddedTexturesCoordinates) {
             throw new RuntimeException("face have setup: " + this.coordIndexLayers.size() + " textures layers but added vertex has only coordinate for: "+ numOfAddedTexturesCoordinates);
         }
@@ -120,7 +120,7 @@ public class FaceFactory {
 
 	    this.vertIndex.add(vertIndex);
 
-	    validateAddedTextrureCoordinates(2);
+	    validateAddedTextureCoordinates(2);
 
 	    this.coordIndexLayers.get(0).add(coordIndex0);
 	    this.coordIndexLayers.get(1).add(coordIndex1);
@@ -134,7 +134,7 @@ public class FaceFactory {
 
 	    this.vertIndex.add(vertIndex);
 
-	    validateAddedTextrureCoordinates(cords.length);
+	    validateAddedTextureCoordinates(cords.length);
 
 	    for (int i = 0; i < cords.length; i++) {
 	        this.coordIndexLayers.get(i).add(cords[i]);
