@@ -36,7 +36,7 @@ public class Photo {
     double pitch;
 
     double angleWidth;
-    double angleHeigth;
+    double angleHeight;
 
 
     String path;
@@ -152,17 +152,17 @@ public class Photo {
     }
 
     /**
-     * @return the angleHeigth
+     * @return the angleHeight
      */
-    public double getAngleHeigth() {
-        return angleHeigth;
+    public double getAngleHeight() {
+        return angleHeight;
     }
 
     /**
-     * @param angleHeigth the angleHeigth to set
+     * @param angleHeight the angleHeight to set
      */
-    public void setAngleHeigth(double angleHeigth) {
-        this.angleHeigth = angleHeigth;
+    public void setAngleHeight(double angleHeight) {
+        this.angleHeight = angleHeight;
     }
 
     /**

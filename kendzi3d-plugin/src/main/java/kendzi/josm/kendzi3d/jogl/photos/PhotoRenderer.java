@@ -121,7 +121,7 @@ public class PhotoRenderer {
         double distance = 500d;
 
         double width = distance * Math.sin(photo.getAngleWidth() / 2d);
-        double height = distance * Math.sin(photo.getAngleHeigth() / 2d);
+        double height = distance * Math.sin(photo.getAngleHeight() / 2d);
 
 
         Vector3d p1 = new Vector3d(distance, -height, -width);

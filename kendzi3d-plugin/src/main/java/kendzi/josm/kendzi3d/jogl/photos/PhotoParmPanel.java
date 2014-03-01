@@ -32,7 +32,7 @@ public class PhotoParmPanel extends JPanel {
     private JTextField pathText;
     private JTextField yawTest;
     private JTextField angleWidthText;
-    private JTextField angleHeigthText;
+    private JTextField angleHeightText;
 
 
     public final static boolean showPhotoPanel = false;
@@ -90,10 +90,10 @@ public class PhotoParmPanel extends JPanel {
                         this.angleWidthText = new JTextField();
                         textPanel.add(angleWidthText);
 
-                                JLabel label_6 = new JLabel("angleHeigthText");
+                                JLabel label_6 = new JLabel("angleHeightText");
                                 textPanel.add(label_6);
-                        this.angleHeigthText = new JTextField();
-                        textPanel.add(angleHeigthText);
+                        this.angleHeightText = new JTextField();
+                        textPanel.add(angleHeightText);
 
                         JLabel label_7 = new JLabel("path");
                         textPanel.add(label_7);
@@ -139,7 +139,7 @@ public class PhotoParmPanel extends JPanel {
         this.latText.setText("52.141809265470116");
         this.lonText.setText("15.764873979360045");
 
-        this.angleHeigthText.setText("30");
+        this.angleHeightText.setText("30");
         this.angleWidthText.setText("60");
         this.pathText.setText("test.png");
         this.pitchText.setText("0");
@@ -161,8 +161,8 @@ public class PhotoParmPanel extends JPanel {
         photo.setLat(Double.parseDouble(this.latText.getText()));
         photo.setLon(Double.parseDouble(this.lonText.getText()));
 
-        photo.setAngleHeigth(
-                Math.toRadians(Double.parseDouble(this.angleHeigthText.getText())));
+        photo.setAngleHeight(
+                Math.toRadians(Double.parseDouble(this.angleHeightText.getText())));
         photo.setAngleWidth(
                 Math.toRadians(Double.parseDouble(this.angleWidthText.getText())));
         photo.setPath( this.pathText.getText());
