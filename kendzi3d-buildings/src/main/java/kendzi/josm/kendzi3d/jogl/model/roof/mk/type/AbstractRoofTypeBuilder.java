@@ -20,9 +20,10 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         super();
     }
 
-    public double getLenghtMetersPersent(Map<MeasurementKey, Measurement> pMeasurements, MeasurementKey pMeasurementKey, double maxLenght, double pDefaultValue) {
+    public double getLenghtMetersPersent(Map<MeasurementKey, Measurement> measurements, MeasurementKey measurementKey,
+            double maxLenght, double pDefaultValue) {
 
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
+        Measurement measurement = getMeasurement(measurementKey, measurements);
 
         if (measurement == null) {
             return pDefaultValue;
@@ -34,14 +35,15 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
             return measurement.getValue();
         } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
+            log.error(MeasurementParserUtil.getErrorMessage(measurementKey, measurement));
             return pDefaultValue;
         }
     }
 
-    public double getHeightMeters(Map<MeasurementKey, Measurement> pMeasurements, MeasurementKey pMeasurementKey, double pDefaultValue) {
+    public double getHeightMeters(Map<MeasurementKey, Measurement> measurements, MeasurementKey measurementKey,
+            double pDefaultValue) {
 
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
+        Measurement measurement = getMeasurement(measurementKey, measurements);
 
         if (measurement == null) {
             return pDefaultValue;
@@ -51,22 +53,25 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
             return measurement.getValue();
         } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
+            log.error(MeasurementParserUtil.getErrorMessage(measurementKey, measurement));
             return pDefaultValue;
         }
     }
 
-    /** Default value is in meters!
-     * @param pMeasurements
-     * @param pMeasurementKey
+    /**
+     * Default value is in meters!
+     * 
+     * @param measurements
+     * @param measurementKey
      * @param pAngleHeight
      * @param pAngleDepth
      * @param pMetersDefaultValue
      * @return
      */
-    public double getHeightMetersDegrees(Map<MeasurementKey, Measurement> pMeasurements, MeasurementKey pMeasurementKey, double pAngleHeight, double pAngleDepth, double pMetersDefaultValue) {
+    public double getHeightMetersDegrees(Map<MeasurementKey, Measurement> measurements, MeasurementKey measurementKey,
+            double pAngleHeight, double pAngleDepth, double pMetersDefaultValue) {
 
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
+        Measurement measurement = getMeasurement(measurementKey, measurements);
 
         if (measurement == null) {
             return pMetersDefaultValue;
@@ -78,50 +83,53 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         } else if (isUnit(measurement, MeasurementUnit.DEGREES)) {
             return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
         } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
+            log.error(MeasurementParserUtil.getErrorMessage(measurementKey, measurement));
             return pMetersDefaultValue;
         }
     }
 
-    /** Default value is in degrees!
-     * @param pMeasurements
-     * @param pMeasurementKey
-     * @param pAngleHeight
-     * @param pAngleDepth
-     * @param pAngleDegreesDefaultValue
+    /**
+     * Default value is in degrees!
+     * 
+     * @param measurements
+     * @param measurementKey
+     * @param angleHeight
+     * @param angleDepth
+     * @param angleDegreesDefaultValue
      * @return
      */
-    public double getHeightDegreesMeters(Map<MeasurementKey, Measurement> pMeasurements, MeasurementKey pMeasurementKey, double pAngleHeight, double pAngleDepth, double pAngleDegreesDefaultValue) {
+    public double getHeightDegreesMeters(Map<MeasurementKey, Measurement> measurements, MeasurementKey measurementKey,
+            double angleHeight, double angleDepth, double angleDegreesDefaultValue) {
 
-        Measurement measurement = getMeasurement(pMeasurementKey, pMeasurements);
+        Measurement measurement = getMeasurement(measurementKey, measurements);
 
         if (measurement == null) {
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(pAngleDegreesDefaultValue));
+            return angleHeight + angleDepth * Math.tan(Math.toRadians(angleDegreesDefaultValue));
         }
         if (isUnit(measurement, MeasurementUnit.METERS)) {
             return measurement.getValue();
         } else if (isUnit(measurement, MeasurementUnit.UNKNOWN)) {
             return measurement.getValue();
         } else if (isUnit(measurement, MeasurementUnit.DEGREES)) {
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(measurement.getValue()));
+            return angleHeight + angleDepth * Math.tan(Math.toRadians(measurement.getValue()));
         } else {
-            log.error(MeasurementParserUtil.getErrorMessage(pMeasurementKey, measurement));
-            return pAngleHeight + pAngleDepth * Math.tan(Math.toRadians(pAngleDegreesDefaultValue));
+            log.error(MeasurementParserUtil.getErrorMessage(measurementKey, measurement));
+            return angleHeight + angleDepth * Math.tan(Math.toRadians(angleDegreesDefaultValue));
         }
     }
 
-    private Measurement getMeasurement(MeasurementKey pDormerWidth1, Map<MeasurementKey, Measurement> pMeasurements) {
-        if (pMeasurements == null) {
+    private Measurement getMeasurement(MeasurementKey dormerWidth1, Map<MeasurementKey, Measurement> measurements) {
+        if (measurements == null) {
             return null;
         }
-        return pMeasurements.get(pDormerWidth1);
+        return measurements.get(dormerWidth1);
     }
 
-    boolean isUnit(Measurement pMeasurement, MeasurementUnit pMeasurementUnit) {
-        if (pMeasurement == null) {
+    boolean isUnit(Measurement measurement, MeasurementUnit measurementUnit) {
+        if (measurement == null) {
             return false;
         }
-        if (pMeasurementUnit.equals(pMeasurement.getUnit())) {
+        if (measurementUnit.equals(measurement.getUnit())) {
             return true;
         }
         return false;
@@ -145,8 +153,5 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
         return meshBorder;
     }
-
-
-
 
 }
