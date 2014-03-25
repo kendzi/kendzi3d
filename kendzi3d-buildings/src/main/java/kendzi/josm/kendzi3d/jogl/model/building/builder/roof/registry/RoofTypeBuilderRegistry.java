@@ -35,12 +35,12 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGabled;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeGambrel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeHalfRound;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquareHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeMansard;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeOnion;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypePitched;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeRound;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSkillion;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquareHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquarePyramidal;
 
 /**
@@ -98,6 +98,8 @@ public class RoofTypeBuilderRegistry {
             return new RoofTypeHalfRound();
         case ROUND:
             return new RoofTypeRound();
+        case SALTBOX:
+            return new RoofType3v0();
 
         case ROOF_TYPE0_0:
             return new RoofType0v0();

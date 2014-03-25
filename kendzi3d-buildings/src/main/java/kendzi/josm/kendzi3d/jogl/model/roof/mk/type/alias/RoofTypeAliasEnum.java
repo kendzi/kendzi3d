@@ -63,6 +63,7 @@ public enum RoofTypeAliasEnum {
     ONION("onion"), //
     HALF_ROUND("half round"), //
     ROUND("round"), //
+    SALTBOX("saltbox"), //
     ;
 
     private String key;
