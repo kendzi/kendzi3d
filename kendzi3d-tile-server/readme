@@ -1,4 +1,4 @@
-This is web application for tomcat. It allow to render tiles on demand and store them in catch directory.
+This is web application for tomcat. It allow to render tiles on demand and store them in cache directory.
 
 
 *** Configuration
