@@ -61,24 +61,24 @@ Example:
 		scale="height(0.8)" direction="90"/>
 		
 	<nodeModel matcher="highway=street_lamp" model="/models/pd/lamp.obj"
-		scale="height(5.5)" direction="0"/>
+		scale="height(5.5)" direction="direction(0)"/>
 	
 	<nodeModel matcher="highway=street_lamp1" model="/models/pd/StreetlampM2_Height323cm.obj"
-		scale="height(5.5)" direction="0"/>
+		scale="height(5.5)" direction="direction(0)"/>
 	
 	
 	
 	<nodeModel matcher="amenity=bench" model="/models/pd/bench.obj"
-		scale="height(1.2)" direction="0"/>
+		scale="height(1.2)" direction="direction(0)"/>
 		
 	<nodeModel matcher="amenity=waste_basket" model="/models/pd/waste_basket.obj"
-		scale="height(0.6)" direction="0"/>
+		scale="height(0.6)" direction="direction(0)"/>
 		
 	<nodeModel matcher="amenity=post_box" model="/models/pd/post_box.obj"
-		scale="height(1.1)" direction="0"/>
+		scale="height(1.1)" direction="direction(0)"/>
 		
 	<nodeModel matcher="highway=milestone" model="/models/pd/milestone.obj"
-		scale="height(1)" direction="0"/>
+		scale="height(1)" direction="direction(0)"/>
 
 	<nodeModel matcher="artwork=statue | monument=statue" model="/models/cc/Statu_LowPoly/Statu_lowpoly.obj"		
 		translate="vectorY(minHeight(0))" scale="height(4) - minHeight(0)" direction="180 - direction(0)"/>
@@ -87,9 +87,9 @@ Example:
 	
 	<!-- Example only -->
 	<nodeModel matcher="test=tree1" model="/models/pd/tree1/christian_nietsche_tree.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="0"/>
+		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="direction(0)"/>
 	<nodeModel matcher="test=tree2" model="/models/pd/new_tree_lod_packed/New_Tree_Lod_Packed.obj"
-		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="0"/>
+		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="direction(0)"/>
 	<wayNodeModel matcher="highway=*" filter="hightway=bench" 
 		model="/models/pd/bench.obj"
 		translate="vector()" scale="height(1)" direction="wayNodeDirection() + 90" offset="3" />
@@ -101,7 +101,7 @@ Example:
 	
 	<nodeModel matcher="test=sign2" model="/models/traffic_signs/test/triangleSign.obj"
 		modelParameter="material.mat_sign.texture0=tree.png"
-		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="0"/>
+		translateX="0" translateY="0" translateZ="0" scale="height(7)" direction="direction(0)"/>
 	
 	
 	 
