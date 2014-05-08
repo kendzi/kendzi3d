@@ -58,6 +58,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.sun</groupId>
@@ -65,6 +66,16 @@
 								<version>${java.version}</version>
 								<scope>system</scope>
 								<systemPath>${java.home}/../lib/tools.jar</systemPath>
+							</dependency>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant</artifactId>
+								<version>1.8.3</version>
+							</dependency>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant-launcher</artifactId>
+								<version>1.8.3</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -86,6 +97,7 @@
 
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
 				<executions>
 					<execution>
 						<phase>process-resources</phase>
@@ -109,14 +121,23 @@
 					<dependency>
 						<groupId>org.apache.ant</groupId>
 						<artifactId>ant-commons-net</artifactId>
-						<version>1.8.1</version>
+						<version>1.9.4</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.ant</groupId>
 						<artifactId>ant-nodeps</artifactId>
 						<version>1.8.1</version>
 					</dependency>
-
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant</artifactId>
+						<version>1.8.3</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-launcher</artifactId>
+						<version>1.8.3</version>
+					</dependency>
 				</dependencies>
 				<!-- <dependencies> -->
 				<!-- This will work only with oracle jdk! http://docs.codehaus.org/display/MAVENUSER/Running+ant+tasks+that+use+the+JDK -->
