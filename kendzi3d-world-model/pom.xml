@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>kendzi3d-world-model</artifactId>
+	
+	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+
+	<dependencies>		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>		
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model</artifactId>
+			<version>1.0.179-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-josm-core</artifactId>
+			<version>1.0.179-SNAPSHOT</version>
+		</dependency>
+
+		 <dependency>
+        	<groupId>kendzi.math</groupId>
+        	<artifactId>kendzi-math-geometry</artifactId>
+        	<version>0.0.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+        	<groupId>kendzi</groupId>
+        	<artifactId>kendzi-util</artifactId>
+        	<version>1.0.179-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+			<groupId>josm</groupId>
+			<artifactId>josm-wrapper</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>1.0.179-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+</project>
