@@ -41,17 +41,17 @@ public final class PluginResourceService implements ResourceService {
     }
 
     /**
-     * @param pFileName
+     * @param fileName
      */
     @Override
-    public URL receivePluginDirUrl(String pFileName) {
-        File f = new File(this.pluginDirectory, pFileName);
+    public URL receivePluginDirUrl(String fileName) {
+        File f = new File(this.pluginDirectory, fileName);
         log.info("reciveFileUrl: " + f.getAbsoluteFile());
         if (f.exists()) {
             try {
                 return f.toURI().toURL();
             } catch (MalformedURLException e) {
-                log.error("error reciving URL for: " + pFileName, e);
+                log.error("error reciving URL for: " + fileName, e);
             }
         }
         return null;
@@ -82,7 +82,9 @@ public final class PluginResourceService implements ResourceService {
         // log.info("resource: " + resource);
 
         String resUrl = resource.toString();
-        if (resUrl.startsWith("jar:")) {
+        if (resUrl.startsWith("jar:") && resUrl.contains("kendzi3d.jar")) {
+            // XXX only for JOSN plugin,
+            // FIXME remove
             // if we are in jar
             try {
                 String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
