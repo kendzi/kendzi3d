@@ -6,6 +6,6 @@ import org.openstreetmap.josm.data.osm.Node;
 
 public interface Perspective {
 
-    public abstract Point2d calcPoint(Node node);
+    Point2d calcPoint(Node node);
 
 }

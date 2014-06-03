@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.jogl.texture;
@@ -48,10 +45,11 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     private List<TextureBuilder> textureBuilderList = new ArrayList<TextureBuilder>();
 
-
-
-    /** Set texture filter.
-     * @param pEnabled enabled
+    /**
+     * Set texture filter.
+     * 
+     * @param pEnabled
+     *            enabled
      */
     public void setTextureFilter(boolean pEnabled) {
         if (this.filter != pEnabled) {
@@ -62,7 +60,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Get texture from cache or load it to cache.
-     *
+     * 
      * @param pName
      *            file name from: <br>
      *            1. directory {PLUGIN_DIR_NAME}/ <br>
@@ -76,7 +74,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Get texture image from.
-     *
+     * 
      * @param pName
      *            file name from: <br>
      *            1. directory {PLUGIN_DIR_NAME}/ <br>
@@ -92,13 +90,12 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         BufferedImage texture = null;
 
         if (pName != null && this.textureBuilderList != null) {
-            //builders
+            // builders
 
             for (TextureBuilder tb : this.textureBuilderList) {
                 if (pName.startsWith(tb.getBuilderPrefix())) {
 
                     texture = tb.buildImage(pName);
-
 
                     if (texture != null) {
                         return texture;
@@ -134,7 +131,9 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Add texture builder.
-     * @param pTextureBuilder texture builder
+     * 
+     * @param pTextureBuilder
+     *            texture builder
      */
     public void addTextureBuilder(TextureBuilder pTextureBuilder) {
         this.textureBuilderList.add(pTextureBuilder);
@@ -142,8 +141,9 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * DONT use Only for test!!
+     * 
      * @throws IOException
-     *
+     * 
      * @depricated
      */
     public void setTexture(GL gl, String pName, BufferedImage pImg) throws IOException {
@@ -152,24 +152,26 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * DONT use Only for test!!
+     * 
      * @throws IOException
-     *
+     * 
      * @depricated
      */
     public void setTexture(String pName, Texture pImg) {
         this.addTexture(pName, pImg, this.filter);
     }
 
-
-    /** Test if texture exist in cache.
-     * @param pName name of texture
+    /**
+     * Test if texture exist in cache.
+     * 
+     * @param pName
+     *            name of texture
      * @return if texture exist
      */
     @Override
     public boolean isTexture(String pName) {
         return null != this.cache.get(pName);
     }
-
 
     /**
      * Clean up all textures from cache.
@@ -183,7 +185,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
      * Try to get texture. If it isn't laded it well be loaded from:<br>
      * 1. directory {PLUGIN_DIR_NAME}/textures <br>
      * 2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
-     *
+     * 
      * @param pName
      * @return
      */
@@ -209,7 +211,6 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return texture;
     }
 
-
     /**
      * @param gl
      * @param texture
@@ -221,14 +222,14 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
             // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
 
             // tex.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-            // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+            // tex.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER,
+            // GL2.GL_LINEAR_MIPMAP_LINEAR);
 
         } else {
             texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
             texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         }
     }
-
 
     /**
      * @param gl
@@ -239,7 +240,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         Texture texture = null;
 
         if (pName != null && this.textureBuilderList != null) {
-            //builders
+            // builders
 
             for (TextureBuilder tb : this.textureBuilderList) {
                 if (pName.startsWith(tb.getBuilderPrefix())) {
@@ -286,7 +287,6 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return TextureIO.newTexture(textUrl, filter, null);
     }
 
-
     public void addTexture(String pName, Texture img, boolean filter) {
 
         Texture tex = img;
@@ -294,22 +294,24 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         this.cache.put(pName, tex);
 
     }
+
     public void addTexture(GL gl, String pName, BufferedImage img, boolean filter) throws IOException {
 
-        //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
         //
-        //        ImageIO.write(img, "png", baos);
+        // ImageIO.write(img, "png", baos);
         //
-        //        baos.close();
+        // baos.close();
         //
-        //        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        // ByteArrayInputStream bais = new
+        // ByteArrayInputStream(baos.toByteArray());
 
         Texture tex = null;
 
         GLProfile glp = GLProfile.get(GLProfile.GL2);
         tex = AWTTextureIO.newTexture(glp, img, filter);
 
-        //tex = TextureIO.newTexture(bais, filter, null);
+        // tex = TextureIO.newTexture(bais, filter, null);
 
         if (tex == null) {
             log.error("error importing buffered image");
@@ -331,8 +333,6 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     }
 
-
-
     /**
      * @return the filter
      */
@@ -341,12 +341,12 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
     }
 
     /**
-     * @param filter the filter to set
+     * @param filter
+     *            the filter to set
      */
     public void setFilter(boolean filter) {
         this.filter = filter;
     }
-
 
     /**
      * @return the textureBuilderList
@@ -355,14 +355,13 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return this.textureBuilderList;
     }
 
-
     /**
-     * @param textureBuilderList the textureBuilderList to set
+     * @param textureBuilderList
+     *            the textureBuilderList to set
      */
     public void setTextureBuilderList(List<TextureBuilder> textureBuilderList) {
         this.textureBuilderList = textureBuilderList;
     }
-
 
     /**
      * @return the resourceService
@@ -371,9 +370,9 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
         return this.resourceService;
     }
 
-
     /**
-     * @param resourceService the resourceService to set
+     * @param resourceService
+     *            the resourceService to set
      */
     public void setFileUrlReciverService(ResourceService resourceService) {
         this.resourceService = resourceService;

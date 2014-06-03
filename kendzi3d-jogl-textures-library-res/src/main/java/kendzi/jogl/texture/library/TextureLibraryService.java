@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.jogl.texture.library;
@@ -41,8 +38,6 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     private static final String TEXTURE_LIBRARY_INTERNAL_XML = "/textures/textureLibraryInternal.xml";
     public static final String TEXTURE_LIBRARY_WIKI_XML = "/textures/textureLibraryWiki.xml";
 
-
-
     /** Log. */
     private static final Logger log = Logger.getLogger(TextureLibraryService.class);
 
@@ -54,8 +49,11 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
     private UrlTextureLibrary userTextureLibraryUrl = null;
 
-    /** Constructor.
-     * @param urlReciverService url reciver service
+    /**
+     * Constructor.
+     * 
+     * @param urlReciverService
+     *            url reciver service
      */
     public TextureLibraryService(ResourceService urlReciverService) {
         super();
@@ -64,20 +62,26 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         init();
     }
 
-    /** Test if texture exist for key.
-     * @param key texture key
+    /**
+     * Test if texture exist for key.
+     * 
+     * @param key
+     *            texture key
      * @return is texture exist
      */
     public boolean isTexture(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
-        if (set== null || set.size() == 0) {
+        if (set == null || set.size() == 0) {
             return false;
         }
         return true;
     }
 
-    /** Return random texture for key.
-     * @param key texture key
+    /**
+     * Return random texture for key.
+     * 
+     * @param key
+     *            texture key
      * @return is texture exist
      */
     @Deprecated
@@ -91,7 +95,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     @Deprecated
     public TextureData getRadnomTextureFromSet(List<TextureData> set) {
 
-        if (set== null || set.size() == 0) {
+        if (set == null || set.size() == 0) {
             return null;
         }
 
@@ -100,10 +104,11 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         return set.get(nextInt);
     }
 
-
-
-    /** Return texture list for key.
-     * @param key texture key
+    /**
+     * Return texture list for key.
+     * 
+     * @param key
+     *            texture key
      * @return texture list for key
      */
     @Override
@@ -116,11 +121,9 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         return set;
     }
 
-
-
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see kendzi.josm.kendzi3d.service.TextureLibrary#getTextureDefault(java.lang.String)
      */
     @Override
@@ -134,20 +137,21 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
     /**
      * {@inheritDoc}
-     *
-     * @see kendzi.josm.kendzi3d.service.TextureLibrary#getKey(kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey, java.lang.String)
+     * 
+     * @see kendzi.josm.kendzi3d.service.TextureLibrary#getKey(kendzi.josm.kendzi3d.service.TextureLibraryService.TextureLibraryKey,
+     *      java.lang.String)
      */
     @Override
-    public String getKey(TextureLibraryKey pKey, String ... pKeyParts) {
+    public String getKey(TextureLibraryKey pKey, String... pKeyParts) {
         return getKey(pKey.getKey(), true, pKeyParts);
     }
 
     @Deprecated
-    private String getKey(String pPattern, String ... pKeyParts) {
+    private String getKey(String pPattern, String... pKeyParts) {
         return getKey(pPattern, true, pKeyParts);
     }
 
-    public String getKey(String pPattern, boolean pTakeUnknown, String ... pKeyParts) {
+    public String getKey(String pPattern, boolean pTakeUnknown, String... pKeyParts) {
 
         if (pTakeUnknown && pKeyParts != null) {
             for (int i = 0; i < pKeyParts.length; i++) {
@@ -158,46 +162,39 @@ public class TextureLibraryService implements TextureLibraryStorageService {
             }
         }
 
-        return MessageFormat.format(pPattern, (Object []) pKeyParts);
+        return MessageFormat.format(pPattern, (Object[]) pKeyParts);
     }
-
 
     /**
      * Initialize.
      */
     private void init() {
-        long t1 = System.currentTimeMillis();
 
         this.textureMap.clear();
 
         try {
-            //load internal
+            // load internal
             load(TEXTURE_LIBRARY_INTERNAL_XML);
         } catch (Exception e) {
-            log.error(e,e);
+            log.error(e, e);
         }
         try {
             // load wiki
             load(TEXTURE_LIBRARY_WIKI_XML);
         } catch (Exception e) {
-            log.error(e,e);
+            log.error(e, e);
         }
 
         try {
             // load wiki
             loadUserFile(this.userTextureLibraryUrl);
         } catch (Exception e) {
-            log.error(e,e);
+            log.error(e, e);
         }
-
-
-        System.out.println("load text libr: " + (System.currentTimeMillis() - t1));
-        System.out.println("tst2");
     }
 
-
     private void load(String url) throws FileNotFoundException, JAXBException {
-        //        this.textureMap.clear();
+        // this.textureMap.clear();
 
         URL pointModelConf = this.urlReciverService.resourceToUrl(url);
 
@@ -208,8 +205,6 @@ public class TextureLibraryService implements TextureLibraryStorageService {
 
         loadUrl(pointModelConf);
     }
-
-
 
     private void loadUrl(URL pUrl) throws JAXBException, FileNotFoundException {
         List<TextureSet> pointModelsInternalList = loadXml(pUrl);
@@ -225,7 +220,8 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     @Override
-    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException {
+    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException,
+            MalformedURLException {
 
         if (pUrlTextureLibrary == null) {
             return;
@@ -240,17 +236,11 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     private TextureData convert(org.kendzi3d.TextureData td) {
-        TextureData textureData = new TextureData(
-                td.getTex0(),
-                td.getTex1(),
-                td.getWidth() == null ? 1d : td.getWidth(),
-                        td.getHeight() == null ? 1d :td.getHeight(),
-                                td.isColorable());
+        TextureData textureData = new TextureData(td.getTex0(), td.getTex1(), td.getWidth() == null ? 1d : td.getWidth(),
+                td.getHeight() == null ? 1d : td.getHeight(), td.isColorable());
 
         return textureData;
     }
-
-
 
     private void addTexture(String key, TextureData data) {
         ArrayList<TextureData> set = this.textureMap.get(key);
@@ -263,20 +253,19 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         set.add(data);
     }
 
-
     public static List<TextureSet> loadXml(URL url) throws JAXBException, FileNotFoundException {
 
-        //        JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+        // JAXBContext
+        // jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
 
-        JAXBContext jaxbContext=JAXBContext.newInstance( "org.kendzi3d", TextureLibraryService.class.getClassLoader());
-        // JAXBContext jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
+        JAXBContext jaxbContext = JAXBContext.newInstance("org.kendzi3d", TextureLibraryService.class.getClassLoader());
+        // JAXBContext
+        // jaxbContext=JAXBContext.newInstance("kendzi.josm.kendzi3d.dto.xsd");
 
-        Unmarshaller unmarshaller =
-                jaxbContext.createUnmarshaller();
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         @SuppressWarnings("unchecked")
-        JAXBElement<TextureLibrary> c = (JAXBElement<TextureLibrary>)
-        unmarshaller.unmarshal(url);
+        JAXBElement<TextureLibrary> c = (JAXBElement<TextureLibrary>) unmarshaller.unmarshal(url);
 
         return c.getValue().getTextureSet();
     }
@@ -288,19 +277,17 @@ public class TextureLibraryService implements TextureLibraryStorageService {
             dir.mkdirs();
         }
 
-        JAXBContext jaxbContext=JAXBContext.newInstance("org.kendzi3d", TextureLibraryService.class.getClassLoader());
-        Marshaller marshaller=jaxbContext.
-                createMarshaller();
+        JAXBContext jaxbContext = JAXBContext.newInstance("org.kendzi3d", TextureLibraryService.class.getClassLoader());
+        Marshaller marshaller = jaxbContext.createMarshaller();
 
         marshaller.setProperty("jaxb.formatted.output", true);
-        marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-        //        marshaller.setProperty( Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, Boolean.TRUE);
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        // marshaller.setProperty( Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION,
+        // Boolean.TRUE);
 
+        ObjectFactory factory = new ObjectFactory();
 
-        ObjectFactory factory=new ObjectFactory();
-
-        JAXBElement<TextureLibrary> gl =
-                factory.createTextureLibrary(pTextureLibrary);
+        JAXBElement<TextureLibrary> gl = factory.createTextureLibrary(pTextureLibrary);
 
         marshaller.marshal(gl, new FileOutputStream(file));
 
@@ -313,6 +300,5 @@ public class TextureLibraryService implements TextureLibraryStorageService {
         this.textureMap.clear();
         init();
     }
-
 
 }
