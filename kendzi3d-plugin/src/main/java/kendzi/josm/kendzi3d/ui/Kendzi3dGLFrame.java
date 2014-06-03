@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import kendzi.josm.kendzi3d.jogl.photos.PhotoParmPanel;
 import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
@@ -31,7 +32,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 /**
  * Main application window. Display 3d view, panel with menu and layers.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListener {
@@ -39,9 +40,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
     /** Log. */
     private static final Logger log = Logger.getLogger(Kendzi3dGLFrame.class);
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -73,14 +71,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     @Inject
     Kendzi3dGLEventListener canvasListener;
-    // = new Kendzi3dGLEventListener() {
-    //
-    // @Override
-    // void displayStats(long pTime, int pFps) {
-    // setTimeSpent(pTime);
-    // setFps(pFps);
-    // }
-    // };
 
     /**
      * 3d view animator.
@@ -99,12 +89,12 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
      */
     public void initUI() {
 
-        // Container c = getContentPane();
         Container c = this;
         c.setLayout(new BorderLayout());
         c.add(makeRenderPanel(), BorderLayout.CENTER);
 
-        JPanel ctrls = new JPanel(); // a row of text fields
+        // a row of text fields
+        JPanel ctrls = new JPanel();
         ctrls.setLayout(new BoxLayout(ctrls, BoxLayout.X_AXIS));
 
         this.jTFFps = new JTextField("Fps: unknown");
@@ -119,22 +109,18 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
         addWindowListener(this);
 
-        // setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
         if (PhotoParmPanel.showPhotoPanel) {
             initPhotoFrame();
         }
 
         pack();
-        // setVisible(true);
     }
-
 
     private void initPhotoFrame() {
         JFrame photoFrame = new JFrame();
         this.photoParmPanel = new PhotoParmPanel();
         photoFrame.getContentPane().add(this.photoParmPanel);
-        photoFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        photoFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         photoFrame.pack();
         photoFrame.setVisible(true);
 
@@ -143,7 +129,7 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     /**
      * Make canvas panel.
-     *
+     * 
      * @return panel with canvas
      */
     private JPanel makeRenderPanel() {
@@ -155,7 +141,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         renderPane.setSize(640, 480);
 
         this.canvas = makeCanvas(renderPane);
-        // renderPane.add("Center", this.canvas);
 
         renderPane.add(this.canvas);
         renderPane.setVisible(true);
@@ -165,17 +150,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
         this.canvas.setFocusable(true);
         this.canvas.requestFocus(); // the canvas now has focus, so receives key
-        // events
-
-        // // detect window resizes, and reshape the canvas accordingly
-        // renderPane.addComponentListener(new ComponentAdapter() {
-        // @Override
-        // public void componentResized(ComponentEvent evt) {
-        // Dimension d = evt.getComponent().getSize();
-        // // log.info("New size: " + d);
-        // View3dGLFrame.this.canvas.reshape(d.width, d.height);
-        // } // end of componentResized()
-        // });
 
         return renderPane;
     }
@@ -240,7 +214,7 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
     /**
      * Set up openGL capabilities.
-     *
+     * 
      * @param capabilities
      *            openGL capabilities
      */
@@ -285,7 +259,7 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
         final JTextField textField = this.jTFFps;
         final JTextField timeField = this.jTFTime;
 
-//        GuiHelper.runInEDT(new Runnable() {
+        // GuiHelper.runInEDT(new Runnable() {
         SwingUtilities.invokeLater(new Runnable() {
             // always in by query, with out it it could create dead lock in AWT
             @Override
@@ -293,28 +267,8 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
                 textField.setText("Fps: " + fps);
                 timeField.setText("Time Spent: " + time + " secs");
             }
-        }
-        );
+        });
     }
-//    /**
-//     * Display time spent.
-//     *
-//     * @param pTime
-//     *            time
-//     */
-//    public void setTimeSpent(long pTime) {
-//        this.jTFTime.setText("Time Spent: " + pTime + " secs");
-//    }
-
-//    /**
-//     * Display fps.
-//     *
-//     * @param pFps
-//     *            fps
-//     */
-//    public void setFps(final int pFps) {
-//        jTFFps.setText("Fps: " + pFps);
-//    }
 
     // ----------------- window listener methods -------------
 
@@ -389,10 +343,6 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
 
         if (fpsChangeEvent != null) {
             setTimeAndFps(fpsChangeEvent.getTime(), fpsChangeEvent.getFps());
-
-//            setFps(fpsChangeEvent.getFps());
-//            setTimeSpent(fpsChangeEvent.getTime());
         }
     }
-
 }
