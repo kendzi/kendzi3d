@@ -1,15 +1,11 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.ui;
 
-//import com.sun.opengl.util.Animator;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
@@ -17,12 +13,15 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -56,24 +55,23 @@ public class BaseJoglFrame implements GLEventListener {
     /** Log. */
     private static final Logger log = Logger.getLogger(BaseJoglFrame.class);
 
-
     /**
      * Position of sun. XXX
      */
-    private float [] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
-    /** XXX
-     * Font for axis.
+    /**
+     * XXX Font for axis.
      */
     private Font font = new Font("SansSerif", Font.BOLD, 24);
 
-    /** XXX
-     * For axis labels.
+    /**
+     * XXX For axis labels.
      */
     private TextRenderer axisLabelRenderer = new TextRenderer(this.font);
 
-    /** XXX
-     * For the axis labels.
+    /**
+     * XXX For the axis labels.
      */
     private final static float SCALE_FACTOR = 0.01f;
 
@@ -86,7 +84,6 @@ public class BaseJoglFrame implements GLEventListener {
 
     CameraMoveListener cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
-
     public static void main(String[] args) {
 
         BaseJoglFrame sj = new BaseJoglFrame();
@@ -94,7 +91,6 @@ public class BaseJoglFrame implements GLEventListener {
         sj.initUi();
 
     }
-
 
     /**
      * @param frame
@@ -104,6 +100,8 @@ public class BaseJoglFrame implements GLEventListener {
         Frame frame = new Frame("Simple JOGL Application");
 
         GLCanvas canvas = createCanvas();
+
+        // GLCanvas canvas = new GLCanvas();
 
         canvas.addGLEventListener(this);
         frame.add(canvas);
@@ -141,20 +139,21 @@ public class BaseJoglFrame implements GLEventListener {
      * @return
      */
     public static GLCanvas createCanvas() {
-        //create a profile, in this case OpenGL 2 or later
+        // create a profile, in this case OpenGL 2 or later
         GLProfile profile = GLProfile.get(GLProfile.GL2);
 
-        //configure context
+        // configure context
         GLCapabilities capabilities = new GLCapabilities(profile);
 
         // setup z-buffer
         capabilities.setDepthBits(16);
 
         // for anti-aliasing
-        capabilities.setSampleBuffers(true);
-        capabilities.setNumSamples(2);
+        // FIXME enabling sample buffers on dual screen ubuntu cause problems...
+        // capabilities.setSampleBuffers(true);
+        // capabilities.setNumSamples(2);
 
-        //initialize a GLDrawable of your choice
+        // initialize a GLDrawable of your choice
         GLCanvas canvas = new GLCanvas(capabilities);
         return canvas;
     }
@@ -184,44 +183,42 @@ public class BaseJoglFrame implements GLEventListener {
         gl.glClearDepth(1.0);
         gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
 
-        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glEnable(GL.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL2.GL_DEPTH_BITS, depth_bits, 0);
+        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
 
-        gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to
+                                                   // GL_FLAT and see what
+                                                   // happens.
 
         addLight(gl);
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
-
+        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
 
     }
 
     @Deprecated
-    private Model buildWalls( List<Point2d> border, double minHeight, double height) {
+    private Model buildWalls(List<Point2d> border, double minHeight, double height) {
         double facadeTextureLenght = 4;
         double facadeTextureHeight = 2;
-
 
         boolean isCounterClockwise = false;
         if (0.0f < Triangulate.area(border)) {
             isCounterClockwise = true;
         }
 
-        Material facadeMaterial =  MaterialFactory.createTextureMaterial("");
+        Material facadeMaterial = MaterialFactory.createTextureMaterial("");
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        //        int mat = modelBuilder.addMaterial(facadeMaterial);
-
+        // int mat = modelBuilder.addMaterial(facadeMaterial);
 
         MeshFactory meshWalls = modelBuilder.addMesh("walls");
 
-        //        meshWalls.materialID = mat;
+        // meshWalls.materialID = mat;
         meshWalls.hasTexture = false;
-
 
         if (border.size() > 0) {
 
@@ -233,10 +230,8 @@ public class BaseJoglFrame implements GLEventListener {
 
                 Point2d endPoint = border.get(i);
 
-                Vector3d norm = NormalUtil.normal(
-                        beginPoint.x, 0.0f, beginPoint.y,
-                        endPoint.x, 0.0f, endPoint.y,
-                        beginPoint.x, 1.0, beginPoint.y);
+                Vector3d norm = NormalUtil.normal(beginPoint.x, 0.0f, beginPoint.y, endPoint.x, 0.0f, endPoint.y, beginPoint.x,
+                        1.0, beginPoint.y);
 
                 if (isCounterClockwise) {
                     norm.negate();
@@ -252,11 +247,10 @@ public class BaseJoglFrame implements GLEventListener {
                 int tc3 = meshWalls.addTextCoord(new TextCoord(uEnd, vEnd));
                 int tc4 = meshWalls.addTextCoord(new TextCoord(uEnd, 0));
 
-                int w1 = meshWalls.addVertex(new Point3d(beginPoint.x,  minHeight, -beginPoint.y));
+                int w1 = meshWalls.addVertex(new Point3d(beginPoint.x, minHeight, -beginPoint.y));
                 int w2 = meshWalls.addVertex(new Point3d(beginPoint.x, height, -beginPoint.y));
                 int w3 = meshWalls.addVertex(new Point3d(endPoint.x, height, -endPoint.y));
                 int w4 = meshWalls.addVertex(new Point3d(endPoint.x, minHeight, -endPoint.y));
-
 
                 FaceFactory face = meshWalls.addFace(FaceType.QUADS);
                 face.addVert(w1, tc1, n);
@@ -275,8 +269,6 @@ public class BaseJoglFrame implements GLEventListener {
         return model;
     }
 
-
-
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
@@ -290,17 +282,15 @@ public class BaseJoglFrame implements GLEventListener {
 
         gl.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0, (float)width / (float) height, 1.0, 1500.0); // 5
+        glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 1500.0); // 5
     }
 
     @Override
     public void display(GLAutoDrawable drawable) {
 
-
         this.simpleMoveAnimator.updateState();
-
 
         GL2 gl = drawable.getGL().getGL2();
         // System.err.println("INIT GL IS: " + gl.getClass().getName());
@@ -308,27 +298,24 @@ public class BaseJoglFrame implements GLEventListener {
         GLU glu = new GLU();
 
         // _direction_
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, this.lightPos, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
 
         // clear color and depth buffers
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        //      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
-
 
         setCamera(glu);
 
+        gl.glEnable(GL.GL_MULTISAMPLE);
 
-        gl.glEnable(GL2.GL_MULTISAMPLE);
-
-
-        //        String versionStr = gl.glGetString( GL2.GL_VERSION );
-        //        log.info( "GL version:"+versionStr );
+        // String versionStr = gl.glGetString( GL2.GL_VERSION );
+        // log.info( "GL version:"+versionStr );
 
         drawFloor(gl);
 
-        //        drawTextInfo(gl, this.simpleMoveAnimator.info());
+        // drawTextInfo(gl, this.simpleMoveAnimator.info());
 
         // Flush all drawing operations to the graphics card
         gl.glFlush();
@@ -337,21 +324,23 @@ public class BaseJoglFrame implements GLEventListener {
     private void drawFloor(GL2 gl) {
         // gl.glDisable(GL2.GL_LIGHTING);
 
-        //blue
+        // blue
         gl.glColor3f(0.0f, 0.1f, 0.4f);
         DrawUtil.drawTiles(gl, 50, true);
         // green
         gl.glColor3f(0.0f, 0.5f, 0.1f);
         DrawUtil.drawTiles(gl, 50, false);
 
-
         labelAxes(gl);
 
         // gl.glEnable(GL2.GL_LIGHTING);
     }
+
     /**
      * Sets camera position and rotation.
-     * @param pGlu GLU
+     * 
+     * @param pGlu
+     *            GLU
      */
     private void setCamera(GLU pGlu) {
 
@@ -361,17 +350,16 @@ public class BaseJoglFrame implements GLEventListener {
 
         posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z);
         posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y);
-        //        posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
+        // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
 
         posLookAt.add(pos);
 
-        pGlu.gluLookAt(pos.x, pos.y, pos.z,
-                posLookAt.x, posLookAt.y, posLookAt.z,
-                0, 1, 0);
+        pGlu.gluLookAt(pos.x, pos.y, pos.z, posLookAt.x, posLookAt.y, posLookAt.z, 0, 1, 0);
     }
 
     @Override
-    public void dispose(GLAutoDrawable drawable){}
+    public void dispose(GLAutoDrawable drawable) {
+    }
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
@@ -381,50 +369,44 @@ public class BaseJoglFrame implements GLEventListener {
      * components
      */
     private void addLight(GL2 gl) {
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         // enable a single light source
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-
+        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        gl.glEnable(GLLightingFunc.GL_LIGHT0);
 
         float gray = 0.5f;
-        float[] grayLight = {gray, gray, gray, 1.0f }; // weak gray ambient
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, grayLight, 0);
+        float[] grayLight = { gray, gray, gray, 1.0f }; // weak gray ambient
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
 
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
         // & specular
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, whiteLight, 0);
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, whiteLight, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
 
-        //      float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
-        float [] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
+        // float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
+        float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
+        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
 
+        // gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
 
-        //        gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
-
-        //        float [] lmodel_ambient = { 1f, 1f, 1f, 1.0f };
-        //        gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
+        // float [] lmodel_ambient = { 1f, 1f, 1f, 1.0f };
+        // gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
     }
-
-
-
-
 
     /**
      * The game-over message is an overlay that always stays at the front,
      * 'stuck' to the screen. The message consists of three elements: a robot
      * image with transparent elements, a red rectangle, and a text message in
      * the rectangle which shows the player's final score.
-     *
+     * 
      * I borrowed this 2D overlay technique from ozak in his message at
      * http://www.javagaming.org/forums/index.php?topic=8110.0
      */
     private void drawTextInfo(GL2 gl, String msg) {
         GLUT glut = new GLUT();
 
-        gl.glDisable(GL2.GL_LIGHTING);
+        gl.glDisable(GLLightingFunc.GL_LIGHTING);
 
         int msgWidth = glut.glutBitmapLength(GLUT.BITMAP_TIMES_ROMAN_10, msg);
         // use a bitmap font (since no scaling required)
@@ -434,17 +416,15 @@ public class BaseJoglFrame implements GLEventListener {
 
         begin2D(gl); // switch to 2D viewing
 
-
         // write the message in the center of the screen
         gl.glColor3f(1.0f, 1.0f, 1.0f); // white text
         gl.glRasterPos2i(x, y);
 
-
-        String [] split = msg.split("\\n");
+        String[] split = msg.split("\\n");
 
         int i = 0;
         for (String msgLine : split) {
-            gl.glRasterPos2i(x, y + (i * 20));
+            gl.glRasterPos2i(x, y + i * 20);
             glut.glutBitmapString(GLUT.BITMAP_TIMES_ROMAN_10, msgLine);
 
             i++;
@@ -452,15 +432,16 @@ public class BaseJoglFrame implements GLEventListener {
 
         end2D(gl); // switch back to 3D viewing
 
-        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GLLightingFunc.GL_LIGHTING);
     }
 
     /**
      * Switch to 2D viewing (an orthographic projection).
+     * 
      * @param gl
      */
     private void begin2D(GL2 gl) {
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glPushMatrix(); // save projection settings
         gl.glLoadIdentity();
         double panelWidth = 800;
@@ -473,27 +454,28 @@ public class BaseJoglFrame implements GLEventListener {
          * upwards. This is reversed back to the more familiar top-left,
          * downwards, by switching the the top and bottom values in glOrtho().
          */
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glPushMatrix(); // save model view settings
         gl.glLoadIdentity();
-        gl.glDisable(GL2.GL_DEPTH_TEST);
+        gl.glDisable(GL.GL_DEPTH_TEST);
     }
 
     /**
      * switch back to 3D viewing.
+     * 
      * @param gl
      */
     private void end2D(GL2 gl) {
-        gl.glEnable(GL2.GL_DEPTH_TEST);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glPopMatrix(); // restore previous projection settings
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glPopMatrix(); // restore previous model view settings
     }
 
     /**
      * Place numbers along the x- and z-axes at the integer positions.
-     *
+     * 
      * @param gl
      */
     private void labelAxes(GL2 gl) {
@@ -513,7 +495,7 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * Draw txt at (x,y,z), with the text centered in the x-direction, facing
      * along the +z axis.
-     *
+     * 
      * @param gl
      * @param txt
      * @param x

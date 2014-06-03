@@ -230,25 +230,30 @@ public class Kendzi3dGLFrame extends Frame implements WindowListener, FpsListene
             capabilities.setDepthBits(Integer.parseInt(zbuffer));
         }
 
-        String sampleBuffers = System.getProperty("kendzi3d.opengl.sampleBuffers");
-        log.info("user sampleBuffers: " + sampleBuffers);
+        // FIXME enabling sample buffers on dual screen ubuntu cause problems...
+        // https://jogamp.org/bugzilla/show_bug.cgi?id=995
 
-        if (sampleBuffers == null) {
-            capabilities.setSampleBuffers(true);
-        } else if ("true".equals(sampleBuffers)) {
-            capabilities.setSampleBuffers(true);
-        } else if ("false".equals(sampleBuffers)) {
-            capabilities.setSampleBuffers(false);
-        }
-
-        String sampleBuffersNum = System.getProperty("kendzi3d.opengl.sampleBuffersNum");
-        log.info("user sampleBuffersNum: " + sampleBuffersNum);
-
-        if (sampleBuffersNum == null) {
-            capabilities.setNumSamples(2);
-        } else if (!"default".equals(sampleBuffersNum)) {
-            capabilities.setNumSamples(Integer.parseInt(sampleBuffersNum));
-        }
+        // String sampleBuffers =
+        // System.getProperty("kendzi3d.opengl.sampleBuffers");
+        // log.info("user sampleBuffers: " + sampleBuffers);
+        //
+        // if (sampleBuffers == null) {
+        // capabilities.setSampleBuffers(true);
+        // } else if ("true".equals(sampleBuffers)) {
+        // capabilities.setSampleBuffers(true);
+        // } else if ("false".equals(sampleBuffers)) {
+        // capabilities.setSampleBuffers(false);
+        // }
+        //
+        // String sampleBuffersNum =
+        // System.getProperty("kendzi3d.opengl.sampleBuffersNum");
+        // log.info("user sampleBuffersNum: " + sampleBuffersNum);
+        //
+        // if (sampleBuffersNum == null) {
+        // capabilities.setNumSamples(2);
+        // } else if (!"default".equals(sampleBuffersNum)) {
+        // capabilities.setNumSamples(Integer.parseInt(sampleBuffersNum));
+        // }
 
         log.info("GLCapabilities: " + capabilities);
     }
