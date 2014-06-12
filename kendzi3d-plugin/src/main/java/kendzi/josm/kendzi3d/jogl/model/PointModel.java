@@ -44,6 +44,7 @@ import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -98,12 +99,12 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
      *            node
      * @param pNodeModelConf
      *            model configuration
-     * @param pPerspective3D
+     * @param perspective
      *            perspective 3d
      */
-    public PointModel(Node node, NodeModelConf pNodeModelConf, Perspective3D pPerspective3D, ModelRender pModelRender,
+    public PointModel(Node node, NodeModelConf pNodeModelConf, Perspective perspective, ModelRender pModelRender,
             ModelCacheService modelCacheService) {
-        super(node, pPerspective3D);
+        super(node, perspective);
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
@@ -116,7 +117,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
 
         buildModel(LOD.LOD1);
 
@@ -336,11 +337,6 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
-    public Point3d getPoint() {
-        return new Point3d(this.x, 0, -this.y);
-    }
-
-    @Override
     public List<ExportItem> export(ExportModelConf conf) {
         if (this.modelLod.get(LOD.LOD1) == null) {
             buildModel(LOD.LOD1);
@@ -348,5 +344,10 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
                 .getGlobalY()), new Vector3d(1, 1, 1)));
+    }
+
+    @Override
+    public Model getModel() {
+        return this.modelLod.get(LOD.LOD1);
     }
 }

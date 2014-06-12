@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model;
@@ -44,8 +41,9 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
-/** Water model.
- *
+/**
+ * Water model.
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class Water extends AbstractModel {
@@ -54,7 +52,7 @@ public class Water extends AbstractModel {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(Water.class);
 
-	/**
+    /**
      * Renderer of model.
      */
     private ModelRender modelRender;
@@ -78,40 +76,45 @@ public class Water extends AbstractModel {
 
     private Way way;
 
-
-	/** Constructor for water.
-	 *
-	 * @param way way represent water
-	 * @param pPerspective3D perspective
-	 * @param pModelRender
-	 * @param pMetadataCacheService
-	 * @param pTextureLibraryStorageService
-	 */
-	public Water(Way way, Perspective3D pPerspective3D, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+    /**
+     * Constructor for water.
+     * 
+     * @param way
+     *            way represent water
+     * @param perspective
+     *            perspective
+     * @param pModelRender
+     * @param pMetadataCacheService
+     * @param pTextureLibraryStorageService
+     */
+    public Water(Way way, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
             TextureLibraryStorageService pTextureLibraryStorageService) {
 
-	    super(pPerspective3D);
+        super(perspective);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
         this.textureLibraryStorageService = pTextureLibraryStorageService;
 
         this.way = way;
-	}
+    }
 
-	/** Constructor for water.
-	 *
-	 * @param pRelation relation represent water
-     * @param pPerspective perspective3d
-     * @param pModelRender model render
-	 * @param pMetadataCacheService
-	 * @param pTextureLibraryStorageService
+    /**
+     * Constructor for water.
+     * 
+     * @param pRelation
+     *            relation represent water
+     * @param perspective
+     *            Perspective
+     * @param pModelRender
+     *            model render
+     * @param pMetadataCacheService
+     * @param pTextureLibraryStorageService
      */
-    public Water(Relation pRelation, Perspective3D pPerspective,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
+    public Water(Relation pRelation, Perspective perspective, ModelRender pModelRender,
+            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
 
-        super(pPerspective);
+        super(perspective);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
@@ -127,41 +130,39 @@ public class Water extends AbstractModel {
         return getMultiPolygonWithHolesWay(this.way, this.perspective);
     }
 
-    List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective pPerspective) {
+    List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective perspective) {
         List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
 
         List<Point2d> poly = new ArrayList<Point2d>();
 
-        int size =  way.getNodesCount();
+        int size = way.getNodesCount();
         if (size > 0) {
             if (way.getNode(0).equals(way.getNode(way.getNodesCount() - 1))) {
                 size--;
             }
             for (int i = 0; i < size; i++) {
-                Point2d p = pPerspective.calcPoint(way.getNode(i));
+                Point2d p = perspective.calcPoint(way.getNode(i));
                 poly.add(p);
             }
-            ret.add(new PolygonWithHolesList2d(new PolygonList2d(poly),null));
+            ret.add(new PolygonWithHolesList2d(new PolygonList2d(poly), null));
         }
         return ret;
     }
 
-    List<PolygonWithHolesList2d> getMultiPolygonWithHolesRelation(Relation pRelation, Perspective pPerspective) {
+    List<PolygonWithHolesList2d> getMultiPolygonWithHolesRelation(Relation pRelation, Perspective perspective) {
 
-        return PolygonWithHolesUtil.findPolygonsWithHoles(pRelation, pPerspective);
+        return PolygonWithHolesUtil.findPolygonsWithHoles(pRelation, perspective);
     }
 
-
-
-
-
     @Override
-	public void buildModel() {
+    public void buildWorldObject() {
 
-	    ModelFactory model = ModelFactory.modelBuilder();
-	    MeshFactory mesh = model.addMesh("water");
+        ModelFactory model = ModelFactory.modelBuilder();
+        MeshFactory mesh = model.addMesh("water");
 
-        TextureData waterTexture = getWaterTextureData();//new TextureData("#c=#008EFF", 1d, 1d);
+        TextureData waterTexture = getWaterTextureData();// new
+                                                         // TextureData("#c=#008EFF",
+                                                         // 1d, 1d);
         Material waterMaterial = MaterialFactory.createTextureMaterial(waterTexture.getTex0());
         int waterMaterialIndex = model.addMaterial(waterMaterial);
 
@@ -185,20 +186,21 @@ public class Water extends AbstractModel {
             MeshFactoryUtil.addPolygonToRoofMesh(mesh, triangles, planeTop, roofTopLineVector, waterTexture, 0, 0);
         }
 
-	    this.model = model.toModel();
+        this.model = model.toModel();
         this.model.setUseLight(true);
         this.model.setUseTexture(true);
 
         this.buildModel = true;
-	}
+    }
 
-	@Override
-	public void draw(GL2 pGl, Camera camera) {
+    @Override
+    public void draw(GL2 pGl, Camera camera) {
 
-	    pGl.glPushMatrix();
+        pGl.glPushMatrix();
         pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
 
-        //pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 / 255);
+        // pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
+        // 255);
 
         try {
             this.modelRender.render(pGl, this.model);
@@ -206,22 +208,28 @@ public class Water extends AbstractModel {
         } finally {
             pGl.glPopMatrix();
         }
-	}
-
-	@Override
-    public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
-            buildModel();
-        }
-
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
     }
 
-	 public TextureData getWaterTextureData() {
+    @Override
+    public List<ExportItem> export(ExportModelConf conf) {
+        if (this.model == null) {
+            buildWorldObject();
+        }
 
-         String keyStr = this.textureLibraryStorageService.getKey(TextureLibraryKey.WATER, (String) null);
-         return this.textureLibraryStorageService.getTextureDefault(keyStr);
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
+                new Vector3d(1, 1, 1)));
+    }
 
-     }
+    @Override
+    public Model getModel() {
+        return model;
+    }
+
+    public TextureData getWaterTextureData() {
+
+        String keyStr = this.textureLibraryStorageService.getKey(TextureLibraryKey.WATER, (String) null);
+        return this.textureLibraryStorageService.getTextureDefault(keyStr);
+
+    }
 
 }

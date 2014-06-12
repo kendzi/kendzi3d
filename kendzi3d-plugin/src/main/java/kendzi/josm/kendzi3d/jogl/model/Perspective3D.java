@@ -10,7 +10,6 @@ import javax.vecmath.Point2d;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
-import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -27,9 +26,6 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public class Perspective3D implements Perspective {
 
-    /** Log. */
-    private static final Logger log = Logger.getLogger(Perspective3D.class);
-
     private double scale;
     private double centerX;
     private double centerY;
@@ -38,7 +34,6 @@ public class Perspective3D implements Perspective {
         this.scale = scale;
         this.centerX = centerX;
         this.centerY = centerY;
-        // log.info("**************-----> " + scale);
     }
 
     public double calcX(double x) {
@@ -52,7 +47,7 @@ public class Perspective3D implements Perspective {
     /**
      * {@inheritDoc}
      * 
-     * @see kendzi.josm.kendzi3d.jogl.model.Perspective#calcPoint(org.openstreetmap.josm.data.osm.Node)
+     * @see kendzi.josm.kendzi3d.jogl.model.Perspective3D#calcPoint(org.openstreetmap.josm.data.osm.Node)
      */
     @Override
     public Point2d calcPoint(Node node) {
@@ -66,7 +61,7 @@ public class Perspective3D implements Perspective {
 
     @Override
     public String toString() {
-        return "Perspective3D [scale=" + this.scale + ", centerX=" + this.centerX + ", centerY=" + this.centerY + "]";
+        return "Perspective [scale=" + this.scale + ", centerX=" + this.centerX + ", centerY=" + this.centerY + "]";
     }
 
     /**

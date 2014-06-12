@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.trees;
@@ -14,17 +11,16 @@ import java.util.EnumMap;
 import java.util.List;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.camera.Camera;
-import kendzi.josm.kendzi3d.util.ModelUtil;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
@@ -32,15 +28,18 @@ import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.MultiPointWorldObject;
 
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing trees in row model.
- *
+ * 
  * @author Tomasz Kedziora (Kendzi)
  */
-public class TreeRow extends AbstractWayModel implements DLODSuport {
+public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointWorldObject {
 
     private static final double EPSILON = 0.001;
 
@@ -72,14 +71,14 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
     private Integer numOfTrees;
 
     /**
-     * @param pWay way
-     * @param pPerspective3D perspective
+     * @param pWay
+     *            way
+     * @param perspective
+     *            perspective
      */
-    public TreeRow(Way pWay, Perspective3D pPerspective3D,
-            ModelRender pModelRender,
-            ModelCacheService modelCacheService,
+    public TreeRow(Way pWay, Perspective perspective, ModelRender pModelRender, ModelCacheService modelCacheService,
             MetadataCacheService metadataCacheService) {
-        super(pWay, pPerspective3D);
+        super(pWay, perspective);
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
@@ -91,7 +90,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
 
         buildModel(LOD.LOD1);
 
@@ -133,7 +132,6 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
             numOfTrees = (int) Math.round(distance / 5d);
         }
 
-
         List<Point2d> ret = new ArrayList<Point2d>();
 
         double repeatEvery = distance / numOfTrees;
@@ -141,7 +139,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
         double lastOffset = 0;
 
         Point2d b = points.get(0);
-        for (int i = 1 ; i<points.size(); i ++) {
+        for (int i = 1; i < points.size(); i++) {
             Point2d e = points.get(i);
             distance = e.distance(b);
 
@@ -150,7 +148,6 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
             b = e;
 
         }
-
 
         return ret;
     }
@@ -173,17 +170,15 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
 
         Vector2d repeat = beginVector;
 
-
         do {
             ret.add(new Point2d(b.x + repeat.x, b.y + repeat.y));
 
             repeat.add(everyVector);
 
-
-        } while ( distance + EPSILON >= repeat.length());
+        } while (distance + EPSILON >= repeat.length());
 
         return repeat.length() - distance;
-//        return distance - (repeat.length() - everyVector.length());
+        // return distance - (repeat.length() - everyVector.length());
 
     }
 
@@ -195,7 +190,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
         double distance = 0;
 
         Point2d b = points.get(0);
-        for (int i = 1 ; i<points.size(); i ++) {
+        for (int i = 1; i < points.size(); i++) {
             Point2d e = points.get(i);
             distance = distance + e.distance(b);
 
@@ -220,12 +215,8 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
         this.scale.y = modelScaleHeight;
         this.scale.z = modelScaleWidht;
 
-//        model2.useScale = true;
+        // model2.useScale = true;
     }
-
-
-
-
 
     @Override
     public boolean isModelBuild(LOD pLod) {
@@ -241,7 +232,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
         Model model2 = this.modelLod.get(pLod);
         if (model2 != null) {
 
-            gl.glEnable(GL2.GL_NORMALIZE);
+            gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
             for (Point2d hook : this.hookPoints) {
 
@@ -256,19 +247,13 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
                 gl.glPopMatrix();
             }
 
-            gl.glDisable(GL2.GL_NORMALIZE);
+            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
         }
     }
-
 
     @Override
     public void draw(GL2 gl, Camera camera) {
         draw(gl, camera, LOD.LOD1);
-    }
-
-    @Override
-    public Point3d getPoint() {
-        return new Point3d(this.x, 0, -this.y);
     }
 
     @Override
@@ -281,14 +266,28 @@ public class TreeRow extends AbstractWayModel implements DLODSuport {
 
         for (Point2d hook : this.hookPoints) {
 
-           Point3d p = new Point3d(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+            Point3d p = new Point3d(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
 
-           Vector3d s = new Vector3d(this.scale.x, this.scale.y, this.scale.z);
-           ret.add(new ExportItem(this.modelLod.get(LOD.LOD1), p, s));
+            Vector3d s = new Vector3d(this.scale.x, this.scale.y, this.scale.z);
+            ret.add(new ExportItem(this.modelLod.get(LOD.LOD1), p, s));
 
         }
         return ret;
     }
 
+    @Override
+    public List<Point3d> getPoints() {
+        List<Point3d> ret = new ArrayList<Point3d>();
+
+        for (Point2d hook : this.hookPoints) {
+            ret.add(new Point3d(hook.x, 0, -hook.y));
+        }
+        return ret;
+    }
+
+    @Override
+    public Model getModel() {
+        return modelLod.get(LOD.LOD1);
+    }
 
 }

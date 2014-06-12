@@ -1,23 +1,18 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.Model;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.Water;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -31,18 +26,13 @@ import com.google.inject.Inject;
 
 /**
  * Layer for water.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class WaterLayer implements Layer {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(WaterLayer.class);
-
-    /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
 
     /**
      * Model renderer.
@@ -68,19 +58,22 @@ public class WaterLayer implements Layer {
 
     {
         try {
-            this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false, false);
+            this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false,
+                    false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.waterMatcher = SearchCompiler.compile("((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon", false, false);
+            this.waterMatcher = SearchCompiler.compile(
+                    "((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon", false, false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.waterRelationMatcher = SearchCompiler.compile("type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))", false, false);
+            this.waterRelationMatcher = SearchCompiler.compile(
+                    "type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))", false, false);
         } catch (ParseError e) {
             this.waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
@@ -89,8 +82,7 @@ public class WaterLayer implements Layer {
     }
 
     @Override
-    public
-    Match getNodeMatcher() {
+    public Match getNodeMatcher() {
         return null;
     }
 
@@ -110,28 +102,18 @@ public class WaterLayer implements Layer {
     }
 
     @Override
-    public List<Model> getModels() {
-        return this.modelList;
+    public WorldObject buildModel(Node node, Perspective perspective) {
+        return null;
     }
 
     @Override
-    public void addModel(Node node, Perspective3D pPerspective3D) {
-        //
+    public WorldObject buildModel(Way way, Perspective perspective) {
+        return new Water(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
     }
 
     @Override
-    public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new Water(way, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService));
-    }
-
-    @Override
-    public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new Water(relation, pPerspective3D, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService));
-    }
-
-    @Override
-    public void clear() {
-        this.modelList.clear();
+    public WorldObject buildModel(Relation relation, Perspective perspective) {
+        return new Water(relation, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
     }
 
     /**
@@ -142,10 +124,10 @@ public class WaterLayer implements Layer {
     }
 
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;
     }
-
 }

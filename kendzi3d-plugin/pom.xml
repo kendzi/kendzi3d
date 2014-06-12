@@ -31,6 +31,11 @@
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-world-model</artifactId>
+			<version>1.0.179-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-buildings-josm</artifactId>
 			<version>1.0.179-SNAPSHOT</version>
 		</dependency>

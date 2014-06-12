@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model;
@@ -13,7 +10,9 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -34,6 +33,7 @@ import kendzi.josm.kendzi3d.util.ColorUtil;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -42,7 +42,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Fence for shapes defined as way.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BarrierWall extends AbstractWayModel {
@@ -90,26 +90,29 @@ public class BarrierWall extends AbstractWayModel {
 
     /**
      * Fence constructor.
-     *
-     * @param pWay way
-     * @param pPerspective3D perspective
-     * @param pModelRender model render
-     * @param pMetadataCacheService metadata cache service
-     * @param pTextureLibraryStorageService texture library service
+     * 
+     * @param pWay
+     *            way
+     * @param perspective
+     *            perspective
+     * @param pModelRender
+     *            model render
+     * @param pMetadataCacheService
+     *            metadata cache service
+     * @param pTextureLibraryStorageService
+     *            texture library service
      */
-    public BarrierWall(Way pWay, Perspective3D pPerspective3D,
-            ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
             TextureLibraryStorageService pTextureLibraryStorageService) {
-        super(pWay, pPerspective3D);
+        super(pWay, perspective);
 
         this.modelRender = pModelRender;
         this.metadataCacheService = pMetadataCacheService;
         this.textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
-
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
 
         if (!(this.points.size() > 1)) {
             return;
@@ -117,14 +120,13 @@ public class BarrierWall extends AbstractWayModel {
 
         String wallType = getWallType(this.way);
 
-        double wallHeight = this.metadataCacheService.getPropertitesDouble(
-                "barrier.wall_{0}.height", WALL_HEIGHT, wallType);
+        double wallHeight = this.metadataCacheService.getPropertitesDouble("barrier.wall_{0}.height", WALL_HEIGHT, wallType);
 
         this.hight = ModelUtil.getHeight(this.way, wallHeight);
 
         this.minHeight = ModelUtil.getMinHeight(this.way, 0d);
 
-//        String wallColor = OsmAttributeKeys.COLOUR.primitiveValue(this.way);
+        // String wallColor = OsmAttributeKeys.COLOUR.primitiveValue(this.way);
 
         Color wallColor = takeWallColor(this.way);
 
@@ -158,20 +160,28 @@ public class BarrierWall extends AbstractWayModel {
         return null;
     }
 
-
-    /** Gets wall type.
-     * @param osmPrimitive osm primitive
+    /**
+     * Gets wall type.
+     * 
+     * @param osmPrimitive
+     *            osm primitive
      * @return fence type
      */
     private static String getWallType(OsmPrimitive osmPrimitive) {
         return OsmAttributeKeys.WALL.primitiveValue(osmPrimitive);
     }
 
-    /** Gets wall texture data.
-     * @param wallType wall type
-     * @param wallColor wall color
-     * @param osmPrimitive primitive
-     * @param TextureLibraryStorageService texture library service
+    /**
+     * Gets wall texture data.
+     * 
+     * @param wallType
+     *            wall type
+     * @param wallColor
+     *            wall color
+     * @param osmPrimitive
+     *            primitive
+     * @param TextureLibraryStorageService
+     *            texture library service
      * @return texture data
      */
     public static TextureData takeWallTexture(String wallType, Color wallColor, OsmPrimitive osmPrimitive,
@@ -193,9 +203,9 @@ public class BarrierWall extends AbstractWayModel {
 
         BarrierFence.enableTransparentText(pGl);
 
-        pGl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+        pGl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
-        pGl.glEnable(GL2.GL_CULL_FACE);
+        pGl.glEnable(GL.GL_CULL_FACE);
 
         pGl.glPushMatrix();
         pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
@@ -219,7 +229,7 @@ public class BarrierWall extends AbstractWayModel {
 
             pGl.glPopMatrix();
 
-            pGl.glDisable(GL2.GL_CULL_FACE);
+            pGl.glDisable(GL.GL_CULL_FACE);
         }
 
         BarrierFence.disableTransparentText(pGl);
@@ -229,9 +239,15 @@ public class BarrierWall extends AbstractWayModel {
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
         if (this.model == null) {
-            buildModel();
+            buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()), new Vector3d(1,1,1)));
+        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
+                new Vector3d(1, 1, 1)));
+    }
+
+    @Override
+    public Model getModel() {
+        return model;
     }
 }

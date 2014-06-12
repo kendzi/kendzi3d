@@ -16,13 +16,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.layer.Layer;
-import kendzi.josm.kendzi3d.jogl.model.Model;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.jogl.model.DrawableMultipleWorldObject;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryDataChangeEvent;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.resource.inter.ResourceService;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -45,11 +46,6 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     private static final Logger log = Logger.getLogger(ModelsLibraryLayer.class);
 
     /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
-
-    /**
      * List of model definitions.
      */
     private List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
@@ -57,16 +53,10 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     /**
      * Model renderer.
      */
-    // @Inject
     private ModelRender modelRender;
 
-    // @Inject
     private ModelCacheService modelCacheService;
 
-    // @Inject
-    private ResourceService urlReciverService;
-
-    // @Inject
     private ModelsLibraryService modelsLibraryService;
 
     private Map<String, List<WayNodeModelConf>> wayNodeModelsMap;
@@ -135,15 +125,6 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
             }
         }
 
-        // for (WayNodeModel nodeModel :
-        // modelsLibraryService.findAllWayNodeModels()) {
-        // try {
-        // wayNodeModelsList.add(ModelsConvertUtil.convert(nodeModel));
-        // } catch (Exception e) {
-        // log.error(e, e);
-        // }
-        // }
-
         wayNodeModelsMap = new HashMap<String, List<WayNodeModelConf>>();
         for (WayNodeModelConf wayNodeModelConf : wayNodeModelsList) {
             String key = wayNodeModelConf.getMatcher().toString();
@@ -167,13 +148,6 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     @Override
     public Match getWayMatcher() {
-        // List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
-        // for (WayNodeModelConf nodeModel : this.wayNodeModelsList) {
-        //
-        // matchersList.add(nodeModel.getMatcher());
-        // }
-        //
-        // return new OrList(matchersList);
         return new SearchCompiler.Always();
     }
 
@@ -188,25 +162,29 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     @Override
-    public List<Model> getModels() {
-        return this.modelList;
-    }
+    public WorldObject buildModel(Node pNode, Perspective perspective) {
 
-    @Override
-    public void addModel(Node pNode, Perspective3D pPerspective3D) {
+        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject();
 
         for (NodeModelConf nodeModel : this.nodeModelsList) {
 
             if (nodeModel.getMatcher().match(pNode)) {
 
-                this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.PointModel(pNode, nodeModel, pPerspective3D,
-                        this.modelRender, this.modelCacheService));
+                ret.getWorldObjects().add(
+                        new kendzi.josm.kendzi3d.jogl.model.PointModel(pNode, nodeModel, perspective, this.modelRender,
+                                this.modelCacheService));
             }
         }
+        if (ret.getWorldObjects().isEmpty()) {
+            return null;
+        }
+        return ret;
     }
 
     @Override
-    public void addModel(Way way, Perspective3D perspective3D) {
+    public WorldObject buildModel(Way way, Perspective perspective3D) {
+
+        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject();
         for (Entry<String, List<WayNodeModelConf>> entry : wayNodeModelsMap.entrySet()) {
             List<WayNodeModelConf> wayNodeModelsList = entry.getValue();
 
@@ -216,12 +194,17 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
                     List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), way);
                     if (!selectedNodes.isEmpty()) {
-                        this.modelList.add(new kendzi.josm.kendzi3d.jogl.model.WayNodeModel(way, selectedNodes, nodeModel,
-                                perspective3D, this.modelRender, this.modelCacheService));
+                        ret.getWorldObjects().add(
+                                new kendzi.josm.kendzi3d.jogl.model.WayNodeModel(way, selectedNodes, nodeModel, perspective3D,
+                                        this.modelRender, this.modelCacheService));
                     }
                 }
             }
         }
+        if (ret.getWorldObjects().isEmpty()) {
+            return null;
+        }
+        return ret;
     }
 
     /**
@@ -246,16 +229,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     @Override
-    public void addModel(Relation pRelation, Perspective3D pPerspective3D) {
-        //
-    }
-
-    @Override
-    public void clear() {
-        // clean up model data
-        this.modelList.clear();
-
-        // don't re-download configuration data each time.
+    public WorldObject buildModel(Relation pRelation, Perspective perspective) {
+        return null;
     }
 
     public void cleanUp() {
@@ -284,14 +259,6 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
      */
     public void setModelCacheService(ModelCacheService modelCacheService) {
         this.modelCacheService = modelCacheService;
-    }
-
-    /**
-     * @param urlReciverService
-     *            the urlReciverService to set
-     */
-    public void setUrlReciverService(ResourceService urlReciverService) {
-        this.urlReciverService = urlReciverService;
     }
 
     /**

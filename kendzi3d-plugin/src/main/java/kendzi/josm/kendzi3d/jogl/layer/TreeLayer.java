@@ -1,25 +1,20 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.model.Model;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.trees.Forest;
 import kendzi.josm.kendzi3d.jogl.model.trees.Tree;
 import kendzi.josm.kendzi3d.jogl.model.trees.TreeRow;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -33,7 +28,7 @@ import com.google.inject.Inject;
 
 /**
  * Layer for trees.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class TreeLayer implements Layer {
@@ -60,11 +55,6 @@ public class TreeLayer implements Layer {
     @Inject
     private MetadataCacheService metadataCacheService;
 
-    /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
-
     private Match treesMatcher;
     private Match treesWayMatcher;
 
@@ -82,12 +72,10 @@ public class TreeLayer implements Layer {
             e.printStackTrace();
         }
 
-
     }
 
     @Override
-    public
-    Match getNodeMatcher() {
+    public Match getNodeMatcher() {
         return this.treesMatcher;
     }
 
@@ -107,34 +95,23 @@ public class TreeLayer implements Layer {
     }
 
     @Override
-    public List<Model> getModels() {
-        return this.modelList;
-    }
-
-    @Override
-    public void addModel(Node pNode, Perspective3D pPerspective3D) {
-        this.modelList.add(new Tree(pNode, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.modelCacheService));
+    public WorldObject buildModel(Node pNode, Perspective perspective) {
+        return new Tree(pNode, perspective, this.modelRender, this.metadataCacheService, this.modelCacheService);
 
     }
 
     @Override
-    public void addModel(Way pWay, Perspective3D pPerspective3D) {
+    public WorldObject buildModel(Way pWay, Perspective perspective) {
         if ("tree_row".equals(pWay.get("natural"))) {
-            this.modelList.add(new TreeRow(pWay, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
-        } else {
-            this.modelList.add(new Forest(pWay, pPerspective3D, this.modelRender, this.modelCacheService, this.metadataCacheService));
+            return new TreeRow(pWay, perspective, this.modelRender, this.modelCacheService, this.metadataCacheService);
         }
+        return new Forest(pWay, perspective, this.modelRender, this.modelCacheService, this.metadataCacheService);
+
     }
 
     @Override
-    public void addModel(Relation pRelation, Perspective3D pPerspective3D) {
-        //
-    }
-
-    @Override
-    public void clear() {
-        this.modelList.clear();
+    public WorldObject buildModel(Relation pRelation, Perspective perspective) {
+        return null;
     }
 
     /**
@@ -145,14 +122,11 @@ public class TreeLayer implements Layer {
     }
 
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;
     }
-
-
-
-
 
 }

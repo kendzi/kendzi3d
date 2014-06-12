@@ -1,24 +1,19 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.layer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.model.BarrierFence;
 import kendzi.josm.kendzi3d.jogl.model.BarrierFenceRelation;
-import kendzi.josm.kendzi3d.jogl.model.Model;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -32,7 +27,7 @@ import com.google.inject.Inject;
 
 /**
  * Layer for fence.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class FenceLayer implements Layer {
@@ -58,13 +53,8 @@ public class FenceLayer implements Layer {
     @Inject
     private TextureLibraryStorageService textureLibraryStorageService;
 
-
-    /**
-     * List of layer models.
-     */
-    private List<Model> modelList = new ArrayList<Model>();
-
     private Match fenceMatcher;
+
     private Match fenceRelationMatcher;
 
     {
@@ -75,7 +65,7 @@ public class FenceLayer implements Layer {
             log.error(e, e);
         }
         try {
-           this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
+            this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
         } catch (ParseError e) {
             this.fenceRelationMatcher = new SearchCompiler.Never();
             log.error(e, e);
@@ -84,8 +74,7 @@ public class FenceLayer implements Layer {
     }
 
     @Override
-    public
-    Match getNodeMatcher() {
+    public Match getNodeMatcher() {
         return null;
     }
 
@@ -105,34 +94,19 @@ public class FenceLayer implements Layer {
     }
 
     @Override
-    public List<Model> getModels() {
-        return this.modelList;
+    public WorldObject buildModel(Node node, Perspective perspective) {
+        return null;
     }
 
     @Override
-    public void addModel(Node node, Perspective3D pPerspective3D) {
-//        this.modelList.add(new Tree(node, pPerspective3D));
-//        this.modelList.add(new Tree(node, pPerspective3D));
-
+    public WorldObject buildModel(Way way, Perspective perspective) {
+        return new BarrierFence(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
     }
 
     @Override
-    public void addModel(Way way, Perspective3D pPerspective3D) {
-        this.modelList.add(new BarrierFence(
-                way, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryStorageService));
-    }
-
-    @Override
-    public void addModel(Relation relation, Perspective3D pPerspective3D) {
-        this.modelList.add(new BarrierFenceRelation(
-                relation, pPerspective3D, this.modelRender,
-                this.metadataCacheService, this.textureLibraryStorageService));
-    }
-
-    @Override
-    public void clear() {
-        this.modelList.clear();
+    public WorldObject buildModel(Relation relation, Perspective perspective) {
+        return new BarrierFenceRelation(relation, perspective, this.modelRender, this.metadataCacheService,
+                this.textureLibraryStorageService);
     }
 
     /**
@@ -143,7 +117,8 @@ public class FenceLayer implements Layer {
     }
 
     /**
-     * @param modelRender the modelRender to set
+     * @param modelRender
+     *            the modelRender to set
      */
     public void setModelRender(ModelRender modelRender) {
         this.modelRender = modelRender;

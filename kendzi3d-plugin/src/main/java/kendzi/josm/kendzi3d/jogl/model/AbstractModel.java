@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model;
@@ -14,125 +11,119 @@ import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
 
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
 import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
+import kendzi.josm.kendzi3d.jogl.selection.Selectable;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.AbstractWorldObject;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
-
-/** in future create AbstractWayModel, AbstractNodeModel ?
- *
+/**
+ * in future create AbstractWayModel, AbstractNodeModel ?
+ * 
  * @author Tomasz Kedziora (Kendzi)
- *
+ * 
  */
-public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, OsmPrimitiveRender, ExportModel {
-
-
-    protected double x;
-
-    protected double y;
+public abstract class AbstractModel extends AbstractWorldObject implements Selectable, DrawableModel, ModelFrame, GlobalFrame,
+        OsmPrimitiveRender, ExportModel {
 
     protected double radius;
-    protected Perspective3D perspective;
+
+    protected Perspective perspective;
+
     protected boolean buildModel;
-
-
-//    protected double globalX;
-//    protected double globalY;
-//
-//    private double openGlX;
-//    private double openGlY;
-
-
 
     /**
      * If error occurred.
      */
     protected boolean error;
 
-    public AbstractModel(Perspective3D pPerspective) {
-        this.perspective = pPerspective;
+    public AbstractModel(Perspective perspective) {
+        this.perspective = perspective;
+        setPoint(new Point3d());
     }
 
     @Deprecated
-    public AbstractModel(Node node, Perspective3D pers) {
-        this.perspective = pers;
+    public AbstractModel(Way way, Perspective perspective) {
+        this.perspective = perspective;
+        setPoint(new Point3d());
 
-        this.x =  this.perspective.calcX(node.getEastNorth().getX());
-        this.y =  this.perspective.calcY(node.getEastNorth().getY());
-
-        this.radius = 1.0;
-    }
-
-    @Deprecated
-    public AbstractModel(Way way, Perspective3D pPerspective) {
-        this.perspective = pPerspective;
         calcModelCenter(way);
         calcModelRadius(way);
+
     }
 
     public AbstractModel() {
-
+        setPoint(new Point3d());
     }
 
-    /** Calculate model center.
-     * @param way list of points
+    /**
+     * Calculate model center.
+     * 
+     * @param way
+     *            list of points
      */
     protected void calcModelCenter(Way way) {
         double centerX = 0;
         double centerY = 0;
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
+            Point2d point = perspective.calcPoint(node);
 
-            double x = this.perspective.calcX(node.getEastNorth().getX());
-            double y = this.perspective.calcY(node.getEastNorth().getY());
-
-            centerX += x;
-            centerY += y;
+            centerX += point.x;
+            centerY += point.y;
         }
 
-        this.x = centerX / way.getNodesCount();
-        this.y = centerY / way.getNodesCount();
+        setPoint(new Point3d(centerX / way.getNodesCount(), 0, -(centerY / way.getNodesCount())));
     }
 
-    /** Calculate model center.
-     * @param pNodes list of points
+    /**
+     * Calculate model center.
+     * 
+     * @param pNodes
+     *            list of points
      */
     protected void calcModelCenter(List<Node> pNodes) {
         double centerX = 0;
         double centerY = 0;
         for (Node node : pNodes) {
-            double x = this.perspective.calcX(node.getEastNorth().getX());
-            double y = this.perspective.calcY(node.getEastNorth().getY());
-
-            centerX += x;
-            centerY += y;
+            Point2d point = perspective.calcPoint(node);
+            centerX += point.x;
+            centerY += point.y;
         }
+        setPoint(new Point3d(centerX / pNodes.size(), 0, -(centerY / pNodes.size())));
 
-        this.x = centerX / pNodes.size();
-        this.y = centerY / pNodes.size();
     }
 
-    /** Calculate max distance from center do all of points.
-     * @param way list of points
+    /**
+     * Calculate max distance from center do all of points.
+     * 
+     * @param way
+     *            list of points
      */
     protected void calcModelRadius(Way way) {
 
         double maxRadius = 0;
 
+        double x = getPoint().x;
+        double y = -getPoint().z;
+
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
+            Point2d point = perspective.calcPoint(node);
 
-            double dx = this.x - this.perspective.calcX(node.getEastNorth().getX());
-            double dy = this.y - this.perspective.calcY(node.getEastNorth().getY());
+            double dx = x - point.x;
+            double dy = y - point.y;
 
-            double radius = dx*dx + dy*dy;
+            double radius = dx * dx + dy * dy;
             if (radius > maxRadius) {
                 maxRadius = radius;
             }
@@ -141,26 +132,15 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
     }
 
     @Override
-    public boolean isInCamraRange(double camraX, double camraY,
-            double camraRange) {
-        return distance(camraX, camraY) > this.radius + camraRange;
-    }
-
-    @Override
-    public double distance(double pX, double pY) {
-        double dx = pX - this.x;
-        double dy = pY - this.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    @Override
+    @Deprecated
     public double getX() {
-        return this.x;
+        return getPoint().x;
     }
 
     @Override
+    @Deprecated
     public double getY() {
-        return this.y;
+        return -getPoint().z;
     }
 
     @Override
@@ -169,21 +149,18 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
     }
 
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
         this.buildModel = true;
     }
 
     @Override
-    public boolean isBuildModel() {
+    public boolean isWorldObjectBuild() {
         return this.buildModel;
     }
 
     @Override
     public String toString() {
-        return "AbstractModel [x=" + this.x + ", y=" + this.y + ", radius=" + this.radius
-        + ", buildModel=" + this.buildModel
-        //				 + ", perspective=" + perspective +
-        + "]";
+        return "AbstractModel [point=" + getPoint() + ", radius=" + this.radius + ", buildModel=" + this.buildModel + "]";
     }
 
     /**
@@ -195,54 +172,39 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
     }
 
     /**
-     * @param error the error to set
+     * @param error
+     *            the error to set
      */
     @Override
     public void setError(boolean error) {
         this.error = error;
     }
 
-
-
-
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalX()
      */
     @Override
+    @Deprecated
     public double getGlobalX() {
-        return this.x;
+        return getX();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalY()
      */
     @Override
+    @Deprecated
     public double getGlobalY() {
-        return this.y;
+        return getY();
     }
 
-
-    /* (non-Javadoc)
-     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrameX(double)
-     */
-    @Override
-    public double toModelFrameX(double x) {
-        return this.perspective.calcY(x) - getGlobalX();
-    }
-
-    /* (non-Javadoc)
-     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrameY(double)
-     */
-    @Override
-    public double toModelFrameY(double y) {
-        return this.perspective.calcY(y) - getGlobalY();
-    }
-
-
-    /* (non-Javadoc)
-     * @see kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrame(javax.vecmath.Point2d)
+    /*
+     * (non-Javadoc)
+     * @see
+     * kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrame(javax.vecmath
+     * .Point2d)
      */
     @Override
     public Point2d toModelFrame(Node pNode) {
@@ -254,31 +216,23 @@ public abstract class AbstractModel implements Model, ModelFrame, GlobalFrame, O
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender#getOsmPrimitives()
      */
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
-        // TODO Auto-generated method stub
         // FIXME remove form abstract!
         throw new RuntimeException("TODO");
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see kendzi.josm.kendzi3d.jogl.selection.Selectable#getSelection()
      */
     @Override
     public List<Selection> getSelection() {
-        return Collections.<Selection>emptyList();
+        return Collections.<Selection> emptyList();
     }
-
-//    protected MetadataCacheService getMetadataCacheService() {
-//        ApplicationContext context = ApplicationContextFactory.getContext();
-//        // XXX rewrite with injections?
-//        return (MetadataCacheService) context.getBean("metadataCacheService");
-//    }
-
 
 }

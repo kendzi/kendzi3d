@@ -25,13 +25,15 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.layer.Layer;
-import kendzi.josm.kendzi3d.jogl.model.Model;
+import kendzi.josm.kendzi3d.jogl.model.DrawableModel;
 import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
+import kendzi.josm.kendzi3d.jogl.selection.Selectable;
 import kendzi.josm.kendzi3d.jogl.selection.Selection;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.ModelLayerBuilder;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
 
@@ -44,7 +46,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
@@ -69,40 +70,15 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     private static double lod4 = 1000 * 1000;
 
     /**
-     * Request for rebuildin models.
+     * Request for models rebuild.
      */
     private boolean datasetChanged = true;
 
     /**
-     * Perspective used by OpenGl. Transforming coordinates from EastNorth to
-     * OpenGl .
+     * Perspective used to transform coordinates from geolocation (lat/lon) to
+     * local, drawable world.
      */
-    private Perspective3D pers;
-
-    /**
-     * Perspective used by OpenGl. Transforming coordinates from EastNorth to
-     * OpenGl .
-     */
-    private static Perspective perspective3D;
-
-    public static Perspective getPerspective3D() {
-        return perspective3D;
-    }
-
-    // /**
-    // * X Offset of coordinate system used by openGl.
-    // */
-    // private double centerX = 0;
-    //
-    // /**
-    // * Y Offset of coordinate system used by openGl.
-    // */
-    // private double centerY = 0;
-
-    // /**
-    // * Position of sun. XXX
-    // */
-    // private float lightPos[] = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    private Perspective3D perspective;
 
     /**
      * Model displayed when error happen.
@@ -118,19 +94,21 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * Center point of world.
      */
     private EastNorth center;
-    private List<Layer> layerList = new ArrayList<Layer>();
+    private List<Layer> layers = new ArrayList<Layer>();
 
     private Selection lastSelection;
 
     private GLUquadric quadratic; // Storage For Our Quadratic Objects
     private GLU glu = new GLU();
 
+    private List<WorldObject> models = new ArrayList<WorldObject>(500);
+
     public Perspective3D getPerspective() {
-        return this.pers;
+        return this.perspective;
     }
 
     public void setPerspective(Perspective3D pers) {
-        this.pers = pers;
+        this.perspective = pers;
     }
 
     public RenderJOSM() {
@@ -142,94 +120,75 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         this.center = new EastNorth(0, 0);
 
-        this.pers = new Perspective3D(1, 0, 0);
+        this.perspective = new Perspective3D(1, 0, 0);
 
     }
 
     public void init(GL2 gl) {
-        //
+
         this.quadratic = this.glu.gluNewQuadric();
-        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH); // Create
-                                                                    // Smooth
-                                                                    // Normals
-        // glu.gluQuadricTexture(quadratic, true);
-        // glu.gluQuadricTexture(quadratic, true);
+        // Create Smooth Normals
+        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH);
+
     }
 
     public void draw(GL2 gl, Camera camera) {
-
-        // // _direction_
-        // gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION,
-        // this.lightPos, 0);
 
         if (this.datasetChanged) {
             this.datasetChanged = false;
             rebuildData();
         }
+        for (WorldObject r : models) {
 
-        // for (Model r : this.modelList) {
-        // drawModel(r, gl, camera);
-        // }
+            drawModel((DrawableModel) r, gl, camera);
 
-        for (Layer layer : this.layerList) {
-            List<Model> models = layer.getModels();
-            for (Model r : models) {
-                drawModel(r, gl, camera);
-            }
         }
 
         if (this.modelRender.isDebugging()) {
             drawSelectable(gl);
 
         }
-        // Selection selection = this.lastSelection;
-        // if (selection != null) {
-        // drawEditors(gl, selection);
-        // }
 
         this.modelRender.setupDefaultMaterial(gl);
     }
 
     /**
-     * @param r
+     * @param model
      * @param gl
      * @param camera
      */
-    public void drawModel(Model r, GL2 gl, Camera camera) {
-        if (r.isError()) {
-            drawError(r, gl, camera);
+    public void drawModel(DrawableModel model, GL2 gl, Camera camera) {
+        if (model.isError()) {
+            drawError(model, gl, camera);
             return;
         }
 
         // r.isInCamraRange(pCamraX, pCamraY, pCamraRange)
         try {
+            if (!model.isWorldObjectBuild()) {
+                model.buildWorldObject();
+            }
 
-            if (r instanceof DLODSuport) {
-                DLODSuport lodModel = (DLODSuport) r;
+            if (model instanceof DLODSuport) {
+                DLODSuport lodModel = (DLODSuport) model;
                 LOD pLod = getLods(lodModel, camera);
-                if (!lodModel.isModelBuild(pLod)) {
-                    lodModel.buildModel(pLod);
-                }
 
                 lodModel.draw(gl, camera, pLod);
 
             } else {
-                if (!r.isBuildModel()) {
-                    r.buildModel();
-                }
 
-                r.draw(gl, camera);
+                model.draw(gl, camera);
 
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            r.setError(true);
-            drawError(r, gl, camera);
+            log.error("error rendering", e);
+            model.setError(true);
+            drawError(model, gl, camera);
         }
     }
 
-    private void drawError(Model r, GL2 pGl, Camera camera) {
+    private void drawError(DrawableModel r, GL2 pGl, Camera camera) {
         double x = r.getX();
         double y = r.getY();
 
@@ -245,15 +204,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
         Material material = new Material(new AmbientDiffuseComponent(Color.RED, Color.RED));
-        // material.ambientColor = Color.RED;
-        // material.diffuseColor = Color.RED;
-        // material.specularColor = Color.RED;
-        //
-        // material.emissive = Color.RED;
-        //
-        // material.shininess = (float) 0.5;
-
-        // material.shininess2 = (float) 0.5;
 
         int mat = modelBuilder.addMaterial(material);
 
@@ -353,57 +303,63 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     public void rebuildData() {
         DataSet dataset = getDataSet();
 
+        models.clear();
+
         if (dataset == null) {
             return;
         }
 
-        // this.modelList.clear();
+        models.addAll(ModelLayerBuilder.bulid(layers, dataset, perspective));
 
-        for (Layer layer : this.layerList) {
-            layer.clear();
-        }
-
-        for (Node node : dataset.getNodes()) {
-
-            if (node.isDeleted()) {
-                continue;
-            }
-
-            // layers
-            for (Layer layer : this.layerList) {
-                if (layer.getNodeMatcher() != null && layer.getNodeMatcher().match(node)) {
-                    layer.addModel(node, this.pers);
-                }
-            }
-        }
-
-        for (Way way : dataset.getWays()) {
-
-            if (way.isDeleted()) {
-                continue;
-            }
-
-            // layers
-            for (Layer layer : this.layerList) {
-                if (layer.getWayMatcher() != null && layer.getWayMatcher().match(way)) {
-                    layer.addModel(way, this.pers);
-                }
-            }
-        }
-
-        for (org.openstreetmap.josm.data.osm.Relation relation : dataset.getRelations()) {
-
-            if (relation.isDeleted()) {
-                continue;
-            }
-
-            // layers
-            for (Layer layer : this.layerList) {
-                if (layer.getRelationMatcher() != null && layer.getRelationMatcher().match(relation)) {
-                    layer.addModel(relation, this.pers);
-                }
-            }
-        }
+        // for (Layer layer : layers) {
+        // layer.clear();
+        // }
+        //
+        // for (Node node : dataset.getNodes()) {
+        //
+        // if (node.isDeleted()) {
+        // continue;
+        // }
+        //
+        // // layers
+        // for (Layer layer : this.layers) {
+        // if (layer.getNodeMatcher() != null &&
+        // layer.getNodeMatcher().match(node)) {
+        // layer.addModel(node, this.pers);
+        // }
+        // }
+        // }
+        //
+        // for (Way way : dataset.getWays()) {
+        //
+        // if (way.isDeleted()) {
+        // continue;
+        // }
+        //
+        // // layers
+        // for (Layer layer : this.layers) {
+        // if (layer.getWayMatcher() != null &&
+        // layer.getWayMatcher().match(way)) {
+        // layer.addModel(way, this.pers);
+        // }
+        // }
+        // }
+        //
+        // for (org.openstreetmap.josm.data.osm.Relation relation :
+        // dataset.getRelations()) {
+        //
+        // if (relation.isDeleted()) {
+        // continue;
+        // }
+        //
+        // // layers
+        // for (Layer layer : this.layers) {
+        // if (layer.getRelationMatcher() != null &&
+        // layer.getRelationMatcher().match(relation)) {
+        // layer.addModel(relation, this.pers);
+        // }
+        // }
+        // }
     }
 
     private void setupPerspective3D(EastNorth center) {
@@ -416,7 +372,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         double scale = dist / 2d;
 
-        this.pers = new Perspective3D(scale, center.getX(), center.getY());
+        this.perspective = new Perspective3D(scale, center.getX(), center.getY());
     }
 
     @Override
@@ -442,15 +398,6 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         }
 
         if (pEvent instanceof DataChangedEvent) {
-            AbstractDatasetChangedEvent dce = pEvent;
-
-            try {
-                if (Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().equals(this.dataSet)) {
-                    // log.info("TESTTTT !!!!!!!!!!!!!!!!!!!! bad data set ?");
-                }
-            } catch (Exception e) {
-                // e.printStackTrace();
-            }
 
             if (this.dataSet != null) {
 
@@ -566,7 +513,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * @return the layerList
      */
     public List<Layer> getLayerList() {
-        return this.layerList;
+        return this.layers;
     }
 
     /**
@@ -574,19 +521,16 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      *            the layerList to set
      */
     public void setLayerList(List<Layer> layerList) {
-        this.layerList = layerList;
+        this.layers = layerList;
     }
 
     public void drawSelectable(GL2 gl) {
 
         gl.glColor3fv(Color.ORANGE.darker().getRGBComponents(new float[4]), 0);
 
-        for (Layer layer : this.layerList) {
-            List<Model> models = layer.getModels();
-            for (Model r : models) {
-                for (Selection s : r.getSelection()) {
-                    // Double intersect = Ray3dUtil.intersect(selectRay,
-                    // s.getCenter(), s.getRadius());
+        for (WorldObject r : models) {
+            if (r instanceof Selectable) {
+                for (Selection s : ((Selectable) r).getSelection()) {
 
                     gl.glPushMatrix();
 
@@ -610,6 +554,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
                     gl.glPopMatrix();
                 }
             }
+
         }
 
     }
@@ -618,10 +563,9 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         Selection selection = null;
         double min = Double.MAX_VALUE;
 
-        for (Layer layer : this.layerList) {
-            List<Model> models = layer.getModels();
-            for (Model r : models) {
-                for (Selection s : r.getSelection()) {
+        for (WorldObject r : models) {
+            if (r instanceof Selectable) {
+                for (Selection s : ((Selectable) r).getSelection()) {
                     Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
                     if (intersect == null) {
                         continue;
@@ -658,6 +602,13 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         this.lastSelection = selection;
 
         return selection;
+    }
+
+    /**
+     * @return the models
+     */
+    public List<WorldObject> getModels() {
+        return models;
     }
 
 }

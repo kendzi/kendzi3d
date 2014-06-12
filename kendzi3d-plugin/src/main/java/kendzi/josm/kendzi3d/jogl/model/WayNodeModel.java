@@ -41,6 +41,7 @@ import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
 
@@ -99,15 +100,15 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
      *            selected nodes
      * @param wayNodeModelConf
      *            model configuration
-     * @param perspective3D
+     * @param Perspective
      *            perspective 3d
      * @param modelRender
      * @param modelCacheService
      */
-    public WayNodeModel(Way way, List<Integer> nodeFilter, WayNodeModelConf wayNodeModelConf, Perspective3D perspective3D,
+    public WayNodeModel(Way way, List<Integer> nodeFilter, WayNodeModelConf wayNodeModelConf, Perspective Perspective,
             ModelRender modelRender, ModelCacheService modelCacheService) {
 
-        super(way, perspective3D);
+        super(way, Perspective);
 
         this.nodeFilter = nodeFilter;
 
@@ -123,7 +124,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
 
         buildModel(LOD.LOD1);
 
@@ -285,7 +286,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         return bisector;
     }
 
-    private Point2d transform(Node node, Perspective3D perspective) {
+    private Point2d transform(Node node, Perspective perspective) {
         return perspective.calcPoint(node);
     }
 
@@ -391,10 +392,10 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                 double cos = -modelPoint.getOffsetVector().y;
                 double sin = -modelPoint.getOffsetVector().x;
 
-                gl.glMultMatrixd(//
+                gl.glMultMatrixd( //
                         new double[] { cos, 0, sin, 0, //
-                                0, 1, 0, 0,//
-                                -sin, 0, cos, 0,//
+                                0, 1, 0, 0, //
+                                -sin, 0, cos, 0, //
                                 0, 0, 0, 1 }, 0);
 
                 PointModel.drawDebug(gl, translate, modelPoint.getDirection());
@@ -421,11 +422,6 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
-    public Point3d getPoint() {
-        return new Point3d(this.x, 0, -this.y);
-    }
-
-    @Override
     public List<ExportItem> export(ExportModelConf conf) {
         if (this.modelLod.get(LOD.LOD1) == null) {
             buildModel(LOD.LOD1);
@@ -433,5 +429,10 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
                 .getGlobalY()), new Vector3d(1, 1, 1)));
+    }
+
+    @Override
+    public Model getModel() {
+        return this.modelLod.get(LOD.LOD1);
     }
 }

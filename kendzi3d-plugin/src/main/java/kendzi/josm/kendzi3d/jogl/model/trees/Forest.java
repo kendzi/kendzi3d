@@ -18,7 +18,6 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.DrawUtil;
@@ -27,7 +26,6 @@ import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
@@ -35,6 +33,8 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.MultiPointWorldObject;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
@@ -47,7 +47,7 @@ import org.openstreetmap.josm.data.osm.Way;
  * 
  * @author Tomasz Kedziora (Kendzi)
  */
-public class Forest extends AbstractWayModel {
+public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(Forest.class);
@@ -79,12 +79,12 @@ public class Forest extends AbstractWayModel {
     /**
      * @param pWay
      *            way
-     * @param pPerspective3D
+     * @param perspective
      *            perspective
      */
-    public Forest(Way pWay, Perspective3D pPerspective3D, ModelRender pModelRender, ModelCacheService modelCacheService,
+    public Forest(Way pWay, Perspective perspective, ModelRender pModelRender, ModelCacheService modelCacheService,
             MetadataCacheService metadataCacheService) {
-        super(pWay, pPerspective3D);
+        super(pWay, perspective);
 
         this.modelLod = new EnumMap<LOD, Model>(LOD.class);
 
@@ -96,7 +96,7 @@ public class Forest extends AbstractWayModel {
     }
 
     @Override
-    public void buildModel() {
+    public void buildWorldObject() {
 
         buildModel(LOD.LOD1);
         buildModel(LOD.LOD2);
@@ -183,41 +183,23 @@ public class Forest extends AbstractWayModel {
         int clusterXMax = (int) Math.ceil(width / pClusterSize);
         int clusterYMax = (int) Math.ceil(height / pClusterSize);
 
-        // T [][] cluster = new T [clusterYMax][];
-
         T[] clusters = (T[]) Array.newInstance(clazz, clusterYMax * clusterXMax);
-
-        // new T [clusterYMax][];
-
-        // for (int i = 0; i < clusterYMax; i++) {
-        //
-        //
-        // // cluster[i] = new Cluster [clusterXMax];
-        // // Use Array native method to create arra of a type only known at run
-        // time
-        // cluster[i] = (T[]) Array.newInstance(clazz, clusterXMax);
-        // // cluster[i] = (T[])new Object[clusterXMax];
-        // }
 
         for (int y = 0; y < clusterYMax; y++) {
             for (int x = 0; x < clusterXMax; x++) {
-                // Cluster c = new Cluster();
 
                 T c = null;
                 try {
                     c = clazz.newInstance();
                 } catch (InstantiationException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(e, e);
                 } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
 
                 c.setCenter(new Point3d(minX + pClusterSize / 2 + pClusterSize * x, 0, -(minY + pClusterSize / 2 + pClusterSize
                         * y)));
 
-                // cluster[y][x] = c;
                 clusters[clusterXMax * y + x] = c;
             }
         }
@@ -412,60 +394,11 @@ public class Forest extends AbstractWayModel {
         return ret;
     }
 
-    private double splitVector(Point2d b, Point2d e, double left, double every, List<Point2d> ret) {
-        Vector2d v = new Vector2d(e);
-        v.sub(b);
-        double distance = v.length();
-        if (distance + EPSILON < left) {
-            return left - distance;
-        }
-
-        v.normalize();
-
-        Vector2d beginVector = new Vector2d(v);
-        beginVector.scale(left);
-
-        Vector2d everyVector = new Vector2d(v);
-        everyVector.scale(every);
-
-        Vector2d repeat = beginVector;
-
-        do {
-            ret.add(new Point2d(b.x + repeat.x, b.y + repeat.y));
-
-            repeat.add(everyVector);
-
-        } while (distance + EPSILON >= repeat.length());
-
-        return repeat.length() - distance;
-        // return distance - (repeat.length() - everyVector.length());
-
-    }
-
-    private double calcDistance(List<Point2d> points) {
-
-        if (points == null || points.size() < 2) {
-            return 0d;
-        }
-        double distance = 0;
-
-        Point2d b = points.get(0);
-        for (int i = 1; i < points.size(); i++) {
-            Point2d e = points.get(i);
-            distance = distance + e.distance(b);
-
-            b = e;
-        }
-        return distance;
-    }
-
     private void setupScale(Model model2, double height) {
 
         Bounds bounds = model2.getBounds();
 
         double modelHeight = bounds.max.y;
-
-        double modelWidht = Math.max(bounds.max.x - bounds.min.x, bounds.max.z - bounds.min.z);
 
         double modelScaleHeight = height / modelHeight;
 
@@ -475,7 +408,6 @@ public class Forest extends AbstractWayModel {
         this.scale.y = modelScaleHeight;
         this.scale.z = modelScaleWidht;
 
-        // model2.useScale = true;
     }
 
     public boolean isModelBuild(LOD pLod) {
@@ -507,7 +439,6 @@ public class Forest extends AbstractWayModel {
 
                 gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
 
-                // this.modelRender.render(gl, model2);
                 gl.glCallList(dl);
 
                 gl.glPopMatrix();
@@ -527,11 +458,7 @@ public class Forest extends AbstractWayModel {
 
         // compile the display list, store a triangle in it
         gl.glNewList(index, GL2.GL_COMPILE);
-        // glBegin(GL_TRIANGLES);
-        // glVertex3fv(v0);
-        // glVertex3fv(v1);
-        // glVertex3fv(v2);
-        // glEnd();
+
         this.modelRender.resetFaceCount();
         this.modelRender.render(gl, model2);
         log.info("***> face count: " + this.modelRender.getFaceCount());
@@ -551,7 +478,6 @@ public class Forest extends AbstractWayModel {
 
     @Override
     public void draw(GL2 gl, Camera camera) {
-        // draw(gl, camera, LOD.LOD1);
 
         Point3d localCamera = new Point3d(camera.getPoint().x - this.getGlobalX(), camera.getPoint().y, camera.getPoint().z
                 + this.getGlobalY());
@@ -595,7 +521,6 @@ public class Forest extends AbstractWayModel {
 
                     gl.glScaled(this.scale.x * height, this.scale.y * height, this.scale.z * height);
 
-                    // this.modelRender.render(gl, model2);
                     gl.glCallList(dl);
 
                     gl.glPopMatrix();
@@ -609,14 +534,28 @@ public class Forest extends AbstractWayModel {
 
     }
 
-    public Point3d getPoint() {
-        return new Point3d(this.x, 0, -this.y);
-    }
-
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
+    public Model getModel() {
+        return modelLod.get(LOD.LOD1);
+    }
+
+    @Override
+    public List<Point3d> getPoints() {
+        List<Point3d> ret = new ArrayList<Point3d>();
+        for (HeightCluster cluster : this.clusterHook) {
+
+            List<Point2d> hookPoints = cluster.getHook();
+
+            for (Point2d hook : hookPoints) {
+                ret.add(new Point3d(hook.x, 0, -hook.y));
+            }
+        }
+        return ret;
+    }
 }
