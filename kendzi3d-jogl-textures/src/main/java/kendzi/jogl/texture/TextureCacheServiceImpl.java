@@ -125,7 +125,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
             log.info("No file to load: " + name);
             return null;
         }
-
+        // return Toolkit.createImage(textUrl);
         return ImageIO.read(textUrl);
     }
 

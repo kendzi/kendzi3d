@@ -111,6 +111,9 @@ public class Road extends AbstractWayModel {
     @Override
     public void buildWorldObject() {
 
+        // FIXME object is not in local coordinates!
+        setPoint(new Point3d());
+
         List<Point2d> pointList = new ArrayList<Point2d>();
 
         for (int i = 0; i < this.way.getNodesCount(); i++) {
@@ -376,7 +379,7 @@ public class Road extends AbstractWayModel {
 
     @Override
     public void draw(GL2 pGl, Camera pCamera) {
-
+        // FIXME object is not in local coordinates!
         this.modelRender.render(pGl, this.model);
 
     }
