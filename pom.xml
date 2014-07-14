@@ -3,7 +3,7 @@
 
 	<groupId>kendzi.kendzi3d</groupId>
 	<artifactId>kendzi3d-parent</artifactId>
-	<version>1.0.179-SNAPSHOT</version>
+	<version>1.0.179</version>
 	<packaging>pom</packaging>
  
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
@@ -13,7 +13,7 @@
 		<connection>scm:git:git@github.com/kendzi/kendzi3d.git</connection>
 		<developerConnection>scm:git:git@github.com:kendzi/kendzi3d.git</developerConnection>
 		<url>http://github.com/kendzi/kendzi3d</url>
-  	  <tag>HEAD</tag>
+  	  <tag>kendzi3d-parent-1.0.179</tag>
   </scm>
 	<distributionManagement>
 		<repository>
