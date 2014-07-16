@@ -32,7 +32,16 @@
 		<kendzi.math.version>0.0.8</kendzi.math.version>
 		<inject.version>1</inject.version>
 	</properties>
-
+	
+	<dependencyManagement>
+    	<dependencies>
+      		<dependency>
+				<groupId>org.openstreetmap</groupId>
+				<artifactId>josm</artifactId>
+				<version>RELEASE</version>
+			</dependency>		
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

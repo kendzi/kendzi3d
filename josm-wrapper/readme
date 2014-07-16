@@ -1,15 +1,15 @@
+To create maven artifact for JOSM simply follow:
 
-This project provide maven wrapper for JOSM ant build scripts.
+* execute JOSM ant build
 
-*** How to build
-1. setup path to JOSM project in pom.xml
-2. build and install project using command: 
-	maven install
+* add result of build to maven repository by command
 
+mvn deploy:deploy-file -DgroupId=org.openstreetmap \
+  -DartifactId=josm \
+  -Dversion=0.0.${SVN_REVISION}  \
+  -Dpackaging=jar \
+  -Dfile=${WORKSPACE}/dist/josm-custom.jar \
+  -DrepositoryId=zibi-ftp-repository \
+  -Durl=ftp://kendzi@zibi.openstreetmap.org.pl/k/repo
 
-*** License
-
-This software is provided "AS IS" without a warranty of any kind.  You use it on your own risk and responsibility!!!
-
-This program is shared on license BSDv3 more information in file BSD3.
-Some parts of program as source, images, models may be shared on different licenses. In case of doubt ask.
+  
