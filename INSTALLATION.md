@@ -5,9 +5,9 @@
 
 # Installation inside eclipse
 
-* download and install java 1.6 JDK
+* download and install java 1.7 JDK
 
-* download and install Eclipse 4.2 EE
+* download and install Eclipse 4.4 EE
 
 * download kendzi3d project using egit
 ```

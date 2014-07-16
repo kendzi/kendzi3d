@@ -14,7 +14,7 @@ JOSM plug-in "kendzi.josm.plugin3d" is build by ant script.
 Currently conversion to maven is in progress. Build will change in future. 
 Only one of subproject is build by ant all others are maven project. 
 
-* Install java JDK 1.6 64bit from java.oracle.com
+* Install java JDK 1.7 64bit from java.oracle.com
 * Install Eclipse EE form eclipse.org
 * Install Eclipse plugins from marketplace: "Help > Eclipse Marketplace"
  * Subversive
@@ -34,19 +34,10 @@ https://github.com/kendzi/kendzi3d-josm-jogl.git
 * Download source of kendzi3d. Git link: 
 https://github.com/kendzi/kendzi3d.git
  * import from local git repo as java ant project: kendzi.josm.plugin3d
- * import all other sub projects from local git repo as java maven projects. If need you can import it as general project and later convert to maven by clicking on project: "Convigure>Convert to Maven"
-* Setup project josm-wrapper and set path for JOSM builded jar in file (line 16, property josm.dir):
-```{josm-wrapper}/pom.xml```
-* Compile josm-wrapper and check if result is the same as by using ant script:
-```{josm-wrapper}/pom.xml clean install```
-Always use tools.jar profile!
+ * import all other sub projects from local git working directory as java maven projects. If need you can import it as general project and later convert to maven by clicking on project: "Convigure>Convert to Maven"
 * Compile all maven project by using command:
 ``` {kendzi3d-plugin-build}/pom.xml clean install ```
 This step is important. It will generate temporary directors used by and script! All subproject should pass!
-* Finally build plugin by using ant:
-```{kendzi.josm.plugin3d}/build.xml clean dist```
-* Output will be generated to file:
-```{JOSM}/dist/kendzi3d.jar```
 
 
 # License
