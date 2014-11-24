@@ -26,11 +26,16 @@
 		 <dependency>
         	<groupId>kendzi.math</groupId>
         	<artifactId>kendzi-math-geometry</artifactId>
-        	<version>0.0.9-SNAPSHOT</version>
+        	<version>${kendzi.math.version}</version>
         </dependency>
         <dependency>
         	<groupId>kendzi</groupId>
         	<artifactId>kendzi-util</artifactId>
+        	<version>1.0.181-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+        	<groupId>kendzi.kendzi3d</groupId>
+        	<artifactId>kendzi3d-editor</artifactId>
         	<version>1.0.181-SNAPSHOT</version>
         </dependency>
 		<dependency>

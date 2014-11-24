@@ -37,11 +37,11 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Represent road.
- * 
+ *
  * This class require lot of clean up!
- * 
+ *
  * @author Tomasz Kedziora (Kendzi)
- * 
+ *
  */
 @Deprecated
 public class Road extends AbstractWayModel {
@@ -57,12 +57,12 @@ public class Road extends AbstractWayModel {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
     /**
      * List of road points.
@@ -91,7 +91,7 @@ public class Road extends AbstractWayModel {
 
     /**
      * Represent road.
-     * 
+     *
      * @param way
      *            way
      * @param perspective
@@ -116,16 +116,16 @@ public class Road extends AbstractWayModel {
 
         List<Point2d> pointList = new ArrayList<Point2d>();
 
-        for (int i = 0; i < this.way.getNodesCount(); i++) {
-            Node node = this.way.getNode(i);
+        for (int i = 0; i < way.getNodesCount(); i++) {
+            Node node = way.getNode(i);
             pointList.add(perspective.calcPoint(node));
         }
 
-        this.list = pointList;
+        list = pointList;
 
-        this.roadWidth = (float) DEFAULT_ROAD_WIDTH;
+        roadWidth = (float) DEFAULT_ROAD_WIDTH;
 
-        this.roadWidth = getRoadWidth();
+        roadWidth = getRoadWidth();
 
         TextureData texture = getTexture();
 
@@ -140,7 +140,7 @@ public class Road extends AbstractWayModel {
         meshWalls.materialID = mi;
         meshWalls.hasTexture = true;
 
-        if (this.list.size() > 1) {
+        if (list.size() > 1) {
 
             FaceFactory leftBorder = meshWalls.addFace(FaceType.QUAD_STRIP);
             FaceFactory leftPart = meshWalls.addFace(FaceType.QUAD_STRIP);
@@ -151,9 +151,9 @@ public class Road extends AbstractWayModel {
 
             int flatNormalI = meshWalls.addNormal(flatSurface);
 
-            Point2d beginPoint = this.list.get(0);
-            for (int i = 1; i < this.list.size(); i++) {
-                Point2d endPoint = this.list.get(i);
+            Point2d beginPoint = list.get(0);
+            for (int i = 1; i < list.size(); i++) {
+                Point2d endPoint = list.get(i);
 
                 double x = endPoint.x - beginPoint.x;
                 double y = endPoint.y - beginPoint.y;
@@ -167,8 +167,8 @@ public class Road extends AbstractWayModel {
                 double orthY = -x * sin90 + y * cos90;
 
                 // calc vector for road width;
-                double normX = this.roadWidth / 2 * orthX / mod;
-                double normY = this.roadWidth / 2 * orthY / mod;
+                double normX = roadWidth / 2 * orthX / mod;
+                double normY = roadWidth / 2 * orthY / mod;
                 // calc vector for border width;
                 double borderX = normX + 0.2 * orthX / mod;
                 double borderY = normY + 0.2 * orthY / mod;
@@ -243,38 +243,38 @@ public class Road extends AbstractWayModel {
             }
         }
 
-        this.model = modelBuilder.toModel();
-        this.model.setUseLight(true);
-        this.model.setUseTexture(true);
+        model = modelBuilder.toModel();
+        model.setUseLight(true);
+        model.setUseTexture(true);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     /**
      * Finds texture data.
-     * 
+     *
      * @return texture data
      */
     private TextureData getTexture() {
 
-        String highway = this.way.get("highway");
+        String highway = way.get("highway");
         if (highway == null) {
             highway = "unknown";
         }
 
-        String surface = this.way.get("surface");
+        String surface = way.get("surface");
         if (surface == null) {
             surface = "unknown";
         }
 
         String file = null;
 
-        String highwayTexture = this.metadataCacheService.getPropertites("roads.highway_" + highway + ".texture.file", null);
-        Double highwayTextureLenght = this.metadataCacheService.getPropertitesDouble("roads.highway_" + highway
-                + ".texture.lenght", 1d);
-        String surfaceTexture = this.metadataCacheService.getPropertites("roads.surface_" + surface + ".texture.file", null);
-        Double surfaceTextureLenght = this.metadataCacheService.getPropertitesDouble("roads.surface_" + surface
-                + ".texture.lenght", 1d);
+        String highwayTexture = metadataCacheService.getPropertites("roads.highway_" + highway + ".texture.file", null);
+        Double highwayTextureLenght = metadataCacheService.getPropertitesDouble("roads.highway_" + highway + ".texture.lenght",
+                1d);
+        String surfaceTexture = metadataCacheService.getPropertites("roads.surface_" + surface + ".texture.file", null);
+        Double surfaceTextureLenght = metadataCacheService.getPropertitesDouble("roads.surface_" + surface + ".texture.lenght",
+                1d);
 
         double lenght = 1;
         // finds known texture
@@ -303,9 +303,9 @@ public class Road extends AbstractWayModel {
 
     /**
      * Texture data.
-     * 
+     *
      * @author kendzi
-     * 
+     *
      */
     private class TextureData {
         String file;
@@ -313,15 +313,15 @@ public class Road extends AbstractWayModel {
 
         private TextureData(String pFile, double pLenght) {
             super();
-            this.file = pFile;
-            this.lenght = pLenght;
+            file = pFile;
+            lenght = pLenght;
         }
 
         /**
          * @return the file
          */
         public String getFile() {
-            return this.file;
+            return file;
         }
 
         /**
@@ -329,14 +329,14 @@ public class Road extends AbstractWayModel {
          *            the file to set
          */
         public void setFile(String pFile) {
-            this.file = pFile;
+            file = pFile;
         }
 
         /**
          * @return the lenght
          */
         public double getLenght() {
-            return this.lenght;
+            return lenght;
         }
 
         /**
@@ -344,24 +344,24 @@ public class Road extends AbstractWayModel {
          *            the lenght to set
          */
         public void setLenght(double pLenght) {
-            this.lenght = pLenght;
+            lenght = pLenght;
         }
 
     }
 
     /**
      * Finds road width.
-     * 
+     *
      * @return road width
      */
     private double getRoadWidth() {
 
-        String highway = this.way.get("highway");
+        String highway = way.get("highway");
         if (highway == null) {
             highway = "unknown";
         }
 
-        String widthStr = this.way.get("width");
+        String widthStr = way.get("width");
         if (widthStr != null) {
             try {
                 return Long.parseLong(widthStr);
@@ -370,32 +370,42 @@ public class Road extends AbstractWayModel {
             }
         }
 
-        Double paramWidth = this.metadataCacheService.getPropertitesDouble("roads.highway_" + highway + ".width",
-                DEFAULT_ROAD_WIDTH);
+        Double paramWidth = metadataCacheService.getPropertitesDouble("roads.highway_" + highway + ".width", DEFAULT_ROAD_WIDTH);
 
         return paramWidth;
 
     }
 
     @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
     public void draw(GL2 pGl, Camera pCamera) {
         // FIXME object is not in local coordinates!
-        this.modelRender.render(pGl, this.model);
+        modelRender.render(pGl, model);
 
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
+        if (model == null) {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
         return model;
     }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
+    }
+
 }

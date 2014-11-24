@@ -19,7 +19,7 @@ import javax.media.opengl.glu.GLU;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.DrawUtil;
+import kendzi.jogl.util.DrawUtil;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
@@ -255,20 +255,20 @@ public class Kendzi3dTitleGLEventListener {
         //        glu.gluPerspective(45.0, (float)width / (float) height, 1.0, 1500.0); // 5
 
 
-        double areaHeigth =  leftTopPoint.y - rightBottomPoint.y;
+        double areaHeight =  leftTopPoint.y - rightBottomPoint.y;
         double areaWidth = rightBottomPoint.x - leftTopPoint.x;
 
         //        this.cameraAngleX = Math.toRadians(0);
         //        this.cameraAngleY = Math.toRadians(-35);
 
         double ox = Math.cos(cameraAngleX) * areaWidth / 2d;
-        double oy = Math.cos(cameraAngleY) * areaHeigth / 2d;
+        double oy = Math.cos(cameraAngleY) * areaHeight / 2d;
 
         double oz = Math.max(ox, oy);
 
         gl.glOrtho(- ox, ox , -oy, oy, -oz - 25, oz + 600);
 
-        //        gl.glOrtho(- areaWidth/2, areaWidth/2 , -areaHeigth/2, areaHeigth/2, -10, 100);
+        //        gl.glOrtho(- areaWidth/2, areaWidth/2 , -areaHeight/2, areaHeight/2, -10, 100);
 
     }
 

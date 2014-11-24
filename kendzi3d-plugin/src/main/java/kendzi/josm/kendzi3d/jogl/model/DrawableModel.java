@@ -50,12 +50,24 @@ public interface DrawableModel extends BuildableWorldObject {
     /**
      * Draw using openGl.
      * 
-     * @param pGl
+     * @param gl
      *            openGl
-     * @param pCamera
+     * @param camera
      *            camera
      */
-    void draw(GL2 pGl, Camera pCamera);
+    void draw(GL2 gl, Camera camera);
+
+    /**
+     * Draw using openGl. When object can be selectable.
+     * 
+     * @param gl
+     *            openGl
+     * @param camera
+     *            camera
+     * @param selected
+     *            if object is selected
+     */
+    void draw(GL2 gl, Camera camera, boolean selected);
 
     /**
      * When error occurred in time of model building/rendering.
@@ -67,9 +79,9 @@ public interface DrawableModel extends BuildableWorldObject {
     /**
      * Set if error occurred.
      * 
-     * @param pError
+     * @param error
      *            error
      */
-    void setError(boolean pError);
+    void setError(boolean error);
 
 }

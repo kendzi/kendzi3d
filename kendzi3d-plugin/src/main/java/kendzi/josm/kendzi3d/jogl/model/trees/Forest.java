@@ -20,11 +20,11 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.DrawUtil;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.util.DrawUtil;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
@@ -60,9 +60,9 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
-    private EnumMap<LOD, Model> modelLod;
+    private final EnumMap<LOD, Model> modelLod;
 
     private String type;
     private String genus;
@@ -86,11 +86,11 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             MetadataCacheService metadataCacheService) {
         super(pWay, perspective);
 
-        this.modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<LOD, Model>(LOD.class);
 
-        this.scale = new Vector3d(1d, 1d, 1d);
+        scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRender = pModelRender;
+        modelRender = pModelRender;
         this.modelCacheService = modelCacheService;
         this.metadataCacheService = metadataCacheService;
     }
@@ -104,42 +104,42 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         buildModel(LOD.LOD4);
         buildModel(LOD.LOD5);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     public void buildModel(LOD pLod) {
 
-        this.type = this.way.get("type");
-        if (this.type == null) {
-            this.type = "unknown";
+        type = way.get("type");
+        if (type == null) {
+            type = "unknown";
         }
-        this.genus = this.way.get("genus");
-        this.species = this.way.get("species");
+        genus = way.get("genus");
+        species = way.get("species");
 
-        double height = Tree.getHeight(this.way, this.species, this.genus, this.type, metadataCacheService);
+        double height = Tree.getHeight(way, species, genus, type, metadataCacheService);
 
         Model model = null;
 
-        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
+        model = Tree.findSimpleModel(species, genus, type, pLod, metadataCacheService, modelCacheService);
 
         setupScale(model, height);
 
-        this.modelLod.put(pLod, model);
+        modelLod.put(pLod, model);
 
-        this.numOfTrees = ModelUtil.parseInteger(this.way.get("tree"), null);
+        numOfTrees = ModelUtil.parseInteger(way.get("tree"), null);
 
-        if (this.hookPoints == null) {
-            this.hookPoints = calsHookPoints(this.points, this.numOfTrees);
+        if (hookPoints == null) {
+            hookPoints = calsHookPoints(points, numOfTrees);
 
-            log.info("***** num of tree: " + this.hookPoints.size());
+            log.info("***** num of tree: " + hookPoints.size());
 
             double CLUSTER_SIZE = 50;
 
-            Point2d minBound = minBound(this.points);
+            Point2d minBound = minBound(points);
 
-            this.clusterHook = calcClusterHooks(this.hookPoints, minBound, CLUSTER_SIZE, HeightCluster.class);
+            clusterHook = calcClusterHooks(hookPoints, minBound, CLUSTER_SIZE, HeightCluster.class);
 
-            calcHeight(this.clusterHook);
+            calcHeight(clusterHook);
 
         }
 
@@ -164,8 +164,8 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         return randomNumberGenerator.nextDouble() / 2d + 0.5;
     }
 
-    private <T extends Cluster> ArrayList<T> calcClusterHooks(List<Point2d> pHookPoints2, Point2d pMinBound, double pClusterSize,
-            Class<T> clazz) {
+    private <T extends Cluster> ArrayList<T> calcClusterHooks(List<Point2d> pHookPoints2, Point2d pMinBound,
+            double pClusterSize, Class<T> clazz) {
 
         Point2d minBound = pMinBound;
 
@@ -197,8 +197,8 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                     log.error(e, e);
                 }
 
-                c.setCenter(new Point3d(minX + pClusterSize / 2 + pClusterSize * x, 0, -(minY + pClusterSize / 2 + pClusterSize
-                        * y)));
+                c.setCenter(new Point3d(minX + pClusterSize / 2 + pClusterSize * x, 0,
+                        -(minY + pClusterSize / 2 + pClusterSize * y)));
 
                 clusters[clusterXMax * y + x] = c;
             }
@@ -248,15 +248,15 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
         public Cluster() {
             super();
-            this.hook = new ArrayList<Point2d>();
-            this.center = new Point3d();
+            hook = new ArrayList<Point2d>();
+            center = new Point3d();
         }
 
         /**
          * @return the hook
          */
         public List<Point2d> getHook() {
-            return this.hook;
+            return hook;
         }
 
         /**
@@ -271,7 +271,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
          * @return the center
          */
         public Point3d getCenter() {
-            return this.center;
+            return center;
         }
 
         /**
@@ -404,22 +404,22 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
         double modelScaleWidht = modelScaleHeight;
 
-        this.scale.x = modelScaleWidht;
-        this.scale.y = modelScaleHeight;
-        this.scale.z = modelScaleWidht;
+        scale.x = modelScaleWidht;
+        scale.y = modelScaleHeight;
+        scale.z = modelScaleWidht;
 
     }
 
     public boolean isModelBuild(LOD pLod) {
 
-        if (this.modelLod.get(pLod) != null) {
+        if (modelLod.get(pLod) != null) {
             return true;
         }
         return false;
     }
 
     public void draw(GL2 gl, Camera camera, LOD pLod) {
-        Model model2 = this.modelLod.get(pLod);
+        Model model2 = modelLod.get(pLod);
 
         if (model2 != null) {
 
@@ -431,13 +431,13 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
             gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
-            for (Point2d hook : this.hookPoints) {
+            for (Point2d hook : hookPoints) {
 
                 gl.glPushMatrix();
 
-                gl.glTranslated(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+                gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
+                gl.glScaled(scale.x, scale.y, scale.z);
 
                 gl.glCallList(dl);
 
@@ -454,18 +454,18 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         int index = gl.glGenLists(1);
 
         // XXX for texture download
-        this.modelRender.render(gl, model2);
+        modelRender.render(gl, model2);
 
         // compile the display list, store a triangle in it
         gl.glNewList(index, GL2.GL_COMPILE);
 
-        this.modelRender.resetFaceCount();
-        this.modelRender.render(gl, model2);
-        log.info("***> face count: " + this.modelRender.getFaceCount());
+        modelRender.resetFaceCount();
+        modelRender.render(gl, model2);
+        log.info("***> face count: " + modelRender.getFaceCount());
 
         gl.glEndList();
 
-        this.displayList.put(model2, index == 0 ? null : index);
+        displayList.put(model2, index == 0 ? null : index);
 
         return index;
     }
@@ -473,21 +473,26 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     Map<Model, Integer> displayList = new HashMap<Model, Integer>();
 
     private Integer getDisplayList(Model model2) {
-        return this.displayList.get(model2);
+        return displayList.get(model2);
+    }
+
+    @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
     }
 
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        Point3d localCamera = new Point3d(camera.getPoint().x - this.getGlobalX(), camera.getPoint().y, camera.getPoint().z
-                + this.getGlobalY());
+        Point3d localCamera = new Point3d(camera.getPoint().x - getGlobalX(), camera.getPoint().y, camera.getPoint().z
+                + getGlobalY());
 
-        for (HeightCluster c : this.clusterHook) {
+        for (HeightCluster c : clusterHook) {
 
-            if (this.modelRender.isDebugging()) {
+            if (modelRender.isDebugging()) {
                 gl.glPushMatrix();
 
-                gl.glTranslated(c.getCenter().x + this.getGlobalX(), 2, c.getCenter().z - this.getGlobalY());
+                gl.glTranslated(c.getCenter().x + getGlobalX(), 2, c.getCenter().z - getGlobalY());
 
                 DrawUtil.drawDotY(gl, 6d, 6);
 
@@ -498,7 +503,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             List<Point2d> hookPoints = c.getHook();
             double[] heights = c.getHeight();
 
-            Model model2 = this.modelLod.get(lod);
+            Model model2 = modelLod.get(lod);
 
             if (model2 != null) {
 
@@ -517,9 +522,9 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
                     gl.glPushMatrix();
 
-                    gl.glTranslated(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+                    gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                    gl.glScaled(this.scale.x * height, this.scale.y * height, this.scale.z * height);
+                    gl.glScaled(scale.x * height, scale.y * height, scale.z * height);
 
                     gl.glCallList(dl);
 
@@ -548,7 +553,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     @Override
     public List<Point3d> getPoints() {
         List<Point3d> ret = new ArrayList<Point3d>();
-        for (HeightCluster cluster : this.clusterHook) {
+        for (HeightCluster cluster : clusterHook) {
 
             List<Point2d> hookPoints = cluster.getHook();
 
@@ -557,5 +562,10 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             }
         }
         return ret;
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>kendzi3d-editor</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-textures-library-res</artifactId> 
+			<version>1.0.181-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-util</artifactId>
+			<version>1.0.181-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-example</artifactId>
+			<version>1.0.181-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model-util</artifactId>
+			<version>1.0.181-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-jogl-model-render</artifactId>
+			<version>1.0.181-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>${inject.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
+
+ 	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>1.0.181-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+</project>

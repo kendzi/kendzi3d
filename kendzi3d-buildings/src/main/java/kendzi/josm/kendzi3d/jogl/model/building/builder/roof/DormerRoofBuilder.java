@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
@@ -27,6 +24,7 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.roof.registry.RoofTypeBuilderRegistry;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
+import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.DormerTypeBuilder;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
@@ -59,30 +57,35 @@ public class DormerRoofBuilder {
 
     /**
      * Dormer roof builder.
-     * 
+     *
      * @param buildingPart
-     * 
-     * @param height roof maximal height. Taken from building
+     *
+     * @param height
+     *            roof maximal height. Taken from building
      * @param mf
-     * @param roofTextureData texture data
+     * @param roofTextureData
+     *            texture data
      * @return roof model
      */
     public static RoofOutput build(BuildingPart buildingPart, double height, ModelFactory mf, RoofTextureData roofTextureData) {
 
         RoofMaterials roofMaterials = addMaterials(roofTextureData, mf);
 
-        // XXX
-        DormerRoofModel roof = (DormerRoofModel) buildingPart.getRoof();
+        RoofModel roofModel = buildingPart.getRoof();
+
+        validate(roofModel);
+
+        DormerRoofModel dormerRoof = (DormerRoofModel) roofModel;
 
         {
             // FIXME
-            if (roof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null && buildingPart.getRoofLevels() != null) {
+            if (dormerRoof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null && buildingPart.getRoofLevels() != null) {
 
                 double roofHeight = buildingPart.getDefaultRoofHeight();
                 if (buildingPart.getRoofLevels() < 1) {
                     roofHeight = 1d;
                 }
-                roof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
+                dormerRoof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
             }
         }
 
@@ -93,20 +96,16 @@ public class DormerRoofBuilder {
 
         Point2d startPoint = polygon.get(0);
 
-        RoofTypeBuilder roofType = RoofTypeBuilderRegistry.selectBuilder(roof.getRoofType());
+        RoofTypeBuilder roofType = getRoofType(dormerRoof);
 
-        if (roofType == null) {
-            roofType = new RoofType0v0();
-        }
+        RoofTypeOutput rto = roofType.buildRoof(startPoint, buildingPolygon, dormerRoof, height, roofMaterials);
 
-        RoofTypeOutput rto = roofType.buildRoof(startPoint, buildingPolygon, roof, height, roofMaterials);
-
-        List<RoofDormerTypeOutput> roofExtensionsList = DormerTypeBuilder.build(rto.getRoofHooksSpaces(),
-                roof, roof.getMeasurements(), roofMaterials);
+        List<RoofDormerTypeOutput> roofExtensionsList = DormerTypeBuilder.build(rto.getRoofHooksSpaces(), dormerRoof,
+                dormerRoof.getMeasurements(), roofMaterials);
 
         double minHeight = height - rto.getHeight();
 
-        ModelFactory model = buildModel(rto, roofExtensionsList, mf);
+        buildModel(rto, roofExtensionsList, mf);
 
         RoofDebugOut debug = buildDebugInfo(rto, roofExtensionsList, startPoint, minHeight);
 
@@ -115,6 +114,24 @@ public class DormerRoofBuilder {
         out.setDebug(debug);
 
         return out;
+    }
+
+    private static void validate(RoofModel roofModel) {
+        if (!(roofModel instanceof DormerRoofModel)) {
+            throw new IllegalArgumentException("wrong roof model, should be DormerRoofModel but it is: " + roofModel);
+        }
+    }
+
+    private static RoofTypeBuilder getRoofType(DormerRoofModel roof) {
+
+        DormerRoofModel dormerRoof = roof;
+
+        RoofTypeBuilder roofType = RoofTypeBuilderRegistry.selectBuilder(dormerRoof.getRoofType());
+
+        if (roofType == null) {
+            roofType = new RoofType0v0();
+        }
+        return roofType;
     }
 
     private static RoofMaterials addMaterials(RoofTextureData pRoofTextureData, ModelFactory model) {
@@ -153,7 +170,8 @@ public class DormerRoofBuilder {
     /**
      * Remove last point if it is the same as first.
      *
-     * @param pRoofPolygon polygon
+     * @param pRoofPolygon
+     *            polygon
      * @return list of points
      */
     private static List<Point2d> cleanPolygon(List<Point2d> pRoofPolygon) {
@@ -228,8 +246,7 @@ public class DormerRoofBuilder {
         return out;
     }
 
-    private static ModelFactory buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList,
-            ModelFactory modelFactory) {
+    private static void buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList, ModelFactory modelFactory) {
 
         for (MeshFactory mf : rto.getMesh()) {
             transformMeshFactory(mf, rto.getTransformationMatrix());
@@ -251,6 +268,5 @@ public class DormerRoofBuilder {
             }
         }
 
-        return modelFactory;
     }
 }

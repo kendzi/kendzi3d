@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>kendzi3d-jogl-util</artifactId>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>kendzi.math</groupId>
+			<artifactId>kendzi-math-geometry</artifactId>
+			<version>${kendzi.math.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-main</artifactId>
+			<version>${gluegen.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-main</artifactId>
+			<version>${jogl.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<parent>
+		<groupId>kendzi.kendzi3d</groupId>
+		<artifactId>kendzi3d-parent</artifactId>
+		<version>1.0.181-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+</project>

@@ -46,19 +46,19 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Model cache service
      */
-    private ModelCacheService modelCacheService;
+    private final ModelCacheService modelCacheService;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
-    private EnumMap<LOD, Model> modelLod;
+    private final EnumMap<LOD, Model> modelLod;
 
     private String type;
     private String genus;
@@ -80,11 +80,11 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
             MetadataCacheService metadataCacheService) {
         super(pWay, perspective);
 
-        this.modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<LOD, Model>(LOD.class);
 
-        this.scale = new Vector3d(1d, 1d, 1d);
+        scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRender = pModelRender;
+        modelRender = pModelRender;
         this.modelCacheService = modelCacheService;
         this.metadataCacheService = metadataCacheService;
     }
@@ -94,33 +94,33 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
 
         buildModel(LOD.LOD1);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     @Override
     public void buildModel(LOD pLod) {
 
-        this.type = this.way.get("type");
-        if (this.type == null) {
-            this.type = "unknown";
+        type = way.get("type");
+        if (type == null) {
+            type = "unknown";
         }
-        this.genus = this.way.get("genus");
-        this.species = this.way.get("species");
+        genus = way.get("genus");
+        species = way.get("species");
 
-        double height = Tree.getHeight(this.way, this.species, this.genus, this.type, metadataCacheService);
+        double height = Tree.getHeight(way, species, genus, type, metadataCacheService);
 
         Model model = null;
 
-        model = Tree.findSimpleModel(this.species, this.genus, this.type, pLod, metadataCacheService, modelCacheService);
+        model = Tree.findSimpleModel(species, genus, type, pLod, metadataCacheService, modelCacheService);
 
         setupScale(model, height);
 
-        this.modelLod.put(pLod, model);
+        modelLod.put(pLod, model);
 
-        this.numOfTrees = ModelUtil.parseInteger(this.way.get("tree"), null);
+        numOfTrees = ModelUtil.parseInteger(way.get("tree"), null);
 
-        if (this.hookPoints == null) {
-            this.hookPoints = calsHookPoints(this.points, this.numOfTrees);
+        if (hookPoints == null) {
+            hookPoints = calsHookPoints(points, numOfTrees);
         }
     }
 
@@ -211,9 +211,9 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
 
         double modelScaleWidht = modelScaleHeight;
 
-        this.scale.x = modelScaleWidht;
-        this.scale.y = modelScaleHeight;
-        this.scale.z = modelScaleWidht;
+        scale.x = modelScaleWidht;
+        scale.y = modelScaleHeight;
+        scale.z = modelScaleWidht;
 
         // model2.useScale = true;
     }
@@ -221,7 +221,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (this.modelLod.get(pLod) != null) {
+        if (modelLod.get(pLod) != null) {
             return true;
         }
         return false;
@@ -229,20 +229,20 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
 
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
-        Model model2 = this.modelLod.get(pLod);
+        Model model2 = modelLod.get(pLod);
         if (model2 != null) {
 
             gl.glEnable(GLLightingFunc.GL_NORMALIZE);
 
-            for (Point2d hook : this.hookPoints) {
+            for (Point2d hook : hookPoints) {
 
                 gl.glPushMatrix();
 
-                gl.glTranslated(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+                gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
+                gl.glScaled(scale.x, scale.y, scale.z);
 
-                this.modelRender.render(gl, model2);
+                modelRender.render(gl, model2);
 
                 gl.glPopMatrix();
             }
@@ -252,24 +252,29 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
     }
 
     @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
     public void draw(GL2 gl, Camera camera) {
         draw(gl, camera, LOD.LOD1);
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.modelLod.get(LOD.LOD1) == null) {
+        if (modelLod.get(LOD.LOD1) == null) {
             buildModel(LOD.LOD1);
         }
 
         List<ExportItem> ret = new ArrayList<ExportItem>();
 
-        for (Point2d hook : this.hookPoints) {
+        for (Point2d hook : hookPoints) {
 
-            Point3d p = new Point3d(this.getGlobalX() + hook.x, 0, -(this.getGlobalY() + hook.y));
+            Point3d p = new Point3d(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-            Vector3d s = new Vector3d(this.scale.x, this.scale.y, this.scale.z);
-            ret.add(new ExportItem(this.modelLod.get(LOD.LOD1), p, s));
+            Vector3d s = new Vector3d(scale.x, scale.y, scale.z);
+            ret.add(new ExportItem(modelLod.get(LOD.LOD1), p, s));
 
         }
         return ret;
@@ -279,7 +284,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
     public List<Point3d> getPoints() {
         List<Point3d> ret = new ArrayList<Point3d>();
 
-        for (Point2d hook : this.hookPoints) {
+        for (Point2d hook : hookPoints) {
             ret.add(new Point3d(hook.x, 0, -hook.y));
         }
         return ret;
@@ -290,4 +295,8 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
         return modelLod.get(LOD.LOD1);
     }
 
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
+    }
 }

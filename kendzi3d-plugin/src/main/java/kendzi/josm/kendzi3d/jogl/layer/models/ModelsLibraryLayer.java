@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -36,9 +37,9 @@ import com.google.inject.Inject;
 
 /**
  * Layer allow loading custom models.
- * 
+ *
  * @author Tomasz Kędziora (kendzi)
- * 
+ *
  */
 public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
@@ -63,7 +64,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /**
      * Constructor.
-     * 
+     *
      * @param modelRender
      * @param modelCacheService
      * @param urlReciverService
@@ -138,7 +139,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     @Override
     public Match getNodeMatcher() {
         List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
-        for (NodeModelConf nodeModel : this.nodeModelsList) {
+        for (NodeModelConf nodeModel : nodeModelsList) {
 
             matchersList.add(nodeModel.getMatcher());
         }
@@ -162,19 +163,30 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     @Override
-    public WorldObject buildModel(Node pNode, Perspective perspective) {
+    public WorldObject buildModel(final Node node, Perspective perspective) {
 
-        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject();
+        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject() {
+            @Override
+            public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
 
-        for (NodeModelConf nodeModel : this.nodeModelsList) {
+                getWorldObjects().clear();
 
-            if (nodeModel.getMatcher().match(pNode)) {
+                for (NodeModelConf nodeModel : nodeModelsList) {
 
-                ret.getWorldObjects().add(
-                        new kendzi.josm.kendzi3d.jogl.model.PointModel(pNode, nodeModel, perspective, this.modelRender,
-                                this.modelCacheService));
+                    if (nodeModel.getMatcher().match(primitive)) {
+
+                        getWorldObjects().add(
+                                new kendzi.josm.kendzi3d.jogl.model.PointModel((Node) primitive, nodeModel, perspective,
+                                        modelRender, modelCacheService));
+                    }
+                }
+
+                buildWorldObject();
             }
-        }
+        };
+
+        ret.rebuildWorldObject(node, perspective);
+
         if (ret.getWorldObjects().isEmpty()) {
             return null;
         }
@@ -182,25 +194,37 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     @Override
-    public WorldObject buildModel(Way way, Perspective perspective3D) {
+    public WorldObject buildModel(Way way, final Perspective perspective) {
 
-        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject();
-        for (Entry<String, List<WayNodeModelConf>> entry : wayNodeModelsMap.entrySet()) {
-            List<WayNodeModelConf> wayNodeModelsList = entry.getValue();
+        DrawableMultipleWorldObject ret = new DrawableMultipleWorldObject() {
+            @Override
+            public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
 
-            for (WayNodeModelConf nodeModel : wayNodeModelsList) {
+                getWorldObjects().clear();
 
-                if (nodeModel.getMatcher().match(way)) {
+                for (Entry<String, List<WayNodeModelConf>> entry : wayNodeModelsMap.entrySet()) {
+                    List<WayNodeModelConf> wayNodeModelsList = entry.getValue();
 
-                    List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), way);
-                    if (!selectedNodes.isEmpty()) {
-                        ret.getWorldObjects().add(
-                                new kendzi.josm.kendzi3d.jogl.model.WayNodeModel(way, selectedNodes, nodeModel, perspective3D,
-                                        this.modelRender, this.modelCacheService));
+                    for (WayNodeModelConf nodeModel : wayNodeModelsList) {
+
+                        if (nodeModel.getMatcher().match(primitive)) {
+
+                            List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), (Way) primitive);
+                            if (!selectedNodes.isEmpty()) {
+                                getWorldObjects().add(
+                                        new kendzi.josm.kendzi3d.jogl.model.WayNodeModel((Way) primitive, selectedNodes,
+                                                nodeModel, perspective, modelRender, modelCacheService));
+                            }
+                        }
                     }
                 }
+
+                buildWorldObject();
             }
-        }
+        };
+
+        ret.rebuildWorldObject(way, perspective);
+
         if (ret.getWorldObjects().isEmpty()) {
             return null;
         }
@@ -209,7 +233,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /**
      * Finds indexes of nodes on way, match filter.
-     * 
+     *
      * @param filter
      *            filter for nodes on way
      * @param way
@@ -242,7 +266,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

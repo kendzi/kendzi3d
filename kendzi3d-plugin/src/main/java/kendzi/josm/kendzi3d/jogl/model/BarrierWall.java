@@ -76,17 +76,17 @@ public class BarrierWall extends AbstractWayModel {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Fence constructor.
@@ -102,49 +102,50 @@ public class BarrierWall extends AbstractWayModel {
      * @param pTextureLibraryStorageService
      *            texture library service
      */
-    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
+    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender,
+            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
         super(pWay, perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        modelRender = pModelRender;
+        metadataCacheService = pMetadataCacheService;
+        textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
     @Override
     public void buildWorldObject() {
 
-        if (!(this.points.size() > 1)) {
+        if (!(points.size() > 1)) {
             return;
         }
 
-        String wallType = getWallType(this.way);
+        String wallType = getWallType(way);
 
-        double wallHeight = this.metadataCacheService.getPropertitesDouble("barrier.wall_{0}.height", WALL_HEIGHT, wallType);
+        double wallHeight = metadataCacheService.getPropertitesDouble("barrier.wall_{0}.height", WALL_HEIGHT, wallType);
 
-        this.hight = ModelUtil.getHeight(this.way, wallHeight);
+        hight = ModelUtil.getHeight(way, wallHeight);
 
-        this.minHeight = ModelUtil.getMinHeight(this.way, 0d);
+        minHeight = ModelUtil.getMinHeight(way, 0d);
 
         // String wallColor = OsmAttributeKeys.COLOUR.primitiveValue(this.way);
 
-        Color wallColor = takeWallColor(this.way);
+        Color wallColor = takeWallColor(way);
 
-        TextureData wallTexture = takeWallTexture(wallType, wallColor, this.way, this.textureLibraryStorageService);
+        TextureData wallTexture = takeWallTexture(wallType, wallColor, way, textureLibraryStorageService);
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border", modelBuilder);
+        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border",
+                modelBuilder);
 
-        BarrierFenceRelation.buildWallModel(this.points, null, this.minHeight, this.hight, 0, meshBorder, wallTexture);
+        BarrierFenceRelation.buildWallModel(points, null, minHeight, hight, 0, meshBorder, wallTexture);
 
-        this.model = modelBuilder.toModel();
-        this.model.setUseLight(true);
-        this.model.setUseTexture(true);
+        model = modelBuilder.toModel();
+        model.setUseLight(true);
+        model.setUseTexture(true);
 
-        this.buildModel = true;
+        buildModel = true;
 
-        this.heightClone = RelationCloneHeight.buildHeightClone(this.way);
+        heightClone = RelationCloneHeight.buildHeightClone(way);
     }
 
     private Color takeWallColor(Way way) {
@@ -199,55 +200,65 @@ public class BarrierWall extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 pGl, Camera pCamera) {
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
 
-        BarrierFence.enableTransparentText(pGl);
+    @Override
+    public void draw(GL2 gl, Camera camera) {
 
-        pGl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        BarrierFence.enableTransparentText(gl);
 
-        pGl.glEnable(GL.GL_CULL_FACE);
+        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
-        pGl.glPushMatrix();
-        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+        gl.glEnable(GL.GL_CULL_FACE);
+
+        gl.glPushMatrix();
+        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
-            this.modelRender.render(pGl, this.model);
+            modelRender.render(gl, model);
 
-            for (RelationCloneHeight cloner : this.heightClone) {
+            for (RelationCloneHeight cloner : heightClone) {
                 for (Double height : cloner) {
 
-                    pGl.glPushMatrix();
-                    pGl.glTranslated(0, height, 0);
+                    gl.glPushMatrix();
+                    gl.glTranslated(0, height, 0);
 
-                    this.modelRender.render(pGl, this.model);
-                    pGl.glPopMatrix();
+                    modelRender.render(gl, model);
+                    gl.glPopMatrix();
 
                 }
             }
 
         } finally {
 
-            pGl.glPopMatrix();
+            gl.glPopMatrix();
 
-            pGl.glDisable(GL.GL_CULL_FACE);
+            gl.glDisable(GL.GL_CULL_FACE);
         }
 
-        BarrierFence.disableTransparentText(pGl);
+        BarrierFence.disableTransparentText(gl);
 
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
+        if (model == null) {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
+        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
                 new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
         return model;
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

@@ -47,7 +47,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Set texture filter.
-     * 
+     *
      * @param pEnabled
      *            enabled
      */
@@ -60,7 +60,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Get texture from cache or load it to cache.
-     * 
+     *
      * @param pName
      *            file name from: <br>
      *            1. directory {PLUGIN_DIR_NAME}/ <br>
@@ -74,7 +74,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Get texture image from.
-     * 
+     *
      * @param pName
      *            file name from: <br>
      *            1. directory {PLUGIN_DIR_NAME}/ <br>
@@ -131,7 +131,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Add texture builder.
-     * 
+     *
      * @param pTextureBuilder
      *            texture builder
      */
@@ -141,9 +141,9 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * DONT use Only for test!!
-     * 
+     *
      * @throws IOException
-     * 
+     *
      * @depricated
      */
     public void setTexture(GL gl, String pName, BufferedImage pImg) throws IOException {
@@ -152,9 +152,9 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * DONT use Only for test!!
-     * 
+     *
      * @throws IOException
-     * 
+     *
      * @depricated
      */
     public void setTexture(String pName, Texture pImg) {
@@ -163,7 +163,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     /**
      * Test if texture exist in cache.
-     * 
+     *
      * @param pName
      *            name of texture
      * @return if texture exist
@@ -185,7 +185,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
      * Try to get texture. If it isn't laded it well be loaded from:<br>
      * 1. directory {PLUGIN_DIR_NAME}/textures <br>
      * 2. from resources from jar in dir {PLUGIN_JAR}/textures <br>
-     * 
+     *
      * @param pName
      * @return
      */
@@ -278,7 +278,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
             return null;
         }
 
-        URL textUrl = this.resourceService.resourceToUrl(name);
+        URL textUrl = resourceService.resourceToUrl(name);
         if (textUrl == null) {
             log.info("No file to load: " + name);
             return null;
@@ -289,10 +289,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
 
     public void addTexture(String pName, Texture img, boolean filter) {
 
-        Texture tex = img;
-
-        this.cache.put(pName, tex);
-
+        cache.put(pName, img);
     }
 
     public void addTexture(GL gl, String pName, BufferedImage img, boolean filter) throws IOException {

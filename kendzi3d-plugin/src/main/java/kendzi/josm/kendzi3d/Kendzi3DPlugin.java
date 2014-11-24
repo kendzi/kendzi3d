@@ -6,8 +6,8 @@
 
 package kendzi.josm.kendzi3d;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.*;
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -32,8 +32,10 @@ import kendzi.josm.kendzi3d.action.PointModelListAction;
 import kendzi.josm.kendzi3d.action.ShowPluginDirAction;
 import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
+import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrame;
+import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrameOld;
+import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 import org.openstreetmap.josm.Main;
@@ -56,7 +58,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     /**
      * Frame with gl canvas.
      */
-    private Kendzi3dGLFrame ogl;
+    private Kendzi3dGLFrameOld ogl;
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
@@ -112,26 +114,26 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         MainMenu menu = Main.main.menu;
 
         System.err.println("3d test");
-        if (this.view3dJMenu == null) {
-            this.view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.getDefaultMenuPos(), ht("/Plugin/WMS"));
+        if (view3dJMenu == null) {
+            view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.getDefaultMenuPos(), ht("/Plugin/WMS"));
         } else {
-            this.view3dJMenu.removeAll();
+            view3dJMenu.removeAll();
         }
 
         view3dJMenu.addSeparator();
 
-        view3dJMenu.add(new JMenuItem(
-                new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+        view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"),
+                null, false) {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        putValue("toolbar", "3dView_run");
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                putValue("toolbar", "3dView_run");
 
-                        openJOGLWindow(injector);
+                openJOGLWindow(injector);
 
-                    }
+            }
 
-                }));
+        }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -158,7 +160,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         DebugToggleAction debugToggleAction = injector.getInstance(DebugToggleAction.class);
         registerCheckBoxAction(debugToggleAction, view3dJMenu);
 
-        DebugPointModelToggleAction debugPointModelToggleAction = injector.getInstance(DebugPointModelToggleAction.class);
+        DebugPointModelToggleAction debugPointModelToggleAction = injector
+                .getInstance(DebugPointModelToggleAction.class);
         registerCheckBoxAction(debugPointModelToggleAction, view3dJMenu);
 
         view3dJMenu.addSeparator();
@@ -202,8 +205,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     }
 
     private void setEnabledAll(boolean isEnabled) {
-        for (int i = 0; i < this.view3dJMenu.getItemCount(); i++) {
-            JMenuItem item = this.view3dJMenu.getItem(i);
+        for (int i = 0; i < view3dJMenu.getItemCount(); i++) {
+            JMenuItem item = view3dJMenu.getItem(i);
 
             if (item != null) {
                 item.setEnabled(isEnabled);
@@ -213,20 +216,23 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     private void openJOGLWindow(Injector injector) {
         try {
-            if (this.ogl == null || !this.ogl.isDisplayable()) {
+            if (ogl == null || !ogl.isDisplayable()) {
+                // XXX
+                injector.getInstance(EditorObjectsProducer.class);
 
-                Kendzi3dGLFrame frame = injector.getInstance(Kendzi3dGLFrame.class);
+                Kendzi3dGlFrame frame2 = injector.getInstance(Kendzi3dGlFrame.class);
 
-                frame.initUI();
+                frame2.initUi();
 
                 ImageIcon img = ImageProvider.get("stock_3d-effects24");
                 if (img != null) {
-                    frame.setIconImage(img.getImage());
+
+                    frame2.setIconImage(img.getImage());
                 }
 
-                frame.setVisible(true);
-
-                this.ogl = frame;
+                frame2.setVisible(true);
+                // FIXME
+                // ogl = frame2;
 
                 CameraLayer oglListener = injector.getInstance(CameraLayer.class);
                 initializeKendzi3dLayer(oglListener);

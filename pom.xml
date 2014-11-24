@@ -29,7 +29,7 @@
 		<vecmath.version>1.3.1</vecmath.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.11</junit.version>
-		<kendzi.math.version>0.0.8</kendzi.math.version>
+		<kendzi.math.version>0.0.10</kendzi.math.version>
 		<inject.version>1</inject.version>
 	</properties>
 	
@@ -78,6 +78,9 @@
 
 		<module>kendzi3d-expressions</module>
 
+		<module>kendzi3d-jogl-util</module>
+		<module>kendzi3d-jogl-example</module>
+
 		<module>kendzi3d-jogl-model</module>
 		<module>kendzi3d-jogl-model-render</module>
 		<module>kendzi3d-jogl-model-util</module>
@@ -96,6 +99,8 @@
 		
 		<module>kendzi3d-resource-manager</module>
 		<module>kendzi3d-light</module>
+
+                <module>kendzi3d-editor</module>
 		<module>kendzi3d-world-model</module>
 		
 		<module>kendzi3d-plugin</module>

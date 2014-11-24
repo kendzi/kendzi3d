@@ -6,11 +6,12 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
+import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround;
+import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround.GroundType;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
@@ -25,23 +26,25 @@ import com.google.inject.Inject;
  */
 public class GroundToggleAction extends ToggleAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     private static final String KENDZI_3D_GROUND_TEXTURED = "kendzi3d.ground.textured";
 
-    private Kendzi3dGLEventListener kendzi3dGLEventListener;
+    /**
+     * Selectable ground drawer.
+     */
+    private final SelectableGround selectableGround;
 
     /**
      * Constructor of ground toggle action.
      * 
-     * @param pKendzi3dGLEventListener
+     * @param selectableGround
+     *            ground drawer
      */
     @Inject
-    public GroundToggleAction(Kendzi3dGLEventListener pKendzi3dGLEventListener) {
-        super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null, false);
+    public GroundToggleAction(SelectableGround selectableGround) {
+        super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null,
+                false);
 
         Main.toolbar.register(this);
 
@@ -51,7 +54,7 @@ public class GroundToggleAction extends ToggleAction {
 
         notifySelectedState();
 
-        this.kendzi3dGLEventListener = pKendzi3dGLEventListener;
+        this.selectableGround = selectableGround;
 
         setTexturedGround(selected);
 
@@ -68,10 +71,14 @@ public class GroundToggleAction extends ToggleAction {
     }
 
     /**
-     * @param pEnable
-     *            enable debug
+     * @param enable
+     *            checkbox enabled
      */
-    private void setTexturedGround(boolean pEnable) {
-        this.kendzi3dGLEventListener.setGroundType(pEnable);
+    private void setTexturedGround(boolean enable) {
+        if (enable) {
+            selectableGround.selectGroundType(GroundType.STYLED_TITLE);
+        } else {
+            selectableGround.selectGroundType(GroundType.SINGLE_TEXTURE);
+        }
     }
 }

@@ -31,20 +31,29 @@ public abstract class AbstractPointModel extends AbstractModel {
 
         this.node = node;
 
-        this.radius = 1.0;
+        radius = 1.0;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getOsmPrimitives()
      */
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
         Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-        set.add(this.node);
+        set.add(node);
 
         return set;
+    }
+
+    @Override
+    public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
+        // clean up everything
+        node = (Node) primitive;
+        this.perspective = perspective;
+
+        buildWorldObject();
     }
 }

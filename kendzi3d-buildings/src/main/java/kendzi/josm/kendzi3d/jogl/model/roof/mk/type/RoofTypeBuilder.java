@@ -15,7 +15,7 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 /**
  * Interface for roof type buildier.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public interface RoofTypeBuilder {
@@ -24,7 +24,7 @@ public interface RoofTypeBuilder {
 
     /**
      * Build roof from given roof parameters.
-     * 
+     *
      * @param pStartPoint
      *            roof starting point
      * @param wallPolygon

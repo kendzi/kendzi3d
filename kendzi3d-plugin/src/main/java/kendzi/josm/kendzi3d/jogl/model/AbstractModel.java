@@ -13,12 +13,13 @@ import java.util.Set;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 
+import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
 import kendzi.josm.kendzi3d.jogl.model.frame.ModelFrame;
 import kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender;
-import kendzi.josm.kendzi3d.jogl.selection.Selectable;
-import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.kendzi3d.editor.selection.Selectable;
+import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.AbstractWorldObject;
 
@@ -28,12 +29,12 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * in future create AbstractWayModel, AbstractNodeModel ?
- * 
+ *
  * @author Tomasz Kedziora (Kendzi)
- * 
+ *
  */
 public abstract class AbstractModel extends AbstractWorldObject implements Selectable, DrawableModel, ModelFrame, GlobalFrame,
-        OsmPrimitiveRender, ExportModel {
+        OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     protected double radius;
 
@@ -67,7 +68,7 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
 
     /**
      * Calculate model center.
-     * 
+     *
      * @param way
      *            list of points
      */
@@ -87,7 +88,7 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
 
     /**
      * Calculate model center.
-     * 
+     *
      * @param pNodes
      *            list of points
      */
@@ -105,7 +106,7 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
 
     /**
      * Calculate max distance from center do all of points.
-     * 
+     *
      * @param way
      *            list of points
      */
@@ -128,7 +129,7 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
                 maxRadius = radius;
             }
         }
-        this.radius = maxRadius;
+        radius = maxRadius;
     }
 
     @Override
@@ -145,22 +146,22 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
 
     @Override
     public double getRadius() {
-        return this.radius;
+        return radius;
     }
 
     @Override
     public void buildWorldObject() {
-        this.buildModel = true;
+        buildModel = true;
     }
 
     @Override
     public boolean isWorldObjectBuild() {
-        return this.buildModel;
+        return buildModel;
     }
 
     @Override
     public String toString() {
-        return "AbstractModel [point=" + getPoint() + ", radius=" + this.radius + ", buildModel=" + this.buildModel + "]";
+        return "AbstractModel [point=" + getPoint() + ", radius=" + radius + ", buildModel=" + buildModel + "]";
     }
 
     /**
@@ -208,28 +209,18 @@ public abstract class AbstractModel extends AbstractWorldObject implements Selec
      */
     @Override
     public Point2d toModelFrame(Node pNode) {
-        Point2d calcPoint = this.perspective.calcPoint(pNode);
+        Point2d calcPoint = perspective.calcPoint(pNode);
         calcPoint.x -= getGlobalX();
         calcPoint.y -= getGlobalY();
         return calcPoint;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see kendzi.josm.kendzi3d.jogl.model.tmp.OsmPrimitiveRender#getOsmPrimitives()
-     */
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
         // FIXME remove form abstract!
         throw new RuntimeException("TODO");
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see kendzi.josm.kendzi3d.jogl.selection.Selectable#getSelection()
-     */
     @Override
     public List<Selection> getSelection() {
         return Collections.<Selection> emptyList();

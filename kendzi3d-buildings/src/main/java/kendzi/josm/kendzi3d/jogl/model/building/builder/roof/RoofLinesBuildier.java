@@ -1,15 +1,13 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,7 +46,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Roof builder for roof described using RoofLines tagging schema.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class RoofLinesBuildier {
@@ -57,12 +55,17 @@ public class RoofLinesBuildier {
 
     /**
      * Builds roof. Roof is build into given model factory.
-     * 
-     * @param bp building part
-     * @param maxHeight maximal height
-     * @param mf model factory
-     * @param roofTextureData roof texture data
-     * @param roofColor roof color
+     *
+     * @param bp
+     *            building part
+     * @param maxHeight
+     *            maximal height
+     * @param mf
+     *            model factory
+     * @param roofTextureData
+     *            roof texture data
+     * @param roofColor
+     *            roof color
      * @return debbug infromation about builded roof
      */
     public static RoofOutput build(BuildingPart bp, double maxHeight, ModelFactory mf, TextureData roofTextureData,
@@ -72,11 +75,10 @@ public class RoofLinesBuildier {
             throw new RuntimeException("wrong type of roof model, should be RoofLinesModel");
         }
 
-        RoofLinesModel roof =  (RoofLinesModel) bp.getRoof();
+        RoofLinesModel roof = (RoofLinesModel) bp.getRoof();
         PolygonWithHolesList2d polygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
 
         final Map<Point2d, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
-
 
         PolygonList2d outer = polygon.getOuter();
         Collection<PolygonList2d> holes = polygon.getInner();
@@ -84,11 +86,10 @@ public class RoofLinesBuildier {
         Collection<LineSegment2d> segments = roof.getInnerSegments();
 
         MeshFactory roofMesh = createRoofMesh(mf, roofTextureData, roofColor);
-        //XXX
+        // XXX
         MeshFactory outlineMesh = createRoofMesh(mf, roofTextureData, roofColor);
 
-        List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments,
-                Collections.<Point2d> emptyList());
+        List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments, Collections.<Point2d> emptyList());
 
         Vector3d up = new Vector3d(0d, 1d, 0d);
         for (Triangle2d triangle : triangles) {
@@ -106,20 +107,19 @@ public class RoofLinesBuildier {
 
             Vector3d n = Vector3dUtil.fromTo(pp1, pp2);
             n.cross(n, Vector3dUtil.fromTo(pp1, pp3));
-            //Vector3d n = new Vector3d(p2.x - p1.x, h2 - h1, -(p2.y - p1.y));
-            //n.cross(n, new Vector3d(p3.x - p1.x, h3 - h1, -(p3.y - p1.y)));
+            // Vector3d n = new Vector3d(p2.x - p1.x, h2 - h1, -(p2.y - p1.y));
+            // n.cross(n, new Vector3d(p3.x - p1.x, h3 - h1, -(p3.y - p1.y)));
             n.normalize();
 
             Vector3d rl = new Vector3d();
-            //XXX
+            // XXX
             rl.cross(up, n);
-
-
 
             MultiPolygonList2d topMP = new MultiPolygonList2d(new PolygonList2d(p1, p2, p3));
             Plane3d planeTop = new Plane3d(pp1, n);
 
-            //FIXME there is no need in converting to Multipolygon, it should be done in different way
+            // FIXME there is no need in converting to Multipolygon, it should
+            // be done in different way
             MeshFactoryUtil.addPolygonToRoofMesh(roofMesh, topMP, planeTop, rl, roofTextureData);
 
         }
@@ -127,17 +127,15 @@ public class RoofLinesBuildier {
         HeightCalculator hc = new HeightCalculator() {
 
             @Override
-            public SegmentHeight[] height(Point2d p1, Point2d p2) {
+            public List<SegmentHeight> height(Point2d p1, Point2d p2) {
 
-                return new SegmentHeight[] { new SegmentHeight(p1, getHeight(heights, p1), p2, getHeight(heights, p2)) };
+                return Arrays.asList(new SegmentHeight(p1, getHeight(heights, p1), p2, getHeight(heights, p2)));
             }
         };
 
         double minHeight = maxHeight - roof.getRoofHeight();
 
-        RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, minHeight,  outlineMesh, roofTextureData);
-
-
+        RoofTypeUtil.makeWallsFromHeightCalculator(outer.getPoints(), hc, minHeight, outlineMesh, roofTextureData);
 
         RoofOutput ro = new RoofOutput();
         ro.setHeight(roof.getRoofHeight());
@@ -146,8 +144,6 @@ public class RoofLinesBuildier {
 
         return ro;
     }
-
-
 
     /**
      * @param heights
@@ -185,7 +181,7 @@ public class RoofLinesBuildier {
         return ret;
     }
 
-    private static MeshFactory createRoofMesh( ModelFactory mf, TextureData td, Color color) {
+    private static MeshFactory createRoofMesh(ModelFactory mf, TextureData td, Color color) {
 
         Material mat = MaterialFactory.createTextureColorMaterial(td.getTex0(), color);
 

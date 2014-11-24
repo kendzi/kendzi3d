@@ -63,14 +63,14 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     /**
      * Model renderer.
      */
-    private ModelRender modelRenderer;
+    private final ModelRender modelRenderer;
 
     ModelCacheService modelCacheService;
 
     /**
      * Lod support.
      */
-    private EnumMap<LOD, Model> modelLod;
+    private final EnumMap<LOD, Model> modelLod;
 
     /**
      * Model scale;
@@ -85,11 +85,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     /**
      * Model configuration.
      */
-    private WayNodeModelConf nodeModelConf;
+    private final WayNodeModelConf nodeModelConf;
 
     private List<ModelPoint> modelPoints;
 
-    private List<Integer> nodeFilter;
+    private final List<Integer> nodeFilter;
 
     /**
      * Constructor.
@@ -112,13 +112,13 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.nodeFilter = nodeFilter;
 
-        this.modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<LOD, Model>(LOD.class);
 
-        this.scale = new Vector3d(1d, 1d, 1d);
+        scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRenderer = modelRender;
+        modelRenderer = modelRender;
 
-        this.nodeModelConf = wayNodeModelConf;
+        nodeModelConf = wayNodeModelConf;
 
         this.modelCacheService = modelCacheService;
     }
@@ -128,7 +128,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         buildModel(LOD.LOD1);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     // XXX move
@@ -186,21 +186,21 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     @Override
     public void buildModel(LOD pLod) {
 
-        Model model = getModel(this.nodeModelConf, pLod, this.modelCacheService);
+        Model model = getModel(nodeModelConf, pLod, modelCacheService);
 
         double scale = 1d;
         Context contextDouble = new Context();
-        contextDouble.putVariable("osm", this.way);
-        contextDouble.putVariable("osm_way", this.way);
-        contextDouble.putVariable("osm_node", this.way);
+        contextDouble.putVariable("osm", way);
+        contextDouble.putVariable("osm_way", way);
+        contextDouble.putVariable("osm_node", way);
         Double modelNormalFactor = getModelNormal(model);
         contextDouble.putVariable("normal", modelNormalFactor);
 
         kendzi.kendzi3d.expressions.Context c = new kendzi.kendzi3d.expressions.Context();
 
-        c.getVariables().put("osm", this.way);
-        c.getVariables().put("osm_way", this.way);
-        c.getVariables().put("osm_node", this.way);
+        c.getVariables().put("osm", way);
+        c.getVariables().put("osm_way", way);
+        c.getVariables().put("osm_node", way);
         c.getVariables().put("normal", modelNormalFactor);
 
         c.registerFunction(new HeightFunction());
@@ -213,7 +213,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         c.registerFunction(new Vector3dYFunction());
         c.registerFunction(new Vector3dZFunction());
 
-        double offset = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getOffset(), c, 0);
+        double offset = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getOffset(), c, 0);
 
         boolean closed = way.isClosed();
         List<ModelPoint> modelPoints = new ArrayList<ModelPoint>();
@@ -235,11 +235,11 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                 // point.z += -bisector.y * offset;
             }
 
-            c.getVariables().put("osm_way", this.way);
+            c.getVariables().put("osm_way", way);
             c.getVariables().put("osm_node", node);
             c.getVariables().put("bisector", bisector);
 
-            Double direction = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 0);
+            Double direction = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getDirection(), c, 0);
 
             modelPoints.add(new ModelPoint(point, direction, bisector));
         }
@@ -255,13 +255,13 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.scale = new Vector3d(scale, scale, scale);
 
-        Vector3d translateWithOffset = ExpressiongBuilder
-                .evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
+        Vector3d translateWithOffset = ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c,
+                new Vector3d());
         translateWithOffset.z += offset;
 
-        this.translate = translateWithOffset;
+        translate = translateWithOffset;
 
-        this.modelLod.put(pLod, model);
+        modelLod.put(pLod, model);
 
     }
 
@@ -357,7 +357,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (this.modelLod.get(pLod) != null) {
+        if (modelLod.get(pLod) != null) {
             return true;
         }
         return false;
@@ -367,21 +367,21 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
             Material material = pModel.getMaterial(i);
             // material.ambientColor = material.diffuseColor;
-            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(), material
-                    .getAmbientDiffuse().getDiffuseColor()));
+            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(),
+                    material.getAmbientDiffuse().getDiffuseColor()));
         }
     }
 
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
-        Model model2 = this.modelLod.get(pLod);
+        Model model2 = modelLod.get(pLod);
         if (model2 != null) {
             BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
             // gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
             gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
 
-            for (ModelPoint modelPoint : this.modelPoints) {
+            for (ModelPoint modelPoint : modelPoints) {
 
                 gl.glPushMatrix();
 
@@ -400,12 +400,12 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
                 PointModel.drawDebug(gl, translate, modelPoint.getDirection());
 
-                gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
+                gl.glTranslated(translate.x, translate.y, translate.z);
 
-                gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
+                gl.glScaled(scale.x, scale.y, scale.z);
                 gl.glRotated(modelPoint.getDirection(), 0d, 1d, 0d);
 
-                this.modelRenderer.render(gl, model2);
+                modelRenderer.render(gl, model2);
                 gl.glPopMatrix();
             }
 
@@ -417,22 +417,32 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
     public void draw(GL2 gl, Camera camera) {
         draw(gl, camera, LOD.LOD1);
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.modelLod.get(LOD.LOD1) == null) {
+        if (modelLod.get(LOD.LOD1) == null) {
             buildModel(LOD.LOD1);
         }
 
-        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
-                .getGlobalY()), new Vector3d(1, 1, 1)));
+        return Collections.singletonList(new ExportItem(modelLod.get(LOD.LOD1), new Point3d(getGlobalX(), 0,
+                -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
-        return this.modelLod.get(LOD.LOD1);
+        return modelLod.get(LOD.LOD1);
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

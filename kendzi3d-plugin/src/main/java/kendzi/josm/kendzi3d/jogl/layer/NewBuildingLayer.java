@@ -8,7 +8,7 @@ package kendzi.josm.kendzi3d.jogl.layer;
 
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.NewBuilding;
+import kendzi.josm.kendzi3d.jogl.model.building.Building;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.WorldObject;
@@ -113,17 +113,17 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Node node, Perspective perspective) {
-        return new NewBuilding(node, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Building(node, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new NewBuilding(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Building(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Relation relation, Perspective perspective) {
-        return new NewBuilding(relation, perspective, this.modelRender, this.metadataCacheService,
+        return new Building(relation, perspective, this.modelRender, this.metadataCacheService,
                 this.textureLibraryStorageService);
     }
 

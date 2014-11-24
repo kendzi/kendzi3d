@@ -1,433 +1,134 @@
-/*
- * This software is provided "AS IS" without a warranty of any kind. You use it
- * on your own risk and responsibility!!! This file is shared under BSD v3
- * license. See readme.txt and BSD3 file for details.
- */
-
 package kendzi.josm.kendzi3d.ui;
 
-import java.awt.Canvas;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.media.opengl.GL;
+import javax.inject.Inject;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
-import kendzi.jogl.DrawUtil;
-import kendzi.jogl.camera.Camera;
-import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.camera.SimpleMoveAnimator;
+import kendzi.jogl.camera.Viewport;
+import kendzi.jogl.drawer.AxisLabels;
+import kendzi.jogl.drawer.TilesSurface;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.jogl.compas.Compass;
-import kendzi.josm.kendzi3d.jogl.model.ground.Ground;
-import kendzi.josm.kendzi3d.jogl.model.ground.StyledTitleGround;
-import kendzi.josm.kendzi3d.jogl.photos.CameraChangeEvent;
-import kendzi.josm.kendzi3d.jogl.photos.CameraChangeListener;
-import kendzi.josm.kendzi3d.jogl.photos.PhotoChangeEvent;
-import kendzi.josm.kendzi3d.jogl.photos.PhotoRenderer;
-import kendzi.josm.kendzi3d.jogl.selection.JosmEditorListener;
-import kendzi.josm.kendzi3d.jogl.selection.ObjectSelectionManager;
-import kendzi.josm.kendzi3d.jogl.selection.Selection;
-import kendzi.josm.kendzi3d.jogl.selection.draw.SelectionDrawUtil;
-import kendzi.josm.kendzi3d.jogl.skybox.SkyBox;
-import kendzi.josm.kendzi3d.ui.debug.AxisLabels;
-import kendzi.josm.kendzi3d.ui.fps.FpsChangeEvent;
-import kendzi.josm.kendzi3d.ui.fps.FpsListener;
-import kendzi.math.geometry.point.PointUtil;
-import kendzi.math.geometry.ray.Ray3d;
+import kendzi.josm.kendzi3d.jogl.compas.CompassDrawer;
+import kendzi.josm.kendzi3d.jogl.model.DrawableModel;
+import kendzi.josm.kendzi3d.jogl.model.WorldObjectDebugDrawable;
+import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround;
+import kendzi.josm.kendzi3d.jogl.skybox.SkyBoxDrawer;
+import kendzi.josm.kendzi3d.objects.drawer.StaticModelWorldObjectDrawer;
+import kendzi.kendzi3d.editor.EditableObject;
+import kendzi.kendzi3d.editor.drawer.HighlightDrawer;
+import kendzi.kendzi3d.editor.ui.BaseEditorGLEventListener;
+import kendzi.kendzi3d.world.StaticModelWorldObject;
 import kendzi3d.light.render.LightRender;
 
-import org.apache.log4j.Logger;
-
-import com.google.inject.Inject;
-
-/**
- * Draws 3d.
- * 
- * @author Tomasz Kędziora (Kendzi)
- * 
- */
-public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeListener {
-
-    /** Log. */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(Kendzi3dGLEventListener.class);
-
-    Viewport viewport = new Viewport(1, 1);
-
-    /**
-     * Model renderer.
-     */
-    private ModelRender modelRender;
-
-    /**
-     * Renderer of josm opengl object.
-     */
-    private RenderJOSM renderJosm;
-
-    /**
-     * Texture cache service.
-     */
-    private TextureCacheService textureCacheService;
-
-    /**
-     * Texture library service.
-     */
-    private TextureLibraryStorageService textureLibraryStorageService;
-
-    /**
-     * Position of sun. XXX
-     */
-    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
     /**
      * Light render.
      */
+    @Inject
     private LightRender lightRender;
 
     /**
-     * Animator of camera movement.
+     * Drawer for skybox.
      */
-    private SimpleMoveAnimator simpleMoveAnimator;
+    @Inject
+    private SkyBoxDrawer skyBox;
 
     /**
-     * Key and mouse listener for camera movement.
+     * Model renderer.
      */
-    private CameraMoveListener cameraMoveListener;
+    @Inject
+    private ModelRender modelRender;
 
-    private ObjectSelectionManager objectSelectionListener;
+    /**
+     * XXX Viewprot should be used. Need to be refactored.
+     */
+    @Inject
+    private SimpleMoveAnimator camera;
 
     /**
      * Axis labels.
      */
-    private AxisLabels axisLabels;
+    private final AxisLabels axisLabels = new AxisLabels();;
 
-    private SelectionDrawUtil selectionDrawUtil;
+    /**
+     * Drawer for tiles floor.
+     */
+    private final TilesSurface floor = new TilesSurface();
+
+    /**
+     * Drawer for compass.
+     */
+    private final CompassDrawer compass = new CompassDrawer();
 
     /**
      * Ground.
      */
-    private Ground ground;
-
-    /**
-     * Fps counter.
-     */
-    private int fpsCount = 0;
-
-    /**
-     * Fps last counter reset time.
-     */
-    private long fpsTimeStamp = 0;
-
-    /**
-     * Number of fps.
-     */
-    private int fps = 0;
-
-    /**
-     * Start time.
-     */
-    private long startTimeStamp = System.currentTimeMillis();
-
-    /**
-     * Time spend in render loop.
-     */
-    private long timeSpend;
-
-    /**
-     * Photos as layer in 3d.
-     */
-    private PhotoRenderer photoRenderer;
-
-    private List<FpsListener> fpsChangeListenerList = new ArrayList<FpsListener>();
-
-    SkyBox skyBox;
-
-    private Ray3d lastSelectRay = null;
-
-    // private Point3d closestPointOnBaseRay;
-
-    private CloseEvent closeEvent;
-
-    private boolean error;
-
-    private Compass compass;
-
     @Inject
-    public Kendzi3dGLEventListener(ModelRender modelRender, RenderJOSM renderJosm, TextureCacheService textureCacheService,
-            TextureLibraryStorageService textureLibraryStorageService, PhotoRenderer photoRenderer, SkyBox skyBox,
-            LightRender lightRender) {
-        super();
-        this.modelRender = modelRender;
-        this.renderJosm = renderJosm;
-        this.textureCacheService = textureCacheService;
-        this.textureLibraryStorageService = textureLibraryStorageService;
-        this.skyBox = skyBox;
-        this.photoRenderer = photoRenderer;
-
-        setGroundType(false);
-
-        this.axisLabels = new AxisLabels();
-
-        this.simpleMoveAnimator = new SimpleMoveAnimator();
-
-        this.cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
-
-        this.selectionDrawUtil = new SelectionDrawUtil();
-
-        this.compass = new Compass();
-
-        this.lightRender = lightRender;
-
-        initObjectSelectionListener();
-    }
-
-    // /**
-    // * Default constructor.
-    // */
-    // public Kendzi3dGLEventListener() {
-    //
-    // setGroundType(false);
-    //
-    // this.axisLabels = new AxisLabels();
-    //
-    // this.simpleMoveAnimator = new SimpleMoveAnimator();
-    //
-    // this.cameraMoveListener = new
-    // CameraMoveListener(this.simpleMoveAnimator);
-    //
-    // this.skyBox = new SkyBox();
-    //
-    // this.selectionDrawUtil = new SelectionDrawUtil();
-    //
-    // initObjectSelectionListener();
-    // }
-
-    private void initObjectSelectionListener() {
-
-        this.objectSelectionListener = new ObjectSelectionManager() {
-
-            @Override
-            public Ray3d viewportPicking(int x, int y) {
-                return Kendzi3dGLEventListener.this.viewport.picking(x, y);
-            }
-
-            @Override
-            public Selection select(Ray3d selectRay) {
-                return Kendzi3dGLEventListener.this.renderJosm.select(selectRay);
-            }
-        };
-
-        // this.selectEditorListeners.add(this.objectSelectionListener);
-        // this.objectSelectionListener.addEditorChangeListener(this);
-
-        JosmEditorListener jel = new JosmEditorListener();
-        this.objectSelectionListener.addEditorChangeListener(jel);
-    }
-
-    @Override
-    public void display(GLAutoDrawable pDrawable) {
-
-        if (this.error) {
-            return;
-        }
-
-        countFps();
-
-        this.simpleMoveAnimator.updateState();
-
-        GL2 gl = pDrawable.getGL().getGL2();
-        // System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        GLU glu = new GLU();
-
-        lightRender.draw(gl);
-
-        // _direction_
-        // gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION,
-        // this.lightPos, 0);
-
-        // // Clear the drawing area
-        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        //
-        //
-        //
-        //
-        // // Reset the current matrix to the "identity"
-        // gl.glLoadIdentity();
-        //
-        // gl.glMatrixMode(GL2.GL_MODELVIEW);
-        // gl.glLoadIdentity();
-
-        // clear color and depth buffers
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-        gl.glLoadIdentity();
-
-        setCamera(glu, this.simpleMoveAnimator);
-
-        gl.glEnable(GL.GL_MULTISAMPLE);
-
-        this.skyBox.draw(gl, this.simpleMoveAnimator, null);
-
-        this.ground.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());
-
-        if (this.modelRender.isDebugging()) {
-
-            this.axisLabels.draw(gl);
-
-            drawFloor(gl);
-
-            // drawTextInfo(gl, this.simpleMoveAnimator.info());
-        }
-
-        this.renderJosm.draw(gl, this.simpleMoveAnimator);
-
-        if (this.photoRenderer.isEnabled()) {
-            // photo != null) {
-            // FIXME
-
-            this.photoRenderer.update(this.simpleMoveAnimator, this.renderJosm.getPerspective());
-
-            this.photoRenderer.draw(gl, this.simpleMoveAnimator, this.renderJosm.getPerspective());
-
-        }
-
-        // if (this.closestPointOnBaseRay != null) {
-        // drawPoint(gl, this.closestPointOnBaseRay);
-        // }
-
-        selectionDrawUtil.draw(gl, this.objectSelectionListener, this.simpleMoveAnimator);
-
-        drawCompass(gl);
-
-        // Flush all drawing operations to the graphics card
-        gl.glFlush();
-    }
-
-    void drawCompass(GL2 gl) {
-
-        int distance = 70;
-
-        Ray3d ray3d = this.viewport.picking(distance, this.viewport.height - distance);
-
-        Point3d point = ray3d.getPoint();
-
-        Vector3d vector = ray3d.getVector();
-        vector.normalize();
-        // vector.scale(2);
-        point.add(vector);
-
-        this.compass.draw(gl, point, this.simpleMoveAnimator.getAngle());
-
-    }
+    private SelectableGround ground;
 
     /**
-     * Counts fps. Save last result to variable fps.
+     * Only for single thread!
      */
-    protected void countFps() {
-        long timeMillis = System.currentTimeMillis();
-        if (timeMillis - this.fpsTimeStamp > 1000) {
-            this.fpsTimeStamp = timeMillis;
-            this.fps = this.fpsCount;
-            this.fpsCount = 0;
+    private final DrawableModelDrawer highlightModelDrawer = new DrawableModelDrawer();
 
-            this.timeSpend = (timeMillis - this.startTimeStamp) / 1000l;
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        super.init(drawable);
 
-            dispatchFpsChange(this.timeSpend, this.fps);
+        GL2 gl = drawable.getGL().getGL2();
+
+        axisLabels.init();
+        compass.init(gl);
+        lightRender.init(gl);
+    }
+
+    @Override
+    protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {
+        lightRender.draw(gl);
+    }
+
+    @Override
+    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
+
+        modelRender.resetMaterials();
+        ModelRender.setDefaultMaterial(gl);
+
+        skyBox.draw(gl, viewport2.getPosition());
+
+        ground.draw(gl, viewport2.getPosition());
+
+        if (modelRender.isDebugging()) {
+
+            axisLabels.draw(gl);
+
+            floor.draw(gl);
+
+            // drawTextInfo(gl, simpleMoveAnimator.info());
         }
 
-        this.fpsCount++;
-    }
-
-    protected void dispatchFpsChange(long pTime, int pFps) {
-
-        FpsChangeEvent fpsChangeEvent = new FpsChangeEvent(pFps, pTime);
-
-        dispatchFpsChange(fpsChangeEvent);
-    }
-
-    @Override
-    public void dispose(GLAutoDrawable pDrawable) {
-        //
-    }
-
-    @Override
-    public void init(GLAutoDrawable pDrawable) {
-        // Use debug pipeline
-        // drawable.setGL(new DebugGL(drawable.getGL()));
-
-        GL2 gl = pDrawable.getGL().getGL2();
-        // System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        checkRequiredExtensions(gl);
-
-        // Enable VSync
-        gl.setSwapInterval(1);
-
-        // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-        gl.glClearDepth(1.0);
-        // sky blue color
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
-
-        gl.glEnable(GL.GL_DEPTH_TEST);
-        int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
-
-        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to
-                                                   // GL_FLAT and see what
-                                                   // happens.
-
-        // addLight(gl);
-
-        float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
-        // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
-
-        // this.modelRender = ModelRender.getInstance();
-
-        this.axisLabels.init();
-        this.renderJosm.init(gl);
-        this.selectionDrawUtil.init(gl);
-        this.compass.init(gl);
-
-        lightRender.init(gl);
-
+        compass.drawAtLeftBottom(gl, viewport2);
     }
 
     /**
      * Check if all required openGl extensions are available.
      * 
      * @param gl
-     * @return
+     *            gl
+     * @return if there is no required extension
      */
-    private boolean checkRequiredExtensions(GL2 gl) {
-        this.error = false;
-        // String extensions = gl.glGetString(GL2.GL_EXTENSIONS);
+    @Override
+    protected boolean checkRequiredExtensions(GL2 gl) {
+
         if (!gl.isExtensionAvailable("GL_ARB_multitexture")) {
 
-            // JOptionPane.showMessageDialog(null,
-            // "GL_ARB_vertex_buffer_object extension not available",
-            // "Unavailable extension", JOptionPane.ERROR_MESSAGE);
-
-            // Check if the extension ARB_multitexture is supported by the
-            // Graphic card
-
+            /*
+             * Check if the extension ARB_multitexture is supported by the
+             * Graphic card
+             */
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -438,513 +139,44 @@ public class Kendzi3dGLEventListener implements GLEventListener, CameraChangeLis
                 }
             });
 
-            this.error = true;
-
-            if (this.closeEvent != null) {
-                this.closeEvent.closeAction();
-            }
+            return false;
         }
 
-        return this.error;
+        return true;
     }
 
     @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL2 gl = drawable.getGL().getGL2();
-        GLU glu = new GLU();
+    protected void drawEditorObject(GL2 gl, EditableObject editableObject, Viewport viewport) {
 
-        if (height <= 0) { // avoid a divide by zero error!
-            height = 1;
+        if (editableObject instanceof StaticModelWorldObject) {
+            staticModelWorldObjectDrawer.draw(gl, (StaticModelWorldObject) editableObject, false);
+
+        } else if (editableObject instanceof DrawableModel) {
+            DrawableModel drawable = (DrawableModel) editableObject;
+            // XXX Viewprot should be used. Need to be refactored.
+            drawable.draw(gl, camera);
         }
-
-        // this.viewportAspectRatio = (double) width / (double) height;
-
-        this.viewport = new Viewport(width, height);
-
-        gl.glViewport(0, 0, width, height); // size of drawing area
-
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(Viewport.PERSP_VIEW_ANGLE, this.viewport.viewportAspectRatio(),
-                Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE, 1500.0); // 5
-
-    }
-
-    /**
-     * Register listener for camera move.
-     * 
-     * @param pCanvas
-     *            canvas for listener
-     */
-    public void registerMoveListener(Canvas pCanvas) {
-        pCanvas.addKeyListener(this.cameraMoveListener);
-
-        pCanvas.addMouseMotionListener(this.cameraMoveListener);
-
-        pCanvas.addMouseListener(this.cameraMoveListener);
-    }
-
-    /**
-     * Register listener for mouse selection.
-     * 
-     * @param pCanvas
-     *            canvas for listener
-     */
-    public void registerMouseSelectionListener(Canvas pCanvas) {
-
-        pCanvas.addMouseListener(this.objectSelectionListener);
-        pCanvas.addMouseMotionListener(this.objectSelectionListener);
-    }
-
-    /**
-     * Set up a point source with ambient, diffuse, and specular color.
-     * components
-     * 
-     * @param pGl
-     *            gl
-     */
-    private void addLight(GL2 pGl) {
-
-        pGl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-        // enable a single light source
-        pGl.glEnable(GLLightingFunc.GL_LIGHTING);
-        pGl.glEnable(GLLightingFunc.GL_LIGHT0);
-
-        float gray = 0.5f;
-        float[] grayLight = { gray, gray, gray, 1.0f }; // weak gray ambient
-        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
-
-        float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
-        // & specular
-        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
-        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
-
-        // float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
-        float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
-        // _direction_
-        pGl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
-    }
-
-    /**
-     * Sets camera position and rotation.
-     * 
-     * @param pGlu
-     *            GLU
-     * @param pCamera
-     */
-    private void setCamera(GLU pGlu, Camera pCamera) {
-
-        Point3d position = pCamera.getPoint();
-
-        this.viewport.updateViewport(pCamera);
-
-        Vector3d lookAt = this.viewport.getLookAt();
-        Vector3d lookUp = this.viewport.getLookUp();
-
-        // Vector3d lookAt = new Vector3d(100, 0, 0);
-        // Vector3d lookUp = new Vector3d(0, 1, 0);
-        //
-        // Vector3d rotate = pCamera.getAngle();
-        //
-        // lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
-        // lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
-        // // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
-        //
-        // lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
-        // lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
-        //
-        // lookAt.add(position);
-
-        pGlu.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, lookUp.x, lookUp.y, lookUp.z);
-
-        // Vector3d view = new Vector3d();
-        // Vector3d screenHoritzontally = new Vector3d();
-        // Vector3d screenVertically = new Vector3d();
-        //
-        // // look direction
-        // view.sub(lookAt, position);
-        // view.normalize();
-        //
-        //
-        // // screenX
-        // screenHoritzontally.cross(view, lookUp);
-        // screenHoritzontally.normalize();
-        //
-        // // screenY
-        // screenVertically.cross(screenHoritzontally, view);
-        // screenVertically.normalize();
-        //
-        // final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-        // float halfHeight = (float) (Math.tan(radians/2) *
-        // PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
-        // float halfScaledAspectRatio = (float) (halfHeight *
-        // this.viewportAspectRatio);
-        //
-        // screenVertically.scale(halfHeight);
-        // screenHoritzontally.scale(halfScaledAspectRatio);
-    }
-
-    private void onEditorChanged() {
-
-    }
-
-    static class Viewport {
-
-        /**
-         * Viev angle of camera (fovy).
-         */
-        public static final double PERSP_VIEW_ANGLE = 45;
-
-        /**
-         * The distance from the viewer to the near clipping plane. (zNear).
-         */
-        public static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE = 1d;
-
-        private int width;
-        private int height;
-
-        private Point3d position;
-        private Vector3d lookAt;
-        private Vector3d lookUp;
-        private Vector3d view;
-        private Vector3d screenHoritzontally = new Vector3d();
-        private Vector3d screenVertically = new Vector3d();
-
-        public Viewport(int width, int height) {
-            super();
-            this.width = width;
-            this.height = height;
-        }
-
-        public double viewportAspectRatio() {
-            return (double) this.width / (double) this.height;
-            //
-        }
-
-        void updateViewport(Camera pCamera) {
-
-            Point3d position = pCamera.getPoint();
-            Vector3d lookAt = new Vector3d(100, 0, 0);
-            Vector3d lookUp = new Vector3d(0, 1, 0);
-
-            Vector3d rotate = pCamera.getAngle();
-
-            lookAt = PointUtil.rotateZ3d(lookAt, rotate.z);
-            lookAt = PointUtil.rotateY3d(lookAt, rotate.y);
-            // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x);
-
-            lookUp = PointUtil.rotateZ3d(lookUp, rotate.z);
-            lookUp = PointUtil.rotateY3d(lookUp, rotate.y);
-
-            lookAt.add(position);
-
-            Vector3d view = new Vector3d();
-            Vector3d screenHoritzontally = new Vector3d();
-            Vector3d screenVertically = new Vector3d();
-
-            // look direction
-            view.sub(lookAt, position);
-            view.normalize();
-
-            // screenX
-            screenHoritzontally.cross(view, lookUp);
-            screenHoritzontally.normalize();
-
-            // screenY
-            screenVertically.cross(screenHoritzontally, view);
-            screenVertically.normalize();
-
-            final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-            float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
-            float halfScaledAspectRatio = (float) (halfHeight * this.viewportAspectRatio());
-
-            screenVertically.scale(halfHeight);
-            screenHoritzontally.scale(halfScaledAspectRatio);
-
-            this.lookAt = lookAt;
-            this.lookUp = lookUp;
-            this.view = view;
-            this.screenHoritzontally = screenHoritzontally;
-            this.screenVertically = screenVertically;
-            this.position = position;
-        }
-
-        public Ray3d picking(float screenX, float screenY) {
-
-            Ray3d pickingRay = new Ray3d();
-
-            double viewportWidth = this.width;
-            double viewportHeight = this.height;
-
-            // Camera camera = this.simpleMoveAnimator;
-
-            Point3d point = new Point3d(this.position);
-            point.add(this.view);
-
-            pickingRay.getPoint().set(this.position);
-            pickingRay.getPoint().add(this.view);
-
-            screenX -= (float) viewportWidth / 2f;
-            screenY = (float) viewportHeight / 2f - screenY;
-
-            // normalize to 1
-            screenX /= (float) viewportWidth / 2f;
-            screenY /= (float) viewportHeight / 2f;
-
-            pickingRay.getPoint().x += this.screenHoritzontally.x * screenX + this.screenVertically.x * screenY;
-            pickingRay.getPoint().y += this.screenHoritzontally.y * screenX + this.screenVertically.y * screenY;
-            pickingRay.getPoint().z += this.screenHoritzontally.z * screenX + this.screenVertically.z * screenY;
-
-            pickingRay.getVector().set(pickingRay.getPoint());
-            pickingRay.getVector().sub(this.position);
-
-            return pickingRay;
-        }
-
-        /**
-         * @return the width
-         */
-        public int getWidth() {
-            return this.width;
-        }
-
-        /**
-         * @param width
-         *            the width to set
-         */
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        /**
-         * @return the height
-         */
-        public int getHeight() {
-            return this.height;
-        }
-
-        /**
-         * @param height
-         *            the height to set
-         */
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        /**
-         * @return the lookAt
-         */
-        public Vector3d getLookAt() {
-            return this.lookAt;
-        }
-
-        /**
-         * @param lookAt
-         *            the lookAt to set
-         */
-        public void setLookAt(Vector3d lookAt) {
-            this.lookAt = lookAt;
-        }
-
-        /**
-         * @return the lookUp
-         */
-        public Vector3d getLookUp() {
-            return this.lookUp;
-        }
-
-        /**
-         * @param lookUp
-         *            the lookUp to set
-         */
-        public void setLookUp(Vector3d lookUp) {
-            this.lookUp = lookUp;
-        }
-
-    }
-
-    /**
-     * @return the renderJosm
-     */
-    public RenderJOSM getRenderJosm() {
-        return this.renderJosm;
-    }
-
-    /**
-     * Set up camera position. Warning this is 2d version!!! it convert z to
-     * -z!!!
-     * 
-     * @deprecated
-     * 
-     * @param pCamPosX
-     *            x coordinate
-     * @param pCamPosY
-     *            y coordinate
-     */
-    @Deprecated
-    public void setCamPos(double pCamPosX, double pCamPosY) {
-        setCamPos(pCamPosX, Camera.CAM_HEIGHT, -pCamPosY);
-    }
-
-    /**
-     * Set up camera position.
-     * 
-     * @param pCamPosX
-     *            x coordinate
-     * @param pCamPosY
-     *            y coordinate
-     * @param pCamPosZ
-     *            z coordinate
-     */
-    public void setCamPos(double pCamPosX, double pCamPosY, double pCamPosZ) {
-
-        this.simpleMoveAnimator.setPoint(pCamPosX, pCamPosY, pCamPosZ);
-    }
-
-    public Camera getCamera() {
-        return simpleMoveAnimator;
-    }
-
-    /**
-     * @return the fps
-     */
-    public int getFps() {
-        return this.fps;
-    }
-
-    private void drawFloor(GL2 gl) {
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-
-        // blue
-        gl.glColor3f(0.0f, 0.1f, 0.4f);
-        DrawUtil.drawTiles(gl, 50, true);
-        // green
-        gl.glColor3f(0.0f, 0.5f, 0.1f);
-        DrawUtil.drawTiles(gl, 50, false);
-
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-    }
-
-    /**
-     * @param pType
-     *            type of the ground to set
-     */
-    public void setGroundType(boolean pType) {
-        if (pType) {
-            this.ground = new StyledTitleGround(this.textureCacheService);
-        } else {
-            this.ground = new Ground(this.textureCacheService, this.textureLibraryStorageService);
+        if (editableObject instanceof WorldObjectDebugDrawable) {
+            WorldObjectDebugDrawable drawable = (WorldObjectDebugDrawable) editableObject;
+            drawable.drawDebug(gl, camera);
         }
     }
+
+    @Inject
+    private StaticModelWorldObjectDrawer staticModelWorldObjectDrawer;
 
     @Override
-    public void dispatchCameraChange(CameraChangeEvent pEvent) {
+    protected void drawHighlightEditorObject(GL2 gl, Object editableObject) {
 
-        if (pEvent instanceof PhotoChangeEvent) {
+        if (editableObject instanceof StaticModelWorldObject) {
+            staticModelWorldObjectDrawer.draw(gl, (StaticModelWorldObject) editableObject, true);
 
-            PhotoChangeEvent pce = (PhotoChangeEvent) pEvent;
-            // photo = pce.getPhoto();
+        } else if (editableObject instanceof DrawableModel) {
 
-            this.photoRenderer.setPhoto(pce.getPhoto());
+            highlightModelDrawer.set((DrawableModel) editableObject, camera);
 
-            // XXX
-
-        } else if (pEvent instanceof CameraChangeEvent) {
-            // XXX
+            HighlightDrawer.drawHighlight(highlightModelDrawer, gl);
         }
     }
 
-    /**
-     * @param renderJosm
-     *            the renderJosm to set
-     */
-    public void setRenderJosm(RenderJOSM renderJosm) {
-        this.renderJosm = renderJosm;
-    }
-
-    /**
-     * @return the modelRender
-     */
-    public ModelRender getModelRender() {
-        return this.modelRender;
-    }
-
-    /**
-     * @param modelRender
-     *            the modelRender to set
-     */
-    public void setModelRender(ModelRender modelRender) {
-        this.modelRender = modelRender;
-    }
-
-    /**
-     * @return the photoRenderer
-     */
-    public PhotoRenderer getPhotoRenderer() {
-        return this.photoRenderer;
-    }
-
-    /**
-     * @param photoRenderer
-     *            the photoRenderer to set
-     */
-    public void setPhotoRenderer(PhotoRenderer photoRenderer) {
-        this.photoRenderer = photoRenderer;
-    }
-
-    public void dispatchFpsChange(FpsChangeEvent fpsChangeEvent) {
-        for (FpsListener fl : this.fpsChangeListenerList) {
-            fl.dispatchFpsChange(fpsChangeEvent);
-        }
-    }
-
-    public void addFpsChangeListener(FpsListener pFpsListener) {
-        this.fpsChangeListenerList.add(pFpsListener);
-    }
-
-    public void removeFpsChangeListener(FpsListener pFpsListener) {
-        this.fpsChangeListenerList.remove(pFpsListener);
-    }
-
-    public void closeEvent(CloseEvent closeEvent) {
-        this.closeEvent = closeEvent;
-    }
-
-    /**
-     * @return the textureCacheService
-     */
-    public TextureCacheService getTextureCacheService() {
-        return textureCacheService;
-    }
-
-    /**
-     * @param textureCacheService
-     *            the textureCacheService to set
-     */
-    public void setTextureCacheService(TextureCacheService textureCacheService) {
-        this.textureCacheService = textureCacheService;
-    }
-
-    /**
-     * @return the textureLibraryStorageService
-     */
-    public TextureLibraryStorageService getTextureLibraryStorageService() {
-        return textureLibraryStorageService;
-    }
-
-    /**
-     * @param textureLibraryStorageService
-     *            the textureLibraryStorageService to set
-     */
-    public void setTextureLibraryStorageService(TextureLibraryStorageService textureLibraryStorageService) {
-        this.textureLibraryStorageService = textureLibraryStorageService;
-    }
-
-    // @Override
-    // public void onEditorChange(EditorChangeEvent args) {
-    // if (args instanceof ArrowEditorChangeEvent) {
-    // this.closestPointOnBaseRay =
-    // ((ArrowEditorChangeEvent)args).getClosestPointOnBaseRay();
-    // }
-    // }
 }

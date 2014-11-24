@@ -19,14 +19,14 @@ import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.DrawUtil;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.compas.Compass;
+import kendzi.jogl.util.DrawUtil;
+import kendzi.josm.kendzi3d.jogl.compas.CompassDrawer;
 import kendzi.josm.kendzi3d.jogl.layer.models.NodeModelConf;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
@@ -66,14 +66,14 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     /**
      * Model renderer.
      */
-    private ModelRender modelRenderer;
+    private final ModelRender modelRenderer;
 
     ModelCacheService modelCacheService;
 
     /**
      * Lod support.
      */
-    private EnumMap<LOD, Model> modelLod;
+    private final EnumMap<LOD, Model> modelLod;
 
     /**
      * Model scale;
@@ -88,7 +88,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     /**
      * Model configuration.
      */
-    private NodeModelConf nodeModelConf;
+    private final NodeModelConf nodeModelConf;
 
     private double rotateY;
 
@@ -106,13 +106,13 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             ModelCacheService modelCacheService) {
         super(node, perspective);
 
-        this.modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<LOD, Model>(LOD.class);
 
-        this.scale = new Vector3d(1d, 1d, 1d);
+        scale = new Vector3d(1d, 1d, 1d);
 
-        this.modelRenderer = pModelRender;
+        modelRenderer = pModelRender;
 
-        this.nodeModelConf = pNodeModelConf;
+        nodeModelConf = pNodeModelConf;
         this.modelCacheService = modelCacheService;
     }
 
@@ -121,18 +121,18 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         buildModel(LOD.LOD1);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     @Override
     public void buildModel(LOD pLod) {
 
-        Model model = getModel(this.nodeModelConf, pLod, this.modelCacheService);
+        Model model = getModel(nodeModelConf, pLod, modelCacheService);
 
         kendzi.kendzi3d.expressions.Context c = new kendzi.kendzi3d.expressions.Context();
 
-        c.getVariables().put("osm", this.node);
-        c.getVariables().put("osm_node", this.node);
+        c.getVariables().put("osm", node);
+        c.getVariables().put("osm_node", node);
         Double modelNormalFactor = getModelNormal(model);
         c.getVariables().put("normal", modelNormalFactor);
 
@@ -147,13 +147,13 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         c.registerFunction(new Vector3dZFunction());
 
         Context context = new Context();
-        context.putVariable("osm", this.node);
+        context.putVariable("osm", node);
         context.putVariable("normal", modelNormalFactor);
 
         double scale = 1d;
 
         try {
-            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getScale(), c, 1);
+            scale = modelNormalFactor * ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getScale(), c, 1);
 
         } catch (Exception e) {
             throw new RuntimeException("error eval of scale function", e);
@@ -163,7 +163,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         translate = ExpressiongBuilder.evaluateExpectedDefault(nodeModelConf.getTranslate(), c, new Vector3d());
 
-        rotateY = ExpressiongBuilder.evaluateExpectedDouble(this.nodeModelConf.getDirection(), c, 180);
+        rotateY = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getDirection(), c, 180);
 
         modelLod.put(pLod, model);
     }
@@ -201,7 +201,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (this.modelLod.get(pLod) != null) {
+        if (modelLod.get(pLod) != null) {
             return true;
         }
         return false;
@@ -211,28 +211,28 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         for (int i = 0; i < pModel.getNumberOfMaterials(); i++) {
             Material material = pModel.getMaterial(i);
             // material.ambientColor = material.diffuseColor;
-            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(), material
-                    .getAmbientDiffuse().getDiffuseColor()));
+            material.setAmbientDiffuse(new AmbientDiffuseComponent(material.getAmbientDiffuse().getDiffuseColor(),
+                    material.getAmbientDiffuse().getDiffuseColor()));
         }
     }
 
     @Override
     public void draw(GL2 gl, Camera camera, LOD pLod) {
         //
-        Model model2 = this.modelLod.get(pLod);
+        Model model2 = modelLod.get(pLod);
         if (model2 != null) {
             BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
-            gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
-            drawDebug(gl, this.translate, 0);
+            gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+            drawDebug(gl, translate, 0);
 
-            gl.glTranslated(this.translate.x, this.translate.y, this.translate.z);
+            gl.glTranslated(translate.x, translate.y, translate.z);
 
             gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
-            gl.glScaled(this.scale.x, this.scale.y, this.scale.z);
-            gl.glRotated(this.rotateY, 0d, 1d, 0d);
+            gl.glScaled(scale.x, scale.y, scale.z);
+            gl.glRotated(rotateY, 0d, 1d, 0d);
 
-            this.modelRenderer.render(gl, model2);
+            modelRenderer.render(gl, model2);
 
             gl.glDisable(GLLightingFunc.GL_NORMALIZE);
 
@@ -266,7 +266,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         // bottom Y
         gl.glPushMatrix();
-        gl.glColor3fv(Compass.Y_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        gl.glColor3fv(CompassDrawer.Y_AXIS_COLOR.getRGBComponents(colorArrays), 0);
 
         DrawUtil.drawLine(gl, translate.x, 0, translate.z, //
                 translate.x, translate.y, translate.z);
@@ -280,7 +280,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         // back X
         gl.glPushMatrix();
 
-        gl.glColor3fv(Compass.X_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        gl.glColor3fv(CompassDrawer.X_AXIS_COLOR.getRGBComponents(colorArrays), 0);
 
         DrawUtil.drawLine(gl, 0, translate.y, translate.z, //
                 translate.x, translate.y, translate.z);
@@ -298,7 +298,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         // right Z
         gl.glPushMatrix();
 
-        gl.glColor3fv(Compass.Z_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        gl.glColor3fv(CompassDrawer.Z_AXIS_COLOR.getRGBComponents(colorArrays), 0);
 
         DrawUtil.drawLine(gl, translate.x, translate.y, 0, //
                 translate.x, translate.y, translate.z);
@@ -332,22 +332,32 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
     public void draw(GL2 gl, Camera camera) {
         draw(gl, camera, LOD.LOD1);
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.modelLod.get(LOD.LOD1) == null) {
+        if (modelLod.get(LOD.LOD1) == null) {
             buildModel(LOD.LOD1);
         }
 
-        return Collections.singletonList(new ExportItem(this.modelLod.get(LOD.LOD1), new Point3d(this.getGlobalX(), 0, -this
-                .getGlobalY()), new Vector3d(1, 1, 1)));
+        return Collections.singletonList(new ExportItem(modelLod.get(LOD.LOD1), new Point3d(getGlobalX(), 0,
+                -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
-        return this.modelLod.get(LOD.LOD1);
+        return modelLod.get(LOD.LOD1);
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

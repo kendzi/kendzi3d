@@ -11,9 +11,9 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 
 /**
  * Roof type 0.0.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class RoofType0v0 extends RoofType0 {
 
@@ -25,11 +25,12 @@ public class RoofType0v0 extends RoofType0 {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0.5d);
+        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0d);
 
         int type = getType();
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, 0, 0, 0,
                 0, 0, type, conf.getRoofTextureData());
     }
+
 }

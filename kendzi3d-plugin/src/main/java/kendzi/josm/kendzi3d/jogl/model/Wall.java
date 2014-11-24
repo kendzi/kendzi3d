@@ -86,17 +86,17 @@ public class Wall extends AbstractWayModel {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Fence constructor.
@@ -110,37 +110,38 @@ public class Wall extends AbstractWayModel {
      * @param pMetadataCacheService
      *            metadata cache service
      */
-    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
+    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender,
+            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pWay, perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        modelRender = pModelRender;
+        metadataCacheService = pMetadataCacheService;
+        textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
     @Override
     public void buildWorldObject() {
 
-        if (!(this.points.size() > 1)) {
+        if (!(points.size() > 1)) {
             return;
         }
 
-        String fenceType = BarrierFenceRelation.getFenceType(this.way);
+        String fenceType = BarrierFenceRelation.getFenceType(way);
 
-        double fenceHeight = this.metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
+                fenceType);
 
-        this.hight = ModelUtil.getHeight(this.way, fenceHeight);
+        hight = ModelUtil.getHeight(way, fenceHeight);
 
-        this.minHeight = ModelUtil.getMinHeight(this.way, 0d);
+        minHeight = ModelUtil.getMinHeight(way, 0d);
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
         MeshFactory meshBorder = modelBuilder.addMesh("fence_border");
         MeshFactory testMesh = modelBuilder.addMesh("test");
         // MeshFactory meshBorder = modelBuilder.addMesh("box");
 
-        TextureData facadeTexture = BarrierFenceRelation.getFenceTexture(fenceType, this.way, this.textureLibraryStorageService);
+        TextureData facadeTexture = BarrierFenceRelation.getFenceTexture(fenceType, way, textureLibraryStorageService);
         Material fenceMaterial = MaterialFactory.createTextureMaterial(facadeTexture.getTex0());
 
         int facadeMaterialIndex = modelBuilder.addMaterial(fenceMaterial);
@@ -167,17 +168,17 @@ public class Wall extends AbstractWayModel {
         ArrayList<Polygon> polygons = sphere.subtract(sphere2).toPolygons();
         solidToModel(testMesh, polygons);
 
-        this.way.getNodes();
+        way.getNodes();
 
-        double height = ModelUtil.getHeight(this.way, 2d);
-        double min_height = ModelUtil.getHeight(this.way, 0d);
+        double height = ModelUtil.getHeight(way, 2d);
+        double min_height = ModelUtil.getHeight(way, 0d);
 
-        double width = ModelUtil.parseHeight(this.way.get("width"), 1d);
+        double width = ModelUtil.parseHeight(way.get("width"), 1d);
 
         List<WallHole> holeList = new ArrayList<Wall.WallHole>();
 
-        for (int i = 0; i < this.way.getNodes().size(); i++) {
-            Node node = this.way.getNode(i);
+        for (int i = 0; i < way.getNodes().size(); i++) {
+            Node node = way.getNode(i);
 
             if ("box".equals(node.get("hole"))) {
                 WallHole wh = new WallHole();
@@ -185,32 +186,32 @@ public class Wall extends AbstractWayModel {
                 wh.setHeight(ModelUtil.getHeight(node, 2d));
                 wh.setWidth(ModelUtil.parseHeight(node.get("width"), 1d));
                 wh.setDepth(width * 2d);
-                wh.setX(this.points.get(i).x);
-                wh.setY(this.points.get(i).y);
+                wh.setX(points.get(i).x);
+                wh.setY(points.get(i).y);
 
                 holeList.add(wh);
             }
 
         }
 
-        meshBorder = buildWallModelWithHoles(this.points, holeList, min_height, height, width);
+        meshBorder = buildWallModelWithHoles(points, holeList, min_height, height, width);
         meshBorder.materialID = facadeMaterialIndex;
         meshBorder.hasTexture = true;
 
         modelBuilder.addMesh(meshBorder);
 
-        if (this.points.size() > 0) {
-            Point2d start = this.points.get(0);
+        if (points.size() > 0) {
+            Point2d start = points.get(0);
             MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Point3d(start.x, 3, -start.y));
 
             modelBuilder.addMesh(cubeMesh);
         }
 
-        this.model = modelBuilder.toModel();
-        this.model.setUseLight(true);
-        this.model.setUseTexture(true);
+        model = modelBuilder.toModel();
+        model.setUseLight(true);
+        model.setUseTexture(true);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     enum WallHoleType {
@@ -317,8 +318,8 @@ public class Wall extends AbstractWayModel {
 
     }
 
-    private MeshFactory buildWallModelWithHoles(List<Point2d> points, List<WallHole> holeList, double min_height, double height,
-            double width) {
+    private MeshFactory buildWallModelWithHoles(List<Point2d> points, List<WallHole> holeList, double min_height,
+            double height, double width) {
 
         MeshFactory wallMesh = new MeshFactory();
 
@@ -634,6 +635,11 @@ public class Wall extends AbstractWayModel {
     }
 
     @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
     public void draw(GL2 pGl, Camera pCamera) {
         // if (true) {
         // return;
@@ -656,13 +662,13 @@ public class Wall extends AbstractWayModel {
         pGl.glEnable(GL.GL_CULL_FACE);
 
         pGl.glPushMatrix();
-        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+        pGl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         // pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
         // 255);
 
         try {
-            this.modelRender.render(pGl, this.model);
+            modelRender.render(pGl, model);
 
             // for (RelationCloneHeight cloner : this.heightClone) {
             // for (Double height : cloner) {
@@ -686,16 +692,21 @@ public class Wall extends AbstractWayModel {
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
+        if (model == null) {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
+        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
                 new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
         return model;
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

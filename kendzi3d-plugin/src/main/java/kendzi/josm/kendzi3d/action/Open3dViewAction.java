@@ -15,7 +15,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
+import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListenerOld;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
@@ -36,7 +36,7 @@ public class Open3dViewAction extends JosmAction {
 
     private RenderJOSM renderJosm;
 
-    private Kendzi3dGLEventListener kendzi3dGLEventListener;
+    private Kendzi3dGLEventListenerOld kendzi3dGLEventListener;
 
 
 
@@ -46,7 +46,7 @@ public class Open3dViewAction extends JosmAction {
      * @param kendzi3dGLEventListener
      */
     @Inject
-    public Open3dViewAction(RenderJOSM renderJosm, Kendzi3dGLEventListener kendzi3dGLEventListener) {
+    public Open3dViewAction(RenderJOSM renderJosm, Kendzi3dGLEventListenerOld kendzi3dGLEventListener) {
         super(
                 tr("Kendzi 3D"),
                 "1306318146_build__24",

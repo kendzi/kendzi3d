@@ -10,33 +10,17 @@ package kendzi.josm.kendzi3d.jogl.selection;
 
 import javax.vecmath.Point3d;
 
-public abstract class BuildingSelection implements Selection {
+import kendzi.kendzi3d.editor.selection.SphereSelection;
 
-    Point3d center;
-    double radius;
+public abstract class BuildingSelection extends SphereSelection {
 
     long wayId;
 
+    public BuildingSelection(long wayId, Point3d center, double radius) {
+        super(center, radius);
 
-    public BuildingSelection(long wayId,   Point3d center, double radius) {
-        super();
-        this.center = center;
-        this.radius = radius;
         this.wayId = wayId;
     }
-
-    @Override
-    public Point3d getCenter() {
-        return this.center;
-    }
-
-    @Override
-    public double getRadius() {
-        return this.radius;
-    }
-
-    @Override
-    public abstract void select(boolean selected);
 
     /**
      * @return the wayId
@@ -46,24 +30,10 @@ public abstract class BuildingSelection implements Selection {
     }
 
     /**
-     * @param wayId the wayId to set
+     * @param wayId
+     *            the wayId to set
      */
     public void setWayId(long wayId) {
         this.wayId = wayId;
     }
-
-    /**
-     * @param center the center to set
-     */
-    public void setCenter(Point3d center) {
-        this.center = center;
-    }
-
-    /**
-     * @param radius the radius to set
-     */
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
 }

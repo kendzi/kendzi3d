@@ -1,13 +1,11 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.wall;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,8 +19,8 @@ import kendzi.math.geometry.polygon.split.PolygonSplit;
 import org.apache.log4j.Logger;
 
 /**
- * Calculate heights on line segments. Height is stored in planes. Planes are limited by lines. It is chosen plane[n]
- * laying between line[n] and line[n+1].
+ * Calculate heights on line segments. Height is stored in planes. Planes are
+ * limited by lines. It is chosen plane[n] laying between line[n] and line[n+1].
  *
  * @author Tomasz Kędziora (Kendzi)
  */
@@ -42,8 +40,10 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
     private Plane3d[] planes;
 
     /**
-     * @param lines 2d lines splitting surface
-     * @param planes 3d planes assigned for divided surface
+     * @param lines
+     *            2d lines splitting surface
+     * @param planes
+     *            3d planes assigned for divided surface
      */
     public BetweenLinesHeightCalculator(LinePoints2d[] lines, Plane3d[] planes) {
         super();
@@ -52,15 +52,15 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
     }
 
     @Override
-    public SegmentHeight[] height(Point2d p1, Point2d p2) {
+    public List<SegmentHeight> height(Point2d p1, Point2d p2) {
 
         List<Point2d> splitPolygon = Arrays.asList(p1, p2);
 
-        for (LinePoints2d line : this.lines) {
+        for (LinePoints2d line : lines) {
             splitPolygon = PolygonSplit.splitLineSegmentsOnLineBBB(line, splitPolygon);
         }
 
-        SegmentHeight[] ret = new SegmentHeight[splitPolygon.size() - 1];
+        List<SegmentHeight> ret = new ArrayList<SegmentHeight>(splitPolygon.size() - 1);
 
         for (int i = 0; i < splitPolygon.size() - 1; i++) {
             int j = i + 1;
@@ -68,11 +68,12 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
             Point2d begin = splitPolygon.get(i);
             Point2d end = splitPolygon.get(j);
 
-            double beginHeight = calcHeight(begin, this.lines, this.planes);
-            double endHeight = calcHeight(end, this.lines, this.planes);
+            double beginHeight = calcHeight(begin, lines, planes);
+            double endHeight = calcHeight(end, lines, planes);
 
             SegmentHeight sh = new SegmentHeight(begin, beginHeight, end, endHeight);
-            ret[i] = sh;
+
+            ret.add(sh);
         }
 
         return ret;

@@ -1,12 +1,11 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 package kendzi.josm.kendzi3d.ui.layer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -18,7 +17,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 
 import kendzi.jogl.camera.Camera;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -32,34 +32,34 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-import static org.openstreetmap.josm.tools.I18n.*;
-
 /**
  * Layer showing location of camera.
- *
+ * 
  * @author Tomasz Kędziora (Kendzi)
  */
 public class CameraLayer extends Layer implements LayerChangeListener {
 
-    private Camera camera;
-    private Perspective3D perspective3d;
+    private final Camera camera;
+    private final Perspective3dProvider perspective3dProvider;
 
     private double lastX = Double.MAX_VALUE;
     private double lastY = Double.MAX_VALUE;
     private double lastAngle;
-    private Timer timer = new Timer("kendzi3d.layer.refreash");
+    private final Timer timer = new Timer("kendzi3d.layer.refreash");
 
     /**
      * Constructor.
-     *
-     * @param perspective3d
+     * 
+     * @param perspective3dProvider
+     *            perspective provider
      * @param camera
+     *            camera location
      */
-    public CameraLayer(Camera camera, Perspective3D perspective3d) {
+    public CameraLayer(Camera camera, Perspective3dProvider perspective3dProvider) {
         super(tr("Kendzi3d camera layer"));
 
         this.camera = camera;
-        this.perspective3d = perspective3d;
+        this.perspective3dProvider = perspective3dProvider;
 
         registerLayerChangeListener();
 
@@ -73,13 +73,14 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     private void initTimer() {
         int time = 600;
 
-        this.timer.scheduleAtFixedRate(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (Main.map != null && isChanged()) {
                     // XXX currently there is no change listener for camera, so
                     // we need redraw camera position from time to time.
-                    System.out.println(System.currentTimeMillis() + " force map to repaint");
+                    // System.out.println(System.currentTimeMillis() +
+                    // " force map to repaint");
                     Main.map.repaint(200);
                 }
             }
@@ -98,16 +99,21 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     @Override
     public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 
-        drawCamera(this.camera, Color.RED, g, mv);
+        drawCamera(camera, Color.RED, g, mv);
     }
 
     /**
      * Draws camera.
+     * 
      * @param camera
+     *            camera location
      * @param color
+     *            color of camera on layer
      * @param g
+     *            graphics 2d
      * @param mv
-     *
+     *            map view
+     * 
      */
     protected void drawCamera(Camera camera, Color color, final Graphics2D g, final MapView mv) {
 
@@ -115,7 +121,13 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         double cameraY = get2dY(camera);
         double cameraAngle = get2dAngle(camera);
 
-        EastNorth eastNorth = this.perspective3d.toEastNorth(cameraX, cameraY);
+        Perspective3D perspective3d = perspective3dProvider.getPerspective3d();
+
+        if (perspective3d == null) {
+            return;
+        }
+
+        EastNorth eastNorth = perspective3d.toEastNorth(cameraX, cameraY);
 
         Point2D point2d = mv.getPoint2D(eastNorth);
 
@@ -124,8 +136,8 @@ public class CameraLayer extends Layer implements LayerChangeListener {
 
         g.setColor(color);
 
-        double drawAngle1 = cameraAngle - Math.PI/4d;
-        double drawAngle2 = cameraAngle + Math.PI/4d;
+        double drawAngle1 = cameraAngle - Math.PI / 4d;
+        double drawAngle2 = cameraAngle + Math.PI / 4d;
 
         int lenght = 30;
         int lenght2 = lenght + lenght;
@@ -140,7 +152,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         int end2Y = y - (int) (Math.sin(drawAngle2) * lenght);
         g.drawLine(x, y, end2X, end2Y);
 
-//        g.drawLine(endX, endY, end2X, end2Y);
+        // g.drawLine(endX, endY, end2X, end2Y);
 
         boolean selected = true;
         if (selected) {
@@ -149,10 +161,9 @@ public class CameraLayer extends Layer implements LayerChangeListener {
             g.drawOval(x - 7, y - 7, 14, 14);
         }
 
-
-        this.lastX = cameraX;
-        this.lastY = cameraY;
-        this.lastAngle = cameraAngle;
+        lastX = cameraX;
+        lastY = cameraY;
+        lastAngle = cameraAngle;
     }
 
     /**
@@ -193,7 +204,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     @Override
     public boolean isChanged() {
         // System.out.println(System.currentTimeMillis() + " isChanged");
-        return (this.lastX != get2dX(this.camera) || (this.lastY != get2dY(this.camera)) || (this.lastAngle != get2dAngle(this.camera)));
+        return lastX != get2dX(camera) || lastY != get2dY(camera) || lastAngle != get2dAngle(camera);
     }
 
     @Override
@@ -213,13 +224,10 @@ public class CameraLayer extends Layer implements LayerChangeListener {
 
     @Override
     public Action[] getMenuEntries() {
-        return new Action[] {
-                LayerListDialog.getInstance().createShowHideLayerAction(),
-                LayerListDialog.getInstance().createDeleteLayerAction(),
-                SeparatorLayerAction.INSTANCE,
-                //new RenameLayerAction(null, this),
-                SeparatorLayerAction.INSTANCE,
-                new LayerListPopup.InfoAction(this) };
+        return new Action[] { LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(), SeparatorLayerAction.INSTANCE,
+                // new RenameLayerAction(null, this),
+                SeparatorLayerAction.INSTANCE, new LayerListPopup.InfoAction(this) };
     }
 
     @Override

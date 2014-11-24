@@ -5,19 +5,21 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
+import kendzi.jogl.Gl2Draw;
 import kendzi3d.light.service.LightRenderService;
 
-public class LightRender {
+public class LightRender implements Gl2Draw {
 
     @Inject
     private LightRenderService lightRenderService;
 
     /**
      * Set up a light position and color.
-     * 
+     *
      * @param gl
      *            gl
      */
+    @Override
     public void draw(GL2 gl) {
 
         // gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);

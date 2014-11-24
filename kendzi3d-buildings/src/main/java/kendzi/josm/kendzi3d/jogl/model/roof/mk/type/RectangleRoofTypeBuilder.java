@@ -38,7 +38,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
     private static final Logger log = Logger.getLogger(RectangleRoofTypeBuilder.class);
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
+    public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
             double height, RoofMaterials roofTextureData) {
 
         Point2d[] rectangleContur = null;
@@ -49,7 +49,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
             PolygonList2d outerPolygon = buildingPolygon.getOuter();
 
             rectangleContur = rectToList(RectangleUtil.findRectangleContur(outerPolygon.getPoints()));
-            rectangleContur = findStartPoint(pStartPoint, rectangleContur);
+            rectangleContur = findStartPoint(startPoint, rectangleContur);
 
             if (roof.getOrientation() == null) {
                 rectangleContur = findOrientation(RoofOrientation.along, rectangleContur);
@@ -82,8 +82,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
                 + pow(rectangleContur[0].y - rectangleContur[1].y));
 
         SimpleMatrix transformLocal = trandformToLocalMatrix(newStartPoint.x, newStartPoint.y, alpha, 1d, 1d);
-        // pPolygon = TransformationMatrix2d.transformList(pPolygon,
-        // transformLocal);
+
         PolygonWithHolesList2d transfBuildingPolygon = transformationPolygonWithHoles(buildingPolygon, transformLocal);
         rectangleContur = TransformationMatrix2d.transformArray(rectangleContur, transformLocal);
 
@@ -102,10 +101,6 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     }
 
-    /**
-     * @param rectangleContur
-     * @return
-     */
     public List<Point3d> createRectangle(Point2d[] rectangleContur) {
         List<Point3d> rect = new ArrayList<Point3d>();
         rect.add(new Point3d(rectangleContur[0].x, 0, -rectangleContur[0].y));
@@ -309,7 +304,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     /**
      * Build roof hook space for rectangle edge.
-     * 
+     *
      * @param pEdge
      *            rectangle edge number
      * @param pRectangleContur
@@ -329,7 +324,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
 
     /**
      * Build roof hook space for rectangle edge.
-     * 
+     *
      * @param pEdge
      *            rectangle edge number XXX
      * @param pRectangleContur

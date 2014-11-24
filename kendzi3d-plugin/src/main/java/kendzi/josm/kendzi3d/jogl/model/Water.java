@@ -38,12 +38,14 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
 
 import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Water model.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class Water extends AbstractModel {
@@ -55,79 +57,57 @@ public class Water extends AbstractModel {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Model of water.
      */
     private Model model;
 
-    private Relation relation;
-
-    private Way way;
+    private OsmPrimitive primitive;
 
     /**
      * Constructor for water.
-     * 
-     * @param way
-     *            way represent water
+     *
+     * @param primitive
+     *            primitive represent water
      * @param perspective
      *            perspective
      * @param pModelRender
      * @param pMetadataCacheService
      * @param pTextureLibraryStorageService
      */
-    public Water(Way way, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
-            TextureLibraryStorageService pTextureLibraryStorageService) {
-
-        super(perspective);
-
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
-
-        this.way = way;
-    }
-
-    /**
-     * Constructor for water.
-     * 
-     * @param pRelation
-     *            relation represent water
-     * @param perspective
-     *            Perspective
-     * @param pModelRender
-     *            model render
-     * @param pMetadataCacheService
-     * @param pTextureLibraryStorageService
-     */
-    public Water(Relation pRelation, Perspective perspective, ModelRender pModelRender,
+    public Water(OsmPrimitive primitive, Perspective perspective, ModelRender pModelRender,
             MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(perspective);
 
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        modelRender = pModelRender;
+        metadataCacheService = pMetadataCacheService;
+        textureLibraryStorageService = pTextureLibraryStorageService;
 
-        this.relation = pRelation;
+        if (primitive instanceof Node) {
+            throw new IllegalArgumentException("node is not supported");
+        }
+
+        this.primitive = primitive;
     }
 
     List<PolygonWithHolesList2d> getMultiPolygonWithHoles() {
-        if (this.relation != null) {
-            return getMultiPolygonWithHolesRelation(this.relation, this.perspective);
+        if (primitive instanceof Relation) {
+            return getMultiPolygonWithHolesRelation((Relation) primitive, perspective);
         }
-        return getMultiPolygonWithHolesWay(this.way, this.perspective);
+        return getMultiPolygonWithHolesWay((Way) primitive, perspective);
     }
 
     List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective perspective) {
@@ -161,8 +141,8 @@ public class Water extends AbstractModel {
         MeshFactory mesh = model.addMesh("water");
 
         TextureData waterTexture = getWaterTextureData();// new
-                                                         // TextureData("#c=#008EFF",
-                                                         // 1d, 1d);
+        // TextureData("#c=#008EFF",
+        // 1d, 1d);
         Material waterMaterial = MaterialFactory.createTextureMaterial(waterTexture.getTex0());
         int waterMaterialIndex = model.addMaterial(waterMaterial);
 
@@ -190,20 +170,22 @@ public class Water extends AbstractModel {
         this.model.setUseLight(true);
         this.model.setUseTexture(true);
 
-        this.buildModel = true;
+        buildModel = true;
+    }
+
+    @Override
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
     }
 
     @Override
     public void draw(GL2 pGl, Camera camera) {
 
         pGl.glPushMatrix();
-        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
-
-        // pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
-        // 255);
+        pGl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
-            this.modelRender.render(pGl, this.model);
+            modelRender.render(pGl, model);
 
         } finally {
             pGl.glPopMatrix();
@@ -212,12 +194,12 @@ public class Water extends AbstractModel {
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
+        if (model == null) {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -227,9 +209,22 @@ public class Water extends AbstractModel {
 
     public TextureData getWaterTextureData() {
 
-        String keyStr = this.textureLibraryStorageService.getKey(TextureLibraryKey.WATER, (String) null);
-        return this.textureLibraryStorageService.getTextureDefault(keyStr);
+        String keyStr = textureLibraryStorageService.getKey(TextureLibraryKey.WATER, (String) null);
+        return textureLibraryStorageService.getTextureDefault(keyStr);
 
     }
 
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
+    }
+
+    @Override
+    public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
+        // clean up everything
+        this.primitive = primitive;
+        this.perspective = perspective;
+
+        buildWorldObject();
+    }
 }

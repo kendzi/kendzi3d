@@ -1,10 +1,7 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 package kendzi.josm.kendzi3d.jogl.model.building.parser;
 
@@ -43,6 +40,29 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class BuildingParser {
+
+    public static BuildingModel parseBuilding(OsmPrimitive primitive, Perspective perspective) {
+
+        if (primitive instanceof Way) {
+            return BuildingParser.parseBuildingWay((Way) primitive, perspective);
+
+        } else if (primitive instanceof Node) {
+            return BuildingParser.parseBuildingNode((Node) primitive, perspective);
+
+        } else if (primitive instanceof Relation) {
+            Relation relation = (Relation) primitive;
+
+            if (relation.isMultipolygon()) {
+                // simple building from multipolygon
+                return BuildingParser.parseBuildingMultiPolygon(relation, perspective);
+
+            } else {
+                // complex building
+                return BuildingParser.parseBuildingRelation(relation, perspective);
+            }
+        }
+        throw new IllegalArgumentException("unknown type of building");
+    }
 
     /**
      * Parse building model from multipolygon.
@@ -125,6 +145,8 @@ public class BuildingParser {
 
         bp.setRoofMaterialType(BuildingAttributeParser.parseRoofMaterialName(pOsmPrimitive));
         bp.setRoofColor(BuildingAttributeParser.parseRoofColor(pOsmPrimitive));
+
+        bp.setContext(pOsmPrimitive.getPrimitiveId());
         return bp;
     }
 
@@ -182,8 +204,7 @@ public class BuildingParser {
 
             if (BuildingType.OUTLINE.equals(bt) && !OsmAttributeKeys.BUILDING.primitiveKeyHaveAnyValue(member.getMember())) {
                 continue;
-            } else if (BuildingType.PARTS.equals(bt)
-                    && !isPrimitiveBuildingPart(member.getMember())) {
+            } else if (BuildingType.PARTS.equals(bt) && !isPrimitiveBuildingPart(member.getMember())) {
                 continue;
             }
 
@@ -256,8 +277,6 @@ public class BuildingParser {
             ret.setMinHeight(bp.getMinHeight() + height);
         }
 
-
-
         ret.setFacadeColor(bp.getFacadeColor());
 
         ret.setFacadeMaterialType(bp.getFacadeMaterialType());
@@ -315,7 +334,7 @@ public class BuildingParser {
     }
 
     static boolean isClosedWay(RelationMember member) {
-        if (OsmPrimitiveType.WAY.equals(member.getType()) && (member.getWay().isClosed())) {
+        if (OsmPrimitiveType.WAY.equals(member.getType()) && member.getWay().isClosed()) {
             return true;
         }
         return false;

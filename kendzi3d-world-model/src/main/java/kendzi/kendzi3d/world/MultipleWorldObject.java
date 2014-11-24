@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.vecmath.Point3d;
 
-public class MultipleWorldObject implements WorldObject {
+public abstract class MultipleWorldObject implements WorldObject {
 
     private List<WorldObject> worldObjects = new ArrayList<WorldObject>();
 
@@ -15,6 +15,12 @@ public class MultipleWorldObject implements WorldObject {
             return worldObjects.get(0).getPoint();
         }
         return null;
+    }
+
+    @Override
+    public Point3d getPosition() {
+        // FIXME it is wrong!
+        return getPoint();
     }
 
     @Override

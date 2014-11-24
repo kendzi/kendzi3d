@@ -16,7 +16,6 @@ import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import kendzi.jogl.DrawUtil;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -25,17 +24,17 @@ import kendzi.jogl.model.factory.ModelFactory;
 import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.util.DrawUtil;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.DrawableModel;
-import kendzi.josm.kendzi3d.jogl.model.Perspective3D;
 import kendzi.josm.kendzi3d.jogl.model.lod.DLODSuport;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
-import kendzi.josm.kendzi3d.jogl.selection.Selectable;
-import kendzi.josm.kendzi3d.jogl.selection.Selection;
+import kendzi.kendzi3d.editor.selection.Selectable;
+import kendzi.kendzi3d.editor.selection.Selection;
+import kendzi.kendzi3d.editor.selection.SphereSelection;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.ModelLayerBuilder;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-import kendzi.math.geometry.ray.Ray3d;
-import kendzi.math.geometry.ray.Ray3dUtil;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -83,7 +82,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     /**
      * Model displayed when error happen.
      */
-    private kendzi.jogl.model.geometry.Model errorModel;
+    private final kendzi.jogl.model.geometry.Model errorModel;
 
     /**
      * Renderer of model.
@@ -99,16 +98,16 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     private Selection lastSelection;
 
     private GLUquadric quadratic; // Storage For Our Quadratic Objects
-    private GLU glu = new GLU();
+    private final GLU glu = new GLU();
 
-    private List<WorldObject> models = new ArrayList<WorldObject>(500);
+    private final List<WorldObject> models = new ArrayList<WorldObject>(500);
 
     public Perspective3D getPerspective() {
-        return this.perspective;
+        return perspective;
     }
 
     public void setPerspective(Perspective3D pers) {
-        this.perspective = pers;
+        perspective = pers;
     }
 
     public RenderJOSM() {
@@ -116,26 +115,26 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         // FIXME TODO XXX
         DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this), FireMode.IMMEDIATELY);
 
-        this.errorModel = createErrorModel();
+        errorModel = createErrorModel();
 
-        this.center = new EastNorth(0, 0);
+        center = new EastNorth(0, 0);
 
-        this.perspective = new Perspective3D(1, 0, 0);
+        perspective = new Perspective3D(1, 0, 0);
 
     }
 
     public void init(GL2 gl) {
 
-        this.quadratic = this.glu.gluNewQuadric();
+        quadratic = glu.gluNewQuadric();
         // Create Smooth Normals
-        this.glu.gluQuadricNormals(this.quadratic, GLU.GLU_SMOOTH);
+        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
 
     }
 
     public void draw(GL2 gl, Camera camera) {
 
-        if (this.datasetChanged) {
-            this.datasetChanged = false;
+        if (datasetChanged) {
+            datasetChanged = false;
             rebuildData();
         }
         for (WorldObject r : models) {
@@ -144,12 +143,12 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         }
 
-        if (this.modelRender.isDebugging()) {
+        if (modelRender.isDebugging()) {
             drawSelectable(gl);
 
         }
 
-        this.modelRender.setupDefaultMaterial(gl);
+        modelRender.setupDefaultMaterial(gl);
     }
 
     /**
@@ -195,7 +194,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
         pGl.glPushMatrix();
         pGl.glTranslated(x, 0, -y);
 
-        this.modelRender.render(pGl, this.errorModel);
+        modelRender.render(pGl, errorModel);
 
         pGl.glPopMatrix();
     }
@@ -296,7 +295,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
     }
 
     public DataSet getDataSet() {
-        return this.dataSet;
+        return dataSet;
         // return Main.main.getCurrentDataSet();
     }
 
@@ -372,7 +371,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         double scale = dist / 2d;
 
-        this.perspective = new Perspective3D(scale, center.getX(), center.getY());
+        perspective = new Perspective3D(scale, center.getX(), center.getY());
     }
 
     @Override
@@ -388,31 +387,31 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
             updatePrimitive(((TagsChangedEvent) pEvent).getPrimitive());
         }
 
-        if (this.center == null || pEvent == null) {
+        if (center == null || pEvent == null) {
             // for tests we change center only on menu button action
-            this.center = Main.map.mapView.getCenter();
+            center = Main.map.mapView.getCenter();
         }
 
         if (pEvent != null) {
-            this.dataSet = pEvent.getDataset();
+            dataSet = pEvent.getDataset();
         }
 
         if (pEvent instanceof DataChangedEvent) {
 
-            if (this.dataSet != null) {
+            if (dataSet != null) {
 
                 Projection proj = Main.getProjection();
 
-                this.center = centerFromDataSet(this.dataSet, proj);
+                center = centerFromDataSet(dataSet, proj);
 
             } else {
-                this.center = new EastNorth(0, 0);
+                center = new EastNorth(0, 0);
             }
         }
 
-        setupPerspective3D(this.center);
+        setupPerspective3D(center);
 
-        this.datasetChanged = true;
+        datasetChanged = true;
     }
 
     private void updatePrimitive(OsmPrimitive primitive) {
@@ -498,7 +497,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**
@@ -513,7 +512,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      * @return the layerList
      */
     public List<Layer> getLayerList() {
-        return this.layers;
+        return layers;
     }
 
     /**
@@ -521,7 +520,7 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
      *            the layerList to set
      */
     public void setLayerList(List<Layer> layerList) {
-        this.layers = layerList;
+        layers = layerList;
     }
 
     public void drawSelectable(GL2 gl) {
@@ -530,28 +529,31 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
         for (WorldObject r : models) {
             if (r instanceof Selectable) {
-                for (Selection s : ((Selectable) r).getSelection()) {
+                for (Selection selection : ((Selectable) r).getSelection()) {
+                    if (selection instanceof SphereSelection) {
 
-                    gl.glPushMatrix();
+                        SphereSelection s = (SphereSelection) selection;
+                        gl.glPushMatrix();
 
-                    Point3d p = s.getCenter();
+                        Point3d p = s.getCenter();
 
-                    double dx = p.x;
-                    double dy = p.y;
-                    double dz = p.z;
+                        double dx = p.x;
+                        double dy = p.y;
+                        double dz = p.z;
 
-                    gl.glLineWidth(1);
-                    gl.glTranslated(dx, dy, dz);
+                        gl.glLineWidth(1);
+                        gl.glTranslated(dx, dy, dz);
 
-                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+                        DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                    gl.glRotated(90d, 1d, 0, 0);
-                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+                        gl.glRotated(90d, 1d, 0, 0);
+                        DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                    gl.glRotated(90d, 0, 0, 1d);
-                    DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
+                        gl.glRotated(90d, 0, 0, 1d);
+                        DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                    gl.glPopMatrix();
+                        gl.glPopMatrix();
+                    }
                 }
             }
 
@@ -559,51 +561,52 @@ public class RenderJOSM implements DataSetListenerAdapter.Listener {
 
     }
 
-    public Selection select(Ray3d selectRay) {
-        Selection selection = null;
-        double min = Double.MAX_VALUE;
-
-        for (WorldObject r : models) {
-            if (r instanceof Selectable) {
-                for (Selection s : ((Selectable) r).getSelection()) {
-                    Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
-                    if (intersect == null) {
-                        continue;
-                    }
-                    if (intersect < min) {
-                        selection = s;
-                        min = intersect;
-                    }
-                }
-            }
-        }
-
-        Selection last = this.lastSelection;
-
-        if (selection != null) {
-            log.info("selected object: " + selection);
-            // FIXME
-            if (last != selection) {
-                // FIXME
-                selection.select(true);
-                if (last != null) {
-                    last.select(false);
-                }
-            }
-
-        } else {
-            log.info("can't find selection");
-            // FIXME
-            if (last != null) {
-                last.select(false);
-            }
-        }
-
-        this.lastSelection = selection;
-
-        return selection;
-    }
-
+    /*-
+     *    public Selection select(Ray3d selectRay) {
+     *        Selection selection = null;
+     *        double min = Double.MAX_VALUE;
+     *
+     *        for (WorldObject r : models) {
+     *            if (r instanceof Selectable) {
+     *                for (Selection s : ((Selectable) r).getSelection()) {
+     *                    Double intersect = Ray3dUtil.intersect(selectRay, s.getCenter(), s.getRadius());
+     *                    if (intersect == null) {
+     *                        continue;
+     *                    }
+     *                    if (intersect < min) {
+     *                        selection = s;
+     *                        min = intersect;
+     *                    }
+     *                }
+     *            }
+     *        }
+     *
+     *        Selection last = this.lastSelection;
+     *
+     *        if (selection != null) {
+     *            log.info("selected object: " + selection);
+     *            // FIXME
+     *            if (last != selection) {
+     *                // FIXME
+     *                selection.select(true);
+     *                if (last != null) {
+     *                    last.select(false);
+     *                }
+     *            }
+     *
+     *        } else {
+     *            log.info("can't find selection");
+     *            // FIXME
+     *            if (last != null) {
+     *                last.select(false);
+     *            }
+     *        }
+     *
+     *        this.lastSelection = selection;
+     *
+     *        return selection;
+     *    }
+     */
     /**
      * @return the models
      */

@@ -51,13 +51,13 @@ public abstract class AbstractWayModel extends AbstractModel {
 
         this.way = way;
 
-        this.radius = maxRadius;
-        this.points = pointsList;
+        radius = maxRadius;
+        points = pointsList;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getOsmPrimitives()
      */
     @Override
@@ -65,9 +65,18 @@ public abstract class AbstractWayModel extends AbstractModel {
 
         Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
 
-        set.add(this.way);
+        set.add(way);
 
         return set;
+    }
+
+    @Override
+    public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
+        // clean up everything
+        way = (Way) primitive;
+        this.perspective = perspective;
+
+        buildWorldObject();
     }
 
 }

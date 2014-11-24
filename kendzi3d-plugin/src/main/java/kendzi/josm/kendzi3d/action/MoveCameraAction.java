@@ -1,25 +1,23 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
-
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
 import kendzi.jogl.camera.Camera;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
+import kendzi.jogl.camera.SimpleMoveAnimator;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.coor.EastNorth;
 
 import com.google.inject.Inject;
 
@@ -36,42 +34,33 @@ public class MoveCameraAction extends JosmAction {
      */
     private static final long serialVersionUID = 1L;
 
-    private RenderJOSM renderJosm;
+    @Inject
+    private Perspective3dProvider perspective3dProvider;
 
-    private Kendzi3dGLEventListener kendzi3dGLEventListener;
-
-
+    @Inject
+    private SimpleMoveAnimator simpleMoveAnimator;
 
     /**
      * Constructor.
-     * @param renderJosm
-     * @param kendzi3dGLEventListener
+     *
      */
-    @Inject
-    public MoveCameraAction(RenderJOSM renderJosm, Kendzi3dGLEventListener kendzi3dGLEventListener) {
-        super(
-                tr("Move camera"),
-                "1306318146_build__24",
-                tr("Move camera"),
-                null,
-                false
-        );
 
-        this.renderJosm = renderJosm;
-        this.kendzi3dGLEventListener = kendzi3dGLEventListener;
+    public MoveCameraAction() {
+        super(tr("Move camera"), "1306318146_build__24", tr("Move camera"), null, false);
     }
 
     @Override
     public void actionPerformed(ActionEvent pE) {
 
-        double x = this.renderJosm.getPerspective().calcX(Main.map.mapView.getCenter().getX());
-        double y = this.renderJosm.getPerspective().calcY(Main.map.mapView.getCenter().getY());
+        EastNorth mapCenter = Main.map.mapView.getCenter();
+        Perspective3D perspective = perspective3dProvider.getPerspective3d();
 
-        this.kendzi3dGLEventListener.setCamPos(x, Camera.CAM_HEIGHT, -y);
+        double x = perspective.calcX(mapCenter.getX());
+        double y = perspective.calcY(mapCenter.getY());
+
+        simpleMoveAnimator.getPoint().x = x;
+        simpleMoveAnimator.getPoint().y = Camera.CAM_HEIGHT;
+        simpleMoveAnimator.getPoint().z = -y;
     }
 
-    @Override
-    protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
-    }
 }

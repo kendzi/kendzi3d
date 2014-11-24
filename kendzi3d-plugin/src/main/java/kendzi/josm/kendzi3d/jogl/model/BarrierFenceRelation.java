@@ -64,17 +64,17 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     /**
      * Renderer of model.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Metadata cache service.
      */
-    private MetadataCacheService metadataCacheService;
+    private final MetadataCacheService metadataCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Hight.
@@ -91,11 +91,11 @@ public class BarrierFenceRelation extends AbstractRelationModel {
      */
     private Model model;
 
-    private List<Point2d> points;
+    private final List<Point2d> points;
 
-    private List<Double> heights;
+    private final List<Double> heights;
 
-    private List<Node> nodes;
+    private final List<Node> nodes;
 
     /**
      * Fence constructor.
@@ -143,9 +143,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         this.nodes = nodes;
         this.points = points;
         this.heights = heights;
-        this.modelRender = pModelRender;
-        this.metadataCacheService = pMetadataCacheService;
-        this.textureLibraryStorageService = pTextureLibraryStorageService;
+        modelRender = pModelRender;
+        metadataCacheService = pMetadataCacheService;
+        textureLibraryStorageService = pTextureLibraryStorageService;
     }
 
     /**
@@ -158,7 +158,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
 
-        set.addAll(this.nodes);
+        set.addAll(nodes);
 
         return set;
     }
@@ -166,34 +166,35 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     @Override
     public void buildWorldObject() {
 
-        if (!(this.points.size() > 1)) {
+        if (!(points.size() > 1)) {
             // FIXME
-            this.model = new Model();
-            this.buildModel = true;
+            model = new Model();
+            buildModel = true;
             return;
         }
 
-        String fenceType = getFenceType(this.relation);
+        String fenceType = getFenceType(relation);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
+                fenceType);
 
-        this.hight = ModelUtil.getHeight(this.relation, fenceHeight);
+        hight = ModelUtil.getHeight(relation, fenceHeight);
 
-        this.minHeight = ModelUtil.getMinHeight(this.relation, 0d);
+        minHeight = ModelUtil.getMinHeight(relation, 0d);
 
-        TextureData facadeTexture = getFenceTexture(fenceType, this.relation, this.textureLibraryStorageService);
+        TextureData facadeTexture = getFenceTexture(fenceType, relation, textureLibraryStorageService);
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
         MeshFactory meshBorder = createMesh(facadeTexture.getTex0(), null, "fence_border", modelBuilder);
 
-        buildWallModel(this.points, this.heights, this.minHeight, this.hight, 0, meshBorder, facadeTexture);
+        buildWallModel(points, heights, minHeight, hight, 0, meshBorder, facadeTexture);
 
-        this.model = modelBuilder.toModel();
-        this.model.setUseLight(true);
-        this.model.setUseTexture(true);
+        model = modelBuilder.toModel();
+        model.setUseLight(true);
+        model.setUseTexture(true);
 
-        this.buildModel = true;
+        buildModel = true;
     }
 
     /**
@@ -361,50 +362,60 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     }
 
     @Override
-    public void draw(GL2 pGl, Camera pCamera) {
+    public void draw(GL2 gl, Camera camera, boolean selected) {
+        draw(gl, camera);
+    }
+
+    @Override
+    public void draw(GL2 gl, Camera camera) {
 
         // do not draw the transparent parts of the texture
-        pGl.glEnable(GL.GL_BLEND);
-        pGl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         // don't show source alpha parts in the destination
 
         // determine which areas of the polygon are to be rendered
-        pGl.glEnable(GL2ES1.GL_ALPHA_TEST);
-        pGl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
+        gl.glEnable(GL2ES1.GL_ALPHA_TEST);
+        gl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
 
         // replace the quad colors with the texture
         // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
         // GL2.GL_REPLACE);
-        pGl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
-        pGl.glEnable(GL.GL_CULL_FACE);
+        gl.glEnable(GL.GL_CULL_FACE);
 
-        pGl.glPushMatrix();
-        pGl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
+        gl.glPushMatrix();
+        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
 
-            this.modelRender.render(pGl, this.model);
+            modelRender.render(gl, model);
         } finally {
 
-            pGl.glPopMatrix();
+            gl.glPopMatrix();
 
-            pGl.glDisable(GL.GL_CULL_FACE);
+            gl.glDisable(GL.GL_CULL_FACE);
         }
     }
 
     @Override
     public List<ExportItem> export(ExportModelConf conf) {
-        if (this.model == null) {
+        if (model == null) {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(this.model, new Point3d(this.getGlobalX(), 0, -this.getGlobalY()),
+        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
                 new Vector3d(1, 1, 1)));
     }
 
     @Override
     public Model getModel() {
         return model;
+    }
+
+    @Override
+    public Point3d getPosition() {
+        return getPoint();
     }
 }

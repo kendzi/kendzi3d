@@ -9,17 +9,17 @@ public class BuildingPart {
 
     private static final double DEFAULT_BUILDING_HEIGHT = 8;
 
-    Double maxHeight;
+    private Double maxHeight;
 
-    Double minHeight;
+    private Double minHeight;
 
-    Integer maxLevel;
+    private Integer maxLevel;
 
-    Integer minLevel;
+    private Integer minLevel;
 
-    Integer roofLevels;
+    private Integer roofLevels;
 
-    double levelHeight = 2.5;
+    private double levelHeight = 2.5;
 
     private String facadeMaterialType;
 
@@ -35,12 +35,13 @@ public class BuildingPart {
 
     private RoofModel roof;
 
+    private Object context;
+
     // Outline
     private Wall wall;
 
     // Inline
     private List<Wall> inlineWalls;
-
 
     // Windows
 
@@ -48,32 +49,32 @@ public class BuildingPart {
 
     // XXX move to util
     public double getDefaultMinHeight() {
-        if (this.minHeight != null) {
-            return this.minHeight;
+        if (minHeight != null) {
+            return minHeight;
         }
 
-        if (this.minLevel != null) {
-            return this.minLevel * this.levelHeight;
+        if (minLevel != null) {
+            return minLevel * levelHeight;
         }
         return 0;
     }
 
     // XXX move to util
     public double getDefaultMaxHeight() {
-        if (this.maxHeight != null) {
-            return this.maxHeight;
+        if (maxHeight != null) {
+            return maxHeight;
         }
 
-        if (this.maxLevel != null) {
-            return this.maxLevel * this.levelHeight;
+        if (maxLevel != null) {
+            return maxLevel * levelHeight;
         }
         return getDefaultMinHeight() + DEFAULT_BUILDING_HEIGHT;
     }
 
     // XXX move to util
     public int getDefaultMinLevel() {
-        if (this.minLevel != null) {
-            return this.minLevel;
+        if (minLevel != null) {
+            return minLevel;
         }
 
         return 0;
@@ -81,23 +82,23 @@ public class BuildingPart {
 
     // XXX move to util
     public int getDefaultMaxLevel() {
-        if (this.maxLevel != null) {
-            return this.maxLevel;
+        if (maxLevel != null) {
+            return maxLevel;
         }
 
         return getDefaultMinLevel() + 1;
     }
 
     public int getDefaultRoofLevels() {
-        if (this.roofLevels != null) {
-            return this.roofLevels;
+        if (roofLevels != null) {
+            return roofLevels;
         }
         return 0;
     }
 
     public double getDefaultRoofHeight() {
-        if (this.roofLevels != null) {
-            return this.roofLevels * levelHeight;
+        if (roofLevels != null) {
+            return roofLevels * levelHeight;
         }
         return 0;
     }
@@ -106,7 +107,7 @@ public class BuildingPart {
      * @return the levelHeight
      */
     public double getLevelHeight() {
-        return this.levelHeight;
+        return levelHeight;
     }
 
     /**
@@ -121,7 +122,7 @@ public class BuildingPart {
      * @return the roof
      */
     public RoofModel getRoof() {
-        return this.roof;
+        return roof;
     }
 
     /**
@@ -136,7 +137,7 @@ public class BuildingPart {
      * @return the wall
      */
     public Wall getWall() {
-        return this.wall;
+        return wall;
     }
 
     /**
@@ -151,7 +152,7 @@ public class BuildingPart {
      * @return the inlineWalls
      */
     public List<Wall> getInlineWalls() {
-        return this.inlineWalls;
+        return inlineWalls;
     }
 
     /**
@@ -162,25 +163,11 @@ public class BuildingPart {
         this.inlineWalls = inlineWalls;
     }
 
-    // /**
-    // * @return the facadeTextureData
-    // */
-    // public TextureData getFacadeTextureData() {
-    // return facadeTextureData;
-    // }
-    //
-    // /**
-    // * @param facadeTextureData the facadeTextureData to set
-    // */
-    // public void setFacadeTextureData(TextureData facadeTextureData) {
-    // this.facadeTextureData = facadeTextureData;
-    // }
-
     /**
      * @return the maxHeight
      */
     public Double getMaxHeight() {
-        return this.maxHeight;
+        return maxHeight;
     }
 
     /**
@@ -195,7 +182,7 @@ public class BuildingPart {
      * @return the minHeight
      */
     public Double getMinHeight() {
-        return this.minHeight;
+        return minHeight;
     }
 
     /**
@@ -210,7 +197,7 @@ public class BuildingPart {
      * @return the maxLevel
      */
     public Integer getMaxLevel() {
-        return this.maxLevel;
+        return maxLevel;
     }
 
     /**
@@ -225,7 +212,7 @@ public class BuildingPart {
      * @return the minLevel
      */
     public Integer getMinLevel() {
-        return this.minLevel;
+        return minLevel;
     }
 
     /**
@@ -236,40 +223,11 @@ public class BuildingPart {
         this.minLevel = minLevel;
     }
 
-    //    /**
-    //     * @return the dormerRoofModel
-    //     */
-    //    public DormerRoofModel getDormerRoofModel() {
-    //        return this.dormerRoofModel;
-    //    }
-    //
-    //    /**
-    //     * @param dormerRoofModel
-    //     *            the dormerRoofModel to set
-    //     */
-    //    public void setDormerRoofModel(DormerRoofModel dormerRoofModel) {
-    //        this.dormerRoofModel = dormerRoofModel;
-    //    }
-
-    // /**
-    // * @return the roofTextureData
-    // */
-    // public TextureData getRoofTextureData() {
-    // return roofTextureData;
-    // }
-    //
-    // /**
-    // * @param roofTextureData the roofTextureData to set
-    // */
-    // public void setRoofTextureData(TextureData roofTextureData) {
-    // this.roofTextureData = roofTextureData;
-    // }
-
     /**
      * @return the facadeMaterialType
      */
     public String getFacadeMaterialType() {
-        return this.facadeMaterialType;
+        return facadeMaterialType;
     }
 
     /**
@@ -284,7 +242,7 @@ public class BuildingPart {
      * @return the roofMaterialType
      */
     public String getRoofMaterialType() {
-        return this.roofMaterialType;
+        return roofMaterialType;
     }
 
     /**
@@ -299,7 +257,7 @@ public class BuildingPart {
      * @return the facadeColor
      */
     public Color getFacadeColor() {
-        return this.facadeColor;
+        return facadeColor;
     }
 
     /**
@@ -314,7 +272,7 @@ public class BuildingPart {
      * @return the roofColor
      */
     public Color getRoofColor() {
-        return this.roofColor;
+        return roofColor;
     }
 
     /**
@@ -329,7 +287,7 @@ public class BuildingPart {
      * @return the roofLevels
      */
     public Integer getRoofLevels() {
-        return this.roofLevels;
+        return roofLevels;
     }
 
     /**
@@ -348,7 +306,8 @@ public class BuildingPart {
     }
 
     /**
-     * @param floorMaterialType the floorMaterialType to set
+     * @param floorMaterialType
+     *            the floorMaterialType to set
      */
     public void setFloorMaterialType(String floorMaterialType) {
         this.floorMaterialType = floorMaterialType;
@@ -362,9 +321,25 @@ public class BuildingPart {
     }
 
     /**
-     * @param floorColor the floorColor to set
+     * @param floorColor
+     *            the floorColor to set
      */
     public void setFloorColor(Color floorColor) {
         this.floorColor = floorColor;
+    }
+
+    /**
+     * @return the context
+     */
+    public Object getContext() {
+        return context;
+    }
+
+    /**
+     * @param context
+     *            the context to set
+     */
+    public void setContext(Object context) {
+        this.context = context;
     }
 }

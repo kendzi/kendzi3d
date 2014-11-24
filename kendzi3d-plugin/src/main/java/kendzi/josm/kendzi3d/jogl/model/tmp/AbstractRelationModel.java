@@ -9,6 +9,7 @@ package kendzi.josm.kendzi3d.jogl.model.tmp;
 import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 
 public abstract class AbstractRelationModel extends AbstractModel {
@@ -18,6 +19,15 @@ public abstract class AbstractRelationModel extends AbstractModel {
     public AbstractRelationModel(Relation pRelation, Perspective pers) {
         super(pers);
 
-        this.relation = pRelation;
+        relation = pRelation;
+    }
+
+    @Override
+    public void rebuildWorldObject(OsmPrimitive primitive, Perspective perspective) {
+        // clean up everything
+        relation = (Relation) primitive;
+        this.perspective = perspective;
+
+        buildWorldObject();
     }
 }
