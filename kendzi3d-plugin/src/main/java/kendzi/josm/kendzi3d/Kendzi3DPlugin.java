@@ -34,7 +34,6 @@ import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrameOld;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
@@ -58,7 +57,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     /**
      * Frame with gl canvas.
      */
-    private Kendzi3dGLFrameOld ogl;
+    private Kendzi3dGlFrame singleWindow;
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
@@ -85,7 +84,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         refreshMenu(injector);
 
         if (!Boolean.FALSE.equals(Main.pref.getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, false))) {
-            openJOGLWindow(injector);
+            openKendzi3dWindow(injector);
         }
     }
 
@@ -129,7 +128,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             public void actionPerformed(ActionEvent e) {
                 putValue("toolbar", "3dView_run");
 
-                openJOGLWindow(injector);
+                openKendzi3dWindow(injector);
 
             }
 
@@ -214,27 +213,27 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         }
     }
 
-    private void openJOGLWindow(Injector injector) {
+    private void openKendzi3dWindow(Injector injector) {
         try {
-            if (ogl == null || !ogl.isDisplayable()) {
-                // XXX
+            if (singleWindow == null || !singleWindow.isDisplayable()) {
+                // XXX to create instance before frame
                 injector.getInstance(EditorObjectsProducer.class);
 
-                Kendzi3dGlFrame frame2 = injector.getInstance(Kendzi3dGlFrame.class);
+                Kendzi3dGlFrame frame = injector.getInstance(Kendzi3dGlFrame.class);
 
-                frame2.initUi();
+                frame.initUi();
 
                 ImageIcon img = ImageProvider.get("stock_3d-effects24");
                 if (img != null) {
-
-                    frame2.setIconImage(img.getImage());
+                    frame.setIconImage(img.getImage());
                 }
 
-                frame2.setVisible(true);
-                // FIXME
-                // ogl = frame2;
+                frame.setVisible(true);
+
+                singleWindow = frame;
 
                 CameraLayer oglListener = injector.getInstance(CameraLayer.class);
+
                 initializeKendzi3dLayer(oglListener);
             }
 
