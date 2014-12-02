@@ -27,6 +27,7 @@ import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.library.BuildingElementsTextureManager;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.jogl.util.ColorUtil;
+import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.WorldObjectDebugDrawable;
@@ -62,10 +63,10 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing building model.
- * 
+ *
  * @author Tomasz Kedziora (Kendzi)
  */
-public class Building extends AbstractModel implements RebuildableWorldObject, WorldObjectDebugDrawable {
+public class Building extends AbstractModel implements RebuildableWorldObject, WorldObjectDebugDrawable, OsmPrimitiveWorldObject {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(Building.class);
@@ -103,7 +104,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
     /**
      * Constructor for building.
-     * 
+     *
      * @param primitive
      *            primitive describing building
      * @param perspective
@@ -264,8 +265,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
                                 if (getBuildingPart().getRoof() instanceof DormerRoofModel) {
                                     DormerRoofModel model = (DormerRoofModel) getBuildingPart().getRoof();
-                                    if (model.getRoofType() == null
-                                            || RoofTypeAliasEnum.FLAT.equals(model.getRoofType())) {
+                                    if (model.getRoofType() == null || RoofTypeAliasEnum.FLAT.equals(model.getRoofType())) {
 
                                         changeRoofShape = true;
                                         model.setRoofType(RoofTypeAliasEnum.GABLED);
@@ -445,8 +445,8 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -456,7 +456,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getSelection()
      */
     @Override
@@ -526,5 +526,10 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         gl.glPopMatrix();
 
         SelectionDrawUtil.drawSphereSelection(gl, this);
+    }
+
+    @Override
+    public PrimitiveId getPrimitiveId() {
+        return primitive;
     }
 }

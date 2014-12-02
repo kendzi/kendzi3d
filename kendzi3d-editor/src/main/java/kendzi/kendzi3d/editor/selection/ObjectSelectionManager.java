@@ -221,6 +221,50 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         return selectedEditor;
     }
 
+    public void select(SelectionCriteria criteria) {
+
+        if (criteria == null) {
+            return;
+        }
+
+        List<EditableObject> editableObjects = editableObjectProvider.getEditableObjects();
+        if (editableObjects == null) {
+            return;
+        }
+
+        List<Selection> selections = new ArrayList<Selection>();
+        for (EditableObject editableObject : editableObjects) {
+            if (criteria.match(editableObject)) {
+
+                selections.addAll(editableObject.getSelection());
+            }
+        }
+
+        for (Selection selection : selections) {
+            if (criteria.match(selection)) {
+
+                // single selection
+                boolean selectionChanged = lastSelection != selection;
+
+                if (selectionChanged) {
+                    if (selection != null) {
+                        LOG.debug("selected object: " + selection);
+                        // FIXME
+                        selection.onSelectEvent(new SelectEvent(true, -1, -1));
+                    }
+                    if (lastSelection != null) {
+                        LOG.debug("selected object: " + selection);
+                        // FIXME
+                        lastSelection.onSelectEvent(new SelectEvent(false, -1, -1));
+                    }
+                }
+                lastSelection = selection;
+                lastSelectRay = null;
+                return;
+            }
+        }
+    }
+
     @Override
     protected Selection select(int x, int y) {
 

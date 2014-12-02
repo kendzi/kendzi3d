@@ -20,6 +20,7 @@ import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import kendzi.josm.kendzi3d.data.producer.DataConsumersMonitor;
 import kendzi.josm.kendzi3d.data.producer.DataEventListener;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
+import kendzi.josm.kendzi3d.data.selection.SelectionSynchronizeManager;
 import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
@@ -235,5 +236,14 @@ public class Kendzi3dModule extends AbstractModule {
     @Singleton
     CameraMoveListener provideCameraMoveListener(SimpleMoveAnimator simpleMoveAnimator) {
         return new CameraMoveListener(simpleMoveAnimator);
+    }
+
+    @Provides
+    @Singleton
+    SelectionSynchronizeManager provideSelectionSynchronizeManager(ObjectSelectionManager objectSelectionManager) {
+        SelectionSynchronizeManager manager = new SelectionSynchronizeManager(objectSelectionManager);
+        manager.register();
+
+        return manager;
     }
 }
