@@ -46,8 +46,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.kendzi3d.editor.drawer.SelectionDrawUtil;
+import kendzi.kendzi3d.editor.selection.ModelSelection;
 import kendzi.kendzi3d.editor.selection.Selection;
-import kendzi.kendzi3d.editor.selection.SphereSelection;
 import kendzi.kendzi3d.editor.selection.editor.CachePoint3dProvider;
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
@@ -340,7 +340,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         final Bounds bounds = bf.toBounds();
         this.bounds = bounds;
 
-        return Arrays.asList((Selection) new SphereSelection(bounds.getCenter(), bounds.getRadius()) {
+        return Arrays.asList((Selection) new ModelSelection(bounds.getCenter(), bounds.getRadius()) {
 
             @Override
             public List<Editor> getEditors() {
@@ -355,6 +355,11 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
             @Override
             public double getRadius() {
                 return bounds.getRadius();
+            }
+
+            @Override
+            public Model getModel() {
+                return Building.this.getModel();
             }
         });
 
