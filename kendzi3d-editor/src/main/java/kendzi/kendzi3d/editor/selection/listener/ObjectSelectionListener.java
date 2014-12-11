@@ -14,11 +14,13 @@ import java.util.List;
 
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEditorEvent;
+import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 
 public abstract class ObjectSelectionListener extends MouseSelectionListener {
 
-	private final List<EditorChangeListener> editorChangeListeners = new LinkedList<EditorChangeListener>();
+    private final List<EditorChangeListener> editorChangeListeners = new LinkedList<EditorChangeListener>();
     private final List<SelectEditorListener> selectEditorListeners = new LinkedList<SelectEditorListener>();
+    private final List<SelectionChangeListener> selectionChangeListeners = new LinkedList<SelectionChangeListener>();
 
     public final void addEditorChangeListener(EditorChangeListener listener) {
         this.editorChangeListeners.add(listener);
@@ -38,7 +40,6 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
         public void onEditorChange(EditorChangeEvent event);
     }
 
-
     public final void addSelectEditorListener(SelectEditorListener listener) {
         this.selectEditorListeners.add(listener);
     }
@@ -53,8 +54,26 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
         }
     }
 
+    public final void addSelectionChangeListener(SelectionChangeListener listener) {
+        this.selectionChangeListeners.add(listener);
+    }
+
+    public final void removeSelectionChangeListener(SelectionChangeListener listener) {
+        this.selectionChangeListeners.remove(listener);
+    }
+
+    protected void raiseSelectionChange(SelectionChangeEvent event) {
+        for (SelectionChangeListener listener : this.selectionChangeListeners) {
+            listener.onSelectionChange(event);
+        }
+    }
+
     public interface SelectEditorListener extends EventListener {
         public void onSelectEditor(SelectEditorEvent args);
+    }
+
+    public interface SelectionChangeListener extends EventListener {
+        public void onSelectionChange(SelectionChangeEvent args);
     }
 
 }

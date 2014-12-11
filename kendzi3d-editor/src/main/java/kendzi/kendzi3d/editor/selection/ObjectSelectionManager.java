@@ -21,6 +21,7 @@ import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEditorEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEvent;
+import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
@@ -240,6 +241,12 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             }
         }
 
+        if (selections.isEmpty()) {
+            setLastSelection(null);
+            lastSelectRay = null;
+            return;
+        }
+
         for (Selection selection : selections) {
             if (criteria.match(selection)) {
 
@@ -258,7 +265,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
                         lastSelection.onSelectEvent(new SelectEvent(false, -1, -1));
                     }
                 }
-                lastSelection = selection;
+                setLastSelection(selection);
                 lastSelectRay = null;
                 return;
             }
@@ -292,7 +299,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         }
 
         lastSelectRay = selectRay;
-        lastSelection = selection;
+        setLastSelection(selection);
 
         return selection;
     }
@@ -330,6 +337,12 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
      */
     public Editor getLastHighlightedEditor() {
         return lastHighlightedEditor;
+    }
+
+    private void setLastSelection(Selection selection) {
+        raiseSelectionChange(new SelectionChangeEvent(selection));
+
+        lastSelection = selection;
     }
 
 }
