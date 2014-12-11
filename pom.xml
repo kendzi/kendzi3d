@@ -29,7 +29,7 @@
 		<vecmath.version>1.3.1</vecmath.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.11</junit.version>
-		<kendzi.math.version>0.0.10</kendzi.math.version>
+		<kendzi.math.version>0.0.11</kendzi.math.version>
 		<inject.version>1</inject.version>
 	</properties>
 	
@@ -73,9 +73,6 @@
 		<module>kendzi3d-buildings</module>
 		<module>kendzi3d-buildings-josm</module>
 
-		<module>kendzi3d-collada-bindings</module>
-		<module>kendzi3d-collada-exporter</module>
-
 		<module>kendzi3d-expressions</module>
 
 		<module>kendzi3d-jogl-util</module>
@@ -90,13 +87,16 @@
 		<module>kendzi3d-jogl-textures-library</module>
 		<module>kendzi3d-jogl-textures-library-bindings</module>
 		<module>kendzi3d-jogl-textures-library-res</module>
+		
+		<module>kendzi3d-collada-bindings</module>
+		<module>kendzi3d-collada-exporter</module>
 
 		<module>kendzi3d-models-library</module>
 		<module>kendzi3d-models-library-bindings</module>
 		<module>kendzi3d-models-library-layer</module>
 		<module>kendzi3d-models-library-josm</module>
 		<module>kendzi3d-models-library-res</module>
-		
+
 		<module>kendzi3d-resource-manager</module>
 		<module>kendzi3d-light</module>
 
