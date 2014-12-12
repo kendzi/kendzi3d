@@ -15,12 +15,12 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model</artifactId>
-			<version>1.0.183</version>
+			<version>1.0.184-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.183</version>
+			<version>1.0.184-SNAPSHOT</version>
 		</dependency>
 
 		 <dependency>
@@ -31,12 +31,12 @@
         <dependency>
         	<groupId>kendzi</groupId>
         	<artifactId>kendzi-util</artifactId>
-        	<version>1.0.183</version>
+        	<version>1.0.184-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>kendzi.kendzi3d</groupId>
         	<artifactId>kendzi3d-editor</artifactId>
-        	<version>1.0.183</version>
+        	<version>1.0.184-SNAPSHOT</version>
         </dependency>
 		<dependency>
 			<groupId>org.openstreetmap</groupId>
@@ -47,7 +47,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.183</version>
+		<version>1.0.184-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
