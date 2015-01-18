@@ -8,6 +8,7 @@ import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SelectionCriteria;
 import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
+import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
 
 import org.openstreetmap.josm.Main;
@@ -51,7 +52,7 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
 
         SelectionCriteria criteria = new PrimitiveSelection(primitives);
 
-        objectSelectionManager.select(criteria);
+        objectSelectionManager.select(criteria, SelectionEventSource.EXTERNAL);
     }
 
     private boolean isOriginIn3dView(Collection<? extends OsmPrimitive> primitives) {
@@ -98,14 +99,21 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
     public void onSelectionChange(SelectionChangeEvent event) {
         Selection selection = event.getSelection();
 
+        SelectionEventSource eventSource = event.getSelectionSource();
+
+        if (SelectionEventSource.EXTERNAL.equals(eventSource)) {
+            // selection comes from external source like JOSM, should be ignored
+            return;
+        }
+
         if (selection == null) {
             requestJosmSelectionChange(null);
             return;
         }
 
-        Object selectionSource = selection.getSource();
-        if (selectionSource instanceof OsmPrimitiveWorldObject) {
-            OsmPrimitiveWorldObject worldObject = (OsmPrimitiveWorldObject) selectionSource;
+        Object sourceOfSelection = selection.getSource();
+        if (sourceOfSelection instanceof OsmPrimitiveWorldObject) {
+            OsmPrimitiveWorldObject worldObject = (OsmPrimitiveWorldObject) sourceOfSelection;
 
             PrimitiveId primitiveId = worldObject.getPrimitiveId();
 

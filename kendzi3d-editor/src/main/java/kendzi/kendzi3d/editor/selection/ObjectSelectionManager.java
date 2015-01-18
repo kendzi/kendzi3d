@@ -22,6 +22,7 @@ import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEditorEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
+import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
@@ -222,7 +223,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         return selectedEditor;
     }
 
-    public void select(SelectionCriteria criteria) {
+    public void select(SelectionCriteria criteria, SelectionEventSource selectionSource) {
 
         if (criteria == null) {
             return;
@@ -242,7 +243,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         }
 
         if (selections.isEmpty()) {
-            setLastSelection(null);
+            setLastSelection(null, selectionSource);
             lastSelectRay = null;
             return;
         }
@@ -265,7 +266,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
                         lastSelection.onSelectEvent(new SelectEvent(false, -1, -1));
                     }
                 }
-                setLastSelection(selection);
+                setLastSelection(selection, selectionSource);
                 lastSelectRay = null;
                 return;
             }
@@ -298,8 +299,8 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             }
         }
 
+        setLastSelection(selection, SelectionEventSource.INTERNAL);
         lastSelectRay = selectRay;
-        setLastSelection(selection);
 
         return selection;
     }
@@ -339,8 +340,9 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         return lastHighlightedEditor;
     }
 
-    private void setLastSelection(Selection selection) {
-        raiseSelectionChange(new SelectionChangeEvent(selection));
+    private void setLastSelection(Selection selection, SelectionEventSource selectionSource) {
+
+        raiseSelectionChange(new SelectionChangeEvent(selection, selectionSource));
 
         lastSelection = selection;
     }
