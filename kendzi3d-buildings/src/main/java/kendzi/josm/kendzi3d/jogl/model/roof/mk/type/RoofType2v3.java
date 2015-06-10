@@ -28,7 +28,7 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 
 /**
  * Roof type 2.3.
@@ -65,8 +65,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
 
         boolean skipLeft = getSkipLeft();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
-                l2, l3, skipLeft, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
+                h2, l1, l2, l3, skipLeft, conf.getRoofTextureData());
 
     }
 
@@ -172,9 +172,11 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
             rightHeight = planeTop.calcYOfPlane(rightTop.x, -rightTop.y);
         }
 
-        Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y), new Vector3d(-(h1 - leftHeight), l2, 0));
+        Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y), new Vector3d(-(h1 - leftHeight),
+                l2, 0));
 
-        Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y), new Vector3d(-(rightHeight - h1), l2, 0));
+        Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y), new Vector3d(
+                -(rightHeight - h1), l2, 0));
 
         // //******************
         List<Point2d> border = new ArrayList<Point2d>();
@@ -191,12 +193,14 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
         MultiPolygonList2d borderMultiPolygon = new MultiPolygonList2d(borderPolygon);
 
-        MultiPolygonList2d mpb = PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, rightBottom, rightCenter,
+        MultiPolygonList2d mpb = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightBottom, rightCenter,
                 leftCenter, leftBottom);
-        MultiPolygonList2d mpt = PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftTop, leftCenter, rightCenter,
-                rightTop);
-        MultiPolygonList2d mpl = PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, leftBottom, leftCenter, leftTop);
-        MultiPolygonList2d mpr = PolygonSplitUtil.intersectionOfFrontPart(borderMultiPolygon, rightTop, rightCenter, rightBottom);
+        MultiPolygonList2d mpt = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftTop, leftCenter,
+                rightCenter, rightTop);
+        MultiPolygonList2d mpl = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom, leftCenter,
+                leftTop);
+        MultiPolygonList2d mpr = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightTop, rightCenter,
+                rightBottom);
 
         Vector3d roofLeftLineVector = new Vector3d(0, 0, recWidth);
 
@@ -215,8 +219,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         List<Point2d> borderSplit = RoofTypeUtil.splitBorder(borderPolygon, middleLine, rightTopLine, rightBottomLine,
                 leftTopLine, leftBottomLine);
 
-        List<Double> borderHeights = calcHeightList(borderSplit, middleLine, rightTopLine, rightBottomLine, leftTopLine,
-                leftBottomLine, planeLeft, planeRight, planeTop, planeBottom);
+        List<Double> borderHeights = calcHeightList(borderSplit, middleLine, rightTopLine, rightBottomLine,
+                leftTopLine, leftBottomLine, planeLeft, planeRight, planeTop, planeBottom);
 
         RoofTypeUtil.makeRoofBorderMesh(borderSplit, borderHeights,
 
@@ -233,6 +237,11 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         rto.setRoofHooksSpaces(rhs);
 
         return rto;
+    }
+
+    public static MultiPolygonList2d intersectionOfLeftSideOfMultipleCuts(MultiPolygonList2d polygons, Point2d... lines) {
+        return PolygonSplitHelper.intersectionOfLeftSideOfMultipleCuts(polygons,
+                PolygonSplitHelper.polygonalChaniToLineArray(lines));
     }
 
     /**
@@ -270,8 +279,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
         for (Point2d point : pSplitBorder) {
 
-            double height = calcHeight(point, pMiddleLine, pRightTopLine, pRightBottomLine, pLeftTopLine, pLeftBottomLine,
-                    pPlaneLeft, pPlaneRight, pPlaneTop, pPlaneBottom);
+            double height = calcHeight(point, pMiddleLine, pRightTopLine, pRightBottomLine, pLeftTopLine,
+                    pLeftBottomLine, pPlaneLeft, pPlaneRight, pPlaneTop, pPlaneBottom);
 
             borderHeights.add(height);
         }

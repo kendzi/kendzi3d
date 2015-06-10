@@ -14,7 +14,7 @@ import javax.vecmath.Point2d;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.SegmentHeight;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
-import kendzi.math.geometry.polygon.split.PolygonSplit;
+import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
 
 import org.apache.log4j.Logger;
 
@@ -32,12 +32,12 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
     /**
      * Lines splitting 2d surface on smaller parts.
      */
-    private LinePoints2d[] lines;
+    private final LinePoints2d[] lines;
 
     /**
      * Planes assigned for smaller parts.
      */
-    private Plane3d[] planes;
+    private final Plane3d[] planes;
 
     /**
      * @param lines
@@ -57,7 +57,7 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
         List<Point2d> splitPolygon = Arrays.asList(p1, p2);
 
         for (LinePoints2d line : lines) {
-            splitPolygon = PolygonSplit.splitLineSegmentsOnLineBBB(line, splitPolygon);
+            splitPolygon = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(splitPolygon, line);
         }
 
         List<SegmentHeight> ret = new ArrayList<SegmentHeight>(splitPolygon.size() - 1);

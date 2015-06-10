@@ -26,8 +26,8 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygons;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
 
 /**
  * Roof type 3.0.
@@ -45,10 +45,11 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
 
         Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, l1, 60);
 
-        Double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight() - l1, 10);
+        Double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0,
+                conf.getRecHeight() - l1, 10);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
-                conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
+                h2, l1, conf.getRoofTextureData());
 
     }
 
@@ -89,10 +90,11 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-        SplitPolygons middleSplit = PolygonSplitUtil.split(borderPolygon, mLine);
+        MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(
+                new MultiPolygonList2d(borderPolygon), mLine);
 
-        MultiPolygonList2d topMP = middleSplit.getTopMultiPolygons();
-        MultiPolygonList2d bottomMP = middleSplit.getBottomMultiPolygons();
+        MultiPolygonList2d topMP = middleSplit.getLeftMultiPolygon();
+        MultiPolygonList2d bottomMP = middleSplit.getRightMultiPolygon();
 
         Point3d planeLeftPoint = new Point3d(leftMiddlePoint.x, height, -leftMiddlePoint.y);
 
@@ -125,15 +127,16 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
 
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
-        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(pRectangleContur, new PolygonPlane(bottomMP, planeBottom), null,
-                new PolygonPlane(topMP, planeTop), null);
+        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(pRectangleContur,
+                new PolygonPlane(bottomMP, planeBottom), null, new PolygonPlane(topMP, planeTop), null);
 
         rto.setRoofHooksSpaces(rhs);
 
         return rto;
     }
 
-    private List<Double> calcHeightList(List<Point2d> pSplitBorder, LinePoints2d mLine, Plane3d planeTop, Plane3d planeBottom) {
+    private List<Double> calcHeightList(List<Point2d> pSplitBorder, LinePoints2d mLine, Plane3d planeTop,
+            Plane3d planeBottom) {
 
         List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
         for (Point2d point : pSplitBorder) {

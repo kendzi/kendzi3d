@@ -22,7 +22,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
-import kendzi.math.geometry.polygon.split.PolygonSplit;
+import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
 
 import org.apache.log4j.Logger;
 
@@ -60,7 +60,8 @@ public class RoofTypeUtil {
     @Deprecated
     public static void makeRoofBorderMesh(
 
-    List<Point2d> borderSplit, double minHeight, List<Double> borderHeights, MeshFactory pMeshBorder, TextureData facadeTexture) {
+    List<Point2d> borderSplit, double minHeight, List<Double> borderHeights, MeshFactory pMeshBorder,
+            TextureData facadeTexture) {
 
         List<Double> borderMinHeights = new ArrayList<Double>(borderHeights.size());
         Double min = new Double(minHeight);
@@ -81,8 +82,8 @@ public class RoofTypeUtil {
      *            border mesh
      * @param wallTexture
      */
-    public static void makeRoofBorderMesh(List<Point2d> wallPolygon, List<Double> wallHeights, List<Double> borderHeights,
-            MeshFactory wallMesh, TextureData wallTexture) {
+    public static void makeRoofBorderMesh(List<Point2d> wallPolygon, List<Double> wallHeights,
+            List<Double> borderHeights, MeshFactory wallMesh, TextureData wallTexture) {
 
         boolean isCounterClockwise = !PolygonUtil.isClockwisePolygon(wallPolygon);
 
@@ -192,7 +193,7 @@ public class RoofTypeUtil {
         List<Point2d> splitPolygon = new ArrayList<Point2d>(pPolygon.getPoints());
 
         for (LinePoints2d line : pLines) {
-            splitPolygon = PolygonSplit.splitLineSegmentsOnLine(line, splitPolygon);
+            splitPolygon = EnrichPolygonalChainUtil.enrichClosedPolygonalChainByLineCrossing(splitPolygon, line);
         }
 
         return splitPolygon;
