@@ -55,7 +55,7 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 
 /**
  * Builder for 3d model of building.
@@ -642,7 +642,7 @@ public class BuildingBuilder {
             Point2d rtp = new Point2d(she.getWidth() / 2.0, she.getMaxHeight());
             Point2d mtp = new Point2d(0, she.getMaxHeight());
 
-            mPoly = PolygonSplitUtil.unionOfFrontPart(mPoly, new LinePoints2d(rtp, rbp), new LinePoints2d(mtp, rtp),
+            mPoly = PolygonSplitHelper.unionOfLeftSideOfMultipleCuts(mPoly, new LinePoints2d(rtp, rbp), new LinePoints2d(mtp, rtp),
                     new LinePoints2d(rbp, mbp));
 
             TextureData td = findWindowTextureData(be, pTextureMenager);
@@ -685,7 +685,7 @@ public class BuildingBuilder {
             Point2d mtp = new Point2d(nodeDisplacement, she.getMaxHeight());
             Point2d ltp = new Point2d(nodeDisplacement - she.getWidth() / 2.0, she.getMaxHeight());
 
-            mPoly = PolygonSplitUtil.unionOfFrontPart(mPoly, new LinePoints2d(lbp, ltp), new LinePoints2d(ltp, mtp),
+            mPoly = PolygonSplitHelper.unionOfLeftSideOfMultipleCuts(mPoly, new LinePoints2d(lbp, ltp), new LinePoints2d(ltp, mtp),
                     new LinePoints2d(mbp, lbp));
 
             TextureData td = findWindowTextureData(be, pTextureMenager);

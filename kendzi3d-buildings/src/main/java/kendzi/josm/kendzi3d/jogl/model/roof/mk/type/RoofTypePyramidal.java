@@ -30,7 +30,7 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 
 /**
  * Roof type Pyramidal.
@@ -91,7 +91,8 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mp.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture,
+                    textureOffset[i], 0);
 
         }
 
@@ -199,7 +200,8 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      * @param middlePoint
      * @return
      */
-    private MultiPolygonList2d[] createMP(List<Point2d> outlineConvexHull, List<Point2d> outlineList, Point2d middlePoint) {
+    private MultiPolygonList2d[] createMP(List<Point2d> outlineConvexHull, List<Point2d> outlineList,
+            Point2d middlePoint) {
 
         MultiPolygonList2d outlineMultiPolygon = new MultiPolygonList2d(new PolygonList2d(outlineList));
 
@@ -210,9 +212,14 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
             Point2d p1 = outlineConvexHull.get(i);
             Point2d p2 = outlineConvexHull.get((i + 1) % size);
 
-            ret[i] = PolygonSplitUtil.intersectionOfFrontPart(outlineMultiPolygon, p2, middlePoint, p1);
+            ret[i] = intersectionOfLeftSideOfMultipleCuts(outlineMultiPolygon, p2, middlePoint, p1);
         }
 
         return ret;
+    }
+
+    public static MultiPolygonList2d intersectionOfLeftSideOfMultipleCuts(MultiPolygonList2d polygons, Point2d... lines) {
+        return PolygonSplitHelper.intersectionOfLeftSideOfMultipleCuts(polygons,
+                PolygonSplitHelper.polygonalChaniToLineArray(lines));
     }
 }

@@ -28,8 +28,8 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygons;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
 
 /**
  * Roof type 5.2.
@@ -112,7 +112,8 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mps.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0,
+                    offsets[i]);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
@@ -159,10 +160,10 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         for (int i = 1; i < lines.length; i++) {
 
-            SplitPolygons middleSplit = PolygonSplitUtil.split(topMP, lines[i]);
+            MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(topMP, lines[i]);
 
-            topMP = middleSplit.getTopMultiPolygons();
-            mps[i - 1] = middleSplit.getBottomMultiPolygons();
+            topMP = middleSplit.getLeftMultiPolygon();
+            mps[i - 1] = middleSplit.getRightMultiPolygon();
         }
 
         return mps;

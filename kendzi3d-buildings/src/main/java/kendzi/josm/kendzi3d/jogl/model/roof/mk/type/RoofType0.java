@@ -25,8 +25,8 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.PolygonSplitUtil;
-import kendzi.math.geometry.polygon.split.SplitPolygons;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
+import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
 
 /**
  * Roof type 0.X.
@@ -76,15 +76,15 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
         Plane3d planeCenter = new Plane3d(planeRightCenterPoint, nt);
 
-        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
+        List<Point2d> borderList = buildingPolygon.getOuter().getPoints();
         List<List<Point2d>> innerLists = innerLists(buildingPolygon);
 
         MeshFactoryUtil.addPolygonWithHolesInY(buildingPolygon, h1, meshRoof, roofTexture, 0, 0, roofTopLineVector);
 
-        List<Double> borderHeights = calcHeightList(pBorderList, h1);
+        List<Double> borderHeights = calcHeightList(borderList, h1);
 
         if (h1 > 0) {
-            RoofTypeUtil.makeRoofBorderMesh(pBorderList, borderHeights, meshBorder, facadeTexture);
+            RoofTypeUtil.makeRoofBorderMesh(borderList, borderHeights, meshBorder, facadeTexture);
 
             for (List<Point2d> inner : innerLists) {
                 // for inners
@@ -100,17 +100,18 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             LinePoints2d bLine = new LinePoints2d(new Point2d(0, l1), new Point2d(pRecWidth, l1));
 
-            SplitPolygons middleSplit = PolygonSplitUtil.split(new PolygonList2d(pBorderList), bLine);
+            MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(new MultiPolygonList2d(
+                    new PolygonList2d(borderList)), bLine);
 
-            MultiPolygonList2d centerMP = middleSplit.getTopMultiPolygons();
+            MultiPolygonList2d centerMP = middleSplit.getLeftMultiPolygon();
 
             if (type >= 2) {
                 LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2,
                         pRecHeight));
 
-                SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, rLine);
+                MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, rLine);
 
-                centerMP = topSplit.getTopMultiPolygons();
+                centerMP = topSplit.getLeftMultiPolygon();
 
             }
 
@@ -119,9 +120,9 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
                 LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0,
                         pRecHeight - l3));
 
-                SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, tLine);
+                MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, tLine);
 
-                centerMP = topSplit.getTopMultiPolygons();
+                centerMP = topSplit.getLeftMultiPolygon();
 
             }
 
@@ -129,9 +130,9 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
                 LinePoints2d tLine = new LinePoints2d(new Point2d(l4, pRecHeight), new Point2d(l4, 0));
 
-                SplitPolygons topSplit = PolygonSplitUtil.split(centerMP, tLine);
+                MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, tLine);
 
-                centerMP = topSplit.getTopMultiPolygons();
+                centerMP = topSplit.getLeftMultiPolygon();
 
             }
 
