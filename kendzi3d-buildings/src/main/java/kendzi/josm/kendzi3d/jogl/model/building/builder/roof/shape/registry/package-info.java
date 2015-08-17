@@ -10,4 +10,4 @@
  *
  * @author Tomasz Kędziora (Kendzi)
  */
-package kendzi.josm.kendzi3d.jogl.model.building.builder.roof.registry;
+package kendzi.josm.kendzi3d.jogl.model.building.builder.roof.shape.registry;

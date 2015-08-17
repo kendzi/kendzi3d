@@ -11,12 +11,9 @@ import java.util.List;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
-import kendzi.jogl.model.factory.FaceFactory;
-import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
-import kendzi.jogl.model.geometry.TextCoord;
+import kendzi.jogl.model.factory.StripMeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
 import kendzi.math.geometry.line.LinePoints2d;
@@ -32,167 +29,65 @@ public class RoofTypeUtil {
     private static final Logger log = Logger.getLogger(RoofTypeUtil.class);
 
     /**
-     * Make roof border mesh. It is wall under roof.
-     *
-     * @param borderSplit
-     * @param borderHeights
-     * @param pMeshBorder
-     *            border mesh
-     * @param facadeTexture
+     * Make mesh of vertical wall e.g. It is wall under the roof. The wall base
+     * is on zero height.
+     * 
+     * 
+     * @param stripPoints
+     *            the strip points
+     * @param stripPointHeights
+     *            the strip points heights
+     * @param mesh
+     *            the mesh
+     * @param textureData
+     *            the texture data
      */
-    public static void makeRoofBorderMesh(
+    public static void makeRoofBorderMesh(List<Point2d> stripPoints, List<Double> stripPointHeights, MeshFactory mesh,
+            TextureData textureData) {
 
-    List<Point2d> borderSplit, List<Double> borderHeights, MeshFactory pMeshBorder, TextureData facadeTexture) {
-
-        makeRoofBorderMesh(borderSplit, 0, borderHeights, pMeshBorder, facadeTexture);
+        makeRoofBorderMesh(stripPoints, 0, stripPointHeights, mesh, textureData);
     }
 
     /**
-     * Make roof border mesh. It is wall under roof.
+     * Make mesh of vertical wall e.g. It is wall under the roof.
      *
-     * @param borderSplit
+     * @param stripPoints
+     *            the strip points
      * @param minHeight
-     * @param borderHeights
-     * @param pMeshBorder
-     *            border mesh
-     * @param facadeTexture
+     *            the strip minimal height
+     * @param stripPointHeights
+     *            the strip points heights
+     * @param mesh
+     *            the mesh
+     * @param textureData
+     *            the texture data
      */
-    @Deprecated
-    public static void makeRoofBorderMesh(
+    public static void makeRoofBorderMesh(List<Point2d> stripPoints, double minHeight, List<Double> stripPointHeights,
+            MeshFactory mesh, TextureData textureData) {
 
-    List<Point2d> borderSplit, double minHeight, List<Double> borderHeights, MeshFactory pMeshBorder,
-            TextureData facadeTexture) {
-
-        List<Double> borderMinHeights = new ArrayList<Double>(borderHeights.size());
-        Double min = new Double(minHeight);
-        for (int i = 0; i < borderHeights.size(); i++) {
-            // XXX do it without list!
-            borderMinHeights.add(min);
-        }
-        makeRoofBorderMesh(borderSplit, borderMinHeights, borderHeights, pMeshBorder, facadeTexture);
-    }
-
-    /**
-     * Make roof border mesh. It is wall under roof.
-     *
-     * @param wallPolygon
-     * @param wallHeights
-     * @param borderHeights
-     * @param wallMesh
-     *            border mesh
-     * @param wallTexture
-     */
-    public static void makeRoofBorderMesh(List<Point2d> wallPolygon, List<Double> wallHeights,
-            List<Double> borderHeights, MeshFactory wallMesh, TextureData wallTexture) {
-
-        boolean isCounterClockwise = !PolygonUtil.isClockwisePolygon(wallPolygon);
-
-        List<Double> heights = borderHeights;
-        List<Double> minHeights = wallHeights;
-
-        List<Point2d> pBorderExtanded = wallPolygon;
-
-        Integer[] bottomPointsIndex = new Integer[pBorderExtanded.size()];
-        Integer[] topPointsIndex = new Integer[pBorderExtanded.size()];
-
-        FaceFactory face = wallMesh.addFace(FaceType.TRIANGLES);
-
-        double uLast = 0;
-
-        for (int i = 0; i < pBorderExtanded.size(); i++) {
-            int index1 = i;
-            int index2 = (i + 1) % pBorderExtanded.size();
-
-            Point2d point1 = pBorderExtanded.get(index1);
-            Point2d point2 = pBorderExtanded.get(index2);
-
-            double height1 = heights.get(index1);
-            double height2 = heights.get(index2);
-
-            double minHeight1 = minHeights.get(index1);
-            double minHeight2 = minHeights.get(index2);
-
-            int point1HightIndex = cachePointIndex(point1, index1, height1, topPointsIndex, wallMesh);
-            int point2HightIndex = cachePointIndex(point2, index2, height2, topPointsIndex, wallMesh);
-
-            int point1BottomIndex = cachePointIndex(point1, index1, minHeight1, bottomPointsIndex, wallMesh);
-            int point2BottomIndex = cachePointIndex(point2, index2, minHeight2, bottomPointsIndex, wallMesh);
-
-            Vector3d n = new Vector3d(-(point2.y - point1.y), 0, -(point2.x - point1.x));
-            n.normalize();
-
-            if (isCounterClockwise) {
-                n.negate();
-            }
-
-            int normalIndex = wallMesh.addNormal(n);
-
-            double uBegin = uLast;
-            double uEnd = uLast + point1.distance(point2) / wallTexture.getWidth();
-            uLast = uEnd;
-
-            int tc_0_0 = wallMesh.addTextCoord(new TextCoord(uBegin, minHeight1 / wallTexture.getHeight()));
-            int tc_0_v = wallMesh.addTextCoord(new TextCoord(uBegin, height1 / wallTexture.getHeight()));
-            int tc_u_0 = wallMesh.addTextCoord(new TextCoord(uEnd, minHeight2 / wallTexture.getHeight()));
-            int tc_u_v = wallMesh.addTextCoord(new TextCoord(uEnd, height2 / wallTexture.getHeight()));
-
-            if (height1 > 0) {
-                face.addVertIndex(point1HightIndex);
-                face.addVertIndex(point1BottomIndex);
-                face.addVertIndex(point2BottomIndex);
-
-                face.addNormalIndex(normalIndex);
-                face.addNormalIndex(normalIndex);
-                face.addNormalIndex(normalIndex);
-
-                face.addCoordIndex(tc_0_v);
-                face.addCoordIndex(tc_0_0);
-                face.addCoordIndex(tc_u_0);
-            }
-
-            if (height2 > 0) {
-                face.addVertIndex(point1HightIndex);
-                face.addVertIndex(point2BottomIndex);
-                face.addVertIndex(point2HightIndex);
-
-                face.addNormalIndex(normalIndex);
-                face.addNormalIndex(normalIndex);
-                face.addNormalIndex(normalIndex);
-
-                face.addCoordIndex(tc_0_v);
-                face.addCoordIndex(tc_u_0);
-                face.addCoordIndex(tc_u_v);
-            }
-
-        }
-    }
-
-    private static int cachePointIndex(Point2d pPoint, int pPointIndex, double pHeight, Integer[] pPointsIndexCache,
-            MeshFactory pMeshBorder) {
-
-        if (pPointsIndexCache[pPointIndex] == null) {
-            int p1i = pMeshBorder.addVertex(new Point3d(pPoint.x, pHeight, -pPoint.y));
-            pPointsIndexCache[pPointIndex] = p1i;
-        }
-
-        int point2BottomIndex = pPointsIndexCache[pPointIndex];
-        return point2BottomIndex;
+        StripMeshFactoryUtil.verticalStripMesh(stripPoints, //
+                new StripMeshFactoryUtil.ConstHeightProvider(minHeight),//
+                new StripMeshFactoryUtil.ListHeightProvider(stripPointHeights), //
+                mesh, //
+                textureData, //
+                true, //
+                !PolygonUtil.isClockwisePolygon(stripPoints));
     }
 
     /**
      * Splits polygon by lines. Adds extra points in crossing places.
      *
-     * @param pPolygon
+     * @param polygon
      *            polygon to split by lines
-     * @param pLines
+     * @param lines
      *            lines to split polygon
      * @return polygon with extra points on crossing places
      */
-    public static List<Point2d> splitBorder(PolygonList2d pPolygon, LinePoints2d... pLines) {
+    public static List<Point2d> splitBorder(PolygonList2d polygon, LinePoints2d... lines) {
 
-        List<Point2d> splitPolygon = new ArrayList<Point2d>(pPolygon.getPoints());
+        List<Point2d> splitPolygon = new ArrayList<Point2d>(polygon.getPoints());
 
-        for (LinePoints2d line : pLines) {
+        for (LinePoints2d line : lines) {
             splitPolygon = EnrichPolygonalChainUtil.enrichClosedPolygonalChainByLineCrossing(splitPolygon, line);
         }
 
@@ -204,34 +99,50 @@ public class RoofTypeUtil {
      * gutters. Walls are generated from building_max_height - roof_height to
      * building_max_height. This code will be removed in future.
      *
-     * @param pOutline
-     * @param pHeightCalculator
+     * @param wallPoints
+     *            the wall points
+     * @param heightCalculator
+     *            the maximal height of wall points
      * @param minHeight
-     * @param pWallMesh
-     * @param pFacadeTextureData
+     *            the minimal height of wall points
+     * @param mesh
+     *            the mesh
+     * @param textureData
+     *            the texture data
      */
-    @Deprecated
-    public static void makeWallsFromHeightCalculator(List<Point2d> pOutline, HeightCalculator pHeightCalculator,
-            double minHeight, MeshFactory pWallMesh, TextureData pFacadeTextureData) {
-        List<Point2d> borderSplit = new ArrayList<Point2d>();
-        List<Double> borderHeights = new ArrayList<Double>();
-        {
-            // This is only temporary, border generation code will be moved
-            for (int i = 0; i < pOutline.size(); i++) {
-                Point2d p1 = pOutline.get(i);
-                Point2d p2 = pOutline.get((i + 1) % pOutline.size());
+    public static void makeWallsFromHeightCalculator(List<Point2d> wallPoints, HeightCalculator heightCalculator,
+            double minHeight, MeshFactory mesh, TextureData textureData) {
 
-                List<SegmentHeight> height2 = pHeightCalculator.height(p1, p2);
+        boolean isClockwisePolygon = !PolygonUtil.isClockwisePolygon(wallPoints);
 
-                for (int j = 0; j < height2.size(); j++) {
-                    borderSplit.add(height2.get(j).getBegin());
-                    borderHeights.add(height2.get(j).getBeginHeight());
-                }
+        for (int i = 0; i < wallPoints.size(); i++) {
+            Point2d p1 = wallPoints.get(i);
+            Point2d p2 = wallPoints.get((i + 1) % wallPoints.size());
 
+            List<SegmentHeight> height2 = heightCalculator.height(p1, p2);
+
+            for (int j = 0; j < height2.size(); j++) {
+
+                List<Point2d> segment = new ArrayList<Point2d>(2);
+                List<Double> segmentHeights = new ArrayList<Double>(2);
+
+                SegmentHeight segmentHeight = height2.get(j);
+
+                segment.add(segmentHeight.getBegin());
+                segment.add(segmentHeight.getEnd());
+
+                segmentHeights.add(segmentHeight.getBeginHeight());
+                segmentHeights.add(segmentHeight.getEndHeight());
+
+                StripMeshFactoryUtil.verticalStripMesh(segment, //
+                        new StripMeshFactoryUtil.ConstHeightProvider(minHeight),//
+                        new StripMeshFactoryUtil.ListHeightProvider(segmentHeights), //
+                        mesh, //
+                        textureData, //
+                        false, //
+                        isClockwisePolygon);
             }
         }
-
-        RoofTypeUtil.makeRoofBorderMesh(borderSplit, minHeight, borderHeights, pWallMesh, pFacadeTextureData);
     }
 
     /**
@@ -240,20 +151,20 @@ public class RoofTypeUtil {
      *
      * XXX this should by changed!
      *
-     * @param pPolygon
+     * @param polygon
      *            list of points
      * @param height
      *            height
      * @return minimal rectangle
      */
-    public static List<Point3d> findRectangle(List<Point2d> pPolygon, double height) {
+    public static List<Point3d> findRectangle(List<Point2d> polygon, double height) {
 
         double minx = Double.MAX_VALUE;
         double miny = Double.MAX_VALUE;
         double maxx = -Double.MAX_VALUE;
         double maxy = -Double.MAX_VALUE;
 
-        for (Point2d p : pPolygon) {
+        for (Point2d p : polygon) {
             if (minx > p.x) {
                 minx = p.x;
             }

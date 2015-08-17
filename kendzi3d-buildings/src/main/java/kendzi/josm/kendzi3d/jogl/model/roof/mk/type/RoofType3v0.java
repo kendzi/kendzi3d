@@ -6,7 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +20,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.MultiSplitHeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -54,11 +55,12 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
     }
 
     /**
-     * @param pBorderList
+     * @param buildingPolygon
      * @param pRecHeight
      * @param pRecWidth
      * @param pRectangleContur
      * @param h1
+     * @param h2
      * @param l1
      * @param roofTextureData
      * @return
@@ -71,14 +73,13 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         Point2d rightMiddlePoint = new Point2d(pRecWidth, l1);
 
         Point2d leftMiddlePoint = new Point2d(0, l1);
 
-        LinePoints2d mLine = new LinePoints2d(leftMiddlePoint, rightMiddlePoint);
+        final LinePoints2d mLine = new LinePoints2d(leftMiddlePoint, rightMiddlePoint);
 
         Vector3d nt = new Vector3d(0, pRecHeight - l1, -h2);
         nt.normalize();
@@ -100,8 +101,8 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
 
         Point3d planeRightPoint = new Point3d(rightMiddlePoint.x, height, -rightMiddlePoint.y);
 
-        Plane3d planeTop = new Plane3d(planeRightPoint, nt);
-        Plane3d planeBottom = new Plane3d(planeLeftPoint, nb);
+        final Plane3d planeTop = new Plane3d(planeRightPoint, nt);
+        final Plane3d planeBottom = new Plane3d(planeLeftPoint, nb);
 
         Vector3d roofBottomLineVector = new Vector3d(pRecWidth, 0, 0);
 
@@ -110,21 +111,21 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMP, planeBottom, roofBottomLineVector, roofTexture);
 
-        List<Point2d> borderSplit = RoofTypeUtil.splitBorder(borderPolygon, mLine);
+        HeightCalculator hc = new MultiSplitHeightCalculator() {
+            @Override
+            public double calcHeight(Point2d point) {
+                return RoofType3v0.calcHeight(point, mLine, planeTop, planeBottom);
+            }
 
-        List<Double> borderHeights = calcHeightList(borderSplit, mLine, planeTop, planeBottom);
-
-        // //******************
-
-        RoofTypeUtil.makeRoofBorderMesh(
-
-        borderSplit, borderHeights,
-
-        meshBorder, facadeTexture);
+            @Override
+            public List<LinePoints2d> getSplittingLines() {
+                return Arrays.asList(mLine);
+            }
+        };
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(Math.max(h1, h2));
-
+        rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(pRectangleContur,
@@ -135,31 +136,20 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
         return rto;
     }
 
-    private List<Double> calcHeightList(List<Point2d> pSplitBorder, LinePoints2d mLine, Plane3d planeTop,
-            Plane3d planeBottom) {
-
-        List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
-        for (Point2d point : pSplitBorder) {
-
-            double height = calcHeight(point, mLine, planeTop, planeBottom);
-
-            borderHeights.add(height);
-
-        }
-
-        return borderHeights;
-    }
-
     /**
-     * Calc height of point in border.
+     * Calculate height of point in wall.
      * 
      * @param point
+     *            the point
      * @param mLine
+     *            the middle line
      * @param planeTop
+     *            the top plane
      * @param planeBottom
+     *            the bottom plane
      * @return
      */
-    private double calcHeight(Point2d point, LinePoints2d mLine, Plane3d planeTop, Plane3d planeBottom) {
+    private static double calcHeight(Point2d point, LinePoints2d mLine, Plane3d planeTop, Plane3d planeBottom) {
 
         double x = point.x;
         double z = -point.y;

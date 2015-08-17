@@ -39,6 +39,8 @@ import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitRe
  */
 public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
+    private static final double EPSILON = 1e-10;
+
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
@@ -72,18 +74,16 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     }
 
     /**
-     * @param pBorderList
-     * @param pScaleA
-     * @param pScaleB
-     * @param pRecHeight
-     * @param pRecWidth
-     * @param pRectangleContur
+     * @param buildingPolygon
+     * @param recHeight
+     * @param recWidth
+     * @param rectangleContur
      * @param height
      * @param roofTextureData
      * @return
      */
-    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
-            Point2d[] pRectangleContur, double height, RoofMaterials roofTextureData) {
+    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double recHeight, double recWidth,
+            Point2d[] rectangleContur, double height, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -98,7 +98,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
         List<Double> splitPoint = calcSplitPoint(true, segments);
         // List<LinePoints2d> lines = createLines(splitPoint, pRecHeight);
 
-        List<CrossSectionElement> crossSection = createCrossSection(height, pRecHeight);
+        List<CrossSectionElement> crossSection = createCrossSection(height, recHeight + EPSILON);
         final LinePoints2d[] lines = createLines(crossSection);
 
         MultiPolygonList2d[] mps = createMP(borderPolygon, lines);
@@ -108,7 +108,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         double[] offsets = createTextureOffsets(crossSection);
 
-        Vector3d roofLineVector = new Vector3d(pRecWidth, 0, 0);
+        Vector3d roofLineVector = new Vector3d(recWidth, 0, 0);
 
         for (int i = 0; i < mps.length; i++) {
 
@@ -118,11 +118,9 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
-        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, 0d, meshBorder, facadeTexture);
-
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
-
+        rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         //
@@ -233,7 +231,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
     }
 
-    private List<CrossSectionElement> createCrossSection(double height, double pRecHeight) {
+    private List<CrossSectionElement> createCrossSection(double height, double recHeight) {
         List<Point2d> round = createRound(6);
 
         List<CrossSectionElement> split = new ArrayList<CrossSectionElement>();
@@ -245,8 +243,8 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
             split.add(new CrossSectionElement(new Point2d(x, y), new Vector2d(p.x - 1d, p.y)));
         }
 
-        if (height < pRecHeight) {
-            split.add(new CrossSectionElement(new Point2d(pRecHeight, height), new Vector2d(0, 1)));
+        if (height < recHeight) {
+            split.add(new CrossSectionElement(new Point2d(recHeight, height), new Vector2d(0, 1)));
         }
 
         return split;

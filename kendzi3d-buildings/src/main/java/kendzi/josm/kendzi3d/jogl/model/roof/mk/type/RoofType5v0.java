@@ -128,42 +128,15 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mps.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0,
+                    offsets[i]);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
-        // List<Point2d> borderSplit = new ArrayList<Point2d>();
-        // List<Double> borderHeights = new ArrayList<Double>();
-        // {
-        // // This is only temporary, border generation code will be moved
-        // for (int i = 0; i< pBorderList.size(); i++) {
-        // Point2d p1 = pBorderList.get(i) ;
-        // Point2d p2 = pBorderList.get((i+1) %pBorderList.size()) ;
-        //
-        // SegmentHeight[] height2 = hc.height(p1, p2);
-        //
-        // for (int j = 0; j < height2.length; j++) {
-        // borderSplit.add(height2[j].getBegin());
-        // borderHeights.add(height2[j].getBeginHeight());
-        // }
-        //
-        // }
-        // }
-        //
-        // RoofTypeUtil.makeRoofBorderMesh(
-        //
-        // borderSplit,
-        // borderHeights,
-        //
-        // meshBorder,
-        // facadeTexture
-        // );
-        RoofTypeUtil.makeWallsFromHeightCalculator(pBorderList, hc, 0d, meshBorder, facadeTexture);
-
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
-
+        rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         return rto;

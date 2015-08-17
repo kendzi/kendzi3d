@@ -6,7 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.roof.mk.type;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofMaterials;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.SingleSplitHeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.line.LineUtil;
@@ -28,11 +28,8 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
-
-import org.apache.log4j.Logger;
 
 /**
  * Roof type 2.1.
@@ -42,8 +39,6 @@ import org.apache.log4j.Logger;
  */
 public class RoofType2v1 extends RectangleRoofTypeBuilder {
 
-    /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType2v1.class);
     private static final double EPSILON = 1e-10;
 
     @Override
@@ -118,45 +113,9 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMP, planeBottom, roofBottomLineVector, roofTexture);
 
-        List<Point2d> borderWithSplits = RoofTypeUtil.splitBorder(borderPolygon, middleRoofLine);
-
-        HeightCalculator hc = new HeightCalculator() {
-
-            @Override
-            public List<SegmentHeight> height(Point2d p1, Point2d p2) {
-
-                List<Point2d> chain = new ArrayList<Point2d>();
-                chain.add(p1);
-                chain.add(p2);
-
-                List<Point2d> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain,
-                        middleRoofLine);
-
-                List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
-                // XXX TODO FIXME run it and test it!
-
-                for (int i = 0; i < enrichedChain.size() - 1; i++) {
-                    Point2d begin = enrichedChain.get(i);
-                    Point2d end = enrichedChain.get(i + 1);
-
-                    Plane3d plane = planeBottom;
-                    if (isSegmentInFrontOfLine(begin, end, middleRoofLine)) {
-                        plane = planeTop;
-                    }
-                    ret.add(new SegmentHeight( //
-                            begin, calcHeight(begin, plane), //
-                            end, calcHeight(end, plane)));
-                }
-
-                return ret;
-            }
-        };
-
-        double minHeight = 0;
+        HeightCalculator hc = new SingleSplitHeightCalculator(middleRoofLine, planeBottom, planeTop);
 
         // FIXME it is middle wall missing! It have to be fixed!
-
-        RoofTypeUtil.makeWallsFromHeightCalculator(borderWithSplits, hc, minHeight, meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(Math.max(roofHeightBottom, roofHeightTop));

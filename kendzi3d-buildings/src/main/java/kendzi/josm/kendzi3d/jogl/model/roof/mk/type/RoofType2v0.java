@@ -21,6 +21,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.SingleSplitHeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -66,7 +67,6 @@ public class RoofType2v0 extends RectangleRoofTypeBuilder {
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         Point2d leftMiddlePoint = new Point2d(0, l1);
@@ -101,22 +101,7 @@ public class RoofType2v0 extends RectangleRoofTypeBuilder {
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMP, planeBottom, roofBottomLineVector, roofTexture);
 
-        List<Point2d> borderWithSplits = RoofTypeUtil.splitBorder(borderPolygon, middleRoofLine);
-
-        HeightCalculator hc = new HeightCalculator() {
-
-            @Override
-            public List<SegmentHeight> height(Point2d p1, Point2d p2) {
-
-                return Arrays.asList(new SegmentHeight( //
-                        p1, calcHeight(p1, middleRoofLine, planeTop, planeBottom), //
-                        p2, calcHeight(p2, middleRoofLine, planeTop, planeBottom)));
-            }
-        };
-
-        double minHeight = 0;
-
-        RoofTypeUtil.makeWallsFromHeightCalculator(borderWithSplits, hc, minHeight, meshBorder, facadeTexture);
+        HeightCalculator hc = new SingleSplitHeightCalculator(middleRoofLine, planeBottom, planeTop);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(roofHeight);
@@ -129,29 +114,6 @@ public class RoofType2v0 extends RectangleRoofTypeBuilder {
         rto.setRoofHooksSpaces(rhs);
 
         return rto;
-    }
-
-    /**
-     * Calculate height of point in border.
-     *
-     * @param point
-     * @param mLine
-     * @param planeTop
-     * @param planeBottom
-     * @return
-     */
-    private double calcHeight(Point2d point, LinePoints2d mLine, Plane3d planeTop, Plane3d planeBottom) {
-
-        double x = point.x;
-        double z = -point.y;
-
-        if (mLine.inFront(point)) {
-
-            return planeTop.calcYOfPlane(x, z);
-        } else {
-
-            return planeBottom.calcYOfPlane(x, z);
-        }
     }
 
 }

@@ -23,6 +23,8 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.dormer.space.RectangleRoofHooksSpaces;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.HeightCalculator;
+import kendzi.josm.kendzi3d.jogl.model.roof.mk.wall.MultiSplitHeightCalculator;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
@@ -49,9 +51,6 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
 
         Double h2 = getHeight2(conf.getMeasurements());
 
-        // Double h2 = getHeightMeters(conf.getMeasurements(),
-        // MeasurementKey.HEIGHT_2, 1.5d);
-
         Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
         Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(),
@@ -60,7 +59,7 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
                 conf.getRecHeight() / 2d);
 
         if (h2 > h1) {
-            throw new RuntimeException("bad parameters: h1 is biger then h2");
+            throw new RuntimeException("bad parameters: h1 is bigger then h2");
         }
 
         boolean skipLeft = getSkipLeft();
@@ -83,8 +82,6 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
      * <img src="doc-files/RoofType2_3.png">
      * 
      * @param pBorderList
-     * @param pScaleA
-     * @param pScaleB
      * @param recHeight
      * @param recWidth
      * @param rectangleContur
@@ -105,7 +102,6 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
-        TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
         // double l1 = l1;
@@ -123,7 +119,7 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
 
         double sizeB1Oposit = recHeight - l1;
 
-        LinePoints2d middleLine = new LinePoints2d(new Point2d(0, l1), new Point2d(recWidth, l1));
+        final LinePoints2d middleLine = new LinePoints2d(new Point2d(0, l1), new Point2d(recWidth, l1));
 
         Vector3d normalTop = new Vector3d(0, sizeB1Oposit, -h1);
         normalTop.normalize();
@@ -133,8 +129,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
 
         Point3d planePoint = new Point3d(middleLine.getP1().x, h1, -middleLine.getP1().y);
 
-        Plane3d planeTop = new Plane3d(planePoint, normalTop);
-        Plane3d planeBottom = new Plane3d(planePoint, normalBottom);
+        final Plane3d planeTop = new Plane3d(planePoint, normalTop);
+        final Plane3d planeBottom = new Plane3d(planePoint, normalBottom);
 
         double leftTopY = -planeTop.calcZOfPlane(0, h2);
         double leftBottomY = -planeBottom.calcZOfPlane(0, h2);
@@ -155,11 +151,11 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         Point2d rightCenter = new Point2d(recWidth - l2, l1);
         Point2d rightBottom = new Point2d(recWidth, leftBottomY);
 
-        LinePoints2d leftBottomLine = new LinePoints2d(leftBottom, leftCenter);
-        LinePoints2d leftTopLine = new LinePoints2d(leftCenter, leftTop);
+        final LinePoints2d leftBottomLine = new LinePoints2d(leftBottom, leftCenter);
+        final LinePoints2d leftTopLine = new LinePoints2d(leftCenter, leftTop);
 
-        LinePoints2d rightBottomLine = new LinePoints2d(rightBottom, rightCenter);
-        LinePoints2d rightTopLine = new LinePoints2d(rightCenter, rightTop);
+        final LinePoints2d rightBottomLine = new LinePoints2d(rightBottom, rightCenter);
+        final LinePoints2d rightTopLine = new LinePoints2d(rightCenter, rightTop);
 
         double leftHeight = planeBottom.calcYOfPlane(leftBottom.x, -leftBottom.y);
         if (l1 < 0.5 * recHeight) {
@@ -172,10 +168,10 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
             rightHeight = planeTop.calcYOfPlane(rightTop.x, -rightTop.y);
         }
 
-        Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y), new Vector3d(-(h1 - leftHeight),
-                l2, 0));
+        final Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y), new Vector3d(
+                -(h1 - leftHeight), l2, 0));
 
-        Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y), new Vector3d(
+        final Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y), new Vector3d(
                 -(rightHeight - h1), l2, 0));
 
         // //******************
@@ -214,21 +210,22 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mpt, planeTop, roofTopLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mpb, planeBottom, roofButtomLineVector, roofTexture);
 
-        // //******************
+        HeightCalculator hc = new MultiSplitHeightCalculator() {
+            @Override
+            public double calcHeight(Point2d point) {
+                return RoofType2v3.calcHeight(point, middleLine, rightTopLine, rightBottomLine, leftTopLine,
+                        leftBottomLine, planeLeft, planeRight, planeTop, planeBottom);
+            }
 
-        List<Point2d> borderSplit = RoofTypeUtil.splitBorder(borderPolygon, middleLine, rightTopLine, rightBottomLine,
-                leftTopLine, leftBottomLine);
-
-        List<Double> borderHeights = calcHeightList(borderSplit, middleLine, rightTopLine, rightBottomLine,
-                leftTopLine, leftBottomLine, planeLeft, planeRight, planeTop, planeBottom);
-
-        RoofTypeUtil.makeRoofBorderMesh(borderSplit, borderHeights,
-
-        meshBorder, facadeTexture);
+            @Override
+            public List<LinePoints2d> getSplittingLines() {
+                return Arrays.asList(middleLine, rightTopLine, rightBottomLine, leftTopLine, leftBottomLine);
+            }
+        };
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(h1);
-
+        rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(rectangleContur, new PolygonPlane(mpb, planeBottom),
@@ -245,99 +242,54 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
     }
 
     /**
-     * Heights of point on border.
-     * 
-     * @param pSplitBorder
-     *            border after split
-     * @param pMiddleLine
-     *            middle line
-     * @param pRightTopLine
-     *            right top line
-     * @param pRightBottomLine
-     *            right bottom line
-     * @param pLeftTopLine
-     *            left top line
-     * @param pLeftBottomLine
-     *            left bottom line
-     * @param pPlaneLeft
-     *            plane left
-     * @param pPlaneRight
-     *            plane right
-     * @param pPlaneTop
-     *            plane top
-     * @param pPlaneBottom
-     *            plane bottom
-     * @return heights heights
-     */
-    private List<Double> calcHeightList(List<Point2d> pSplitBorder,
-
-    LinePoints2d pMiddleLine, LinePoints2d pRightTopLine, LinePoints2d pRightBottomLine, LinePoints2d pLeftTopLine,
-            LinePoints2d pLeftBottomLine,
-
-            Plane3d pPlaneLeft, Plane3d pPlaneRight, Plane3d pPlaneTop, Plane3d pPlaneBottom) {
-
-        List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
-        for (Point2d point : pSplitBorder) {
-
-            double height = calcHeight(point, pMiddleLine, pRightTopLine, pRightBottomLine, pLeftTopLine,
-                    pLeftBottomLine, pPlaneLeft, pPlaneRight, pPlaneTop, pPlaneBottom);
-
-            borderHeights.add(height);
-        }
-
-        return borderHeights;
-    }
-
-    /**
      * Calculate height of point.
      * 
-     * @param pPoint
-     *            point to find height *
-     * @param pMiddleLine
+     * @param point
+     *            point to find height
+     * @param middleLine
      *            middle line
-     * @param pRightTopLine
+     * @param rightTopLine
      *            right top line
-     * @param pRightBottomLine
+     * @param rightBottomLine
      *            right bottom line
-     * @param pLeftTopLine
+     * @param leftTopLine
      *            left top line
-     * @param pLeftBottomLine
+     * @param leftBottomLine
      *            left bottom line
-     * @param pPlaneLeft
+     * @param planeLeft
      *            plane left
-     * @param pPlaneRight
+     * @param planeRight
      *            plane right
-     * @param pPlaneTop
+     * @param planeTop
      *            plane top
-     * @param pPlaneBottom
+     * @param planeBottom
      *            plane bottom
      * @return height of point
      */
-    private double calcHeight(Point2d pPoint, LinePoints2d pMiddleLine, LinePoints2d pRightTopLine,
-            LinePoints2d pRightBottomLine, LinePoints2d pLeftTopLine, LinePoints2d pLeftBottomLine,
+    private static double calcHeight(Point2d point, LinePoints2d middleLine, LinePoints2d rightTopLine,
+            LinePoints2d rightBottomLine, LinePoints2d leftTopLine, LinePoints2d leftBottomLine, Plane3d planeLeft,
+            Plane3d planeRight, Plane3d planeTop, Plane3d planeBottom) {
 
-            Plane3d pPlaneLeft, Plane3d pPlaneRight, Plane3d pPlaneTop, Plane3d pPlaneBottom) {
+        double x = point.x;
+        double z = -point.y;
 
-        double x = pPoint.x;
-        double z = -pPoint.y;
-
-        if (pMiddleLine.inFront(pPoint)) {
-            if (pLeftTopLine.inFront(pPoint)) {
-                return pPlaneLeft.calcYOfPlane(x, z);
-            } else if (!pRightTopLine.inFront(pPoint)) {
-                return pPlaneRight.calcYOfPlane(x, z);
+        if (middleLine.inFront(point)) {
+            if (leftTopLine.inFront(point)) {
+                return planeLeft.calcYOfPlane(x, z);
+            } else if (!rightTopLine.inFront(point)) {
+                return planeRight.calcYOfPlane(x, z);
             } else {
-                return pPlaneTop.calcYOfPlane(x, z);
+                return planeTop.calcYOfPlane(x, z);
             }
 
         } else {
 
-            if (pLeftBottomLine.inFront(pPoint)) {
-                return pPlaneLeft.calcYOfPlane(x, z);
-            } else if (!pRightBottomLine.inFront(pPoint)) {
-                return pPlaneRight.calcYOfPlane(x, z);
+            if (leftBottomLine.inFront(point)) {
+                return planeLeft.calcYOfPlane(x, z);
+            } else if (!rightBottomLine.inFront(point)) {
+                return planeRight.calcYOfPlane(x, z);
             } else {
-                return pPlaneBottom.calcYOfPlane(x, z);
+                return planeBottom.calcYOfPlane(x, z);
             }
         }
     }

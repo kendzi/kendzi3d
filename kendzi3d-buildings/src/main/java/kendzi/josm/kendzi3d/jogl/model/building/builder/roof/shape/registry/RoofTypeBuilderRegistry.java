@@ -1,4 +1,4 @@
-package kendzi.josm.kendzi3d.jogl.model.building.builder.roof.registry;
+package kendzi.josm.kendzi3d.jogl.model.building.builder.roof.shape.registry;
 
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0v0;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.RoofType0v1;
@@ -44,7 +44,7 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquareHipped;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeSquarePyramidal;
 
 /**
- * Registered roof type builders.
+ * Registered roof type builders for dormer roofs.
  * 
  * @author Tomasz Kędziora (Kendzi)
  */
@@ -55,7 +55,7 @@ public class RoofTypeBuilderRegistry {
     }
 
     /**
-     * Chose builder depending on roof type.
+     * Choose builder depend on roof type.
      * 
      * @param roofTypeEnum
      *            roof type

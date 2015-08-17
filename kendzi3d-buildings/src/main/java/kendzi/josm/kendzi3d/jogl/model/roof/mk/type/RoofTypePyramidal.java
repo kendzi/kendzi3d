@@ -98,11 +98,12 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
 
-        RoofTypeUtil.makeWallsFromHeightCalculator(outlineList, hc, 0d, meshBorder, facadeTexture);
+        // RoofTypeUtil.makeWallsFromHeightCalculator(outlineList, hc, 0d,
+        // meshBorder, facadeTexture);
 
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(h1);
-
+        rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
         return rto;

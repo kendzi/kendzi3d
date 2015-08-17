@@ -3,7 +3,7 @@
  * on your own risk and responsibility!!! This file is shared under BSD v3
  * license. See readme.txt and BSD3 file for details.
  */
-package kendzi.josm.kendzi3d.jogl.model.building.builder.roof;
+package kendzi.josm.kendzi3d.jogl.model.building.builder.roof.lines;
 
 import java.awt.Color;
 import java.util.ArrayList;
