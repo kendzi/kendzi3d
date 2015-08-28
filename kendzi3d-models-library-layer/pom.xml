@@ -17,13 +17,13 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-resource-interface</artifactId>
-			<version>1.0.185-SNAPSHOT</version>
+			<version>1.0.185</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-models-library-bindings</artifactId>
-			<version>1.0.185-SNAPSHOT</version>
+			<version>1.0.185</version>
 		</dependency>
  
 	</dependencies>
@@ -31,7 +31,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.185-SNAPSHOT</version>
+		<version>1.0.185</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
