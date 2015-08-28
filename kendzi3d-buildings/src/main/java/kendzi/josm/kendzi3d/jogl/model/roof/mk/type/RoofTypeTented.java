@@ -20,9 +20,9 @@ import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofTypeOutput;
 import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
 import kendzi.math.geometry.Graham;
 import kendzi.math.geometry.Plane3d;
-import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import kendzi.math.geometry.polygon.PolygonUtil;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 
 /**
@@ -44,18 +44,22 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
     }
 
     /**
-     * 
      * @param buildingPolygon
-     * @param pBorderList
-     * @param pRecHeight
-     * @param pRecWidth
-     * @param pRectangleContur
+     *            the building polygon
+     * @param recHeight
+     *            the bonding rectangle height
+     * @param recWidth
+     *            the bonding rectangle width
+     * @param rectangleContur
+     *            the bonding rectangle
      * @param h1
+     *            the roof height
      * @param roofTextureData
-     * @return
+     *            the roof texture data
+     * @return the roof output
      */
-    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
-            Point2d[] pRectangleContur, double h1, RoofMaterials roofTextureData) {
+    protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double recHeight, double recWidth,
+            Point2d[] rectangleContur, double h1, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -64,14 +68,13 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
 
         List<Point2d> outlineList = buildingPolygon.getOuter().getPoints();
 
-        // XXX temporary ?
-        if (0.0f > Triangulate.area(outlineList)) {
+        if (PolygonUtil.isClockwisePolygon(outlineList)) {
             outlineList = PolygonList2d.reverse(outlineList);
         }
 
         List<Point2d> outlineConvexHull = Graham.grahamScan(outlineList);
 
-        Point2d middlePoint = RoofTypePyramidal.findMidlePoint(outlineConvexHull);
+        Point2d middlePoint = RoofTypePyramidal.findMiddlePoint(outlineConvexHull);
 
         MultiPolygonList2d[] mp = createMP(outlineList, middlePoint);
 
@@ -83,8 +86,8 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mp.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
-
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i],
+                    0);
         }
 
         RoofTypeOutput rto = new RoofTypeOutput();

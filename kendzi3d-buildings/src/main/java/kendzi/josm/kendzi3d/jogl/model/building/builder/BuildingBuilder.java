@@ -6,10 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.building.builder;
 
-import static kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingTextureUtil.findWindowTextureData;
-import static kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingTextureUtil.takeFacadeTextureData;
-import static kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingTextureUtil.takeFloorTextureData;
-import static kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingTextureUtil.takeWindowsColumnsTextureData;
+import static kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingTextureUtil.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -37,6 +34,7 @@ import kendzi.jogl.texture.library.TextureFindCriteria;
 import kendzi.jogl.texture.library.TextureFindCriteria.Type;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.roof.lines.RoofLinesBuildier;
 import kendzi.josm.kendzi3d.jogl.model.building.builder.roof.shape.ShapeRoofBuilder;
+import kendzi.josm.kendzi3d.jogl.model.building.builder.util.SimpleTriangulateInterable;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
 import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingUtil;
@@ -69,6 +67,8 @@ import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BuildingBuilder {
+
+    private static final double EPSILON = 1e-10;
 
     /**
      * Build 3d Model of building.
@@ -169,15 +169,13 @@ public class BuildingBuilder {
         Color roofColor = takeRoofColor(buildingModel, bp, w, firstWallPart, tm);
         TextureData roofTextureData = takeRoofTextureData(buildingModel, bp, w, tm, roofColor != null);
         // XXX
-        TextureData facadeTextureData = takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm,
-                facadeColor != null);
+        TextureData facadeTextureData = takeFacadeTextureData(buildingModel, bp, w, firstWallPart, tm, facadeColor != null);
 
         RoofOutput roofOutput = buildRoof(bp, mf, maxHeight, facadeColor, roofColor, facadeTextureData, roofTextureData);
 
         double wallHeight = maxHeight - roofOutput.getHeight();
 
-        buildWall(w, minHeight, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm,
-                roofOutput.getHeightCalculator());
+        buildWall(w, minHeight, wallHeight, bp, buildingModel, mf, catchFaceFactory, tm, roofOutput.getHeightCalculator());
 
         buildFloor(bp, buildingModel, mf, tm, roofTextureData, facadeColor, minHeight);
 
@@ -204,8 +202,8 @@ public class BuildingBuilder {
      * @param roofTextureData
      * @return
      */
-    private static RoofOutput buildRoof(BuildingPart bp, ModelFactory mf, double maxHeight, Color facadeColor,
-            Color roofColor, TextureData facadeTextureData, TextureData roofTextureData) {
+    private static RoofOutput buildRoof(BuildingPart bp, ModelFactory mf, double maxHeight, Color facadeColor, Color roofColor,
+            TextureData facadeTextureData, TextureData roofTextureData) {
         RoofTextureData rtd = new RoofTextureData();
         // XXX fix, currently roof builder support only one texture, fix before
         // roof builder is changed.
@@ -239,8 +237,8 @@ public class BuildingBuilder {
         mesh.materialID = mf.cacheMaterial(mat);
 
         PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
-        MeshFactoryUtil.addPolygonWithHolesInYRevert(buildingPolygon, minHeight, mesh, roofTextureData, 0, 0,
-                new Vector3d(1, 0, 0));
+        MeshFactoryUtil.addPolygonWithHolesInYRevert(buildingPolygon, minHeight, mesh, roofTextureData, 0, 0, new Vector3d(1, 0,
+                0));
     }
 
     private static WallPart getFirstWallPart(Wall w) {
@@ -256,9 +254,9 @@ public class BuildingBuilder {
         return null;
     }
 
-    private static void buildWall(Wall w, double minHeight, double wallHeight, BuildingPart bp,
-            BuildingModel buildingModel, ModelFactory mf, CatchFaceFactory catchFaceFactory,
-            BuildingElementsTextureManager tm, HeightCalculator roofHeightCalculator) {
+    private static void buildWall(Wall w, double minHeight, double wallHeight, BuildingPart bp, BuildingModel buildingModel,
+            ModelFactory mf, CatchFaceFactory catchFaceFactory, BuildingElementsTextureManager tm,
+            HeightCalculator roofHeightCalculator) {
 
         boolean counterClockwise = isWallCounterClockwise(w);
 
@@ -293,7 +291,7 @@ public class BuildingBuilder {
 
             int texNum = 1 + (isOverLayer ? 1 : 0) + (isWindows ? 1 : 0);
 
-            FaceFactory face = mesh.addFace(FaceType.QUADS, texNum);
+            FaceFactory face = mesh.addFace(FaceType.TRIANGLES, texNum);
 
             double wallDistance = 0;
 
@@ -334,24 +332,20 @@ public class BuildingBuilder {
                 MultiPolygonList2d mPoly = new MultiPolygonList2d(poly);
 
                 if (roofHeightCalculator != null) {
-                    mPoly.getPolygons().addAll(
-                            createUnderRoofPolygons(startPoint, endPoint, wallHeight, roofHeightCalculator));
+                    mPoly.getPolygons().addAll(createUnderRoofPolygons(startPoint, endPoint, wallHeight, roofHeightCalculator));
                 }
 
                 // build mesh
-
-                mPoly = applyWindows(mPoly, n1.getBuildingNodeElements(), startPoint, direction, 0, false,
-                        catchFaceFactory, tm, counterClockwise);
+                mPoly = applyWindows(mPoly, n1.getBuildingNodeElements(), startPoint, direction, 0, false, catchFaceFactory, tm,
+                        counterClockwise);
                 mPoly = applyWindows(mPoly, n2.getBuildingNodeElements(), startPoint, direction, segmentDistance, true,
                         catchFaceFactory, tm, counterClockwise);
 
                 for (PolygonList2d polygon : mPoly.getPolygons()) {
-                    List<Point2d> points = polygon.getPoints();
-                    if (points.size() > 4) {
-                        throw new IllegalStateException("more then 4 points in quate!" + points);
-                    }
 
-                    for (Point2d p : points) {
+                    Iterable<Point2d> trianglePoint = new SimpleTriangulateInterable(polygon.getPoints());
+
+                    for (Point2d p : trianglePoint) {
 
                         int vi = segmentPointToVertex3dIndex(p, startPoint, direction, mesh);
 
@@ -369,7 +363,9 @@ public class BuildingBuilder {
                             tex[1] = tex[0];
                         }
 
-                        /* Windows over layer have its own texture coordinates. */
+                        /*
+                         * Windows over layer have its own texture coordinates.
+                         */
                         if (isWindows) {
                             tex[texNum - 1] = segmentPointToTextureDataIndex(p, wallDistance, 0d, mesh,
                                     adjustedWindowsTextureData);
@@ -398,6 +394,17 @@ public class BuildingBuilder {
             double leftHeight = segmentHeight.getBeginHeight();
             double rightHeight = segmentHeight.getEndHeight();
 
+            boolean shrinkLeft = equal(wallHeight2, leftHeight);
+            boolean shrinkRight = equal(wallHeight2, rightHeight);
+
+            if (shrinkLeft && shrinkRight) {
+                /*
+                 * Same height of begin end and desired height so no point to
+                 * generate empty size polygon.
+                 */
+                continue;
+            }
+
             Point2d bottomLeft = new Point2d(distance, wallHeight2);
             Point2d bottomRight = new Point2d(distance + segmentDistance, wallHeight2);
 
@@ -412,16 +419,20 @@ public class BuildingBuilder {
         return ret;
     }
 
+    private static boolean equal(double number1, double number2) {
+
+        return Math.abs(number1 - number2) < EPSILON;
+    }
+
     private static TextureData generateWindowsOverlayTextureData(Wall wall, double minHeight, double wallHeight,
-            BuildingPart buildingPart, BuildingModel buildingModel, BuildingElementsTextureManager tm,
-            WallPart wallPart, double wallLength) {
+            BuildingPart buildingPart, BuildingModel buildingModel, BuildingElementsTextureManager tm, WallPart wallPart,
+            double wallLength) {
 
         Integer windowsCols = hasWindowsCloumns(wallPart.getBuildingElements());
 
         if (windowsCols != null && windowsCols != 0) {
             /* Check if wall has any windows column defined. */
-            TextureData windowsTextureData = takeWindowsColumnsTextureData(buildingModel, buildingPart, wall, wallPart,
-                    tm);
+            TextureData windowsTextureData = takeWindowsColumnsTextureData(buildingModel, buildingPart, wall, wallPart, tm);
 
             double windowsSegmetLength = wallLength / (double) windowsCols;
 
@@ -513,8 +524,7 @@ public class BuildingBuilder {
         return null;
     }
 
-    private static Color takeFacadeColor(BuildingModel buildingModel, NodeBuildingPart bp,
-            BuildingElementsTextureManager tm) {
+    private static Color takeFacadeColor(BuildingModel buildingModel, NodeBuildingPart bp, BuildingElementsTextureManager tm) {
 
         Color c = null;
 
@@ -598,29 +608,28 @@ public class BuildingBuilder {
         return td;
     }
 
-    private static MultiPolygonList2d applyWindows(MultiPolygonList2d mPoly,
-            List<BuildingNodeElement> buildingNodeElements, Point2d segmentStart, Vector2d segmentDirection,
-            double displacementOnSegment, boolean beginEnd, CatchFaceFactory catchFaceFactory,
-            BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
+    private static MultiPolygonList2d applyWindows(MultiPolygonList2d mPoly, List<BuildingNodeElement> buildingNodeElements,
+            Point2d segmentStart, Vector2d segmentDirection, double displacementOnSegment, boolean beginEnd,
+            CatchFaceFactory catchFaceFactory, BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
 
         if (buildingNodeElements != null) {
             for (BuildingNodeElement be : buildingNodeElements) {
 
                 if (beginEnd) {
-                    mPoly = applyWindowsEnd(mPoly, be, segmentStart, segmentDirection, displacementOnSegment,
-                            catchFaceFactory, textureMenager, counterClockwise);
+                    mPoly = applyWindowsEnd(mPoly, be, segmentStart, segmentDirection, displacementOnSegment, catchFaceFactory,
+                            textureMenager, counterClockwise);
                 } else {
-                    mPoly = applyWindowsBegin(mPoly, be, segmentStart, segmentDirection, displacementOnSegment,
-                            catchFaceFactory, textureMenager, counterClockwise);
+                    mPoly = applyWindowsBegin(mPoly, be, segmentStart, segmentDirection, displacementOnSegment, catchFaceFactory,
+                            textureMenager, counterClockwise);
                 }
             }
         }
         return mPoly;
     }
 
-    private static MultiPolygonList2d applyWindowsBegin(MultiPolygonList2d mPoly, BuildingNodeElement be,
-            Point2d segmentStart, Vector2d segmentDirection, double nodeDisplacement,
-            CatchFaceFactory pCatchFaceFactory, BuildingElementsTextureManager pTextureMenager, boolean counterClockwise) {
+    private static MultiPolygonList2d applyWindowsBegin(MultiPolygonList2d mPoly, BuildingNodeElement be, Point2d segmentStart,
+            Vector2d segmentDirection, double nodeDisplacement, CatchFaceFactory pCatchFaceFactory,
+            BuildingElementsTextureManager pTextureMenager, boolean counterClockwise) {
 
         if (be instanceof SquareHoleElement) {
             SquareHoleElement she = (SquareHoleElement) be;
@@ -661,9 +670,9 @@ public class BuildingBuilder {
         return mPoly;
     }
 
-    private static MultiPolygonList2d applyWindowsEnd(MultiPolygonList2d mPoly, BuildingNodeElement be,
-            Point2d segmentStart, Vector2d segmentDirection, double nodeDisplacement,
-            CatchFaceFactory catchFaceFactory, BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
+    private static MultiPolygonList2d applyWindowsEnd(MultiPolygonList2d mPoly, BuildingNodeElement be, Point2d segmentStart,
+            Vector2d segmentDirection, double nodeDisplacement, CatchFaceFactory catchFaceFactory,
+            BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
 
         if (be instanceof SquareHoleElement) {
             SquareHoleElement she = (SquareHoleElement) be;
@@ -732,8 +741,7 @@ public class BuildingBuilder {
     private static int segmentPointToTextureDataIndex(Point2d point, double offsetX, double offsetY, MeshFactory mesh,
             TextureData td) {
 
-        return mesh.addTextCoord(new TextCoord((point.x + offsetX) / td.getWidth(), (point.y + offsetY)
-                / td.getHeight()));
+        return mesh.addTextCoord(new TextCoord((point.x + offsetX) / td.getWidth(), (point.y + offsetY) / td.getHeight()));
     }
 
     private static int segmentPointToVertex3dIndex(Point2d point, Point2d start, Vector2d direction, MeshFactory mesh) {
