@@ -45,13 +45,13 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-plugin</artifactId>
-			<version>1.0.186</version>
+			<version>1.0.187-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.186</version>
+		<version>1.0.187-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<build>
