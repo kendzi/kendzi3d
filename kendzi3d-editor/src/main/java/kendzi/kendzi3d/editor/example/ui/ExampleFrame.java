@@ -1,7 +1,7 @@
 package kendzi.kendzi3d.editor.example.ui;
 
 import javax.inject.Inject;
-import javax.media.opengl.GLEventListener;
+import com.jogamp.opengl.GLEventListener;
 
 import kendzi.kendzi3d.editor.ui.BaseEditorFrame;
 

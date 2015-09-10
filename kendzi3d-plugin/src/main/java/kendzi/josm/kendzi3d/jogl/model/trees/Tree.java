@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 

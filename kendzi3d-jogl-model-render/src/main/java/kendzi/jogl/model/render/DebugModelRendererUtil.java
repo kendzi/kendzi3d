@@ -1,6 +1,6 @@
 package kendzi.jogl.model.render;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.model.factory.FaceFactory.FaceType;

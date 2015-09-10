@@ -1,8 +1,8 @@
 package kendzi.josm.kendzi3d.ui;
 
 import javax.inject.Inject;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 

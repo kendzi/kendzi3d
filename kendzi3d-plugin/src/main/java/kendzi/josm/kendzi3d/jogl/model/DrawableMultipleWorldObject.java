@@ -2,7 +2,7 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import java.util.List;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;

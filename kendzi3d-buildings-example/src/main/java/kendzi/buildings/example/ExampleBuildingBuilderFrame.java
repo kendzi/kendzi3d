@@ -5,9 +5,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 import javax.vecmath.Point2d;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
@@ -54,7 +55,7 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
     /**
      * {@inheritDoc}
      *
-     * @see kendzi.buildings.example.BaseJoglFrame#init(javax.media.opengl.GLAutoDrawable)
+     * @see kendzi.buildings.example.BaseJoglFrame#init(com.jogamp.opengl.GLAutoDrawable)
      */
     @Override
     public void init(GLAutoDrawable drawable) {
@@ -74,16 +75,16 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
         // Manual injection of dependencies.
         textureCacheService.setFileUrlReciverService(resourceService);
 
-        this.textureLibraryStorageService = new TextureLibraryService(resourceService);
+        textureLibraryStorageService = new TextureLibraryService(resourceService);
 
         // Set up of my model renderer to display my model
-        this.modelRender = new ModelRender();
+        modelRender = new ModelRender();
 
         // Manual injection of dependencies.
-        this.modelRender.setTextureCacheService(textureCacheService);
+        modelRender.setTextureCacheService(textureCacheService);
 
         // Create model mesh.
-        this.model = createRoofModel();
+        model = createRoofModel();
     }
 
     private Model createRoofModel() {
@@ -129,12 +130,12 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
         BuildingModel buildingModel = new BuildingModel();
         buildingModel.setParts(Arrays.asList(bp));
 
-        BuildingElementsTextureManager tm = new OsmBuildingElementsTextureMenager(this.textureLibraryStorageService);
+        BuildingElementsTextureManager tm = new OsmBuildingElementsTextureMenager(textureLibraryStorageService);
         BuildingOutput buildModel = BuildingBuilder.buildModel(buildingModel, tm);
 
         return buildModel.getModel();
 
-        /*-  
+        /*-
          * If you don't want use textures here replace texture key with material color like this:
          *          (XXX my renderer portably crash with materials);
          *
@@ -152,7 +153,7 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
     /**
      * {@inheritDoc}
      *
-     * @see kendzi.buildings.example.BaseJoglFrame#display(javax.media.opengl.GLAutoDrawable)
+     * @see kendzi.buildings.example.BaseJoglFrame#display(com.jogamp.opengl.GLAutoDrawable)
      */
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -160,7 +161,7 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
 
         GL2 gl = drawable.getGL().getGL2();
 
-        this.modelRender.render(gl, this.model);
+        modelRender.render(gl, model);
     }
 
     public static void main(String[] args) {

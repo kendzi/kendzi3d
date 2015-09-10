@@ -11,7 +11,7 @@ package kendzi.jogl.texture;
 
 import java.awt.image.BufferedImage;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL;
 
 import com.jogamp.opengl.util.texture.Texture;
 

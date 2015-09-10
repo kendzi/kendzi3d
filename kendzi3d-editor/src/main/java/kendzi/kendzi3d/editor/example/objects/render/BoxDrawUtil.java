@@ -1,8 +1,8 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2GL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2GL3;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.util.DrawUtil;

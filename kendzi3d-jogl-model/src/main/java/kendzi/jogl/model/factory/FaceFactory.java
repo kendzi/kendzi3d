@@ -12,7 +12,7 @@ package kendzi.jogl.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 public class FaceFactory {
 

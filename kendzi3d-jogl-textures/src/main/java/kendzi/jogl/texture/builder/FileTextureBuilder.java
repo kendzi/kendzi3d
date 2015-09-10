@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.media.opengl.GLException;
+import com.jogamp.opengl.GLException;
 
 import kendzi.kendzi3d.resource.inter.ResourceService;
 

@@ -2,8 +2,8 @@ package kendzi.kendzi3d.editor.drawer;
 
 import java.awt.Color;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.camera.Viewport;

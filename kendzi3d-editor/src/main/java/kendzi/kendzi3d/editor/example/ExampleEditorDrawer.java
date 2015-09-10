@@ -2,7 +2,7 @@ package kendzi.kendzi3d.editor.example;
 
 import java.util.List;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.EditorDrawer;

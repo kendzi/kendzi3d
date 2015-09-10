@@ -6,10 +6,10 @@
 
 package kendzi.jogl.util;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2GL3;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2GL3;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import javax.vecmath.Point3d;
 
 public class DrawUtil {

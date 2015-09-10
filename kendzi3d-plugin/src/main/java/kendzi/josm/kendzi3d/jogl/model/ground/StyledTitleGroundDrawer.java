@@ -9,10 +9,10 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2GL3;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2GL3;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;

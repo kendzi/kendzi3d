@@ -2,9 +2,9 @@ package kendzi.kendzi3d.editor.drawer;
 
 import java.awt.Color;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2GL3;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2GL3;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.util.ColorUtil;

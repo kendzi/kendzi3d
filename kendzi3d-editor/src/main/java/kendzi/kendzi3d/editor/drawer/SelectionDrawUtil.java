@@ -1,6 +1,6 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.util.DrawUtil;

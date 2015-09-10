@@ -9,7 +9,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model.lod;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.camera.Camera;

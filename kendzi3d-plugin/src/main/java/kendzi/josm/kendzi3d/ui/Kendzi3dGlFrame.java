@@ -1,7 +1,7 @@
 package kendzi.josm.kendzi3d.ui;
 
 import javax.inject.Inject;
-import javax.media.opengl.GLEventListener;
+import com.jogamp.opengl.GLEventListener;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;

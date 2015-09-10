@@ -1,9 +1,9 @@
 package kendzi.josm.kendzi3d.objects.drawer;
 
 import javax.inject.Inject;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.Gl2Draw;

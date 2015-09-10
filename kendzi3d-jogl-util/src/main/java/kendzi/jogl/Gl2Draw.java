@@ -1,6 +1,6 @@
 package kendzi.jogl;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 public interface Gl2Draw {
 
