@@ -31,20 +31,20 @@ import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.WorldObjectDebugDrawable;
-import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingBuilder;
-import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingOutput;
-import kendzi.josm.kendzi3d.jogl.model.building.builder.BuildingPartOutput;
 import kendzi.josm.kendzi3d.jogl.model.building.editor.PartValueEditor;
-import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingModel;
-import kendzi.josm.kendzi3d.jogl.model.building.model.BuildingPart;
-import kendzi.josm.kendzi3d.jogl.model.building.model.WallNode;
-import kendzi.josm.kendzi3d.jogl.model.building.model.WallPart;
 import kendzi.josm.kendzi3d.jogl.model.building.parser.BuildingParser;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.buildings.builder.BuildingBuilder;
+import kendzi.kendzi3d.buildings.model.BuildingModel;
+import kendzi.kendzi3d.buildings.model.BuildingPart;
+import kendzi.kendzi3d.buildings.model.WallNode;
+import kendzi.kendzi3d.buildings.model.WallPart;
+import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
+import kendzi.kendzi3d.buildings.model.roof.shape.RoofTypeAliasEnum;
+import kendzi.kendzi3d.buildings.output.BuildingOutput;
+import kendzi.kendzi3d.buildings.output.BuildingPartOutput;
 import kendzi.kendzi3d.editor.drawer.SelectionDrawUtil;
 import kendzi.kendzi3d.editor.selection.ModelSelection;
 import kendzi.kendzi3d.editor.selection.Selection;
@@ -177,7 +177,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
         if (buildModel.getBuildingPartOutput() != null) {
             for (BuildingPartOutput bo : buildModel.getBuildingPartOutput()) {
-                debugPart.add(new BuildingDebugDrawer(bo.getRoofDebugOut()));
+                debugPart.add(new BuildingDebugDrawer(bo.getRoofDebug()));
                 if (bo.getEdges() != null) {
                     edges.addAll(bo.getEdges());
                 }

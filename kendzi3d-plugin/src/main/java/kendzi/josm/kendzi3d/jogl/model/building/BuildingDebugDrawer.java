@@ -11,7 +11,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.util.DrawUtil;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.RoofDebugOut;
+import kendzi.kendzi3d.buildings.output.RoofDebugOutput;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 
@@ -36,13 +36,13 @@ public class BuildingDebugDrawer {
      */
     private final static float SCALE_FACTOR = 0.01f;
 
-    protected RoofDebugOut debug;
+    protected RoofDebugOutput debug;
     private List<Point3d> scaledBBox;
 
     /**
      * @param debug
      */
-    public BuildingDebugDrawer(RoofDebugOut debug) {
+    public BuildingDebugDrawer(RoofDebugOutput debug) {
         this.debug = debug;
     }
 

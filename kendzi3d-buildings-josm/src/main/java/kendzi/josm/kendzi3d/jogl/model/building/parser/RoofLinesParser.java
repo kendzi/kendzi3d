@@ -10,8 +10,8 @@ import java.util.Set;
 
 import javax.vecmath.Point2d;
 
-import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofLinesModel;
 import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.buildings.model.roof.lines.RoofLinesModel;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;

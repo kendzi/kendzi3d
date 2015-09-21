@@ -42,7 +42,6 @@
 			<artifactId>kendzi3d-jogl-textures-library-res</artifactId>
 			<version>1.0.187-SNAPSHOT</version>
 		</dependency>
-				
 	</dependencies>
 
  	<parent>

@@ -5,16 +5,15 @@ import java.util.Map;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
-import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofModel;
-import kendzi.josm.kendzi3d.jogl.model.building.model.roof.RoofOrientation;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.Parser;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.Measurement;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementKey;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.measurement.MeasurementUnit;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.DormerRoofModel;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.model.RoofFrontDirection;
-import kendzi.josm.kendzi3d.jogl.model.roof.mk.type.alias.RoofTypeAliasEnum;
 import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
+import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
+import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementUnit;
+import kendzi.kendzi3d.buildings.model.roof.RoofFrontDirection;
+import kendzi.kendzi3d.buildings.model.roof.RoofModel;
+import kendzi.kendzi3d.buildings.model.roof.RoofOrientation;
+import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
+import kendzi.kendzi3d.buildings.model.roof.shape.RoofTypeAliasEnum;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.direction.AngleDirection;
@@ -83,25 +82,25 @@ public class RoofParser {
 
         String type = parseRoofShape(primitive);
 
-        RoofTypeAliasEnum roofType = Parser.parseRoofShape(type);
+        RoofTypeAliasEnum roofType = RoofParserUtil.parseRoofShape(type);
         if (roofType == null) {
             roofType = RoofTypeAliasEnum.FLAT;
         }
 
         roof.setRoofType(roofType);
-        roof.setRoofTypeParameter(Parser.parseRoofTypeParameter(roofType, type));
+        roof.setRoofTypeParameter(RoofParserUtil.parseRoofTypeParameter(roofType, type));
 
         Map<String, String> keys = primitive.getKeys();
 
         String dormer = keys.get(OsmAttributeKeys._3DR_DORMERS.getKey());
 
-        roof.setDormers(Parser.parseMultipleDormers(dormer));
-        roof.setDormersFront(Parser.parseSiteDormers("front", keys));
-        roof.setDormersLeft(Parser.parseSiteDormers("left", keys));
-        roof.setDormersBack(Parser.parseSiteDormers("back", keys));
-        roof.setDormersRight(Parser.parseSiteDormers("right", keys));
+        roof.setDormers(RoofParserUtil.parseMultipleDormers(dormer));
+        roof.setDormersFront(RoofParserUtil.parseSiteDormers("front", keys));
+        roof.setDormersLeft(RoofParserUtil.parseSiteDormers("left", keys));
+        roof.setDormersBack(RoofParserUtil.parseSiteDormers("back", keys));
+        roof.setDormersRight(RoofParserUtil.parseSiteDormers("right", keys));
 
-        Map<MeasurementKey, Measurement> measurements = Parser.parseMeasurements(keys);
+        Map<MeasurementKey, Measurement> measurements = RoofParserUtil.parseMeasurements(keys);
 
         if (measurements.get(MeasurementKey.HEIGHT_1) == null) {
 
@@ -123,7 +122,7 @@ public class RoofParser {
         roof.setMeasurements(measurements);
 
         roof.setDirection(findDirection(primitive, perspective));
-        RoofOrientation parseOrientation = Parser.parseOrientation(keys);
+        RoofOrientation parseOrientation = RoofParserUtil.parseOrientation(keys);
 
         roof.setOrientation(parseOrientation);
 

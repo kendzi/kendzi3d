@@ -13,9 +13,9 @@ import java.awt.Color;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryKey;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.building.model.WindowGridBuildingElement;
 import kendzi.josm.kendzi3d.util.ColorUtil;
 import kendzi.josm.kendzi3d.util.ModelUtil;
+import kendzi.kendzi3d.buildings.model.WindowGridBuildingElement;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.util.StringUtil;
 

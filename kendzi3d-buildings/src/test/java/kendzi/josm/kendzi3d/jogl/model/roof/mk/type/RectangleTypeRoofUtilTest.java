@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
+import kendzi.kendzi3d.buildings.builder.roof.shape.type.RectangleTypeRoofUtil;
 import kendzi.math.geometry.AngleUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
