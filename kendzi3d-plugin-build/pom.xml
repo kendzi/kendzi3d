@@ -90,7 +90,7 @@
 							<Plugin-Link>http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
 							<Plugin-Mainversion>6088</Plugin-Mainversion>
 							<Plugin-Version>${project.version}</Plugin-Version>
-							<Plugin-Requires>log4j;kendzi3d-jogl</Plugin-Requires>
+							<Plugin-Requires>log4j;kendzi3d-jogl;kendzi3d-resources</Plugin-Requires>
 							<url>${project.url}</url>
 						</manifestEntries>
 					</archive>
