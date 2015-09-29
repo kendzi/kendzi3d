@@ -9,22 +9,34 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import kendzi.kendzi3d.resource.inter.ResourceService;
-
 import org.apache.log4j.Logger;
 
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 
+import kendzi.kendzi3d.resource.inter.ResourceService;
+
+/**
+ * Creates black and white texture image from provided image.
+ *
+ * @author Tomasz Kedziora (Kendzi)
+ *
+ */
 public class BwFileTextureBuilder implements TextureBuilder {
     /** Log. */
     private static final Logger log = Logger.getLogger(BwFileTextureBuilder.class);
 
     /**
-     * File url reciver service.
+     * File url receiver service.
      */
     ResourceService resourceService;
 
+    /**
+     * Constructor.
+     *
+     * @param resourceService
+     *            resource service
+     */
     public BwFileTextureBuilder(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
@@ -67,12 +79,19 @@ public class BwFileTextureBuilder implements TextureBuilder {
         return loadBufferedImage(pKey);
     }
 
+    /**
+     * Loads buffered image from resources.
+     *
+     * @param key
+     *            the file key
+     * @return the buffered image
+     */
     public BufferedImage loadBufferedImage(String key) {
         if (key == null) {
             return null;
         }
 
-        URL url = this.resourceService.resourceToUrl(key);
+        URL url = resourceService.resourceToUrl(key);
         if (url == null) {
             log.info("No file to load: " + key);
             return null;
@@ -98,37 +117,40 @@ public class BwFileTextureBuilder implements TextureBuilder {
             return null;
         }
 
-
         TextureRenderer tr = new TextureRenderer(img.getWidth(), img.getHeight(), true, true);
 
         Graphics2D g = tr.createGraphics();
 
         g.setClip(0, 0, img.getWidth(), img.getHeight());
 
-        g.drawImage(img, new AffineTransform(1f,0f,0f,1f,0,0),  null);
+        g.drawImage(img, new AffineTransform(1f, 0f, 0f, 1f, 0, 0), null);
 
         g.dispose();
 
         return tr;
     }
 
-
-
+    /**
+     * Converts color image to black and white.
+     *
+     * @param colorFrame
+     *            color image to be converted
+     */
     protected void filterBw(BufferedImage colorFrame) {
 
         BufferedImage grayFrame = colorFrame;
 
         WritableRaster raster = grayFrame.getRaster();
 
-        for(int x = 0; x < raster.getWidth(); x++) {
-            for(int y = 0; y < raster.getHeight(); y++){
-                int argb = colorFrame.getRGB(x,y);
+        for (int x = 0; x < raster.getWidth(); x++) {
+            for (int y = 0; y < raster.getHeight(); y++) {
+                int argb = colorFrame.getRGB(x, y);
                 int r = argb >> 16 & 0xff;
-            int g = argb >>  8 & 0xff;
-            int b = argb & 0xff;
+                int g = argb >> 8 & 0xff;
+                int b = argb & 0xff;
 
-            int l = (int) (.299 * r + .587 * g + .114 * b);
-            raster.setSample(x, y, 0, l);
+                int l = (int) (.299 * r + .587 * g + .114 * b);
+                raster.setSample(x, y, 0, l);
             }
         }
     }
