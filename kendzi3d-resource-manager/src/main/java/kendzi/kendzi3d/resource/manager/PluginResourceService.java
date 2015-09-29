@@ -10,9 +10,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import kendzi.kendzi3d.resource.inter.ResourceService;
-
 import org.apache.log4j.Logger;
+
+import kendzi.kendzi3d.resource.inter.ResourceService;
 
 /**
  * Receive files stored locally in resources or plugin directory.
@@ -72,35 +72,31 @@ public final class PluginResourceService implements ResourceService {
      * @return url to resource
      */
     public static URL getResourceUrl(String pResName) {
-        // ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
-        // CodeSource codeSource = pDomain.getCodeSource();
-        // // if (codeSource == null) throw new CannotFindDirException();
-        // URL loc = codeSource.getLocation();
-        // log.info("loc: " + loc);
 
-        URL resource = PluginResourceService.class.getResource("");
-        // log.info("resource: " + resource);
+        // URL resource = PluginResourceService.class.getResource("");
+        // // log.info("resource: " + resource);
+        //
+        // String resUrl = resource.toString();
+        // if (resUrl.startsWith("jar:") && resUrl.contains("kendzi3d.jar")) {
+        // // XXX only for JOSN plugin,
+        // // FIXME remove
+        // // if we are in jar
+        // try {
+        // String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) +
+        // pResName;
+        // // log.info("new url: " + newURL);
+        // return new URL(newURL);
+        // } catch (MalformedURLException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        //
+        // }
 
-        String resUrl = resource.toString();
-        if (resUrl.startsWith("jar:") && resUrl.contains("kendzi3d.jar")) {
-            // XXX only for JOSN plugin,
-            // FIXME remove
-            // if we are in jar
-            try {
-                String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
-                // log.info("new url: " + newURL);
-                return new URL(newURL);
-            } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        } else {
-            // if we run from eclipse ide
-            URL res = PluginResourceService.class.getResource(pResName);
-            if (res != null) {
-                return res;
-            }
+        // if we run from eclipse ide
+        URL res = PluginResourceService.class.getResource(pResName);
+        if (res != null) {
+            return res;
         }
 
         // if it is not from root

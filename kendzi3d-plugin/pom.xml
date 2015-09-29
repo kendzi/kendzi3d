@@ -30,6 +30,10 @@
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-resources</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-editor</artifactId>
 			<version>1.0.187-SNAPSHOT</version>
 		</dependency>

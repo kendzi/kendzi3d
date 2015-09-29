@@ -31,15 +31,18 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>kendzi.kendzi3d</groupId>
+			<artifactId>kendzi3d-resources</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
-			<version>${gluegen.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>${jogl.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

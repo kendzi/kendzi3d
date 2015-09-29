@@ -5,7 +5,7 @@
 	<artifactId>kendzi3d-parent</artifactId>
 	<version>1.0.187-SNAPSHOT</version>
 	<packaging>pom</packaging>
- 
+
 	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
 	
 	
@@ -49,6 +49,11 @@
 				<groupId>org.jogamp.gluegen</groupId>
 				<artifactId>gluegen-rt-main</artifactId>
 				<version>${gluegen.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>kendzi.kendzi3d</groupId>
+				<artifactId>kendzi3d-resources</artifactId>
+				<version>0.0.14-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
