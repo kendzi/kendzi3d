@@ -6,15 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.BarrierFence;
-import kendzi.josm.kendzi3d.jogl.model.BarrierFenceRelation;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -25,9 +16,18 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.BarrierFence;
+import kendzi.josm.kendzi3d.jogl.model.BarrierFenceRelation;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for fence.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class FenceLayer implements Layer {
@@ -59,15 +59,15 @@ public class FenceLayer implements Layer {
 
     {
         try {
-            this.fenceMatcher = SearchCompiler.compile("(barrier=fence) | (barrier\\:part=fence)", false, false);
+            fenceMatcher = SearchCompiler.compile("(barrier=fence) | (barrier\\:part=fence)");
         } catch (ParseError e) {
-            this.fenceMatcher = new SearchCompiler.Never();
+            fenceMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))", false, false);
+            fenceRelationMatcher = SearchCompiler.compile("((type=way\\:3d) & (barrier=fence))");
         } catch (ParseError e) {
-            this.fenceRelationMatcher = new SearchCompiler.Never();
+            fenceRelationMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
@@ -80,12 +80,12 @@ public class FenceLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.fenceMatcher;
+        return fenceMatcher;
     }
 
     @Override
     public Match getRelationMatcher() {
-        return this.fenceRelationMatcher;
+        return fenceRelationMatcher;
     }
 
     @Override
@@ -100,20 +100,19 @@ public class FenceLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new BarrierFence(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new BarrierFence(way, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Relation relation, Perspective perspective) {
-        return new BarrierFenceRelation(relation, perspective, this.modelRender, this.metadataCacheService,
-                this.textureLibraryStorageService);
+        return new BarrierFenceRelation(relation, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     /**
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

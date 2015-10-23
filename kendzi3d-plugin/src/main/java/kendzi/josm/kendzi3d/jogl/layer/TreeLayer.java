@@ -6,16 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.model.trees.Forest;
-import kendzi.josm.kendzi3d.jogl.model.trees.Tree;
-import kendzi.josm.kendzi3d.jogl.model.trees.TreeRow;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -26,9 +16,19 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.model.trees.Forest;
+import kendzi.josm.kendzi3d.jogl.model.trees.Tree;
+import kendzi.josm.kendzi3d.jogl.model.trees.TreeRow;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for trees.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class TreeLayer implements Layer {
@@ -60,15 +60,15 @@ public class TreeLayer implements Layer {
 
     {
         try {
-            this.treesMatcher = SearchCompiler.compile("(natural=tree)", false, false);
+            treesMatcher = SearchCompiler.compile("(natural=tree)");
         } catch (ParseError e) {
-            this.treesMatcher = new SearchCompiler.Never();
+            treesMatcher = new SearchCompiler.Never();
             e.printStackTrace();
         }
         try {
-            this.treesWayMatcher = SearchCompiler.compile("(natural=tree_row | natural=wood | landuse=forest)", false, false);
+            treesWayMatcher = SearchCompiler.compile("(natural=tree_row | natural=wood | landuse=forest)");
         } catch (ParseError e) {
-            this.treesWayMatcher = new SearchCompiler.Never();
+            treesWayMatcher = new SearchCompiler.Never();
             e.printStackTrace();
         }
 
@@ -76,12 +76,12 @@ public class TreeLayer implements Layer {
 
     @Override
     public Match getNodeMatcher() {
-        return this.treesMatcher;
+        return treesMatcher;
     }
 
     @Override
     public Match getWayMatcher() {
-        return this.treesWayMatcher;
+        return treesWayMatcher;
     }
 
     @Override
@@ -96,16 +96,16 @@ public class TreeLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Node pNode, Perspective perspective) {
-        return new Tree(pNode, perspective, this.modelRender, this.metadataCacheService, this.modelCacheService);
+        return new Tree(pNode, perspective, modelRender, metadataCacheService, modelCacheService);
 
     }
 
     @Override
     public WorldObject buildModel(Way pWay, Perspective perspective) {
         if ("tree_row".equals(pWay.get("natural"))) {
-            return new TreeRow(pWay, perspective, this.modelRender, this.modelCacheService, this.metadataCacheService);
+            return new TreeRow(pWay, perspective, modelRender, modelCacheService, metadataCacheService);
         }
-        return new Forest(pWay, perspective, this.modelRender, this.modelCacheService, this.metadataCacheService);
+        return new Forest(pWay, perspective, modelRender, modelCacheService, metadataCacheService);
 
     }
 
@@ -118,7 +118,7 @@ public class TreeLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

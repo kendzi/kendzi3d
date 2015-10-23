@@ -6,8 +6,8 @@
 
 package kendzi.josm.kendzi3d;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.gui.help.HelpUtil.*;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -17,6 +17,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.ImageProvider;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import kendzi.josm.jogl.JoglPlugin;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
@@ -37,16 +47,6 @@ import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.ToggleAction;
-import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.tools.ImageProvider;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
@@ -61,7 +61,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
-     * 
+     *
      * @param pInfo
      *            information about the plugin and its local installation
      */
@@ -90,7 +90,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
      * Check if file exist in plugin directory.
-     * 
+     *
      * @param pFileName
      *            file path
      * @return if file exist
@@ -106,7 +106,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
     /**
      * Refreshing menu.
-     * 
+     *
      * @param injector
      */
     public void refreshMenu(final Injector injector) {
@@ -114,25 +114,25 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         System.err.println("3d test");
         if (view3dJMenu == null) {
-            view3dJMenu = menu.addMenu("3D", KeyEvent.VK_D, menu.getDefaultMenuPos(), ht("/Plugin/WMS"));
+            view3dJMenu = menu.addMenu("3D", "3D", KeyEvent.VK_D, menu.getDefaultMenuPos(), ht("/Plugin/WMS"));
         } else {
             view3dJMenu.removeAll();
         }
 
         view3dJMenu.addSeparator();
 
-        view3dJMenu.add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"),
-                null, false) {
+        view3dJMenu
+                .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                putValue("toolbar", "3dView_run");
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        putValue("toolbar", "3dView_run");
 
-                openKendzi3dWindow(injector);
+                        openKendzi3dWindow(injector);
 
-            }
+                    }
 
-        }));
+                }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -159,8 +159,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         DebugToggleAction debugToggleAction = injector.getInstance(DebugToggleAction.class);
         registerCheckBoxAction(debugToggleAction, view3dJMenu);
 
-        DebugPointModelToggleAction debugPointModelToggleAction = injector
-                .getInstance(DebugPointModelToggleAction.class);
+        DebugPointModelToggleAction debugPointModelToggleAction = injector.getInstance(DebugPointModelToggleAction.class);
         registerCheckBoxAction(debugPointModelToggleAction, view3dJMenu);
 
         view3dJMenu.addSeparator();

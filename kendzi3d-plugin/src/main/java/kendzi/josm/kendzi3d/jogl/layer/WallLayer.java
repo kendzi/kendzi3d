@@ -6,14 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.BarrierWall;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -24,9 +16,17 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.BarrierWall;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for fence.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class WallLayer implements Layer {
@@ -56,9 +56,9 @@ public class WallLayer implements Layer {
 
     {
         try {
-            this.wallMatcher = SearchCompiler.compile("(barrier=wall)", false, false);
+            wallMatcher = SearchCompiler.compile("(barrier=wall)");
         } catch (ParseError e) {
-            this.wallMatcher = new SearchCompiler.Never();
+            wallMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
     }
@@ -70,7 +70,7 @@ public class WallLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.wallMatcher;
+        return wallMatcher;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class WallLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new BarrierWall(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new BarrierWall(way, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class WallLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

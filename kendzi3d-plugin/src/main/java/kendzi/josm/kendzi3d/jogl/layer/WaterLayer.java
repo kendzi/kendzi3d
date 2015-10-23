@@ -6,14 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.Water;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -24,9 +16,17 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.Water;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for water.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class WaterLayer implements Layer {
@@ -58,24 +58,23 @@ public class WaterLayer implements Layer {
 
     {
         try {
-            this.waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)", false,
-                    false);
+            waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)");
         } catch (ParseError e) {
-            this.waterMatcher = new SearchCompiler.Never();
+            waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.waterMatcher = SearchCompiler.compile(
-                    "((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon", false, false);
+            waterMatcher = SearchCompiler
+                    .compile("((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon");
         } catch (ParseError e) {
-            this.waterMatcher = new SearchCompiler.Never();
+            waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.waterRelationMatcher = SearchCompiler.compile(
-                    "type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))", false, false);
+            waterRelationMatcher = SearchCompiler
+                    .compile("type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))");
         } catch (ParseError e) {
-            this.waterMatcher = new SearchCompiler.Never();
+            waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
@@ -88,12 +87,12 @@ public class WaterLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.waterMatcher;
+        return waterMatcher;
     }
 
     @Override
     public Match getRelationMatcher() {
-        return this.waterRelationMatcher;
+        return waterRelationMatcher;
     }
 
     @Override
@@ -108,19 +107,19 @@ public class WaterLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new Water(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Water(way, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Relation relation, Perspective perspective) {
-        return new Water(relation, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Water(relation, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     /**
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

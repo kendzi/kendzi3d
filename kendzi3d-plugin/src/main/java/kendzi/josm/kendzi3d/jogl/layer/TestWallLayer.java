@@ -6,14 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.Wall;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -24,9 +16,17 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.Wall;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for fence.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class TestWallLayer implements Layer {
@@ -56,9 +56,9 @@ public class TestWallLayer implements Layer {
 
     {
         try {
-            this.fenceMatcher = SearchCompiler.compile("(test=wall)", false, false);
+            fenceMatcher = SearchCompiler.compile("(test=wall)");
         } catch (ParseError e) {
-            this.fenceMatcher = new SearchCompiler.Never();
+            fenceMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
@@ -71,7 +71,7 @@ public class TestWallLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.fenceMatcher;
+        return fenceMatcher;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class TestWallLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new Wall(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Wall(way, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class TestWallLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

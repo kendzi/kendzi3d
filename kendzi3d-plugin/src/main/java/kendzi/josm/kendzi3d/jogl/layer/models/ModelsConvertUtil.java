@@ -1,19 +1,18 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
-import generated.NodeModel;
-import generated.WayNodeModel;
-
 import javax.vecmath.Vector3d;
 
+import org.openstreetmap.josm.actions.search.SearchCompiler;
+import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
+
+import generated.NodeModel;
+import generated.WayNodeModel;
 import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
 import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.inter.ResourceUtil;
 import kendzi.util.StringUtil;
-
-import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
 
 public class ModelsConvertUtil {
 
@@ -68,7 +67,7 @@ public class ModelsConvertUtil {
 
     private static Match compileMatch(String match) throws Exception {
         try {
-            return SearchCompiler.compile(match, false, false);
+            return SearchCompiler.compile(match);
         } catch (Exception e) {
             throw new Exception("can't compile expression for: " + match, e);
         }
@@ -81,7 +80,8 @@ public class ModelsConvertUtil {
         }
 
         if (configurationFile.startsWith(ResourceService.PLUGIN_FILE_PREFIX)) {
-            // if configuration is stored inside plug-in, all resources should be taken from plug-in jar root
+            // if configuration is stored inside plug-in, all resources should
+            // be taken from plug-in jar root
             return ResourceService.PLUGIN_FILE_PREFIX + "/" + removeRoot(fileUrl);
         }
 
@@ -106,7 +106,5 @@ public class ModelsConvertUtil {
         }
         return fileName;
     }
-
-
 
 }

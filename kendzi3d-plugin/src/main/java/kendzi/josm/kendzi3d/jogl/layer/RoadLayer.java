@@ -6,13 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.josm.kendzi3d.jogl.model.Road;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -23,9 +16,16 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.jogl.model.Road;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for roads.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class RoadLayer implements Layer {
@@ -49,9 +49,9 @@ public class RoadLayer implements Layer {
 
     {
         try {
-            this.roadMatcher = SearchCompiler.compile("(highway=*)", false, false);
+            roadMatcher = SearchCompiler.compile("(highway=*)");
         } catch (ParseError e) {
-            this.roadMatcher = new SearchCompiler.Never();
+            roadMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
@@ -64,7 +64,7 @@ public class RoadLayer implements Layer {
 
     @Override
     public Match getWayMatcher() {
-        return this.roadMatcher;
+        return roadMatcher;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class RoadLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new Road(way, perspective, this.modelRender, this.metadataCacheService);
+        return new Road(way, perspective, modelRender, metadataCacheService);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class RoadLayer implements Layer {
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**

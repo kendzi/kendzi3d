@@ -6,14 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import kendzi.jogl.model.render.ModelRender;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.building.Building;
-import kendzi.josm.kendzi3d.service.MetadataCacheService;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
@@ -24,9 +16,17 @@ import org.openstreetmap.josm.data.osm.Way;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.building.Building;
+import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
+
 /**
  * Layer for buildings.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class NewBuildingLayer implements Layer {
@@ -58,34 +58,28 @@ public class NewBuildingLayer implements Layer {
 
     {
         try {
-            this.buildingNodeMatcher = SearchCompiler
-                    .compile(
-                            "building\\:shape=* & ((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))",
-                            false, false);
+            buildingNodeMatcher = SearchCompiler.compile(
+                    "building\\:shape=* & ((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))");
 
         } catch (ParseError e) {
-            this.buildingNodeMatcher = new SearchCompiler.Never();
+            buildingNodeMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
-            this.buildingMatcher = SearchCompiler
-                    .compile(
-                            "((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))",
-                            false, false);
+            buildingMatcher = SearchCompiler.compile(
+                    "((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no)) & -child type=building & (-child (type=multipolygon & (building=* |  building\\:part=*)))");
 
         } catch (ParseError e) {
-            this.buildingMatcher = new SearchCompiler.Never();
+            buildingMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
         try {
-            this.buildingRelationMatcher = SearchCompiler
-                    .compile(
-                            "(type=multipolygon  & ((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no))  & -child type=building) | type=building",
-                            false, false);
+            buildingRelationMatcher = SearchCompiler.compile(
+                    "(type=multipolygon  & ((building=* & -building=no & -building\\:parts=*) | (building\\:part=* & -building\\:part=no))  & -child type=building) | type=building");
 
         } catch (ParseError e) {
-            this.buildingMatcher = new SearchCompiler.Never();
+            buildingMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 
@@ -93,17 +87,17 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public Match getNodeMatcher() {
-        return this.buildingNodeMatcher;
+        return buildingNodeMatcher;
     }
 
     @Override
     public Match getWayMatcher() {
-        return this.buildingMatcher;
+        return buildingMatcher;
     }
 
     @Override
     public Match getRelationMatcher() {
-        return this.buildingRelationMatcher;
+        return buildingRelationMatcher;
     }
 
     @Override
@@ -113,25 +107,24 @@ public class NewBuildingLayer implements Layer {
 
     @Override
     public WorldObject buildModel(Node node, Perspective perspective) {
-        return new Building(node, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Building(node, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Way way, Perspective perspective) {
-        return new Building(way, perspective, this.modelRender, this.metadataCacheService, this.textureLibraryStorageService);
+        return new Building(way, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     @Override
     public WorldObject buildModel(Relation relation, Perspective perspective) {
-        return new Building(relation, perspective, this.modelRender, this.metadataCacheService,
-                this.textureLibraryStorageService);
+        return new Building(relation, perspective, modelRender, metadataCacheService, textureLibraryStorageService);
     }
 
     /**
      * @return the modelRender
      */
     public ModelRender getModelRender() {
-        return this.modelRender;
+        return modelRender;
     }
 
     /**
