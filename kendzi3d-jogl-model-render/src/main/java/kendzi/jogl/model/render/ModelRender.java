@@ -200,7 +200,7 @@ public class ModelRender {
 
         int texSize = texturesComponent.size();
         int texColored = colored && texSize > 0 ? texSize : -1;
-        for (int i = 0; i < MAX_TEXTURES_LAYERS; i++) {
+        for (int i = 0; i < 2; i++) {
 
             boolean layerEnabled = i < texSize && useTextures;
             boolean lightLayerEnabled = i == texColored;
@@ -224,6 +224,11 @@ public class ModelRender {
 
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2ES1.GL_PREVIOUS);
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+
+                /* Replete alpha with value from previous pass. */
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
 
                 /* Replete alpha with value from previous pass. */
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
