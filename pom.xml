@@ -32,7 +32,7 @@
 		<jogl.version>2.3.1</jogl.version>
 		<gluegen.version>2.3.1</gluegen.version>
 		
-		<kendzi.math.version>0.0.12-SNAPSHOT</kendzi.math.version>
+		<kendzi.math.version>0.0.12</kendzi.math.version>
 		<kendzi3d-resources.version>0.0.1</kendzi3d-resources.version>
 	</properties>
 	
