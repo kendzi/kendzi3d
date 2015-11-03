@@ -39,9 +39,10 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.openstreetmap</groupId>
+				<!-- artifact from jsom repository -->
+				<groupId>org.openstreetmap.josm</groupId>
 				<artifactId>josm</artifactId>
-				<version>RELEASE</version>
+				<version>SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jogamp.jogl</groupId>
@@ -128,6 +129,18 @@
 	</modules>
 	
 	<repositories>
+		<repository>
+			<id>josm_repo</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>https://josm.openstreetmap.de/nexus/content/repositories/public/</url>
+		</repository>
+		
 		<repository>
 			<id>repo_remote</id>
 			<releases>

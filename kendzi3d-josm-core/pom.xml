@@ -8,7 +8,7 @@
  
 	<dependencies>
 		<dependency>
-			<groupId>org.openstreetmap</groupId>
+			<groupId>org.openstreetmap.josm</groupId>
 			<artifactId>josm</artifactId>
 		</dependency>
 		<dependency>

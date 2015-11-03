@@ -14,7 +14,7 @@
 	</distributionManagement>
 	<dependencies>
 		<dependency>
-			<groupId>org.openstreetmap</groupId>
+			<groupId>org.openstreetmap.josm</groupId>
 			<artifactId>josm</artifactId>
 			<scope>provided</scope>
 		</dependency>

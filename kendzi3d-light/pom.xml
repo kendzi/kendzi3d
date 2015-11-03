@@ -35,7 +35,6 @@
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>${jogl.version}</version>
 		</dependency>
 
 		<dependency>
