@@ -7,6 +7,18 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.DataSource;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.Projection;
+
 import kendzi.josm.kendzi3d.data.DataSetFilterUtil;
 import kendzi.josm.kendzi3d.data.Kendzi3dCore;
 import kendzi.josm.kendzi3d.data.OsmId;
@@ -20,18 +32,10 @@ import kendzi.kendzi3d.world.BuildableWorldObject;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.DataSource;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.projection.Projection;
-
+/**
+ * Monitor JOSM data change events and produce new editable objects for 3d view.
+ *
+ */
 public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private static final Logger LOG = Logger.getLogger(EditorObjectsProducer.class);
@@ -42,6 +46,14 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private LatLon center;
 
+    /**
+     * Constructor.
+     *
+     * @param core
+     *            the core
+     * @param dataConsumersMonitor
+     *            the data consumer monitor
+     */
     @Inject
     public EditorObjectsProducer(Kendzi3dCore core, DataConsumersMonitor dataConsumersMonitor) {
         this.core = core;
@@ -90,14 +102,23 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         Perspective3D perspective = core.getPerspective3d();
 
+        boolean rebuildData = false;
+
         if (perspective == null || event instanceof NewDataEvent) {
             Projection proj = Main.getProjection();
             center = calculateCenter(dataSet, proj);
             perspective = calculatePerspective(center, proj);
             core.setPerspective3d(perspective);
+
+            rebuildData = true;
         }
 
         for (Layer layer : core.getLayers()) {
+
+            if (rebuildData) {
+                // the whole data was re-added, need to clean up all old objects
+                core.clean(layer);
+            }
 
             Set<OsmId> currentIds = core.getOsmIds(layer);
             List<OsmId> filteredIds = DataSetFilterUtil.filter(layer, dataSet, perspective);
@@ -186,16 +207,20 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private void createNewEditorObjects(DataSet dataSet, Set<OsmId> newIds, Layer layer, Perspective perspective) {
         for (OsmId osmId : newIds) {
-            WorldObject buildModel = prepareEditorObject(dataSet, layer, osmId, perspective);
+            try {
+                WorldObject buildModel = prepareEditorObject(dataSet, layer, osmId, perspective);
 
-            if (buildModel != null) {
+                if (buildModel != null) {
 
-                if (buildModel instanceof BuildableWorldObject) {
+                    if (buildModel instanceof BuildableWorldObject) {
 
-                    ((BuildableWorldObject) buildModel).buildWorldObject();
+                        ((BuildableWorldObject) buildModel).buildWorldObject();
+                    }
+
+                    core.add(layer, osmId, buildModel);
                 }
-
-                core.add(layer, osmId, buildModel);
+            } catch (Exception e) {
+                LOG.error(String.format("cannot create new world object with id: %s, skipping", osmId), e);
             }
         }
     }
@@ -203,24 +228,30 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
     private void updateEditorObjects(DataSet dataSet, Set<OsmId> updateIds, Layer layer, Perspective perspective) {
         for (OsmId osmId : updateIds) {
 
-            OsmPrimitive primitive = dataSet.getPrimitiveById(osmId);
+            try {
+                OsmPrimitive primitive = dataSet.getPrimitiveById(osmId);
 
-            EditableObject editableObject = core.load(layer, osmId);
-            if (editableObject instanceof RebuildableWorldObject) {
-                ((RebuildableWorldObject) editableObject).rebuildWorldObject(primitive, perspective);
-            } else {
-                throw new IllegalStateException("can't rebuild osm object: " + osmId + " for layer " + layer
-                        + " because it don't support it");
+                EditableObject editableObject = core.load(layer, osmId);
+                if (editableObject instanceof RebuildableWorldObject) {
+                    ((RebuildableWorldObject) editableObject).rebuildWorldObject(primitive, perspective);
+                } else {
+                    throw new IllegalStateException(String
+                            .format("cannot rebuild osm object: %s for layer %s because it don't support it", osmId, layer));
+                }
+
+            } catch (Exception e) {
+                LOG.error(String.format("cannot update world object with id: %s, skipping", osmId), e);
             }
-            // if (editableObject instanceof BuildableWorldObject) {
-            // ((BuildableWorldObject) editableObject).buildWorldObject();
-            // }
         }
     }
 
     private void removeEditorObjects(Set<OsmId> removeIds, Layer layer) {
         for (OsmId osmId : removeIds) {
-            core.remove(layer, osmId);
+            try {
+                core.remove(layer, osmId);
+            } catch (Exception e) {
+                LOG.error(String.format("cannot remove world object with id: %s, skipping", osmId), e);
+            }
         }
     }
 
@@ -330,10 +361,6 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
             this.removeIds = removeIds;
         }
 
-    }
-
-    public void addDbEvent(DataEvent dataEvent) {
-        eventQueue.add(dataEvent);
     }
 
     @Override
