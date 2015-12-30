@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>kendzi</groupId>
 			<artifactId>kendzi-util</artifactId>
-			<version>1.0.189-SNAPSHOT</version>
+			<version>1.0.189</version>
 		</dependency>
 		<dependency>
 			<groupId>java3d</groupId>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-math</artifactId>
-			<version>1.0.189-SNAPSHOT</version>
+			<version>1.0.189</version>
 		</dependency>
 		
 	</dependencies>
@@ -32,7 +32,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.189-SNAPSHOT</version>
+		<version>1.0.189</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
