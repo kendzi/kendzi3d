@@ -2,6 +2,7 @@ package kendzi.josm.kendzi3d.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import kendzi.kendzi3d.world.quad.layer.Layer;
 
 /**
  * Implementation of editor core.
- * 
+ *
  */
 public class Kendzi3dCore implements EditorCore, Perspective3dProvider {
 
