@@ -25,8 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-josm-jogl</artifactId>
-			<version>1.0.0</version>
+			<artifactId>josm-jogl</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>

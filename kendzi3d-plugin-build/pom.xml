@@ -26,8 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-josm-jogl</artifactId>
-			<version>1.0.0</version>
+			<artifactId>josm-jogl</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -93,7 +92,7 @@
 							<Plugin-Link>http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
 							<Plugin-Mainversion>8931</Plugin-Mainversion>
 							<Plugin-Version>${project.version}</Plugin-Version>
-							<Plugin-Requires>log4j;kendzi3d-jogl;kendzi3d-resources</Plugin-Requires>
+							<Plugin-Requires>log4j;jogl;kendzi3d-resources</Plugin-Requires>
 							<url>${project.url}</url>
 						</manifestEntries>
 					</archive>

@@ -29,8 +29,8 @@
 		<junit.version>4.11</junit.version>
 		<inject.version>1</inject.version>
 		
-		<jogl.version>2.3.1</jogl.version>
-		<gluegen.version>2.3.1</gluegen.version>
+		<jogl.version>2.3.2</jogl.version>
+		<gluegen.version>2.3.2</gluegen.version>
 		
 		<kendzi.math.version>0.0.12</kendzi.math.version>
 		<kendzi3d-resources.version>0.0.1</kendzi3d-resources.version>
@@ -59,6 +59,11 @@
 				<artifactId>kendzi3d-resources</artifactId>
 				<version>${kendzi3d-resources.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>kendzi.kendzi3d</groupId>
+				<artifactId>josm-jogl</artifactId>
+				<version>1.0.45</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -68,12 +73,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>		
-		<dependency>
-			<!-- artifact in local repo -->
-			<groupId>kendzi.kendzi3d</groupId>
-			<artifactId>kendzi3d-josm-jogl</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+		
 		<dependency>
 			<!-- artifact in local repo -->
 			<groupId>org.poly2tri</groupId>
