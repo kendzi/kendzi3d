@@ -149,6 +149,11 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private LatLon calculateCenter(DataSet dataset, Projection proj) {
 
+        if (dataset == null) {
+            // default location when dataset don't exists
+            return new LatLon(0, 0);
+        }
+
         double maxX = -Double.MAX_VALUE;
         double minX = Double.MAX_VALUE;
 
