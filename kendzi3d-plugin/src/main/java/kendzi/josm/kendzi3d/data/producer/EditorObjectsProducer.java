@@ -94,7 +94,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private DataSet getDataSet(DataEvent event) {
         // always take the newest data set form JOSM
-        return Main.main.getCurrentDataSet();
+        return Main.getLayerManager().getEditDataSet();
     }
 
     private void process(DataEvent event) {

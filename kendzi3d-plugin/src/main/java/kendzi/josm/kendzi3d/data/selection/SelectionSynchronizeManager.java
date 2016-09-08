@@ -129,7 +129,7 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
         previewSelectionPrimitiveId = primitiveId;
         previewSelectionTime = time;
 
-        DataSet currentDataSet = Main.main.getCurrentDataSet();
+        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
 
         currentDataSet.setSelected(primitiveId);
     }
