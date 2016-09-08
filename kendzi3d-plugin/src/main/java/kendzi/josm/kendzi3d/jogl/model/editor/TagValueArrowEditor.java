@@ -105,7 +105,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     protected void saveTagToPrimitive(AbstractMap<String, String> tags) {
 
-        DataSet dataSet = Main.main.getCurrentDataSet();
+        DataSet dataSet = Main.getLayerManager().getEditDataSet();
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 
@@ -118,7 +118,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
         DecimalFormat formater = new DecimalFormat("#0.00");
         String value = formater.format(length);
 
-        DataSet dataSet = Main.main.getCurrentDataSet();
+        DataSet dataSet = Main.getLayerManager().getEditDataSet();
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 

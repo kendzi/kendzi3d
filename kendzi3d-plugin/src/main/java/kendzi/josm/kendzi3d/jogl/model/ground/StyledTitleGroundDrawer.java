@@ -239,7 +239,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         nc.zoomTo(newCenter, scale);
         StyledMapRenderer sr = new StyledMapRenderer(g, nc, false);
 
-        DataSet ds = Main.main.getCurrentDataSet();
+        DataSet ds = Main.getLayerManager().getEditDataSet();
 
         LatLon min = nc.getLatLon(0, 0);
         LatLon max = nc.getLatLon(size, size);

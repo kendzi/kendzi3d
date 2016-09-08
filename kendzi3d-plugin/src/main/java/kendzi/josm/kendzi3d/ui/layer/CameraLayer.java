@@ -25,10 +25,13 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -67,7 +70,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     private void registerLayerChangeListener() {
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
     }
 
     private void initTimer() {
@@ -236,11 +239,11 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
+    public void layerAdded(LayerAddEvent evt) {
         addCameraLayer();
     }
 
@@ -248,40 +251,36 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      * If layer is the OSM Data layer, remove all errors
      */
     @Override
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer instanceof OsmDataLayer && !isOsmDataLayer()) {
-            Main.main.removeLayer(this);
-        } else if (oldLayer == this) {
+    public void layerRemoving(LayerRemoveEvent evt) {
+        if (evt.getRemovedLayer() instanceof OsmDataLayer && !isOsmDataLayer()) {
+            Main.getLayerManager().removeLayer(this);
+        } else if (evt.getRemovedLayer() == this) {
             // XXX
             // Always can be added layer!
-            // MapView.removeLayerChangeListener(this);
+            // Main.getLayerManager().removeLayerChangeListener(this);
         }
     }
 
     private boolean isOsmDataLayer() {
-        if (Main.map != null && Main.map.mapView != null) {
-            for (Layer layer : Main.map.mapView.getAllLayers()) {
-                if (layer instanceof OsmDataLayer) {
-                    return true;
-                }
+        for (Layer layer : Main.getLayerManager().getLayers()) {
+            if (layer instanceof OsmDataLayer) {
+                return true;
             }
         }
         return false;
     }
 
     private boolean isAddedToLayers() {
-        if (Main.map != null && Main.map.mapView != null) {
-            for (Layer layer : Main.map.mapView.getAllLayers()) {
-                if (layer instanceof CameraLayer) {
-                    return true;
-                }
+        for (Layer layer : Main.getLayerManager().getLayers()) {
+            if (layer instanceof CameraLayer) {
+                return true;
             }
         }
         return false;
     }
 
     private boolean isEditLayer() {
-        return Main.map != null && Main.map.mapView.getEditLayer() != null;
+        return Main.getLayerManager().getEditLayer() != null;
     }
 
     public void addCameraLayer() {
@@ -289,10 +288,9 @@ public class CameraLayer extends Layer implements LayerChangeListener {
             return;
         }
         if (isOsmDataLayer()) { // isEditLayer()) {
-            if (!Main.map.mapView.hasLayer(this)) {
-                Main.main.addLayer(this);
+            if (!Main.getLayerManager().containsLayer(this)) {
+                Main.getLayerManager().addLayer(this);
             }
         }
     }
-
 }
