@@ -1,7 +1,12 @@
 package kendzi.kendzi3d.expressions;
 
+import static org.junit.Assert.*;
+
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
+import org.junit.Test;
+import org.openstreetmap.josm.data.osm.Way;
 
 import kendzi.kendzi3d.expressions.exeption.ExpressionExeption;
 import kendzi.kendzi3d.expressions.expression.Expression;
@@ -12,18 +17,10 @@ import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 
-import org.junit.Test;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Preferences;
-import org.openstreetmap.josm.data.osm.Way;
-
-import static org.junit.Assert.*;
-
 /**
  * Unit test for ExpressiongBuilder.
  */
 public class OsmFunctionTest {
-
 
     @Test
     public void testExpression1() throws ExpressionExeption {
@@ -38,7 +35,6 @@ public class OsmFunctionTest {
 
     @Test
     public void testExpression2() throws ExpressionExeption {
-        Main.pref = new Preferences();
 
         Context c = new Context();
         Way w = new Way();
@@ -54,7 +50,6 @@ public class OsmFunctionTest {
 
     @Test
     public void testExpression3() throws ExpressionExeption {
-        Main.pref = new Preferences();
 
         Context c = new Context();
         Way w = new Way();
@@ -69,7 +64,6 @@ public class OsmFunctionTest {
 
     @Test
     public void testExpression4() throws ExpressionExeption {
-        Main.pref = new Preferences();
 
         Context c = new Context();
         Way w = new Way();
@@ -84,7 +78,6 @@ public class OsmFunctionTest {
 
     @Test
     public void testExpression5() throws ExpressionExeption {
-        Main.pref = new Preferences();
 
         Context c = new Context();
         Way w = new Way();
@@ -120,7 +113,6 @@ public class OsmFunctionTest {
         Object value = build.evaluate(c);
         assertEquals(new Vector3d(0, 0, 0), value);
     }
-
 
     @Test
     public void testExpression8() throws ExpressionExeption {
