@@ -12,7 +12,10 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-collada-bindings</artifactId>
-			<version>1.0.190-SNAPSHOT</version>
+			<!-- Because of bug in java 8 there is no easy way to make correct bindings.
+			https://java.net/jira/browse/JAXB-986
+			Don't want to play with work around, simply use old version. -->
+			<version>1.0.190</version>
 		</dependency>
 		<dependency> 
 			<groupId>kendzi.kendzi3d</groupId>

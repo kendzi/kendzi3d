@@ -107,7 +107,10 @@
 		<module>kendzi3d-jogl-textures-library-bindings</module>
 		<module>kendzi3d-jogl-textures-library-res</module>
 		
-		<module>kendzi3d-collada-bindings</module>
+		<!-- Because of bug in java 8 there is no easy way to make correct bindings.
+		https://java.net/jira/browse/JAXB-986
+		Don't want to play with work around, simply use old version. -->
+		<!-- <module>kendzi3d-collada-bindings</module> -->
 		<module>kendzi3d-collada-exporter</module>
 
 		<module>kendzi3d-models-library</module>
