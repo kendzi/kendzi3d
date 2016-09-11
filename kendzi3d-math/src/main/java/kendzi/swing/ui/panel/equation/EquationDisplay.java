@@ -91,33 +91,18 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
     private boolean sameRatio;
 
-    /**
-	 * @uml.property  name="drawText"
-	 */
     private boolean drawText = true;
 
     private Point dragStart;
 
     private NumberFormat formatter;
-    /**
-	 * @uml.property  name="zoomHandler"
-	 * @uml.associationEnd
-	 */
+
     private ZoomHandler zoomHandler;
-    /**
-	 * @uml.property  name="resizeHandler"
-	 * @uml.associationEnd
-	 */
+
     private ComponentResizeHandler resizeHandler;
-    /**
-	 * @uml.property  name="panMotionHandler"
-	 * @uml.associationEnd
-	 */
+
     private PanMotionHandler panMotionHandler;
-    /**
-	 * @uml.property  name="panHandler"
-	 * @uml.associationEnd
-	 */
+
     private PanHandler panHandler;
     private double startMinX;
     private double startMaxX;
@@ -137,6 +122,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
      * @param minorX ilosc lini podzednego podzialu x
      * @param majorY wielkosc podzialu glownej siatki y
      * @param minorY ilosc lini podzednego podzialu y
+     * @param sameRatio the same ratio
      */
     public EquationDisplay(double originX, double originY,
                            double minX, double maxX,
@@ -243,16 +229,14 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     }
 
     /**
-	 * @return
-	 * @uml.property  name="drawText"
+	 * @return if should draw text
 	 */
     public boolean isDrawText() {
         return drawText;
     }
 
     /**
-	 * @param drawText
-	 * @uml.property  name="drawText"
+	 * @param drawText if should draw text
 	 */
     public void setDrawText(boolean drawText) {
         this.drawText = drawText;

@@ -11,11 +11,11 @@ import java.util.ArrayList;
  * solids are correctly handled.
  *
  * Example usage:
- *
+ * <pre>
  *   var cube = CSG.cube();
  *   var sphere = CSG.sphere({ radius: 1.3 });
  *   var polygons = cube.subtract(sphere).toPolygons();
- *
+ * </pre>
  * ## Implementation Details
  *
  * All CSG operations are implemented in terms of two functions, `clipTo()` and
@@ -46,8 +46,8 @@ import java.util.ArrayList;
  *
  * Subtraction and intersection naturally follow from set operations. If
  * union is `A | B`, subtraction is `A - B = ~(~A | B)` and intersection is
- * `A & B = ~(~A | ~B)` where `~` is the complement operator.
- *
+ * `A &amp; B = ~(~A | ~B)` where `~` is the complement operator.
+ * 
  * ## License
  *
  * Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
@@ -62,8 +62,8 @@ public class CSG {
     ArrayList<Polygon> polygons = null;
 
     /** Construct a CSG solid from a list of `CSG.Polygon` instances.
-     * @param polygons
-     * @return
+     * @param polygons the polygon
+     * @return CSG from polygon
      */
     public static CSG fromPolygons(ArrayList<Polygon> polygons) {
         CSG csg = new CSG();
@@ -88,7 +88,7 @@ public class CSG {
     }
 
     /**
-     * @return
+     * @return list of polygons
      */
     public ArrayList<Polygon> toPolygons() {
         return this.polygons;
@@ -126,7 +126,7 @@ public class CSG {
         return fromPolygons(a.allPolygons());
     }
 
-    /**
+    /**-
      * Return a new CSG solid representing space in this solid but not in the
      * solid `csg`. Neither this solid nor the solid `csg` are modified.
      * <pre>
@@ -142,8 +142,8 @@ public class CSG {
      *          +-------+
      *
      * </pre>
-     * @param csg
-     * @return
+     * @param csg the csg
+     * @return subtract of csg
      */
     public CSG subtract(CSG csg) {
         Node a = new CSG.Node((this.clone().polygons));
@@ -531,8 +531,8 @@ public class CSG {
          *  interpolating all properties using a parameter of `t`. Subclasses should
          *  override this to interpolate additional properties.
          *
-         * @param other
-         * @param t
+         * @param other the other
+         * @param t the distance between two vertex
          * @return interpolated vertex
          */
         Vertex interpolate(Vertex other, double t);

@@ -23,30 +23,42 @@ public class Triangulate {
     public static final float EPSILON = 0.0000000001f;
 
     /**
-     *  @see kendzi.math.geometry.polygon.PolygonUtil.area(List<Point2d>)
+     * Calculates area of polygon
+     * 
+     * @param polygon
+     *            the polygon
+     * @return area of polygon
+     * @see kendzi.math.geometry.polygon.PolygonUtil#area(List)
      */
-    public static float area(List<Point2d> contour) {
+    public static float area(List<Point2d> polygon) {
 
-        int n = contour.size();
+        int n = polygon.size();
 
         float A = 0.0f;
 
         for (int p = n - 1, q = 0; q < n; p = q++) {
-            A += contour.get(p).x * contour.get(q).y
-                    - contour.get(q).x * contour.get(p).y;
+            A += polygon.get(p).x * polygon.get(q).y
+                    - polygon.get(q).x * polygon.get(p).y;
         }
         return A * 0.5f;
     }
 
-    public static float area(Point2D.Double [] contour) {
+    /**
+     * Calculates area of polygon
+     * 
+     * @param polygon
+     *            the polygon
+     * @return area of polygon
+     */
+    public static float area(Point2D.Double [] polygon) {
 
-        int n = contour.length;
+        int n = polygon.length;
 
         float A = 0.0f;
 
         for (int p = n - 1, q = 0; q < n; p = q++) {
-            A += contour[p].x * contour[q].y
-                    - contour[q].x * contour[p].y;
+            A += polygon[p].x * polygon[q].y
+                    - polygon[q].x * polygon[p].y;
         }
         return A * 0.5f;
     }
