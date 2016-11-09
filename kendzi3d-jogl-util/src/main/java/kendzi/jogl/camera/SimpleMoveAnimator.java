@@ -17,9 +17,9 @@ import kendzi.math.geometry.point.PointUtil;
 
 /**
  * Simple camera move animator.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class SimpleMoveAnimator implements Camera {
 
@@ -105,9 +105,9 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Speed directions.
-     * 
+     *
      * @author Tomasz Kędziora (Kendzi)
-     * 
+     *
      */
     private enum Speeds {
         FORWARD, BACKWARD, MOVE_LEFT, MOVE_RIGHT, ROTATE_LEFT, ROTATE_RIGHT, MOVE_UP, MOVE_DOWN
@@ -115,9 +115,9 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Speeds directional data.
-     * 
+     *
      * @author Tomasz Kędziora (Kendzi)
-     * 
+     *
      */
     private class SpeedData {
 
@@ -188,36 +188,35 @@ public class SimpleMoveAnimator implements Camera {
 
     public void updateState() {
         double time = System.currentTimeMillis() / 1000d;
-        double dt = time - this.lastTime;
-        this.lastTime = time;
+        double dt = time - lastTime;
+        lastTime = time;
 
-        this.vf = calcForwardSpeed(this.vf, dt, time);
-        this.vs = calcSideSpeed(this.vs, dt, time);
-        this.vu = calcUpSpeed(this.vu, dt, time);
+        vf = calcForwardSpeed(vf, dt, time);
+        vs = calcSideSpeed(vs, dt, time);
+        vu = calcUpSpeed(vu, dt, time);
 
-        this.wh = calcHorizontallySpeed(this.wh, dt, time);
+        wh = calcHorizontallySpeed(wh, dt, time);
 
-        Vector3d speed = new Vector3d(this.vf, this.vu, this.vs);
+        Vector3d speed = new Vector3d(vf, vu, vs);
 
-        speed = PointUtil.rotateZ3d(speed, this.angle.z);
-        speed = PointUtil.rotateY3d(speed, this.angle.y);
+        speed = PointUtil.rotateZ3d(speed, angle.z);
+        speed = PointUtil.rotateY3d(speed, angle.y);
 
         Vector3d dx = speed;
         dx.scale(dt);
 
-        this.point.add(dx);
+        point.add(dx);
 
-        Vector3d angleSpeed = new Vector3d(0, this.wh, 0);
+        Vector3d angleSpeed = new Vector3d(0, wh, 0);
         Vector3d dOmega = angleSpeed;
         dOmega.scale(dt);
 
-        this.angle.add(dOmega);
-
+        angle.add(dOmega);
     }
 
     /**
      * Calculate forward speed.
-     * 
+     *
      * @param vf
      *            current forward speed
      * @param dt
@@ -232,8 +231,8 @@ public class SimpleMoveAnimator implements Camera {
 
         // Acceleration
         double a = FORWARD_STOP_ACCELERATION;
-        if (this.speeds.get(Speeds.FORWARD).isActive(time)) {
-            double take = time - this.speeds.get(Speeds.FORWARD).start;
+        if (speeds.get(Speeds.FORWARD).isActive(time)) {
+            double take = time - speeds.get(Speeds.FORWARD).start;
 
             if (take < FORWARD_SPEED_2_TIMEOUT) {
                 desiredSpeed = FORWARD_SPEED_1;
@@ -243,8 +242,8 @@ public class SimpleMoveAnimator implements Camera {
 
             a = FORWARD_ACCELERATION;
 
-        } else if (this.speeds.get(Speeds.BACKWARD).isActive(time)) {
-            double take = time - this.speeds.get(Speeds.BACKWARD).start;
+        } else if (speeds.get(Speeds.BACKWARD).isActive(time)) {
+            double take = time - speeds.get(Speeds.BACKWARD).start;
 
             if (take < FORWARD_SPEED_2_TIMEOUT) {
                 desiredSpeed = -FORWARD_SPEED_1;
@@ -260,7 +259,7 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Calculate side speed.
-     * 
+     *
      * @param vs
      *            current side speed speed
      * @param dt
@@ -273,11 +272,11 @@ public class SimpleMoveAnimator implements Camera {
 
         double desiredSpeed = 0;
 
-        if (this.speeds.get(Speeds.MOVE_LEFT).isActive(time)) {
+        if (speeds.get(Speeds.MOVE_LEFT).isActive(time)) {
 
             desiredSpeed = -SIDE_SPEED;
 
-        } else if (this.speeds.get(Speeds.MOVE_RIGHT).isActive(time)) {
+        } else if (speeds.get(Speeds.MOVE_RIGHT).isActive(time)) {
 
             desiredSpeed = SIDE_SPEED;
 
@@ -291,7 +290,7 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Calculate up/down speed.
-     * 
+     *
      * @param vu
      *            current up/down speed
      * @param dt
@@ -304,11 +303,11 @@ public class SimpleMoveAnimator implements Camera {
 
         double desiredSpeed = 0;
 
-        if (this.speeds.get(Speeds.MOVE_UP).isActive(time)) {
+        if (speeds.get(Speeds.MOVE_UP).isActive(time)) {
 
             desiredSpeed = UP_SPEED;
 
-        } else if (this.speeds.get(Speeds.MOVE_DOWN).isActive(time)) {
+        } else if (speeds.get(Speeds.MOVE_DOWN).isActive(time)) {
 
             desiredSpeed = -UP_SPEED;
 
@@ -349,7 +348,7 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Calculate horizontal rotation speed.
-     * 
+     *
      * @param wh
      *            current horizontal rotation speed
      * @param dt
@@ -364,12 +363,12 @@ public class SimpleMoveAnimator implements Camera {
 
         double a = ROTATE_STOP_ACCELERATRION;
 
-        if (this.speeds.get(Speeds.ROTATE_LEFT).isActive(time)) {
+        if (speeds.get(Speeds.ROTATE_LEFT).isActive(time)) {
 
             desiredSpeed = ROTATE_SPEED;
             a = ROTATE_ACCELERATRION;
 
-        } else if (this.speeds.get(Speeds.ROTATE_RIGHT).isActive(time)) {
+        } else if (speeds.get(Speeds.ROTATE_RIGHT).isActive(time)) {
 
             desiredSpeed = -ROTATE_SPEED;
             a = ROTATE_ACCELERATRION;
@@ -385,17 +384,16 @@ public class SimpleMoveAnimator implements Camera {
      */
     public SimpleMoveAnimator() {
 
-        this.speeds = new EnumMap<SimpleMoveAnimator.Speeds, SimpleMoveAnimator.SpeedData>(
-                SimpleMoveAnimator.Speeds.class);
+        speeds = new EnumMap<SimpleMoveAnimator.Speeds, SimpleMoveAnimator.SpeedData>(SimpleMoveAnimator.Speeds.class);
 
         for (Speeds s : Speeds.values()) {
-            this.speeds.put(s, new SpeedData());
+            speeds.put(s, new SpeedData());
         }
     }
 
     /**
      * Set speed active.
-     * 
+     *
      * @param speedDirection
      *            speed direction
      * @param active
@@ -405,20 +403,20 @@ public class SimpleMoveAnimator implements Camera {
 
         double time = System.currentTimeMillis() / 1000d;
 
-        SpeedData speedData = this.speeds.get(speedDirection);
+        SpeedData speedData = speeds.get(speedDirection);
         if (speedData.isActive(time) != active) {
             speedData.start = time;
         }
         speedData.active = active;
 
-        speedData.last = System.currentTimeMillis() / 1000d;
+        speedData.last = time;
 
     }
 
     private void setRotateAngle(double h, double v) {
         // FIXME use speeds
-        this.angle.y += h;
-        this.angle.z += v;
+        angle.y += h;
+        angle.z += v;
 
     }
 
@@ -467,29 +465,28 @@ public class SimpleMoveAnimator implements Camera {
 
         String speedsStr = "";
         for (Speeds s : Speeds.values()) {
-            SpeedData speedData = this.speeds.get(s);
+            SpeedData speedData = speeds.get(s);
 
-            speedsStr += "" + s + ", active: " + speedData.active + ", last: " + speedData.last + ", start: "
-                    + speedData.start + "\n";
+            speedsStr += "" + s + ", active: " + speedData.active + ", last: " + speedData.last + ", start: " + speedData.start
+                    + "\n";
 
         }
 
-        return "KinematicsSimpleAnimator [\n" + "\np=" + format(this.point) + ",\n angle=" + formatAngle(this.angle)
-                + ",\n lastTime=" + this.df.format(this.lastTime) + ",\n vf=" + this.df.format(this.vf) + ",\n vs="
-                + this.df.format(this.vs) + ",\n wh=" + this.df.format(Math.toDegrees(this.wh)) + ",\n speeds:\n"
-                + speedsStr
+        return "KinematicsSimpleAnimator [\n" + "\np=" + format(point) + ",\n angle=" + formatAngle(angle) + ",\n lastTime="
+                + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
+                + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
 
-                + "]";
+        + "]";
     }
 
     String format(Tuple3d tuple) {
-        return "( " + this.df.format(tuple.x) + ", " + this.df.format(tuple.y) + ", " + this.df.format(tuple.z) + " )";
+        return "( " + df.format(tuple.x) + ", " + df.format(tuple.y) + ", " + df.format(tuple.z) + " )";
 
     }
 
     String formatAngle(Tuple3d tuple) {
-        return "( " + this.df.format(Math.toDegrees(tuple.x)) + ", " + this.df.format(Math.toDegrees(tuple.y)) + ", "
-                + this.df.format(Math.toDegrees(tuple.z)) + " )";
+        return "( " + df.format(Math.toDegrees(tuple.x)) + ", " + df.format(Math.toDegrees(tuple.y)) + ", "
+                + df.format(Math.toDegrees(tuple.z)) + " )";
 
     }
 
@@ -498,7 +495,7 @@ public class SimpleMoveAnimator implements Camera {
      */
     @Override
     public Point3d getPoint() {
-        return this.point;
+        return point;
     }
 
     /**
@@ -506,20 +503,20 @@ public class SimpleMoveAnimator implements Camera {
      */
     @Override
     public Vector3d getAngle() {
-        return this.angle;
+        return angle;
     }
 
     /**
      * TODO move animator.
-     * 
+     *
      * @param pCamPosX
      * @param pCamPosY
      * @param pCamPosZ
      */
     public void setPoint(double pCamPosX, double pCamPosY, double pCamPosZ) {
-        this.point.x = pCamPosX;
-        this.point.y = pCamPosY;
-        this.point.z = pCamPosZ;
+        point.x = pCamPosX;
+        point.y = pCamPosY;
+        point.z = pCamPosZ;
     }
 
 }

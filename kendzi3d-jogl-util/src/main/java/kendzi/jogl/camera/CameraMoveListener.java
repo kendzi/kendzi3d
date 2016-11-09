@@ -48,9 +48,9 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     @Override
     public void mousePressed(MouseEvent e) {
 
-        this.lastX = e.getX();
-        this.lastY = e.getY();
-        this.move = true;
+        lastX = e.getX();
+        lastY = e.getY();
+        move = true;
     }
 
     /*
@@ -60,7 +60,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     @Override
     public void mouseReleased(MouseEvent e) {
 
-        this.move = false;
+        move = false;
     }
 
     /*
@@ -70,7 +70,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     @Override
     public void mouseExited(MouseEvent e) {
 
-        this.move = false;
+        move = false;
     }
 
     /*
@@ -96,9 +96,9 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
             return;
         }
 
-        moveCamera(this.lastX - e.getX(), this.lastY - e.getY());
-        this.lastX = e.getX();
-        this.lastY = e.getY();
+        moveCamera(lastX - e.getX(), lastY - e.getY());
+        lastX = e.getX();
+        lastY = e.getY();
 
     }
 
@@ -106,7 +106,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     public void keyPressed(KeyEvent pEvent) {
         boolean start = true;
 
-        if (this.isRunning) {
+        if (isRunning) {
 
             moveAction(pEvent, start);
         }
@@ -116,7 +116,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     public void keyTyped(KeyEvent pEvent) {
         boolean start = true;
 
-        if (this.isRunning) {
+        if (isRunning) {
 
             moveAction(pEvent, start);
         }
@@ -127,7 +127,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     public void keyReleased(KeyEvent pEvent) {
         boolean start = false;
 
-        if (this.isRunning) {
+        if (isRunning) {
 
             moveAction(pEvent, start);
         }
@@ -143,52 +143,52 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
         // move based on the arrow key pressed
         if (keyCode == KeyEvent.VK_LEFT) { // left
             if (pEvent.isControlDown()) { // translate left
-                this.kinematicsSimpleAnimator.translateLeft(start);
-                this.kinematicsSimpleAnimator.rotateLeft(false);
+                kinematicsSimpleAnimator.translateLeft(start);
+                kinematicsSimpleAnimator.rotateLeft(false);
             } else { // turn left
-                this.kinematicsSimpleAnimator.translateLeft(false);
-                this.kinematicsSimpleAnimator.rotateLeft(start);
+                kinematicsSimpleAnimator.translateLeft(false);
+                kinematicsSimpleAnimator.rotateLeft(start);
             }
         } else if (keyCode == KeyEvent.VK_RIGHT) { // right
             if (pEvent.isControlDown()) {
                 // translate right
-                this.kinematicsSimpleAnimator.translateRight(start);
-                this.kinematicsSimpleAnimator.rotateRight(false);
+                kinematicsSimpleAnimator.translateRight(start);
+                kinematicsSimpleAnimator.rotateRight(false);
             } else { // turn right
-                this.kinematicsSimpleAnimator.translateRight(false);
-                this.kinematicsSimpleAnimator.rotateRight(start);
+                kinematicsSimpleAnimator.translateRight(false);
+                kinematicsSimpleAnimator.rotateRight(start);
             }
         } else if (keyCode == KeyEvent.VK_D) {
             // translate right
-            this.kinematicsSimpleAnimator.translateRight(start);
+            kinematicsSimpleAnimator.translateRight(start);
 
         } else if (keyCode == KeyEvent.VK_A) {
             // translate left
-            this.kinematicsSimpleAnimator.translateLeft(start);
+            kinematicsSimpleAnimator.translateLeft(start);
 
         } else if (keyCode == KeyEvent.VK_W) {
             // move forward
-            this.kinematicsSimpleAnimator.moveForward(start);
+            kinematicsSimpleAnimator.moveForward(start);
 
         } else if (keyCode == KeyEvent.VK_S) {
             // move backwards
-            this.kinematicsSimpleAnimator.moveBackwards(start);
+            kinematicsSimpleAnimator.moveBackwards(start);
 
         } else if (keyCode == KeyEvent.VK_UP) {
             // move forward
-            this.kinematicsSimpleAnimator.moveForward(start);
+            kinematicsSimpleAnimator.moveForward(start);
 
         } else if (keyCode == KeyEvent.VK_DOWN) {
             // move backwards
-            this.kinematicsSimpleAnimator.moveBackwards(start);
+            kinematicsSimpleAnimator.moveBackwards(start);
 
         } else if (keyCode == KeyEvent.VK_PAGE_UP || keyCode == KeyEvent.VK_E) {
             // move up
-            this.kinematicsSimpleAnimator.moveUp(start);
+            kinematicsSimpleAnimator.moveUp(start);
 
         } else if (keyCode == KeyEvent.VK_PAGE_DOWN || keyCode == KeyEvent.VK_Q) {
             // move down
-            this.kinematicsSimpleAnimator.moveDown(start);
+            kinematicsSimpleAnimator.moveDown(start);
 
         }
     }
@@ -206,11 +206,11 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
         double mouseMoveAngle = 0.25;
 
         if (pDX != 0) { // left
-            this.kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
+            kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
         }
 
         if (pDY != 0) { // left
-            this.kinematicsSimpleAnimator.rotateVertically(Math.toRadians(-pDY * mouseMoveAngle));
+            kinematicsSimpleAnimator.rotateVertically(Math.toRadians(-pDY * mouseMoveAngle));
         }
 
         setLookAt();
