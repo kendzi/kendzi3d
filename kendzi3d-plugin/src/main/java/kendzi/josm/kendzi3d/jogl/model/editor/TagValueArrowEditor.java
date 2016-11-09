@@ -6,13 +6,11 @@
 package kendzi.josm.kendzi3d.jogl.model.editor;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import kendzi.josm.kendzi3d.jogl.model.building.Building;
-import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
-import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -21,6 +19,13 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 
+import kendzi.josm.kendzi3d.jogl.model.building.Building;
+import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
+import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
+
+/**
+ * The simple arrow like editor for primitives.
+ */
 public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     /** Log. */
@@ -28,30 +33,41 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     private PrimitiveId primitiveId;
 
-    private String fildName;
+    private String fieldName;
 
-    public TagValueArrowEditor(PrimitiveId primitiveId, String fildName) {
+    /**
+     * Instantiates a new tag value arrow editor.
+     *
+     * @param primitiveId
+     *            the primitive id
+     * @param fieldName
+     *            the field name which should be modified
+     */
+    public TagValueArrowEditor(PrimitiveId primitiveId, String fieldName) {
         super();
         this.primitiveId = primitiveId;
-        this.fildName = fildName;
+        this.fieldName = fieldName;
 
     }
 
     /**
-     * @return the fildName
+     * @return the fieldName
      */
-    public String getFildName() {
-        return fildName;
+    public String getFieldName() {
+        return fieldName;
     }
 
     /**
-     * @param fildName
-     *            the fildName to set
+     * @param fieldName
+     *            the fieldName to set
      */
-    public void setFildName(String fildName) {
-        this.fildName = fildName;
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 
+    /**
+     * @return the primitive id
+     */
     public PrimitiveId getPrimitiveId() {
         return primitiveId;
     }
@@ -64,6 +80,12 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
         this.primitiveId = primitiveId;
     }
 
+    /**
+     * Generate preview for current editor state.
+     *
+     * @param value
+     *            the value
+     */
     public abstract void preview(double value);
 
     @Override
@@ -77,15 +99,21 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
         }
     }
 
+    /**
+     * Save event.
+     *
+     * @param event
+     *            the event to save
+     */
     protected void saveEvent(ArrowEditorChangeEvent event) {
 
         double length = event.getLength();
 
         AbstractMap<String, String> tags = new HashMap<>();
-        DecimalFormat formater = new DecimalFormat("#0.00");
+        DecimalFormat formater = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         String value = formater.format(length);
         // save new editor value
-        tags.put(fildName, value);
+        tags.put(fieldName, value);
 
         // save additional required tags values
         updateTags(tags);
@@ -95,7 +123,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     /**
      * Is some additional tags have to be updated when editor value is saved.
-     * 
+     *
      * @param tags
      *            tags to save
      */
@@ -103,6 +131,12 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
         //
     }
 
+    /**
+     * Saves tags to primitive.
+     *
+     * @param tags
+     *            the tags to save
+     */
     protected void saveTagToPrimitive(AbstractMap<String, String> tags) {
 
         DataSet dataSet = Main.getLayerManager().getEditDataSet();
@@ -112,18 +146,4 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
         Main.main.undoRedo.add(new ChangePropertyCommand(Arrays.asList(primitive), tags));
         LOG.info("primitive value was saved, id: " + primitiveId);
     }
-
-    protected void saveTagToPrimitive(double length, String fildName) {
-
-        DecimalFormat formater = new DecimalFormat("#0.00");
-        String value = formater.format(length);
-
-        DataSet dataSet = Main.getLayerManager().getEditDataSet();
-
-        OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
-
-        Main.main.undoRedo.add(new ChangePropertyCommand(primitive, fildName, value));
-        LOG.info("primitive value was saved, id: " + primitiveId);
-    }
-
 }

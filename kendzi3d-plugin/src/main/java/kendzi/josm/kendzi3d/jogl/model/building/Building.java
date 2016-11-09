@@ -13,11 +13,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.data.osm.Way;
+
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.BoundsFactory;
@@ -54,12 +61,6 @@ import kendzi.kendzi3d.editor.selection.editor.EditorType;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.bbox.Bbox2d;
 import kendzi.math.geometry.line.LineSegment3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing building model.
@@ -237,7 +238,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                         double minHeight = bp.getDefaultMinHeight();
                         double maxHeight = bp.getDefaultMaxHeight();
                         Point3d partCenter = new Point3d( //
-                                (bounds.getxMax() + bounds.getxMin()) / 2d,//
+                                (bounds.getxMax() + bounds.getxMin()) / 2d, //
                                 minHeight, //
                                 -(bounds.getyMax() + bounds.getyMin()) / 2d);
 
@@ -374,7 +375,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
             if (editor instanceof PartValueEditor) {
                 PartValueEditor e = (PartValueEditor) editor;
 
-                if (primitive2.equals(e.getPrimitiveId()) && string.equals(e.getFildName())) {
+                if (primitive2.equals(e.getPrimitiveId()) && string.equals(e.getFieldName())) {
                     return e;
                 }
             }
