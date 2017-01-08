@@ -1,25 +1,21 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
-
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
-
-import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
-import kendzi.kendzi3d.models.library.ui.action.ModelLibraryResourcesListFrameAction;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
+
+import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import kendzi.kendzi3d.models.library.ui.action.ModelLibraryResourcesListFrameAction;
 
 /**
  * Point model list action.
@@ -43,6 +39,7 @@ public class PointModelListAction extends JosmAction {
      * Constructor.
      *
      * @param modelsLibraryService
+     *            the models library service
      */
     @Inject
     public PointModelListAction(ModelsLibraryService modelsLibraryService) {
@@ -53,11 +50,6 @@ public class PointModelListAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent pE) {
-
-        // this.textureCacheService.clear();
-        //
-        // XXX add event
-        // this.renderJosm.processDatasetEvent(null);
 
         ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(modelsLibraryService);
 

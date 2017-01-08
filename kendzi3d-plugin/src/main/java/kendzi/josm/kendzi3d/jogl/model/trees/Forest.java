@@ -14,18 +14,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Way;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.util.DrawUtil;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.lod.LOD;
@@ -39,12 +42,9 @@ import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Way;
-
 /**
  * Representing trees in row model.
- * 
+ *
  * @author Tomasz Kedziora (Kendzi)
  */
 public class Forest extends AbstractWayModel implements MultiPointWorldObject {
@@ -55,7 +55,13 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     ModelCacheService modelCacheService;
     MetadataCacheService metadataCacheService;
 
-    private static final double EPSILON = 0.001;
+    public static double lod1 = 20 * 20;
+
+    private static double lod2 = 100 * 100;
+
+    private static double lod3 = 500 * 500;
+
+    private static double lod4 = 1000 * 1000;
 
     /**
      * Renderer of model.
@@ -164,8 +170,8 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         return randomNumberGenerator.nextDouble() / 2d + 0.5;
     }
 
-    private <T extends Cluster> ArrayList<T> calcClusterHooks(List<Point2d> pHookPoints2, Point2d pMinBound,
-            double pClusterSize, Class<T> clazz) {
+    private <T extends Cluster> ArrayList<T> calcClusterHooks(List<Point2d> pHookPoints2, Point2d pMinBound, double pClusterSize,
+            Class<T> clazz) {
 
         Point2d minBound = pMinBound;
 
@@ -305,7 +311,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     /**
      * Minimal values in polygon. Minimal coordinates of bounding box.
-     * 
+     *
      * @param pPolygon
      *            polygon
      * @return minimal values
@@ -329,7 +335,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     /**
      * Maximal values in polygon. Maximal coordinates of bounding box.
-     * 
+     *
      * @param pPolygon
      *            polygon
      * @return maximal values
@@ -353,7 +359,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     /**
      * Generate hook for trees using monte carlo method.
-     * 
+     *
      * @param polygon
      *            polygon
      * @param numOfTrees
@@ -484,8 +490,8 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        Point3d localCamera = new Point3d(camera.getPoint().x - getGlobalX(), camera.getPoint().y, camera.getPoint().z
-                + getGlobalY());
+        Point3d localCamera = new Point3d(camera.getPoint().x - getGlobalX(), camera.getPoint().y,
+                camera.getPoint().z + getGlobalY());
 
         for (HeightCluster c : clusterHook) {
 
@@ -499,7 +505,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                 gl.glPopMatrix();
             }
 
-            LOD lod = RenderJOSM.getLods(c.getCenter(), localCamera);
+            LOD lod = getLods(c.getCenter(), localCamera);
             List<Point2d> hookPoints = c.getHook();
             double[] heights = c.getHeight();
 
@@ -536,6 +542,27 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             }
 
         }
+
+    }
+
+    public static LOD getLods(Point3d point, Point3d camera) {
+
+        double dx = camera.x - point.x;
+        double dy = camera.y - point.y;
+        double dz = camera.z - point.z;
+
+        double distance = dx * dx + dy * dy + dz * dz;
+
+        if (distance < lod1) {
+            return LOD.LOD1;
+        } else if (distance < lod2) {
+            return LOD.LOD2;
+        } else if (distance < lod3) {
+            return LOD.LOD3;
+        } else if (distance < lod4) {
+            return LOD.LOD4;
+        }
+        return LOD.LOD5;
 
     }
 

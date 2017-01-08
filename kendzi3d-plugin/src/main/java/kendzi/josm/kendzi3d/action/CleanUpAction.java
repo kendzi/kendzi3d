@@ -10,22 +10,21 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
-import kendzi.josm.kendzi3d.service.ModelCacheService;
-import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
-
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
+import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+
 /**
  * Clean up action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class CleanUpAction extends JosmAction {
 
@@ -33,11 +32,6 @@ public class CleanUpAction extends JosmAction {
      *
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * JOSM 3D Render.
-     */
-    private RenderJOSM renderJosm;
 
     /**
      * Texture cache service.
@@ -66,8 +60,7 @@ public class CleanUpAction extends JosmAction {
 
     /**
      * Constructor.
-     * 
-     * @param renderJosm
+     *
      * @param textureCacheService
      *            texture cache service
      * @param TextureLibraryStorageService
@@ -78,15 +71,14 @@ public class CleanUpAction extends JosmAction {
      *            Model library service
      */
     @Inject
-    public CleanUpAction(RenderJOSM renderJosm, TextureCacheService textureCacheService,
-            TextureLibraryStorageService TextureLibraryStorageService, ModelCacheService modelCacheService,
-            ModelsLibraryService modelsLibraryService, ModelsLibraryLayer modelsLibraryLayer) {
+    public CleanUpAction(TextureCacheService textureCacheService, TextureLibraryStorageService TextureLibraryStorageService,
+            ModelCacheService modelCacheService, ModelsLibraryService modelsLibraryService,
+            ModelsLibraryLayer modelsLibraryLayer) {
 
         super(tr("Clean up"), "1306318208_rebuild__24", tr("Rebuild models, textures and wold offset"), null, false);
 
-        this.renderJosm = renderJosm;
         this.textureCacheService = textureCacheService;
-        this.textureLibraryStorageService = TextureLibraryStorageService;
+        textureLibraryStorageService = TextureLibraryStorageService;
         this.modelCacheService = modelCacheService;
         this.modelsLibraryService = modelsLibraryService;
         this.modelsLibraryLayer = modelsLibraryLayer;
@@ -104,8 +96,5 @@ public class CleanUpAction extends JosmAction {
         modelCacheService.clear();
 
         modelsLibraryLayer.cleanUp();
-
-        // XXX add event
-        renderJosm.processDatasetEvent(null);
     }
 }

@@ -3,6 +3,10 @@ package kendzi.josm.kendzi3d.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.camera.SimpleMoveAnimator;
@@ -21,7 +25,6 @@ import kendzi.josm.kendzi3d.data.producer.DataConsumersMonitor;
 import kendzi.josm.kendzi3d.data.producer.DataEventListener;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.data.selection.SelectionSynchronizeManager;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
@@ -41,8 +44,6 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListener;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLEventListenerOld;
-import kendzi.josm.kendzi3d.ui.Kendzi3dGLFrameOld;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 import kendzi.kendzi3d.editor.EditableObjectProvider;
 import kendzi.kendzi3d.editor.EditorCore;
@@ -60,10 +61,6 @@ import kendzi3d.light.dao.LightDao;
 import kendzi3d.light.service.LightRenderService;
 import kendzi3d.light.service.LightStorageService;
 import kendzi3d.light.service.impl.LightService;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 
 public class Kendzi3dModule extends AbstractModule {
     private final String pluginDirectory;
@@ -104,10 +101,6 @@ public class Kendzi3dModule extends AbstractModule {
         bind(ModelsLibraryLayer.class).in(Singleton.class);
         bind(FenceLayer.class);
         bind(TestWallLayer.class);
-
-        bind(Kendzi3dGLEventListenerOld.class).in(Singleton.class);
-
-        bind(Kendzi3dGLFrameOld.class);
 
         bind(LightDao.class).to(JosmLightDao.class).in(Singleton.class);
         bind(LightService.class).in(Singleton.class);
@@ -190,17 +183,6 @@ public class Kendzi3dModule extends AbstractModule {
     CameraLayer provideCameraLayer(Camera camera, final Kendzi3dCore kendzi3dCore) {
 
         return new CameraLayer(camera, kendzi3dCore);
-    }
-
-    @Provides
-    @Singleton
-    RenderJOSM provideRenderJOSM(ModelRender pModelRender, List<Layer> layers) {
-
-        RenderJOSM renderJOSM = new RenderJOSM();
-        renderJOSM.setModelRender(pModelRender);
-        renderJOSM.setLayerList(layers);
-
-        return renderJOSM;
     }
 
     @Provides

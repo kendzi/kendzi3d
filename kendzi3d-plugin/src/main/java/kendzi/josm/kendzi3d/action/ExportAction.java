@@ -14,25 +14,26 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.josm.kendzi3d.jogl.RenderJOSM;
-import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
-import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
-import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
-import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
-import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
-import kendzi.kendzi3d.world.WorldObject;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.josm.kendzi3d.data.Kendzi3dCore;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
+import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
+import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
+import kendzi.kendzi3d.editor.EditableObject;
+import kendzi.kendzi3d.world.WorldObject;
+
 /**
  * Export action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class ExportAction extends JosmAction {
 
@@ -52,15 +53,15 @@ public class ExportAction extends JosmAction {
     /**
      * Rendering service.
      */
-    private RenderJOSM renderJOSM;
+    private Kendzi3dCore kendzi3dCore;
 
     final JFileChooser fc = new JFileChooser();
 
     @Inject
-    public ExportAction(RenderJOSM pRenderJOSM, TextureCacheService textureCacheService) {
+    public ExportAction(Kendzi3dCore kendzi3dCore, TextureCacheService textureCacheService) {
         super(tr("Export models to files"), null, tr("Export models to files"), null, false);
 
-        this.renderJOSM = pRenderJOSM;
+        this.kendzi3dCore = kendzi3dCore;
         this.textureCacheService = textureCacheService;
 
     }
@@ -92,7 +93,14 @@ public class ExportAction extends JosmAction {
 
         List<ExportItem> itemsToExport = new ArrayList<ExportItem>();
 
-        List<WorldObject> modelList = this.renderJOSM.getModels();
+        List<EditableObject> allObjects = kendzi3dCore.getEditableObjects();
+
+        List<WorldObject> modelList = new ArrayList<WorldObject>();
+        for (EditableObject editableList : allObjects) {
+            if (editableList instanceof WorldObject) {
+                modelList.add((WorldObject) editableList);
+            }
+        }
 
         List<ExportItem> el = exportLayer(modelList, conf);
 
@@ -105,7 +113,7 @@ public class ExportAction extends JosmAction {
     }
 
     private void saveToFiles(List<ExportItem> itemsToExport, ExportModelConf conf) {
-        ExportWorker ew = new ExportWorker(itemsToExport, conf, this.textureCacheService);
+        ExportWorker ew = new ExportWorker(itemsToExport, conf, textureCacheService);
         ew.start();
     }
 
