@@ -161,7 +161,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
         double minY = Double.MAX_VALUE;
         // Bbox2d
 
-        if (dataset.dataSources.size() > 0) {
+        if (dataset.getDataSources().size() > 0) {
             // it is dataset connected with OSM. Get bounds.
             for (DataSource source : dataset.dataSources) {
                 // create area from data bounds
