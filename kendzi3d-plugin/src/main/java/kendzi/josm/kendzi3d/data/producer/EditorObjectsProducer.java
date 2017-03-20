@@ -26,7 +26,11 @@ import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.data.event.DataEvent;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import kendzi.kendzi3d.world.BuildableWorldObject;
+import kendzi.kendzi3d.world.WorldObject;
+import kendzi.kendzi3d.world.quad.layer.Layer;
 
 /**
  * Monitor JOSM data change events and produce new editable objects for 3d view.
