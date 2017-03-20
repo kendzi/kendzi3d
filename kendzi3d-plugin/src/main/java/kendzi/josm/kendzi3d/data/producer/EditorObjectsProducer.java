@@ -26,11 +26,7 @@ import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.data.event.DataEvent;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
-import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import kendzi.kendzi3d.world.BuildableWorldObject;
-import kendzi.kendzi3d.world.WorldObject;
-import kendzi.kendzi3d.world.quad.layer.Layer;
 
 /**
  * Monitor JOSM data change events and produce new editable objects for 3d view.
@@ -163,7 +159,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         if (dataset.getDataSources().size() > 0) {
             // it is dataset connected with OSM. Get bounds.
-            for (DataSource source : dataset.dataSources) {
+            for (DataSource source : dataset.getDataSources()) {
                 // create area from data bounds
                 LatLon min = source.bounds.getMin();
                 LatLon max = source.bounds.getMax();
