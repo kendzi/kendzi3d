@@ -10,12 +10,12 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-util</artifactId>
-			<version>1.0.195-SNAPSHOT</version>
+			<version>1.0.195</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi</groupId>
 			<artifactId>kendzi-util</artifactId>
-			<version>1.0.195-SNAPSHOT</version>
+			<version>1.0.195</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.195-SNAPSHOT</version>
+			<version>1.0.195</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
@@ -48,7 +48,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.195-SNAPSHOT</version>
+		<version>1.0.195</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
