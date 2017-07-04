@@ -94,6 +94,7 @@
 							<Plugin-Version>${project.version}</Plugin-Version>
 							<Plugin-Requires>log4j;jogl;kendzi3d-resources</Plugin-Requires>
 							<url>${project.url}</url>
+							<Class-Path>./kendzi3d-resources.jar</Class-Path>
 						</manifestEntries>
 					</archive>
 					<descriptor>src/main/assembly/dep.xml</descriptor>
