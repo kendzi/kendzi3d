@@ -15,12 +15,12 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-expressions-javacc</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openstreetmap.josm</groupId>
@@ -45,7 +45,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-expressions</artifactId>
-		<version>1.0.196-SNAPSHOT</version>
+		<version>1.0.196</version>
 		<relativePath>../kendzi3d-expressions/pom.xml</relativePath>
 	</parent>
 </project>

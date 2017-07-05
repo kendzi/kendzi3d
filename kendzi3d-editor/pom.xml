@@ -8,28 +8,28 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-library-res</artifactId> 
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-util</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-example</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model-util</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model-render</artifactId>
-			<version>1.0.196-SNAPSHOT</version>
+			<version>1.0.196</version>
 		</dependency>
 		
 		<dependency>
@@ -47,7 +47,7 @@
  	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.196-SNAPSHOT</version>
+		<version>1.0.196</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
