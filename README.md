@@ -14,7 +14,7 @@ JOSM plug-in "kendzi.josm.plugin3d" is build by ant script.
 Currently conversion to maven is in progress. Build will change in future. 
 Only one of subproject is build by ant all others are maven project. 
 
-* Install java JDK 1.7 64bit from java.oracle.com
+* Install java JDK 8 64bit from java.oracle.com
 * Install Eclipse EE form eclipse.org
 * Install Eclipse plugins from marketplace: "Help > Eclipse Marketplace"
  * Subversive
