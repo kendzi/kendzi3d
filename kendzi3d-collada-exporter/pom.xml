@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>${log4j.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.googlecode.efficient-java-matrix-library</groupId>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		            
 	</dependencies>
