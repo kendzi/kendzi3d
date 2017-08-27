@@ -2,8 +2,8 @@ package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import javax.vecmath.Vector3d;
 
-import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 import generated.NodeModel;
 import generated.WayNodeModel;
