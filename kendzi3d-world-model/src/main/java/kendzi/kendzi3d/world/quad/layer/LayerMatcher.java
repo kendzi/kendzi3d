@@ -1,6 +1,6 @@
 package kendzi.kendzi3d.world.quad.layer;
 
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
  * Matchers for layers. Groups 3d models by type.

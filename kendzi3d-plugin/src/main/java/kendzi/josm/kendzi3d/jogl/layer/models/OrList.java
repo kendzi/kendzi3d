@@ -2,7 +2,7 @@ package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import java.util.List;
 
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**

@@ -7,9 +7,9 @@
 package kendzi.josm.kendzi3d.jogl.layer;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
-import org.openstreetmap.josm.actions.search.SearchCompiler.ParseError;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -50,7 +50,7 @@ public class RoadLayer implements Layer {
     {
         try {
             roadMatcher = SearchCompiler.compile("(highway=*)");
-        } catch (ParseError e) {
+        } catch (SearchParseError e) {
             roadMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
