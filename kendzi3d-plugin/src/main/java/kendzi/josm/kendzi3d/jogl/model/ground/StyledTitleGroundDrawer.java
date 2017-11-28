@@ -186,7 +186,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         texture.enable(gl);
         texture.bind(gl);
 
-        gl.glBegin(GL2GL3.GL_QUADS);
+        gl.glBegin(GL2ES3.GL_QUADS);
         gl.glNormal3d(0d, 1d, 0d);
 
         double h = -0.1d;
