@@ -12,12 +12,13 @@ import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Autostart toggle action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class AutostartToggleAction extends ToggleAction {
 
@@ -37,7 +38,7 @@ public class AutostartToggleAction extends ToggleAction {
     public AutostartToggleAction() {
         super(tr("Plugin autostart"), "1323594394_apply-icon24.png", tr("Enable/disable autostart"), null, false);
 
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
 
         boolean selected = Main.pref.getBoolean(KENDZI_3D_AUTOSTART, false);
 
@@ -51,7 +52,7 @@ public class AutostartToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.put(KENDZI_3D_AUTOSTART, selected);
+        Main.pref.putBoolean(KENDZI_3D_AUTOSTART, selected);
         notifySelectedState();
     }
 }

@@ -10,16 +10,16 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
+
+import com.google.inject.Inject;
+
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.coor.EastNorth;
-
-import com.google.inject.Inject;
 
 /**
  * Move camera action.
@@ -52,7 +52,7 @@ public class MoveCameraAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent pE) {
 
-        EastNorth mapCenter = Main.map.mapView.getCenter();
+        EastNorth mapCenter = MainApplication.getMap().mapView.getCenter();
         Perspective3D perspective = perspective3dProvider.getPerspective3d();
 
         double x = perspective.calcX(mapCenter.getX());

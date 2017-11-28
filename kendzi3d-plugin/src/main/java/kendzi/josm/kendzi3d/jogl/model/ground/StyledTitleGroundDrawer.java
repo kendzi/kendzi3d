@@ -9,29 +9,29 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2GL3;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point3d;
 
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.jogl.texture.TextureCacheServiceImpl;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
-
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
 import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES3;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
+
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 
 public class StyledTitleGroundDrawer extends GroundDrawer {
 
@@ -239,7 +239,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         nc.zoomTo(newCenter, scale);
         StyledMapRenderer sr = new StyledMapRenderer(g, nc, false);
 
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
 
         LatLon min = nc.getLatLon(0, 0);
         LatLon max = nc.getLatLon(size, size);

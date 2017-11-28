@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -110,7 +111,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      * @param injector
      */
     public void refreshMenu(final Injector injector) {
-        MainMenu menu = Main.main.menu;
+        MainMenu menu = MainApplication.getMenu();
 
         System.err.println("3d test");
         if (view3dJMenu == null) {

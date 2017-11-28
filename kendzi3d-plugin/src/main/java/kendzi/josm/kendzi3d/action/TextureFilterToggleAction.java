@@ -10,24 +10,24 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.jogl.texture.TextureCacheServiceImpl;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+
 /**
  * Texture filter toggle action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class TextureFilterToggleAction extends ToggleAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ public class TextureFilterToggleAction extends ToggleAction {
 
         this.textureCacheService = textureCacheService;
 
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
 
         boolean selected = true;
 
@@ -71,9 +71,9 @@ public class TextureFilterToggleAction extends ToggleAction {
      *            enable filter
      */
     private void setTextureFilter(boolean pEnable) {
-        if (this.textureCacheService instanceof TextureCacheServiceImpl) {
-            ((TextureCacheServiceImpl) this.textureCacheService).setTextureFilter(pEnable);
-            this.textureCacheService.clear();
+        if (textureCacheService instanceof TextureCacheServiceImpl) {
+            ((TextureCacheServiceImpl) textureCacheService).setTextureFilter(pEnable);
+            textureCacheService.clear();
         } else {
             throw new RuntimeException("unsupported textureCacheService");
         }

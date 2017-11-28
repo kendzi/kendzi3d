@@ -2,6 +2,12 @@ package kendzi.josm.kendzi3d.data.selection;
 
 import java.util.Collection;
 
+import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.gui.MainApplication;
+
 import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
@@ -10,12 +16,6 @@ import kendzi.kendzi3d.editor.selection.SelectionCriteria;
 import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
 
 public class SelectionSynchronizeManager implements SelectionChangedListener, SelectionChangeListener {
 
@@ -129,7 +129,7 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
         previewSelectionPrimitiveId = primitiveId;
         previewSelectionTime = time;
 
-        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         currentDataSet.setSelected(primitiveId);
     }

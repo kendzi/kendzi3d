@@ -5,7 +5,7 @@
  */
 package kendzi.josm.kendzi3d.ui.layer;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,14 +16,11 @@ import java.util.TimerTask;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import kendzi.jogl.camera.Camera;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -35,9 +32,13 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+import kendzi.jogl.camera.Camera;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
+
 /**
  * Layer showing location of camera.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class CameraLayer extends Layer implements LayerChangeListener {
@@ -52,7 +53,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
 
     /**
      * Constructor.
-     * 
+     *
      * @param perspective3dProvider
      *            perspective provider
      * @param camera
@@ -70,7 +71,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     private void registerLayerChangeListener() {
-        Main.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
     }
 
     private void initTimer() {
@@ -79,12 +80,17 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (Main.map != null && isChanged()) {
+                if (MainApplication.getMap() != null && isChanged()) {
                     // XXX currently there is no change listener for camera, so
                     // we need redraw camera position from time to time.
                     // System.out.println(System.currentTimeMillis() +
                     // " force map to repaint");
-                    Main.map.repaint(200);
+
+                    // MainApplication.getMap().repaint(200);
+
+                    if (isChanged()) {
+                        invalidate();
+                    }
                 }
             }
         }, time, time);
@@ -107,7 +113,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
 
     /**
      * Draws camera.
-     * 
+     *
      * @param camera
      *            camera location
      * @param color
@@ -116,7 +122,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      *            graphics 2d
      * @param mv
      *            map view
-     * 
+     *
      */
     protected void drawCamera(Camera camera, Color color, final Graphics2D g, final MapView mv) {
 
@@ -204,9 +210,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         return false;
     }
 
-    @Override
     public boolean isChanged() {
-        // System.out.println(System.currentTimeMillis() + " isChanged");
         return lastX != get2dX(camera) || lastY != get2dY(camera) || lastAngle != get2dAngle(camera);
     }
 
@@ -253,7 +257,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     @Override
     public void layerRemoving(LayerRemoveEvent evt) {
         if (evt.getRemovedLayer() instanceof OsmDataLayer && !isOsmDataLayer()) {
-            Main.getLayerManager().removeLayer(this);
+            MainApplication.getLayerManager().removeLayer(this);
         } else if (evt.getRemovedLayer() == this) {
             // XXX
             // Always can be added layer!
@@ -262,7 +266,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     private boolean isOsmDataLayer() {
-        for (Layer layer : Main.getLayerManager().getLayers()) {
+        for (Layer layer : MainApplication.getLayerManager().getLayers()) {
             if (layer instanceof OsmDataLayer) {
                 return true;
             }
@@ -271,7 +275,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     private boolean isAddedToLayers() {
-        for (Layer layer : Main.getLayerManager().getLayers()) {
+        for (Layer layer : MainApplication.getLayerManager().getLayers()) {
             if (layer instanceof CameraLayer) {
                 return true;
             }
@@ -280,16 +284,16 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     private boolean isEditLayer() {
-        return Main.getLayerManager().getEditLayer() != null;
+        return MainApplication.getLayerManager().getEditLayer() != null;
     }
 
     public void addCameraLayer() {
-        if (Main.map == null || Main.main == null || Main.map.mapView == null) {
+        if (MainApplication.getMap() == null || Main.main == null || MainApplication.getMap().mapView == null) {
             return;
         }
         if (isOsmDataLayer()) { // isEditLayer()) {
-            if (!Main.getLayerManager().containsLayer(this)) {
-                Main.getLayerManager().addLayer(this);
+            if (!MainApplication.getLayerManager().containsLayer(this)) {
+                MainApplication.getLayerManager().addLayer(this);
             }
         }
     }

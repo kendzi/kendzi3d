@@ -7,6 +7,8 @@ import javax.vecmath.Vector3d;
 
 import org.junit.Test;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.spi.preferences.MemoryPreferences;
 
 import kendzi.kendzi3d.expressions.exeption.ExpressionExeption;
 import kendzi.kendzi3d.expressions.expression.Expression;
@@ -21,6 +23,9 @@ import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
  * Unit test for ExpressiongBuilder.
  */
 public class OsmFunctionTest {
+    {
+        Config.setPreferencesInstance(new MemoryPreferences());
+    }
 
     @Test
     public void testExpression1() throws ExpressionExeption {

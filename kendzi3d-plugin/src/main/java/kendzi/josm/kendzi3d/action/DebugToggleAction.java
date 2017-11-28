@@ -10,18 +10,19 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.jogl.model.render.ModelRender;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
 
+import kendzi.jogl.model.render.ModelRender;
+
 /**
  * Debug toggle action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class DebugToggleAction extends ToggleAction {
 
@@ -42,7 +43,7 @@ public class DebugToggleAction extends ToggleAction {
 
     /**
      * Constructor of debug toggle action.
-     * 
+     *
      * @param pModelRender
      *            model render
      */
@@ -50,9 +51,9 @@ public class DebugToggleAction extends ToggleAction {
     public DebugToggleAction(ModelRender pModelRender) {
         super(tr("Debug View"), "1306318261_debugger__24", tr("Enable/disable display debug information"), null, false);
 
-        this.modelRender = pModelRender;
+        modelRender = pModelRender;
 
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
 
         boolean selected = Main.pref.getBoolean(KENDZI_3D_DEBUG_VIEW, false);
 
@@ -67,7 +68,7 @@ public class DebugToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.put(KENDZI_3D_DEBUG_VIEW, selected);
+        Main.pref.putBoolean(KENDZI_3D_DEBUG_VIEW, selected);
         notifySelectedState();
 
         setState(selected);
@@ -80,9 +81,9 @@ public class DebugToggleAction extends ToggleAction {
      */
     private void setState(boolean pEnable) {
 
-        this.modelRender.setDebugging(pEnable);
-        this.modelRender.setDrawEdges(pEnable);
-        this.modelRender.setDrawNormals(pEnable);
+        modelRender.setDebugging(pEnable);
+        modelRender.setDrawEdges(pEnable);
+        modelRender.setDrawNormals(pEnable);
 
     }
 

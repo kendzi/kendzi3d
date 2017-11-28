@@ -18,6 +18,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import kendzi.josm.kendzi3d.jogl.model.building.Building;
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
@@ -139,7 +140,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
      */
     protected void saveTagToPrimitive(AbstractMap<String, String> tags) {
 
-        DataSet dataSet = Main.getLayerManager().getEditDataSet();
+        DataSet dataSet = MainApplication.getLayerManager().getEditDataSet();
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 

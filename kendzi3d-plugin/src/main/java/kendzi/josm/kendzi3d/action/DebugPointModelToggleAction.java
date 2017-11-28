@@ -10,18 +10,19 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import kendzi.josm.kendzi3d.jogl.model.PointModel;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
 
+import kendzi.josm.kendzi3d.jogl.model.PointModel;
+
 /**
  * Debug model library toggle action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class DebugPointModelToggleAction extends ToggleAction {
 
@@ -37,7 +38,7 @@ public class DebugPointModelToggleAction extends ToggleAction {
 
     /**
      * Constructor of debug toggle action.
-     * 
+     *
      * @param pModelRender
      *            model render
      */
@@ -48,7 +49,7 @@ public class DebugPointModelToggleAction extends ToggleAction {
 
         // putValue("help", ht("/Action/FullscreenView"));
         // putValue("toolbar", "fullscreen");
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
 
         boolean selected = Main.pref.getBoolean(KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW, false);
 
@@ -63,7 +64,7 @@ public class DebugPointModelToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.put(KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW, selected);
+        Main.pref.putBoolean(KENDZI_3D_MODEL_LIBRARY_DEBUG_VIEW, selected);
         notifySelectedState();
 
         setState(selected);

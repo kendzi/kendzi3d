@@ -6,23 +6,24 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
+
+import com.google.inject.Inject;
 
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround;
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround.GroundType;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.ToggleAction;
-
-import com.google.inject.Inject;
-
 /**
  * Enable/disable display texture on ground toggle action.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
- * 
+ *
  */
 public class GroundToggleAction extends ToggleAction {
 
@@ -37,16 +38,15 @@ public class GroundToggleAction extends ToggleAction {
 
     /**
      * Constructor of ground toggle action.
-     * 
+     *
      * @param selectableGround
      *            ground drawer
      */
     @Inject
     public GroundToggleAction(SelectableGround selectableGround) {
-        super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null,
-                false);
+        super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null, false);
 
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
 
         boolean selected = Main.pref.getBoolean(KENDZI_3D_GROUND_TEXTURED, false);
 
@@ -64,7 +64,7 @@ public class GroundToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.put(KENDZI_3D_GROUND_TEXTURED, selected);
+        Main.pref.putBoolean(KENDZI_3D_GROUND_TEXTURED, selected);
         notifySelectedState();
 
         setTexturedGround(selected);
