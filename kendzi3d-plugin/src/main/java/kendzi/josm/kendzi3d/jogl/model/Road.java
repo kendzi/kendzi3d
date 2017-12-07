@@ -364,7 +364,7 @@ public class Road extends AbstractWayModel {
         String widthStr = way.get("width");
         if (widthStr != null) {
             try {
-                return Long.parseLong(widthStr);
+                return Double.parseDouble(widthStr);
             } catch (Exception e) {
                 log.error(e, e);
             }
