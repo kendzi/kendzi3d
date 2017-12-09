@@ -18,10 +18,11 @@ JAR_DIR="/usr/share/java"            # folder with vecmath*.jar and log4j*.jar
 JOGL_DIR="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
 KENDZI_PROJ="$HOME/workspace"        # (top-level-dir) of kendzi-*.jar snapshot builds
 
-JOGL_VER=2.3.2
+JOGL_VER=2.3
 for DEP in vecmath log4j-[0-9] {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry-[0-9],3d-jogl-{util,example}}
 do
-   find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${DEP}*jar" -not -iname "*native*" | sort | tail -1 | \
+   find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${DEP}*jar" \
+      -not -iname "*native*" -not -iname "*sources*" | sort | tail -1 | \
    while read JAR
    do
       echo $JAR
