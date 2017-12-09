@@ -7,20 +7,27 @@ Now you can build this project using command
 maven install
 
 
-*** How to run
+*** How to run (outside an IDE)
 
 To run the jar you need to have correct dependencies in the classpath.  The following bash snippet will attempt
 to find the correct jars in the locations listed below and put them into classpath variable CP.
 
-JAR_DIR=/usr/share/java        # folder with vecmath*.jar and log4j*.jar
-JOGL_DIR=~/.josm/plugins/jogl  # folder with jogl-all*.jar and gluegen-rt*.jar
-JOGL_VER=2.3.2                 # jogl version installed in ${JOGL_DIR}
-KENDZI_PROJ=~/workspace        # (top-level-dir) of {..}/kendzi-math-geometry/{..}/kendzi-math-geometry*.jar and alike 
+#M2="$HOME/.m2/repository"           # local maven repo, uncomment if you used 'maven install' to populate it
+                                     #                   in this case directories below will not be searched
+JAR_DIR="/usr/share/java"            # folder with vecmath*.jar and log4j*.jar
+JOGL_DIR="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
+KENDZI_PROJ="$HOME/workspace"        # (top-level-dir) of kendzi-*.jar snapshot builds
 
-for dep in vecmath log4j-1.2 {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry,3d-jogl-{util,example}}
+JOGL_VER=2.3.2
+for DEP in vecmath log4j-[0-9] {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry-[0-9],3d-jogl-{util,example}}
 do
-   find "${KENDZI_PROJ}" -ipath "*/${dep}/*/${dep}*jar" | grep '.' || \
-   find "${JAR_DIR}" "${JOGL_DIR}" -ipath "*${dep}*jar"
+   find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${DEP}*jar" -not -iname "*native*" | sort | tail -1 | \
+   while read JAR
+   do
+      echo $JAR
+      JAR="${JAR##*/}"
+      find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${JAR//.jar/*native*jar}"
+   done
 done \
 | sort | tee /dev/stderr | paste -s -d ':' | \
 while read CP
