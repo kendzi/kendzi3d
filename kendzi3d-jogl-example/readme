@@ -7,6 +7,28 @@ Now you can build this project using command
 maven install
 
 
+*** How to run
+
+To run the jar you need to have correct dependencies in the classpath.  The following bash snippet will attempt
+to find the correct jars in the locations listed below and put them into classpath variable CP.
+
+JAR_DIR=/usr/share/java        # folder with vecmath*.jar and log4j*.jar
+JOGL_DIR=~/.josm/plugins/jogl  # folder with jogl-all*.jar and gluegen-rt*.jar
+JOGL_VER=2.3.2                 # jogl version installed in ${JOGL_DIR}
+KENDZI_PROJ=~/workspace        # (top-level-dir) of {..}/kendzi-math-geometry/{..}/kendzi-math-geometry*.jar and alike 
+
+for dep in vecmath log4j-1.2 {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry,3d-jogl-{util,example}}
+do
+   find "${KENDZI_PROJ}" -ipath "*/${dep}/*/${dep}*jar" | grep '.' || \
+   find "${JAR_DIR}" "${JOGL_DIR}" -ipath "*${dep}*jar"
+done \
+| sort | tee /dev/stderr | paste -s -d ':' | \
+while read CP
+do
+   java -cp "$CP" kendzi.jogl.ui.BaseJoglFrame
+done
+
+
 *** License
 
 This software is provided "AS IS" without a warranty of any kind.  You use it on your own risk and responsibility!!!
