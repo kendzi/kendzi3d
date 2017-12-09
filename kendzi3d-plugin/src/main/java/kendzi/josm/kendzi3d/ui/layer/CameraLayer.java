@@ -256,13 +256,9 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      */
     @Override
     public void layerRemoving(LayerRemoveEvent evt) {
-        if (evt.getRemovedLayer() instanceof OsmDataLayer && !isOsmDataLayer()) {
-            MainApplication.getLayerManager().removeLayer(this);
-        } else if (evt.getRemovedLayer() == this) {
-            // XXX
-            // Always can be added layer!
-            // Main.getLayerManager().removeLayerChangeListener(this);
-        }
+        if (evt.getRemovedLayer() == this)
+            if (MainApplication.getLayerManager().containsLayer(this))
+            	MainApplication.getLayerManager().removeLayer(this);
     }
 
     private boolean isOsmDataLayer() {
