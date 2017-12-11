@@ -1,10 +1,11 @@
 package kendzi.josm.kendzi3d.ui;
 
 import javax.inject.Inject;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
@@ -95,11 +96,11 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
 
         modelRender.resetMaterials();
-        ModelRender.setDefaultMaterial(gl);
+        modelRender.setDefaultMaterial(gl);
 
         skyBox.draw(gl, viewport2.getPosition());
 
-        ground.draw(gl, viewport2.getPosition());
+        ground.draw(gl, viewport2.getPosition(), modelRender);
 
         if (modelRender.isDebugging()) {
 
@@ -115,7 +116,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
     /**
      * Check if all required openGl extensions are available.
-     * 
+     *
      * @param gl
      *            gl
      * @return if there is no required extension

@@ -10,11 +10,16 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -36,13 +41,9 @@ import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
-
 /**
  * Fence for shapes defined as way.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BarrierWall extends AbstractWayModel {
@@ -90,7 +91,7 @@ public class BarrierWall extends AbstractWayModel {
 
     /**
      * Fence constructor.
-     * 
+     *
      * @param pWay
      *            way
      * @param perspective
@@ -142,6 +143,7 @@ public class BarrierWall extends AbstractWayModel {
         model = modelBuilder.toModel();
         model.setUseLight(true);
         model.setUseTexture(true);
+        model.setUseTextureAlpha(true);
 
         buildModel = true;
 
@@ -163,7 +165,7 @@ public class BarrierWall extends AbstractWayModel {
 
     /**
      * Gets wall type.
-     * 
+     *
      * @param osmPrimitive
      *            osm primitive
      * @return fence type
@@ -174,7 +176,7 @@ public class BarrierWall extends AbstractWayModel {
 
     /**
      * Gets wall texture data.
-     * 
+     *
      * @param wallType
      *            wall type
      * @param wallColor
@@ -207,8 +209,6 @@ public class BarrierWall extends AbstractWayModel {
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        BarrierFence.enableTransparentText(gl);
-
         gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
         gl.glEnable(GL.GL_CULL_FACE);
@@ -237,8 +237,6 @@ public class BarrierWall extends AbstractWayModel {
 
             gl.glDisable(GL.GL_CULL_FACE);
         }
-
-        BarrierFence.disableTransparentText(gl);
 
     }
 

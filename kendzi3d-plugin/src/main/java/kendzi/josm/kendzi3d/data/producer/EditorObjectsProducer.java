@@ -2,7 +2,6 @@ package kendzi.josm.kendzi3d.data.producer;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -122,7 +121,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
             }
 
             Set<OsmId> currentIds = core.getOsmIds(layer);
-            List<OsmId> filteredIds = DataSetFilterUtil.filter(layer, dataSet, perspective);
+            Set<OsmId> filteredIds = DataSetFilterUtil.filter(layer, dataSet, perspective);
 
             RebuildStatus status = combine(currentIds, filteredIds);
 
@@ -277,7 +276,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
         return buildModel;
     }
 
-    private RebuildStatus combine(Set<OsmId> currentIds, List<OsmId> filteredIds) {
+    private RebuildStatus combine(Set<OsmId> currentIds, Set<OsmId> filteredIds) {
 
         // Set<OsmId> currentIdsSet = new HashSet<OsmId>(currentIds);
 

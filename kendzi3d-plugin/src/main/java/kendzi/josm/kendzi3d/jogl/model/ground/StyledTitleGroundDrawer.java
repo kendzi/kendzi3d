@@ -28,6 +28,7 @@ import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 
+import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
@@ -87,7 +88,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     }
 
     @Override
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(GL2 gl, Point3d cameraPosition, ModelRender modelRender) {
 
         Perspective3D perspective = perspective3dProvider.getPerspective3d();
         if (perspective == null) {
@@ -107,7 +108,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         int titlesRows = 2;
         for (int ie = -titlesRows; ie <= titlesRows; ie++) {
             for (int in = -titlesRows; in <= titlesRows; in++) {
-                drawTitle(gl, e + ie, n + in, perspective);
+                drawTitle(gl, e + ie, n + in, perspective, modelRender);
             }
         }
     }
@@ -124,7 +125,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
      * @param perspective3d
      *            perspective
      */
-    private void drawTitle(GL2 gl, int e, int n, Perspective3D perspective3d) {
+    private void drawTitle(GL2 gl, int e, int n, Perspective3D perspective3d, ModelRender modelRender) {
 
         double xCenter = e * TITLE_LENGTH;
         double yCenter = n * TITLE_LENGTH;
@@ -187,7 +188,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         texture.bind(gl);
 
         gl.glBegin(GL2ES3.GL_QUADS);
-        gl.glNormal3d(0d, 1d, 0d);
+        gl.glNormal3d(0d, modelRender.isDoubleSided()?-1d:1d, 0d);
 
         double h = -0.1d;
 

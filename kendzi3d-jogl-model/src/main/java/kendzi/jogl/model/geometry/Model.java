@@ -33,6 +33,11 @@ public class Model {
     public boolean useTexture;
 
     /**
+     * Model use texture alpha blending.
+     */
+    public boolean useTextureAlpha;
+
+    /**
      * Model use light.
      */
     public boolean useLight;
@@ -162,6 +167,20 @@ public class Model {
      */
     public void setUseTexture(boolean pUseTexture) {
         this.useTexture = pUseTexture;
+    }
+
+    /**
+     * @return the useTexture
+     */
+    public boolean isUseTextureAlpha() {
+        return this.useTextureAlpha;
+    }
+
+    /**
+     * @param pUseTexture the useTexture to set
+     */
+    public void setUseTextureAlpha(boolean pUseTextureAlpha) {
+        this.useTextureAlpha = pUseTextureAlpha;
     }
 
     /**

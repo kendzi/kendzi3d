@@ -11,13 +11,17 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Model;
@@ -47,14 +51,11 @@ import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-
 /**
  * Model builder for objects loaded from obj files.
- * 
+ *
  * @author Tomasz Kędziora (kendzi)
- * 
+ *
  */
 public class PointModel extends AbstractPointModel implements DLODSuport {
 
@@ -94,7 +95,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
     /**
      * Constructor.
-     * 
+     *
      * @param node
      *            node
      * @param pNodeModelConf
@@ -188,7 +189,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             } else {
                 loadModel = modelCacheService.generateModel(key, parameter);
             }
-            loadModel.useLight = true;
+            loadModel.setUseLight(true);
             setAmbientColor(loadModel);
             return loadModel;
 
@@ -221,7 +222,6 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         //
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
-            BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
             gl.glTranslated(getGlobalX(), 0, -getGlobalY());
             drawDebug(gl, translate, 0);
@@ -237,7 +237,6 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             gl.glDisable(GLLightingFunc.GL_NORMALIZE);
 
             gl.glPopMatrix();
-            BarrierFence.disableTransparentText(gl);
         }
     }
 

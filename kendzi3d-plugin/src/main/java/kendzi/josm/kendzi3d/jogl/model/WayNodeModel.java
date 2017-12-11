@@ -11,12 +11,17 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Model;
@@ -45,15 +50,11 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
-
 /**
  * Model builder for objects loaded from obj files.
- * 
+ *
  * @author Tomasz Kędziora (kendzi)
- * 
+ *
  */
 public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
@@ -93,7 +94,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
     /**
      * Constructor.
-     * 
+     *
      * @param way
      *            way
      * @param nodeFilter
@@ -376,7 +377,6 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     public void draw(GL2 gl, Camera camera, LOD pLod) {
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
-            BarrierFence.enableTransparentText(gl);
             gl.glPushMatrix();
             // gl.glTranslated(this.getGlobalX(), 0, -this.getGlobalY());
             gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
@@ -412,7 +412,6 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             gl.glDisable(GLLightingFunc.GL_NORMALIZE);
 
             gl.glPopMatrix();
-            BarrierFence.disableTransparentText(gl);
         }
     }
 

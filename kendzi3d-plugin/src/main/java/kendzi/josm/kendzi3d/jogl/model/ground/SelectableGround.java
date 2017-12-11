@@ -3,8 +3,11 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
+
+import com.jogamp.opengl.GL2;
+
+import kendzi.jogl.model.render.ModelRender;
 
 public class SelectableGround {
 
@@ -32,12 +35,12 @@ public class SelectableGround {
         }
     }
 
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(GL2 gl, Point3d cameraPosition, ModelRender modelRender) {
 
         GroundDrawer ground = grounds.get(selectedGroundType);
 
         if (ground != null) {
-            ground.draw(gl, cameraPosition);
+            ground.draw(gl, cameraPosition, modelRender);
         }
     }
 
