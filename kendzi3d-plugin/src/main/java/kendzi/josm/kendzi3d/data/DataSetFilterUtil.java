@@ -18,20 +18,6 @@ import kendzi.kendzi3d.world.quad.layer.LayerMatcher;
 
 public class DataSetFilterUtil {
 
-    private static void addDisabledAndHiddenDeps(Set<OsmId> ret, Relation r) {
-        r.getMemberPrimitives().stream().filter(OsmPrimitive::isDisabledAndHidden)
-        .forEach(e -> {
-            if (e instanceof Relation) {
-                ret.add(new OsmId(e.getUniqueId(), OsmPrimitiveType.RELATION));
-                addDisabledAndHiddenDeps(ret, (Relation)e);
-            }
-            if (e instanceof Way)
-                ret.add(new OsmId(e.getUniqueId(), OsmPrimitiveType.WAY));
-            if (e instanceof Node)
-                ret.add(new OsmId(e.getUniqueId(), OsmPrimitiveType.NODE));
-        });
-    }
-
     public static Set<OsmId> filter(LayerMatcher layerMatcher, DataSet dataSet, Perspective perspective) {
 
         if (dataSet == null) {
@@ -66,8 +52,6 @@ public class DataSetFilterUtil {
             // for (LayerMatcher layer : layerMatchers) {
             if (layerMatcher.getWayMatcher() != null && layerMatcher.getWayMatcher().match(way)) {
                 ret.add(new OsmId(way.getUniqueId(), OsmPrimitiveType.WAY));
-                way.getNodes().stream().filter(Node::isDisabledAndHidden)
-                .forEach(n -> ret.add(new OsmId(n.getUniqueId(), OsmPrimitiveType.NODE)));
             }
             // }
         }
@@ -82,7 +66,6 @@ public class DataSetFilterUtil {
             // for (LayerMatcher layer : layerMatchers) {
             if (layerMatcher.getRelationMatcher() != null && layerMatcher.getRelationMatcher().match(relation)) {
                 ret.add(new OsmId(relation.getUniqueId(), OsmPrimitiveType.RELATION));
-                addDisabledAndHiddenDeps(ret, relation);
             }
             // }
         }
