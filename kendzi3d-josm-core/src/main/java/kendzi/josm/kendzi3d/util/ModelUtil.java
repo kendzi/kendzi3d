@@ -69,8 +69,15 @@ public final class ModelUtil {
 
         try {
             if (heightStr.endsWith("m")) {
+                double mult = 1;
+                switch (heightStr.replaceAll("[^a-z]", "")) {
+                case "km": mult = 1000;
+                case "dm": mult = .1;
+                case "cm": mult = .01;
+                case "mm": mult = .001;
+                }
                 heightStr = heightStr.substring(0, heightStr.length() - 1);
-                return new Double(" " + heightStr + " ");
+                return mult * new Double(" " + heightStr + " ");
 
             } else if (heightStr.endsWith("ft")) {
 
