@@ -1,5 +1,6 @@
 package kendzi.josm.kendzi3d.data;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,18 +11,15 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.quad.layer.LayerMatcher;
 
 public class DataSetFilterUtil {
 
-    private static boolean isDisabledAndHiddenDep(OsmPrimitive o) {
-        return o.isDisabledAndHidden() && !o.isDeleted() && !o.isIncomplete();
-    }
-
     private static void addDisabledAndHiddenDeps(Set<OsmId> ret, Relation r) {
-        r.getMemberPrimitives().stream().filter(DataSetFilterUtil::isDisabledAndHiddenDep)
+        r.getMemberPrimitives().stream().filter(OsmPrimitive::isDisabledAndHidden)
         .forEach(e -> {
             if (e instanceof Relation) {
                 ret.add(new OsmId(e.getUniqueId(), OsmPrimitiveType.RELATION));
@@ -42,9 +40,11 @@ public class DataSetFilterUtil {
 
         Set<OsmId> ret = new HashSet<OsmId>(1000);
 
-        for (Node node : dataSet.getNodes()) {
+        Collection<OsmPrimitive> data = dataSet.allNonDeletedCompletePrimitives();
 
-            if (node.isDeleted() || node.isIncomplete() || node.isDisabledAndHidden()) {
+        for (Node node : new SubclassFilteredCollection<OsmPrimitive, Node>(data, Node.class::isInstance)) {
+
+            if (node.isDisabledAndHidden()) {
                 continue;
             }
 
@@ -56,9 +56,9 @@ public class DataSetFilterUtil {
             // }
         }
 
-        for (Way way : dataSet.getWays()) {
+        for (Way way : new SubclassFilteredCollection<OsmPrimitive, Way>(data, Way.class::isInstance)) {
 
-            if (way.isDeleted() || way.isIncomplete() || way.isDisabledAndHidden()) {
+            if (way.isDisabledAndHidden()) {
                 continue;
             }
 
@@ -66,15 +66,15 @@ public class DataSetFilterUtil {
             // for (LayerMatcher layer : layerMatchers) {
             if (layerMatcher.getWayMatcher() != null && layerMatcher.getWayMatcher().match(way)) {
                 ret.add(new OsmId(way.getUniqueId(), OsmPrimitiveType.WAY));
-                way.getNodes().stream().filter(DataSetFilterUtil::isDisabledAndHiddenDep)
+                way.getNodes().stream().filter(Node::isDisabledAndHidden)
                 .forEach(n -> ret.add(new OsmId(n.getUniqueId(), OsmPrimitiveType.NODE)));
             }
             // }
         }
 
-        for (Relation relation : dataSet.getRelations()) {
+        for (Relation relation : new SubclassFilteredCollection<OsmPrimitive, Relation>(data, Relation.class::isInstance)) {
 
-            if (relation.isDeleted() || relation.isIncomplete() || relation.isDisabledAndHidden()) {
+            if (relation.isDisabledAndHidden()) {
                 continue;
             }
 
