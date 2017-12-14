@@ -122,6 +122,9 @@ public class ModelRender {
                     setupTextures(gl, material, mesh.hasTexture);
                 }
 
+                if (model.useCullFaces)
+                    gl.glEnable(GL.GL_CULL_FACE);
+
                 faceCount += mesh.face.length;
 
                 for (fi = 0; fi < mesh.face.length; fi++) {
@@ -153,6 +156,9 @@ public class ModelRender {
 
                     gl.glEnd();
                 }
+
+                if (model.useCullFaces)
+                    gl.glDisable(GL.GL_CULL_FACE);
 
                 if (drawTextures) {
                     if (model.useTextureAlpha)

@@ -38,6 +38,11 @@ public class Model {
     public boolean useTextureAlpha;
 
     /**
+     * Model use face culling.
+     */
+    public boolean useCullFaces;
+
+    /**
      * Model use light.
      */
     public boolean useLight;
@@ -181,6 +186,20 @@ public class Model {
      */
     public void setUseTextureAlpha(boolean pUseTextureAlpha) {
         this.useTextureAlpha = pUseTextureAlpha;
+    }
+
+    /**
+     * @return the useCullFaces
+     */
+    public boolean isUseCullFaces() {
+        return this.useCullFaces;
+    }
+
+    /**
+     * @param pUseCullFaces the useCullFaces to set
+     */
+    public void setUseCullFaces(boolean pUseCullFaces) {
+        this.useCullFaces = pUseCullFaces;
     }
 
     /**

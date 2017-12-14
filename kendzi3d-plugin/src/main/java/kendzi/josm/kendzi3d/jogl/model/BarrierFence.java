@@ -14,7 +14,6 @@ import javax.vecmath.Vector3d;
 
 import org.openstreetmap.josm.data.osm.Way;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 
@@ -129,6 +128,7 @@ public class BarrierFence extends AbstractWayModel {
         model.setUseLight(true);
         model.setUseTexture(true);
         model.setUseTextureAlpha(true);
+        model.setUseCullFaces(true);
 
         buildModel = true;
 
@@ -148,7 +148,6 @@ public class BarrierFence extends AbstractWayModel {
         // GL2.GL_REPLACE);
         gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
-        gl.glEnable(GL.GL_CULL_FACE);
         gl.glPushMatrix();
         gl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
@@ -165,7 +164,6 @@ public class BarrierFence extends AbstractWayModel {
         }
 
         gl.glPopMatrix();
-        gl.glDisable(GL.GL_CULL_FACE);
 
     }
 
