@@ -131,6 +131,8 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
 
         DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
 
-        currentDataSet.setSelected(primitiveId);
+        if (currentDataSet != null) {
+        	currentDataSet.setSelected(primitiveId);
+        }
     }
 }
