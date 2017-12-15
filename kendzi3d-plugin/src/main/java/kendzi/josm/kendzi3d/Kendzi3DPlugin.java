@@ -11,6 +11,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -34,8 +36,8 @@ import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
-import kendzi.josm.kendzi3d.action.DoubleSidedLightingToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
+import kendzi.josm.kendzi3d.action.ForceTwoSidedToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
 import kendzi.josm.kendzi3d.action.LightConfigurationAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
@@ -170,8 +172,8 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         view3dJMenu.addSeparator();
 
-        /* unfinished + may be better suited to fit in light configuration dialog */
-        DoubleSidedLightingToggleAction doubleSidedLightingToggleAction = injector.getInstance(DoubleSidedLightingToggleAction.class);
+        /* only serves to override a per-model setting, i.e. enables two sided lighting for each model globally */
+        ForceTwoSidedToggleAction doubleSidedLightingToggleAction = injector.getInstance(ForceTwoSidedToggleAction.class);
         registerCheckBoxAction(doubleSidedLightingToggleAction, view3dJMenu);
 
         TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
@@ -208,7 +210,19 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     private void registerCheckBoxAction(ToggleAction action, JMenu menu) {
         final JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem(action);
         checkBox.setAccelerator(action.getShortcut().getKeyStroke());
+
         action.addButtonModel(checkBox.getModel());
+        action.addPropertyChangeListener(new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("enabled")) {
+                    checkBox.setVisible((Boolean) evt.getNewValue());
+                }
+
+            }
+        });
+
         menu.add(checkBox);
     }
 

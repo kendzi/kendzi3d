@@ -256,9 +256,16 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      */
     @Override
     public void layerRemoving(LayerRemoveEvent evt) {
-        if (evt.getRemovedLayer() == this)
-            if (MainApplication.getLayerManager().containsLayer(this))
-            	MainApplication.getLayerManager().removeLayer(this);
+        if (isLastOsmDataLayerBeingRemoved(evt)) {
+            // remove camera layer after all osm data layers have been removed
+            if (MainApplication.getLayerManager().containsLayer(this)) {
+                MainApplication.getLayerManager().removeLayer(this);
+            }
+        }
+    }
+
+    private boolean isLastOsmDataLayerBeingRemoved(LayerRemoveEvent evt) {
+        return evt.getRemovedLayer() instanceof OsmDataLayer && !isOsmDataLayer();
     }
 
     private boolean isOsmDataLayer() {
@@ -270,24 +277,11 @@ public class CameraLayer extends Layer implements LayerChangeListener {
         return false;
     }
 
-    private boolean isAddedToLayers() {
-        for (Layer layer : MainApplication.getLayerManager().getLayers()) {
-            if (layer instanceof CameraLayer) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isEditLayer() {
-        return MainApplication.getLayerManager().getEditLayer() != null;
-    }
-
     public void addCameraLayer() {
         if (MainApplication.getMap() == null || Main.main == null || MainApplication.getMap().mapView == null) {
             return;
         }
-        if (isOsmDataLayer()) { // isEditLayer()) {
+        if (isOsmDataLayer()) {
             if (!MainApplication.getLayerManager().containsLayer(this)) {
                 MainApplication.getLayerManager().addLayer(this);
             }

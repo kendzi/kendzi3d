@@ -143,7 +143,8 @@ public class BarrierWall extends AbstractWayModel {
         model.setUseLight(true);
         model.setUseTexture(true);
         model.setUseTextureAlpha(true);
-        model.setUseCullFaces(true);
+        model.setUseCullFaces(!PREFER_TWO_SIDED.get());
+        model.setUseTwoSidedLighting(PREFER_TWO_SIDED.get());
 
         buildModel = true;
 

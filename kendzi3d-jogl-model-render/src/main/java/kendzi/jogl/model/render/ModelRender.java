@@ -36,13 +36,13 @@ public class ModelRender {
 
     private boolean debugging = true;
 
-    private boolean doubleSided;
-
     private boolean drawEdges;
 
     private boolean drawNormals;
 
     private boolean drawTextures;
+
+    private boolean drawTwoSided;
 
     private int faceCount;
 
@@ -109,21 +109,24 @@ public class ModelRender {
 
         try {
 
+            if (model.useCullFaces) {
+                gl.glEnable(GL.GL_CULL_FACE);
+            }
+
+            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, (model.useTwoSided || drawTwoSided) ? GL2.GL_TRUE : GL2.GL_FALSE);
+
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
 
                 Material material = model.getMaterial(mesh.materialID);
 
-                setupMaterial2(gl, material);
+                setupMaterial2(gl, material, (model.useTwoSided || drawTwoSided) ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
 
                 if (drawTextures) {
                     if (model.useTextureAlpha)
                         enableTransparentText(gl);
                     setupTextures(gl, material, mesh.hasTexture);
                 }
-
-                if (model.useCullFaces)
-                    gl.glEnable(GL.GL_CULL_FACE);
 
                 faceCount += mesh.face.length;
 
@@ -157,15 +160,11 @@ public class ModelRender {
                     gl.glEnd();
                 }
 
-                if (model.useCullFaces)
-                    gl.glDisable(GL.GL_CULL_FACE);
-
                 if (drawTextures) {
                     if (model.useTextureAlpha)
                         disableTransparentText(gl);
                     unsetupTextures(gl, material, mesh.hasTexture);
                 }
-
             }
 
             gl.glColor3f(1.0f, 1.0f, 1.0f);
@@ -173,6 +172,11 @@ public class ModelRender {
         } catch (RuntimeException e) {
             throw new RuntimeException("error model: " + model.getSource() + " mesh: " + mi + " ("
                     + (model.mesh[mi] != null ? model.mesh[mi].name : "") + ")" + " face: " + fi, e);
+        } finally {
+
+            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_FALSE);
+
+            gl.glDisable(GL.GL_CULL_FACE);
         }
 
     }
@@ -376,43 +380,40 @@ public class ModelRender {
 
     }
 
-    private int getMaterialSides() {
-        return doubleSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT;
-    }
-
     public void setDefaultMaterial(GL2 gl) {
-        gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, doubleSided?GL2.GL_TRUE:GL2.GL_FALSE);
 
-        gl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_DIFFUSE, new float[] { 0.8f, 0.8f, 0.8f, 1.0f }, 0);
+        int sides = drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT;
 
-        gl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_AMBIENT, new float[] { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
-        // pGl.glMaterialfv(getMaterialSides(), GL2.GL_AMBIENT, new float[] {0.2f,
+        gl.glMaterialfv(sides, GLLightingFunc.GL_DIFFUSE, new float[] { 0.8f, 0.8f, 0.8f, 1.0f }, 0);
+
+        gl.glMaterialfv(sides, GLLightingFunc.GL_AMBIENT, new float[] { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
+        // pGl.glMaterialfv(sides, GL2.GL_AMBIENT, new float[] {0.2f,
         // 0.2f, 0.2f, 1.0f}, 0);
-        gl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_SPECULAR, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
-        gl.glMaterialf(getMaterialSides(), GLLightingFunc.GL_SHININESS, 0.0f);
-        gl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_EMISSION, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+        gl.glMaterialfv(sides, GLLightingFunc.GL_SPECULAR, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+        gl.glMaterialf(sides, GLLightingFunc.GL_SHININESS, 0.0f);
+        gl.glMaterialfv(sides, GLLightingFunc.GL_EMISSION, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
     }
 
-    private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material) {
+    private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material, int sides) {
 
         float[] rgba = new float[4];
 
-        pGl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_SPECULAR, material.getSpecularColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_SPECULAR, material.getSpecularColor().getRGBComponents(rgba), 0);
 
-        pGl.glMaterialf(getMaterialSides(), GLLightingFunc.GL_SHININESS, material.getShininess());
+        pGl.glMaterialf(sides, GLLightingFunc.GL_SHININESS, material.getShininess());
 
-        pGl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_EMISSION, material.getEmissive().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_EMISSION, material.getEmissive().getRGBComponents(rgba), 0);
 
         lastOtherComponent = material;
     }
 
-    private void setupMaterialAmbientDiffuseComponent(GL2 pGl, AmbientDiffuseComponent material) {
+    private void setupMaterialAmbientDiffuseComponent(GL2 pGl, AmbientDiffuseComponent material, int sides) {
 
         float[] rgba = new float[4];
 
-        pGl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_DIFFUSE, material.getDiffuseColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_DIFFUSE, material.getDiffuseColor().getRGBComponents(rgba), 0);
 
-        pGl.glMaterialfv(getMaterialSides(), GLLightingFunc.GL_AMBIENT, material.getAmbientColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_AMBIENT, material.getAmbientColor().getRGBComponents(rgba), 0);
 
         lastAmbientDiffuseComponent = material;
     }
@@ -425,18 +426,17 @@ public class ModelRender {
     Material defaultMaterial = new Material();
 
     public void setupDefaultMaterial(GL2 pGL) {
-        setupMaterial2(pGL, defaultMaterial);
+        setupMaterial2(pGL, defaultMaterial, drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
     }
 
-    private void setupMaterial2(GL2 pGl, Material material) {
-        pGl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, doubleSided?GL2.GL_TRUE:GL2.GL_FALSE);
+    private void setupMaterial2(GL2 pGl, Material material, int sides) {
 
         if (isAmbientDiffuseChanged(material.getAmbientDiffuse())) {
-            setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse());
+            setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse(), sides);
         }
 
         if (isOtherComponentChanged(material.getOther())) {
-            setupMaterialOtherComponent(pGl, material.getOther());
+            setupMaterialOtherComponent(pGl, material.getOther(), sides);
         }
     }
 
@@ -494,18 +494,18 @@ public class ModelRender {
     }
 
     /**
-     * @param doubleSided
-     *            the doubleSided attribute to set
+     * @param drawTwoSided
+     *            the drawTwoSided attribute to set
      */
-    public void setDoubleSided(boolean doubleSided) {
-        this.doubleSided = doubleSided;
+    public void setDrawTwoSided(boolean drawTwoSided) {
+        this.drawTwoSided = drawTwoSided;
     }
 
     /**
-     * @return the doubleSided attribute
+     * @return the drawTwoSided attribute
      */
-    public boolean isDoubleSided() {
-        return doubleSided;
+    public boolean isDrawTwoSided() {
+        return drawTwoSided;
     }
 
     /**

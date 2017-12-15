@@ -100,7 +100,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
         skyBox.draw(gl, viewport2.getPosition());
 
-        ground.draw(gl, viewport2.getPosition(), modelRender);
+        ground.draw(gl, viewport2.getPosition());
 
         if (modelRender.isDebugging()) {
 

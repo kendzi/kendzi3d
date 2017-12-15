@@ -43,6 +43,11 @@ public class Model {
     public boolean useCullFaces;
 
     /**
+     * Model use face culling.
+     */
+    public boolean useTwoSided;
+
+    /**
      * Model use light.
      */
     public boolean useLight;
@@ -175,14 +180,14 @@ public class Model {
     }
 
     /**
-     * @return the useTexture
+     * @return the useTextureAlpha
      */
     public boolean isUseTextureAlpha() {
         return this.useTextureAlpha;
     }
 
     /**
-     * @param pUseTexture the useTexture to set
+     * @param pUseTexture the useTextureAlpha to set
      */
     public void setUseTextureAlpha(boolean pUseTextureAlpha) {
         this.useTextureAlpha = pUseTextureAlpha;
@@ -200,6 +205,20 @@ public class Model {
      */
     public void setUseCullFaces(boolean pUseCullFaces) {
         this.useCullFaces = pUseCullFaces;
+    }
+
+    /**
+     * @return the useTwoSidedLighting
+     */
+    public boolean isUseTwoSidedLighting() {
+        return this.useTwoSided;
+    }
+
+    /**
+     * @param pUseTwoSidedLighting the useTwoSidedLighting to set
+     */
+    public void setUseTwoSidedLighting(boolean pUseTwoSidedLighting) {
+        this.useTwoSided = pUseTwoSidedLighting;
     }
 
     /**

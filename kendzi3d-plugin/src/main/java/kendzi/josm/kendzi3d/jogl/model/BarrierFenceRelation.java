@@ -194,7 +194,8 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         model.setUseLight(true);
         model.setUseTexture(true);
         model.setUseTextureAlpha(true);
-        model.setUseCullFaces(true);
+        model.setUseCullFaces(!PREFER_TWO_SIDED.get());
+        model.setUseTwoSidedLighting(PREFER_TWO_SIDED.get());
 
         buildModel = true;
     }
@@ -243,7 +244,10 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
             ) {
         FaceFactory faceRight = pMeshBorder.addFace(FaceType.QUADS);
-        FaceFactory faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+        FaceFactory faceLeft = null;
+        if (!PREFER_TWO_SIDED.get()) {
+            faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+        }
 
         Point2d start = pPoints.get(0);
         Double startHeight = getHeight(0, pHeights);
@@ -284,14 +288,16 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             faceRight.addVert(endMi, emi, n1i);
             faceRight.addVert(endHi, ehi, n1i);
 
-            Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
+            if (faceLeft != null) {
+                Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
 
-            int n2i = pMeshBorder.addNormal(normal2);
+                int n2i = pMeshBorder.addNormal(normal2);
 
-            faceLeft.addVert(startMi, emi, n2i);
-            faceLeft.addVert(startHi, ehi, n2i);
-            faceLeft.addVert(endHi, bhi, n2i);
-            faceLeft.addVert(endMi, bmi, n2i);
+                faceLeft.addVert(startMi, emi, n2i);
+                faceLeft.addVert(startHi, ehi, n2i);
+                faceLeft.addVert(endHi, bhi, n2i);
+                faceLeft.addVert(endMi, bmi, n2i);
+            }
 
             // new start point.
             start = end;

@@ -10,8 +10,10 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExpertToggleAction;
+import org.openstreetmap.josm.actions.ExpertToggleAction.ExpertModeChangeListener;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
@@ -21,11 +23,12 @@ import kendzi.jogl.model.render.ModelRender;
 /**
  * Enable/disable display texture on models toggle action.
  */
-public class DoubleSidedLightingToggleAction extends ToggleAction {
+public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertModeChangeListener {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String KENDZI_3D_DOUBLE_SIDED = "kendzi3d.doubleSidedLighting";
+    private static final BooleanProperty FORCE_TWO_SIDED =
+            new BooleanProperty("kendzi3d.models.forceTwoSidedLightingForAllModels", false);
 
     private final ModelRender modelRender;
 
@@ -35,31 +38,34 @@ public class DoubleSidedLightingToggleAction extends ToggleAction {
      * @param pModelRender ModelRender
      */
     @Inject
-    public DoubleSidedLightingToggleAction(ModelRender pModelRender) {
-        super(tr("Double sided lighting"), "1306318261_debugger__24", tr("Enable/disable double sided lighting"), null, false);
+    public ForceTwoSidedToggleAction(ModelRender pModelRender) {
+        super(tr("Force two sided lighting"), "1306318261_debugger__24",
+                tr("Force two sided lighting to be used for each model." +
+                        "This is normally enabled on a per-model basis for some models."), null, false);
 
         this.modelRender = pModelRender;
 
         MainApplication.getToolbar().register(this);
 
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_DOUBLE_SIDED, false);
-
-        setSelected(selected);
+        setSelected(FORCE_TWO_SIDED.get());
 
         notifySelectedState();
 
-        setState(selected);
+        setState(FORCE_TWO_SIDED.get());
+
+        ExpertToggleAction.addExpertModeChangeListener(this, true);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
-        boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_DOUBLE_SIDED, selected);
+
+        FORCE_TWO_SIDED.put(isSelected());
+
         notifySelectedState();
 
-        setState(selected);
+        setState(FORCE_TWO_SIDED.get());
 
     }
 
@@ -69,7 +75,14 @@ public class DoubleSidedLightingToggleAction extends ToggleAction {
      */
     private void setState(boolean pEnable) {
 
-        modelRender.setDoubleSided(pEnable);
+        modelRender.setDrawTwoSided(pEnable);
+
+    }
+
+    @Override
+    public void expertChanged(boolean expert) {
+
+        this.setEnabled(expert);
 
     }
 

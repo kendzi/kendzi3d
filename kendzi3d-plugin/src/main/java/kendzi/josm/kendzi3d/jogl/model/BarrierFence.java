@@ -13,6 +13,10 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
@@ -24,6 +28,7 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
@@ -128,7 +133,8 @@ public class BarrierFence extends AbstractWayModel {
         model.setUseLight(true);
         model.setUseTexture(true);
         model.setUseTextureAlpha(true);
-        model.setUseCullFaces(true);
+        model.setUseCullFaces(!PREFER_TWO_SIDED.get());
+        model.setUseTwoSidedLighting(PREFER_TWO_SIDED.get());
 
         buildModel = true;
 
