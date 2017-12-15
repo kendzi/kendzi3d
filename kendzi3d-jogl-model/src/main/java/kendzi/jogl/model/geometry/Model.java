@@ -43,7 +43,7 @@ public class Model {
     public boolean useCullFaces;
 
     /**
-     * Model use face culling.
+     * Model use two sided lighting.
      */
     public boolean useTwoSided;
 
