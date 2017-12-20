@@ -64,39 +64,29 @@ public final class ModelUtil {
             return pDefault;
         }
 
-        String heightStr = pHeightStr.trim().toLowerCase();
-        heightStr = heightStr.replaceAll(",", ".");
+        pHeightStr = pHeightStr.trim().toLowerCase().replaceAll(",", ".");
 
         try {
-            if (heightStr.endsWith("m")) {
-                double mult = 1;
-                switch (heightStr.replaceAll("[^a-z]", "")) {
-                case "km": mult = 1000;
-                case "dm": mult = .1;
-                case "cm": mult = .01;
-                case "mm": mult = .001;
-                }
-                heightStr = heightStr.substring(0, heightStr.length() - 1);
-                return mult * new Double(" " + heightStr + " ");
+            // default we take in [m]
+            double mult = 1d;
+            int strlen = pHeightStr.length();
 
-            } else if (heightStr.endsWith("ft")) {
-
-                // 1 foot = 0.3048 meters
-                heightStr = heightStr.substring(0, heightStr.length() - 1);
-                return 0.3048d * new Double(" " + heightStr + " ");
-
-            } else if (heightStr.endsWith("feet")) {
-
-                // 1 foot = 0.3048 meters
-                heightStr = heightStr.substring(0, heightStr.length() - 4);
-                return 0.3048d * new Double(" " + heightStr + " ");
+            switch (pHeightStr.replaceAll("[^a-z]", "")) {
+            case "km": mult = 1000d;     strlen--; strlen--; break;
+            case "dm": mult = .1d;       strlen--; strlen--; break;
+            case "cm": mult = .01d;      strlen--; strlen--; break;
+            case "mm": mult = .001d;     strlen--; strlen--; break;
+            case "m":                              strlen--; break;
+            case "feet":                 strlen--; strlen--;
+            case "ft": mult = 0.3048d;   strlen--; strlen--; break;
+            case "inch":                 strlen--; strlen--;
+            case "in": mult = 1/0.0254d; strlen--; strlen--; break;
             }
 
-            // default we take in [m]
-            return new Double(" " + heightStr + " ");
+            return mult * Double.valueOf(pHeightStr.substring(0, strlen));
 
         } catch (Exception e) {
-            log.info("Unsupportet height: " + heightStr);
+            log.info("Unsupported height: " + pHeightStr);
         }
         return pDefault;
 
