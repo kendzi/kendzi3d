@@ -23,19 +23,17 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
     private final List<SelectionChangeListener> selectionChangeListeners = new LinkedList<SelectionChangeListener>();
 
     public final void addEditorChangeListener(EditorChangeListener listener) {
-        editorChangeListeners.add(listener);
+        this.editorChangeListeners.add(listener);
     }
 
     public final void removeEditorChangeListener(EditorChangeListener listener) {
-        editorChangeListeners.remove(listener);
+        this.editorChangeListeners.remove(listener);
     }
 
-    protected boolean raiseEditorChange(EditorChangeEvent event) {
-        for (EditorChangeListener listener : editorChangeListeners) {
+    protected void raiseEditorChange(EditorChangeEvent event) {
+        for (EditorChangeListener listener : this.editorChangeListeners) {
             listener.onEditorChange(event);
         }
-
-        return !editorChangeListeners.isEmpty();
     }
 
     public interface EditorChangeListener extends EventListener {
@@ -43,35 +41,31 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
     }
 
     public final void addSelectEditorListener(SelectEditorListener listener) {
-        selectEditorListeners.add(listener);
+        this.selectEditorListeners.add(listener);
     }
 
     public final void removeSelectEditorListener(SelectEditorListener listener) {
-        selectEditorListeners.remove(listener);
+        this.selectEditorListeners.remove(listener);
     }
 
-    protected boolean raiseSelectEditor(SelectEditorEvent args) {
-        for (SelectEditorListener listener : selectEditorListeners) {
+    protected void raiseSelectEditor(SelectEditorEvent args) {
+        for (SelectEditorListener listener : this.selectEditorListeners) {
             listener.onSelectEditor(args);
         }
-
-        return !selectEditorListeners.isEmpty();
     }
 
     public final void addSelectionChangeListener(SelectionChangeListener listener) {
-        selectionChangeListeners.add(listener);
+        this.selectionChangeListeners.add(listener);
     }
 
     public final void removeSelectionChangeListener(SelectionChangeListener listener) {
-        selectionChangeListeners.remove(listener);
+        this.selectionChangeListeners.remove(listener);
     }
 
-    protected boolean raiseSelectionChange(SelectionChangeEvent event) {
-        for (SelectionChangeListener listener : selectionChangeListeners) {
+    protected void raiseSelectionChange(SelectionChangeEvent event) {
+        for (SelectionChangeListener listener : this.selectionChangeListeners) {
             listener.onSelectionChange(event);
         }
-
-        return !selectionChangeListeners.isEmpty();
     }
 
     public interface SelectEditorListener extends EventListener {

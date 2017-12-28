@@ -443,7 +443,6 @@ public class SimpleMoveAnimator implements Camera {
         // FIXME use speeds
         angle.y += h;
         angle.z += v;
-        resetAdditionalFrameCounter();
     }
 
     public void rotateLeft(boolean start) {
@@ -543,10 +542,13 @@ public class SimpleMoveAnimator implements Camera {
         point.x = pCamPosX;
         point.y = pCamPosY;
         point.z = pCamPosZ;
-        resetAdditionalFrameCounter();
     }
 
     public void resetAdditionalFrameCounter() {
         additionalFrameCounter = additionalFrames;
+    }
+
+    public void resetLastTime() {
+        lastTime = (System.currentTimeMillis() - 100) / 1000d;
     }
 }

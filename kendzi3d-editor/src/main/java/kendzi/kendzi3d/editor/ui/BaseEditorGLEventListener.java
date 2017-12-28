@@ -147,7 +147,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         }
 
         // Animate position of camera depending on mouse or keyboard input.
-        if (camera.updateState() || objectSelectionListener.changedState) {
+        if (camera.updateState()) {
 
             /*
              * Update viewport using current camera position. View port will store
@@ -184,11 +184,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
             }
 
-            if (objectSelectionListener.changedState) {
-
-                drawSelection(gl);
-                objectSelectionListener.changedState = false;
-            }
+            drawSelection(gl);
 
             gl.glFlush();
         } else {

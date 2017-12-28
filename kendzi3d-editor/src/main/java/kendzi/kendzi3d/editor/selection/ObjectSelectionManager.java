@@ -5,7 +5,6 @@
  */
 package kendzi.kendzi3d.editor.selection;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +52,6 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     private final EditableObjectProvider editableObjectProvider;
 
     private transient Viewport viewport;
-
-    public boolean changedState = false;
 
     @Inject
     public ObjectSelectionManager(ViewportPicker viewportPicker, EditableObjectProvider editableObjectProvider) {
@@ -118,21 +115,6 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see kendzi.kendzi3d.editor.selection.listener.jogl.selection.MouseSelectionListener#mouseDragged(java.awt.event.MouseEvent)
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("mouseDragged");
-        }
-        if (moveActiveEditor(e.getX(), e.getY(), false)) {
-            e.consume();
-        }
-    }
-
-    /**
      * @return the activeEditor
      */
     public Editor getActiveEditor() {
@@ -145,28 +127,32 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         Editor activeEditor = lastActiveEditor;
         EditorChangeEvent event = null;
 
-        if (activeEditor instanceof ArrowEditor) {
-            // XXX
+        if (activeEditor == null) {
+            return false;
+        }
+
+        if (!(activeEditor instanceof ArrowEditor)) {
+            return false;
+        }
+        { // XXX
             Ray3d moveRay = viewportPicking(x, y);
             ArrowEditor arrow = (ArrowEditor) activeEditor;
 
             event = arrow.move(moveRay, finish);
 
-            changedState |= raiseEditorChange(event);
+            raiseEditorChange(event);
 
             Ray3d arrowRay = new Ray3d(arrow.getEditorOrigin(), arrow.getVector());
             Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
             lastClosestPointOnBaseRay = closestPointOnBaseRay;
 
-            return true;
         }
-
-        return false;
+        return true;
     }
 
     @Override
-    protected void selectActiveEditor(int x, int y) {
+    protected boolean selectActiveEditor(int x, int y) {
 
         Ray3d selectRay = viewportPicking(x, y);
 
@@ -175,11 +161,13 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         lastActiveEditor = activeEditor;
         lastSelectRay = selectRay;
 
-        changedState |= raiseSelectEditor(new SelectEditorEvent(activeEditor));
+        raiseSelectEditor(new SelectEditorEvent(activeEditor));
+
+        return activeEditor != null;
     }
 
     @Override
-    protected void selectHighlightedEditor(int x, int y) {
+    protected boolean selectHighlightedEditor(int x, int y) {
         Selection selection = lastSelection;
 
         Ray3d selectRay = viewportPicking(x, y);
@@ -187,6 +175,8 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         Editor selectedEditor = selectEditor(selectRay, selection);
 
         lastHighlightedEditor = selectedEditor;
+
+        return selectedEditor != null;
     }
 
     protected Editor selectEditor(Ray3d selectRay, Selection selection) {
@@ -340,7 +330,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
     private void setLastSelection(Selection selection, SelectionEventSource selectionSource) {
 
-        changedState |= raiseSelectionChange(new SelectionChangeEvent(selection, selectionSource));
+        raiseSelectionChange(new SelectionChangeEvent(selection, selectionSource));
 
         lastSelection = selection;
     }
