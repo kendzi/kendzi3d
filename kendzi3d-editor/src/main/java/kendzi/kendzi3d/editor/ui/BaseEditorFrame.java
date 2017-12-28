@@ -16,13 +16,14 @@ import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 
-import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 
 /**
  * Example frame with 3d editor.
- * 
+ *
  * @author tkedziora
- * 
+ *
  */
 public abstract class BaseEditorFrame extends Frame {
 
@@ -50,7 +51,7 @@ public abstract class BaseEditorFrame extends Frame {
 
     /**
      * Constructor.
-     * 
+     *
      * @param name
      *            frame name
      */
@@ -60,7 +61,7 @@ public abstract class BaseEditorFrame extends Frame {
 
     /**
      * Listener for GL related draw events.
-     * 
+     *
      * @return gl event listener
      */
     public abstract GLEventListener getGlEventListener();
@@ -84,7 +85,7 @@ public abstract class BaseEditorFrame extends Frame {
         frame.setSize(640, 480);
 
         // Setup animator for canvas.
-        final Animator animator = new Animator(canvas);
+        final FPSAnimator animator = new FPSAnimator(canvas, 30);
 
         if (listener instanceof CloseWindowEventSource) {
             // if listener could be source of window close event
@@ -134,7 +135,7 @@ public abstract class BaseEditorFrame extends Frame {
         //
     }
 
-    private void closeWindowRequest(final Frame frame, final Animator animator) {
+    private void closeWindowRequest(final Frame frame, final AnimatorBase animator) {
         /*
          * Run this on another thread than the AWT event queue to make sure the
          * call to Animator.stop() completes before exiting.
@@ -170,7 +171,7 @@ public abstract class BaseEditorFrame extends Frame {
         GLCapabilities capabilities = new GLCapabilities(profile);
 
         // setup z-buffer
-        capabilities.setDepthBits(16);
+        capabilities.setDepthBits(32);
 
         // for anti-aliasing
         // FIXME enabling sample buffers on dual screen ubuntu cause problems...
@@ -186,11 +187,13 @@ public abstract class BaseEditorFrame extends Frame {
         canvas.addKeyListener(cameraMoveListener);
         canvas.addMouseMotionListener(cameraMoveListener);
         canvas.addMouseListener(cameraMoveListener);
+        canvas.addMouseWheelListener(cameraMoveListener);
+        canvas.addComponentListener(cameraMoveListener);
     }
 
     /**
      * Register listener for mouse selection.
-     * 
+     *
      * @param pCanvas
      *            canvas for listener
      */

@@ -11,6 +11,8 @@ import javax.vecmath.Vector3d;
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
 
+import org.openstreetmap.josm.data.preferences.DoubleProperty;
+
 /**
  * View port for opengl. Configuration of perspective to convert from 3d space
  * into 2d. Conversion of 2d coordinates into rays in 3d space.
@@ -20,7 +22,12 @@ public class Viewport implements ViewportPicker {
     /**
      * View angle of camera (fovy).
      */
-    public static final double PERSP_VIEW_ANGLE = 45;
+    public static final DoubleProperty PERSP_VIEW_ANGLE_MIN =
+            new DoubleProperty("kendzi3d.viewport.angle.min", 5);
+    public static final DoubleProperty PERSP_VIEW_ANGLE_MAX =
+            new DoubleProperty("kendzi3d.viewport.angle.max", 110);
+    public static final DoubleProperty PERSP_VIEW_ANGLE =
+            new DoubleProperty("kendzi3d.viewport.angle", 45);
 
     /**
      * The distance from the viewer to the near clipping plane (zNear).
@@ -29,8 +36,16 @@ public class Viewport implements ViewportPicker {
 
     /**
      * The distance from the viewer to the far clipping plane (zFar).
+     *
+     * The precision of the depth buffer is dependent on r = zFar / zNear,
+     * roughly log(2) r bits are lost in precision.
      */
-    public static final double PERSP_FAR_CLIPPING_PLANE_DISTANCE = 1500d;
+    public static final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN =
+            new DoubleProperty("kendzi3d.viewport.far.clipping.min", 1.5E+1d);
+    public static final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX =
+            new DoubleProperty("kendzi3d.viewport.far.clipping.max", 1.5E+6d);
+    public static final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE =
+            new DoubleProperty("kendzi3d.viewport.far.clipping", 1.5E+3d);
 
     /**
      * Width of viewport.
@@ -148,7 +163,7 @@ public class Viewport implements ViewportPicker {
         screenVertically.cross(screenHorizontally, view);
         screenVertically.normalize();
 
-        final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
+        final float radians = (float) (PERSP_VIEW_ANGLE.get() * Math.PI / 180f);
         float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
         float halfScaledAspectRatio = (float) (halfHeight * viewportAspectRatio());
 
@@ -175,6 +190,7 @@ public class Viewport implements ViewportPicker {
      * @return ray in 3d space from camera location and in direction of given
      *         screen coordinates
      */
+    @Override
     public Ray3d picking(float screenX, float screenY) {
 
         double viewportWidth = width;
@@ -297,8 +313,20 @@ public class Viewport implements ViewportPicker {
      *
      * @return field of view angle
      */
-    public double getFovy() {
-        return Viewport.PERSP_VIEW_ANGLE;
+    public static double getFovy() {
+        return Viewport.PERSP_VIEW_ANGLE.get();
+    }
+
+    /**
+     * Sets the field of view angle, in degrees, in the y direction.
+     */
+    public static void setFovy(double fovy) {
+        if (fovy > Viewport.PERSP_VIEW_ANGLE_MAX.get()) {
+            fovy = Viewport.PERSP_VIEW_ANGLE_MAX.get();
+        } else if (fovy < Viewport.PERSP_VIEW_ANGLE_MIN.get()) {
+            fovy = Viewport.PERSP_VIEW_ANGLE_MIN.get();
+        }
+        Viewport.PERSP_VIEW_ANGLE.put(fovy);
     }
 
     /**
@@ -307,7 +335,7 @@ public class Viewport implements ViewportPicker {
      *
      * @return distance to the near clipping plane
      */
-    public double getZNear() {
+    public static double getZNear() {
         return Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE;
     }
 
@@ -317,8 +345,20 @@ public class Viewport implements ViewportPicker {
      *
      * @return distance to the far clipping plane
      */
-    public double getZFar() {
-        return Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE;
+    public static double getZFar() {
+        return Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE.get();
+    }
+
+    /**
+     * Sets the distance from the viewer to the far clipping plane.
+     */
+    public static void setZFar(double zFar) {
+        if (zFar > Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX.get()) {
+            zFar = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX.get();
+        } else if (zFar < Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN.get()) {
+            zFar = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN.get();
+        }
+        Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE.put(zFar);
     }
 
     /**

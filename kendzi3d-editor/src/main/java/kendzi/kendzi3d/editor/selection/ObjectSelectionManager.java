@@ -54,6 +54,8 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
     private transient Viewport viewport;
 
+    public boolean changedState = false;
+
     @Inject
     public ObjectSelectionManager(ViewportPicker viewportPicker, EditableObjectProvider editableObjectProvider) {
         this.viewportPicker = viewportPicker;
@@ -143,28 +145,24 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         Editor activeEditor = lastActiveEditor;
         EditorChangeEvent event = null;
 
-        if (activeEditor == null) {
-            return false;
-        }
-
-        if (!(activeEditor instanceof ArrowEditor)) {
-            return false;
-        }
-        { // XXX
+        if (activeEditor instanceof ArrowEditor) {
+            // XXX
             Ray3d moveRay = viewportPicking(x, y);
             ArrowEditor arrow = (ArrowEditor) activeEditor;
 
             event = arrow.move(moveRay, finish);
 
-            raiseEditorChange(event);
+            changedState |= raiseEditorChange(event);
 
             Ray3d arrowRay = new Ray3d(arrow.getEditorOrigin(), arrow.getVector());
             Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
             lastClosestPointOnBaseRay = closestPointOnBaseRay;
 
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     @Override
@@ -177,7 +175,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         lastActiveEditor = activeEditor;
         lastSelectRay = selectRay;
 
-        raiseSelectEditor(new SelectEditorEvent(activeEditor));
+        changedState |= raiseSelectEditor(new SelectEditorEvent(activeEditor));
     }
 
     @Override
@@ -342,7 +340,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
     private void setLastSelection(Selection selection, SelectionEventSource selectionSource) {
 
-        raiseSelectionChange(new SelectionChangeEvent(selection, selectionSource));
+        changedState |= raiseSelectionChange(new SelectionChangeEvent(selection, selectionSource));
 
         lastSelection = selection;
     }

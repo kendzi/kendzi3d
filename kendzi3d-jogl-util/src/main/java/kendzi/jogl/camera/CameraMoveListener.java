@@ -6,18 +6,31 @@
 
 package kendzi.jogl.camera;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
-public class CameraMoveListener implements KeyListener, MouseMotionListener, MouseListener {
+import com.jogamp.opengl.awt.GLCanvas;
+
+public class CameraMoveListener implements KeyListener, MouseMotionListener, MouseListener, MouseWheelListener, ComponentListener {
 
     /** Log. */
     private static final Logger log = Logger.getLogger(CameraMoveListener.class);
+
+    int lastX;
+    int lastY;
+    boolean move;
+    private boolean isRunning = true;
 
     private SimpleMoveAnimator kinematicsSimpleAnimator;
 
@@ -27,19 +40,41 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     }
 
     @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        if (e.isControlDown()) {
+            if (e.isShiftDown()) {
+                Viewport.setZFar(Viewport.getZFar() + 1000 * -e.getWheelRotation());
+            } else {
+                Viewport.setZFar(Viewport.getZFar() + 100 * -e.getWheelRotation());
+            }
+        } else if (e.isShiftDown()){
+            Viewport.setFovy(Viewport.getFovy() + 10 * e.getWheelRotation());
+        } else {
+            Viewport.setFovy(Viewport.getFovy() + 1 * e.getWheelRotation());
+        }
+        reshapeCanvas(e);
+    }
+
+    @Override
     public void mouseClicked(MouseEvent e) {
-        //
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            if (e.getClickCount() == 2) {
+                //toggleCanvasAnimator(e);
+            } else {
+                if (e.isControlDown()) {
+                    Viewport.setZFar(Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE.getDefaultValue());
+                } else {
+                    Viewport.setFovy(Viewport.PERSP_VIEW_ANGLE.getDefaultValue());
+                }
+                reshapeCanvas(e);
+            }
+        }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         //
     }
-
-    int lastX;
-    int lastY;
-    boolean move;
-    private boolean isRunning = true;
 
     /*
      * (non-Javadoc)
@@ -96,7 +131,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
             return;
         }
 
-        moveCamera(lastX - e.getX(), lastY - e.getY());
+        moveCamera(e, lastX - e.getX(), lastY - e.getY());
         lastX = e.getX();
         lastY = e.getY();
 
@@ -114,13 +149,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     @Override
     public void keyTyped(KeyEvent pEvent) {
-        boolean start = true;
-
-        if (isRunning) {
-
-            moveAction(pEvent, start);
-        }
-
+        //
     }
 
     @Override
@@ -191,6 +220,8 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
             kinematicsSimpleAnimator.moveDown(start);
 
         }
+
+        resumeCanvasAnimator(pEvent);
     }
 
     /**
@@ -201,23 +232,80 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
      * @param pDY
      *            number of pixels mouse moved in Y axe
      */
-    protected void moveCamera(int pDX, int pDY) {
+    protected void moveCamera(MouseEvent e, int pDX, int pDY) {
 
         double mouseMoveAngle = 0.25;
 
-        if (pDX != 0) { // left
+        mouseMoveAngle *= Viewport.PERSP_VIEW_ANGLE.get() / Viewport.PERSP_VIEW_ANGLE.getDefaultValue();
+
+        if (pDX != 0) { // left-right
             kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
         }
 
-        if (pDY != 0) { // left
+        if (pDY != 0) { // up-down
             kinematicsSimpleAnimator.rotateVertically(Math.toRadians(-pDY * mouseMoveAngle));
         }
 
         setLookAt();
+
+        resumeCanvasAnimator(e);
     }
 
     private void setLookAt() {
         //
+    }
+
+    private void toggleCanvasAnimatorImpl(ComponentEvent e, boolean resume, boolean pause) {
+        if (e.getSource() instanceof GLCanvas) {
+            GLCanvas canvas = (GLCanvas) e.getSource();
+            if ((canvas.getAnimator().isPaused() || resume) && !pause) {
+                canvas.getAnimator().resume();
+                kinematicsSimpleAnimator.resetAdditionalFrameCounter();
+            } else {
+                canvas.getAnimator().pause();
+            }
+        }
+    }
+
+    public void toggleCanvasAnimator(ComponentEvent e) {
+        toggleCanvasAnimatorImpl(e, false, false);
+    }
+
+    public void resumeCanvasAnimator(ComponentEvent e) {
+        toggleCanvasAnimatorImpl(e, true, false);
+    }
+
+    public void pauseCanvasAnimator(ComponentEvent e) {
+        toggleCanvasAnimatorImpl(e, false, true);
+    }
+
+    public void reshapeCanvas(ComponentEvent e) {
+        if (e.getSource() instanceof GLCanvas) {
+            GLCanvas canvas = (GLCanvas) e.getSource();
+            canvas.reshape(canvas.getX(), canvas.getY(), canvas.getWidth(), canvas.getHeight());
+            canvas.getAnimator().resume();
+            kinematicsSimpleAnimator.resetAdditionalFrameCounter();
+        }
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        resumeCanvasAnimator(e);
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        reshapeCanvas(e);
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        resumeCanvasAnimator(e);
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        resumeCanvasAnimator(e);
     }
 
 }

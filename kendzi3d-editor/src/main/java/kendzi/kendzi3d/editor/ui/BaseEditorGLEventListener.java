@@ -9,6 +9,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 
@@ -146,42 +147,55 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         }
 
         // Animate position of camera depending on mouse or keyboard input.
-        camera.updateState();
+        if (camera.updateState() || objectSelectionListener.changedState) {
 
-        /*
-         * Update viewport using current camera position. View port will store
-         * information required to setup OpenGl model view matrix. Calculates
-         * parameters of viewport required to back trace click of mouse from 2d
-         * space into 3d space.
-         */
-        viewport.updateViewport(camera);
+            /*
+             * Update viewport using current camera position. View port will store
+             * information required to setup OpenGl model view matrix. Calculates
+             * parameters of viewport required to back trace click of mouse from 2d
+             * space into 3d space.
+             */
+            viewport.updateViewport(camera);
 
-        // Gl 2 context.
-        GL2 gl = drawable.getGL().getGL2();
+            // Gl 2 context.
+            GL2 gl = drawable.getGL().getGL2();
 
-        // Clear color and depth buffers.
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+            // Clear color and depth buffers.
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-        // Draw before camera is set.
-        drawBeforeSetCamera(gl, viewport);
+            // Draw before camera is set.
+            drawBeforeSetCamera(gl, viewport);
 
-        // Sets new view matrix.
-        ViewportUtil.lookAt(gl, viewport);
+            // Sets new view matrix.
+            ViewportUtil.lookAt(gl, viewport);
 
-        drawBeforeEditorObjects(gl, viewport);
+            drawBeforeEditorObjects(gl, viewport);
 
-        drawEditorObjects(gl, viewport);
+            // avoid display artifacts of water surface
+            gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 
-        drawAfterEditorObjects(gl, viewport);
+            drawEditorObjects(gl, viewport);
 
-        { // XXX remove!
+            drawAfterEditorObjects(gl, viewport);
 
-            gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
+            { // XXX remove!
 
+                gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
+
+            }
+
+            if (objectSelectionListener.changedState) {
+
+                drawSelection(gl);
+                objectSelectionListener.changedState = false;
+            }
+
+            gl.glFlush();
+        } else {
+            if (drawable instanceof GLCanvas) {
+                ((GLCanvas) drawable).getAnimator().pause();
+            }
         }
-        drawSelection(gl);
-
-        gl.glFlush();
     }
 
     protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {
