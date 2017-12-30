@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.ui;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.camera.ViewportUtil;
-import kendzi.jogl.util.ColorUtil;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.EditorCore;
 import kendzi.kendzi3d.editor.drawer.SelectionDrawer;
@@ -84,12 +82,6 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
         // Set Line Antialiasing.
         gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
-
-        // Enable Blending.
-        gl.glEnable(GL.GL_BLEND);
-
-        // Type Of Blending.
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 
         // Adds light for screen.
         addLight(gl);
@@ -163,24 +155,17 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
             // Clear color and depth buffers.
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-            // Draw before camera is set.
             drawBeforeSetCamera(gl, viewport);
-
-            // Sets new view matrix.
             ViewportUtil.lookAt(gl, viewport);
+            drawAfterSetCamera(gl, viewport);
 
             drawBeforeEditorObjects(gl, viewport);
-
-            // avoid display artifacts of water surface
-            gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-
             drawEditorObjects(gl, viewport);
-
             drawAfterEditorObjects(gl, viewport);
 
             { // XXX remove!
 
-                gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
+                //gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
 
             }
 
@@ -195,6 +180,10 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     }
 
     protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {
+        //
+    }
+
+    protected void drawAfterSetCamera(GL2 gl, Viewport viewport) {
         //
     }
 

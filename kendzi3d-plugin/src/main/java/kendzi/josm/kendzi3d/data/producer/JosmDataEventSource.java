@@ -10,46 +10,35 @@ import org.openstreetmap.josm.gui.MainApplication;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
 import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 
-public class JosmDataEventSource implements DataSetListenerAdapter.Listener {
+public class JosmDataEventSource extends DataSetListenerAdapter {
 
-    private final DataEventListener queue;
-
-    private final DataConsumersMonitor dataConsumerMonitor;
-
-    public JosmDataEventSource(DataEventListener queue, DataConsumersMonitor dataConsumerMonitor) {
-        super();
-        this.queue = queue;
-        this.dataConsumerMonitor = dataConsumerMonitor;
-    }
-
-    public void registerJosmEventSource() {
-        DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this), FireMode.IMMEDIATELY);
+    public JosmDataEventSource(DataEventListener dataEventListener) {
+        super(e -> process(e, dataEventListener));
+        registerJosmEventSource();
     }
 
     @Override
-    public void processDatasetEvent(AbstractDatasetChangedEvent pEvent) {
-
-        if (!dataConsumerMonitor.isActiveConsumer()) {
-            // no consumer, no open window, no data processing
-            return;
-        }
-
-        if (MainApplication.getMap() == null) {
-            // No map data, exit.
-            return;
-        }
-
-        if (isDataChangeEvent(pEvent)) {
-            queue.add(new NewDataEvent());
-            return;
-        }
-
-        queue.add(new UpdateDataEvent());
+    protected void finalize() {
+        deregisterJosmEventSource();
     }
 
-    private boolean isDataChangeEvent(AbstractDatasetChangedEvent event) {
-        // XXX
-        return event instanceof DataChangedEvent;
+    public void deregisterJosmEventSource() {
+        DatasetEventManager.getInstance().removeDatasetListener(this);
     }
 
+    public void registerJosmEventSource() {
+        DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IMMEDIATELY);
+    }
+
+    public static void process(AbstractDatasetChangedEvent e, DataEventListener l) {
+
+        if (MainApplication.getMap() != null) {
+
+            if (e instanceof DataChangedEvent) {
+                l.add(new NewDataEvent());
+            } else {
+                l.add(new UpdateDataEvent());
+            }
+        }
+    }
 }

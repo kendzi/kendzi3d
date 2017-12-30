@@ -51,25 +51,14 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
      *
      * @param core
      *            the core
-     * @param dataConsumersMonitor
-     *            the data consumer monitor
      */
     @Inject
-    public EditorObjectsProducer(Kendzi3dCore core, DataConsumersMonitor dataConsumersMonitor) {
+    public EditorObjectsProducer(Kendzi3dCore core) {
         this.core = core;
 
         eventQueue = new DataEventQueue();
 
         center = new LatLon(0, 0);
-
-        registerEventSource(eventQueue, dataConsumersMonitor);
-    }
-
-    private void registerEventSource(DataEventQueue eventQueue, DataConsumersMonitor dataConsumersMonitor) {
-
-        JosmDataEventSource listener = new JosmDataEventSource(this, dataConsumersMonitor);
-
-        listener.registerJosmEventSource();
     }
 
     @Override
@@ -93,7 +82,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
     }
 
     private DataSet getDataSet(DataEvent event) {
-        // always take the newest data set form JOSM
+        // always take the newest data set from JOSM
         return MainApplication.getLayerManager().getEditDataSet();
     }
 

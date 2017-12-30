@@ -103,6 +103,11 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
         ground.draw(gl, viewport.getPosition());
 
+        // avoid display artifacts of water surface, alternative is
+        // to disable GL_DEPTH_TEST individually when flat, near ground
+        // objects like water multipolygons are drawn
+        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+
         if (modelRender.isDebugging()) {
 
             axisLabels.draw(gl);

@@ -27,7 +27,7 @@ import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class MoveCameraAction extends JosmAction {
+public class MoveCameraAction extends JosmAction implements Kendzi3dAction {
 
     /**
      *
@@ -39,6 +39,8 @@ public class MoveCameraAction extends JosmAction {
 
     @Inject
     private SimpleMoveAnimator simpleMoveAnimator;
+
+    private ResumableCanvas canvas = () -> {};
 
     /**
      * Constructor.
@@ -58,9 +60,12 @@ public class MoveCameraAction extends JosmAction {
         double x = perspective.calcX(mapCenter.getX());
         double y = perspective.calcY(mapCenter.getY());
 
-        simpleMoveAnimator.getPoint().x = x;
-        simpleMoveAnimator.getPoint().y = Camera.CAM_HEIGHT;
-        simpleMoveAnimator.getPoint().z = -y;
+        simpleMoveAnimator.setPoint(x, Camera.CAM_HEIGHT, -y);
+        canvas.resume();
     }
 
+    @Override
+    public void setResumableCanvas(ResumableCanvas canvas) {
+        this.canvas = canvas;
+    }
 }

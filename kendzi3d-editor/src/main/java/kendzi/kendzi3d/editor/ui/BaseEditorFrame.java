@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.ui;
 
-import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,7 +12,6 @@ import com.jogamp.opengl.awt.GLCanvas;
 
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
-import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 
 import com.jogamp.opengl.util.AnimatorBase;
@@ -40,13 +38,19 @@ public abstract class BaseEditorFrame extends Frame {
      * selection.
      */
     @Inject
-    private ObjectSelectionManager objectSelectionManager;
+    private ObjectSelectionManager objectSelectionListener;
+
+    /**
+     * The GLCanvas to draw on.
+     */
+    protected final GLCanvas canvas;
 
     /**
      * Constructor.
      */
     public BaseEditorFrame() {
         super();
+        canvas = createCanvas();
     }
 
     /**
@@ -57,6 +61,7 @@ public abstract class BaseEditorFrame extends Frame {
      */
     public BaseEditorFrame(String name) {
         super(name);
+        canvas = createCanvas();
     }
 
     /**
@@ -75,8 +80,6 @@ public abstract class BaseEditorFrame extends Frame {
 
         final Frame frame = this;
 
-        // Creates canvas.
-        GLCanvas canvas = createCanvas();
         // Adds canvas drawer.
         canvas.addGLEventListener(listener);
 
@@ -109,9 +112,9 @@ public abstract class BaseEditorFrame extends Frame {
         });
 
         // Adds listener for mouse and keyboard to support object selection.
-        addSelectionListener(canvas, objectSelectionManager);
+        addSelectionListener();
         // Adds listeners for mouse and keyboard to support camera move.
-        addCameraMoveListener(canvas, cameraMoveListener);
+        addCameraMoveListener();
 
         // Center frame.
         frame.setLocationRelativeTo(null);
@@ -182,11 +185,11 @@ public abstract class BaseEditorFrame extends Frame {
         return new GLCanvas(capabilities);
     }
 
-    private static void addCameraMoveListener(GLCanvas canvas, final CameraMoveListener cameraMoveListener) {
+    private void addCameraMoveListener() {
 
         canvas.addKeyListener(cameraMoveListener);
-        canvas.addMouseMotionListener(cameraMoveListener);
         canvas.addMouseListener(cameraMoveListener);
+        canvas.addMouseMotionListener(cameraMoveListener);
         canvas.addMouseWheelListener(cameraMoveListener);
         canvas.addComponentListener(cameraMoveListener);
     }
@@ -197,7 +200,7 @@ public abstract class BaseEditorFrame extends Frame {
      * @param pCanvas
      *            canvas for listener
      */
-    private void addSelectionListener(Canvas canvas, ObjectSelectionListener objectSelectionListener) {
+    private void addSelectionListener() {
 
         canvas.addMouseListener(objectSelectionListener);
         canvas.addMouseMotionListener(objectSelectionListener);

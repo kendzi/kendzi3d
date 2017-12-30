@@ -39,6 +39,7 @@ import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
 import kendzi.josm.kendzi3d.action.ForceTwoSidedToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
+import kendzi.josm.kendzi3d.action.Kendzi3dAction;
 import kendzi.josm.kendzi3d.action.LightConfigurationAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
@@ -198,7 +199,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         ShowPluginDirAction showPluginDirAction = injector.getInstance(ShowPluginDirAction.class);
         registerAction(showPluginDirAction, advanceMenu);
 
-        setEnabledAll(true);
+        batchUpdateMenuItems(true);
     }
 
     private void registerAction(JosmAction josmAction, JMenu menu) {
@@ -226,13 +227,22 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         menu.add(checkBox);
     }
 
-    private void setEnabledAll(boolean isEnabled) {
+    private void batchUpdateMenuItems(boolean isEnabled) {
         for (int i = 0; i < view3dJMenu.getItemCount(); i++) {
             JMenuItem item = view3dJMenu.getItem(i);
 
             if (item != null) {
-                item.setEnabled(isEnabled);
+                //item.setEnabled(isEnabled);
+
+                if (item.getAction() instanceof Kendzi3dAction) {
+                    ((Kendzi3dAction) item.getAction()).setResumableCanvas(() -> {
+                        if (singleWindow != null && singleWindow.isDisplayable()) {
+                            singleWindow.resumeAnimator();
+                        }
+                    });
+                }
             }
+
         }
     }
 

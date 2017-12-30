@@ -164,12 +164,12 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
 
     @Override
     public void componentResized(ComponentEvent e) {
-        reshapeCanvas(e);
+        resumeCanvasAnimator(e);
     }
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        resumeCanvasAnimator(e);
+        //resumeCanvasAnimator(e);
     }
 
     @Override

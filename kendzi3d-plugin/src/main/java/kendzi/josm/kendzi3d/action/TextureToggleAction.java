@@ -21,13 +21,15 @@ import kendzi.jogl.model.render.ModelRender;
 /**
  * Enable/disable display texture on models toggle action.
  */
-public class TextureToggleAction extends ToggleAction {
+public class TextureToggleAction extends ToggleAction implements Kendzi3dAction {
 
     private static final long serialVersionUID = 1L;
 
     private static final String KENDZI_3D_MODELS_TEXTURED = "kendzi3d.models.textured";
 
     private final ModelRender modelRender;
+
+    private ResumableCanvas canvas = () -> {};
 
     /**
      * Constructor of texture toggle action.
@@ -37,30 +39,22 @@ public class TextureToggleAction extends ToggleAction {
     @Inject
     public TextureToggleAction(ModelRender pModelRender) {
         super(tr("Textured Models"), "1306318261_debugger__24", tr("Enable/disable display texture on models"), null, false);
-
         this.modelRender = pModelRender;
 
         MainApplication.getToolbar().register(this);
 
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_MODELS_TEXTURED, true);
-
-        setSelected(selected);
-
+        setSelected(Main.pref.getBoolean(KENDZI_3D_MODELS_TEXTURED, true));
         notifySelectedState();
-
-        setState(selected);
-
+        setState(isSelected());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
-        boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_MODELS_TEXTURED, selected);
+
+        Main.pref.putBoolean(KENDZI_3D_MODELS_TEXTURED, isSelected());
         notifySelectedState();
-
-        setState(selected);
-
+        setState(isSelected());
     }
 
     /**
@@ -68,9 +62,12 @@ public class TextureToggleAction extends ToggleAction {
      *            enable debug
      */
     private void setState(boolean pEnable) {
-
         modelRender.setDrawTextures(pEnable);
-
+        canvas.resume();
     }
 
+    @Override
+    public void setResumableCanvas(ResumableCanvas canvas) {
+        this.canvas = canvas;
+    }
 }
