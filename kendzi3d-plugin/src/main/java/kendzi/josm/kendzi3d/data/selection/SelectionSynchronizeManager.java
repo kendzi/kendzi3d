@@ -2,7 +2,6 @@ package kendzi.josm.kendzi3d.data.selection;
 
 import java.util.Collection;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -17,7 +16,7 @@ import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
 
-public class SelectionSynchronizeManager implements SelectionChangedListener, SelectionChangeListener {
+public class SelectionSynchronizeManager implements SelectionChangeListener {
 
     private final ObjectSelectionManager objectSelectionManager;
 
@@ -30,19 +29,16 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
     }
 
     public void register() {
-        DataSet.addSelectionListener(this);
         objectSelectionManager.addSelectionChangeListener(this);
     }
 
     public void unregister() {
-        DataSet.removeSelectionListener(this);
         objectSelectionManager.removeSelectionChangeListener(this);
     }
 
     /**
      * Selection change requested by JOSM.
      */
-    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> primitives) {
 
         if (isOriginIn3dView(primitives)) {
@@ -132,7 +128,7 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
         DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         if (currentDataSet != null) {
-        	currentDataSet.setSelected(primitiveId);
+            currentDataSet.setSelected(primitiveId);
         }
     }
 }

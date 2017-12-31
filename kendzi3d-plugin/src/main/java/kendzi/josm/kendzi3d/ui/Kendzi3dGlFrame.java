@@ -3,10 +3,12 @@ package kendzi.josm.kendzi3d.ui;
 import java.awt.event.ComponentEvent;
 
 import javax.inject.Inject;
+
 import com.jogamp.opengl.GLEventListener;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.data.event.DataEvent;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
+import kendzi.josm.kendzi3d.data.event.SelectionDataEvent;
 import kendzi.josm.kendzi3d.data.producer.DataEventListener;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.data.producer.JosmDataEventSource;
@@ -58,7 +60,13 @@ public class Kendzi3dGlFrame extends BaseEditorFrame implements DataEventListene
 
     @Override
     public void add(DataEvent dataEvent) {
-        editorObjectsProducer.add(dataEvent);
+        if (dataEvent instanceof SelectionDataEvent) {
+
+            selectionSynchronizeManager.selectionChanged(((SelectionDataEvent) dataEvent).getPrimitives());
+        } else {
+
+            editorObjectsProducer.add(dataEvent);
+        }
         resumeAnimator();
     }
 
