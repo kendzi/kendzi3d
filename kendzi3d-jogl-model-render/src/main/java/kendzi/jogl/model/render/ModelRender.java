@@ -78,13 +78,15 @@ public class ModelRender {
         // gl.glCullFace(GL.GL_FRONT);
         // }
 
-        if (model.useLight)
+        if (model.useLight) {
             gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        }
 
         draw(gl, model);
 
-        if (model.useLight)
+        if (model.useLight) {
             gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        }
 
         // gl.glDisable(GL.GL_CULL_FACE);
 
