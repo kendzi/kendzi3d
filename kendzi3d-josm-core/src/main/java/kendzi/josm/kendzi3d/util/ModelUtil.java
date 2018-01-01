@@ -32,9 +32,13 @@ public final class ModelUtil {
         // nop
     }
 
-    /** Get height of object. Return it in meters [m] or return default value.
-     * @param pOsmPrimitive object to take height
-     * @param pDefaultHeight default value of height
+    /**
+     * Get height of object. Return it in meters [m] or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take height
+     * @param pDefaultHeight
+     *            default value of height
      * @return height of object
      */
     public static Double getHeight(OsmPrimitive pOsmPrimitive, Double pDefaultHeight) {
@@ -47,9 +51,13 @@ public final class ModelUtil {
         return parseHeight(pOsmPrimitive.get("est_height"), pDefaultHeight);
     }
 
-    /** Get min_height of object. Return it in meters [m] or return default value.
-     * @param pOsmPrimitive object to take height
-     * @param pDefaultHeight default value of min_height
+    /**
+     * Get min_height of object. Return it in meters [m] or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take height
+     * @param pDefaultHeight
+     *            default value of min_height
      * @return min_height of object
      */
     public static Double getMinHeight(OsmPrimitive pOsmPrimitive, Double pDefaultHeight) {
@@ -72,15 +80,45 @@ public final class ModelUtil {
             int strlen = pHeightStr.length();
 
             switch (pHeightStr.replaceAll("[^a-z]", "")) {
-            case "km": mult = 1000d;     strlen--; strlen--; break;
-            case "dm": mult = .1d;       strlen--; strlen--; break;
-            case "cm": mult = .01d;      strlen--; strlen--; break;
-            case "mm": mult = .001d;     strlen--; strlen--; break;
-            case "m":                              strlen--; break;
-            case "feet":                 strlen--; strlen--;
-            case "ft": mult = 0.3048d;   strlen--; strlen--; break;
-            case "inch":                 strlen--; strlen--;
-            case "in": mult = 1/0.0254d; strlen--; strlen--; break;
+            case "km":
+                mult = 1000d;
+                strlen--;
+                strlen--;
+                break;
+            case "dm":
+                mult = .1d;
+                strlen--;
+                strlen--;
+                break;
+            case "cm":
+                mult = .01d;
+                strlen--;
+                strlen--;
+                break;
+            case "mm":
+                mult = .001d;
+                strlen--;
+                strlen--;
+                break;
+            case "m":
+                strlen--;
+                break;
+            case "feet":
+                strlen--;
+                strlen--;
+            case "ft":
+                mult = 0.3048d;
+                strlen--;
+                strlen--;
+                break;
+            case "inch":
+                strlen--;
+                strlen--;
+            case "in":
+                mult = 0.0254d;
+                strlen--;
+                strlen--;
+                break;
             }
 
             return mult * Double.valueOf(pHeightStr.substring(0, strlen));
@@ -92,11 +130,15 @@ public final class ModelUtil {
 
     }
 
-
-    /** Get double value of attribute or return default value.
-     * @param pOsmPrimitive object to take numerical value
-     * @param pAttrName name of attribute
-     * @param pDefaultValue default value of attribute
+    /**
+     * Get double value of attribute or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take numerical value
+     * @param pAttrName
+     *            name of attribute
+     * @param pDefaultValue
+     *            default value of attribute
      * @return double value of attribute
      */
     public static Double getNumberAttribute(OsmPrimitive pOsmPrimitive, String pAttrName, Double pDefaultValue) {
