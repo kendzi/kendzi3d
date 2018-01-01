@@ -174,9 +174,11 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
         Editor selectedEditor = selectEditor(selectRay, selection);
 
+        boolean highlightedEditorChanged = lastHighlightedEditor != selectedEditor;
+
         lastHighlightedEditor = selectedEditor;
 
-        return selectedEditor != null;
+        return highlightedEditorChanged;
     }
 
     protected Editor selectEditor(Ray3d selectRay, Selection selection) {
