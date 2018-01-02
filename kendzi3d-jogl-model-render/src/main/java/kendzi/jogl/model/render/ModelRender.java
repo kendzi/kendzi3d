@@ -51,6 +51,8 @@ public class ModelRender {
      */
     private TextureCacheService textureCacheService;
 
+    private int lastSides;
+
     private OtherComponent lastOtherComponent;
 
     private AmbientDiffuseComponent lastAmbientDiffuseComponent;
@@ -421,6 +423,7 @@ public class ModelRender {
     }
 
     public void resetMaterials() {
+        lastSides = 0;
         lastOtherComponent = null;
         lastAmbientDiffuseComponent = null;
     }
@@ -433,13 +436,19 @@ public class ModelRender {
 
     private void setupMaterial2(GL2 pGl, Material material, int sides) {
 
-        if (isAmbientDiffuseChanged(material.getAmbientDiffuse())) {
+        if (isAmbientDiffuseChanged(material.getAmbientDiffuse()) || isSidesChanged(sides)) {
             setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse(), sides);
         }
 
-        if (isOtherComponentChanged(material.getOther())) {
+        if (isOtherComponentChanged(material.getOther()) || isSidesChanged(sides)) {
             setupMaterialOtherComponent(pGl, material.getOther(), sides);
         }
+
+        lastSides = sides;
+    }
+
+    private boolean isSidesChanged(int sides) {
+        return lastSides == 0 || lastSides != sides;
     }
 
     private boolean isOtherComponentChanged(OtherComponent other) {
