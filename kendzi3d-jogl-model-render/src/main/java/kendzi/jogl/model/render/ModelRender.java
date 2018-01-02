@@ -448,7 +448,7 @@ public class ModelRender {
     }
 
     private boolean isSidesChanged(int sides) {
-        return lastSides == 0 || lastSides != sides;
+        return lastSides == 0 || (lastSides == GL.GL_FRONT && sides == GL.GL_FRONT_AND_BACK);
     }
 
     private boolean isOtherComponentChanged(OtherComponent other) {
