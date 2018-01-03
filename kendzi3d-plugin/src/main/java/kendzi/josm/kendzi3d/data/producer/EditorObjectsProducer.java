@@ -3,7 +3,6 @@ package kendzi.josm.kendzi3d.data.producer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
@@ -91,7 +90,8 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         Perspective3D perspective = core.getPerspective3d();
 
-        boolean rebuildData = false;
+        boolean rebuild = false;
+        boolean editorObjectsChanged = false;
 
         if (perspective == null || event instanceof NewDataEvent) {
             Projection proj = Main.getProjection();
@@ -99,27 +99,33 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
             perspective = calculatePerspective(center, proj);
             core.setPerspective3d(perspective);
 
-            rebuildData = true;
+            rebuild = editorObjectsChanged = true;
         }
 
         for (Layer layer : core.getLayers()) {
 
-            if (rebuildData) {
+            if (rebuild) {
                 // the whole data was re-added, need to clean up all old objects
                 core.clean(layer);
             }
 
             Set<OsmId> currentIds = core.getOsmIds(layer);
             Set<OsmId> filteredIds = DataSetFilterUtil.filter(layer, dataSet, perspective);
-
             RebuildStatus status = combine(currentIds, filteredIds);
 
-            createNewEditorObjects(dataSet, status.getNewIds(), layer, perspective);
+            if (!status.isEmpty()) {
+                createNewEditorObjects(dataSet, status.getNewIds(), layer, perspective);
 
-            updateEditorObjects(dataSet, status.getUpdateIds(), layer, perspective);
+                updateEditorObjects(dataSet, status.getUpdateIds(), layer, perspective);
 
-            removeEditorObjects(status.getRemoveIds(), layer);
+                removeEditorObjects(status.getRemoveIds(), layer);
 
+                editorObjectsChanged = true;
+            }
+        }
+
+        if (editorObjectsChanged) {
+            event.resumeResumable();
         }
     }
 
@@ -355,6 +361,9 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
             this.removeIds = removeIds;
         }
 
+        public boolean isEmpty() {
+            return newIds.isEmpty() && updateIds.isEmpty() && removeIds.isEmpty();
+        }
     }
 
     @Override

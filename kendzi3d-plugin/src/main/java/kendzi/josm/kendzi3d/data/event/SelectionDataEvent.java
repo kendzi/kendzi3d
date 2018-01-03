@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public class SelectionDataEvent implements DataEvent {
+public class SelectionDataEvent extends DataEvent {
 
     final Collection<? extends OsmPrimitive> primitives;
 

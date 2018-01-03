@@ -8,6 +8,9 @@ import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
+import kendzi.josm.kendzi3d.data.event.DataEvent;
+import kendzi.josm.kendzi3d.data.event.SelectionDataEvent;
+import kendzi.josm.kendzi3d.data.producer.DataEventListener;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
@@ -16,7 +19,7 @@ import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
 
-public class SelectionSynchronizeManager implements SelectionChangeListener {
+public class SelectionSynchronizeManager implements DataEventListener, SelectionChangeListener  {
 
     private final ObjectSelectionManager objectSelectionManager;
 
@@ -130,5 +133,11 @@ public class SelectionSynchronizeManager implements SelectionChangeListener {
         if (currentDataSet != null) {
             currentDataSet.setSelected(primitiveId);
         }
+    }
+
+    @Override
+    public void add(DataEvent dataEvent) {
+        selectionChanged(((SelectionDataEvent) dataEvent).getPrimitives());
+        dataEvent.resumeResumable();
     }
 }

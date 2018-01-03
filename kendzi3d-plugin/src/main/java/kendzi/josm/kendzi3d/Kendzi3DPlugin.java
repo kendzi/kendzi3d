@@ -39,7 +39,6 @@ import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
 import kendzi.josm.kendzi3d.action.ForceTwoSidedToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
-import kendzi.josm.kendzi3d.action.Kendzi3dAction;
 import kendzi.josm.kendzi3d.action.LightConfigurationAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
 import kendzi.josm.kendzi3d.action.MoveCameraAction;
@@ -51,6 +50,7 @@ import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
+import kendzi.josm.kendzi3d.ui.Resumer;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
@@ -234,9 +234,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             if (item != null) {
                 //item.setEnabled(isEnabled);
 
-                if (item.getAction() instanceof Kendzi3dAction) {
-                    ((Kendzi3dAction) item.getAction()).setResumableCanvas(() -> {
-                        if (singleWindow != null && singleWindow.isDisplayable()) {
+                if (item.getAction() instanceof Resumer) {
+                    ((Resumer) item.getAction()).setResumable(() -> {
+                        if (singleWindow != null) {
                             singleWindow.resumeAnimator();
                         }
                     });

@@ -60,17 +60,18 @@ public class Kendzi3dGlFrame extends BaseEditorFrame implements DataEventListene
 
     @Override
     public void add(DataEvent dataEvent) {
+        dataEvent.setResumable(() -> resumeAnimator());
+
         if (dataEvent instanceof SelectionDataEvent) {
-
-            selectionSynchronizeManager.selectionChanged(((SelectionDataEvent) dataEvent).getPrimitives());
+            selectionSynchronizeManager.add(dataEvent);;
         } else {
-
             editorObjectsProducer.add(dataEvent);
         }
-        resumeAnimator();
     }
 
     public void resumeAnimator() {
-        canvas.dispatchEvent(new ComponentEvent(canvas, ComponentEvent.COMPONENT_SHOWN));
+        if (this.isDisplayable()) {
+            canvas.dispatchEvent(new ComponentEvent(canvas, ComponentEvent.COMPONENT_SHOWN));
+        }
     }
 }

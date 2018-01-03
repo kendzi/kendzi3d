@@ -17,11 +17,12 @@ import org.openstreetmap.josm.gui.MainApplication;
 import com.google.inject.Inject;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Enable/disable display texture on models toggle action.
  */
-public class TextureToggleAction extends ToggleAction implements Kendzi3dAction {
+public class TextureToggleAction extends ToggleAction implements Resumer {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +30,7 @@ public class TextureToggleAction extends ToggleAction implements Kendzi3dAction 
 
     private final ModelRender modelRender;
 
-    private ResumableCanvas canvas = () -> {};
+    private Resumable resumable = () -> {};
 
     /**
      * Constructor of texture toggle action.
@@ -63,11 +64,11 @@ public class TextureToggleAction extends ToggleAction implements Kendzi3dAction 
      */
     private void setState(boolean pEnable) {
         modelRender.setDrawTextures(pEnable);
-        canvas.resume();
+        resumable.resume();
     }
 
     @Override
-    public void setResumableCanvas(ResumableCanvas canvas) {
-        this.canvas = canvas;
+    public void setResumable(Resumable r) {
+        resumable = r;
     }
 }
