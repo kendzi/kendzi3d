@@ -1,5 +1,6 @@
 package kendzi.josm.kendzi3d.data.producer;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -24,6 +25,7 @@ import kendzi.josm.kendzi3d.data.OsmId;
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.data.event.DataEvent;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
+import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
@@ -45,6 +47,8 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
     private LatLon center;
 
+    private int lastDataSetHashCode;
+
     /**
      * Constructor.
      *
@@ -57,7 +61,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         eventQueue = new DataEventQueue();
 
-        center = new LatLon(0, 0);
+        center = LatLon.ZERO;
     }
 
     @Override
@@ -85,15 +89,30 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
         return MainApplication.getLayerManager().getEditDataSet();
     }
 
-    private void process(DataEvent event) {
-        DataSet dataSet = getDataSet(event);
+    private boolean editDataSetChanged(DataSet dataSet) {
+        boolean ret = lastDataSetHashCode != dataSet.hashCode();
+        lastDataSetHashCode = dataSet.hashCode();
+        return ret;
+    }
 
-        Perspective3D perspective = core.getPerspective3d();
+    private void process(DataEvent event) {
 
         boolean rebuild = false;
         boolean editorObjectsChanged = false;
 
-        if (perspective == null || event instanceof NewDataEvent) {
+        final DataSet dataSet = getDataSet(event);
+
+        if (dataSet == null) {
+            return;
+        }
+
+        if (editDataSetChanged(dataSet) && event instanceof UpdateDataEvent) {
+            event = new NewDataEvent();
+        }
+
+        Perspective3D perspective = core.getPerspective3d();
+
+        if (center.equals(LatLon.ZERO) || event instanceof NewDataEvent) {
             Projection proj = Main.getProjection();
             center = calculateCenter(dataSet, proj);
             perspective = calculatePerspective(center, proj);
@@ -146,7 +165,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         if (dataset == null) {
             // default location when dataset don't exists
-            return new LatLon(0, 0);
+            return LatLon.ZERO;
         }
 
         double maxX = -Double.MAX_VALUE;
@@ -178,7 +197,13 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
             }
         } else {
             // it is newly created dataset not connected with OSM
-            for (Node n : dataset.getNodes()) {
+            Collection<Node> nodes = dataset.getNodes();
+
+            if (nodes.isEmpty()) {
+                return LatLon.ZERO;
+            }
+
+            for (Node n : nodes) {
                 // create area from data bounds
                 LatLon cord = n.getCoor();
 
