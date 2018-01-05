@@ -25,6 +25,9 @@ import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.jogl.texture.TextureCacheService;
 
+/**
+ * Renderer for models. Main interaction with opengl backend.
+ */
 public class ModelRender {
 
     /** Log. */
@@ -57,6 +60,8 @@ public class ModelRender {
 
     private AmbientDiffuseComponent lastAmbientDiffuseComponent;
 
+    private Material defaultMaterial = new Material();
+
     /**
      *
      */
@@ -64,21 +69,31 @@ public class ModelRender {
 
     }
 
+    /**
+     * Face counter.
+     *
+     * @return face counter.
+     */
     public int getFaceCount() {
         return faceCount;
     }
 
+    /**
+     * Resets face counter.
+     */
     public void resetFaceCount() {
         faceCount = 0;
     }
 
+    /**
+     * Renders model.
+     *
+     * @param gl
+     *            gl context
+     * @param model
+     *            model to render
+     */
     public void render(GL2 gl, Model model) {
-        // XXX get list from cache
-        // if (true) {
-        // return;
-        // gl.glEnable(GL.GL_CULL_FACE);
-        // gl.glCullFace(GL.GL_FRONT);
-        // }
 
         if (model.useLight) {
             gl.glEnable(GLLightingFunc.GL_LIGHTING);
@@ -117,18 +132,19 @@ public class ModelRender {
                 gl.glEnable(GL.GL_CULL_FACE);
             }
 
-            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, (model.useTwoSided || drawTwoSided) ? GL2.GL_TRUE : GL2.GL_FALSE);
+            gl.glLightModeli(GL2ES1.GL_LIGHT_MODEL_TWO_SIDE, model.useTwoSided || drawTwoSided ? GL.GL_TRUE : GL.GL_FALSE);
 
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
 
                 Material material = model.getMaterial(mesh.materialID);
 
-                setupMaterial2(gl, material, (model.useTwoSided || drawTwoSided) ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
+                setupMaterial2(gl, material, model.useTwoSided || drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
 
                 if (drawTextures) {
-                    if (model.useTextureAlpha)
+                    if (model.useTextureAlpha) {
                         enableTransparentText(gl);
+                    }
                     setupTextures(gl, material, mesh.hasTexture);
                 }
 
@@ -165,8 +181,9 @@ public class ModelRender {
                 }
 
                 if (drawTextures) {
-                    if (model.useTextureAlpha)
+                    if (model.useTextureAlpha) {
                         disableTransparentText(gl);
+                    }
                     unsetupTextures(gl, material, mesh.hasTexture);
                 }
             }
@@ -178,7 +195,7 @@ public class ModelRender {
                     + (model.mesh[mi] != null ? model.mesh[mi].name : "") + ")" + " face: " + fi, e);
         } finally {
 
-            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_FALSE);
+            gl.glLightModeli(GL2ES1.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_FALSE);
 
             gl.glDisable(GL.GL_CULL_FACE);
         }
@@ -206,7 +223,7 @@ public class ModelRender {
             gl.glActiveTexture(GL_TEXTURE[curLayer]);
             gl.glEnable(GL.GL_TEXTURE_2D);
             unbindTexture(gl);
-            //disableTransparentText(gl);
+            // disableTransparentText(gl);
             gl.glDisable(GL.GL_TEXTURE_2D);
             if (curLayer == 0) {
                 if (colored) {
@@ -236,7 +253,7 @@ public class ModelRender {
             gl.glEnable(GL.GL_TEXTURE_2D);
 
             Texture texture = getTexture(gl, texturesComponent.get(curLayer));
-            //enableTransparentText(gl);
+            // enableTransparentText(gl);
             bindTexture(gl, texture);
 
             if (curLayer == 0) {
@@ -297,7 +314,7 @@ public class ModelRender {
             gl.glActiveTexture(GL_TEXTURE[curLayer]);
             gl.glEnable(GL.GL_TEXTURE_2D);
 
-            Texture texture = getTexture(gl, texturesComponent.get(curLayer-1));
+            Texture texture = getTexture(gl, texturesComponent.get(curLayer - 1));
             bindTexture(gl, texture);
 
             gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
@@ -322,6 +339,12 @@ public class ModelRender {
         }
     }
 
+    /**
+     * Unbind texture.
+     *
+     * @param gl
+     *            context
+     */
     public void unbindTexture(GL2 gl) {
 
         gl.glMatrixMode(GL.GL_TEXTURE);
@@ -332,8 +355,12 @@ public class ModelRender {
     }
 
     /**
+     * Bind texture.
+     *
      * @param gl
+     *            context
      * @param texture
+     *            the texture
      */
     public void bindTexture(GL2 gl, Texture texture) {
         // switch to texture mode and push a new matrix on the stack
@@ -384,20 +411,6 @@ public class ModelRender {
 
     }
 
-    public void setDefaultMaterial(GL2 gl) {
-
-        int sides = drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT;
-
-        gl.glMaterialfv(sides, GLLightingFunc.GL_DIFFUSE, new float[] { 0.8f, 0.8f, 0.8f, 1.0f }, 0);
-
-        gl.glMaterialfv(sides, GLLightingFunc.GL_AMBIENT, new float[] { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
-        // pGl.glMaterialfv(sides, GL2.GL_AMBIENT, new float[] {0.2f,
-        // 0.2f, 0.2f, 1.0f}, 0);
-        gl.glMaterialfv(sides, GLLightingFunc.GL_SPECULAR, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
-        gl.glMaterialf(sides, GLLightingFunc.GL_SHININESS, 0.0f);
-        gl.glMaterialfv(sides, GLLightingFunc.GL_EMISSION, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
-    }
-
     private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material, int sides) {
 
         float[] rgba = new float[4];
@@ -422,16 +435,24 @@ public class ModelRender {
         lastAmbientDiffuseComponent = material;
     }
 
+    /**
+     * Resets cached materials settings.
+     */
     public void resetMaterials() {
         lastSides = 0;
         lastOtherComponent = null;
         lastAmbientDiffuseComponent = null;
     }
 
-    Material defaultMaterial = new Material();
-
-    public void setupDefaultMaterial(GL2 pGL) {
-        setupMaterial2(pGL, defaultMaterial, drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
+    /**
+     * Setups default material for opengl context. It allow to rested opengl
+     * state to its default when next rendering loop starts.
+     *
+     * @param gl
+     *            context
+     */
+    public void setupDefaultMaterial(GL2 gl) {
+        setupMaterial2(gl, defaultMaterial, drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
     }
 
     private void setupMaterial2(GL2 pGl, Material material, int sides) {
@@ -448,7 +469,7 @@ public class ModelRender {
     }
 
     private boolean isSidesChanged(int sides) {
-        return lastSides == 0 || (lastSides == GL.GL_FRONT && sides == GL.GL_FRONT_AND_BACK);
+        return lastSides == 0 || lastSides == GL.GL_FRONT && sides == GL.GL_FRONT_AND_BACK;
     }
 
     private boolean isOtherComponentChanged(OtherComponent other) {

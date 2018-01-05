@@ -96,7 +96,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
 
         modelRender.resetMaterials();
-        modelRender.setDefaultMaterial(gl);
+        modelRender.setupDefaultMaterial(gl);
 
         skyBox.draw(gl, viewport2.getPosition());
 
