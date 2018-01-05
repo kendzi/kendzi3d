@@ -12,6 +12,7 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 
+import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
@@ -49,7 +50,7 @@ public class GroundDrawer {
         gl.glBegin(GL2.GL_POLYGON);
         gl.glColor3f((float) 123 / 256, (float) 111 / 256, (float) 100 / 255);
 
-        double groundSize = 1500.0;
+        double groundSize = Viewport.getZFar();
 
         Point3d c = cameraPosition;
 

@@ -50,6 +50,7 @@ import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
+import kendzi.josm.kendzi3d.ui.Resumer;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
@@ -198,7 +199,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         ShowPluginDirAction showPluginDirAction = injector.getInstance(ShowPluginDirAction.class);
         registerAction(showPluginDirAction, advanceMenu);
 
-        setEnabledAll(true);
+        batchUpdateMenuItems(true);
     }
 
     private void registerAction(JosmAction josmAction, JMenu menu) {
@@ -226,13 +227,22 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         menu.add(checkBox);
     }
 
-    private void setEnabledAll(boolean isEnabled) {
+    private void batchUpdateMenuItems(boolean isEnabled) {
         for (int i = 0; i < view3dJMenu.getItemCount(); i++) {
             JMenuItem item = view3dJMenu.getItem(i);
 
             if (item != null) {
-                item.setEnabled(isEnabled);
+                //item.setEnabled(isEnabled);
+
+                if (item.getAction() instanceof Resumer) {
+                    ((Resumer) item.getAction()).setResumable(() -> {
+                        if (singleWindow != null) {
+                            singleWindow.resumeAnimator();
+                        }
+                    });
+                }
             }
+
         }
     }
 

@@ -21,8 +21,6 @@ import kendzi.jogl.texture.library.TextureLibraryService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.data.Kendzi3dCore;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
-import kendzi.josm.kendzi3d.data.producer.DataConsumersMonitor;
-import kendzi.josm.kendzi3d.data.producer.DataEventListener;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.data.selection.SelectionSynchronizeManager;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
@@ -121,10 +119,6 @@ public class Kendzi3dModule extends AbstractModule {
 
         bind(EditorCore.class).to(Kendzi3dCore.class).in(Singleton.class);
 
-        bind(DataEventListener.class).to(EditorObjectsProducer.class).in(Singleton.class);
-
-        bind(DataConsumersMonitor.class).in(Singleton.class);
-
     }
 
     @Provides
@@ -142,9 +136,9 @@ public class Kendzi3dModule extends AbstractModule {
 
     @Provides
     @Singleton
-    EditorObjectsProducer provideEditorObjectsProducer(Kendzi3dCore core, DataConsumersMonitor dataConsumersMonitor) {
+    EditorObjectsProducer provideEditorObjectsProducer(Kendzi3dCore core) {
 
-        EditorObjectsProducer producer = new EditorObjectsProducer(core, dataConsumersMonitor);
+        EditorObjectsProducer producer = new EditorObjectsProducer(core);
 
         // All objects should be produced in separate thread .
         Thread editorObjectsProducerThread = new Thread(producer, "Editor objects producer thread");

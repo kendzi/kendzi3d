@@ -1,5 +1,5 @@
 package kendzi.josm.kendzi3d.data.event;
 
-public class NewDataEvent implements DataEvent {
+public class NewDataEvent extends DataEvent {
 
 }

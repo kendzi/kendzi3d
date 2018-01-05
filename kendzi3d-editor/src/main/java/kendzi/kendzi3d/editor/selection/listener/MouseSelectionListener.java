@@ -6,9 +6,12 @@
 
 package kendzi.kendzi3d.editor.selection.listener;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+
+import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
 
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.math.geometry.ray.Ray3d;
@@ -17,52 +20,64 @@ import kendzi.math.geometry.ray.Ray3d;
  *
  * @author Tomasz Kędziora (Kendzi)
  */
-public abstract class MouseSelectionListener implements MouseListener, MouseMotionListener {
+public abstract class MouseSelectionListener extends MouseAdapter {
 
-    /**
-     *
-     */
+    /** Log. */
+    private static final Logger LOG = Logger.getLogger(MouseSelectionListener.class);
+
     public MouseSelectionListener() {
         super();
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-        //
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        //
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        //
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        selectHighlightedEditor(e.getX(), e.getY());
-    }
-
-    @Override
     public void mouseClicked(MouseEvent e) {
-
-        select(e.getX(), e.getY());
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (moveActiveEditor(e.getX(), e.getY(), true)) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            select(e.getX(), e.getY());
             e.consume();
         }
     }
 
-    protected abstract void selectActiveEditor(int x, int y);
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (selectActiveEditor(e.getX(), e.getY())) {
+                e.consume();
+            }
+        }
+    }
 
-    protected abstract void selectHighlightedEditor(int x, int y);
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (moveActiveEditor(e.getX(), e.getY(), true)) {
+                e.consume();
+            }
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("mouseDragged");
+        }
+
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (moveActiveEditor(e.getX(), e.getY(), false)) {
+                e.consume();
+            }
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if (selectHighlightedEditor(e.getX(), e.getY())) {
+            e.consume();
+        }
+    }
+
+    protected abstract boolean selectActiveEditor(int x, int y);
+
+    protected abstract boolean selectHighlightedEditor(int x, int y);
 
     protected abstract boolean moveActiveEditor(int x, int y, boolean b);
 
@@ -70,8 +85,4 @@ public abstract class MouseSelectionListener implements MouseListener, MouseMoti
 
     protected abstract Selection select(Ray3d selectRay);
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        selectActiveEditor(e.getX(), e.getY());
-    }
 }

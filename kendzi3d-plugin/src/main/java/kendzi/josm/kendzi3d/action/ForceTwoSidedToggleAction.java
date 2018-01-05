@@ -19,11 +19,12 @@ import org.openstreetmap.josm.gui.MainApplication;
 import com.google.inject.Inject;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Enable/disable display texture on models toggle action.
  */
-public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertModeChangeListener {
+public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertModeChangeListener, Resumer {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +32,8 @@ public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertMod
             new BooleanProperty("kendzi3d.models.forceTwoSidedLightingForAllModels", false);
 
     private final ModelRender modelRender;
+
+    private Resumable resumable = () -> {};
 
     /**
      * Constructor of texture toggle action.
@@ -58,6 +61,11 @@ public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertMod
     }
 
     @Override
+    public void expertChanged(boolean expert) {
+        this.setEnabled(expert);
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
 
@@ -74,16 +82,12 @@ public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertMod
      *            enable debug
      */
     private void setState(boolean pEnable) {
-
         modelRender.setDrawTwoSided(pEnable);
-
+        resumable.resume();
     }
 
     @Override
-    public void expertChanged(boolean expert) {
-
-        this.setEnabled(expert);
-
+    public void setResumable(Resumable r) {
+        resumable = r;
     }
-
 }

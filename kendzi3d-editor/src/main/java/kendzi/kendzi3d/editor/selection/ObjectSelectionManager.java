@@ -5,7 +5,6 @@
  */
 package kendzi.kendzi3d.editor.selection;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,21 +115,6 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see kendzi.kendzi3d.editor.selection.listener.jogl.selection.MouseSelectionListener#mouseDragged(java.awt.event.MouseEvent)
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("mouseDragged");
-        }
-        if (moveActiveEditor(e.getX(), e.getY(), false)) {
-            e.consume();
-        }
-    }
-
-    /**
      * @return the activeEditor
      */
     public Editor getActiveEditor() {
@@ -168,7 +152,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     }
 
     @Override
-    protected void selectActiveEditor(int x, int y) {
+    protected boolean selectActiveEditor(int x, int y) {
 
         Ray3d selectRay = viewportPicking(x, y);
 
@@ -178,17 +162,23 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
         lastSelectRay = selectRay;
 
         raiseSelectEditor(new SelectEditorEvent(activeEditor));
+
+        return activeEditor != null;
     }
 
     @Override
-    protected void selectHighlightedEditor(int x, int y) {
+    protected boolean selectHighlightedEditor(int x, int y) {
         Selection selection = lastSelection;
 
         Ray3d selectRay = viewportPicking(x, y);
 
         Editor selectedEditor = selectEditor(selectRay, selection);
 
+        boolean highlightedEditorChanged = lastHighlightedEditor != selectedEditor;
+
         lastHighlightedEditor = selectedEditor;
+
+        return highlightedEditorChanged;
     }
 
     protected Editor selectEditor(Ray3d selectRay, Selection selection) {
