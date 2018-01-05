@@ -29,6 +29,7 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
+import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
 import org.apache.log4j.Logger;
@@ -72,7 +73,7 @@ public class Road extends AbstractWayModel {
     /**
      * Width of road.
      */
-    private double roadWidth = DEFAULT_ROAD_WIDTH;
+    private double roadWidth;
 
     /**
      * Sin of 90.
@@ -364,7 +365,7 @@ public class Road extends AbstractWayModel {
         String widthStr = way.get("width");
         if (widthStr != null) {
             try {
-                return Long.parseLong(widthStr);
+                return ModelUtil.parseHeight(widthStr, DEFAULT_ROAD_WIDTH);
             } catch (Exception e) {
                 log.error(e, e);
             }

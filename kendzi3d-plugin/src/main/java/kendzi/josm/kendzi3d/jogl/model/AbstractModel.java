@@ -26,6 +26,7 @@ import kendzi.kendzi3d.world.AbstractWorldObject;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**
  * in future create AbstractWayModel, AbstractNodeModel ?
@@ -34,7 +35,10 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  */
 public abstract class AbstractModel extends AbstractWorldObject implements Selectable, DrawableModel, ModelFrame, GlobalFrame,
-        OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
+OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
+
+    protected static final BooleanProperty PREFER_TWO_SIDED =
+            new BooleanProperty("kendzi3d.models.preferTwoSidedLightingOverFaceCulling", true);
 
     protected double radius;
 

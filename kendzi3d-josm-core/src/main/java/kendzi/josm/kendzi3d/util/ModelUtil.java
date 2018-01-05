@@ -32,9 +32,13 @@ public final class ModelUtil {
         // nop
     }
 
-    /** Get height of object. Return it in meters [m] or return default value.
-     * @param pOsmPrimitive object to take height
-     * @param pDefaultHeight default value of height
+    /**
+     * Get height of object. Return it in meters [m] or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take height
+     * @param pDefaultHeight
+     *            default value of height
      * @return height of object
      */
     public static Double getHeight(OsmPrimitive pOsmPrimitive, Double pDefaultHeight) {
@@ -47,9 +51,13 @@ public final class ModelUtil {
         return parseHeight(pOsmPrimitive.get("est_height"), pDefaultHeight);
     }
 
-    /** Get min_height of object. Return it in meters [m] or return default value.
-     * @param pOsmPrimitive object to take height
-     * @param pDefaultHeight default value of min_height
+    /**
+     * Get min_height of object. Return it in meters [m] or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take height
+     * @param pDefaultHeight
+     *            default value of min_height
      * @return min_height of object
      */
     public static Double getMinHeight(OsmPrimitive pOsmPrimitive, Double pDefaultHeight) {
@@ -64,42 +72,73 @@ public final class ModelUtil {
             return pDefault;
         }
 
-        String heightStr = pHeightStr.trim().toLowerCase();
-        heightStr = heightStr.replaceAll(",", ".");
+        pHeightStr = pHeightStr.trim().toLowerCase().replaceAll(",", ".");
 
         try {
-            if (heightStr.endsWith("m")) {
-                heightStr = heightStr.substring(0, heightStr.length() - 1);
-                return new Double(" " + heightStr + " ");
+            // default we take in [m]
+            double mult = 1d;
+            int strlen = pHeightStr.length();
 
-            } else if (heightStr.endsWith("ft")) {
-
-                // 1 foot = 0.3048 meters
-                heightStr = heightStr.substring(0, heightStr.length() - 1);
-                return 0.3048d * new Double(" " + heightStr + " ");
-
-            } else if (heightStr.endsWith("feet")) {
-
-                // 1 foot = 0.3048 meters
-                heightStr = heightStr.substring(0, heightStr.length() - 4);
-                return 0.3048d * new Double(" " + heightStr + " ");
+            switch (pHeightStr.replaceAll("[^a-z]", "")) {
+            case "km":
+                mult = 1000d;
+                strlen--;
+                strlen--;
+                break;
+            case "dm":
+                mult = .1d;
+                strlen--;
+                strlen--;
+                break;
+            case "cm":
+                mult = .01d;
+                strlen--;
+                strlen--;
+                break;
+            case "mm":
+                mult = .001d;
+                strlen--;
+                strlen--;
+                break;
+            case "m":
+                strlen--;
+                break;
+            case "feet":
+                strlen--;
+                strlen--;
+            case "ft":
+                mult = 0.3048d;
+                strlen--;
+                strlen--;
+                break;
+            case "inch":
+                strlen--;
+                strlen--;
+            case "in":
+                mult = 0.0254d;
+                strlen--;
+                strlen--;
+                break;
             }
 
-            // default we take in [m]
-            return new Double(" " + heightStr + " ");
+            return mult * Double.valueOf(pHeightStr.substring(0, strlen));
 
         } catch (Exception e) {
-            log.info("Unsupportet height: " + heightStr);
+            log.info("Unsupported height: " + pHeightStr);
         }
         return pDefault;
 
     }
 
-
-    /** Get double value of attribute or return default value.
-     * @param pOsmPrimitive object to take numerical value
-     * @param pAttrName name of attribute
-     * @param pDefaultValue default value of attribute
+    /**
+     * Get double value of attribute or return default value.
+     *
+     * @param pOsmPrimitive
+     *            object to take numerical value
+     * @param pAttrName
+     *            name of attribute
+     * @param pDefaultValue
+     *            default value of attribute
      * @return double value of attribute
      */
     public static Double getNumberAttribute(OsmPrimitive pOsmPrimitive, String pAttrName, Double pDefaultValue) {

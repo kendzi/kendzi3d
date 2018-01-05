@@ -32,7 +32,7 @@ public class ModelRender {
 
     private static final int[] GL_TEXTURE = { GL2.GL_TEXTURE0, GL2.GL_TEXTURE1, GL2.GL_TEXTURE2, GL2.GL_TEXTURE3 };
 
-    private static final int MAX_TEXTURES_LAYERS = 4;
+    private static final int MAX_TEXTURES_LAYERS = GL_TEXTURE.length;
 
     private boolean debugging = true;
 
@@ -40,12 +40,18 @@ public class ModelRender {
 
     private boolean drawNormals;
 
+    private boolean drawTextures;
+
+    private boolean drawTwoSided;
+
     private int faceCount;
 
     /**
      * Texture cache service.
      */
     private TextureCacheService textureCacheService;
+
+    private int lastSides;
 
     private OtherComponent lastOtherComponent;
 
@@ -77,15 +83,23 @@ public class ModelRender {
         if (model.useLight) {
             gl.glEnable(GLLightingFunc.GL_LIGHTING);
         }
-        if (model.useTexture) {
-            gl.glEnable(GL.GL_TEXTURE_2D);
-        } else {
-            gl.glDisable(GL.GL_TEXTURE_2D);
-        }
 
         draw(gl, model);
 
+        if (model.useLight) {
+            gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        }
+
         // gl.glDisable(GL.GL_CULL_FACE);
+
+        if (drawEdges || model.drawEdges) {
+            DebugModelRendererUtil.drawEdges(gl, model);
+        }
+        if (drawNormals || model.drawNormals) {
+            DebugModelRendererUtil.drawNormals(gl, model);
+        }
+
+        gl.glColor3f(1.0f, 1.0f, 1.0f);
     }
 
     public void renderRaw(GL2 gl, Model model) {
@@ -99,16 +113,24 @@ public class ModelRender {
 
         try {
 
+            if (model.useCullFaces) {
+                gl.glEnable(GL.GL_CULL_FACE);
+            }
+
+            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, (model.useTwoSided || drawTwoSided) ? GL2.GL_TRUE : GL2.GL_FALSE);
+
             for (mi = 0; mi < model.mesh.length; mi++) {
                 Mesh mesh = model.mesh[mi];
 
                 Material material = model.getMaterial(mesh.materialID);
 
-                setupMaterial2(gl, material);
+                setupMaterial2(gl, material, (model.useTwoSided || drawTwoSided) ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
 
-                boolean useTextures = mesh.hasTexture;
-
-                setupTextures(gl, material, useTextures);
+                if (drawTextures) {
+                    if (model.useTextureAlpha)
+                        enableTransparentText(gl);
+                    setupTextures(gl, material, mesh.hasTexture);
+                }
 
                 faceCount += mesh.face.length;
 
@@ -116,7 +138,7 @@ public class ModelRender {
                     Face face = mesh.face[fi];
 
                     int numOfTextureLayers = Math.min(MAX_TEXTURES_LAYERS, face.coordIndexLayers.length);
-                    if (!mesh.hasTexture) {
+                    if (!drawTextures || !mesh.hasTexture) {
                         numOfTextureLayers = 0;
                     }
 
@@ -142,8 +164,11 @@ public class ModelRender {
                     gl.glEnd();
                 }
 
-                unsetupTextures(gl, material, useTextures);
-
+                if (drawTextures) {
+                    if (model.useTextureAlpha)
+                        disableTransparentText(gl);
+                    unsetupTextures(gl, material, mesh.hasTexture);
+                }
             }
 
             gl.glColor3f(1.0f, 1.0f, 1.0f);
@@ -151,44 +176,42 @@ public class ModelRender {
         } catch (RuntimeException e) {
             throw new RuntimeException("error model: " + model.getSource() + " mesh: " + mi + " ("
                     + (model.mesh[mi] != null ? model.mesh[mi].name : "") + ")" + " face: " + fi, e);
+        } finally {
+
+            gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_FALSE);
+
+            gl.glDisable(GL.GL_CULL_FACE);
         }
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-
-        if (drawEdges || model.drawEdges) {
-            DebugModelRendererUtil.drawEdges(gl, model);
-        }
-        if (drawNormals || model.drawNormals) {
-            DebugModelRendererUtil.drawNormals(gl, model);
-        }
-
-        gl.glColor3f(1.0f, 1.0f, 1.0f);
-        // setDefaultMaterial(gl);
     }
 
     private void unsetupTextures(GL2 gl, Material material, boolean useTextures) {
+
         List<String> texturesComponent = material.getTexturesComponent();
         boolean colored = material.getTexture0Color() != null;
 
-        int texSize = texturesComponent.size();
+        int curLayer = texturesComponent.size();
 
-        int texColored = colored && texSize > 0 ? texSize : -1;
+        if (colored && 0 < curLayer && curLayer < MAX_TEXTURES_LAYERS) {
+            gl.glActiveTexture(GL_TEXTURE[curLayer]);
+            gl.glEnable(GL.GL_TEXTURE_2D);
+            unbindTexture(gl);
+            gl.glDisable(GL.GL_TEXTURE_2D);
+        }
 
-        for (int i = MAX_TEXTURES_LAYERS - 1; i >= 0; i--) {
+        curLayer = useTextures ? curLayer : 0;
 
-            boolean textLayerEnabled = i < texSize && useTextures;
-
-            gl.glActiveTexture(GL_TEXTURE[i]);
-
-            if (i == 0 && colored) {
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
-            }
-
-            if (textLayerEnabled || texColored == i) {
-
-                gl.glDisable(GL.GL_TEXTURE_2D);
-
-                unbindTexture(gl);
+        while (curLayer > 0) {
+            curLayer--;
+            gl.glActiveTexture(GL_TEXTURE[curLayer]);
+            gl.glEnable(GL.GL_TEXTURE_2D);
+            unbindTexture(gl);
+            //disableTransparentText(gl);
+            gl.glDisable(GL.GL_TEXTURE_2D);
+            if (curLayer == 0) {
+                if (colored) {
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+                }
             }
         }
     }
@@ -198,117 +221,108 @@ public class ModelRender {
         List<String> texturesComponent = material.getTexturesComponent();
         boolean colored = material.getTexture0Color() != null;
 
-        int texSize = texturesComponent.size();
-        int texColored = colored && texSize > 0 ? texSize : -1;
-        for (int i = 0; i < 2; i++) {
+        int curLayer = MAX_TEXTURES_LAYERS;
 
-            boolean layerEnabled = i < texSize && useTextures;
-            boolean lightLayerEnabled = i == texColored;
+        while (curLayer > 0) {
+            curLayer--;
+            gl.glActiveTexture(GL_TEXTURE[curLayer]);
+            gl.glDisable(GL.GL_TEXTURE_2D);
+        }
 
-            gl.glActiveTexture(GL_TEXTURE[i]);
+        curLayer = useTextures ? 0 : texturesComponent.size();
 
-            if (lightLayerEnabled) {
-                String textureKey = texturesComponent.get(texSize - 1);
+        for (; curLayer < MAX_TEXTURES_LAYERS && curLayer < texturesComponent.size(); curLayer++) {
+            gl.glActiveTexture(GL_TEXTURE[curLayer]);
+            gl.glEnable(GL.GL_TEXTURE_2D);
 
-                Texture texture = getTexture(gl, textureKey);
+            Texture texture = getTexture(gl, texturesComponent.get(curLayer));
+            //enableTransparentText(gl);
+            bindTexture(gl, texture);
 
-                gl.glEnable(GL.GL_TEXTURE_2D);
+            if (curLayer == 0) {
+                if (colored) {
+                    // For colored textures
+                    // material.setAmbientDiffuse(new
+                    // AmbientDiffuseComponent(Color.WHITE, Color.WHITE));
+                    float[] rgbComponents = material.getTexture0Color().getRGBComponents(new float[4]);
+                    rgbComponents[3] = 0.7f;
 
-                bindTexture(gl, texture);
+                    gl.glTexEnvfv(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_COLOR, rgbComponents, 0);
 
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_INTERPOLATE);
+
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2ES1.GL_CONSTANT);
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL.GL_TEXTURE);
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL2ES1.GL_CONSTANT);
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND2_RGB, GL.GL_SRC_ALPHA);
+                } else {
+                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+                }
+            } else {
+                /*
+                 * Calculates texture color by choosing color value between
+                 * previous texture and current one. As switch key use alpha
+                 * channel from previous texture.
+                 */
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_MODULATE);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_INTERPOLATE);
 
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2ES1.GL_PRIMARY_COLOR);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL.GL_TEXTURE);
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
 
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2ES1.GL_PREVIOUS);
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
 
-                /* Replete alpha with value from previous pass. */
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL.GL_TEXTURE);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND2_RGB, GL.GL_SRC_ALPHA);
+
+                /*
+                 * The final alpha should be 1. Sum both alpha channels from
+                 * previous texture and current one.
+                 */
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL2ES1.GL_ADD);
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_ALPHA, GL.GL_SRC_ALPHA);
                 gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
-
-                /* Replete alpha with value from previous pass. */
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
-                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
-
-            } else if (layerEnabled) {
-
-                String textureKey = texturesComponent.get(i);
-
-                Texture texture = getTexture(gl, textureKey);
-
-                gl.glEnable(GL.GL_TEXTURE_2D);
-
-                bindTexture(gl, texture);
-
-                if (i == 0) {
-                    if (colored) {
-                        // For colored textures
-                        // material.setAmbientDiffuse(new
-                        // AmbientDiffuseComponent(Color.WHITE, Color.WHITE));
-                        float[] rgbComponents = material.getTexture0Color().getRGBComponents(new float[4]);
-                        rgbComponents[3] = 0.7f;
-
-                        gl.glTexEnvfv(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_COLOR, rgbComponents, 0);
-
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_INTERPOLATE);
-
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2ES1.GL_CONSTANT);
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
-
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL.GL_TEXTURE);
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
-
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL2ES1.GL_CONSTANT);
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND2_RGB, GL.GL_SRC_ALPHA);
-
-                    } else {
-                        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
-                    }
-
-                } else {
-
-                    /*
-                     * Calculates texture color by choosing color value between
-                     * previous texture and current one. As switch key use alpha
-                     * channel from previous texture.
-                     */
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_INTERPOLATE);
-
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL.GL_TEXTURE);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
-
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2ES1.GL_PREVIOUS);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
-
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE2_RGB, GL.GL_TEXTURE);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND2_RGB, GL.GL_SRC_ALPHA);
-
-                    /*
-                     * The final alpha should be 1. Sum both alpha channels from
-                     * previous texture and current one.
-                     */
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL2ES1.GL_ADD);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_ALPHA, GL.GL_SRC_ALPHA);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
-                    gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_ALPHA, GL.GL_TEXTURE);
-
-                }
-
-            } else {
-                gl.glDisable(GL.GL_TEXTURE_2D);
+                gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_ALPHA, GL.GL_TEXTURE);
             }
+        }
+
+        if (colored && 0 < curLayer && curLayer < MAX_TEXTURES_LAYERS) {
+            gl.glActiveTexture(GL_TEXTURE[curLayer]);
+            gl.glEnable(GL.GL_TEXTURE_2D);
+
+            Texture texture = getTexture(gl, texturesComponent.get(curLayer-1));
+            bindTexture(gl, texture);
+
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_COMBINE);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_RGB, GL2ES1.GL_MODULATE);
+
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_RGB, GL2ES1.GL_PRIMARY_COLOR);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE1_RGB, GL2ES1.GL_PREVIOUS);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+
+            /* Replete alpha with value from previous pass. */
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
+
+            /* Replete alpha with value from previous pass. */
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_COMBINE_ALPHA, GL.GL_REPLACE);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_OPERAND0_ALPHA, GL2ES1.GL_PREVIOUS);
+            gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2.GL_SOURCE0_ALPHA, GL2ES1.GL_PREVIOUS);
+            curLayer++;
         }
     }
 
-    private void unbindTexture(GL2 gl) {
+    public void unbindTexture(GL2 gl) {
 
         gl.glMatrixMode(GL.GL_TEXTURE);
         gl.glPopMatrix();
@@ -345,43 +359,71 @@ public class ModelRender {
         texture.bind(gl);
     }
 
-    public static void setDefaultMaterial(GL2 gl) {
+    /**
+     * @param pGl
+     *            FIXME move to util!
+     */
+    public static void enableTransparentText(GL2 pGl) {
+        // do not draw the transparent parts of the texture
+        pGl.glEnable(GL.GL_BLEND);
+        pGl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        // don't show source alpha parts in the destination
 
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_DIFFUSE, new float[] { 0.8f, 0.8f, 0.8f, 1.0f }, 0);
-
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT, new float[] { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
-        // pGl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[] {0.2f,
-        // 0.2f, 0.2f, 1.0f}, 0);
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_SPECULAR, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
-        gl.glMaterialf(GL.GL_FRONT, GLLightingFunc.GL_SHININESS, 0.0f);
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_EMISSION, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+        // determine which areas of the polygon are to be rendered
+        pGl.glEnable(GL2ES1.GL_ALPHA_TEST);
+        pGl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
     }
 
-    private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material) {
+    /**
+     * @param pGl
+     *            FIXME move to util!
+     */
+    public static void disableTransparentText(GL2 pGl) {
+        pGl.glDisable(GL2ES1.GL_ALPHA_TEST);
+        pGl.glDisable(GL.GL_BLEND);
+
+    }
+
+    public void setDefaultMaterial(GL2 gl) {
+
+        int sides = drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT;
+
+        gl.glMaterialfv(sides, GLLightingFunc.GL_DIFFUSE, new float[] { 0.8f, 0.8f, 0.8f, 1.0f }, 0);
+
+        gl.glMaterialfv(sides, GLLightingFunc.GL_AMBIENT, new float[] { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
+        // pGl.glMaterialfv(sides, GL2.GL_AMBIENT, new float[] {0.2f,
+        // 0.2f, 0.2f, 1.0f}, 0);
+        gl.glMaterialfv(sides, GLLightingFunc.GL_SPECULAR, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+        gl.glMaterialf(sides, GLLightingFunc.GL_SHININESS, 0.0f);
+        gl.glMaterialfv(sides, GLLightingFunc.GL_EMISSION, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+    }
+
+    private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material, int sides) {
 
         float[] rgba = new float[4];
 
-        pGl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_SPECULAR, material.getSpecularColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_SPECULAR, material.getSpecularColor().getRGBComponents(rgba), 0);
 
-        pGl.glMaterialf(GL.GL_FRONT, GLLightingFunc.GL_SHININESS, material.getShininess());
+        pGl.glMaterialf(sides, GLLightingFunc.GL_SHININESS, material.getShininess());
 
-        pGl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_EMISSION, material.getEmissive().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_EMISSION, material.getEmissive().getRGBComponents(rgba), 0);
 
         lastOtherComponent = material;
     }
 
-    private void setupMaterialAmbientDiffuseComponent(GL2 pGl, AmbientDiffuseComponent material) {
+    private void setupMaterialAmbientDiffuseComponent(GL2 pGl, AmbientDiffuseComponent material, int sides) {
 
         float[] rgba = new float[4];
 
-        pGl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_DIFFUSE, material.getDiffuseColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_DIFFUSE, material.getDiffuseColor().getRGBComponents(rgba), 0);
 
-        pGl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT, material.getAmbientColor().getRGBComponents(rgba), 0);
+        pGl.glMaterialfv(sides, GLLightingFunc.GL_AMBIENT, material.getAmbientColor().getRGBComponents(rgba), 0);
 
         lastAmbientDiffuseComponent = material;
     }
 
     public void resetMaterials() {
+        lastSides = 0;
         lastOtherComponent = null;
         lastAmbientDiffuseComponent = null;
     }
@@ -389,17 +431,24 @@ public class ModelRender {
     Material defaultMaterial = new Material();
 
     public void setupDefaultMaterial(GL2 pGL) {
-        setupMaterial2(pGL, defaultMaterial);
+        setupMaterial2(pGL, defaultMaterial, drawTwoSided ? GL.GL_FRONT_AND_BACK : GL.GL_FRONT);
     }
 
-    private void setupMaterial2(GL2 pGl, Material material) {
-        if (isAmbientDiffuseChanged(material.getAmbientDiffuse())) {
-            setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse());
+    private void setupMaterial2(GL2 pGl, Material material, int sides) {
+
+        if (isAmbientDiffuseChanged(material.getAmbientDiffuse()) || isSidesChanged(sides)) {
+            setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse(), sides);
         }
 
-        if (isOtherComponentChanged(material.getOther())) {
-            setupMaterialOtherComponent(pGl, material.getOther());
+        if (isOtherComponentChanged(material.getOther()) || isSidesChanged(sides)) {
+            setupMaterialOtherComponent(pGl, material.getOther(), sides);
         }
+
+        lastSides = sides;
+    }
+
+    private boolean isSidesChanged(int sides) {
+        return lastSides == 0 || (lastSides == GL.GL_FRONT && sides == GL.GL_FRONT_AND_BACK);
     }
 
     private boolean isOtherComponentChanged(OtherComponent other) {
@@ -438,6 +487,36 @@ public class ModelRender {
      */
     public boolean isDrawNormals() {
         return drawNormals;
+    }
+
+    /**
+     * @param drawTextures
+     *            the drawTextures to set
+     */
+    public void setDrawTextures(boolean drawTextures) {
+        this.drawTextures = drawTextures;
+    }
+
+    /**
+     * @return the drawTextures
+     */
+    public boolean isDrawTextures() {
+        return drawTextures;
+    }
+
+    /**
+     * @param drawTwoSided
+     *            the drawTwoSided attribute to set
+     */
+    public void setDrawTwoSided(boolean drawTwoSided) {
+        this.drawTwoSided = drawTwoSided;
+    }
+
+    /**
+     * @return the drawTwoSided attribute
+     */
+    public boolean isDrawTwoSided() {
+        return drawTwoSided;
     }
 
     /**

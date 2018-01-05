@@ -6,11 +6,13 @@
 
 package kendzi.josm.kendzi3d;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.*;
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -35,6 +37,7 @@ import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
 import kendzi.josm.kendzi3d.action.DebugToggleAction;
 import kendzi.josm.kendzi3d.action.ExportAction;
+import kendzi.josm.kendzi3d.action.ForceTwoSidedToggleAction;
 import kendzi.josm.kendzi3d.action.GroundToggleAction;
 import kendzi.josm.kendzi3d.action.LightConfigurationAction;
 import kendzi.josm.kendzi3d.action.LoadTextureLibraryAction;
@@ -42,6 +45,7 @@ import kendzi.josm.kendzi3d.action.MoveCameraAction;
 import kendzi.josm.kendzi3d.action.PointModelListAction;
 import kendzi.josm.kendzi3d.action.ShowPluginDirAction;
 import kendzi.josm.kendzi3d.action.TextureFilterToggleAction;
+import kendzi.josm.kendzi3d.action.TextureToggleAction;
 import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
@@ -123,17 +127,17 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         view3dJMenu.addSeparator();
 
         view3dJMenu
-                .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+        .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        putValue("toolbar", "3dView_run");
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                putValue("toolbar", "3dView_run");
 
-                        openKendzi3dWindow(injector);
+                openKendzi3dWindow(injector);
 
-                    }
+            }
 
-                }));
+        }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -152,6 +156,9 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         view3dJMenu.addSeparator();
 
+        TextureToggleAction textureToggleAction = injector.getInstance(TextureToggleAction.class);
+        registerCheckBoxAction(textureToggleAction, view3dJMenu);
+
         GroundToggleAction groundToggleAction = injector.getInstance(GroundToggleAction.class);
         registerCheckBoxAction(groundToggleAction, view3dJMenu);
 
@@ -164,6 +171,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         registerCheckBoxAction(debugPointModelToggleAction, view3dJMenu);
 
         view3dJMenu.addSeparator();
+
+        /* only serves to override a per-model setting, i.e. enables two sided lighting for each model globally */
+        ForceTwoSidedToggleAction doubleSidedLightingToggleAction = injector.getInstance(ForceTwoSidedToggleAction.class);
+        registerCheckBoxAction(doubleSidedLightingToggleAction, view3dJMenu);
 
         TextureFilterToggleAction filterToggleAction = injector.getInstance(TextureFilterToggleAction.class);
         registerCheckBoxAction(filterToggleAction, view3dJMenu);
@@ -199,7 +210,19 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     private void registerCheckBoxAction(ToggleAction action, JMenu menu) {
         final JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem(action);
         checkBox.setAccelerator(action.getShortcut().getKeyStroke());
+
         action.addButtonModel(checkBox.getModel());
+        action.addPropertyChangeListener(new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("enabled")) {
+                    checkBox.setVisible((Boolean) evt.getNewValue());
+                }
+
+            }
+        });
+
         menu.add(checkBox);
     }
 

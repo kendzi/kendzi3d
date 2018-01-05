@@ -9,11 +9,17 @@ package kendzi.josm.kendzi3d.jogl.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -22,6 +28,7 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
@@ -30,11 +37,9 @@ import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
-import org.openstreetmap.josm.data.osm.Way;
-
 /**
  * Fence for shapes defined as way.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BarrierFence extends AbstractWayModel {
@@ -78,7 +83,7 @@ public class BarrierFence extends AbstractWayModel {
 
     /**
      * Fence constructor.
-     * 
+     *
      * @param pWay
      *            way
      * @param perspective
@@ -127,6 +132,9 @@ public class BarrierFence extends AbstractWayModel {
         model = modelBuilder.toModel();
         model.setUseLight(true);
         model.setUseTexture(true);
+        model.setUseTextureAlpha(true);
+        model.setUseCullFaces(!PREFER_TWO_SIDED.get());
+        model.setUseTwoSidedLighting(PREFER_TWO_SIDED.get());
 
         buildModel = true;
 
@@ -141,66 +149,27 @@ public class BarrierFence extends AbstractWayModel {
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        enableTransparentText(gl);
-
         // replace the quad colors with the texture
         // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
         // GL2.GL_REPLACE);
         gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
 
-        gl.glEnable(GL.GL_CULL_FACE);
-
         gl.glPushMatrix();
         gl.glTranslated(getGlobalX(), 0, -getGlobalY());
 
-        try {
-            modelRender.render(gl, model);
+        modelRender.render(gl, model);
 
-            for (RelationCloneHeight cloner : heightClone) {
-                for (Double height : cloner) {
+        for (RelationCloneHeight cloner : heightClone) {
+            for (Double height : cloner) {
 
-                    gl.glPushMatrix();
-                    gl.glTranslated(0, height, 0);
-
-                    modelRender.render(gl, model);
-                    gl.glPopMatrix();
-
-                }
+                gl.glPushMatrix();
+                gl.glTranslated(0, height, 0);
+                modelRender.render(gl, model);
+                gl.glPopMatrix();
             }
-
-        } finally {
-
-            gl.glPopMatrix();
-
-            gl.glDisable(GL.GL_CULL_FACE);
         }
 
-        disableTransparentText(gl);
-
-    }
-
-    /**
-     * @param pGl
-     *            FIXME move to util!
-     */
-    public static void enableTransparentText(GL2 pGl) {
-        // do not draw the transparent parts of the texture
-        pGl.glEnable(GL.GL_BLEND);
-        pGl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        // don't show source alpha parts in the destination
-
-        // determine which areas of the polygon are to be rendered
-        pGl.glEnable(GL2ES1.GL_ALPHA_TEST);
-        pGl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
-    }
-
-    /**
-     * @param pGl
-     *            FIXME move to util!
-     */
-    public static void disableTransparentText(GL2 pGl) {
-        pGl.glDisable(GL2ES1.GL_ALPHA_TEST);
-        pGl.glDisable(GL.GL_BLEND);
+        gl.glPopMatrix();
 
     }
 

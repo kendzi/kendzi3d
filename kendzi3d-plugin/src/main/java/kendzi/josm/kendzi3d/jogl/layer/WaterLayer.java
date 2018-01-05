@@ -58,23 +58,17 @@ public class WaterLayer implements Layer {
 
     {
         try {
-            waterMatcher = SearchCompiler.compile("(natural=water) | (landuse=reservoir)| (waterway=riverbank)");
-        } catch (SearchParseError e) {
-            waterMatcher = new SearchCompiler.Never();
-            log.error(e, e);
-        }
-        try {
             waterMatcher = SearchCompiler
-                    .compile("((natural=water) | (landuse=reservoir)| (waterway=riverbank))  -child type=multipolygon");
+                    .compile("((natural=water) | (landuse=reservoir) | (waterway=riverbank)) type:way closed");
         } catch (SearchParseError e) {
             waterMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
         try {
             waterRelationMatcher = SearchCompiler
-                    .compile("type=multipolygon && ((natural=water) | (landuse=reservoir)| (waterway=riverbank))");
+                    .compile("type=multipolygon && ((natural=water) | (landuse=reservoir) | (waterway=riverbank))");
         } catch (SearchParseError e) {
-            waterMatcher = new SearchCompiler.Never();
+            waterRelationMatcher = new SearchCompiler.Never();
             log.error(e, e);
         }
 

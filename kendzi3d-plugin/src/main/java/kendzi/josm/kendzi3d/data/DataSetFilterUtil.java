@@ -1,30 +1,36 @@
 package kendzi.josm.kendzi3d.data;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.quad.layer.LayerMatcher;
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Way;
-
 public class DataSetFilterUtil {
 
-    public static List<OsmId> filter(LayerMatcher layerMatcher, DataSet dataSet, Perspective perspective) {
+    public static Set<OsmId> filter(LayerMatcher layerMatcher, DataSet dataSet, Perspective perspective) {
 
         if (dataSet == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
-        List<OsmId> ret = new ArrayList<OsmId>(1000);
+        Set<OsmId> ret = new HashSet<OsmId>(1000);
 
-        for (Node node : dataSet.getNodes()) {
+        Collection<OsmPrimitive> data = dataSet.allNonDeletedCompletePrimitives();
 
-            if (node.isDeleted()) {
+        for (Node node : new SubclassFilteredCollection<OsmPrimitive, Node>(data, Node.class::isInstance)) {
+
+            if (node.isDisabledAndHidden()) {
                 continue;
             }
 
@@ -36,9 +42,9 @@ public class DataSetFilterUtil {
             // }
         }
 
-        for (Way way : dataSet.getWays()) {
+        for (Way way : new SubclassFilteredCollection<OsmPrimitive, Way>(data, Way.class::isInstance)) {
 
-            if (way.isDeleted()) {
+            if (way.isDisabledAndHidden()) {
                 continue;
             }
 
@@ -50,9 +56,9 @@ public class DataSetFilterUtil {
             // }
         }
 
-        for (org.openstreetmap.josm.data.osm.Relation relation : dataSet.getRelations()) {
+        for (Relation relation : new SubclassFilteredCollection<OsmPrimitive, Relation>(data, Relation.class::isInstance)) {
 
-            if (relation.isDeleted()) {
+            if (relation.isDisabledAndHidden()) {
                 continue;
             }
 

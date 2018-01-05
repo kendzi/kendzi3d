@@ -13,12 +13,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
@@ -42,15 +48,9 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
-
 /**
  * Fence for shapes defined as relation.
- * 
+ *
  * @author Tomasz Kędziora (Kendzi)
  */
 public class BarrierFenceRelation extends AbstractRelationModel {
@@ -99,7 +99,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /**
      * Fence constructor.
-     * 
+     *
      * @param pRelation
      *            way
      * @param pers
@@ -150,7 +150,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see kendzi.josm.kendzi3d.jogl.model.AbstractModel#getOsmPrimitives()
      */
     @Override
@@ -193,6 +193,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         model = modelBuilder.toModel();
         model.setUseLight(true);
         model.setUseTexture(true);
+        model.setUseTextureAlpha(true);
+        model.setUseCullFaces(!PREFER_TWO_SIDED.get());
+        model.setUseTwoSidedLighting(PREFER_TWO_SIDED.get());
 
         buildModel = true;
     }
@@ -220,7 +223,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /**
      * Build wall model. XXX move to util.
-     * 
+     *
      * @param pPoints
      *            wall points
      * @param pHeights
@@ -239,9 +242,12 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     public static void buildWallModel(List<Point2d> pPoints, List<Double> pHeights, double pMinHeight, double pHeight,
             double pWidth, MeshFactory pMeshBorder, TextureData pWallTexture
 
-    ) {
+            ) {
         FaceFactory faceRight = pMeshBorder.addFace(FaceType.QUADS);
-        FaceFactory faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+        FaceFactory faceLeft = null;
+        if (!PREFER_TWO_SIDED.get()) {
+            faceLeft = pMeshBorder.addFace(FaceType.QUADS);
+        }
 
         Point2d start = pPoints.get(0);
         Double startHeight = getHeight(0, pHeights);
@@ -267,12 +273,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
             int n1i = pMeshBorder.addNormal(normal);
 
-            Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
-
-            int n2i = pMeshBorder.addNormal(normal2);
-
             double dist = start.distance(end);
-            double uvEnd = (int) (dist / pWallTexture.getWidth());
+            double uvEnd = dist / pWallTexture.getWidth();
+            uvEnd = (uvEnd < 0.33) ? 0 : (uvEnd < 1.0) ? 1 : (int) uvEnd;
 
             TextCoord em = new TextCoord(uvEnd, 0);
             TextCoord eh = new TextCoord(uvEnd, 1);
@@ -285,10 +288,16 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             faceRight.addVert(endMi, emi, n1i);
             faceRight.addVert(endHi, ehi, n1i);
 
-            faceLeft.addVert(startMi, emi, n2i);
-            faceLeft.addVert(startHi, ehi, n2i);
-            faceLeft.addVert(endHi, bhi, n2i);
-            faceLeft.addVert(endMi, bmi, n2i);
+            if (faceLeft != null) {
+                Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
+
+                int n2i = pMeshBorder.addNormal(normal2);
+
+                faceLeft.addVert(startMi, emi, n2i);
+                faceLeft.addVert(startHi, ehi, n2i);
+                faceLeft.addVert(endHi, bhi, n2i);
+                faceLeft.addVert(endMi, bmi, n2i);
+            }
 
             // new start point.
             start = end;
@@ -307,7 +316,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /**
      * Gets fence texture data.
-     * 
+     *
      * @param fenceType
      *            fence type
      * @param pOsmPrimitive
@@ -348,7 +357,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /**
      * Gets Fence type.
-     * 
+     *
      * @param pOsmPrimitive
      *            osm primitive
      * @return fence type
@@ -369,21 +378,10 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        // do not draw the transparent parts of the texture
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        // don't show source alpha parts in the destination
-
-        // determine which areas of the polygon are to be rendered
-        gl.glEnable(GL2ES1.GL_ALPHA_TEST);
-        gl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
-
         // replace the quad colors with the texture
         // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
         // GL2.GL_REPLACE);
         gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
-
-        gl.glEnable(GL.GL_CULL_FACE);
 
         gl.glPushMatrix();
         gl.glTranslated(getGlobalX(), 0, -getGlobalY());
@@ -394,8 +392,6 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         } finally {
 
             gl.glPopMatrix();
-
-            gl.glDisable(GL.GL_CULL_FACE);
         }
     }
 

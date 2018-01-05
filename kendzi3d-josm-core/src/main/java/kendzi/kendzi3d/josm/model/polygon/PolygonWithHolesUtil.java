@@ -20,9 +20,9 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Util for polygons with holes.
- * 
+ *
  * @author Tomasz Kedziora (Kendzi)
- * 
+ *
  */
 public final class PolygonWithHolesUtil {
 
@@ -69,21 +69,18 @@ public final class PolygonWithHolesUtil {
             int size = way.getNodesCount();
             if (size > 0) {
 
-                if (way.getNode(0).equals(way.getNode(way.getNodesCount() - 1))) {
-                    size--;
-                }
-
                 if (!rw.isReversed()) {
 
-                    for (int i = 0; i < size; i++) {
+                    // do not take the last node, it is either first of next way or first of first way
+                    for (int i = 0; i < size - 1; i++) {
                         Point2d p = pPerspective.calcPoint(way.getNode(i));
 
                         poly.add(p);
                     }
                 } else {
 
-                    for (int i = size - 1; i >= 0; i--) {
-
+                    // do not take the last node, it is either first of next way or first of first way
+                    for (int i = size - 1; i > 0; i--) {
                         Point2d p = pPerspective.calcPoint(way.getNode(i));
 
                         poly.add(p);

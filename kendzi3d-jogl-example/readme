@@ -7,6 +7,36 @@ Now you can build this project using command
 maven install
 
 
+*** How to run (outside an IDE)
+
+To run the jar you need to have correct dependencies in the classpath.  The following bash snippet will attempt
+to find the correct jars in the locations listed below and put them into classpath variable CP.
+
+#M2="$HOME/.m2/repository"           # local maven repo, uncomment if you used 'maven install' to populate it
+                                     #                   in this case directories below will not be searched
+JAR_DIR="/usr/share/java"            # folder with vecmath*.jar and log4j*.jar
+JOGL_DIR="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
+KENDZI_PROJ="$HOME/workspace"        # (top-level-dir) of kendzi-*.jar snapshot builds
+
+JOGL_VER=2.3
+for DEP in vecmath log4j-[0-9] {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry-[0-9],3d-jogl-{util,example}}
+do
+   find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${DEP}*jar" \
+      -not -iname "*native*" -not -iname "*sources*" | sort | tail -1 | \
+   while read JAR
+   do
+      echo $JAR
+      JAR="${JAR##*/}"
+      find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${JAR//.jar/*native*jar}"
+   done
+done \
+| sort | tee /dev/stderr | paste -s -d ':' | \
+while read CP
+do
+   java -cp "$CP" kendzi.jogl.ui.BaseJoglFrame
+done
+
+
 *** License
 
 This software is provided "AS IS" without a warranty of any kind.  You use it on your own risk and responsibility!!!

@@ -2,6 +2,7 @@ package kendzi.math.geometry.triangulate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Point2d;
 
@@ -22,7 +23,7 @@ public class Poly2TriSimpleUtil {
 
     /**
      * Triangulate polygon with holes.
-     * 
+     *
      * @param polygonWithHoles polygon with holes
      * @return list of triangles
      */
@@ -69,13 +70,7 @@ public class Poly2TriSimpleUtil {
 
     private static Polygon convert(PolygonList2d polygon) {
 
-        List<Point2d> p = polygon.getPoints();
-
-        int n = p.size();
-        PolygonPoint[] points = new PolygonPoint[n];
-        for (int i = 0; i < n; i++) {
-            points[i] = new PolygonPoint(p.get(i).x, p.get(i).y);
-        }
-        return new Polygon(points);
+        return new Polygon(polygon.getPoints().stream()
+                .map(p -> new PolygonPoint(p.x, p.y)).collect(Collectors.toCollection(ArrayList<PolygonPoint>::new)));
     }
 }
