@@ -39,6 +39,14 @@ https://github.com/kendzi/kendzi3d.git
 ``` {kendzi3d-plugin-build}/pom.xml clean install ```
 This step is important. It will generate temporary directors used by and script! All subproject should pass!
 
+* Setup formatter
+Chose Menu > Preferences > Java > Code Style > Formatter > Import...
+Select file ```doc/kendzi3d_formatter.xml```
+
+* Setup save actions:
+Chose Menu > Preferences > Java > Editor > Save Actions
+Select settings like on image ```doc/save_actions.png```
+
 
 # License
 
