@@ -6,18 +6,19 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
 
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround;
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround.GroundType;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Enable/disable display texture on ground toggle action.
@@ -25,16 +26,22 @@ import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround.GroundType;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class GroundToggleAction extends ToggleAction {
+public class GroundToggleAction extends ToggleAction implements Resumer {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String KENDZI_3D_GROUND_TEXTURED = "kendzi3d.ground.textured";
+    /**
+     * Debug view property key.
+     */
+    private final BooleanProperty KENDZI_3D_GROUND_TEXTURED = new BooleanProperty("kendzi3d.ground.textured", false);
 
     /**
      * Selectable ground drawer.
      */
     private final SelectableGround selectableGround;
+
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor of ground toggle action.
@@ -45,29 +52,22 @@ public class GroundToggleAction extends ToggleAction {
     @Inject
     public GroundToggleAction(SelectableGround selectableGround) {
         super(tr("Textured Ground"), "1306318261_debugger__24", tr("Enable/disable display texture on ground"), null, false);
-
-        MainApplication.getToolbar().register(this);
-
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_GROUND_TEXTURED, false);
-
-        setSelected(selected);
-
-        notifySelectedState();
-
         this.selectableGround = selectableGround;
 
-        setTexturedGround(selected);
+        MainApplication.getToolbar().register(this);
+        setSelected(KENDZI_3D_GROUND_TEXTURED.get());
 
+        notifySelectedState();
+        setTexturedGround(isSelected());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
-        boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_GROUND_TEXTURED, selected);
-        notifySelectedState();
+        KENDZI_3D_GROUND_TEXTURED.put(isSelected());
 
-        setTexturedGround(selected);
+        notifySelectedState();
+        setTexturedGround(isSelected());
     }
 
     /**
@@ -80,5 +80,11 @@ public class GroundToggleAction extends ToggleAction {
         } else {
             selectableGround.selectGroundType(GroundType.SINGLE_TEXTURE);
         }
+        resumable.resume();
+    }
+
+    @Override
+    public void setResumable(Resumable r) {
+        resumable = r;
     }
 }

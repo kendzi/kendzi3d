@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -18,6 +18,7 @@ import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
+import kendzi.josm.kendzi3d.ui.Resumer;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 
 /**
@@ -26,7 +27,7 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class CleanUpAction extends JosmAction {
+public class CleanUpAction extends JosmAction implements Resumer {
 
     /**
      *
@@ -57,6 +58,9 @@ public class CleanUpAction extends JosmAction {
      * Models library layer.
      */
     private ModelsLibraryLayer modelsLibraryLayer;
+
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor.
@@ -96,5 +100,12 @@ public class CleanUpAction extends JosmAction {
         modelCacheService.clear();
 
         modelsLibraryLayer.cleanUp();
+
+        resumable.resume();
+    }
+
+    @Override
+    public void setResumable(Resumable r) {
+        resumable = r;
     }
 }
