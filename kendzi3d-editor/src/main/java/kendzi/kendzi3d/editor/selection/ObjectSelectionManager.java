@@ -11,6 +11,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.vecmath.Point3d;
 
+import org.apache.log4j.Logger;
+
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.camera.ViewportPicker;
 import kendzi.kendzi3d.editor.EditableObject;
@@ -25,8 +27,6 @@ import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
-
-import org.apache.log4j.Logger;
 
 /**
  *

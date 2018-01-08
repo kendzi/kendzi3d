@@ -4,7 +4,8 @@ import kendzi.josm.kendzi3d.ui.Resumer;
 
 public abstract class DataEvent implements Resumer {
 
-    private Resumable resumable = () -> {};
+    private Resumable resumable = () -> {
+    };
 
     @Override
     public void resumeResumable() {

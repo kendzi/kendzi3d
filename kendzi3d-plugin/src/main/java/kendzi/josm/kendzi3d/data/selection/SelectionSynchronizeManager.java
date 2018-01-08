@@ -19,7 +19,7 @@ import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
 
-public class SelectionSynchronizeManager implements DataEventListener, SelectionChangeListener  {
+public class SelectionSynchronizeManager implements DataEventListener, SelectionChangeListener {
 
     private final ObjectSelectionManager objectSelectionManager;
 

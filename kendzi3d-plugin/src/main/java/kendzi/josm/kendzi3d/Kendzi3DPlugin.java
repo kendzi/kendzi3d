@@ -128,17 +128,17 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         view3dJMenu.addSeparator();
 
         view3dJMenu
-        .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+                .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                putValue("toolbar", "3dView_run");
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        putValue("toolbar", "3dView_run");
 
-                openKendzi3dWindow(injector);
+                        openKendzi3dWindow(injector);
 
-            }
+                    }
 
-        }));
+                }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -173,7 +173,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         view3dJMenu.addSeparator();
 
-        /* only serves to override a per-model setting, i.e. enables two sided lighting for each model globally */
+        /*
+         * only serves to override a per-model setting, i.e. enables two sided
+         * lighting for each model globally
+         */
         ForceTwoSidedToggleAction doubleSidedLightingToggleAction = injector.getInstance(ForceTwoSidedToggleAction.class);
         registerCheckBoxAction(doubleSidedLightingToggleAction, view3dJMenu);
 
@@ -232,7 +235,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             JMenuItem item = view3dJMenu.getItem(i);
 
             if (item != null) {
-                //item.setEnabled(isEnabled);
+                // item.setEnabled(isEnabled);
 
                 if (item.getAction() instanceof Resumer) {
                     ((Resumer) item.getAction()).setResumable(() -> {

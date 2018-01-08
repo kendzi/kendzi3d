@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -24,8 +27,6 @@ import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
-
-import org.apache.log4j.Logger;
 
 public class BaseEditorGLEventListener implements GLEventListener, ViewportProvider, CloseWindowEventSource {
 
@@ -142,10 +143,10 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         if (camera.updateState()) {
 
             /*
-             * Update viewport using current camera position. View port will store
-             * information required to setup OpenGl model view matrix. Calculates
-             * parameters of viewport required to back trace click of mouse from 2d
-             * space into 3d space.
+             * Update viewport using current camera position. View port will
+             * store information required to setup OpenGl model view matrix.
+             * Calculates parameters of viewport required to back trace click of
+             * mouse from 2d space into 3d space.
              */
             viewport.updateViewport(camera);
 
@@ -162,12 +163,6 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
             drawBeforeEditorObjects(gl, viewport);
             drawEditorObjects(gl, viewport);
             drawAfterEditorObjects(gl, viewport);
-
-            { // XXX remove!
-
-                //gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
-
-            }
 
             drawSelection(gl);
 

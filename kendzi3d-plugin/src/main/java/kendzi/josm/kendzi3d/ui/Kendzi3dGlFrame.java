@@ -5,6 +5,7 @@ import java.awt.event.ComponentEvent;
 import javax.inject.Inject;
 
 import com.jogamp.opengl.GLEventListener;
+
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.data.event.DataEvent;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
@@ -63,14 +64,14 @@ public class Kendzi3dGlFrame extends BaseEditorFrame implements DataEventListene
         dataEvent.setResumable(() -> resumeAnimator());
 
         if (dataEvent instanceof SelectionDataEvent) {
-            selectionSynchronizeManager.add(dataEvent);;
+            selectionSynchronizeManager.add(dataEvent);
         } else {
             editorObjectsProducer.add(dataEvent);
         }
     }
 
     public void resumeAnimator() {
-        if (this.isDisplayable()) {
+        if (isDisplayable()) {
             canvas.dispatchEvent(new ComponentEvent(canvas, ComponentEvent.COMPONENT_SHOWN));
         }
     }

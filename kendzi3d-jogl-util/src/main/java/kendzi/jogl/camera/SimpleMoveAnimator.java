@@ -137,7 +137,7 @@ public class SimpleMoveAnimator implements Camera {
         boolean active;
 
         boolean isActive(double time) {
-            return active && (time - last < SPEED_ACTIVE_TIMEOUT);
+            return active && time - last < SPEED_ACTIVE_TIMEOUT;
         }
     }
 
@@ -157,9 +157,9 @@ public class SimpleMoveAnimator implements Camera {
     private double lastTime = System.currentTimeMillis() / 1000d;
 
     /**
-     * Continue reporting a parameter change for this many frames,
-     * after animation parameters stopped changing.  This is needed
-     * to update back buffer(s).
+     * Continue reporting a parameter change for this many frames, after
+     * animation parameters stopped changing. This is needed to update back
+     * buffer(s).
      */
     private final byte additionalFrames = 4;
     private byte additionalFrameCounter = additionalFrames;
@@ -196,6 +196,7 @@ public class SimpleMoveAnimator implements Camera {
 
     /**
      * Updates the state of the camera.
+     * 
      * @return true, if the state of the camera was changed, otherwise false
      */
     public boolean updateState() {
@@ -498,10 +499,10 @@ public class SimpleMoveAnimator implements Camera {
         }
 
         return "KinematicsSimpleAnimator [\n" + "\np=" + format(point) + ",\n angle=" + formatAngle(angle) + ",\n lastTime="
-        + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
-        + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
+                + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
+                + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
 
-        + "]";
+                + "]";
     }
 
     String format(Tuple3d tuple) {

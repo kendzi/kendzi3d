@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -30,17 +30,19 @@ public class TextureToggleAction extends ToggleAction implements Resumer {
 
     private final ModelRender modelRender;
 
-    private Resumable resumable = () -> {};
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor of texture toggle action.
      *
-     * @param pModelRender ModelRender
+     * @param pModelRender
+     *            ModelRender
      */
     @Inject
     public TextureToggleAction(ModelRender pModelRender) {
         super(tr("Textured Models"), "1306318261_debugger__24", tr("Enable/disable display texture on models"), null, false);
-        this.modelRender = pModelRender;
+        modelRender = pModelRender;
 
         MainApplication.getToolbar().register(this);
 

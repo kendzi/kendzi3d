@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -41,7 +41,8 @@ public class MoveCameraAction extends JosmAction implements Resumer {
     @Inject
     private SimpleMoveAnimator simpleMoveAnimator;
 
-    private Resumable resumable = () -> {};
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor.
