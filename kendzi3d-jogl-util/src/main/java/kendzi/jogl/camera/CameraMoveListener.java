@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -27,9 +28,10 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
     private static final Logger LOG = Logger.getLogger(CameraMoveListener.class);
 
     /**
-     * The class calculating decelerating or accelerating movements in response to various mouse events.
+     * The class calculating decelerating or accelerating movements in response
+     * to various mouse events.
      */
-    private SimpleMoveAnimator kinematicsSimpleAnimator;
+    protected SimpleMoveAnimator kinematicsSimpleAnimator;
 
     int lastX;
     int lastY;
@@ -53,9 +55,9 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
                 resumeCanvasAnimator(e);
             } else {
                 if (e.isControlDown()) {
-                    Viewport.setZFar(Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE.getDefaultValue());
+                    Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
                 } else {
-                    Viewport.setFovy(Viewport.PERSP_VIEW_ANGLE.getDefaultValue());
+                    Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE_DEFAULT;
                 }
                 reshapeCanvas(e);
             }
@@ -101,15 +103,17 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (e.isControlDown()) {
             if (e.isShiftDown()) {
-                Viewport.setZFar(Viewport.getZFar() + 1000 * -e.getWheelRotation());
+                Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE
+                        + 1000 * -e.getWheelRotation();
             } else {
-                Viewport.setZFar(Viewport.getZFar() + 100 * -e.getWheelRotation());
+                Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE
+                        + 100 * -e.getWheelRotation();
             }
         } else {
             if (e.isShiftDown()) {
-                Viewport.setFovy(Viewport.getFovy() + 10 * e.getWheelRotation());
+                Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE + 10 * e.getWheelRotation();
             } else {
-                Viewport.setFovy(Viewport.getFovy() + 1 * e.getWheelRotation());
+                Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE + 1 * e.getWheelRotation();
             }
         }
         reshapeCanvas(e);
@@ -169,7 +173,7 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        //resumeCanvasAnimator(e);
+        // resumeCanvasAnimator(e);
     }
 
     @Override
@@ -250,7 +254,7 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
 
         double mouseMoveAngle = 0.25;
 
-        mouseMoveAngle *= Viewport.PERSP_VIEW_ANGLE.get() / Viewport.PERSP_VIEW_ANGLE.getDefaultValue();
+        mouseMoveAngle *= Viewport.PERSP_VIEW_ANGLE / Viewport.PERSP_VIEW_ANGLE_DEFAULT;
 
         if (pDX != 0) { // left-right
             kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
@@ -263,11 +267,11 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
         setLookAt();
     }
 
-    private void setLookAt() {
+    protected void setLookAt() {
         //
     }
 
-    private void reshapeCanvas(ComponentEvent e) {
+    protected void reshapeCanvas(ComponentEvent e) {
         if (e.getSource() instanceof GLCanvas) {
             GLCanvas canvas = (GLCanvas) e.getSource();
 
@@ -276,7 +280,7 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
         }
     }
 
-    private boolean resumeCanvasAnimator(ComponentEvent e) {
+    protected boolean resumeCanvasAnimator(ComponentEvent e) {
         if (e.getSource() instanceof GLCanvas) {
             GLCanvas canvas = (GLCanvas) e.getSource();
 
@@ -290,13 +294,13 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
         return false;
     }
 
-    private void pauseCanvasAnimator(ComponentEvent e) {
+    protected void pauseCanvasAnimator(ComponentEvent e) {
         if (e.getSource() instanceof GLCanvas) {
             ((GLCanvas) e.getSource()).getAnimator().pause();
         }
     }
 
-    private void toggleCanvasAnimator(ComponentEvent e) {
+    protected void toggleCanvasAnimator(ComponentEvent e) {
         if (!resumeCanvasAnimator(e)) {
             pauseCanvasAnimator(e);
         }

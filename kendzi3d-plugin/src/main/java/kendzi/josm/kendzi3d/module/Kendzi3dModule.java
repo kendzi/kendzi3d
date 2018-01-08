@@ -23,6 +23,8 @@ import kendzi.josm.kendzi3d.data.Kendzi3dCore;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.data.selection.SelectionSynchronizeManager;
+import kendzi.josm.kendzi3d.jogl.camera.Kendzi3dCameraMoveListener;
+import kendzi.josm.kendzi3d.jogl.camera.Kendzi3dViewport;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
 import kendzi.josm.kendzi3d.jogl.layer.RoadLayer;
@@ -106,30 +108,30 @@ public class Kendzi3dModule extends AbstractModule {
         bind(LightRenderService.class).to(LightService.class);
 
         bind(Kendzi3dCore.class).in(Singleton.class);
+        bind(EditorCore.class).to(Kendzi3dCore.class).in(Singleton.class);
+        bind(EditableObjectProvider.class).to(Kendzi3dCore.class).in(Singleton.class);
         bind(Perspective3dProvider.class).to(Kendzi3dCore.class).in(Singleton.class);
         bind(ObjectSelectionManager.class).in(Singleton.class);
+
+        bind(CameraMoveListener.class).to(Kendzi3dCameraMoveListener.class).in(Singleton.class);
         bind(SimpleMoveAnimator.class).in(Singleton.class);
         bind(Camera.class).to(SimpleMoveAnimator.class).in(Singleton.class);
 
-        bind(EditableObjectProvider.class).to(Kendzi3dCore.class).in(Singleton.class);
-        bind(Viewport.class).in(Singleton.class);
-        bind(ViewportPicker.class).to(Viewport.class).in(Singleton.class);
-
+        bind(Kendzi3dViewport.class).in(Singleton.class);
+        bind(Viewport.class).to(Kendzi3dViewport.class).in(Singleton.class);
+        bind(ViewportPicker.class).to(Kendzi3dViewport.class).in(Singleton.class);
         bind(ViewportProvider.class).to(Kendzi3dGLEventListener.class);
-
-        bind(EditorCore.class).to(Kendzi3dCore.class).in(Singleton.class);
-
     }
 
     @Provides
     @Singleton
-    SelectableGround provideSelectableGround(TextureCacheService textureCacheService,
-            TextureLibraryStorageService TextureLibraryStorageService, final Kendzi3dCore kendzi3dCore) {
+    SelectableGround provideSelectableGround(TextureCacheService texCache, TextureLibraryStorageService texStorage,
+            final Kendzi3dCore core, final Viewport viewport) {
 
         SelectableGround ground = new SelectableGround();
 
-        ground.addGroundDrawer(GroundType.SINGLE_TEXTURE, new GroundDrawer(textureCacheService, TextureLibraryStorageService));
-        ground.addGroundDrawer(GroundType.STYLED_TITLE, new StyledTitleGroundDrawer(textureCacheService, kendzi3dCore));
+        ground.addGroundDrawer(GroundType.SINGLE_TEXTURE, new GroundDrawer(texCache, texStorage, viewport));
+        ground.addGroundDrawer(GroundType.STYLED_TITLE, new StyledTitleGroundDrawer(texCache, core, viewport));
 
         return ground;
     }
@@ -210,8 +212,8 @@ public class Kendzi3dModule extends AbstractModule {
 
     @Provides
     @Singleton
-    CameraMoveListener provideCameraMoveListener(SimpleMoveAnimator simpleMoveAnimator) {
-        return new CameraMoveListener(simpleMoveAnimator);
+    Kendzi3dCameraMoveListener provideCameraMoveListener(SimpleMoveAnimator simpleMoveAnimator, Kendzi3dViewport viewport) {
+        return new Kendzi3dCameraMoveListener(simpleMoveAnimator, viewport);
     }
 
     @Provides

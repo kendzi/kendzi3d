@@ -1,23 +1,20 @@
 /*
- * This software is provided "AS IS" without a warranty of any kind.
- * You use it on your own risk and responsibility!!!
- *
- * This file is shared under BSD v3 license.
- * See readme.txt and BSD3 file for details.
- *
+ * This software is provided "AS IS" without a warranty of any kind. You use it
+ * on your own risk and responsibility!!! This file is shared under BSD v3
+ * license. See readme.txt and BSD3 file for details.
  */
 
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.texture.Texture;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-
-import com.jogamp.opengl.util.texture.Texture;
 
 public class GroundDrawer {
 
@@ -25,12 +22,15 @@ public class GroundDrawer {
 
     private final TextureLibraryStorageService textureLibraryStorageService;
 
-    public GroundDrawer(TextureCacheService textureCacheService,
-            TextureLibraryStorageService TextureLibraryStorageService) {
+    private final Viewport viewport;
+
+    public GroundDrawer(TextureCacheService textureCacheService, TextureLibraryStorageService textureLibraryStorageService,
+            Viewport viewport) {
         super();
 
         this.textureCacheService = textureCacheService;
-        this.textureLibraryStorageService = TextureLibraryStorageService;
+        this.textureLibraryStorageService = textureLibraryStorageService;
+        this.viewport = viewport;
     }
 
     public void init() {
@@ -41,8 +41,8 @@ public class GroundDrawer {
         gl.glEnable(GL2.GL_LIGHTING);
         gl.glEnable(GL2.GL_TEXTURE_2D);
 
-        TextureData td = this.textureLibraryStorageService.getTextureDefault("ground.unknown");
-        Texture texture = this.textureCacheService.getTexture(gl, td.getTex0());
+        TextureData td = textureLibraryStorageService.getTextureDefault("ground.unknown");
+        Texture texture = textureCacheService.getTexture(gl, td.getTex0());
 
         texture.enable(gl);
         texture.bind(gl);
@@ -50,7 +50,7 @@ public class GroundDrawer {
         gl.glBegin(GL2.GL_POLYGON);
         gl.glColor3f((float) 123 / 256, (float) 111 / 256, (float) 100 / 255);
 
-        double groundSize = Viewport.getZFar();
+        double groundSize = viewport.getZFar();
 
         Point3d c = cameraPosition;
 
