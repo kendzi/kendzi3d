@@ -58,9 +58,9 @@ public class ArrowEditorDrawer {
      */
     public void draw(GL2 gl, ArrowEditor ae, boolean isActiveEditor, boolean isHighlightedEditor, Viewport viewport) {
 
-        Point3d cameraPoint = viewport.getPosition();
+        ae.setViewport(viewport);
 
-        Point3d activeSpot = ae.getActiveSpot(cameraPoint);
+        Point3d activeSpot = ae.getActiveSpot();
 
         double distanceRatio = distanceRatio(ae, viewport);
 

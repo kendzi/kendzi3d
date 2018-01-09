@@ -11,6 +11,7 @@ import java.util.List;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.camera.Viewport;
 import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.EditorChangeListener;
@@ -24,6 +25,8 @@ import kendzi.math.geometry.ray.Ray3dUtil;
  * @author Tomasz Kędziora (Kendzi)
  */
 public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, ChangeAwareEditor {
+
+    private transient Viewport viewport;
 
     /**
      * Provide origin of editor. Origin point could be re-calculated before it
@@ -100,7 +103,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
 
     @Override
     public Point3d getActiveSpot() {
-        return arrowEnd();
+        return getActiveSpot(viewport.getPosition());
     }
 
     @Override
@@ -134,8 +137,13 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     }
 
     private double distanse(Point3d camera) {
-        return arrowEnd().distance(camera);
+        return arrowEnd().distance(camera) * viewport.getFovyRatio();
 
+    }
+
+    @Override
+    public void setViewport(Viewport viewport) {
+        this.viewport = viewport;
     }
 
     @Override
