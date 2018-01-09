@@ -23,7 +23,6 @@ import kendzi.josm.kendzi3d.data.Kendzi3dCore;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.data.selection.SelectionSynchronizeManager;
-import kendzi.josm.kendzi3d.jogl.camera.Kendzi3dCameraMoveListener;
 import kendzi.josm.kendzi3d.jogl.camera.Kendzi3dViewport;
 import kendzi.josm.kendzi3d.jogl.layer.FenceLayer;
 import kendzi.josm.kendzi3d.jogl.layer.NewBuildingLayer;
@@ -113,7 +112,6 @@ public class Kendzi3dModule extends AbstractModule {
         bind(Perspective3dProvider.class).to(Kendzi3dCore.class).in(Singleton.class);
         bind(ObjectSelectionManager.class).in(Singleton.class);
 
-        bind(CameraMoveListener.class).to(Kendzi3dCameraMoveListener.class).in(Singleton.class);
         bind(SimpleMoveAnimator.class).in(Singleton.class);
         bind(Camera.class).to(SimpleMoveAnimator.class).in(Singleton.class);
 
@@ -212,8 +210,8 @@ public class Kendzi3dModule extends AbstractModule {
 
     @Provides
     @Singleton
-    Kendzi3dCameraMoveListener provideCameraMoveListener(SimpleMoveAnimator simpleMoveAnimator, Kendzi3dViewport viewport) {
-        return new Kendzi3dCameraMoveListener(simpleMoveAnimator, viewport);
+    CameraMoveListener provideCameraMoveListener(SimpleMoveAnimator simpleMoveAnimator, Kendzi3dViewport viewport) {
+        return new CameraMoveListener(simpleMoveAnimator, viewport);
     }
 
     @Provides

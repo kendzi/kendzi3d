@@ -21,19 +21,20 @@ public class Viewport implements ViewportPicker {
     /**
      * View angle of camera (fovy).
      */
-    static final double PERSP_VIEW_ANGLE_DEFAULT = 45;
-    static double PERSP_VIEW_ANGLE = PERSP_VIEW_ANGLE_DEFAULT;
+    private static final double PERSP_VIEW_ANGLE_DEFAULT = 45;
+    private double perspViewAngle = PERSP_VIEW_ANGLE_DEFAULT;
 
     /**
      * The distance from the viewer to the near clipping plane (zNear).
      */
-    static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE = 1d;
+    private static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT = 1d;
+    private double perspNearClippingPlaneDistance = PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
 
     /**
      * The distance from the viewer to the far clipping plane (zFar).
      */
-    static final double PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT = 1500d;
-    static double PERSP_FAR_CLIPPING_PLANE_DISTANCE = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    private static final double PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT = 1500d;
+    private double perspFarClippingPlaneDistance = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
 
     /**
      * Width of viewport.
@@ -151,8 +152,8 @@ public class Viewport implements ViewportPicker {
         screenVertically.cross(screenHorizontally, view);
         screenVertically.normalize();
 
-        final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-        float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+        final float radians = (float) (getFovy() * Math.PI / 180f);
+        float halfHeight = (float) (Math.tan(radians / 2) * getZNear());
         float halfScaledAspectRatio = (float) (halfHeight * viewportAspectRatio());
 
         screenVertically.scale(halfHeight);
@@ -297,32 +298,99 @@ public class Viewport implements ViewportPicker {
     }
 
     /**
-     * Gets the field of view angle, in degrees, in the y direction.
+     * Gets the field of view angle, in degrees, in y direction.
      *
      * @return field of view angle
      */
     public double getFovy() {
-        return Viewport.PERSP_VIEW_ANGLE;
+        return perspViewAngle;
     }
 
     /**
-     * Gets the distance from the viewer to the near clipping plane (always
-     * positive).
+     * Gets the default field of view angle, in degrees, in y direction.
      *
-     * @return distance to the near clipping plane
+     * @return default field of view angle
+     */
+    public double getFovyDefault() {
+        return PERSP_VIEW_ANGLE_DEFAULT;
+    }
+
+    /**
+     * Sets the field of view angle, in degrees, in y direction.
+     */
+    public void setFovy(double fov) {
+        perspViewAngle = fov;
+    }
+
+    /**
+     * Resets the field of view angle, in degrees, in y direction.
+     */
+    public void resetFovy() {
+        perspViewAngle = PERSP_VIEW_ANGLE_DEFAULT;
+    }
+
+    /**
+     * Gets distance from viewer to near clipping plane (always positive).
+     *
+     * @return distance to near clipping plane
      */
     public double getZNear() {
-        return Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE;
+        return perspNearClippingPlaneDistance;
     }
 
     /**
-     * Gets the distance from the viewer to the far clipping plane (always
-     * positive).
+     * Gets default distance from viewer to near clipping plane.
      *
-     * @return distance to the far clipping plane
+     * @return default distance to near clipping plane
+     */
+    public double getZNearDefault() {
+        return PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Sets distance from viewer to near clipping plane.
+     */
+    public void setZNear(double zNear) {
+        perspNearClippingPlaneDistance = zNear;
+    }
+
+    /**
+     * Resets distance from viewer to near clipping plane.
+     */
+    public void resetZNear() {
+        perspNearClippingPlaneDistance = PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Gets distance from viewer to far clipping plane (always positive).
+     *
+     * @return distance to far clipping plane
      */
     public double getZFar() {
-        return Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE;
+        return perspFarClippingPlaneDistance;
+    }
+
+    /**
+     * Gets default distance from viewer to far clipping plane.
+     *
+     * @return default distance to far clipping plane
+     */
+    public double getZFarDefault() {
+        return PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Sets distance from viewer to far clipping plane.
+     */
+    public void setZFar(double zFar) {
+        perspFarClippingPlaneDistance = zFar;
+    }
+
+    /**
+     * Resets distance from viewer to far clipping plane.
+     */
+    public void resetZFar() {
+        perspFarClippingPlaneDistance = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
     }
 
     /**

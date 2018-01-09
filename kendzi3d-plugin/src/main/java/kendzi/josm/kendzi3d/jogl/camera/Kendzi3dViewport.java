@@ -9,9 +9,9 @@ public class Kendzi3dViewport extends Viewport {
     /**
      * View angle of camera (fovy).
      */
-    public final DoubleProperty PERSP_VIEW_ANGLE_MIN = new DoubleProperty("kendzi3d.viewport.angle.min", 5);
-    public final DoubleProperty PERSP_VIEW_ANGLE_MAX = new DoubleProperty("kendzi3d.viewport.angle.max", 110);
-    public final DoubleProperty PERSP_VIEW_ANGLE = new DoubleProperty("kendzi3d.viewport.angle", 45);
+    private final DoubleProperty perspViewAngleMin = new DoubleProperty("kendzi3d.viewport.angle.min", 5);
+    private final DoubleProperty perspViewAngleMax = new DoubleProperty("kendzi3d.viewport.angle.max", 110);
+    private final DoubleProperty perspViewAngle = new DoubleProperty("kendzi3d.viewport.angle", 45);
 
     /**
      * The distance from the viewer to the far clipping plane (zFar).
@@ -19,43 +19,57 @@ public class Kendzi3dViewport extends Viewport {
      * The precision of the depth buffer is dependent on r = zFar / zNear,
      * roughly log(2) r bits are lost in precision.
      */
-    public final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN = new DoubleProperty("kendzi3d.viewport.far.clipping.min",
-            1.5E+1d);
-    public final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX = new DoubleProperty("kendzi3d.viewport.far.clipping.max",
-            1.5E+6d);
-    public final DoubleProperty PERSP_FAR_CLIPPING_PLANE_DISTANCE = new DoubleProperty("kendzi3d.viewport.far.clipping", 1.5E+3d);
+    private final DoubleProperty perspFarClippingMin = new DoubleProperty("kendzi3d.viewport.far.clipping.min", 1.5E+1d);
+    private final DoubleProperty perspFarClippingMax = new DoubleProperty("kendzi3d.viewport.far.clipping.max", 1.5E+6d);
+    private final DoubleProperty perspFarClipping = new DoubleProperty("kendzi3d.viewport.far.clipping", 1.5E+3d);
 
     @Override
     public double getFovy() {
-        return PERSP_VIEW_ANGLE.get();
+        return perspViewAngle.get();
+    }
+
+    @Override
+    public double getFovyDefault() {
+        return perspViewAngle.getDefaultValue();
+    }
+
+    @Override
+    public void setFovy(double fov) {
+        if (fov > perspViewAngleMax.get()) {
+            fov = perspViewAngleMax.get();
+        } else if (fov < perspViewAngleMin.get()) {
+            fov = perspViewAngleMin.get();
+        }
+        perspViewAngle.put(fov);
+    }
+
+    @Override
+    public void resetFovy() {
+        perspViewAngle.put(perspViewAngle.getDefaultValue());
     }
 
     @Override
     public double getZFar() {
-        return PERSP_FAR_CLIPPING_PLANE_DISTANCE.get();
+        return perspFarClipping.get();
     }
 
-    /**
-     * Sets the field of view angle, in degrees, in the y direction.
-     */
-    public void setFovy(double fovy) {
-        if (fovy > PERSP_VIEW_ANGLE_MAX.get()) {
-            fovy = PERSP_VIEW_ANGLE_MAX.get();
-        } else if (fovy < PERSP_VIEW_ANGLE_MIN.get()) {
-            fovy = PERSP_VIEW_ANGLE_MIN.get();
-        }
-        PERSP_VIEW_ANGLE.put(fovy);
+    @Override
+    public double getZFarDefault() {
+        return perspFarClipping.getDefaultValue();
     }
 
-    /**
-     * Sets the distance from the viewer to the far clipping plane.
-     */
+    @Override
     public void setZFar(double zFar) {
-        if (zFar > PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX.get()) {
-            zFar = PERSP_FAR_CLIPPING_PLANE_DISTANCE_MAX.get();
-        } else if (zFar < PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN.get()) {
-            zFar = PERSP_FAR_CLIPPING_PLANE_DISTANCE_MIN.get();
+        if (zFar > perspFarClippingMax.get()) {
+            zFar = perspFarClippingMax.get();
+        } else if (zFar < perspFarClippingMin.get()) {
+            zFar = perspFarClippingMin.get();
         }
-        PERSP_FAR_CLIPPING_PLANE_DISTANCE.put(zFar);
+        perspFarClipping.put(zFar);
+    }
+
+    @Override
+    public void resetZFar() {
+        perspFarClipping.put(perspFarClipping.getDefaultValue());
     }
 }

@@ -28,6 +28,11 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
     private static final Logger LOG = Logger.getLogger(CameraMoveListener.class);
 
     /**
+     * Viewport
+     */
+    protected final Viewport viewport;
+
+    /**
      * The class calculating decelerating or accelerating movements in response
      * to various mouse events.
      */
@@ -37,9 +42,14 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
     int lastY;
     boolean move;
 
-    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
+    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator, Viewport viewport) {
         super();
         this.kinematicsSimpleAnimator = kinematicsSimpleAnimator;
+        this.viewport = viewport;
+    }
+
+    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
+        this(kinematicsSimpleAnimator, null);
     }
 
     @Override
@@ -54,12 +64,14 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
             if (e.getClickCount() == 2) {
                 resumeCanvasAnimator(e);
             } else {
-                if (e.isControlDown()) {
-                    Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
-                } else {
-                    Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE_DEFAULT;
+                if (viewport != null) {
+                    if (e.isControlDown()) {
+                        viewport.resetZFar();
+                    } else {
+                        viewport.resetFovy();
+                    }
+                    reshapeCanvas(e);
                 }
-                reshapeCanvas(e);
             }
         }
     }
@@ -101,22 +113,14 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isControlDown()) {
-            if (e.isShiftDown()) {
-                Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE
-                        + 1000 * -e.getWheelRotation();
+        if (viewport != null) {
+            if (e.isControlDown()) {
+                viewport.setZFar(viewport.getZFar() + (e.isShiftDown() ? 1000 : 100) * -e.getWheelRotation());
             } else {
-                Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE = Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE
-                        + 100 * -e.getWheelRotation();
+                viewport.setFovy(viewport.getFovy() + (e.isShiftDown() ? 10 : 1) * e.getWheelRotation());
             }
-        } else {
-            if (e.isShiftDown()) {
-                Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE + 10 * e.getWheelRotation();
-            } else {
-                Viewport.PERSP_VIEW_ANGLE = Viewport.PERSP_VIEW_ANGLE + 1 * e.getWheelRotation();
-            }
+            reshapeCanvas(e);
         }
-        reshapeCanvas(e);
     }
 
     @Override
@@ -254,7 +258,9 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
 
         double mouseMoveAngle = 0.25;
 
-        mouseMoveAngle *= Viewport.PERSP_VIEW_ANGLE / Viewport.PERSP_VIEW_ANGLE_DEFAULT;
+        if (viewport != null) {
+            mouseMoveAngle *= viewport.getFovy() / viewport.getFovyDefault();
+        }
 
         if (pDX != 0) { // left-right
             kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
