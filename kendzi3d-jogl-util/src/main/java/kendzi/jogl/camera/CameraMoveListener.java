@@ -259,7 +259,7 @@ public class CameraMoveListener extends MouseAdapter implements KeyListener, Com
         double mouseMoveAngle = 0.25;
 
         if (viewport != null) {
-            mouseMoveAngle *= viewport.getFovy() / viewport.getFovyDefault();
+            mouseMoveAngle *= viewport.getFovyRatio();
         }
 
         if (pDX != 0) { // left-right

@@ -316,9 +316,38 @@ public class Viewport implements ViewportPicker {
     }
 
     /**
+     * Correction factor for objects that are sized and drawn in dependence of
+     * camera distance to the object.
+     *
+     * This concerns elements of the 3d gui rendered conditionally into the
+     * viewport for user interaction and that are expected to be equal sized
+     * after projecting the 3d scene to the 2d canvas, for example mouse drag
+     * handles of selected objects:
+     *
+     * If there are two editable objects in the scene, one closer to the camera
+     * than the other, then the 3d gui elements are expected to be equal-sized
+     * regardless of which one of these objects is manipulated.
+     *
+     * Multiplying with this factor should ensure, that these fixed size 3d gui
+     * elements maintain their size, even if the viewport is zoomed, that is,
+     * even if the perspective view angle is not at its default.
+     *
+     * @return correction factor for fixed size scene elements that should
+     *         maintain size, regardless of the viewport zoom state
+     */
+    public double getFovyRatio() {
+        return getFovy() / getFovyDefault();
+    }
+
+    /**
      * Sets the field of view angle, in degrees, in y direction.
      */
     public void setFovy(double fov) {
+        if (fov < PERSP_VIEW_ANGLE_DEFAULT / 10) {
+            fov = PERSP_VIEW_ANGLE_DEFAULT / 10;
+        } else if (fov > Math.min(PERSP_VIEW_ANGLE_DEFAULT * 2, 110)) {
+            fov = Math.min(PERSP_VIEW_ANGLE_DEFAULT * 2, 110);
+        }
         perspViewAngle = fov;
     }
 
@@ -383,6 +412,11 @@ public class Viewport implements ViewportPicker {
      * Sets distance from viewer to far clipping plane.
      */
     public void setZFar(double zFar) {
+        if (zFar < Math.max(PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT / 100, 10)) {
+            zFar = Math.max(PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT / 100, 10);
+        } else if (zFar > PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT * 100) {
+            zFar = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT * 100;
+        }
         perspFarClippingPlaneDistance = zFar;
     }
 

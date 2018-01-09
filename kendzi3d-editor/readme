@@ -9,28 +9,39 @@ maven install
 
 *** How to run (outside an IDE)
 
-To run the jar you need to have correct dependencies in the classpath.  The following bash snippet will attempt
-to find the correct jars in the locations listed below.
+To run the jar you need to have correct dependencies in the classpath.
+The following bash snippet will attempt to find the correct jars in
+the locations set by the variables JARS, JOGL and WORK.
 
 #M2="$HOME/.m2/repository"       # local maven repo, uncomment if you used 'maven install' to populate it
                                  #                   in this case directories below will not be searched
-JARS="/usr/share/java"           # folder with vecmath*.jar and log4j*.jar
+JARS="/usr/share/java"           # folder with system-wide installed jars
 JOGL="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
 WORK="$HOME/workspace"           # (top-level-dir) of kendzi-*.jar snapshot builds
 
-if [[ -z "$M2" && ! -e "$JARS/aopalliance.jar" ]]
-then sudo apt-get install libaopalliance-java
-fi
-
-for DEP in javax.inject {aopalliance,guice,log4j,vecmath,kendzi-math-geometry}-[0-9] {gluegen-rt,jogl-all}-2.3 \
+for DEP in {gluegen-rt,jogl-all}-2.3 {aopalliance,atinject-jsr330-api,guava,guice,log4j-1.2,vecmath}-[0-9] \
+           kendzi-math-geometry-[0-9] \
            kendzi3d-jogl-{util,model-util,model-render,textures,textures-library-res} \
-           kendzi3d-resource-{interface,manager} \
+           kendzi3d-resource{-interface,-manager,s} \
            kendzi3d-editor
 do
    find ${M2:-"$JARS" "$JOGL" "$WORK"} -iname "${DEP}*jar" | grep -v -- "-native\|-sources" | sort | tail -1
    find ${M2:-"$JARS" "$JOGL" "$WORK"} -iname "${DEP}*native*jar"
 done \
 | tee /dev/stderr | paste -s -d ':' | xargs -I CP java -cp "CP" kendzi.kendzi3d.editor.example.ExampleMain
+
+
+If you got NoClassDefFound errors using the above, running with M2 unset,
+then some necessary jars might not have been installed system-wide.  On
+debian based systems missing jars can be checked and installed using
+
+for DEP in {aopalliance,atinject-jsr330-api,guice,log4j-1.2,vecmath}
+do
+   if [[ -z "$M2" && ! -e "$JARS/$DEP.jar" ]]
+   then echo lib${DEP/-1.2/1.2}-java
+   fi
+done \
+| tee /dev/stderr | xargs -r sudo apt-get install
 
 
 *** License
