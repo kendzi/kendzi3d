@@ -153,9 +153,9 @@
 		</dependency>
                    
         <dependency>
-		    <groupId>com.googlecode.efficient-java-matrix-library</groupId>
-		    <artifactId>ejml</artifactId>
-		    <version>0.20</version>
+		    <groupId>org.ejml</groupId>
+		    <artifactId>ejml-core</artifactId>
+		    <version>${ejml.version}</version>
 		</dependency>
 		
         <dependency>
