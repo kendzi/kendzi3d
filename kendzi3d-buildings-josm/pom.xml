@@ -11,50 +11,50 @@
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-model</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi</groupId>
 			<artifactId>kendzi-util</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-buildings</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-math</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-resource-interface</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-josm-core</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>kendzi.kendzi3d</groupId>
 			<artifactId>kendzi3d-jogl-textures-library</artifactId>
-			<version>1.0.201-SNAPSHOT</version>
+			<version>1.0.201</version>
 		</dependency>
 	</dependencies>
 
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.201-SNAPSHOT</version>
+		<version>1.0.201</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
