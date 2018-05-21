@@ -90,7 +90,7 @@
 							<Plugin-Description>Simple 3D view of osm data. It is highly experimental. It may crash! Use with caution!</Plugin-Description>
 							<Plugin-Icon>images/stock_3d-effects24.png</Plugin-Icon>
 							<Plugin-Link>https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
-							<Plugin-Mainversion>13174</Plugin-Mainversion>
+							<Plugin-Mainversion>13812</Plugin-Mainversion>
 							<Plugin-Version>${project.version}</Plugin-Version>
 							<Plugin-Requires>log4j;jogl;kendzi3d-resources</Plugin-Requires>
 							<url>${project.url}</url>
