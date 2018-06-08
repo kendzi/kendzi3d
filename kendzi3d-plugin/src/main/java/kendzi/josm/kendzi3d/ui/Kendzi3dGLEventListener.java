@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
@@ -93,14 +94,19 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     }
 
     @Override
-    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
+    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport) {
 
         modelRender.resetMaterials();
         modelRender.setupDefaultMaterial(gl);
 
-        skyBox.draw(gl, viewport2.getPosition());
+        skyBox.draw(gl, viewport.getPosition());
 
-        ground.draw(gl, viewport2.getPosition());
+        ground.draw(gl, viewport.getPosition());
+
+        // avoid display artifacts of water surface, alternative is
+        // to disable GL_DEPTH_TEST individually when flat, near ground
+        // objects like water multipolygons are drawn
+        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 
         if (modelRender.isDebugging()) {
 
@@ -110,8 +116,14 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
             // drawTextInfo(gl, simpleMoveAnimator.info());
         }
+    }
 
-        compass.drawAtLeftBottom(gl, viewport2);
+    @Override
+    protected void drawAfterEditorObjects(GL2 gl, Viewport viewport) {
+
+        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+
+        compass.drawAtLeftBottom(gl, viewport);
     }
 
     /**

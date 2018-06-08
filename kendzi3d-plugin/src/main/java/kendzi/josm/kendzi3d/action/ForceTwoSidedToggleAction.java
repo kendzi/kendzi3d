@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -19,31 +19,35 @@ import org.openstreetmap.josm.gui.MainApplication;
 import com.google.inject.Inject;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Enable/disable display texture on models toggle action.
  */
-public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertModeChangeListener {
+public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertModeChangeListener, Resumer {
 
     private static final long serialVersionUID = 1L;
 
-    private static final BooleanProperty FORCE_TWO_SIDED =
-            new BooleanProperty("kendzi3d.models.forceTwoSidedLightingForAllModels", false);
+    private static final BooleanProperty FORCE_TWO_SIDED = new BooleanProperty(
+            "kendzi3d.models.forceTwoSidedLightingForAllModels", false);
 
     private final ModelRender modelRender;
+
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor of texture toggle action.
      *
-     * @param pModelRender ModelRender
+     * @param pModelRender
+     *            ModelRender
      */
     @Inject
     public ForceTwoSidedToggleAction(ModelRender pModelRender) {
-        super(tr("Force two sided lighting"), "1306318261_debugger__24",
-                tr("Force two sided lighting to be used for each model." +
-                        "This is normally enabled on a per-model basis for some models."), null, false);
+        super(tr("Force two sided lighting"), "1306318261_debugger__24", tr("Force two sided lighting to be used for each model."
+                + "This is normally enabled on a per-model basis for some models."), null, false);
 
-        this.modelRender = pModelRender;
+        modelRender = pModelRender;
 
         MainApplication.getToolbar().register(this);
 
@@ -55,6 +59,11 @@ public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertMod
 
         ExpertToggleAction.addExpertModeChangeListener(this, true);
 
+    }
+
+    @Override
+    public void expertChanged(boolean expert) {
+        setEnabled(expert);
     }
 
     @Override
@@ -74,16 +83,12 @@ public class ForceTwoSidedToggleAction extends ToggleAction implements ExpertMod
      *            enable debug
      */
     private void setState(boolean pEnable) {
-
         modelRender.setDrawTwoSided(pEnable);
-
+        resumable.resume();
     }
 
     @Override
-    public void expertChanged(boolean expert) {
-
-        this.setEnabled(expert);
-
+    public void setResumable(Resumable r) {
+        resumable = r;
     }
-
 }

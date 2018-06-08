@@ -50,6 +50,7 @@ import kendzi.josm.kendzi3d.action.WikiTextureLoaderAction;
 import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
+import kendzi.josm.kendzi3d.ui.Resumer;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
 
 public class Kendzi3DPlugin extends NativeLibPlugin {
@@ -127,17 +128,17 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         view3dJMenu.addSeparator();
 
         view3dJMenu
-        .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+                .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                putValue("toolbar", "3dView_run");
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        putValue("toolbar", "3dView_run");
 
-                openKendzi3dWindow(injector);
+                        openKendzi3dWindow(injector);
 
-            }
+                    }
 
-        }));
+                }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -172,7 +173,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         view3dJMenu.addSeparator();
 
-        /* only serves to override a per-model setting, i.e. enables two sided lighting for each model globally */
+        /*
+         * only serves to override a per-model setting, i.e. enables two sided
+         * lighting for each model globally
+         */
         ForceTwoSidedToggleAction doubleSidedLightingToggleAction = injector.getInstance(ForceTwoSidedToggleAction.class);
         registerCheckBoxAction(doubleSidedLightingToggleAction, view3dJMenu);
 
@@ -198,7 +202,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         ShowPluginDirAction showPluginDirAction = injector.getInstance(ShowPluginDirAction.class);
         registerAction(showPluginDirAction, advanceMenu);
 
-        setEnabledAll(true);
+        batchUpdateMenuItems(true);
     }
 
     private void registerAction(JosmAction josmAction, JMenu menu) {
@@ -226,13 +230,22 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         menu.add(checkBox);
     }
 
-    private void setEnabledAll(boolean isEnabled) {
+    private void batchUpdateMenuItems(boolean isEnabled) {
         for (int i = 0; i < view3dJMenu.getItemCount(); i++) {
             JMenuItem item = view3dJMenu.getItem(i);
 
             if (item != null) {
-                item.setEnabled(isEnabled);
+                // item.setEnabled(isEnabled);
+
+                if (item.getAction() instanceof Resumer) {
+                    ((Resumer) item.getAction()).setResumable(() -> {
+                        if (singleWindow != null) {
+                            singleWindow.resumeAnimator();
+                        }
+                    });
+                }
             }
+
         }
     }
 

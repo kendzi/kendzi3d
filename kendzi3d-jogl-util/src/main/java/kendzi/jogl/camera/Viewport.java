@@ -1,12 +1,13 @@
 package kendzi.jogl.camera;
 
+import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
@@ -20,17 +21,20 @@ public class Viewport implements ViewportPicker {
     /**
      * View angle of camera (fovy).
      */
-    public static final double PERSP_VIEW_ANGLE = 45;
+    private static final double PERSP_VIEW_ANGLE_DEFAULT = 45;
+    private double perspViewAngle = PERSP_VIEW_ANGLE_DEFAULT;
 
     /**
      * The distance from the viewer to the near clipping plane (zNear).
      */
-    public static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE = 1d;
+    private static final double PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT = 1d;
+    private double perspNearClippingPlaneDistance = PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
 
     /**
      * The distance from the viewer to the far clipping plane (zFar).
      */
-    public static final double PERSP_FAR_CLIPPING_PLANE_DISTANCE = 1500d;
+    private static final double PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT = 1500d;
+    private double perspFarClippingPlaneDistance = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
 
     /**
      * Width of viewport.
@@ -148,8 +152,8 @@ public class Viewport implements ViewportPicker {
         screenVertically.cross(screenHorizontally, view);
         screenVertically.normalize();
 
-        final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
-        float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
+        final float radians = (float) (getFovy() * Math.PI / 180f);
+        float halfHeight = (float) (Math.tan(radians / 2) * getZNear());
         float halfScaledAspectRatio = (float) (halfHeight * viewportAspectRatio());
 
         screenVertically.scale(halfHeight);
@@ -175,6 +179,7 @@ public class Viewport implements ViewportPicker {
      * @return ray in 3d space from camera location and in direction of given
      *         screen coordinates
      */
+    @Override
     public Ray3d picking(float screenX, float screenY) {
 
         double viewportWidth = width;
@@ -293,32 +298,133 @@ public class Viewport implements ViewportPicker {
     }
 
     /**
-     * Gets the field of view angle, in degrees, in the y direction.
+     * Gets the field of view angle, in degrees, in y direction.
      *
      * @return field of view angle
      */
     public double getFovy() {
-        return Viewport.PERSP_VIEW_ANGLE;
+        return perspViewAngle;
     }
 
     /**
-     * Gets the distance from the viewer to the near clipping plane (always
-     * positive).
+     * Gets the default field of view angle, in degrees, in y direction.
      *
-     * @return distance to the near clipping plane
+     * @return default field of view angle
+     */
+    public double getFovyDefault() {
+        return PERSP_VIEW_ANGLE_DEFAULT;
+    }
+
+    /**
+     * Correction factor for objects that are sized and drawn in dependence of
+     * camera distance to the object.
+     *
+     * This concerns elements of the 3d gui rendered conditionally into the
+     * viewport for user interaction and that are expected to be equal sized
+     * after projecting the 3d scene to the 2d canvas, for example mouse drag
+     * handles of selected objects:
+     *
+     * If there are two editable objects in the scene, one closer to the camera
+     * than the other, then the 3d gui elements are expected to be equal-sized
+     * regardless of which one of these objects is manipulated.
+     *
+     * Multiplying with this factor should ensure, that these fixed size 3d gui
+     * elements maintain their size, even if the viewport is zoomed, that is,
+     * even if the perspective view angle is not at its default.
+     *
+     * @return correction factor for fixed size scene elements that should
+     *         maintain size, regardless of the viewport zoom state
+     */
+    public double getFovyRatio() {
+        return getFovy() / getFovyDefault();
+    }
+
+    /**
+     * Sets the field of view angle, in degrees, in y direction.
+     */
+    public void setFovy(double fov) {
+        if (fov < PERSP_VIEW_ANGLE_DEFAULT / 10) {
+            fov = PERSP_VIEW_ANGLE_DEFAULT / 10;
+        } else if (fov > Math.min(PERSP_VIEW_ANGLE_DEFAULT * 2, 110)) {
+            fov = Math.min(PERSP_VIEW_ANGLE_DEFAULT * 2, 110);
+        }
+        perspViewAngle = fov;
+    }
+
+    /**
+     * Resets the field of view angle, in degrees, in y direction.
+     */
+    public void resetFovy() {
+        perspViewAngle = PERSP_VIEW_ANGLE_DEFAULT;
+    }
+
+    /**
+     * Gets distance from viewer to near clipping plane (always positive).
+     *
+     * @return distance to near clipping plane
      */
     public double getZNear() {
-        return Viewport.PERSP_NEAR_CLIPPING_PLANE_DISTANCE;
+        return perspNearClippingPlaneDistance;
     }
 
     /**
-     * Gets the distance from the viewer to the far clipping plane (always
-     * positive).
+     * Gets default distance from viewer to near clipping plane.
      *
-     * @return distance to the far clipping plane
+     * @return default distance to near clipping plane
+     */
+    public double getZNearDefault() {
+        return PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Sets distance from viewer to near clipping plane.
+     */
+    public void setZNear(double zNear) {
+        perspNearClippingPlaneDistance = zNear;
+    }
+
+    /**
+     * Resets distance from viewer to near clipping plane.
+     */
+    public void resetZNear() {
+        perspNearClippingPlaneDistance = PERSP_NEAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Gets distance from viewer to far clipping plane (always positive).
+     *
+     * @return distance to far clipping plane
      */
     public double getZFar() {
-        return Viewport.PERSP_FAR_CLIPPING_PLANE_DISTANCE;
+        return perspFarClippingPlaneDistance;
+    }
+
+    /**
+     * Gets default distance from viewer to far clipping plane.
+     *
+     * @return default distance to far clipping plane
+     */
+    public double getZFarDefault() {
+        return PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
+    }
+
+    /**
+     * Sets distance from viewer to far clipping plane.
+     */
+    public void setZFar(double zFar) {
+        if (zFar < Math.max(PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT / 100, 10)) {
+            zFar = Math.max(PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT / 100, 10);
+        } else if (zFar > PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT * 100) {
+            zFar = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT * 100;
+        }
+        perspFarClippingPlaneDistance = zFar;
+    }
+
+    /**
+     * Resets distance from viewer to far clipping plane.
+     */
+    public void resetZFar() {
+        perspFarClippingPlaneDistance = PERSP_FAR_CLIPPING_PLANE_DISTANCE_DEFAULT;
     }
 
     /**

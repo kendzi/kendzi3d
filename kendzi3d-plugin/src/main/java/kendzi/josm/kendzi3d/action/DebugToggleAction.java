@@ -6,17 +6,18 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import com.google.inject.Inject;
 
 import kendzi.jogl.model.render.ModelRender;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Debug toggle action.
@@ -24,7 +25,7 @@ import kendzi.jogl.model.render.ModelRender;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class DebugToggleAction extends ToggleAction {
+public class DebugToggleAction extends ToggleAction implements Resumer {
 
     /**
      *
@@ -34,12 +35,15 @@ public class DebugToggleAction extends ToggleAction {
     /**
      * Debug view property key.
      */
-    public final static String KENDZI_3D_DEBUG_VIEW = "kendzi3d.debug.view";
+    public final BooleanProperty KENDZI_3D_DEBUG_VIEW = new BooleanProperty("kendzi3d.debug.view", false);
 
     /**
      * Model render.
      */
     private ModelRender modelRender;
+
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor of debug toggle action.
@@ -48,31 +52,24 @@ public class DebugToggleAction extends ToggleAction {
      *            model render
      */
     @Inject
-    public DebugToggleAction(ModelRender pModelRender) {
+    public DebugToggleAction(ModelRender modelRender) {
         super(tr("Debug View"), "1306318261_debugger__24", tr("Enable/disable display debug information"), null, false);
-
-        modelRender = pModelRender;
+        this.modelRender = modelRender;
 
         MainApplication.getToolbar().register(this);
-
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_DEBUG_VIEW, false);
-
-        setSelected(selected);
+        setSelected(KENDZI_3D_DEBUG_VIEW.get());
 
         notifySelectedState();
-
-        setState(selected);
+        setState(isSelected());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
-        boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_DEBUG_VIEW, selected);
+        KENDZI_3D_DEBUG_VIEW.put(isSelected());
+
         notifySelectedState();
-
-        setState(selected);
-
+        setState(isSelected());
     }
 
     /**
@@ -80,11 +77,14 @@ public class DebugToggleAction extends ToggleAction {
      *            enable debug
      */
     private void setState(boolean pEnable) {
-
         modelRender.setDebugging(pEnable);
         modelRender.setDrawEdges(pEnable);
         modelRender.setDrawNormals(pEnable);
-
+        resumable.resume();
     }
 
+    @Override
+    public void setResumable(Resumable r) {
+        resumable = r;
+    }
 }

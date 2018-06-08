@@ -1,5 +1,10 @@
 package kendzi.josm.kendzi3d.data.producer;
 
+import java.util.Collection;
+
+import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
@@ -8,48 +13,49 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
+import kendzi.josm.kendzi3d.data.event.SelectionDataEvent;
 import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 
-public class JosmDataEventSource implements DataSetListenerAdapter.Listener {
+public class JosmDataEventSource extends DataSetListenerAdapter implements SelectionChangedListener {
 
-    private final DataEventListener queue;
+    private final SelectionChangedListener selectionChangedListener;
 
-    private final DataConsumersMonitor dataConsumerMonitor;
+    public JosmDataEventSource(DataEventListener dataEventListener) {
+        super(e -> process(e, dataEventListener));
+        selectionChangedListener = e -> process(e, dataEventListener);
 
-    public JosmDataEventSource(DataEventListener queue, DataConsumersMonitor dataConsumerMonitor) {
-        super();
-        this.queue = queue;
-        this.dataConsumerMonitor = dataConsumerMonitor;
-    }
-
-    public void registerJosmEventSource() {
-        DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this), FireMode.IMMEDIATELY);
+        registerJosmEventSource();
     }
 
     @Override
-    public void processDatasetEvent(AbstractDatasetChangedEvent pEvent) {
-
-        if (!dataConsumerMonitor.isActiveConsumer()) {
-            // no consumer, no open window, no data processing
-            return;
-        }
-
-        if (MainApplication.getMap() == null) {
-            // No map data, exit.
-            return;
-        }
-
-        if (isDataChangeEvent(pEvent)) {
-            queue.add(new NewDataEvent());
-            return;
-        }
-
-        queue.add(new UpdateDataEvent());
+    public void selectionChanged(Collection<? extends OsmPrimitive> primitives) {
+        selectionChangedListener.selectionChanged(primitives);
     }
 
-    private boolean isDataChangeEvent(AbstractDatasetChangedEvent event) {
-        // XXX
-        return event instanceof DataChangedEvent;
+    public void registerJosmEventSource() {
+        DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IMMEDIATELY);
+        DataSet.addSelectionListener(this);
     }
 
+    public void deregisterJosmEventSource() {
+        DatasetEventManager.getInstance().removeDatasetListener(this);
+        DataSet.removeSelectionListener(this);
+    }
+
+    public static void process(AbstractDatasetChangedEvent e, DataEventListener l) {
+
+        if (MainApplication.getMap() != null) {
+
+            if (e instanceof DataChangedEvent) {
+                l.add(new NewDataEvent());
+
+            } else {
+                l.add(new UpdateDataEvent());
+            }
+        }
+    }
+
+    public static void process(Collection<? extends OsmPrimitive> e, DataEventListener l) {
+        l.add(new SelectionDataEvent(e));
+    }
 }

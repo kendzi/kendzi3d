@@ -28,6 +28,7 @@ import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 
+import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
@@ -81,8 +82,9 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
      * @param perspective3dProvider
      *            provider for current perspective
      */
-    public StyledTitleGroundDrawer(TextureCacheService textureCacheService, Perspective3dProvider perspective3dProvider) {
-        super(textureCacheService, null);
+    public StyledTitleGroundDrawer(TextureCacheService textureCacheService, Perspective3dProvider perspective3dProvider,
+            Viewport viewport) {
+        super(textureCacheService, null, viewport);
         this.perspective3dProvider = perspective3dProvider;
     }
 

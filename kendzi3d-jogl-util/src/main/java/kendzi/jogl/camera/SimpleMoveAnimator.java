@@ -137,7 +137,7 @@ public class SimpleMoveAnimator implements Camera {
         boolean active;
 
         boolean isActive(double time) {
-            return active && (time - last < SPEED_ACTIVE_TIMEOUT);
+            return active && time - last < SPEED_ACTIVE_TIMEOUT;
         }
     }
 
@@ -155,6 +155,14 @@ public class SimpleMoveAnimator implements Camera {
      * Last time.
      */
     private double lastTime = System.currentTimeMillis() / 1000d;
+
+    /**
+     * Continue reporting a parameter change for this many frames, after
+     * animation parameters stopped changing. This is needed to update back
+     * buffer(s).
+     */
+    private final byte additionalFrames = 4;
+    private byte additionalFrameCounter = additionalFrames;
 
     /**
      * Keys pressed.
@@ -186,7 +194,12 @@ public class SimpleMoveAnimator implements Camera {
      */
     private final DecimalFormat df = new DecimalFormat("0.##"); // 2 dp
 
-    public void updateState() {
+    /**
+     * Updates the state of the camera.
+     * 
+     * @return true, if the state of the camera was changed, otherwise false
+     */
+    public boolean updateState() {
         double time = System.currentTimeMillis() / 1000d;
         double dt = time - lastTime;
         lastTime = time;
@@ -212,6 +225,20 @@ public class SimpleMoveAnimator implements Camera {
         dOmega.scale(dt);
 
         angle.add(dOmega);
+
+        // need some more frames for back buffer and light source correction lag
+        boolean ret = !dx.equals(new Vector3d()) || !dOmega.equals(new Vector3d());
+
+        if (!ret) {
+            if (additionalFrameCounter > 0) {
+                additionalFrameCounter--;
+                ret = !ret;
+            }
+        } else {
+            resetAdditionalFrameCounter();
+        }
+
+        return ret;
     }
 
     /**
@@ -417,7 +444,6 @@ public class SimpleMoveAnimator implements Camera {
         // FIXME use speeds
         angle.y += h;
         angle.z += v;
-
     }
 
     public void rotateLeft(boolean start) {
@@ -476,7 +502,7 @@ public class SimpleMoveAnimator implements Camera {
                 + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
                 + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
 
-        + "]";
+                + "]";
     }
 
     String format(Tuple3d tuple) {
@@ -519,4 +545,11 @@ public class SimpleMoveAnimator implements Camera {
         point.z = pCamPosZ;
     }
 
+    public void resetAdditionalFrameCounter() {
+        additionalFrameCounter = additionalFrames;
+    }
+
+    public void resetLastTime() {
+        lastTime = (System.currentTimeMillis() - 100) / 1000d;
+    }
 }

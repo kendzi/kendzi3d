@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -20,6 +20,7 @@ import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
+import kendzi.josm.kendzi3d.ui.Resumer;
 
 /**
  * Move camera action.
@@ -27,7 +28,7 @@ import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
  * @author Tomasz Kędziora (Kendzi)
  *
  */
-public class MoveCameraAction extends JosmAction {
+public class MoveCameraAction extends JosmAction implements Resumer {
 
     /**
      *
@@ -39,6 +40,9 @@ public class MoveCameraAction extends JosmAction {
 
     @Inject
     private SimpleMoveAnimator simpleMoveAnimator;
+
+    private Resumable resumable = () -> {
+    };
 
     /**
      * Constructor.
@@ -58,9 +62,12 @@ public class MoveCameraAction extends JosmAction {
         double x = perspective.calcX(mapCenter.getX());
         double y = perspective.calcY(mapCenter.getY());
 
-        simpleMoveAnimator.getPoint().x = x;
-        simpleMoveAnimator.getPoint().y = Camera.CAM_HEIGHT;
-        simpleMoveAnimator.getPoint().z = -y;
+        simpleMoveAnimator.setPoint(x, Camera.CAM_HEIGHT, -y);
+        resumable.resume();
     }
 
+    @Override
+    public void setResumable(Resumable r) {
+        resumable = r;
+    }
 }

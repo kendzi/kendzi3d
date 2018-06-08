@@ -2,9 +2,10 @@ package kendzi.kendzi3d.editor.drawer;
 
 import java.awt.Color;
 
+import javax.vecmath.Point3d;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import javax.vecmath.Point3d;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
@@ -57,9 +58,9 @@ public class ArrowEditorDrawer {
      */
     public void draw(GL2 gl, ArrowEditor ae, boolean isActiveEditor, boolean isHighlightedEditor, Viewport viewport) {
 
-        Point3d cameraPoint = viewport.getPosition();
+        ae.setViewport(viewport);
 
-        Point3d activeSpot = ae.getActiveSpot(cameraPoint);
+        Point3d activeSpot = ae.getActiveSpot();
 
         double distanceRatio = distanceRatio(ae, viewport);
 
@@ -81,7 +82,7 @@ public class ArrowEditorDrawer {
         Point3d point = ae.getEditorOrigin();
         Point3d cameraPoint = viewport.getPosition();
 
-        return cameraPoint.distance(point) * 480d / viewport.getHeight();
+        return cameraPoint.distance(point) * 480d / viewport.getHeight() * viewport.getFovyRatio();
     }
 
     private void drawMeasure(GL2 gl, ArrowEditor ae, Viewport viewport, double distanceRatio) {

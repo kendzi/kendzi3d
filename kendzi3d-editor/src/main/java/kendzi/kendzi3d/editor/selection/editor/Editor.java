@@ -7,6 +7,8 @@ package kendzi.kendzi3d.editor.selection.editor;
 
 import javax.vecmath.Point3d;
 
+import kendzi.jogl.camera.Viewport;
+
 /**
  * Interface for editable features.
  *
@@ -26,7 +28,7 @@ public interface Editor {
     /**
      * Gets center location of editor active zone. Location of active spot may
      * depends on distance from camera.
-     * 
+     *
      * @param camera
      *            camera location
      *
@@ -40,4 +42,6 @@ public interface Editor {
      * @return editor active zone radius
      */
     public double getEditorRadius();
+
+    public void setViewport(Viewport viewport);
 }

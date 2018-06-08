@@ -10,31 +10,21 @@ maven install
 *** How to run (outside an IDE)
 
 To run the jar you need to have correct dependencies in the classpath.  The following bash snippet will attempt
-to find the correct jars in the locations listed below and put them into classpath variable CP.
+to find the correct jars in the locations listed below.
 
-#M2="$HOME/.m2/repository"           # local maven repo, uncomment if you used 'maven install' to populate it
-                                     #                   in this case directories below will not be searched
-JAR_DIR="/usr/share/java"            # folder with vecmath*.jar and log4j*.jar
-JOGL_DIR="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
-KENDZI_PROJ="$HOME/workspace"        # (top-level-dir) of kendzi-*.jar snapshot builds
+#M2="$HOME/.m2/repository"       # local maven repo, uncomment if you used 'maven install' to populate it
+                                 #                   in this case directories below will not be searched
+JARS="/usr/share/java"           # folder with vecmath*.jar and log4j*.jar
+JOGL="$HOME/.josm/plugins/jogl"  # folder with jogl-all*.jar and gluegen-rt*.jar
+WORK="$HOME/workspace"           # (top-level-dir) of kendzi-*.jar snapshot builds
 
-JOGL_VER=2.3
-for DEP in vecmath log4j-[0-9] {jogl-all,gluegen-rt}-${JOGL_VER} kendzi{-math-geometry-[0-9],3d-jogl-{util,example}}
+for DEP in {log4j,vecmath,kendzi-math-geometry}-[0-9] {gluegen-rt,jogl-all}-2.3 \
+           kendzi3d-jogl-{util,example}
 do
-   find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${DEP}*jar" \
-      -not -iname "*native*" -not -iname "*sources*" | sort | tail -1 | \
-   while read JAR
-   do
-      echo $JAR
-      JAR="${JAR##*/}"
-      find ${M2:-"$JAR_DIR" "$JOGL_DIR" "$KENDZI_PROJ"} -iname "${JAR//.jar/*native*jar}"
-   done
+   find ${M2:-"$JARS" "$JOGL" "$WORK"} -iname "${DEP}*jar" | grep -v -- "-native\|-sources" | sort | tail -1
+   find ${M2:-"$JARS" "$JOGL" "$WORK"} -iname "${DEP}*native*jar"
 done \
-| sort | tee /dev/stderr | paste -s -d ':' | \
-while read CP
-do
-   java -cp "$CP" kendzi.jogl.ui.BaseJoglFrame
-done
+| tee /dev/stderr | paste -s -d ':' | xargs -I CP java -cp "CP" kendzi.jogl.ui.BaseJoglFrame
 
 
 *** License

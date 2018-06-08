@@ -2,12 +2,13 @@ package kendzi.josm.kendzi3d.jogl.compas;
 
 import java.awt.Color;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
@@ -84,11 +85,21 @@ public class CompassDrawer {
 
         Vector3d vector = ray3d.getVector();
         vector.normalize();
-        vector.scale(1.5);
+        vector.scale(3);
 
         point.add(vector);
 
-        draw(gl, point);
+        Ray3d ray3d2 = viewport.picking(distance, viewport.getHeight() - distance / 2);
+
+        Point3d point2 = ray3d2.getPoint();
+
+        Vector3d vector2 = ray3d2.getVector();
+        vector2.normalize();
+        vector2.scale(3);
+
+        point2.add(vector2);
+
+        draw(gl, point, point.distance(point2));
     }
 
     /**
@@ -100,20 +111,18 @@ public class CompassDrawer {
      *            location
      *
      */
-    public void draw(GL2 gl, Point3d point) {
+    public void draw(GL2 gl, Point3d point, double lenght) {
 
         gl.glPushMatrix();
         gl.glDisable(GLLightingFunc.GL_LIGHTING);
 
         gl.glTranslated(point.x, point.y, point.z);
 
-        double camDistanceRatio = 0.07d;
         int section = 8;
 
-        double lenght = 2d * camDistanceRatio;
-        double arrowLenght = 0.7d * camDistanceRatio;
-        double baseRadius = 0.05d * camDistanceRatio;
-        double arrowRadius = 0.2d * camDistanceRatio;
+        double arrowLenght = lenght / 3;
+        double arrowRadius = lenght / 8;
+        double baseRadius = arrowRadius / 4;
 
         gl.glColor3fv(Y_AXIS_COLOR_ARRAY, 0);
         ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);

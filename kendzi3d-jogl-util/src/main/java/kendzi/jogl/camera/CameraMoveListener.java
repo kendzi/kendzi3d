@@ -6,29 +6,98 @@
 
 package kendzi.jogl.camera;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
-public class CameraMoveListener implements KeyListener, MouseMotionListener, MouseListener {
+import com.jogamp.opengl.awt.GLCanvas;
 
-    /** Log. */
-    private static final Logger log = Logger.getLogger(CameraMoveListener.class);
+public class CameraMoveListener extends MouseAdapter implements KeyListener, ComponentListener {
 
-    private SimpleMoveAnimator kinematicsSimpleAnimator;
+    /**
+     * Log
+     */
+    private static final Logger LOG = Logger.getLogger(CameraMoveListener.class);
 
-    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
+    /**
+     * Viewport
+     */
+    protected final Viewport viewport;
+
+    /**
+     * The class calculating decelerating or accelerating movements in response
+     * to various mouse events.
+     */
+    protected SimpleMoveAnimator kinematicsSimpleAnimator;
+
+    int lastX;
+    int lastY;
+    boolean move;
+
+    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator, Viewport viewport) {
         super();
         this.kinematicsSimpleAnimator = kinematicsSimpleAnimator;
+        this.viewport = viewport;
+    }
+
+    public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
+        this(kinematicsSimpleAnimator, null);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //
+
+        if (e.isConsumed()) {
+            resumeCanvasAnimator(e);
+            return;
+        }
+
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            if (e.getClickCount() == 2) {
+                resumeCanvasAnimator(e);
+            } else {
+                if (viewport != null) {
+                    if (e.isControlDown()) {
+                        viewport.resetZFar();
+                    } else {
+                        viewport.resetFovy();
+                    }
+                    reshapeCanvas(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+        if (e.isConsumed()) {
+            resumeCanvasAnimator(e);
+            return;
+        }
+
+        lastX = e.getX();
+        lastY = e.getY();
+        move = true;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+        if (e.isConsumed()) {
+            resumeCanvasAnimator(e);
+            return;
+        }
+
+        move = false;
     }
 
     @Override
@@ -36,63 +105,32 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
         //
     }
 
-    int lastX;
-    int lastY;
-    boolean move;
-    private boolean isRunning = true;
-
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-        lastX = e.getX();
-        lastY = e.getY();
-        move = true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-        move = false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.MouseAdapter#mouseExited(java.awt.event.MouseEvent)
-     */
     @Override
     public void mouseExited(MouseEvent e) {
 
         move = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.MouseAdapter#mouseMoved(java.awt.event.MouseEvent)
-     */
     @Override
-    public void mouseMoved(MouseEvent e) {
-        //
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        if (viewport != null) {
+            if (e.isControlDown()) {
+                viewport.setZFar(viewport.getZFar() + (e.isShiftDown() ? 1000 : 100) * -e.getWheelRotation());
+            } else {
+                viewport.setFovy(viewport.getFovy() + (e.isShiftDown() ? 10 : 1) * e.getWheelRotation());
+            }
+            reshapeCanvas(e);
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.MouseAdapter#mouseDragged(java.awt.event.MouseEvent)
-     */
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (log.isTraceEnabled()) {
-            log.trace("mouseDragged");
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("mouseDragged");
         }
 
         if (e.isConsumed()) {
+            resumeCanvasAnimator(e);
             return;
         }
 
@@ -100,38 +138,51 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
         lastX = e.getX();
         lastY = e.getY();
 
+        resumeCanvasAnimator(e);
     }
 
     @Override
-    public void keyPressed(KeyEvent pEvent) {
-        boolean start = true;
+    public void mouseMoved(MouseEvent e) {
 
-        if (isRunning) {
-
-            moveAction(pEvent, start);
+        if (e.isConsumed()) {
+            resumeCanvasAnimator(e);
+            return;
         }
     }
 
     @Override
     public void keyTyped(KeyEvent pEvent) {
-        boolean start = true;
+        //
+    }
 
-        if (isRunning) {
-
-            moveAction(pEvent, start);
-        }
-
+    @Override
+    public void keyPressed(KeyEvent pEvent) {
+        moveAction(pEvent, true);
     }
 
     @Override
     public void keyReleased(KeyEvent pEvent) {
-        boolean start = false;
+        moveAction(pEvent, false);
+    }
 
-        if (isRunning) {
+    @Override
+    public void componentShown(ComponentEvent e) {
+        resumeCanvasAnimator(e);
+    }
 
-            moveAction(pEvent, start);
-        }
+    @Override
+    public void componentResized(ComponentEvent e) {
+        resumeCanvasAnimator(e);
+    }
 
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        // resumeCanvasAnimator(e);
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        pauseCanvasAnimator(e);
     }
 
     /**
@@ -191,6 +242,8 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
             kinematicsSimpleAnimator.moveDown(start);
 
         }
+
+        resumeCanvasAnimator(pEvent);
     }
 
     /**
@@ -205,19 +258,57 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
         double mouseMoveAngle = 0.25;
 
-        if (pDX != 0) { // left
+        if (viewport != null) {
+            mouseMoveAngle *= viewport.getFovyRatio();
+        }
+
+        if (pDX != 0) { // left-right
             kinematicsSimpleAnimator.rotateHorizontally(Math.toRadians(-pDX * mouseMoveAngle));
         }
 
-        if (pDY != 0) { // left
+        if (pDY != 0) { // up-down
             kinematicsSimpleAnimator.rotateVertically(Math.toRadians(-pDY * mouseMoveAngle));
         }
 
         setLookAt();
     }
 
-    private void setLookAt() {
+    protected void setLookAt() {
         //
     }
 
+    protected void reshapeCanvas(ComponentEvent e) {
+        if (e.getSource() instanceof GLCanvas) {
+            GLCanvas canvas = (GLCanvas) e.getSource();
+
+            canvas.reshape(canvas.getX(), canvas.getY(), canvas.getWidth(), canvas.getHeight());
+            resumeCanvasAnimator(e);
+        }
+    }
+
+    protected boolean resumeCanvasAnimator(ComponentEvent e) {
+        if (e.getSource() instanceof GLCanvas) {
+            GLCanvas canvas = (GLCanvas) e.getSource();
+
+            kinematicsSimpleAnimator.resetAdditionalFrameCounter();
+            if (canvas.getAnimator().isPaused()) {
+                kinematicsSimpleAnimator.resetLastTime();
+                canvas.getAnimator().resume();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void pauseCanvasAnimator(ComponentEvent e) {
+        if (e.getSource() instanceof GLCanvas) {
+            ((GLCanvas) e.getSource()).getAnimator().pause();
+        }
+    }
+
+    protected void toggleCanvasAnimator(ComponentEvent e) {
+        if (!resumeCanvasAnimator(e)) {
+            pauseCanvasAnimator(e);
+        }
+    }
 }
