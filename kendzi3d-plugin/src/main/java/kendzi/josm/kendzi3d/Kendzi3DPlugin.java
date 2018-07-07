@@ -84,7 +84,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
             e.printStackTrace();
         }
 
-        Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDir()));
+        Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDirs().getUserDataDirectory(false).getPath()));
 
         refreshMenu(injector);
 
@@ -101,12 +101,11 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      * @return if file exist
      */
     public boolean isFileExis(String pFileName) {
-        String pluginDirName = getPluginDir();
-        File pluginDir = new File(pluginDirName);
+        File pluginDir = getPluginDirs().getUserDataDirectory(false);
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
         }
-        return new File(pluginDirName, pFileName).exists();
+        return new File(pluginDir, pFileName).exists();
     }
 
     /**

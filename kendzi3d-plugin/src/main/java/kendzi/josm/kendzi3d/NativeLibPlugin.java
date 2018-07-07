@@ -92,14 +92,12 @@ public abstract class NativeLibPlugin extends Plugin {
         return system;
     }
 
-    @Override
     public void copy(String from, String to) throws FileNotFoundException, IOException {
         try {
             System.out.println("copying file from jar: " + from + " to: " + to);
             makeDirs(to);
 
-            String pluginDirName = getPluginDir();
-            File pluginDir = new File(pluginDirName);
+            File pluginDir = getPluginDirs().getUserDataDirectory(false);
             if (!pluginDir.exists()) {
                 pluginDir.mkdirs();
             }
@@ -116,7 +114,7 @@ public abstract class NativeLibPlugin extends Plugin {
                 throw new Exception("Can't open stream to resource: " + fromUrl, e);
             }
 
-            FileOutputStream out = new FileOutputStream(new File(pluginDirName, to));
+            FileOutputStream out = new FileOutputStream(new File(pluginDir, to));
 
             byte[] buffer = new byte[8192];
             long l = 0;
@@ -148,12 +146,11 @@ public abstract class NativeLibPlugin extends Plugin {
      */
     private void makeDirs(String pFileName) {
 
-        String pluginDirName = getPluginDir();
-        File pluginDir = new File(pluginDirName);
+        File pluginDir = getPluginDirs().getUserDataDirectory(false);
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
         }
-        File dir = new File(pluginDirName, pFileName).getParentFile();
+        File dir = new File(pluginDir, pFileName).getParentFile();
         if (!dir.exists()) {
             System.out.println("Dir don't exist. Creatin new dir: " + dir.getAbsolutePath());
             dir.mkdirs();
