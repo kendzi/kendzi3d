@@ -108,6 +108,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         return new File(pluginDir, pFileName).exists();
     }
 
+    private String getPluginDir() {		 
+  		return getPluginDirs().getUserDataDirectory(false).getPath();
+  	}
+    
     /**
      * Refreshing menu.
      *

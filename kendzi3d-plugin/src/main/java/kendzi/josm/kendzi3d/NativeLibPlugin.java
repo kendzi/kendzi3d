@@ -50,9 +50,6 @@ public abstract class NativeLibPlugin extends Plugin {
      *             ups
      */
     protected void loadLibrary() throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-
-        // copy("/log4j.properties", "log4j.properties");
-
         log.info("starting for os: " + getOsAndArch());
     }
 
@@ -90,71 +87,6 @@ public abstract class NativeLibPlugin extends Plugin {
 
         system = os + "-" + arch;
         return system;
-    }
-
-    public void copy(String from, String to) throws FileNotFoundException, IOException {
-        try {
-            System.out.println("copying file from jar: " + from + " to: " + to);
-            makeDirs(to);
-
-            File pluginDir = getPluginDirs().getUserDataDirectory(false);
-            if (!pluginDir.exists()) {
-                pluginDir.mkdirs();
-            }
-
-            URL fromUrl = getResourceUrl(from);
-            if (fromUrl == null) {
-                throw new Exception("Can't get url for from location: " + from);
-            }
-
-            InputStream in = null;
-            try {
-                in = fromUrl.openStream();
-            } catch (IOException e) {
-                throw new Exception("Can't open stream to resource: " + fromUrl, e);
-            }
-
-            FileOutputStream out = new FileOutputStream(new File(pluginDir, to));
-
-            byte[] buffer = new byte[8192];
-            long l = 0;
-            for (int len = in.read(buffer); len > 0; len = in.read(buffer)) {
-                out.write(buffer, 0, len);
-                l = l + len;
-            }
-            in.close();
-            out.close();
-
-            if (log.isInfoEnabled()) {
-                log.info("end of copying bytes: " + l + " from file: " + from + " at url: " + fromUrl);
-            }
-
-        } catch (java.lang.NullPointerException e) {
-            // for debugging and testing I don't care.
-            log.error(e, e);
-        } catch (Exception e) {
-            // for debugging and testing I don't care.
-            log.error(e, e);
-        }
-    }
-
-    /**
-     * Make all sub directories.
-     *
-     * @param pFileName
-     *            file which require directory
-     */
-    private void makeDirs(String pFileName) {
-
-        File pluginDir = getPluginDirs().getUserDataDirectory(false);
-        if (!pluginDir.exists()) {
-            pluginDir.mkdirs();
-        }
-        File dir = new File(pluginDir, pFileName).getParentFile();
-        if (!dir.exists()) {
-            System.out.println("Dir don't exist. Creatin new dir: " + dir.getAbsolutePath());
-            dir.mkdirs();
-        }
     }
 
     /**
