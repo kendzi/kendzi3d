@@ -34,7 +34,7 @@
 	<parent>
 		<groupId>kendzi.kendzi3d</groupId>
 		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.204-SNAPSHOT</version>
+		<version>1.0.204</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>
