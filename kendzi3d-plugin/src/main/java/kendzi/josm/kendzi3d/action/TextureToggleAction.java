@@ -10,9 +10,9 @@ import static org.openstreetmap.josm.tools.I18n.*;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import com.google.inject.Inject;
 
@@ -42,7 +42,7 @@ public class TextureToggleAction extends ToggleAction {
 
         MainApplication.getToolbar().register(this);
 
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_MODELS_TEXTURED, true);
+        boolean selected = Config.getPref().getBoolean(KENDZI_3D_MODELS_TEXTURED, true);
 
         setSelected(selected);
 
@@ -56,7 +56,7 @@ public class TextureToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_MODELS_TEXTURED, selected);
+        Config.getPref().putBoolean(KENDZI_3D_MODELS_TEXTURED, selected);
         notifySelectedState();
 
         setState(selected);
