@@ -20,12 +20,12 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.google.inject.Guice;
@@ -88,7 +88,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         refreshMenu(injector);
 
-        if (!Boolean.FALSE.equals(Main.pref.getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, false))) {
+        if (!Boolean.FALSE.equals(Config.getPref().getBoolean(AutostartToggleAction.KENDZI_3D_AUTOSTART, false))) {
             openKendzi3dWindow(injector);
         }
     }
@@ -280,7 +280,7 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
     public static final String PREF_LAYER = PREFIX + ".layer";
 
     public void initializeKendzi3dLayer(CameraLayer cameraLayer) {
-        if (!Main.pref.getBoolean(PREF_LAYER, true)) {
+        if (!Config.getPref().getBoolean(PREF_LAYER, true)) {
             return;
         }
 

@@ -5,7 +5,7 @@
  */
 package kendzi.josm.kendzi3d.ui.layer;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,7 +16,6 @@ import java.util.TimerTask;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -278,7 +277,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     public void addCameraLayer() {
-        if (MainApplication.getMap() == null || Main.main == null || MainApplication.getMap().mapView == null) {
+        if (MainApplication.getMap() == null ||  MainApplication.getMap().mapView == null) {
             return;
         }
         if (isOsmDataLayer()) {

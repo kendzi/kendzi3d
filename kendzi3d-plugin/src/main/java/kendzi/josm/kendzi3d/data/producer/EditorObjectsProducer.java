@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -17,6 +16,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import kendzi.josm.kendzi3d.data.DataSetFilterUtil;
@@ -105,7 +105,7 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
         boolean rebuildData = false;
 
         if (perspective == null || event instanceof NewDataEvent) {
-            Projection proj = Main.getProjection();
+            Projection proj = ProjectionRegistry.getProjection();
             center = calculateCenter(dataSet, proj);
             perspective = calculatePerspective(center, proj);
             core.setPerspective3d(perspective);

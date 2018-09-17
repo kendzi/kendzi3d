@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -144,7 +144,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 
-        Main.main.undoRedo.add(new ChangePropertyCommand(Arrays.asList(primitive), tags));
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(Arrays.asList(primitive), tags));
         LOG.info("primitive value was saved, id: " + primitiveId);
     }
 }

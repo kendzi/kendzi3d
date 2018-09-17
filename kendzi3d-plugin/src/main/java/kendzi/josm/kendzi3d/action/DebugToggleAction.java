@@ -6,13 +6,13 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import com.google.inject.Inject;
 
@@ -55,7 +55,7 @@ public class DebugToggleAction extends ToggleAction {
 
         MainApplication.getToolbar().register(this);
 
-        boolean selected = Main.pref.getBoolean(KENDZI_3D_DEBUG_VIEW, false);
+        boolean selected = Config.getPref().getBoolean(KENDZI_3D_DEBUG_VIEW, false);
 
         setSelected(selected);
 
@@ -68,7 +68,7 @@ public class DebugToggleAction extends ToggleAction {
     public void actionPerformed(ActionEvent e) {
         toggleSelectedState(e);
         boolean selected = isSelected();
-        Main.pref.putBoolean(KENDZI_3D_DEBUG_VIEW, selected);
+        Config.getPref().putBoolean(KENDZI_3D_DEBUG_VIEW, selected);
         notifySelectedState();
 
         setState(selected);

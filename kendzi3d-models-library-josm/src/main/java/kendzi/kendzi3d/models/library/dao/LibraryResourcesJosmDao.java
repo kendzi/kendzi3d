@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Load and store resources path in memory.
@@ -30,7 +30,7 @@ public class LibraryResourcesJosmDao implements LibraryResourcesDao {
      */
     @Override
     public List<String> loadResourcesPath() {
-        List<String> paths = new ArrayList<String>(Main.pref.getList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS));
+        List<String> paths = new ArrayList<String>(Config.getPref().getList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS));
         if (paths == null | paths.isEmpty()) {
             return defaultResources();
         }
@@ -44,12 +44,12 @@ public class LibraryResourcesJosmDao implements LibraryResourcesDao {
      */
     @Override
     public void saveResourcesPath(List<String> fileKeys) {
-        Main.pref.putList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS, fileKeys);
+        Config.getPref().putList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS, fileKeys);
     }
 
     @Override
     public void setDefaultResourcesPaths() {
-        Main.pref.put(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS, null);
+        Config.getPref().put(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS, null);
     }
 
     private static List<String> defaultResources() {

@@ -54,7 +54,7 @@ public class ImageRender {
 
 
     private static void initJOSMMinimal() {
-        Main.pref = new Preferences();
+        Config.getPref() = new Preferences();
         org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference.setProjection();
     }
 

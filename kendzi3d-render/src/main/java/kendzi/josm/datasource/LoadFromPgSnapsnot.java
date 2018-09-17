@@ -30,7 +30,7 @@ public class LoadFromPgSnapsnot {
     private Connection connection;
 
     private static void initJOSMMinimal() {
-        Main.pref = new Preferences();
+        Config.getPref() = new Preferences();
         // org.openstreetmap.josm.gui.preferences.map.ProjectionPreference.setProjection();
         org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference.setProjection();
     }
