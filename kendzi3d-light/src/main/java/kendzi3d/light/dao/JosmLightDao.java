@@ -7,10 +7,10 @@ package kendzi3d.light.dao;
 
 import java.awt.Color;
 
+import org.openstreetmap.josm.spi.preferences.Config;
+
 import kendzi.util.ParseUtil;
 import kendzi3d.light.dto.LightConfiguration;
-
-import org.openstreetmap.josm.Main;
 
 /**
  * Light configuration stored in memory.
@@ -30,16 +30,16 @@ public class JosmLightDao implements LightDao {
     @Override
     public LightConfiguration load() {
         LightConfiguration conf = new LightConfiguration();
-        conf.setDirection(Main.pref.getDouble(KENDZI_3D_LIGHT_DIRECTION, DEFAULT_DIRECTION));
-        conf.setAngle(Main.pref.getDouble(KENDZI_3D_LIGHT_ANGLE, DEFAULT_ANGLE));
+        conf.setDirection( Config.getPref().getDouble(KENDZI_3D_LIGHT_DIRECTION, DEFAULT_DIRECTION));
+        conf.setAngle( Config.getPref().getDouble(KENDZI_3D_LIGHT_ANGLE, DEFAULT_ANGLE));
 
-        Color ambientColor = ParseUtil.parseHexColor(Main.pref.get(KENDZI_3D_LIGHT_AMBIENT_COLOR, ""));
+        Color ambientColor = ParseUtil.parseHexColor( Config.getPref().get(KENDZI_3D_LIGHT_AMBIENT_COLOR, ""));
         if (ambientColor == null) {
             ambientColor = DEFAULT_AMBIENT_COLOR;
         }
         conf.setAmbientColor(ambientColor);
 
-        Color diffuseColor = ParseUtil.parseHexColor(Main.pref.get(KENDZI_3D_LIGHT_DIFFUSE_COLOR, ""));
+        Color diffuseColor = ParseUtil.parseHexColor( Config.getPref().get(KENDZI_3D_LIGHT_DIFFUSE_COLOR, ""));
         if (diffuseColor == null) {
             diffuseColor = DEFAULT_DIFFUSE_COLOR;
         }
@@ -51,10 +51,10 @@ public class JosmLightDao implements LightDao {
     @Override
     public void save(LightConfiguration lightLocation) {
 
-        Main.pref.putDouble(KENDZI_3D_LIGHT_DIRECTION, lightLocation.getDirection());
-        Main.pref.putDouble(KENDZI_3D_LIGHT_ANGLE, lightLocation.getAngle());
-        Main.pref.put(KENDZI_3D_LIGHT_AMBIENT_COLOR, formatHexColor(lightLocation.getAmbientColor()));
-        Main.pref.put(KENDZI_3D_LIGHT_DIFFUSE_COLOR, formatHexColor(lightLocation.getDiffuseColor()));
+         Config.getPref().putDouble(KENDZI_3D_LIGHT_DIRECTION, lightLocation.getDirection());
+         Config.getPref().putDouble(KENDZI_3D_LIGHT_ANGLE, lightLocation.getAngle());
+         Config.getPref().put(KENDZI_3D_LIGHT_AMBIENT_COLOR, formatHexColor(lightLocation.getAmbientColor()));
+         Config.getPref().put(KENDZI_3D_LIGHT_DIFFUSE_COLOR, formatHexColor(lightLocation.getDiffuseColor()));
     }
 
     private String formatHexColor(Color color) {
