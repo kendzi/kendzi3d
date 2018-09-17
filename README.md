@@ -48,6 +48,14 @@ Chose Menu > Preferences > Java > Editor > Save Actions
 Select settings like on image ```doc/save_actions.png```
 
 
+# Release process
+
+* mvn -DignoreSnapshots=true release:clean release:prepare 
+ 
+* mvn -Darguments="-Dmaven.deploy.skip=true"  release:perform
+ 
+* update url in: https://josm.openstreetmap.de/wiki/PluginsSource
+
 # License
 
 This software is provided "AS IS" without a warranty of any kind.  You use it on your own risk and responsibility!!!
