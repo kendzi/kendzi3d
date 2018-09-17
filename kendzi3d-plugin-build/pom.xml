@@ -63,20 +63,20 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>2.5</version>
+				<version>3.1.0</version>
 			</extension>
 		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.1.0</version>
 				<configuration>
 				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.1.0</version>
 				<configuration>
 					<archive>
 						<index>true</index>
@@ -92,12 +92,14 @@
 							<Plugin-Link>https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
 							<Plugin-Mainversion>14026</Plugin-Mainversion>
 							<Plugin-Version>${project.version}</Plugin-Version>
-							<Plugin-Requires>log4j;jogl;kendzi3d-resources</Plugin-Requires>
+							<Plugin-Requires>log4j;jaxb;jogl;kendzi3d-resources</Plugin-Requires>
 							<url>${project.url}</url>
 							<Class-Path>./kendzi3d-resources.jar</Class-Path>
 						</manifestEntries>
 					</archive>
-					<descriptor>src/main/assembly/dep.xml</descriptor>
+					<descriptors>
+						<descriptor>src/main/assembly/dep.xml</descriptor>
+					</descriptors>
 				</configuration>
 				<executions>
 					<execution>

@@ -11,18 +11,22 @@
       <includes>
         <include>*.txt</include>
       </includes>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory/>
     </fileSet>
   </fileSets>
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory/>
       <unpack>true</unpack>
       <scope>runtime</scope>
       <excludes>
         <exclude>commons-lang:commons-lang</exclude>
         <exclude>commons-logging:commons-logging</exclude>
         <exclude>commons-cli:commons-cli</exclude>
+        <exclude>javax.xml.bind:jaxb-api</exclude>
+        <exclude>com.sun.xml.bind:jaxb-core</exclude>
+        <exclude>com.sun.xml.bind:jaxb-impl</exclude>
+        <exclude>javax.activation:activation</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>

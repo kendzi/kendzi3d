@@ -2,10 +2,11 @@ package kendzi.josm.kendzi3d.data.selection;
 
 import java.util.Collection;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.gui.MainApplication;
 
 import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
@@ -13,15 +14,12 @@ import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SelectionCriteria;
-import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
 
-public class SelectionSynchronizeManager implements SelectionChangedListener, SelectionChangeListener {
+public class SelectionSynchronizeManager implements DataSelectionListener, SelectionChangeListener {
 
     private final ObjectSelectionManager objectSelectionManager;
-
-    private PrimitiveId previewSelectionPrimitiveId = null;
 
     private long previewSelectionTime = 0;
 
@@ -30,12 +28,12 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
     }
 
     public void register() {
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         objectSelectionManager.addSelectionChangeListener(this);
     }
 
     public void unregister() {
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         objectSelectionManager.removeSelectionChangeListener(this);
     }
 
@@ -43,8 +41,9 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
      * Selection change requested by JOSM.
      */
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> primitives) {
+    public void selectionChanged(SelectionChangeEvent e) {
 
+        Collection<? extends OsmPrimitive> primitives = e.getSelection();
         if (isOriginIn3dView(primitives)) {
             // skip to avoid selection loop.
             return;
@@ -96,7 +95,7 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
      * Selection change requested by 3d view.
      */
     @Override
-    public void onSelectionChange(SelectionChangeEvent event) {
+    public void onSelectionChange(kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent event) {
         Selection selection = event.getSelection();
 
         SelectionEventSource eventSource = event.getSelectionSource();
@@ -126,7 +125,6 @@ public class SelectionSynchronizeManager implements SelectionChangedListener, Se
 
         long time = System.currentTimeMillis();
 
-        previewSelectionPrimitiveId = primitiveId;
         previewSelectionTime = time;
 
         DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
