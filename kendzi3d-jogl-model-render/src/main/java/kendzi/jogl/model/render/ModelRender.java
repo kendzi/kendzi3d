@@ -106,10 +106,10 @@ public class ModelRender {
         // GL11.glDisable(GL11.GL_CULL_FACE);
 
         if (drawEdges || model.drawEdges) {
-            DebugModelRendererUtil.drawEdges(gl, model);
+            DebugModelRendererUtil.drawEdges(model);
         }
         if (drawNormals || model.drawNormals) {
-            DebugModelRendererUtil.drawNormals(gl, model);
+            DebugModelRendererUtil.drawNormals(model);
         }
 
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -137,11 +137,11 @@ public class ModelRender {
 
                 Material material = model.getMaterial(mesh.materialID);
 
-                setupMaterial2(gl, material, model.useTwoSided || drawTwoSided ? GL11.GL_FRONT_AND_BACK : GL11.GL_FRONT);
+                setupMaterial2(material, model.useTwoSided || drawTwoSided ? GL11.GL_FRONT_AND_BACK : GL11.GL_FRONT);
 
                 if (drawTextures) {
                     if (model.useTextureAlpha) {
-                        enableTransparentText(gl);
+                        enableTransparentText();
                     }
                     setupTextures(gl, material, mesh.hasTexture);
                 }
@@ -181,9 +181,9 @@ public class ModelRender {
 
                 if (drawTextures) {
                     if (model.useTextureAlpha) {
-                        disableTransparentText(gl);
+                        disableTransparentText();
                     }
-                    unsetupTextures(gl, material, mesh.hasTexture);
+                    unsetupTextures(material, mesh.hasTexture);
                 }
             }
 
@@ -201,7 +201,7 @@ public class ModelRender {
 
     }
 
-    private void unsetupTextures(GL2 gl, Material material, boolean useTextures) {
+    private void unsetupTextures(Material material, boolean useTextures) {
 
         List<String> texturesComponent = material.getTexturesComponent();
         boolean colored = material.getTexture0Color() != null;
@@ -211,7 +211,7 @@ public class ModelRender {
         if (colored && 0 < curLayer && curLayer < MAX_TEXTURES_LAYERS) {
             GL13.glActiveTexture(GL_TEXTURE[curLayer]);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            unbindTexture(gl);
+            unbindTexture();
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
 
@@ -221,7 +221,7 @@ public class ModelRender {
             curLayer--;
             GL13.glActiveTexture(GL_TEXTURE[curLayer]);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            unbindTexture(gl);
+            unbindTexture();
             // disableTransparentText(gl);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             if (curLayer == 0) {
@@ -340,10 +340,8 @@ public class ModelRender {
     /**
      * Unbind texture.
      *
-     * @param gl
-     *            context
      */
-    public void unbindTexture(GL2 gl) {
+    public void unbindTexture() {
 
         GL11.glMatrixMode(GL11.GL_TEXTURE);
         GL11.glPopMatrix();
@@ -385,10 +383,8 @@ public class ModelRender {
     }
 
     /**
-     * @param pGl
-     *            FIXME move to util!
      */
-    public static void enableTransparentText(GL2 pGl) {
+    public static void enableTransparentText() {
         // do not draw the transparent parts of the texture
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -400,16 +396,14 @@ public class ModelRender {
     }
 
     /**
-     * @param pGl
-     *            FIXME move to util!
      */
-    public static void disableTransparentText(GL2 pGl) {
+    public static void disableTransparentText() {
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
 
     }
 
-    private void setupMaterialOtherComponent(GL2 pGl, OtherComponent material, int sides) {
+    private void setupMaterialOtherComponent(OtherComponent material, int sides) {
 
         float[] rgba = new float[4];
 
@@ -422,7 +416,7 @@ public class ModelRender {
         lastOtherComponent = material;
     }
 
-    private void setupMaterialAmbientDiffuseComponent(GL2 pGl, AmbientDiffuseComponent material, int sides) {
+    private void setupMaterialAmbientDiffuseComponent(AmbientDiffuseComponent material, int sides) {
 
         float[] rgba = new float[4];
 
@@ -446,21 +440,19 @@ public class ModelRender {
      * Setups default material for opengl context. It allow to rested opengl state
      * to its default when next rendering loop starts.
      *
-     * @param gl
-     *            context
      */
-    public void setupDefaultMaterial(GL2 gl) {
-        setupMaterial2(gl, defaultMaterial, drawTwoSided ? GL11.GL_FRONT_AND_BACK : GL11.GL_FRONT);
+    public void setupDefaultMaterial() {
+        setupMaterial2(defaultMaterial, drawTwoSided ? GL11.GL_FRONT_AND_BACK : GL11.GL_FRONT);
     }
 
-    private void setupMaterial2(GL2 pGl, Material material, int sides) {
+    private void setupMaterial2(Material material, int sides) {
 
         if (isAmbientDiffuseChanged(material.getAmbientDiffuse()) || isSidesChanged(sides)) {
-            setupMaterialAmbientDiffuseComponent(pGl, material.getAmbientDiffuse(), sides);
+            setupMaterialAmbientDiffuseComponent(material.getAmbientDiffuse(), sides);
         }
 
         if (isOtherComponentChanged(material.getOther()) || isSidesChanged(sides)) {
-            setupMaterialOtherComponent(pGl, material.getOther(), sides);
+            setupMaterialOtherComponent(material.getOther(), sides);
         }
 
         lastSides = sides;

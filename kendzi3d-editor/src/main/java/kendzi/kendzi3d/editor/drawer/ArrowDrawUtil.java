@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 import org.lwjgl.opengl.GL11;
@@ -13,8 +12,6 @@ public class ArrowDrawUtil {
     /**
      * Draws arrow. Arrow starts at origin and it is directed at +Y axis.
      *
-     * @param gl
-     *            gl
      * @param glu
      *            glu
      * @param quadratic
@@ -30,7 +27,7 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
+    public static void drawArrow(GLU glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
             double arrowheadRadius, int section) {
         GL11.glPushMatrix();
 
@@ -57,8 +54,6 @@ public class ArrowDrawUtil {
     /**
      * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y axis.
      *
-     * @param gl
-     *            gl
      * @param glu
      *            glu
      * @param quadratic
@@ -70,7 +65,7 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrowhead(GL2 gl, GLU glu, GLUquadric quadratic, double length, double radius, int section) {
+    public static void drawArrowhead(GLU glu, GLUquadric quadratic, double length, double radius, int section) {
         GL11.glPushMatrix();
 
         GL11.glRotated(-90d, 1d, 0d, 0d);
@@ -87,12 +82,6 @@ public class ArrowDrawUtil {
      * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y axis.
      * This method don't calculate normals!
      *
-     * @param gl
-     *            gl
-     * @param glu
-     *            glu
-     * @param quadratic
-     *            quadratic
      * @param length
      *            length of arrowhead
      * @param radius
@@ -100,7 +89,7 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrowheadSimple(GL2 gl, GLU glu, GLUquadric quadratic, double length, double radius, int section) {
+    public static void drawArrowheadSimple(double length, double radius, int section) {
 
         double[] xs = new double[section];
         double[] ys = new double[section];

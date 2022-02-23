@@ -58,10 +58,10 @@ public class ExampleEditorGLEventListener extends BaseEditorGLEventListener {
         //
         if (editableObject instanceof Box) {
 
-            BoxDrawUtil.draw((Box) editableObject, gl);
+            BoxDrawUtil.draw((Box) editableObject);
         } else if (editableObject instanceof Roof) {
 
-            RoofDrawUtil.draw((Roof) editableObject, gl);
+            RoofDrawUtil.draw((Roof) editableObject);
         } else {
             throw new IllegalStateException("unsupported editor object: " + editableObject);
         }

@@ -14,6 +14,6 @@ public class RoofHighlightDrawer implements Gl2Draw {
 
     @Override
     public void draw(GL2 gl) {
-        RoofDrawUtil.draw(roof, gl);
+        RoofDrawUtil.draw(roof);
     }
 }

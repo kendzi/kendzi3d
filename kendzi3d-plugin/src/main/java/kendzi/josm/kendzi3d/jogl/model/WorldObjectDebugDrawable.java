@@ -6,7 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
 import kendzi.jogl.camera.Camera;
 
 /**
@@ -20,11 +19,9 @@ public interface WorldObjectDebugDrawable {
     /**
      * Draw debug information using openGl.
      *
-     * @param gl
-     *            openGl
      * @param camera
      *            camera
      */
-    void drawDebug(GL2 gl, Camera camera);
+    void drawDebug(Camera camera);
 
 }

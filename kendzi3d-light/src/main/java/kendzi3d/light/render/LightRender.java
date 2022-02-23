@@ -42,7 +42,7 @@ public class LightRender implements Gl2Draw {
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, lightRenderService.getLightPosition());
     }
 
-    public void init(GL2 gl) {
+    public void init() {
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
 

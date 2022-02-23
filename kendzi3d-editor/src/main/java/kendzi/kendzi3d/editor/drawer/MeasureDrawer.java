@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -26,8 +25,6 @@ public class MeasureDrawer {
      * Draws measure tap with distance arrows and distance value. Measure tap is
      * draw in Y direction always rotated to camera. XXX add measure begin point
      *
-     * @param gl
-     *            gl
      * @param begin
      *            measure begin
      * @param end
@@ -45,8 +42,8 @@ public class MeasureDrawer {
      * @param lineWidth
      *            line width
      */
-    public void drawYMeasureWithArrows(GL2 gl, Point3d begin, Point3d end, double value, Viewport viewport,
-            double horizontalDistance, double arrowHeight, double arrowWidth, float lineWidth) {
+    public void drawYMeasureWithArrows(Point3d begin, Point3d end, double value, Viewport viewport, double horizontalDistance,
+            double arrowHeight, double arrowWidth, float lineWidth) {
 
         GL11.glLineWidth(lineWidth);
 
@@ -59,11 +56,11 @@ public class MeasureDrawer {
         screenHorizontally.scale(horizontalDistance);
 
         // top horizontal line
-        drawLine(gl, end.x, end.y, end.z, //
+        drawLine(end.x, end.y, end.z, //
                 end.x + screenHorizontally.x, end.y + screenHorizontally.y, end.z + screenHorizontally.z);
 
         // bottom horizontal line
-        drawLine(gl, begin.x, begin.y, begin.z, //
+        drawLine(begin.x, begin.y, begin.z, //
                 begin.x + screenHorizontally.x, begin.y + screenHorizontally.y, begin.z + screenHorizontally.z);
 
         screenHorizontally.scale(0.5);
@@ -74,7 +71,7 @@ public class MeasureDrawer {
         topArrowhead.add(end);
 
         // vertical line
-        drawLine(gl, bottomArrowhead, topArrowhead);
+        drawLine(bottomArrowhead, topArrowhead);
 
         // vertical line arrows
         Vector3d arrowVector = Vector3dUtil.fromTo(bottomArrowhead, topArrowhead);
@@ -86,21 +83,21 @@ public class MeasureDrawer {
         bottomArrowheadRight.sub(arrowheadBaseWidthVector);
 
         // bottom arrow
-        drawFlatArrowhead(gl, bottomArrowhead, arrowVector, arrowheadBaseWidthVector);
+        drawFlatArrowhead(bottomArrowhead, arrowVector, arrowheadBaseWidthVector);
 
         arrowVector.negate();
         arrowheadBaseWidthVector.negate();
         // top arrow
-        drawFlatArrowhead(gl, topArrowhead, arrowVector, arrowheadBaseWidthVector);
+        drawFlatArrowhead(topArrowhead, arrowVector, arrowheadBaseWidthVector);
 
         Point3d center = new Point3d(bottomArrowhead);
         center.add(topArrowhead);
         center.scale(0.5);
 
-        drawNumberBox(gl, glu, glut, center, value, viewport);
+        drawNumberBox(glu, glut, center, value, viewport);
     }
 
-    private void drawFlatArrowhead(GL2 gl, Point3d arrowheadPoint, Vector3d arrowheadVector, Vector3d arrowheadWidthVector) {
+    private void drawFlatArrowhead(Point3d arrowheadPoint, Vector3d arrowheadVector, Vector3d arrowheadWidthVector) {
         GL11.glBegin(GL11.GL_TRIANGLES);
 
         GL11.glVertex3d(arrowheadPoint.x, arrowheadPoint.y, arrowheadPoint.z);
@@ -116,7 +113,7 @@ public class MeasureDrawer {
         GL11.glEnd();
     }
 
-    private void drawLine(GL2 gl, double beginX, double beginY, double beginZ, double endX, double endY, double endZ) {
+    private void drawLine(double beginX, double beginY, double beginZ, double endX, double endY, double endZ) {
 
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex3d(beginX, beginY, beginZ);
@@ -124,7 +121,7 @@ public class MeasureDrawer {
         GL11.glEnd();
     }
 
-    private void drawLine(GL2 gl, Point3d begin, Point3d end) {
+    private void drawLine(Point3d begin, Point3d end) {
 
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex3d(begin.x, begin.y, begin.z);
@@ -132,12 +129,12 @@ public class MeasureDrawer {
         GL11.glEnd();
     }
 
-    private void drawNumberBox(GL2 gl, GLU glu, GLUT glut, Point3d point, Double value, Viewport viewport) {
+    private void drawNumberBox(GLU glu, GLUT glut, Point3d point, Double value, Viewport viewport) {
 
         GL11.glDisable(GL11.GL_LIGHTING);
         String msg = String.format("%.2f m", value);
 
-        Point2d p = viewport.project(gl, glu, point);
+        Point2d p = viewport.project(glu, point);
         int fontSize = 18;
         int msgWidth = glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_18, msg);
 
@@ -147,7 +144,7 @@ public class MeasureDrawer {
         int y = (int) p.y + fontSize / 2;
 
         // Switch to 2D viewing
-        DrawUtil.begin2D(gl, viewport.getWidth(), viewport.getHeight());
+        DrawUtil.begin2D(viewport.getWidth(), viewport.getHeight());
 
         // Draw a background rectangle
         GL11.glColor4f(1f, 1f, 1f, 0.6f);
@@ -164,7 +161,7 @@ public class MeasureDrawer {
         GL11.glRasterPos2i(x, y - 2);
         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, msg);
         // Switch back to 3D viewing
-        DrawUtil.end2D(gl);
+        DrawUtil.end2D();
         GL11.glEnable(GL11.GL_LIGHTING);
     }
 }

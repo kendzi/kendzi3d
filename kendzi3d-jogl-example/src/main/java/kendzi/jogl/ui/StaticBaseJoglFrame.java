@@ -156,7 +156,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
         // GL_FLAT and see what
         // happens.
 
-        addLight(gl);
+        addLight();
 
         axisLabels.init();
 
@@ -238,7 +238,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
     /**
      * Set up a point source with ambient, diffuse, and specular color. components
      */
-    private void addLight(GL2 gl) {
+    private void addLight() {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         // enable a single light source
         GL11.glEnable(GL11.GL_LIGHTING);
@@ -262,19 +262,18 @@ public class StaticBaseJoglFrame implements GLEventListener {
     /**
      * Place numbers along the x- and z-axes at the integer positions.
      *
-     * @param gl
      */
-    private void labelAxes(GL2 gl) {
+    private void labelAxes() {
         for (int i = -FLOOR_LEN / 2; i <= FLOOR_LEN / 2; i++) {
-            drawAxisText(gl, "x: " + i, i, 0.0f, 0.0f); // along x-axis
+            drawAxisText("x: " + i, i, 0.0f, 0.0f); // along x-axis
         }
 
         for (int i = -FLOOR_LEN / 2; i <= FLOOR_LEN / 2; i++) {
-            drawAxisText(gl, "z: " + i, 0.0f, 0.0f, i); // along z-axis
+            drawAxisText("z: " + i, 0.0f, 0.0f, i); // along z-axis
         }
 
         for (int i = -FLOOR_LEN / 2; i <= FLOOR_LEN / 2; i++) {
-            drawAxisText(gl, "y: " + i, 0.0f, i, 0.0f); // along y-axis
+            drawAxisText("y: " + i, 0.0f, i, 0.0f); // along y-axis
         }
     }
 
@@ -282,13 +281,12 @@ public class StaticBaseJoglFrame implements GLEventListener {
      * Draw txt at (x,y,z), with the text centered in the x-direction, facing along
      * the +z axis.
      *
-     * @param gl
      * @param txt
      * @param x
      * @param y
      * @param z
      */
-    private void drawAxisText(GL2 gl, String txt, float x, float y, float z) {
+    private void drawAxisText(String txt, float x, float y, float z) {
 
         Rectangle2D dim = this.axisLabelRenderer.getBounds(txt);
         float width = (float) dim.getWidth() * SCALE_FACTOR;

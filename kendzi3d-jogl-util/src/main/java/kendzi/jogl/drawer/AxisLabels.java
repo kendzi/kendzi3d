@@ -109,7 +109,7 @@ public class AxisLabels implements Gl2Draw {
             textToRender = createLabels();
         }
 
-        drawAxisText(gl, textToRender);
+        drawAxisText(textToRender);
 
         GL11.glEnable(GL11.GL_LIGHTING);
     }
@@ -146,8 +146,6 @@ public class AxisLabels implements Gl2Draw {
      * Draw text at (x,y,z), with the text centered in the x-direction, facing along
      * the +z axis.
      *
-     * @param gl
-     *            gl2
      * @param text
      *            text to draw
      * @param x
@@ -157,7 +155,7 @@ public class AxisLabels implements Gl2Draw {
      * @param z
      *            coordinate z
      */
-    private void drawAxisText(GL2 gl, String text, float x, float y, float z) {
+    private void drawAxisText(String text, float x, float y, float z) {
 
         Rectangle2D dim = this.axisLabelRenderer.getBounds(text);
         float width = (float) dim.getWidth() * SCALE_FACTOR;
@@ -171,12 +169,10 @@ public class AxisLabels implements Gl2Draw {
      * Draw list of texts described by pText. Each text have (x,y,z), with the text
      * centered in the x-direction, facing along the +z axis.
      *
-     * @param gl
-     *            gl2
      * @param text
      *            text to draw
      */
-    private void drawAxisText(GL2 gl, List<TextToRender> text) {
+    private void drawAxisText(List<TextToRender> text) {
 
         this.axisLabelRenderer.begin3DRendering();
 

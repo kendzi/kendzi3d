@@ -1,7 +1,5 @@
 package kendzi.jogl.util;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -16,8 +14,6 @@ public class LineDrawUtil {
     /**
      * Draw dotted line, which segments size depends on distance from camera.
      *
-     * @param gl
-     *            gl
      * @param begin
      *            begin point
      * @param end
@@ -25,7 +21,7 @@ public class LineDrawUtil {
      * @param segmentLength
      *            length of line segment
      */
-    public static void drawDottedLine(GL2 gl, Point3d begin, Point3d end, double segmentLength) {
+    public static void drawDottedLine(Point3d begin, Point3d end, double segmentLength) {
 
         double distance = begin.distance(end);
 

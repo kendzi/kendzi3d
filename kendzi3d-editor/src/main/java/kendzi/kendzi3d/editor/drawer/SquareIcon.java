@@ -104,7 +104,7 @@ public class SquareIcon implements Gl2Draw {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         // Draw icon in 2d mode.
-        DrawUtil.begin2D(gl, width, height);
+        DrawUtil.begin2D(width, height);
 
         TextureCoords tc = texture.getImageTexCoords();
 
@@ -125,7 +125,7 @@ public class SquareIcon implements Gl2Draw {
 
         texture.disable(gl);
 
-        DrawUtil.end2D(gl);
+        DrawUtil.end2D();
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }

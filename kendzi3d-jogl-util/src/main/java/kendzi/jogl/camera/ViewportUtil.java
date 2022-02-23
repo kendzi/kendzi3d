@@ -1,6 +1,5 @@
 package kendzi.jogl.camera;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 
 import javax.vecmath.Point3d;
@@ -12,12 +11,10 @@ public class ViewportUtil {
     /**
      * Setup camera position and direction.
      *
-     * @param gl
-     *            gl
      * @param viewport
      *            viewport with camera position
      */
-    public static void lookAt(GL2 gl, Viewport viewport) {
+    public static void lookAt(Viewport viewport) {
 
         // Activate and reset model view matrix.
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -36,10 +33,8 @@ public class ViewportUtil {
      *
      * @param viewport
      *            viewport with perspective configuration
-     * @param gl
-     *            gl
      */
-    public static void reshapePerspective(Viewport viewport, GL2 gl) {
+    public static void reshapePerspective(Viewport viewport) {
 
         // size of drawing area
         GL11.glViewport(0, 0, viewport.getWidth(), viewport.getHeight());

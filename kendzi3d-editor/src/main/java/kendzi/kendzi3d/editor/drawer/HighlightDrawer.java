@@ -50,12 +50,12 @@ public class HighlightDrawer {
         GL11.glColor4fv(selectionColor);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-        SimpleOutlineDrawUtil.beginSimpleOutlineLine(gl);
+        SimpleOutlineDrawUtil.beginSimpleOutlineLine();
         drawer.draw(gl);
 
-        SimpleOutlineDrawUtil.beginSimpleOutlinePoint(gl);
+        SimpleOutlineDrawUtil.beginSimpleOutlinePoint();
         drawer.draw(gl);
 
-        SimpleOutlineDrawUtil.endSimpleOutline(gl);
+        SimpleOutlineDrawUtil.endSimpleOutline();
     }
 }

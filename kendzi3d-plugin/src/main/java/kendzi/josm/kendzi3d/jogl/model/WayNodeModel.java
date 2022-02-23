@@ -394,7 +394,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                                 -sin, 0, cos, 0, //
                                 0, 0, 0, 1 });
 
-                PointModel.drawDebug(gl, translate, modelPoint.getDirection());
+                PointModel.drawDebug(translate, modelPoint.getDirection());
 
                 GL11.glTranslated(translate.x, translate.y, translate.z);
 

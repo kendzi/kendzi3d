@@ -156,7 +156,7 @@ public class BaseJoglFrame implements GLEventListener {
         // GL_FLAT and see what
         // happens.
 
-        addLight(gl);
+        addLight();
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
@@ -248,7 +248,7 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * Set up a point source with ambient, diffuse, and specular color. components
      */
-    private void addLight(GL2 gl) {
+    private void addLight() {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         // enable a single light source
         GL11.glEnable(GL11.GL_LIGHTING);

@@ -90,7 +90,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         // Adds light for screen.
-        addLight(gl);
+        addLight();
 
         selectionDrawer.init(gl);
 
@@ -99,10 +99,8 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     /**
      * Set up a point source with ambient, diffuse, and specular color. components.
      *
-     * @param gl
-     *            gl
      */
-    private void addLight(GL2 gl) {
+    private void addLight() {
 
         // Put light in model view.
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -164,7 +162,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         drawBeforeSetCamera(gl, viewport);
 
         // Sets new view matrix.
-        ViewportUtil.lookAt(gl, viewport);
+        ViewportUtil.lookAt(viewport);
 
         drawBeforeEditorObjects(gl, viewport);
 
@@ -204,7 +202,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
             drawHighlightEditorObject(gl, editableObject);
 
-            selectionDrawer.draw(gl, lastSelection, objectSelectionListener.getLastActiveEditor(),
+            selectionDrawer.draw(lastSelection, objectSelectionListener.getLastActiveEditor(),
                     objectSelectionListener.getLastHighlightedEditor(), viewport);
 
             // selectionDrawer.drawEditors(gl, lastSelection.getEditors(),
@@ -252,7 +250,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         viewport.reshape(width, height, camera);
 
         // Re-setup opengl perspective.
-        ViewportUtil.reshapePerspective(viewport, gl);
+        ViewportUtil.reshapePerspective(viewport);
     }
 
     @Override

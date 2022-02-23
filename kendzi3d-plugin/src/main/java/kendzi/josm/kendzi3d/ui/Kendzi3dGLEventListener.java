@@ -83,8 +83,8 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
         GL2 gl = drawable.getGL().getGL2();
 
         axisLabels.init();
-        compass.init(gl);
-        lightRender.init(gl);
+        compass.init();
+        lightRender.init();
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
 
         modelRender.resetMaterials();
-        modelRender.setupDefaultMaterial(gl);
+        modelRender.setupDefaultMaterial();
 
         skyBox.draw(gl, viewport2.getPosition());
 
@@ -111,7 +111,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
             // drawTextInfo(gl, simpleMoveAnimator.info());
         }
 
-        compass.drawAtLeftBottom(gl, viewport2);
+        compass.drawAtLeftBottom(viewport2);
     }
 
     /**
@@ -152,7 +152,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
         }
         if (editableObject instanceof WorldObjectDebugDrawable) {
             WorldObjectDebugDrawable drawable = (WorldObjectDebugDrawable) editableObject;
-            drawable.drawDebug(gl, camera);
+            drawable.drawDebug(camera);
         }
     }
 

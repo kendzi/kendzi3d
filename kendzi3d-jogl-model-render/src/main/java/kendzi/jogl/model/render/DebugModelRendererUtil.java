@@ -1,7 +1,5 @@
 package kendzi.jogl.model.render;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -15,12 +13,10 @@ public class DebugModelRendererUtil {
     /**
      * Draws normals.
      * 
-     * @param pGl
-     *            gl
      * @param pModel
      *            model
      */
-    public static void drawNormals(GL2 pGl, Model pModel) {
+    public static void drawNormals(Model pModel) {
 
         for (Mesh mesh : pModel.mesh) {
             // blue
@@ -63,12 +59,10 @@ public class DebugModelRendererUtil {
     /**
      * Draws edges.
      * 
-     * @param pGl
-     *            gl
      * @param pModel
      *            model
      */
-    public static void drawEdges(GL2 pGl, Model pModel) {
+    public static void drawEdges(Model pModel) {
         for (Mesh mesh : pModel.mesh) {
             // green
             GL11.glColor3f(0.5f, 1.0f, 0.5f);

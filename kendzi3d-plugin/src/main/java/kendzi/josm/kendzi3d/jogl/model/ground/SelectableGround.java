@@ -23,7 +23,7 @@ public class SelectableGround {
         selectedGroundType = groundType;
     }
 
-    public void init(GL2 gl) {
+    public void init() {
         for (GroundType key : grounds.keySet()) {
             GroundDrawer ground = grounds.get(selectedGroundType);
 

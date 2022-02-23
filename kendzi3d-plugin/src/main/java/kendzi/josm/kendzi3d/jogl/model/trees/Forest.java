@@ -493,7 +493,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
                 GL11.glTranslated(c.getCenter().x + getGlobalX(), 2, c.getCenter().z - getGlobalY());
 
-                DrawUtil.drawDotY(gl, 6d, 6);
+                DrawUtil.drawDotY(6d, 6);
 
                 GL11.glPopMatrix();
             }

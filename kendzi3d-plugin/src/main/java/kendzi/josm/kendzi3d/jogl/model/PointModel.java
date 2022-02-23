@@ -219,7 +219,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         if (model2 != null) {
             GL11.glPushMatrix();
             GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
-            drawDebug(gl, translate, 0);
+            drawDebug(translate, 0);
 
             GL11.glTranslated(translate.x, translate.y, translate.z);
 
@@ -235,7 +235,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         }
     }
 
-    public static void drawDebug(GL2 gl, Vector3d translate, double direction) {
+    public static void drawDebug(Vector3d translate, double direction) {
 
         if (!debug) {
             return;
@@ -255,19 +255,19 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         glu.gluSphere(quadratic, 0.3, 9, 9);
 
-        DrawUtil.drawLine(gl, 0, 0, 0, //
+        DrawUtil.drawLine(0, 0, 0, //
                 translate.x, translate.y, translate.z);
 
         // bottom Y
         GL11.glPushMatrix();
         GL11.glColor3fv(CompassDrawer.Y_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(gl, translate.x, 0, translate.z, //
+        DrawUtil.drawLine(translate.x, 0, translate.z, //
                 translate.x, translate.y, translate.z);
 
         GL11.glTranslated(translate.x, 0.15, translate.z);
 
-        DrawUtil.drawDotY(gl, 0.3, 9);
+        DrawUtil.drawDotY(0.3, 9);
 
         GL11.glPopMatrix();
 
@@ -276,14 +276,14 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         GL11.glColor3fv(CompassDrawer.X_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(gl, 0, translate.y, translate.z, //
+        DrawUtil.drawLine(0, translate.y, translate.z, //
                 translate.x, translate.y, translate.z);
 
         GL11.glTranslated(0, translate.y, translate.z);
 
         // GL11.glRotated(90, 0d, 0d, 1d);
 
-        DrawUtil.drawDotY(gl, 0.3, 9);
+        DrawUtil.drawDotY(0.3, 9);
 
         // XXX
 
@@ -294,14 +294,14 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         GL11.glColor3fv(CompassDrawer.Z_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(gl, translate.x, translate.y, 0, //
+        DrawUtil.drawLine(translate.x, translate.y, 0, //
                 translate.x, translate.y, translate.z);
 
         GL11.glTranslated(translate.x, translate.y, 0);
 
         GL11.glRotated(90, 1d, 0d, 0d);
 
-        DrawUtil.drawDotY(gl, 0.3, 9);
+        DrawUtil.drawDotY(0.3, 9);
 
         GL11.glPopMatrix();
 
@@ -319,7 +319,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         GL11.glRotated(direction, 0d, 1d, 0d);
 
-        DrawUtil.drawFlatArrowY(gl, scale * 1.2, scale * 0.3, scale * 0.11, scale * 0.3);
+        DrawUtil.drawFlatArrowY(scale * 1.2, scale * 0.3, scale * 0.11, scale * 0.3);
 
         GL11.glPopMatrix();
 

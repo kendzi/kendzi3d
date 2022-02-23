@@ -74,10 +74,10 @@ public class TilesSurface implements Gl2Draw {
 
         // GL11.glColor3f(0.0f, 0.1f, 0.4f);
         GL11.glColor3fv(firstColor);
-        DrawUtil.drawTiles(gl, 50, true);
+        DrawUtil.drawTiles(50, true);
         // GL11.glColor3f(0.0f, 0.5f, 0.1f);
         GL11.glColor3fv(secondColor);
-        DrawUtil.drawTiles(gl, 50, false);
+        DrawUtil.drawTiles(50, false);
 
         GL11.glEnable(GL11.GL_LIGHTING);
     }

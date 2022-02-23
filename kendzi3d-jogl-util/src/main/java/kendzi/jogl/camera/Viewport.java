@@ -1,6 +1,5 @@
 package kendzi.jogl.camera;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 
 import javax.vecmath.Point2d;
@@ -198,7 +197,7 @@ public class Viewport implements ViewportPicker {
         return new Ray3d(new Point3d(position), vector);
     }
 
-    public Point2d project(GL2 gl, GLU glu, Point3d point) {
+    public Point2d project(GLU glu, Point3d point) {
         // FIXME
         float[] modelview = new float[16];
         float[] projectionview = new float[16];

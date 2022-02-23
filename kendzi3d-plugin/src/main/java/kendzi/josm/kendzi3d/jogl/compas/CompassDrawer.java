@@ -1,6 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.compas;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
@@ -59,10 +58,8 @@ public class CompassDrawer {
     /**
      * Initiate compass drawer.
      *
-     * @param gl
-     *            gl
      */
-    public void init(GL2 gl) {
+    public void init() {
         quadratic = glu.gluNewQuadric();
         // Create Smooth Normals
         glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
@@ -71,12 +68,10 @@ public class CompassDrawer {
     /**
      * Draws compass at left bottom corner of viewport.
      *
-     * @param gl
-     *            gl
      * @param viewport
      *            viewport
      */
-    public void drawAtLeftBottom(GL2 gl, Viewport viewport) {
+    public void drawAtLeftBottom(Viewport viewport) {
         int distance = 70;
 
         Ray3d ray3d = viewport.picking(distance, viewport.getHeight() - distance);
@@ -89,19 +84,17 @@ public class CompassDrawer {
 
         point.add(vector);
 
-        draw(gl, point);
+        draw(point);
     }
 
     /**
      * Draws compass.
      *
-     * @param gl
-     *            gl
      * @param point
      *            location
      *
      */
-    public void draw(GL2 gl, Point3d point) {
+    public void draw(Point3d point) {
 
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -117,15 +110,15 @@ public class CompassDrawer {
         double arrowRadius = 0.2d * camDistanceRatio;
 
         GL11.glColor3fv(Y_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glRotated(-90d, 0d, 0d, 1d);
         GL11.glColor3fv(X_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glRotated(90d, 1d, 0d, 0d);
         GL11.glColor3fv(Z_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glPopMatrix();
     }

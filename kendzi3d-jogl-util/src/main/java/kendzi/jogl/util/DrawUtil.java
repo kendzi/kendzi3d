@@ -6,14 +6,12 @@
 
 package kendzi.jogl.util;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 import org.lwjgl.opengl.GL11;
 
 public class DrawUtil {
 
-    public static void drawDotY(GL2 pGl, double radius, int numberOfPoints) {
+    public static void drawDotY(double radius, int numberOfPoints) {
 
         double x = radius;
         double y = 0d;
@@ -39,7 +37,7 @@ public class DrawUtil {
 
     }
 
-    public static void drawDotOuterY(GL2 pGl, double radius, int numberOfPoints) {
+    public static void drawDotOuterY(double radius, int numberOfPoints) {
 
         double x = radius;
         double y = 0d;
@@ -64,7 +62,7 @@ public class DrawUtil {
         GL11.glEnd();
     }
 
-    public static void drawLine(GL2 gl, double x1, double y1, double z1, double x2, double y2, double z2) {
+    public static void drawLine(double x1, double y1, double z1, double x2, double y2, double z2) {
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex3d(x1, y1, z1);
         GL11.glVertex3d(x2, y2, z2);
@@ -74,14 +72,12 @@ public class DrawUtil {
     /**
      * Draw guads on XZ plane, y==0. Skeep odd quads. XXX
      *
-     * @param gl
-     *            gl
      * @param size
      *            size of quads area
      * @param odd
      *            if draw odd quads
      */
-    public static void drawTiles(GL2 gl, int size, boolean odd) {
+    public static void drawTiles(int size, boolean odd) {
 
         GL11.glBegin(GL11.GL_QUADS);
         boolean aBlueTile;
@@ -92,9 +88,9 @@ public class DrawUtil {
             for (int x = -size / 2; x <= size / 2 - 1; x++) {
                 if (aBlueTile && odd) {
                     // drawing blue
-                    drawTile(gl, x, z);
+                    drawTile(x, z);
                 } else if (!aBlueTile && !odd) {
-                    drawTile(gl, x, z);
+                    drawTile(x, z);
                 }
                 aBlueTile = !aBlueTile;
             }
@@ -105,14 +101,12 @@ public class DrawUtil {
     /**
      * Draw single title at given coordinate.
      *
-     * @param gl
-     *            gl
      * @param x
      *            coordinate x
      * @param z
      *            coordinate z
      */
-    public static void drawTile(GL2 gl, int x, int z) {
+    public static void drawTile(int x, int z) {
         // points created in counter-clockwise order
         // bottom left point
         GL11.glVertex3f(x, 0.0f, z + 1.0f);
@@ -124,23 +118,20 @@ public class DrawUtil {
     /**
      * Switch to 2D viewing (an orthographic projection).
      *
-     * @param gl
      */
-    public static void begin2D(GL2 gl) {
-        begin2D(gl, 800, 800);
+    public static void begin2D() {
+        begin2D(800, 800);
     }
 
     /**
      * Switch to 2D viewing (an orthographic projection).
      *
-     * @param gl
-     *            gl
      * @param panelWidth
      *            width
      * @param panelHeight
      *            height
      */
-    public static void begin2D(GL2 gl, double panelWidth, double panelHeight) {
+    public static void begin2D(double panelWidth, double panelHeight) {
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         // save projection settings
         GL11.glPushMatrix();
@@ -164,9 +155,8 @@ public class DrawUtil {
     /**
      * switch back to 3D viewing.
      *
-     * @param gl
      */
-    public static void end2D(GL2 gl) {
+    public static void end2D() {
         // GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         // restore previous projection settings
@@ -176,7 +166,7 @@ public class DrawUtil {
         GL11.glPopMatrix();
     }
 
-    public static void drawBox(GL2 gl, double size) {
+    public static void drawBox(double size) {
 
         // right
         GL11.glBegin(GL11.GL_QUADS);
@@ -224,7 +214,7 @@ public class DrawUtil {
         GL11.glEnd();
     }
 
-    public static void drawFullBox(GL2 gl, Point3d max, Point3d min) {
+    public static void drawFullBox(Point3d max, Point3d min) {
 
         // right
         GL11.glBegin(GL11.GL_QUADS);
@@ -272,7 +262,7 @@ public class DrawUtil {
         GL11.glEnd();
     }
 
-    public static void drawBox(GL2 gl, Point3d max, Point3d min) {
+    public static void drawBox(Point3d max, Point3d min) {
 
         GL11.glBegin(GL11.GL_LINES);
 
@@ -304,7 +294,7 @@ public class DrawUtil {
         GL11.glEnd();
     }
 
-    public static void drawFlatArrowY(GL2 gl, double lenght, double lenghtArrow, double widthBase, double widthArrow) {
+    public static void drawFlatArrowY(double lenght, double lenghtArrow, double widthBase, double widthArrow) {
 
         double lenghtBase = lenght - lenghtArrow;
 

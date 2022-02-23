@@ -14,6 +14,6 @@ public class BoxHighlightDrawer implements Gl2Draw {
 
     @Override
     public void draw(GL2 gl) {
-        BoxDrawUtil.draw(box, gl);
+        BoxDrawUtil.draw(box);
     }
 }

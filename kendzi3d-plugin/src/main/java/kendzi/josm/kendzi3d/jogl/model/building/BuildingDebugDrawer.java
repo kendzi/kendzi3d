@@ -1,6 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.model.building;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 import java.awt.*;
@@ -47,10 +46,8 @@ public class BuildingDebugDrawer {
     }
 
     /**
-     * @param gl
-     *            gl
      */
-    public void drawDebugRoof(GL2 gl) {
+    public void drawDebugRoof() {
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -75,7 +72,7 @@ public class BuildingDebugDrawer {
 
         for (int i = 0; i < rectangle.size(); i++) {
             Point3d point3d = rectangle.get(i);
-            drawAxisText(gl, ("rec point " + (i + 1)), point3d.x, point3d.y, point3d.z);
+            drawAxisText(("rec point " + (i + 1)), point3d.x, point3d.y, point3d.z);
         }
         //
         // Point2d point2d = this.firstPoint;
@@ -95,7 +92,7 @@ public class BuildingDebugDrawer {
 
             GL11.glTranslated(x, y, z);
 
-            DrawUtil.drawDotY(gl, d, 12);
+            DrawUtil.drawDotY(d, 12);
 
             GL11.glPopMatrix();
         }
@@ -155,13 +152,12 @@ public class BuildingDebugDrawer {
      * Draw txt at (x,y,z), with the text centered in the x-direction, facing along
      * the +z axis.
      * 
-     * @param gl
      * @param txt
      * @param x
      * @param y
      * @param z
      */
-    private void drawAxisText(GL2 gl, String txt, double x, double y, double z) {
+    private void drawAxisText(String txt, double x, double y, double z) {
 
         Rectangle2D dim = this.axisLabelRenderer.getBounds(txt);
         float width = (float) dim.getWidth() * SCALE_FACTOR;

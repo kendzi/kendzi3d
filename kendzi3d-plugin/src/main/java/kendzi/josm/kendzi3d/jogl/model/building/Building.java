@@ -414,13 +414,13 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         modelRender.render(gl, model);
 
         if (debug != null && debug.getEdges() != null) {
-            drawEdges(gl, debug.getEdges());
+            drawEdges(debug.getEdges());
         }
 
         GL11.glPopMatrix();
     }
 
-    private void drawEdges(GL2 gl, List<LineSegment3d> edges) {
+    private void drawEdges(List<LineSegment3d> edges) {
 
         // Lift up a little to avoid z-buffer problems
         GL11.glTranslated(0, 0.1, 0);
@@ -510,7 +510,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     }
 
     @Override
-    public void drawDebug(GL2 gl, Camera camera) {
+    public void drawDebug(Camera camera) {
 
         if (!modelRender.isDebugging()) {
             return;
@@ -523,12 +523,12 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         GL11.glTranslated(position.x, position.y, position.z);
 
         if (debug != null && debug.getEdges() != null) {
-            drawEdges(gl, debug.getEdges());
+            drawEdges(debug.getEdges());
         }
 
         GL11.glPopMatrix();
 
-        SelectionDrawUtil.drawSphereSelection(gl, this);
+        SelectionDrawUtil.drawSphereSelection(this);
     }
 
     @Override

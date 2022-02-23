@@ -1,7 +1,5 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.util.DrawUtil;
@@ -23,10 +21,8 @@ public final class BoxDrawUtil {
      *
      * @param box
      *            box
-     * @param gl
-     *            gl
      */
-    public static void draw(Box box, GL2 gl) {
+    public static void draw(Box box) {
 
         double size = box.getSize();
 
@@ -40,15 +36,15 @@ public final class BoxDrawUtil {
         min.y -= size;
         min.z -= size;
 
-        DrawUtil.drawFullBox(gl, max, min);
+        DrawUtil.drawFullBox(max, min);
     }
 
-    private static void drawSelected(GL2 gl, Point3d max, Point3d min) {
-        drawSelectedFill(gl, max, min);
-        drawGreenOutline(gl, max, min);
+    private static void drawSelected(Point3d max, Point3d min) {
+        drawSelectedFill(max, min);
+        drawGreenOutline(max, min);
     }
 
-    private static void drawSelectedFill(GL2 gl, Point3d max, Point3d min) {
+    private static void drawSelectedFill(Point3d max, Point3d min) {
 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
@@ -56,22 +52,22 @@ public final class BoxDrawUtil {
         // offset polygons to front
         GL11.glPolygonOffset(-2.0f, -2.0f);
 
-        DrawUtil.drawFullBox(gl, max, min);
+        DrawUtil.drawFullBox(max, min);
 
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
     }
 
-    private static void drawGreenOutline(GL2 gl, Point3d max, Point3d min) {
+    private static void drawGreenOutline(Point3d max, Point3d min) {
 
         // green
         GL11.glColor3f(0.5f, 1.0f, 0.5f);
 
-        SimpleOutlineDrawUtil.beginSimpleOutlineLine(gl);
+        SimpleOutlineDrawUtil.beginSimpleOutlineLine();
 
-        DrawUtil.drawFullBox(gl, max, min);
+        DrawUtil.drawFullBox(max, min);
 
-        SimpleOutlineDrawUtil.endSimpleOutline(gl);
+        SimpleOutlineDrawUtil.endSimpleOutline();
 
     }
 

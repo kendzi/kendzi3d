@@ -1,11 +1,10 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
 import org.lwjgl.opengl.GL11;
 
 public class SimpleOutlineDrawUtil {
 
-    public static void endSimpleOutline(GL2 gl) {
+    public static void endSimpleOutline() {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_POINT);
@@ -14,7 +13,7 @@ public class SimpleOutlineDrawUtil {
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
-    public static void beginSimpleOutlineLine(GL2 gl) {
+    public static void beginSimpleOutlineLine() {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_FRONT);
 
@@ -29,7 +28,7 @@ public class SimpleOutlineDrawUtil {
         GL11.glDisable(GL11.GL_LIGHTING);
     }
 
-    public static void beginSimpleOutlinePoint(GL2 gl) {
+    public static void beginSimpleOutlinePoint() {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_FRONT);
 
