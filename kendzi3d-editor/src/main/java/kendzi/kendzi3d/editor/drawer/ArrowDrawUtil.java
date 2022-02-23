@@ -1,9 +1,9 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Util for drawing arrows.
@@ -32,26 +32,26 @@ public class ArrowDrawUtil {
      */
     public static void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
             double arrowheadRadius, int section) {
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glRotated(-90d, 1d, 0d, 0d);
+        GL11.glRotated(-90d, 1d, 0d, 0d);
 
         double baseLength = length - arrowheadLength;
 
-        gl.glPushMatrix();
-        gl.glRotated(180d, 1d, 0d, 0d);
+        GL11.glPushMatrix();
+        GL11.glRotated(180d, 1d, 0d, 0d);
         glu.gluDisk(quadratic, 0, baseRadius, section, 2);
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
         glu.gluCylinder(quadratic, baseRadius, baseRadius, baseLength, section, 2);
 
-        gl.glTranslated(0, 0, baseLength);
+        GL11.glTranslated(0, 0, baseLength);
 
         glu.gluCylinder(quadratic, arrowheadRadius, 0, arrowheadLength, section, 2);
-        gl.glRotated(180d, 1d, 0d, 0d);
+        GL11.glRotated(180d, 1d, 0d, 0d);
         glu.gluDisk(quadratic, 0, arrowheadRadius, section, 2);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     /**
@@ -71,16 +71,16 @@ public class ArrowDrawUtil {
      *            number of section
      */
     public static void drawArrowhead(GL2 gl, GLU glu, GLUquadric quadratic, double length, double radius, int section) {
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glRotated(-90d, 1d, 0d, 0d);
+        GL11.glRotated(-90d, 1d, 0d, 0d);
 
         glu.gluCylinder(quadratic, radius, 0, length, section, 2);
 
-        gl.glRotated(180d, 1d, 0d, 0d);
+        GL11.glRotated(180d, 1d, 0d, 0d);
         glu.gluDisk(quadratic, 0, radius, section, 2);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     /**
@@ -113,35 +113,35 @@ public class ArrowDrawUtil {
         }
 
         // top
-        gl.glBegin(GL.GL_TRIANGLE_FAN);
+        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 
-        gl.glVertex3d(0, length, 0);
-        gl.glNormal3d(0, 1, 0);
+        GL11.glVertex3d(0, length, 0);
+        GL11.glNormal3d(0, 1, 0);
 
         for (int i = 0; i < section; i++) {
             double x = xs[i];
             double y = ys[i];
 
-            gl.glVertex3d(x * radius, 0, -y * radius);
+            GL11.glVertex3d(x * radius, 0, -y * radius);
         }
-        gl.glVertex3d(xs[0] * radius, 0, -ys[0] * radius);
-        gl.glEnd();
+        GL11.glVertex3d(xs[0] * radius, 0, -ys[0] * radius);
+        GL11.glEnd();
 
         // bottom
-        gl.glBegin(GL.GL_TRIANGLE_FAN);
-        gl.glNormal3d(0, -1, 0);
+        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+        GL11.glNormal3d(0, -1, 0);
 
-        gl.glVertex3d(0, 0, 0);
+        GL11.glVertex3d(0, 0, 0);
 
         for (int i = section - 1; i >= 0; i--) {
             double x = xs[i];
             double y = ys[i];
 
-            gl.glVertex3d(x * radius, 0, -y * radius);
+            GL11.glVertex3d(x * radius, 0, -y * radius);
         }
-        gl.glVertex3d(xs[section - 1] * radius, 0, -ys[section - 1] * radius);
+        GL11.glVertex3d(xs[section - 1] * radius, 0, -ys[section - 1] * radius);
 
-        gl.glEnd();
+        GL11.glEnd();
     }
 
 }

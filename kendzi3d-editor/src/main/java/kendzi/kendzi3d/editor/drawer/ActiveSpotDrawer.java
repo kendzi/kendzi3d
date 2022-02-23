@@ -1,7 +1,6 @@
 package kendzi.kendzi3d.editor.drawer;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
@@ -10,6 +9,7 @@ import java.awt.Color;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Util for drawing editor active spots.
@@ -80,19 +80,19 @@ public class ActiveSpotDrawer {
 
         case NORMAL:
 
-            gl.glColor3fv(normalColor, 0);
+            GL11.glColor3fv(normalColor);
             drawEditor(gl, editorRadius, type);
             break;
 
         default:
             throw new IllegalArgumentException("Unknown editor mode: " + mode);
         }
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
 
     }
 
     private void drawHighlightEditor(GL2 gl, EditorType type, double editorRadius, float[] fillColor) {
-        gl.glColor3fv(highlightOutlineColor, 0);
+        GL11.glColor3fv(highlightOutlineColor);
 
         SimpleOutlineDrawUtil.beginSimpleOutlineLine(gl);
         drawEditor(gl, editorRadius, type);
@@ -101,8 +101,8 @@ public class ActiveSpotDrawer {
         drawEditor(gl, editorRadius, type);
         SimpleOutlineDrawUtil.endSimpleOutline(gl);
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-        gl.glColor3fv(fillColor, 0);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glColor3fv(fillColor);
         drawEditor(gl, editorRadius, type);
     }
 
@@ -139,11 +139,11 @@ public class ActiveSpotDrawer {
 
         double length = 2d * editorRadius;
 
-        gl.glPushMatrix();
-        gl.glTranslated(0, -editorRadius, 0);
+        GL11.glPushMatrix();
+        GL11.glTranslated(0, -editorRadius, 0);
 
         ArrowDrawUtil.drawArrowheadSimple(gl, glu, quadratic, length, editorRadius, NUMBER_OF_SECTIONS);
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     private static void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic, double editorRadius) {
@@ -154,9 +154,9 @@ public class ActiveSpotDrawer {
         double baseRadius = 0.1d * editorRadius;
         double arrowheadRadius = 0.6d * editorRadius;
 
-        gl.glPushMatrix();
-        gl.glTranslated(0, -length / 2d, 0);
+        GL11.glPushMatrix();
+        GL11.glTranslated(0, -length / 2d, 0);
         ArrowDrawUtil.drawArrow(gl, glu, quadratic, length, arrowheadLength, baseRadius, arrowheadRadius, NUMBER_OF_SECTIONS);
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 }

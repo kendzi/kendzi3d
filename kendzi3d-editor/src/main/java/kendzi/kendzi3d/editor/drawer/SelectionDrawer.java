@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
@@ -11,6 +10,7 @@ import kendzi.jogl.camera.Viewport;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditor;
 import kendzi.kendzi3d.editor.selection.editor.Editor;
+import org.lwjgl.opengl.GL11;
 
 public class SelectionDrawer {
 
@@ -44,8 +44,8 @@ public class SelectionDrawer {
             return;
         }
 
-        gl.glDisable(GL.GL_TEXTURE_2D);
-        gl.glDisable(GL.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         for (Editor editor : editors) {
             boolean isActiveEditor = editor.equals(activeEditor);
@@ -56,7 +56,7 @@ public class SelectionDrawer {
                 arrowEditorDrawer.draw(gl, ae, isActiveEditor, isHighlightedEditor, viewport);
             }
         }
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     public void draw(GL2 gl, Selection lastSelection, Editor lastActiveEditor, Editor lastHighlightedEditor, Viewport viewport) {

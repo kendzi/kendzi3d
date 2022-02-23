@@ -1,11 +1,8 @@
 package kendzi.kendzi3d.editor.ui;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 
 public class BaseEditorGLEventListener implements GLEventListener, ViewportProvider, CloseWindowEventSource {
 
@@ -53,6 +51,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
     @Override
     public void init(GLAutoDrawable drawable) {
+        org.lwjgl.opengl.GL.createCapabilities();
 
         GL2 gl = drawable.getGL().getGL2();
 
@@ -66,29 +65,29 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         gl.setSwapInterval(1);
 
         // Clear z-buffer.
-        gl.glClearDepth(1.0);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        GL11.glClearDepth(1.0);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
         // Enable z-buffer.
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         // Background color.
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
+        GL11.glClearColor(0.17f, 0.65f, 0.92f, 0.0f);
 
         // Smooth shade model.
-        gl.glShadeModel(GLLightingFunc.GL_SMOOTH);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
 
         // Enable Antialiasing for lines.
-        gl.glEnable(GL.GL_LINE_SMOOTH);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
         // Set Line Antialiasing.
-        gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
+        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 
         // Enable Blending.
-        gl.glEnable(GL.GL_BLEND);
+        GL11.glEnable(GL11.GL_BLEND);
 
         // Type Of Blending.
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         // Adds light for screen.
         addLight(gl);
@@ -106,26 +105,26 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     private void addLight(GL2 gl) {
 
         // Put light in model view.
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
         // Enable lighting.
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
 
         // Enable a single light source.
-        gl.glEnable(GLLightingFunc.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_LIGHT0);
 
         // Weak gray ambient.
         float[] grayLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_AMBIENT, grayLight);
 
         // Bright white diffuse & specular.
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f };
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, whiteLight);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_SPECULAR, whiteLight);
 
         // Position of light source on top right front.
         float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, lightPos);
     }
 
     @Override
@@ -159,7 +158,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         GL2 gl = drawable.getGL().getGL2();
 
         // Clear color and depth buffers.
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
         // Draw before camera is set.
         drawBeforeSetCamera(gl, viewport);
@@ -175,12 +174,12 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
         { // XXX remove!
 
-            gl.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)), 0);
+            GL11.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)));
 
         }
         drawSelection(gl);
 
-        gl.glFlush();
+        GL11.glFlush();
     }
 
     protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {

@@ -1,9 +1,6 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2GL3;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -14,6 +11,7 @@ import javax.vecmath.Vector3d;
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.math.geometry.point.Vector3dUtil;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Drawer for measure tap.
@@ -50,7 +48,7 @@ public class MeasureDrawer {
     public void drawYMeasureWithArrows(GL2 gl, Point3d begin, Point3d end, double value, Viewport viewport,
             double horizontalDistance, double arrowHeight, double arrowWidth, float lineWidth) {
 
-        gl.glLineWidth(lineWidth);
+        GL11.glLineWidth(lineWidth);
 
         Vector3d screenHorizontally = new Vector3d(viewport.getScreenHorizontally());
         screenHorizontally.normalize();
@@ -103,40 +101,40 @@ public class MeasureDrawer {
     }
 
     private void drawFlatArrowhead(GL2 gl, Point3d arrowheadPoint, Vector3d arrowheadVector, Vector3d arrowheadWidthVector) {
-        gl.glBegin(GL.GL_TRIANGLES);
+        GL11.glBegin(GL11.GL_TRIANGLES);
 
-        gl.glVertex3d(arrowheadPoint.x, arrowheadPoint.y, arrowheadPoint.z);
-        gl.glVertex3d(//
+        GL11.glVertex3d(arrowheadPoint.x, arrowheadPoint.y, arrowheadPoint.z);
+        GL11.glVertex3d(//
                 arrowheadPoint.x + arrowheadVector.x + arrowheadWidthVector.x, //
                 arrowheadPoint.y + arrowheadVector.y + arrowheadWidthVector.y, //
                 arrowheadPoint.z + arrowheadVector.z + arrowheadWidthVector.z);
-        gl.glVertex3d( //
+        GL11.glVertex3d( //
                 arrowheadPoint.x + arrowheadVector.x - arrowheadWidthVector.x, //
                 arrowheadPoint.y + arrowheadVector.y - arrowheadWidthVector.y, //
                 arrowheadPoint.z + arrowheadVector.z - arrowheadWidthVector.z);
 
-        gl.glEnd();
+        GL11.glEnd();
     }
 
     private void drawLine(GL2 gl, double beginX, double beginY, double beginZ, double endX, double endY, double endZ) {
 
-        gl.glBegin(GL.GL_LINES);
-        gl.glVertex3d(beginX, beginY, beginZ);
-        gl.glVertex3d(endX, endY, endZ);
-        gl.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex3d(beginX, beginY, beginZ);
+        GL11.glVertex3d(endX, endY, endZ);
+        GL11.glEnd();
     }
 
     private void drawLine(GL2 gl, Point3d begin, Point3d end) {
 
-        gl.glBegin(GL.GL_LINES);
-        gl.glVertex3d(begin.x, begin.y, begin.z);
-        gl.glVertex3d(end.x, end.y, end.z);
-        gl.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex3d(begin.x, begin.y, begin.z);
+        GL11.glVertex3d(end.x, end.y, end.z);
+        GL11.glEnd();
     }
 
     private void drawNumberBox(GL2 gl, GLU glu, GLUT glut, Point3d point, Double value, Viewport viewport) {
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
         String msg = String.format("%.2f m", value);
 
         Point2d p = viewport.project(gl, glu, point);
@@ -152,21 +150,21 @@ public class MeasureDrawer {
         DrawUtil.begin2D(gl, viewport.getWidth(), viewport.getHeight());
 
         // Draw a background rectangle
-        gl.glColor4f(1f, 1f, 1f, 0.6f);
-        gl.glBegin(GL2GL3.GL_QUADS);
+        GL11.glColor4f(1f, 1f, 1f, 0.6f);
+        GL11.glBegin(GL11.GL_QUADS);
         int border = 7;
-        gl.glVertex3i(x - border, y + border, 0);
-        gl.glVertex3i(x + msgWidth + border, y + border, 0);
-        gl.glVertex3i(x + msgWidth + border, y - fontSize - border, 0);
-        gl.glVertex3i(x - border, y - fontSize - border, 0);
-        gl.glEnd();
+        GL11.glVertex3i(x - border, y + border, 0);
+        GL11.glVertex3i(x + msgWidth + border, y + border, 0);
+        GL11.glVertex3i(x + msgWidth + border, y - fontSize - border, 0);
+        GL11.glVertex3i(x - border, y - fontSize - border, 0);
+        GL11.glEnd();
         // Write the message in the center of the screen
-        gl.glColor3f(0.1f, 0.1f, 0.1f);
+        GL11.glColor3f(0.1f, 0.1f, 0.1f);
 
-        gl.glRasterPos2i(x, y - 2);
+        GL11.glRasterPos2i(x, y - 2);
         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, msg);
         // Switch back to 3D viewing
         DrawUtil.end2D(gl);
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 }

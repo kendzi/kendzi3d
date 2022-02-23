@@ -8,6 +8,7 @@ import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.Selectable;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SphereSelection;
+import org.lwjgl.opengl.GL11;
 
 public class SelectionDrawUtil {
 
@@ -17,7 +18,7 @@ public class SelectionDrawUtil {
             if (selection instanceof SphereSelection) {
 
                 SphereSelection s = (SphereSelection) selection;
-                gl.glPushMatrix();
+                GL11.glPushMatrix();
 
                 Point3d p = s.getCenter();
 
@@ -25,18 +26,18 @@ public class SelectionDrawUtil {
                 double dy = p.y;
                 double dz = p.z;
 
-                gl.glLineWidth(1);
-                gl.glTranslated(dx, dy, dz);
+                GL11.glLineWidth(1);
+                GL11.glTranslated(dx, dy, dz);
 
                 DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                gl.glRotated(90d, 1d, 0, 0);
+                GL11.glRotated(90d, 1d, 0, 0);
                 DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                gl.glRotated(90d, 0, 0, 1d);
+                GL11.glRotated(90d, 0, 0, 1d);
                 DrawUtil.drawDotOuterY(gl, s.getRadius(), 24);
 
-                gl.glPopMatrix();
+                GL11.glPopMatrix();
             }
         }
     }

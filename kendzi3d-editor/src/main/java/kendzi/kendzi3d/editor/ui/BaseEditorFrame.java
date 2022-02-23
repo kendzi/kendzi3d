@@ -4,7 +4,8 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 
 import java.awt.Canvas;
 import java.awt.Frame;
@@ -13,8 +14,6 @@ import java.awt.event.WindowEvent;
 
 import javax.inject.Inject;
 
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
@@ -85,6 +84,7 @@ public abstract class BaseEditorFrame extends Frame {
         frame.setSize(640, 480);
 
         // Setup animator for canvas.
+        // FIXME TODO update fps dynamically if monitor changes
         final AnimatorBase animator = new FPSAnimator(canvas, 5);
 
         if (listener instanceof CloseWindowEventSource) {

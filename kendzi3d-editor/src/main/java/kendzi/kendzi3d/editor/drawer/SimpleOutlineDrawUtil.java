@@ -1,49 +1,47 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2GL3;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import org.lwjgl.opengl.GL11;
 
 public class SimpleOutlineDrawUtil {
 
     public static void endSimpleOutline(GL2 gl) {
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glDisable(GL2GL3.GL_POLYGON_OFFSET_LINE);
-        gl.glDisable(GL2GL3.GL_POLYGON_OFFSET_POINT);
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
+        GL11.glDisable(GL11.GL_POLYGON_OFFSET_POINT);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
-        gl.glDisable(GL.GL_CULL_FACE);
+        GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
     public static void beginSimpleOutlineLine(GL2 gl) {
-        gl.glEnable(GL.GL_CULL_FACE);
-        gl.glCullFace(GL.GL_FRONT);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_FRONT);
 
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-        gl.glLineWidth(9);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        GL11.glLineWidth(9);
 
-        gl.glEnable(GL2GL3.GL_POLYGON_OFFSET_LINE);
+        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
         // offset polygons to back
-        gl.glPolygonOffset(1.0f, 1.0f);
+        GL11.glPolygonOffset(1.0f, 1.0f);
         // bold line
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
 
     public static void beginSimpleOutlinePoint(GL2 gl) {
-        gl.glEnable(GL.GL_CULL_FACE);
-        gl.glCullFace(GL.GL_FRONT);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_FRONT);
 
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_POINT);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_POINT);
 
-        gl.glPointSize(6);
-        gl.glEnable(GL2GL3.GL_POLYGON_OFFSET_POINT);
+        GL11.glPointSize(6);
+        GL11.glEnable(GL11.GL_POLYGON_OFFSET_POINT);
 
         // offset polygons to back
-        gl.glPolygonOffset(2.0f, 2.0f);
+        GL11.glPolygonOffset(2.0f, 2.0f);
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
 
 }

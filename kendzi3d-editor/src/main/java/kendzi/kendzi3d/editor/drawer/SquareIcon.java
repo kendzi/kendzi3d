@@ -6,10 +6,7 @@
 
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
@@ -19,6 +16,7 @@ import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Displays given icon.
@@ -92,43 +90,43 @@ public class SquareIcon implements Gl2Draw {
         texture.enable(gl);
         texture.bind(gl);
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         // Set transparency for texture
-        gl.glColor4f(1f, 1f, 1f, 0.8f);
+        GL11.glColor4f(1f, 1f, 1f, 0.8f);
 
         // Mix transparency color with texture
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
         // No depth.
-        gl.glDisable(GL.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         // Draw icon in 2d mode.
         DrawUtil.begin2D(gl, width, height);
 
         TextureCoords tc = texture.getImageTexCoords();
 
-        gl.glBegin(GL2.GL_POLYGON);
+        GL11.glBegin(GL11.GL_POLYGON);
 
-        gl.glTexCoord2d(tc.left(), tc.bottom());
-        gl.glVertex2d(minx, maxy);
-        gl.glTexCoord2d(tc.right(), tc.bottom());
-        gl.glVertex2d(maxx, maxy);
-        gl.glTexCoord2d(tc.right(), tc.top());
-        gl.glVertex2d(maxx, miny);
-        gl.glTexCoord2d(tc.left(), tc.top());
-        gl.glVertex2d(minx, miny);
+        GL11.glTexCoord2d(tc.left(), tc.bottom());
+        GL11.glVertex2d(minx, maxy);
+        GL11.glTexCoord2d(tc.right(), tc.bottom());
+        GL11.glVertex2d(maxx, maxy);
+        GL11.glTexCoord2d(tc.right(), tc.top());
+        GL11.glVertex2d(maxx, miny);
+        GL11.glTexCoord2d(tc.left(), tc.top());
+        GL11.glVertex2d(minx, miny);
 
-        gl.glEnd();
+        GL11.glEnd();
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
 
         texture.disable(gl);
 
         DrawUtil.end2D(gl);
 
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 }
