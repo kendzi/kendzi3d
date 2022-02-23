@@ -6,19 +6,17 @@
 
 package kendzi.jogl.ui;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -30,6 +28,8 @@ import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
 import kendzi.math.geometry.point.PointUtil;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 /**
  * Base for test jogl applications.
@@ -74,7 +74,7 @@ public class BaseJoglFrame implements GLEventListener {
         canvas.addGLEventListener(this);
         frame.add(canvas);
         frame.setSize(640, 480);
-        final Animator animator = new Animator(canvas);
+        final AnimatorBase animator = new FPSAnimator(canvas, 60);
         frame.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -143,16 +143,16 @@ public class BaseJoglFrame implements GLEventListener {
         gl.setSwapInterval(1);
 
         // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        gl.glClearDepth(1.0);
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
+        GL11.glClearDepth(1.0);
+        GL11.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
 
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
+        GL11.glGetIntegerv(GL11.GL_DEPTH_BITS, depth_bits);
 
-        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to
+        GL11.glShadeModel(GL11.GL_SMOOTH); // try setting this to
         // GL_FLAT and see what
         // happens.
 
@@ -160,7 +160,7 @@ public class BaseJoglFrame implements GLEventListener {
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
+        GL11.glMaterialfv(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, grayCol);
 
         axisLabels.init();
     }
@@ -175,10 +175,10 @@ public class BaseJoglFrame implements GLEventListener {
             height = 1;
         }
 
-        gl.glViewport(0, 0, width, height); // size of drawing area
+        GL11.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
         glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 1500.0); // 5
     }
 
@@ -193,19 +193,19 @@ public class BaseJoglFrame implements GLEventListener {
         GLU glu = new GLU();
 
         // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPos);
 
         // clear color and depth buffers
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        // GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glLoadIdentity();
 
         setCamera(glu);
 
-        gl.glEnable(GL.GL_MULTISAMPLE);
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
 
-        // String versionStr = gl.glGetString( GL2.GL_VERSION );
+        // String versionStr = GL11.glGetString( GL11.GL_VERSION );
         // log.info( "GL version:"+versionStr );
 
         floor.draw(gl);
@@ -215,7 +215,7 @@ public class BaseJoglFrame implements GLEventListener {
         // drawTextInfo(gl, this.simpleMoveAnimator.info());
 
         // Flush all drawing operations to the graphics card
-        gl.glFlush();
+        GL11.glFlush();
     }
 
     /**
@@ -249,28 +249,28 @@ public class BaseJoglFrame implements GLEventListener {
      * Set up a point source with ambient, diffuse, and specular color. components
      */
     private void addLight(GL2 gl) {
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
         // enable a single light source
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glEnable(GLLightingFunc.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
 
         float gray = 0.5f;
         float[] grayLight = { gray, gray, gray, 1.0f }; // weak gray ambient
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_AMBIENT, grayLight);
 
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
         // & specular
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, whiteLight);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_SPECULAR, whiteLight);
 
         // float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
         float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, lightPos);
 
-        // gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+        // GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
 
         // float [] lmodel_ambient = { 1f, 1f, 1f, 1.0f };
-        // gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
+        // GL11.glLightModelfv(GL11.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
     }
 }
