@@ -176,10 +176,10 @@ public class StaticBaseJoglFrame implements GLEventListener {
             height = 1;
         }
 
-        gl.glViewport(0, 0, width, height); // size of drawing area
+        GL11.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GL11.GL_PROJECTION);
-        gl.glLoadIdentity();
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
         glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 1500.0); // 5
     }
 
@@ -187,24 +187,24 @@ public class StaticBaseJoglFrame implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
 
         GL2 gl = drawable.getGL().getGL2();
-        // System.err.println("INIT GL IS: " + gl.getClass().getName());
+        // System.err.println("INIT GL IS: " + GL11.getClass().getName());
 
         GLU glu = new GLU();
 
         // _direction_
-        gl.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPos);
 
         // clear color and depth buffers
-        gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        // gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GL11.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        // GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glLoadIdentity();
 
         setCamera(glu);
 
-        gl.glEnable(GL13.GL_MULTISAMPLE);
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
 
-        // String versionStr = gl.glGetString( GL11.GL_VERSION );
+        // String versionStr = GL11.glGetString( GL11.GL_VERSION );
         // log.info( "GL version:"+versionStr );
 
         floor.draw(gl);
@@ -214,7 +214,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
         // drawTextInfo(gl, this.simpleMoveAnimator.info());
 
         // Flush all drawing operations to the graphics card
-        gl.glFlush();
+        GL11.glFlush();
     }
 
     /**
