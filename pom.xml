@@ -29,6 +29,8 @@
     <guice.version>4.2.0</guice.version>
     <inject.version>1</inject.version>
     <jogl.version>2.3.2</jogl.version>
+    <lwjgl.version>3.3.0</lwjgl.version>
+    <lwjgl3-awt.version>0.1.8</lwjgl3-awt.version>
     <gluegen.version>2.3.2</gluegen.version>
     <kendzi.math.version>0.0.13-SNAPSHOT</kendzi.math.version>
     <kendzi3d-resources.version>0.0.3-SNAPSHOT</kendzi3d-resources.version>
@@ -39,6 +41,11 @@
         <!-- artifact from josm repository -->
         <groupId>org.openstreetmap.josm</groupId>
         <artifactId>josm</artifactId>
+        <version>SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openstreetmap.josm.plugins</groupId>
+        <artifactId>lwjgl</artifactId>
         <version>SNAPSHOT</version>
       </dependency>
       <dependency>
@@ -60,6 +67,12 @@
         <groupId>kendzi.kendzi3d</groupId>
         <artifactId>josm-jogl</artifactId>
         <version>1.2.4-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.lwjgl</groupId>
+        <artifactId>lwjgl-opengl</artifactId>
+        <version>${lwjgl.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -96,8 +109,8 @@
     <module>kendzi3d-jogl-textures-library-bindings</module>
     <module>kendzi3d-jogl-textures-library-res</module>
     <!-- Because of bug in java 8 there is no easy way to make correct bindings.
-        https://java.net/jira/browse/JAXB-986
-        Don't want to play with work around, simply use old version. -->
+		https://java.net/jira/browse/JAXB-986
+		Don't want to play with work around, simply use old version. -->
     <module>kendzi3d-collada-bindings</module>
     <module>kendzi3d-collada-exporter</module>
     <module>kendzi3d-models-library</module>
