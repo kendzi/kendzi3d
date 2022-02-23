@@ -1,11 +1,12 @@
 package kendzi.jogl.util;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
 import kendzi.math.geometry.point.Vector3dUtil;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Util for drawing lines.
@@ -37,14 +38,14 @@ public class LineDrawUtil {
 
         Point3d drawPoint = new Point3d(begin);
 
-        gl.glBegin(GL.GL_LINES);
+        GL11.glBegin(GL11.GL_LINES);
 
         while (distance > drawedDistance + segmentLength) {
             drawedDistance += segmentLength;
 
             if (fill) {
-                gl.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-                gl.glVertex3d(drawPoint.x + segmentVector.x, //
+                GL11.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
+                GL11.glVertex3d(drawPoint.x + segmentVector.x, //
                         drawPoint.y + segmentVector.y, //
                         drawPoint.z + segmentVector.z);
             }
@@ -53,11 +54,11 @@ public class LineDrawUtil {
         }
 
         if (fill) {
-            gl.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-            gl.glVertex3d(end.x, end.y, end.z);
+            GL11.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
+            GL11.glVertex3d(end.x, end.y, end.z);
 
         }
 
-        gl.glEnd();
+        GL11.glEnd();
     }
 }

@@ -7,15 +7,15 @@
 package kendzi.jogl.drawer;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
-import java.awt.Font;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.Gl2Draw;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Draws axis labels.
@@ -103,7 +103,7 @@ public class AxisLabels implements Gl2Draw {
     @Override
     public void draw(GL2 gl) {
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         if (textToRender == null) {
             textToRender = createLabels();
@@ -111,7 +111,7 @@ public class AxisLabels implements Gl2Draw {
 
         drawAxisText(gl, textToRender);
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 
     /**

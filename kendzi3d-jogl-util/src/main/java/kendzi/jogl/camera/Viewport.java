@@ -1,8 +1,6 @@
 package kendzi.jogl.camera;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 
 import javax.vecmath.Point2d;
@@ -11,6 +9,7 @@ import javax.vecmath.Vector3d;
 
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.lwjgl.opengl.GL11;
 
 /**
  * View port for opengl. Configuration of perspective to convert from 3d space
@@ -209,9 +208,9 @@ public class Viewport implements ViewportPicker {
         // modelview.clear();
         // projectionview.clear();
         // viewportview.clear();
-        gl.glGetFloatv(GLMatrixFunc.GL_MODELVIEW_MATRIX, modelview, 0);
-        gl.glGetFloatv(GLMatrixFunc.GL_PROJECTION_MATRIX, projectionview, 0);
-        gl.glGetIntegerv(GL.GL_VIEWPORT, viewportview, 0);
+        GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelview);
+        GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionview);
+        GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewportview);
         glu.gluProject((float) point.x, (float) point.y, (float) point.z, modelview, 0, projectionview, 0, viewportview, 0,
                 objectPos, 0);
 
@@ -224,11 +223,11 @@ public class Viewport implements ViewportPicker {
         // float [] buf = new float[16];
         //
         //
-        // gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buf, 0);
+        // GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, buf, 0);
         // view = new Matrix4f(buf);
         //
         //
-        // gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buf,0);
+        // GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, buf,0);
         // projection = new Matrix4f(buf);
         //
         //
