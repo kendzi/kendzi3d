@@ -205,7 +205,7 @@ public class RoofDormerTypeA extends AbstractRoofDormerType {
         topFace.addVert(t3, tc3, tni);
         topFace.addVert(t4, tc4, tni);
 
-        List<MeshFactory> ret = new ArrayList<MeshFactory>();
+        List<MeshFactory> ret = new ArrayList<>();
         ret.add(border);
         ret.add(top);
 

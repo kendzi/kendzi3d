@@ -33,7 +33,7 @@ public class RoofLinesParser {
             Way way = (Way) primitive;
 
             return hasWayRoofLines(way);
-        } else if (primitive instanceof Relation && ((Relation) primitive).isMultipolygon()) {
+        } else if (primitive instanceof Relation && primitive.isMultipolygon()) {
             Relation mp = (Relation) primitive;
 
             for (RelationMember relationMember : mp.getMembers()) {
@@ -78,17 +78,17 @@ public class RoofLinesParser {
 
     public static RoofLinesModel parse(OsmPrimitive primitive, Perspective perspective) {
 
-        Map<Point2d, Double> roofHeightMap = new HashMap<Point2d, Double>();
+        Map<Point2d, Double> roofHeightMap = new HashMap<>();
 
-        List<Way> edgesWay = new ArrayList<Way>();
-        List<Way> ridgesWay = new ArrayList<Way>();
-        List<Node> apexNode = new ArrayList<Node>();
+        List<Way> edgesWay = new ArrayList<>();
+        List<Way> ridgesWay = new ArrayList<>();
+        List<Node> apexNode = new ArrayList<>();
 
-        Collection<Way> roofLinesWays = new ArrayList<Way>();
+        Collection<Way> roofLinesWays = new ArrayList<>();
         Double roofHeight = 0d;
 
-        List<Way> outerWay = new ArrayList<Way>();
-        List<Way> innerWay = new ArrayList<Way>();
+        List<Way> outerWay = new ArrayList<>();
+        List<Way> innerWay = new ArrayList<>();
 
         if (primitive instanceof Way) {
             Way way = (Way) primitive;
@@ -98,7 +98,7 @@ public class RoofLinesParser {
             findApexNodes(apexNode, way);
 
             roofHeight = parseRoofHeight(primitive);
-        } else if (primitive instanceof Relation && ((Relation) primitive).isMultipolygon()) {
+        } else if (primitive instanceof Relation && primitive.isMultipolygon()) {
             Relation mp = (Relation) primitive;
             roofHeight = parseRoofHeight(primitive);
 
@@ -145,7 +145,7 @@ public class RoofLinesParser {
             findApexNodes(apexNode, roofLine);
         }
 
-        List<LineSegment2d> innerSegments = new ArrayList<LineSegment2d>();
+        List<LineSegment2d> innerSegments = new ArrayList<>();
 
         for (Way edgeWay : edgesWay) {
             // ?
@@ -160,8 +160,8 @@ public class RoofLinesParser {
             Double ridgeHeight = ModelUtil.parseHeight(height, roofHeight);
 
             Point2d[] points = transform(ridgeWay, perspective);
-            for (int i = 0; i < points.length; i++) {
-                roofHeightMap.put(points[i], ridgeHeight);
+            for (Point2d point : points) {
+                roofHeightMap.put(point, ridgeHeight);
             }
 
             for (int i = 1; i < points.length; i++) {
@@ -195,9 +195,7 @@ public class RoofLinesParser {
     private static void setNodesAsMinHeight(Perspective perspective, Map<Point2d, Double> roofHeightMap, Way way) {
         Point2d[] points = transform(way, perspective);
         for (Point2d point2d : points) {
-            if (roofHeightMap.get(point2d) == null) {
-                roofHeightMap.put(point2d, MIN_HEIGHT);
-            }
+            roofHeightMap.putIfAbsent(point2d, MIN_HEIGHT);
         }
     }
 
@@ -243,10 +241,10 @@ public class RoofLinesParser {
 
     private static Collection<Way> findRoofLinesWays(Way way) {
 
-        List<Way> process = new ArrayList<Way>();
+        List<Way> process = new ArrayList<>();
         process.add(way);
 
-        Set<Way> processed = new HashSet<Way>();
+        Set<Way> processed = new HashSet<>();
         // processed.add(way);
 
         while (!process.isEmpty()) {
@@ -273,7 +271,7 @@ public class RoofLinesParser {
     }
 
     private static List<Way> findChildRoofLines(Way way) {
-        List<Way> ret = new ArrayList<Way>();
+        List<Way> ret = new ArrayList<>();
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);

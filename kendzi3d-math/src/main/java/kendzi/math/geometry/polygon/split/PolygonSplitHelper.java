@@ -26,7 +26,7 @@ public class PolygonSplitHelper {
     }
 
     private static MultiPolygonList2d toMultiPolygon(List<List<Point2d>> leftPolygons) {
-        List<PolygonList2d> polygons = new ArrayList<PolygonList2d>();
+        List<PolygonList2d> polygons = new ArrayList<>();
 
         for (List<Point2d> polygon : leftPolygons) {
             polygons.add(new PolygonList2d(polygon));
@@ -61,8 +61,8 @@ public class PolygonSplitHelper {
     }
 
     public static PlygonSplitUtil.SplitResult split(MultiPolygonList2d multiPolygon, LinePoints2d splittingLine) {
-        final List<List<Point2d>> leftPolygons = new ArrayList<List<Point2d>>();
-        final List<List<Point2d>> rightPolygons = new ArrayList<List<Point2d>>();
+        final List<List<Point2d>> leftPolygons = new ArrayList<>();
+        final List<List<Point2d>> rightPolygons = new ArrayList<>();
 
         for (PolygonList2d polygon : multiPolygon.getPolygons()) {
 

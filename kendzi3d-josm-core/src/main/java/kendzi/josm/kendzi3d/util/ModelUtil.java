@@ -120,7 +120,7 @@ public final class ModelUtil {
                 break;
             }
 
-            return mult * Double.valueOf(pHeightStr.substring(0, strlen));
+            return mult * Double.parseDouble(pHeightStr.substring(0, strlen));
 
         } catch (Exception e) {
             log.info("Unsupported height: " + pHeightStr);

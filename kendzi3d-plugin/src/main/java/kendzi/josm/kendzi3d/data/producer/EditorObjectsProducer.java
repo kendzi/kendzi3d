@@ -279,9 +279,9 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         // Set<OsmId> currentIdsSet = new HashSet<OsmId>(currentIds);
 
-        Set<OsmId> newIds = new HashSet<OsmId>(filteredIds);
-        Set<OsmId> updateIds = new HashSet<OsmId>(filteredIds.size());
-        Set<OsmId> removeIds = new HashSet<OsmId>(filteredIds.size());
+        Set<OsmId> newIds = new HashSet<>(filteredIds);
+        Set<OsmId> updateIds = new HashSet<>(filteredIds.size());
+        Set<OsmId> removeIds = new HashSet<>(filteredIds.size());
 
         // find all ids which are not in filtered set
         for (OsmId osmId : currentIds) {

@@ -7,7 +7,6 @@ package kendzi.kendzi3d.buildings.builder.roof.lines;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,7 +87,7 @@ public class RoofLinesBuildier {
         // XXX
         MeshFactory outlineMesh = createRoofMesh(mf, roofTextureData, roofColor);
 
-        List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments, Collections.<Point2d> emptyList());
+        List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments, Collections.emptyList());
 
         Vector3d up = new Vector3d(0d, 1d, 0d);
         for (Triangle2d triangle : triangles) {
@@ -123,14 +122,8 @@ public class RoofLinesBuildier {
 
         }
 
-        HeightCalculator hc = new HeightCalculator() {
-
-            @Override
-            public List<SegmentHeight> height(Point2d p1, Point2d p2) {
-
-                return Arrays.asList(new SegmentHeight(p1, getHeight(heights, p1), p2, getHeight(heights, p2)));
-            }
-        };
+        HeightCalculator hc = (p1, p2) -> Collections
+                .singletonList(new SegmentHeight(p1, getHeight(heights, p1), p2, getHeight(heights, p2)));
 
         double minHeight = maxHeight - roof.getRoofHeight();
 
@@ -159,7 +152,7 @@ public class RoofLinesBuildier {
     }
 
     private static Map<Point2d, Double> normalizeRoofHeights(double maxHeight, double roofHeight, Map<Point2d, Double> heights) {
-        Map<Point2d, Double> ret = new HashMap<Point2d, Double>();
+        Map<Point2d, Double> ret = new HashMap<>();
 
         double cullisHeight = maxHeight - roofHeight;
         for (Entry<Point2d, Double> entry : heights.entrySet()) {
@@ -196,7 +189,7 @@ public class RoofLinesBuildier {
 
     private static List<LineSegment3d> createEdgesDebug(Collection<LineSegment2d> segments, Map<Point2d, Double> heights) {
 
-        List<LineSegment3d> ret = new ArrayList<LineSegment3d>();
+        List<LineSegment3d> ret = new ArrayList<>();
 
         if (segments == null) {
             return ret;

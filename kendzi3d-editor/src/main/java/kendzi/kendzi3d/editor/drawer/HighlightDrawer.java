@@ -15,7 +15,7 @@ import kendzi.jogl.util.ColorUtil;
  */
 public class HighlightDrawer {
 
-    private static float[] selectionColor = ColorUtil.colorToArray(new Color(0.5f, 1.0f, 0.5f));
+    private static final float[] selectionColor = ColorUtil.colorToArray(new Color(0.5f, 1.0f, 0.5f));
 
     /**
      * Draw object with highlight.

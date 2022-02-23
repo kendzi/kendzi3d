@@ -38,11 +38,11 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
      */
     ResourceService resourceService;
 
-    private Map<String, Texture> cache = new HashMap<String, Texture>();
+    private final Map<String, Texture> cache = new HashMap<>();
 
     private boolean filter;
 
-    private List<TextureBuilder> textureBuilderList = new ArrayList<TextureBuilder>();
+    private List<TextureBuilder> textureBuilderList = new ArrayList<>();
 
     /**
      * Set texture filter.
@@ -248,7 +248,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
                     } catch (Exception e) {
                         // gl.getGL4().glGetErrorString
                         int errorCode = gl.glGetError();
-                        String errorStr = new String();
+                        String errorStr = "";
                         errorStr = new GLU().gluErrorString(errorCode);
                         System.err.println(errorStr);
                         log.error("Error loading texture: " + pName + " texture url: " + pName, e);

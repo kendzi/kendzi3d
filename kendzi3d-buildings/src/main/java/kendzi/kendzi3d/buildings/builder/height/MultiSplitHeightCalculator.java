@@ -29,7 +29,7 @@ public abstract class MultiSplitHeightCalculator implements HeightCalculator {
     @Override
     public List<SegmentHeight> height(Point2d p1, Point2d p2) {
 
-        List<Point2d> chain = new ArrayList<Point2d>();
+        List<Point2d> chain = new ArrayList<>();
         chain.add(p1);
         chain.add(p2);
 
@@ -40,7 +40,7 @@ public abstract class MultiSplitHeightCalculator implements HeightCalculator {
             enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(enrichedChain, splittingLine);
         }
 
-        List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
+        List<SegmentHeight> ret = new ArrayList<>();
 
         for (int i = 0; i < enrichedChain.size() - 1; i++) {
             Point2d begin = enrichedChain.get(i);

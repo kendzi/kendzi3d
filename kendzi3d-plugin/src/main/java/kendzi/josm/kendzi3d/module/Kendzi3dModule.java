@@ -200,7 +200,7 @@ public class Kendzi3dModule extends AbstractModule {
     List<Layer> provideLayers(ModelsLibraryLayer pointModelsLayer, NewBuildingLayer buildingLayer, RoadLayer roadLayer,
             WaterLayer waterLayer, TreeLayer treeLayer, FenceLayer fenceLayer, WallLayer wallLayer, TestWallLayer testWallLayer) {
 
-        List<Layer> layerList = new ArrayList<Layer>();
+        List<Layer> layerList = new ArrayList<>();
         layerList.add(buildingLayer);
         layerList.add(roadLayer);
         layerList.add(waterLayer);

@@ -20,7 +20,7 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
  */
 public interface RoofTypeBuilder {
 
-    public static double DEFAULT_ROOF_HEIGHT = 2.5d;
+    double DEFAULT_ROOF_HEIGHT = 2.5d;
 
     /**
      * Build roof from given roof parameters.
@@ -37,7 +37,7 @@ public interface RoofTypeBuilder {
      *            roof material
      * @return builded roof
      */
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d wallPolygon, DormerRoofModel roof, double height,
+    RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d wallPolygon, DormerRoofModel roof, double height,
             RoofMaterials roofMaterials);
 
 }

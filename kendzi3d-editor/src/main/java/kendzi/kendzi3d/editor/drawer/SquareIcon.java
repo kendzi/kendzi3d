@@ -33,11 +33,11 @@ public class SquareIcon implements Gl2Draw {
     /**
      * Display icon size.
      */
-    private double size = 64;
+    private final double size = 64;
 
-    private double x = 10;
+    private final double x = 10;
 
-    private double y = 10;
+    private final double y = 10;
 
     /**
      * Texture cache service.

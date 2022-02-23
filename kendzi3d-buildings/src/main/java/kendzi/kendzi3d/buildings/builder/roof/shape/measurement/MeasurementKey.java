@@ -88,7 +88,7 @@ public enum MeasurementKey {
     /**
      * Key value.
      */
-    private String key;
+    private final String key;
 
     /**
      * Constructor for enum.
@@ -96,7 +96,7 @@ public enum MeasurementKey {
      * @param pKey
      *            key value
      */
-    private MeasurementKey(String pKey) {
+    MeasurementKey(String pKey) {
 
         this.key = pKey;
 

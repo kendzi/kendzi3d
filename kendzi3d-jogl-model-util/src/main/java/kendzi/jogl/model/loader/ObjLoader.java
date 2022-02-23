@@ -35,7 +35,7 @@ public class ObjLoader {
             return null;
         }
 
-        List<Vector3d> normals = new ArrayList<Vector3d>();
+        List<Vector3d> normals = new ArrayList<>();
         if (normalsArray != null) {
             normals.addAll(Arrays.asList(normalsArray)); // XXX
         }
@@ -60,7 +60,6 @@ public class ObjLoader {
                     Point3d p3 = vertices[face.vertIndex[t + 2]];
 
                     Vector3d normal = NormalUtil.normal(p1, p2, p3);
-                    ;
 
                     normals.add(normal);
                     int ni = normals.indexOf(normal);
@@ -88,7 +87,6 @@ public class ObjLoader {
                     Point3d p3 = vertices[face.vertIndex[t]];
 
                     Vector3d normal = NormalUtil.normal(p1, p2, p3);
-                    ;
 
                     normals.add(normal);
                     int ni = normals.indexOf(normal);
@@ -105,7 +103,7 @@ public class ObjLoader {
             }
         }
 
-        return normals.toArray(new Vector3d[normals.size()]);
+        return normals.toArray(new Vector3d[0]);
     }
 
     private static boolean isNeedToRecalcNormals(Face face) {

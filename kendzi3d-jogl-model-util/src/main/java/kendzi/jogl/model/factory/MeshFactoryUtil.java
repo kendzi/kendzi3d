@@ -348,7 +348,7 @@ public class MeshFactoryUtil {
         // FIXME remove this method and switch to PolygonUtil
         int size = poly.size();
 
-        List<Point2d> polySweeped = new ArrayList<Point2d>();
+        List<Point2d> polySweeped = new ArrayList<>();
         for (Point2d point2d : poly) {
             polySweeped.add(new Point2d(point2d.x + 0.3 + Double.MIN_VALUE, point2d.y + 0.3 + Double.MIN_VALUE));
         }
@@ -363,7 +363,7 @@ public class MeshFactoryUtil {
             return null;
         }
 
-        List<Integer> ret = new ArrayList<Integer>();
+        List<Integer> ret = new ArrayList<>();
         for (Integer integer : trianglePoly) {
             // sweep back
             ret.add((integer + 1) % size);

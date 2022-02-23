@@ -2,8 +2,6 @@ package kendzi.josm.kendzi3d.jogl.model.export.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,22 +12,19 @@ import javax.swing.border.EmptyBorder;
 
 public class ExportOutput extends JFrame {
 
-    private JPanel contentPane;
-    private JTextArea textLog;
+    private final JPanel contentPane;
+    private final JTextArea textLog;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ExportOutput frame = new ExportOutput();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                ExportOutput frame = new ExportOutput();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -49,12 +44,7 @@ public class ExportOutput extends JFrame {
         contentPane.add(panelButtons, BorderLayout.SOUTH);
 
         JButton btnOk = new JButton("Ok");
-        btnOk.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnOk.addActionListener(e -> dispose());
         panelButtons.add(btnOk);
 
         JScrollPane scrollPane = new JScrollPane();

@@ -23,13 +23,13 @@ import kendzi.jogl.model.geometry.material.Material;
 
 public class ModelFactory {
 
-    protected List<Material> materials = new ArrayList<Material>();
+    protected List<Material> materials = new ArrayList<>();
 
     public static ModelFactory modelBuilder() {
         return new ModelFactory();
     }
 
-    private List<MeshFactory> mashFactory = new ArrayList<MeshFactory>();;
+    private final List<MeshFactory> mashFactory = new ArrayList<>();
 
     protected ModelFactory() {
         //

@@ -40,7 +40,7 @@ public class ModelLibraryXmlDao {
     /** Log. */
     private static final Logger log = Logger.getLogger(ModelsLibraryService.class);
 
-    private ResourceService resourceManager;
+    private final ResourceService resourceManager;
 
     public ModelLibraryXmlDao(ResourceService resourceManager) {
         super();

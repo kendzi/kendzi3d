@@ -31,15 +31,14 @@ public interface TextureLibraryStorageService {
      *            texture key
      * @return texture data
      */
-    public TextureData getTextureDefault(String textureKey);
+    TextureData getTextureDefault(String textureKey);
 
-    public List<TextureData> findTextureData(String textureKey);
+    List<TextureData> findTextureData(String textureKey);
 
-    public String getKey(TextureLibraryKey pKey, String... pKeyParts);
+    String getKey(TextureLibraryKey pKey, String... pKeyParts);
 
-    public void reload();
+    void reload();
 
-    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary)
-            throws FileNotFoundException, JAXBException, MalformedURLException;
+    void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException;
 
 }

@@ -7,8 +7,8 @@ import kendzi.kendzi3d.expressions.functions.Function;
 import kendzi.kendzi3d.expressions.functions.NamedFunction;
 
 public class Context {
-    private Map<String, Object> variables = new HashMap<String, Object>();
-    private Map<String, Function> functions = new HashMap<String, Function>();
+    private Map<String, Object> variables = new HashMap<>();
+    private Map<String, Function> functions = new HashMap<>();
 
     /**
      * @return the variables

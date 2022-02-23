@@ -35,27 +35,27 @@ public class CleanUpAction extends JosmAction {
     /**
      * Texture cache service.
      */
-    private TextureCacheService textureCacheService;
+    private final TextureCacheService textureCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Model cache service.
      */
-    private ModelCacheService modelCacheService;
+    private final ModelCacheService modelCacheService;
 
     /**
      * Model library service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     /**
      * Models library layer.
      */
-    private ModelsLibraryLayer modelsLibraryLayer;
+    private final ModelsLibraryLayer modelsLibraryLayer;
 
     /**
      * Constructor.

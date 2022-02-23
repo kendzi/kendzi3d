@@ -10,6 +10,6 @@ public interface MultiPointWorldObject extends StaticModelWorldObject {
     /**
      * @return the points
      */
-    public List<Point3d> getPoints();
+    List<Point3d> getPoints();
 
 }

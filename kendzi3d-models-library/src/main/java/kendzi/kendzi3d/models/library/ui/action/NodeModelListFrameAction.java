@@ -29,21 +29,18 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NodeModelListFrameAction frame = new NodeModelListFrameAction();
-                    ResourceService urlReciverService = new UrlReciverServiceTest();
-                    ModelsLibraryService temp = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
-                    temp.init();
+        EventQueue.invokeLater(() -> {
+            try {
+                NodeModelListFrameAction frame = new NodeModelListFrameAction();
+                ResourceService urlReciverService = new UrlReciverServiceTest();
+                ModelsLibraryService temp = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
+                temp.init();
 
-                    frame.setNodeModelService(temp);
-                    frame.loadTableData();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e);
-                }
+                frame.setNodeModelService(temp);
+                frame.loadTableData();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                log.error(e);
             }
         });
     }

@@ -32,7 +32,7 @@ public class PointModelListAction extends JosmAction {
     /**
      * Point model service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     /**
      * Constructor.

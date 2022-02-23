@@ -85,7 +85,7 @@ public class RoofTypeUtil {
      */
     public static List<Point2d> splitBorder(PolygonList2d polygon, LinePoints2d... lines) {
 
-        List<Point2d> splitPolygon = new ArrayList<Point2d>(polygon.getPoints());
+        List<Point2d> splitPolygon = new ArrayList<>(polygon.getPoints());
 
         for (LinePoints2d line : lines) {
             splitPolygon = EnrichPolygonalChainUtil.enrichClosedPolygonalChainByLineCrossing(splitPolygon, line);
@@ -121,12 +121,12 @@ public class RoofTypeUtil {
 
             List<SegmentHeight> height2 = heightCalculator.height(p1, p2);
 
-            for (int j = 0; j < height2.size(); j++) {
+            for (SegmentHeight height : height2) {
 
-                List<Point2d> segment = new ArrayList<Point2d>(2);
-                List<Double> segmentHeights = new ArrayList<Double>(2);
+                List<Point2d> segment = new ArrayList<>(2);
+                List<Double> segmentHeights = new ArrayList<>(2);
 
-                SegmentHeight segmentHeight = height2.get(j);
+                SegmentHeight segmentHeight = height;
 
                 segment.add(segmentHeight.getBegin());
                 segment.add(segmentHeight.getEnd());
@@ -179,7 +179,7 @@ public class RoofTypeUtil {
             }
         }
 
-        List<Point3d> rect = new ArrayList<Point3d>();
+        List<Point3d> rect = new ArrayList<>();
         rect.add(new Point3d(minx, height, -miny));
         rect.add(new Point3d(minx, height, -maxy));
         rect.add(new Point3d(maxx, height, -maxy));

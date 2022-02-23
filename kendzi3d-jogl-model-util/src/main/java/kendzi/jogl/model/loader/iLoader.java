@@ -16,5 +16,5 @@ import kendzi.jogl.model.geometry.Model;
  * @author RodgersGB
  */
 public interface iLoader {
-    public Model load(String path) throws ModelLoadException;
+    Model load(String path) throws ModelLoadException;
 }

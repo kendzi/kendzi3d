@@ -233,7 +233,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             return;
         }
 
-        List<Selection> selections = new ArrayList<Selection>();
+        List<Selection> selections = new ArrayList<>();
         for (EditableObject editableObject : editableObjects) {
             if (criteria.match(editableObject)) {
 

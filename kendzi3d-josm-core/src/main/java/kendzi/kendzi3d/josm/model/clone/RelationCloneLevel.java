@@ -12,11 +12,11 @@ import org.openstreetmap.josm.data.osm.Relation;
 
 public class RelationCloneLevel implements java.lang.Iterable<Double> {
 
-    private double offset = 0;
+    private double offset;
 
     private int from = 1;
 
-    private int repeat = 0;
+    private int repeat;
 
     private int every = 1;
 
@@ -26,7 +26,7 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     // private double offset =0;
 
     public static List<RelationCloneLevel> buildHeightClone(OsmPrimitive pOsmPrimitive, double pLevelHeight) {
-        List<RelationCloneLevel> ret = new ArrayList<RelationCloneLevel>();
+        List<RelationCloneLevel> ret = new ArrayList<>();
 
         if (pOsmPrimitive == null) {
             return ret;

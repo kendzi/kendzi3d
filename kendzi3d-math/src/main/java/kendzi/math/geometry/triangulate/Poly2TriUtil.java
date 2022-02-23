@@ -25,12 +25,12 @@ import org.poly2tri.triangulation.point.TPoint;
  */
 public class Poly2TriUtil {
     static class CDTSet implements Triangulatable {
-        List<TriangulationPoint> points = new ArrayList<TriangulationPoint>(20);
-        List<DelaunayTriangle> triangles = new ArrayList<DelaunayTriangle>(20);
-        ArrayList<LineSegment2d> segmentSet = new ArrayList<LineSegment2d>();
+        List<TriangulationPoint> points = new ArrayList<>(20);
+        List<DelaunayTriangle> triangles = new ArrayList<>(20);
+        ArrayList<LineSegment2d> segmentSet = new ArrayList<>();
 
         // it seems poly2tri requires points to be unique objects
-        HashMap<Point2d, TriangulationPoint> pointSet = new HashMap<Point2d, TriangulationPoint>();
+        HashMap<Point2d, TriangulationPoint> pointSet = new HashMap<>();
 
         public CDTSet(PolygonList2d polygon, Collection<PolygonList2d> holes, Collection<LineSegment2d> cSegments,
                 Collection<Point2d> cPoints) {
@@ -187,7 +187,7 @@ public class Poly2TriUtil {
 
         Poly2Tri.triangulate(tcx);
 
-        List<Triangle2d> triangles = new ArrayList<Triangle2d>();
+        List<Triangle2d> triangles = new ArrayList<>();
 
         List<DelaunayTriangle> result = cdt.getTriangles();
 

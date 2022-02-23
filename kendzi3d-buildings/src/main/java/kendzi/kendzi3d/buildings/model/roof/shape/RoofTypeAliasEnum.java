@@ -66,9 +66,9 @@ public enum RoofTypeAliasEnum {
     SALTBOX("saltbox"), //
     ;
 
-    private String key;
+    private final String key;
 
-    private RoofTypeAliasEnum(String pKey) {
+    RoofTypeAliasEnum(String pKey) {
         this.key = pKey;
     }
 

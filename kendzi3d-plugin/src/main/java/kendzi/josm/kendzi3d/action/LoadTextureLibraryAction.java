@@ -17,7 +17,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class LoadTextureLibraryAction extends JosmAction {
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     final JFileChooser fc = new JFileChooser();
 
@@ -98,13 +97,7 @@ public class LoadTextureLibraryAction extends JosmAction {
             // errors = load.getErrors();
             // timestamp = load.getTimestamp();
 
-        } catch (MalformedURLException e) {
-            log.error(e, e);
-            showError(e);
-        } catch (IOException e) {
-            log.error(e, e);
-            showError(e);
-        } catch (JAXBException e) {
+        } catch (JAXBException | IOException e) {
             log.error(e, e);
             showError(e);
         }
@@ -157,7 +150,7 @@ public class LoadTextureLibraryAction extends JosmAction {
     }
 
     public static int showNegativeConfirmDialog(Component parentComponent, Object message, String title) {
-        List<Object> options = new ArrayList<Object>();
+        List<Object> options = new ArrayList<>();
         Object defaultOption;
 
         options.add(UIManager.getString("OptionPane.yesButtonText"));

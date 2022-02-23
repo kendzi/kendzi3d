@@ -26,7 +26,7 @@ public class Vector3dContext implements CompileContext, FunctionBuilder {
 
     @Override
     public Set<String> getFunctionsNames() {
-        Set<String> fun = new HashSet<String>();
+        Set<String> fun = new HashSet<>();
         fun.add("vector");
         return fun;
     }

@@ -11,18 +11,18 @@ public class SimplifyIndexTest {
     @Test
     public void test() {
 
-        List<Integer> data = new ArrayList<Integer>();
+        List<Integer> data = new ArrayList<>();
         data.add(1);
         data.add(2);
         data.add(3);
         data.add(4);
         data.add(5);
 
-        List<Integer> index = new ArrayList<Integer>();
+        List<Integer> index = new ArrayList<>();
         index.add(2);
         index.add(4);
 
-        SimplifyIndex<Integer> si = new SimplifyIndex<Integer>(data, index);
+        SimplifyIndex<Integer> si = new SimplifyIndex<>(data, index);
         si.simple();
 
         Assert.assertEquals(2, si.getSdata().size());

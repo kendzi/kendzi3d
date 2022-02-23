@@ -18,7 +18,6 @@ import com.jogamp.opengl.util.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
-import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 
 /**
  * Example frame with 3d editor.
@@ -90,13 +89,7 @@ public abstract class BaseEditorFrame extends Frame {
 
         if (listener instanceof CloseWindowEventSource) {
             // if listener could be source of window close event
-            ((CloseWindowEventSource) listener).addCloseWindowListener(new CloseWindowListener() {
-
-                @Override
-                public void closeWindow() {
-                    closeWindowRequest(frame, animator);
-                }
-            });
+            ((CloseWindowEventSource) listener).addCloseWindowListener(() -> closeWindowRequest(frame, animator));
         }
 
         // Listener to close correctly application and stop animator.
@@ -141,23 +134,18 @@ public abstract class BaseEditorFrame extends Frame {
          * Run this on another thread than the AWT event queue to make sure the call to
          * Animator.stop() completes before exiting.
          */
-        new Thread(new Runnable() {
+        new Thread(() -> {
 
-            @Override
-            public void run() {
-
-                // If need stop animator before dispose frame.
-                if (animator.isStarted()) {
-                    animator.stop();
-                }
-
-                // Dispose frame.
-                frame.setVisible(false);
-                frame.dispose();
-
-                onCloseWindow();
+            // If need stop animator before dispose frame.
+            if (animator.isStarted()) {
+                animator.stop();
             }
 
+            // Dispose frame.
+            frame.setVisible(false);
+            frame.dispose();
+
+            onCloseWindow();
         }).start();
     }
 

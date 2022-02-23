@@ -59,7 +59,7 @@ public class ModelRender {
 
     private AmbientDiffuseComponent lastAmbientDiffuseComponent;
 
-    private Material defaultMaterial = new Material();
+    private final Material defaultMaterial = new Material();
 
     /**
      *

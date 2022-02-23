@@ -11,8 +11,8 @@ package kendzi.swing.ui.panel.equation;
 
 import java.awt.Graphics2D;
 
-abstract public class EquationLayer {
+public abstract class EquationLayer {
 
-    abstract public void draw(Graphics2D g2d, EquationDisplay disp);
+    public abstract void draw(Graphics2D g2d, EquationDisplay disp);
 
 }

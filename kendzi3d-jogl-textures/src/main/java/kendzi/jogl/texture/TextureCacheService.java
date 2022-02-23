@@ -24,7 +24,7 @@ public interface TextureCacheService {
     /**
      * Undefined texture.
      */
-    public static final String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
+    String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
 
     /**
      * Get texture from cache or load it to cache.
@@ -36,7 +36,7 @@ public interface TextureCacheService {
      * 
      * @return texture texture object
      */
-    public Texture getTexture(GL pGl, String pFileName);
+    Texture getTexture(GL pGl, String pFileName);
 
     /**
      * Test if texture exist in cache.
@@ -45,12 +45,12 @@ public interface TextureCacheService {
      *            name of texture
      * @return if texture exist
      */
-    public boolean isTexture(String pFileName);
+    boolean isTexture(String pFileName);
 
     /**
      * Clean up all textures from cache.
      */
-    public void clear();
+    void clear();
 
     /**
      * Get texture image from cache.
@@ -60,6 +60,6 @@ public interface TextureCacheService {
      * 
      * @return texture
      */
-    public BufferedImage getImage(String pFileName);
+    BufferedImage getImage(String pFileName);
 
 }

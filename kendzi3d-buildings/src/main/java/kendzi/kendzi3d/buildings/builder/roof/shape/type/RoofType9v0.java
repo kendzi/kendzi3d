@@ -97,7 +97,7 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
         // List<PolygonRoofHooksSpace> polygonRoofHooksSpace = new
         // ArrayList<PolygonRoofHooksSpace>();
-        Map<Point2d, Double> distance = new IdentityHashMap<Point2d, Double>();
+        Map<Point2d, Double> distance = new IdentityHashMap<>();
 
         calcDistances(sk, distance);
 
@@ -149,14 +149,14 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
     }
 
     private String debugPolygon(PolygonWithHolesList2d buildingTransformed) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("** Debug for polygon **\n");
 
         List<Point2d> outer = buildingTransformed.getOuter().getPoints();
         sb.append("List<Point2d> polygon = new ArrayList<Point2d>();\n");
 
         for (Point2d p : outer) {
-            sb.append("polygon.add(new Point2d(" + p.x + ",  " + p.y + "));\n");
+            sb.append("polygon.add(new Point2d(").append(p.x).append(",  ").append(p.y).append("));\n");
         }
 
         List<List<Point2d>> inners = PolygonWithHolesList2dUtil.getListOfHolePoints(buildingTransformed);
@@ -164,9 +164,10 @@ public class RoofType9v0 extends AbstractRoofTypeBuilder {
         int holeCount = 0;
         for (List<Point2d> polygonList2d : inners) {
             holeCount++;
-            sb.append("\nList<Point2d> hole" + holeCount + " = new ArrayList<Point2d>();\n");
+            sb.append("\nList<Point2d> hole").append(holeCount).append(" = new ArrayList<Point2d>();\n");
             for (Point2d p : polygonList2d) {
-                sb.append("hole" + holeCount + ".add(new Point2d(" + p.x + ",  " + p.y + "));\n");
+                sb.append("hole").append(holeCount).append(".add(new Point2d(").append(p.x).append(",  ").append(p.y)
+                        .append("));\n");
             }
         }
 

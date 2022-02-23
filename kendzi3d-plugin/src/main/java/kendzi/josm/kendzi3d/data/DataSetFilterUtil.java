@@ -23,7 +23,7 @@ public class DataSetFilterUtil {
             return Collections.emptySet();
         }
 
-        Set<OsmId> ret = new HashSet<OsmId>(1000);
+        Set<OsmId> ret = new HashSet<>(1000);
 
         Collection<OsmPrimitive> data = dataSet.allNonDeletedCompletePrimitives();
 

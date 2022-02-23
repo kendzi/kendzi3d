@@ -18,7 +18,7 @@ import java.net.URL;
  */
 public interface ResourceService {
 
-    public static final String PLUGIN_FILE_PREFIX = "plugin:";
+    String PLUGIN_FILE_PREFIX = "plugin:";
 
     // /**
     // * Try to get file URL. It is looking at:<br>

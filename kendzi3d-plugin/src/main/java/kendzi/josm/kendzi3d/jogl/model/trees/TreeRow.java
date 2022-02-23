@@ -80,7 +80,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
             MetadataCacheService metadataCacheService) {
         super(pWay, perspective);
 
-        modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<>(LOD.class);
 
         scale = new Vector3d(1d, 1d, 1d);
 
@@ -132,7 +132,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
             numOfTrees = (int) Math.round(distance / 5d);
         }
 
-        List<Point2d> ret = new ArrayList<Point2d>();
+        List<Point2d> ret = new ArrayList<>();
 
         double repeatEvery = distance / numOfTrees;
 
@@ -221,10 +221,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (modelLod.get(pLod) != null) {
-            return true;
-        }
-        return false;
+        return modelLod.get(pLod) != null;
     }
 
     @Override
@@ -267,7 +264,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
             buildModel(LOD.LOD1);
         }
 
-        List<ExportItem> ret = new ArrayList<ExportItem>();
+        List<ExportItem> ret = new ArrayList<>();
 
         for (Point2d hook : hookPoints) {
 
@@ -282,7 +279,7 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
 
     @Override
     public List<Point3d> getPoints() {
-        List<Point3d> ret = new ArrayList<Point3d>();
+        List<Point3d> ret = new ArrayList<>();
 
         for (Point2d hook : hookPoints) {
             ret.add(new Point3d(hook.x, 0, -hook.y));

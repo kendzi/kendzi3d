@@ -31,7 +31,7 @@ public final class ValidationUtil {
     }
 
     public static String errorToString(List<String> errors) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("model errors:");
         if (errors == null) {
             return sb.toString();
@@ -65,7 +65,7 @@ public final class ValidationUtil {
      * @return list of errors
      */
     public static List<String> validate(Model pModel, boolean pRepair) {
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
 
         int mi = 0;
         int fi = 0;

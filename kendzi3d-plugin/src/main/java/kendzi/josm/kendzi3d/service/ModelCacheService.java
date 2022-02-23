@@ -28,7 +28,7 @@ public class ModelCacheService {
     @Inject
     ResourceService urlReciverService;
 
-    private Map<String, Model> modelCache = new HashMap<String, Model>();
+    private final Map<String, Model> modelCache = new HashMap<>();
 
     public Model getModel(String pId) {
         return this.modelCache.get(pId);

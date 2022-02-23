@@ -19,7 +19,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     /** Log. */
     private static final Logger log = Logger.getLogger(CameraMoveListener.class);
 
-    private SimpleMoveAnimator kinematicsSimpleAnimator;
+    private final SimpleMoveAnimator kinematicsSimpleAnimator;
 
     public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
         super();
@@ -39,7 +39,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     int lastX;
     int lastY;
     boolean move;
-    private boolean isRunning = true;
+    private final boolean isRunning = true;
 
     /*
      * (non-Javadoc)

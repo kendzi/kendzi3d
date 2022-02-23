@@ -4,8 +4,8 @@ import kendzi.kendzi3d.editor.EditableObject;
 
 public interface SelectionCriteria {
 
-    public boolean match(EditableObject editableObject);
+    boolean match(EditableObject editableObject);
 
-    public boolean match(Selection selection);
+    boolean match(Selection selection);
 
 }

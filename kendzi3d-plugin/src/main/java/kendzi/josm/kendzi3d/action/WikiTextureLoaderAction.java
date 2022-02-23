@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -45,7 +44,7 @@ public class WikiTextureLoaderAction extends JosmAction {
     /**
      * Wiki texture loader service.
      */
-    private WikiTextureLoaderService wikiTextureLoaderService;
+    private final WikiTextureLoaderService wikiTextureLoaderService;
 
     /**
      * Constructor of wiki texture loader toggle action.
@@ -71,20 +70,14 @@ public class WikiTextureLoaderAction extends JosmAction {
             errors = load.getErrors();
             timestamp = load.getTimestamp();
 
-        } catch (MalformedURLException e) {
-            log.error(e, e);
-            showError(e);
-        } catch (IOException e) {
-            log.error(e, e);
-            showError(e);
-        } catch (JAXBException e) {
+        } catch (JAXBException | IOException e) {
             log.error(e, e);
             showError(e);
         }
 
         if (errors != null && !errors.isEmpty()) {
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (String err : errors) {
                 sb.append(err);
                 sb.append("\n");

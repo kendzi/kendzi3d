@@ -25,7 +25,7 @@ public class RoofType1v0 extends RoofType1v1 {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, conf.getRecHeight(), 20d);
+        double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, conf.getRecHeight(), 20d);
 
         if (h1 < 0) {
             h1 = 0d;

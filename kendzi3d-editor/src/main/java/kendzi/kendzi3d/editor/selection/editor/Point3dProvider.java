@@ -27,5 +27,5 @@ public class Point3dProvider {
      */
     public Point3d provide() {
         return point;
-    };
+    }
 }

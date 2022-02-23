@@ -38,7 +38,7 @@ public enum MeasurementUnit {
     /**
      * Key value.
      */
-    private String key;
+    private final String key;
 
     /**
      * Constructor for enum.
@@ -46,7 +46,7 @@ public enum MeasurementUnit {
      * @param pKey
      *            key value
      */
-    private MeasurementUnit(String pKey) {
+    MeasurementUnit(String pKey) {
 
         this.key = pKey;
 

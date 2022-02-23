@@ -158,9 +158,9 @@ public class ShapeRoofBuilder {
 
         SimpleMatrix normalMatrix = transformationMatrix.invert().transpose();
 
-        Set<Vector3d> procesed = new HashSet<Vector3d>();
+        Set<Vector3d> procesed = new HashSet<>();
 
-        List<Point3d> vertices = new ArrayList<Point3d>();
+        List<Point3d> vertices = new ArrayList<>();
         for (int i = 0; i < mesh.vertices.size(); i++) {
             Point3d p = mesh.vertices.get(i);
 
@@ -168,7 +168,7 @@ public class ShapeRoofBuilder {
         }
         mesh.vertices = vertices;
 
-        List<Vector3d> normals = new ArrayList<Vector3d>();
+        List<Vector3d> normals = new ArrayList<>();
         for (int i = 0; i < mesh.normals.size(); i++) {
             Vector3d v = mesh.normals.get(i);
             // if (procesed.contains(v)) {
@@ -190,12 +190,10 @@ public class ShapeRoofBuilder {
 
         Point3d startPointMark = new Point3d(startPoint.x, height, -startPoint.y);
 
-        List<Point3d> rectangleTransf = new ArrayList<Point3d>();
+        List<Point3d> rectangleTransf = new ArrayList<>();
 
         List<Point3d> rectangle = rto.getRectangle();
-        for (int i = 0; i < rectangle.size(); i++) {
-            Point3d p = rectangle.get(i);
-
+        for (Point3d p : rectangle) {
             rectangleTransf.add(TransformationMatrix3d.transform(p, rto.getTransformationMatrix()));
         }
         rto.setRectangle(rectangleTransf);

@@ -20,14 +20,14 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 
 public class SplitPolygon {
 
-    List<Point2d> polygonExtanded = new ArrayList<Point2d>();
-    List<List<Integer>> polygonsLeft = new ArrayList<List<Integer>>();
-    List<List<Integer>> polygonsRight = new ArrayList<List<Integer>>();
+    List<Point2d> polygonExtanded = new ArrayList<>();
+    List<List<Integer>> polygonsLeft = new ArrayList<>();
+    List<List<Integer>> polygonsRight = new ArrayList<>();
 
     @Deprecated
     public List<List<Point2d>> getLeftPolygons() {
 
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         for (List<Integer> p : this.polygonsLeft) {
             List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
@@ -54,7 +54,7 @@ public class SplitPolygon {
     @Deprecated
     public List<List<Point2d>> getRightPolygons() {
 
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         for (List<Integer> p : this.polygonsRight) {
             List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
@@ -80,7 +80,7 @@ public class SplitPolygon {
 
     private List<Point2d> makeListFromIndex(List<Point2d> borderExtanded, List<Integer> polyIndex) {
 
-        List<Point2d> ret = new ArrayList<Point2d>(polyIndex.size());
+        List<Point2d> ret = new ArrayList<>(polyIndex.size());
         for (Integer i : polyIndex) {
             ret.add(borderExtanded.get(i));
         }

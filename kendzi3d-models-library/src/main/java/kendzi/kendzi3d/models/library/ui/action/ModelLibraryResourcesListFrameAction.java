@@ -38,7 +38,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
     /**
      * Point model service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     public ModelLibraryResourcesListFrameAction(ModelsLibraryService modelsLibraryService) {
         super();
@@ -49,20 +49,17 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ResourceService urlReciverService = new UrlReciverServiceTest();
-                    ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
-                    pms.init();
-                    ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
+        EventQueue.invokeLater(() -> {
+            try {
+                ResourceService urlReciverService = new UrlReciverServiceTest();
+                ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
+                pms.init();
+                ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
 
-                    frame.loadTableData();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e);
-                }
+                frame.loadTableData();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                log.error(e);
             }
         });
     }
@@ -154,7 +151,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         }
     }
 
-    private class ModelLibraryFilter extends FileFilter {
+    private static class ModelLibraryFilter extends FileFilter {
         @Override
         public boolean accept(File f) {
             if (f == null) {

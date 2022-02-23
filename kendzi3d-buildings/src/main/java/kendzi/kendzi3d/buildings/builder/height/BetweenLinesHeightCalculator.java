@@ -58,7 +58,7 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
             splitPolygon = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(splitPolygon, line);
         }
 
-        List<SegmentHeight> ret = new ArrayList<SegmentHeight>(splitPolygon.size() - 1);
+        List<SegmentHeight> ret = new ArrayList<>(splitPolygon.size() - 1);
 
         for (int i = 0; i < splitPolygon.size() - 1; i++) {
             int j = i + 1;

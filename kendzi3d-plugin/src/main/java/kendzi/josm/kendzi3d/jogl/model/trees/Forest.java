@@ -11,6 +11,7 @@ import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -56,11 +57,11 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     public static double lod1 = 20 * 20;
 
-    private static double lod2 = 100 * 100;
+    private static final double lod2 = 100 * 100;
 
-    private static double lod3 = 500 * 500;
+    private static final double lod3 = 500 * 500;
 
-    private static double lod4 = 1000 * 1000;
+    private static final double lod4 = 1000 * 1000;
 
     /**
      * Renderer of model.
@@ -91,7 +92,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             MetadataCacheService metadataCacheService) {
         super(pWay, perspective);
 
-        modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<>(LOD.class);
 
         scale = new Vector3d(1d, 1d, 1d);
 
@@ -196,9 +197,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                 T c = null;
                 try {
                     c = clazz.newInstance();
-                } catch (InstantiationException e) {
-                    log.error(e, e);
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     log.error(e, e);
                 }
 
@@ -217,11 +216,9 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
         }
 
-        ArrayList<T> ret = new ArrayList<T>();
+        ArrayList<T> ret = new ArrayList<>();
         for (int y = 0; y < clusterYMax; y++) {
-            for (int x = 0; x < clusterXMax; x++) {
-                ret.add(clusters[clusterXMax * y + x]);
-            }
+            ret.addAll(Arrays.asList(clusters).subList(0 + clusterXMax * y + 0, clusterXMax + clusterXMax * y + 0));
         }
 
         return ret;
@@ -253,7 +250,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
         public Cluster() {
             super();
-            hook = new ArrayList<Point2d>();
+            hook = new ArrayList<>();
             center = new Point3d();
         }
 
@@ -367,7 +364,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
      */
     private List<Point2d> monteCarloHookGenerator(PolygonList2d polygon, Integer numOfTrees) {
 
-        List<Point2d> ret = new ArrayList<Point2d>(numOfTrees);
+        List<Point2d> ret = new ArrayList<>(numOfTrees);
 
         Point2d minBound = PolygonUtil.minBound(polygon);
         Point2d maxBound = PolygonUtil.maxBound(polygon);
@@ -417,10 +414,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     public boolean isModelBuild(LOD pLod) {
 
-        if (modelLod.get(pLod) != null) {
-            return true;
-        }
-        return false;
+        return modelLod.get(pLod) != null;
     }
 
     public void draw(GL2 gl, Camera camera, LOD pLod) {
@@ -475,7 +469,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         return index;
     }
 
-    Map<Model, Integer> displayList = new HashMap<Model, Integer>();
+    Map<Model, Integer> displayList = new HashMap<>();
 
     private Integer getDisplayList(Model model2) {
         return displayList.get(model2);
@@ -578,7 +572,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     @Override
     public List<Point3d> getPoints() {
-        List<Point3d> ret = new ArrayList<Point3d>();
+        List<Point3d> ret = new ArrayList<>();
         for (HeightCluster cluster : clusterHook) {
 
             List<Point2d> hookPoints = cluster.getHook();

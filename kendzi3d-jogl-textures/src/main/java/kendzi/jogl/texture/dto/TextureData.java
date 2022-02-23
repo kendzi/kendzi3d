@@ -145,13 +145,9 @@ public class TextureData {
             return false;
         }
         if (tex1 == null) {
-            if (other.tex1 != null) {
-                return false;
-            }
-        } else if (!tex1.equals(other.tex1)) {
-            return false;
-        }
-        return true;
+            return other.tex1 == null;
+        } else
+            return tex1.equals(other.tex1);
     }
 
     /**

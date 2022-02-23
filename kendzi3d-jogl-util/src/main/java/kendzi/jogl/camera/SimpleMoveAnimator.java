@@ -117,7 +117,7 @@ public class SimpleMoveAnimator implements Camera {
      * @author Tomasz Kędziora (Kendzi)
      *
      */
-    private class SpeedData {
+    private static class SpeedData {
 
         /**
          * Speed change start time.
@@ -162,22 +162,22 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Speed forward.
      */
-    private double vf = 0;
+    private double vf;
 
     /**
      * Speed side.
      */
-    private double vs = 0;
+    private double vs;
 
     /**
      * Speed up/down.
      */
-    private double vu = 0;
+    private double vu;
 
     /**
      * Angular speed horizontal.
      */
-    private double wh = 0;
+    private double wh;
 
     /**
      * Number formater.
@@ -382,7 +382,7 @@ public class SimpleMoveAnimator implements Camera {
      */
     public SimpleMoveAnimator() {
 
-        speeds = new EnumMap<SimpleMoveAnimator.Speeds, SimpleMoveAnimator.SpeedData>(SimpleMoveAnimator.Speeds.class);
+        speeds = new EnumMap<>(SimpleMoveAnimator.Speeds.class);
 
         for (Speeds s : Speeds.values()) {
             speeds.put(s, new SpeedData());
@@ -461,12 +461,12 @@ public class SimpleMoveAnimator implements Camera {
     @SuppressWarnings("unqualified-field-access")
     public String info() {
 
-        String speedsStr = "";
+        StringBuilder speedsStr = new StringBuilder();
         for (Speeds s : Speeds.values()) {
             SpeedData speedData = speeds.get(s);
 
-            speedsStr += "" + s + ", active: " + speedData.active + ", last: " + speedData.last + ", start: " + speedData.start
-                    + "\n";
+            speedsStr.append("").append(s).append(", active: ").append(speedData.active).append(", last: ").append(speedData.last)
+                    .append(", start: ").append(speedData.start).append("\n");
 
         }
 

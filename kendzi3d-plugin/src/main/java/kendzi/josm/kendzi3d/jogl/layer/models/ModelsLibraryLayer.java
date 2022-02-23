@@ -47,7 +47,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     /**
      * List of model definitions.
      */
-    private List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
+    private List<NodeModelConf> nodeModelsList = new ArrayList<>();
 
     /**
      * Model renderer.
@@ -89,7 +89,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     private void loadData() {
-        List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
+        List<NodeModelConf> nodeModelsList = new ArrayList<>();
         for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
             List<NodeModel> nodeModels = modelsLibraryService.findAllNodeModels(configurationFile);
 
@@ -107,7 +107,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
         this.nodeModelsList = nodeModelsList;
 
-        List<WayNodeModelConf> wayNodeModelsList = new ArrayList<WayNodeModelConf>();
+        List<WayNodeModelConf> wayNodeModelsList = new ArrayList<>();
 
         for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
             List<WayNodeModel> wayNodeModels = modelsLibraryService.findAllWayNodeModels(configurationFile);
@@ -124,11 +124,11 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
             }
         }
 
-        wayNodeModelsMap = new HashMap<String, List<WayNodeModelConf>>();
+        wayNodeModelsMap = new HashMap<>();
         for (WayNodeModelConf wayNodeModelConf : wayNodeModelsList) {
             String key = wayNodeModelConf.getMatcher().toString();
             if (!wayNodeModelsMap.containsKey(key)) {
-                wayNodeModelsMap.put(key, new ArrayList<WayNodeModelConf>());
+                wayNodeModelsMap.put(key, new ArrayList<>());
             }
             wayNodeModelsMap.get(key).add(wayNodeModelConf);
         }
@@ -136,7 +136,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     @Override
     public Match getNodeMatcher() {
-        List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
+        List<Match> matchersList = new ArrayList<>();
         for (NodeModelConf nodeModel : nodeModelsList) {
 
             matchersList.add(nodeModel.getMatcher());
@@ -237,7 +237,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
      * @return indexes of nodes on way
      */
     private List<Integer> nodeFilter(Match filter, Way way) {
-        List<Integer> n = new ArrayList<Integer>();
+        List<Integer> n = new ArrayList<>();
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);

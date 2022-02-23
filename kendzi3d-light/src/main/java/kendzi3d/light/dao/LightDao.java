@@ -17,13 +17,13 @@ import kendzi3d.light.dto.LightConfiguration;
  */
 public interface LightDao {
 
-    static final double DEFAULT_DIRECTION = 180;
+    double DEFAULT_DIRECTION = 180;
 
-    static final double DEFAULT_ANGLE = 45;
+    double DEFAULT_ANGLE = 45;
 
-    static final Color DEFAULT_AMBIENT_COLOR = new Color(0.5f, 0.5f, 0.5f, 1f);
+    Color DEFAULT_AMBIENT_COLOR = new Color(0.5f, 0.5f, 0.5f, 1f);
 
-    static final Color DEFAULT_DIFFUSE_COLOR = new Color(1f, 1f, 1f, 1f);
+    Color DEFAULT_DIFFUSE_COLOR = new Color(1f, 1f, 1f, 1f);
 
     /**
      * Load light source configuration.

@@ -8,7 +8,7 @@ package kendzi.josm.kendzi3d.jogl.model.editor;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.AbstractMap;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -143,7 +143,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 
-        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(Arrays.asList(primitive), tags));
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(Collections.singletonList(primitive), tags));
         LOG.info("primitive value was saved, id: " + primitiveId);
     }
 }

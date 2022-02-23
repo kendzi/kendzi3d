@@ -60,7 +60,7 @@ public class ExpressiongBuilderTest extends TestCase {
 
     public void testExpression4() throws ExpressionExeption {
         Context c = new Context();
-        Map<String, Object> var = new HashMap<String, Object>();
+        Map<String, Object> var = new HashMap<>();
         var.put("A", 5d);
         c.setVariables(var);
 
@@ -84,11 +84,11 @@ public class ExpressiongBuilderTest extends TestCase {
 
     public void testExpression5() throws ExpressionExeption {
         Context c = new Context();
-        Map<String, Object> var = new HashMap<String, Object>();
+        Map<String, Object> var = new HashMap<>();
         var.put("A", 5d);
         c.setVariables(var);
 
-        Map<String, Function> fun = new HashMap<String, Function>();
+        Map<String, Function> fun = new HashMap<>();
         c.setFunctions(fun);
         fun.put("funArgPlusOne", new OneParamFunction() {
 
@@ -105,11 +105,11 @@ public class ExpressiongBuilderTest extends TestCase {
 
     public void testExpression6() throws ExpressionExeption {
         Context c = new Context();
-        Map<String, Object> var = new HashMap<String, Object>();
+        Map<String, Object> var = new HashMap<>();
         var.put("A", 5d);
         c.setVariables(var);
 
-        Map<String, Function> fun = new HashMap<String, Function>();
+        Map<String, Function> fun = new HashMap<>();
         c.setFunctions(fun);
         fun.put("funTree", new ZeroParamFunction() {
 

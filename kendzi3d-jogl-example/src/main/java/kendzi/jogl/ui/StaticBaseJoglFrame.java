@@ -35,37 +35,37 @@ public class StaticBaseJoglFrame implements GLEventListener {
     /**
      * Position of sun. XXX
      */
-    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    private final float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
     /**
      * XXX Font for axis.
      */
-    private Font font = new Font("SansSerif", Font.BOLD, 24);
+    private final Font font = new Font("SansSerif", Font.BOLD, 24);
 
     /**
      * XXX For axis labels.
      */
-    private TextRenderer axisLabelRenderer = new TextRenderer(this.font);
+    private final TextRenderer axisLabelRenderer = new TextRenderer(this.font);
 
     /**
      * Drawer for axis labels.
      */
-    private AxisLabels axisLabels = new AxisLabels();
+    private final AxisLabels axisLabels = new AxisLabels();
 
     /**
      * Drawer for tiles floor.
      */
-    private TilesSurface floor = new TilesSurface();
+    private final TilesSurface floor = new TilesSurface();
 
     /**
      * XXX For the axis labels.
      */
-    private final static float SCALE_FACTOR = 0.01f;
+    private static final float SCALE_FACTOR = 0.01f;
 
     /**
      * XXX
      */
-    private final static int FLOOR_LEN = 50;
+    private static final int FLOOR_LEN = 50;
 
     public static void main(String[] args) {
 
@@ -95,13 +95,9 @@ public class StaticBaseJoglFrame implements GLEventListener {
                 // Run this on another thread than the AWT event queue to
                 // make sure the call to Animator.stop() completes before
                 // exiting
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        animator.stop();
-                        System.exit(0);
-                    }
+                new Thread(() -> {
+                    animator.stop();
+                    System.exit(0);
                 }).start();
             }
         });

@@ -68,7 +68,7 @@ public class Road extends AbstractWayModel {
     /**
      * List of road points.
      */
-    private List<Point2d> list = new ArrayList<Point2d>();
+    private List<Point2d> list = new ArrayList<>();
 
     /**
      * Width of road.
@@ -78,12 +78,12 @@ public class Road extends AbstractWayModel {
     /**
      * Sin of 90.
      */
-    private static double cos90 = Math.cos(Math.toRadians(90));
+    private static final double cos90 = Math.cos(Math.toRadians(90));
 
     /**
      * Cos of 90.
      */
-    private static double sin90 = Math.sin(Math.toRadians(90));
+    private static final double sin90 = Math.sin(Math.toRadians(90));
 
     /**
      * Model of road.
@@ -115,7 +115,7 @@ public class Road extends AbstractWayModel {
         // FIXME object is not in local coordinates!
         setPoint(new Point3d());
 
-        List<Point2d> pointList = new ArrayList<Point2d>();
+        List<Point2d> pointList = new ArrayList<>();
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
@@ -308,7 +308,7 @@ public class Road extends AbstractWayModel {
      * @author kendzi
      *
      */
-    private class TextureData {
+    private static class TextureData {
         String file;
         double lenght;
 

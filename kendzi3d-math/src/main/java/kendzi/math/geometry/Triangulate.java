@@ -88,7 +88,7 @@ public class Triangulate {
         bCROSScp = bx * cpy - by * cpx;
 
         return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
-    };
+    }
 
     static boolean snip(List<Point2d> contour, int u, int v, int w, int n, /* ??? */
             int[] V) {
@@ -134,7 +134,7 @@ public class Triangulate {
 
     public static List<Point2d> removeClosePoints(List<Point2d> points, double epsilon) {
         // XXX change to point2d
-        ArrayList<Point2d> ret = new ArrayList<Point2d>();
+        ArrayList<Point2d> ret = new ArrayList<>();
 
         if (points.size() == 0) {
             return ret;
@@ -182,7 +182,7 @@ public class Triangulate {
 
     public static List<Point2d> process(List<Point2d> contour) {
 
-        List<Point2d> result = new ArrayList<Point2d>();
+        List<Point2d> result = new ArrayList<>();
         process(contour, result);
 
         return result;
@@ -269,17 +269,17 @@ public class Triangulate {
     }
 
     private static void logBadPolygon(List<Point2d> contour) {
-        String msg = " Bad polygon triangulation faild: \n";
+        StringBuilder msg = new StringBuilder(" Bad polygon triangulation faild: \n");
         for (Point2d point2d : contour) {
-            msg += "points.add(new Point2d(" + point2d.x + ", " + point2d.y + "); \n";
+            msg.append("points.add(new Point2d(").append(point2d.x).append(", ").append(point2d.y).append("); \n");
         }
 
-        log.error(msg);
+        log.error(msg.toString());
     }
 
     public List<Integer> processIndex(List<Point2d> pContour) {
 
-        List<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ArrayList<>();
 
         int size = pContour.size();
         if (size > 1) {
@@ -292,7 +292,7 @@ public class Triangulate {
         }
 
         /* allocate and initialize list of Vertices in polygon */
-        List<Point2d> contour = new ArrayList<Point2d>();
+        List<Point2d> contour = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Point2d p = pContour.get(i);
             contour.add(new Point2d(p.x, p.y));

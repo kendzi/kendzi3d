@@ -69,12 +69,12 @@ import org.collada._2005._11.colladaschema.VisualScene;
 
 public class ColladaExport extends TextExport {
 
-    private Map<Material, String> matCatche = new HashMap<Material, String>();
-    private Map<String, String> textureKeys = new HashMap<String, String>();
+    private final Map<Material, String> matCatche = new HashMap<>();
+    private final Map<String, String> textureKeys = new HashMap<>();
 
     private COLLADA c;
 
-    private int id = 0;
+    private int id;
 
     public ColladaExport() {
         init();
@@ -103,7 +103,7 @@ public class ColladaExport extends TextExport {
 
         for (Mesh mesh : m.mesh) {
 
-            Map<Material, String> mats = new HashMap<Material, String>();
+            Map<Material, String> mats = new HashMap<>();
 
             // String materialId = null;
             for (Material mat : m.materials) {
@@ -192,7 +192,7 @@ public class ColladaExport extends TextExport {
         texSourcesIds[0] = tex0Source.getId();
 
         @SuppressWarnings("unchecked")
-        SimplifyIndexArray<TextCoord> texSimpleIndex[] = new SimplifyIndexArray[numOfLayers];
+        SimplifyIndexArray<TextCoord>[] texSimpleIndex = new SimplifyIndexArray[numOfLayers];
         texSimpleIndex[0] = simpTex0;
 
         for (int l = 1; l < numOfLayers; l++) {
@@ -244,7 +244,7 @@ public class ColladaExport extends TextExport {
 
         List<BigInteger> triVert = convertToTriangles(simpVertex.getSindex(), face.type);
         List<BigInteger> triNorm = convertToTriangles(simpNormal.getSindex(), face.type);
-        List<List<BigInteger>> triTcLayers = new ArrayList<List<BigInteger>>(numOfLayers);
+        List<List<BigInteger>> triTcLayers = new ArrayList<>(numOfLayers);
         for (int l = 0; l < numOfLayers; l++) {
             List<BigInteger> triTc = convertToTriangles(texSimpleIndex[l].getSindex(), face.type);
             triTcLayers.add(triTc);
@@ -585,7 +585,7 @@ public class ColladaExport extends TextExport {
     }
 
     private static List<BigInteger> convertToTriangles(int[] vertIndex, int type) {
-        ArrayList<BigInteger> ret = new ArrayList<BigInteger>();
+        ArrayList<BigInteger> ret = new ArrayList<>();
 
         if (type == FaceType.QUADS.getType()) {
 
@@ -610,9 +610,7 @@ public class ColladaExport extends TextExport {
             // }
         } else if (type == FaceType.TRIANGLES.getType()) {
 
-            for (int offset = 0; offset < vertIndex.length; offset++) {
-
-                int i0 = vertIndex[offset];
+            for (int i0 : vertIndex) {
 
                 ret.add(number(i0));
             }
@@ -677,8 +675,7 @@ public class ColladaExport extends TextExport {
         vertexArray.setId(vertexArrayId);
         vertexArray.setCount(new BigInteger("" + vertices.length * 3));// face.vertIndex.length * 3));
 
-        for (int vi = 0; vi < vertices.length; vi++) {
-            Point3d point = vertices[vi];
+        for (Point3d point : vertices) {
             vertexArray.getValues().add(point.x);
             vertexArray.getValues().add(point.y);
             vertexArray.getValues().add(point.z);
@@ -727,8 +724,7 @@ public class ColladaExport extends TextExport {
         normalsArray.setId(normalsArrayId);
         normalsArray.setCount(new BigInteger("" + normals.length * 3));
 
-        for (int vi = 0; vi < normals.length; vi++) {
-            Vector3d v = normals[vi];
+        for (Vector3d v : normals) {
             normalsArray.getValues().add(v.x);
             normalsArray.getValues().add(v.y);
             normalsArray.getValues().add(v.z);
@@ -777,8 +773,7 @@ public class ColladaExport extends TextExport {
         texArray.setId(normalsArrayId);
         texArray.setCount(number(texCoords.length * 2));
 
-        for (int vi = 0; vi < texCoords.length; vi++) {
-            TextCoord v = texCoords[vi];
+        for (TextCoord v : texCoords) {
             texArray.getValues().add(v.u);
             texArray.getValues().add(v.v);
         }

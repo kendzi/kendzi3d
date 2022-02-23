@@ -40,13 +40,13 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     /** Log. */
     private static final Logger log = Logger.getLogger(TextureLibraryService.class);
 
-    Map<String, ArrayList<TextureData>> textureMap = new HashMap<String, ArrayList<TextureData>>();
+    Map<String, ArrayList<TextureData>> textureMap = new HashMap<>();
 
-    private ResourceService urlReciverService;
+    private final ResourceService urlReciverService;
 
-    private Random randomNumberGenerator = new Random();
+    private final Random randomNumberGenerator = new Random();
 
-    private UrlTextureLibrary userTextureLibraryUrl = null;
+    private UrlTextureLibrary userTextureLibraryUrl;
 
     /**
      * Constructor.
@@ -70,10 +70,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
      */
     public boolean isTexture(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
-        if (set == null || set.size() == 0) {
-            return false;
-        }
-        return true;
+        return set != null && set.size() != 0;
     }
 
     /**
@@ -114,7 +111,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     public List<TextureData> findTextureData(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
         if (set == null) {
-            return new ArrayList<TextureData>();
+            return new ArrayList<>();
         }
 
         return set;
@@ -242,12 +239,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     private void addTexture(String key, TextureData data) {
-        ArrayList<TextureData> set = this.textureMap.get(key);
-
-        if (set == null) {
-            set = new ArrayList<TextureData>();
-            this.textureMap.put(key, set);
-        }
+        ArrayList<TextureData> set = this.textureMap.computeIfAbsent(key, k -> new ArrayList<>());
 
         set.add(data);
     }

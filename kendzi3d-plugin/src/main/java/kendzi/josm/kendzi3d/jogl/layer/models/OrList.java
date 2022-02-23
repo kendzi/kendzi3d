@@ -34,11 +34,11 @@ public class OrList extends Match {
 
     @Override
     public String toString() {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (Match m : this.lhs) {
-            ret += " || " + m;
+            ret.append(" || ").append(m);
         }
-        return ret;
+        return ret.toString();
     }
 
     /**

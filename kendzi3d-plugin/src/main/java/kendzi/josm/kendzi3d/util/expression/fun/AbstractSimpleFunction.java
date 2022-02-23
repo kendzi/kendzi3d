@@ -6,7 +6,7 @@ import kendzi.josm.kendzi3d.util.expression.Context;
 public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
 
     String[] args;
-    private CompileContext context;
+    private final CompileContext context;
 
     public AbstractSimpleFunction(CompileContext context2, String[] args) {
         this.args = args;

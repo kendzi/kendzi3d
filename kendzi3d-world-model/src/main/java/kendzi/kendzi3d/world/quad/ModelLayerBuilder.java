@@ -19,7 +19,7 @@ public class ModelLayerBuilder {
             return Collections.emptyList();
         }
 
-        List<WorldObject> ret = new ArrayList<WorldObject>();
+        List<WorldObject> ret = new ArrayList<>();
 
         for (Node node : dataSet.getNodes()) {
 

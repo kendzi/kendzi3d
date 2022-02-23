@@ -14,14 +14,8 @@ public abstract class TextExport {
     public abstract Map<String, String> getTextureKeys();
 
     protected static void saveFile(String fileName, String str) throws FileNotFoundException {
-        PrintStream out = null;
-        try {
-            out = new PrintStream(new FileOutputStream(fileName));
+        try (PrintStream out = new PrintStream(new FileOutputStream(fileName))) {
             out.print(str);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 

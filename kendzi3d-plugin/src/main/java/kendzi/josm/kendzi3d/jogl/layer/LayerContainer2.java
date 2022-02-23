@@ -16,7 +16,7 @@ public abstract class LayerContainer2 implements LayerMatcher, ModelBuilder {
     /**
      * List of layer models.
      */
-    private List<WorldObject> modelList = new ArrayList<WorldObject>();
+    private final List<WorldObject> modelList = new ArrayList<>();
 
     public List<WorldObject> getModels() {
         return this.modelList;

@@ -55,18 +55,18 @@ public class WaveFrontLoader implements iLoader {
     public static final String COMMENT = "#";
     public static final String EMPTY = "";
 
-    int vertexTotal = 0;
-    int textureTotal = 0;
-    int normalTotal = 0;
+    int vertexTotal;
+    int textureTotal;
+    int normalTotal;
 
     private DataInputStream dataInputStream;
     // the model
-    private Model model = null;
+    private Model model;
     /** Bounds of the model. */
     // private Bounds bounds = new Bounds();
     /** Center of the model. */
     // private Point3d center = new Point3d(0.0f, 0.0f, 0.0f);
-    private String baseDir = null;
+    private String baseDir;
 
     /**
      * Creates a new instance of myWaveFrontLoader.
@@ -93,16 +93,16 @@ public class WaveFrontLoader implements iLoader {
         this.replaceTextureNewKey = replaceTextureNewKey;
     }
 
-    int numComments = 0;
-    private boolean rebildNormals = false;
+    int numComments;
+    private boolean rebildNormals;
     private String lastLineToProcess;
     private BoundsFactory boundsFactory;
 
-    private List<Point3d> vertexList = new ArrayList<Point3d>();
+    private final List<Point3d> vertexList = new ArrayList<>();
 
-    private List<TextCoord> texCoordsList = new ArrayList<TextCoord>();
+    private final List<TextCoord> texCoordsList = new ArrayList<>();
 
-    private List<Vector3d> vectorList = new ArrayList<Vector3d>();
+    private final List<Vector3d> vectorList = new ArrayList<>();
 
     private String replaceTextureMaterialName;
 
@@ -320,7 +320,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private List<Point3d> getPoints1(String currLine, BufferedReader br) throws IOException {
-        List<Point3d> points = new ArrayList<Point3d>();
+        List<Point3d> points = new ArrayList<>();
 
         String prefix = VERTEX_DATA;
 
@@ -361,7 +361,7 @@ public class WaveFrontLoader implements iLoader {
 
         String prefix = NORMAL_DATA;
 
-        List<Vector3d> points = new ArrayList<Vector3d>();
+        List<Vector3d> points = new ArrayList<>();
 
         // we've already read in the first line (currLine)
         // so go ahead and parse it
@@ -395,7 +395,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private Tuple3d[] getPoints(String prefix, String currLine, BufferedReader br) throws IOException {
-        Vector<Tuple3d> points = new Vector<Tuple3d>();
+        Vector<Tuple3d> points = new Vector<>();
         boolean isVertices = prefix.equals(VERTEX_DATA);
 
         // we've already read in the first line (currLine)
@@ -448,7 +448,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private TextCoord[] getTexCoords(String prefix, String currLine, BufferedReader br) throws IOException {
-        Vector<TextCoord> texCoords = new Vector<TextCoord>();
+        Vector<TextCoord> texCoords = new Vector<>();
 
         String[] s = currLine.split("\\s+");
         TextCoord texCoord = new TextCoord();
@@ -482,7 +482,7 @@ public class WaveFrontLoader implements iLoader {
     private List<TextCoord> getTexCoords1(String currLine, BufferedReader br) throws IOException {
 
         String prefix = TEXTURE_DATA;
-        List<TextCoord> texCoords = new ArrayList<TextCoord>();
+        List<TextCoord> texCoords = new ArrayList<>();
 
         String[] s = currLine.split("\\s+");
         TextCoord texCoord = new TextCoord();
@@ -517,9 +517,9 @@ public class WaveFrontLoader implements iLoader {
     // }
 
     private Face[] getFaces(String currLine, Mesh mesh, BufferedReader br) throws IOException {
-        Vector<Face> faces = new Vector<Face>();
+        Vector<Face> faces = new Vector<>();
 
-        Set<Face> smoothingGroup = new HashSet<Face>();
+        Set<Face> smoothingGroup = new HashSet<>();
         boolean smoothing = false;
 
         faces.add(parseFace(currLine));
@@ -585,15 +585,13 @@ public class WaveFrontLoader implements iLoader {
         // }
 
         // return the faces
-        return faces.toArray(new Face[faces.size()]);
+        return faces.toArray(new Face[0]);
     }
 
     private boolean startSmoothingGroup(String line) {
         String[] s = line.split("\\s+");
         if (s.length > 1) {
-            if ("1".equals(s[1])) {
-                return true;
-            }
+            return "1".equals(s[1]);
         }
         return false;
     }
@@ -621,26 +619,26 @@ public class WaveFrontLoader implements iLoader {
             String[] temp = s1.split("/");
 
             if (temp.length > 0) { // we have vertex data
-                if (Integer.valueOf(temp[0]) < 0) {
+                if (Integer.parseInt(temp[0]) < 0) {
                     // TODO handle relative vertex data
                 } else {
-                    face.vertIndex[loop - 1] = Integer.valueOf(temp[0]) - 1 - this.vertexTotal;
+                    face.vertIndex[loop - 1] = Integer.parseInt(temp[0]) - 1 - this.vertexTotal;
                     // log.info("found vertex index: " + face.vertIndex[loop-1]);
                 }
             }
 
             if (temp.length > 1) { // we have texture data
-                if (Integer.valueOf(temp[1]) < 0) {
+                if (Integer.parseInt(temp[1]) < 0) {
                     face.coordIndexLayers[0][loop - 1] = 0;
                     hasTexture = false;
                 } else {
-                    face.coordIndexLayers[0][loop - 1] = Integer.valueOf(temp[1]) - 1 - this.textureTotal;
+                    face.coordIndexLayers[0][loop - 1] = Integer.parseInt(temp[1]) - 1 - this.textureTotal;
                     // log.info("found texture index: " + face.coordIndex[loop-1]);
                 }
             }
 
             if (temp.length > 2) { // we have normal data
-                face.normalIndex[loop - 1] = Integer.valueOf(temp[2]) - 1 - this.normalTotal;
+                face.normalIndex[loop - 1] = Integer.parseInt(temp[2]) - 1 - this.normalTotal;
                 // log.info("found normal index: " + face.normalIndex[loop-1]);
             } else {
                 face.normalIndex[loop - 1] = -1;
@@ -727,11 +725,7 @@ public class WaveFrontLoader implements iLoader {
             if (mat.getName() != null && mat.getName().equals(materialName) || mat.getName() == null && materialName == null) {
 
                 materialID = i;
-                if (mat.getTexture0() != null) {
-                    hasTexture = true;
-                } else {
-                    hasTexture = false;
-                }
+                hasTexture = mat.getTexture0() != null;
                 break;
             }
         }
@@ -768,12 +762,10 @@ public class WaveFrontLoader implements iLoader {
                     mat.setSpecularColor(parseColor(line));
                 } else if (parts[0].equals("Ns")) {
                     if (parts.length > 1) {
-                        mat.setShininess(Float.valueOf(parts[1]));
+                        mat.setShininess(Float.parseFloat(parts[1]));
                     }
                 } else if (parts[0].equals("d")) {
-                    ;
                 } else if (parts[0].equals("illum")) {
-                    ;
                 } else if (parts[0].equals("Ka")) {
                     mat.setAmbientColor(parseColor(line));
                 } else if (parts[0].equals("Kd")) {
@@ -792,10 +784,8 @@ public class WaveFrontLoader implements iLoader {
             br.close();
             this.model.addMaterial(mat);
 
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
         return mat;
     }
@@ -821,7 +811,7 @@ public class WaveFrontLoader implements iLoader {
         return path = path.replaceAll("\\\\", "/");
     }
 
-    private class EditableMaterial extends Material {
+    private static class EditableMaterial extends Material {
         String name;
 
         void setAmbientColor(Color c) {
@@ -857,9 +847,9 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private Color parseColor(String line) {
-        String parts[] = line.trim().split("\\s+");
+        String[] parts = line.trim().split("\\s+");
 
-        Color color = new Color(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3]));
+        Color color = new Color(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3]));
 
         return color;
     }

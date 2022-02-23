@@ -12,7 +12,7 @@ import kendzi.kendzi3d.expressions.functions.ZeroParamFunction;
 public class ExpressionFactory {
 
     public static class DoubleExpresion implements Expression {
-        private double value;
+        private final double value;
 
         public DoubleExpresion(double value) {
             this.value = value;
@@ -113,22 +113,20 @@ public class ExpressionFactory {
     }
 
     public static Expression variable(final String name) {
-        return new Expression() {
-            public Object evaluate(Context context) {
+        return context -> {
 
-                if (context == null) {
-                    throw new RuntimeException("can't find variable " + name + " context is null");
-                }
-                if (context.getFunctions() == null) {
-                    throw new RuntimeException("can't find variable " + name + " context variables are null");
-                }
-
-                Object ret = context.getVariables().get(name);
-                if (ret instanceof Double) {
-                    return ret;
-                }
-                throw new RuntimeException("unsupported variable type: " + ret);
+            if (context == null) {
+                throw new RuntimeException("can't find variable " + name + " context is null");
             }
+            if (context.getFunctions() == null) {
+                throw new RuntimeException("can't find variable " + name + " context variables are null");
+            }
+
+            Object ret = context.getVariables().get(name);
+            if (ret instanceof Double) {
+                return ret;
+            }
+            throw new RuntimeException("unsupported variable type: " + ret);
         };
     }
 

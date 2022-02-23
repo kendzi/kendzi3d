@@ -60,7 +60,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     /**
      * Total count of frames.
      */
-    private int totalTitleCount = 0;
+    private int totalTitleCount;
 
     /**
      * How many titles was created per frame.

@@ -13,15 +13,15 @@ import javax.vecmath.Point3d;
  * @author Tomasz Kędziora (Kendzi)
  */
 public interface Editor {
-    public static final float SELECTION_ETITOR_RADIUS = 2f;
-    public static final double SELECTION_ETITOR_CAMERA_RATIO = 0.02d;
+    float SELECTION_ETITOR_RADIUS = 2f;
+    double SELECTION_ETITOR_CAMERA_RATIO = 0.02d;
 
     /**
      * Gets center location of editor active zone.
      *
      * @return editor active zone location
      */
-    public Point3d getActiveSpot();
+    Point3d getActiveSpot();
 
     /**
      * Gets center location of editor active zone. Location of active spot may
@@ -32,12 +32,12 @@ public interface Editor {
      *
      * @return editor active zone location
      */
-    public Point3d getActiveSpot(Point3d camera);
+    Point3d getActiveSpot(Point3d camera);
 
     /**
      * Gets radius of editor active zone.
      *
      * @return editor active zone radius
      */
-    public double getEditorRadius();
+    double getEditorRadius();
 }

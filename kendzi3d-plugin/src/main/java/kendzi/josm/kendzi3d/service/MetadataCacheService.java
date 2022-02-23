@@ -37,9 +37,9 @@ public class MetadataCacheService {
      */
     private ResourceService urlReciverService;
 
-    private Map<String, TextureMetadata> cacheTexture = new HashMap<String, TextureMetadata>();
+    private final Map<String, TextureMetadata> cacheTexture = new HashMap<>();
 
-    private Map<String, ModelMetadata> cacheModel = new HashMap<String, ModelMetadata>();
+    private final Map<String, ModelMetadata> cacheModel = new HashMap<>();
 
     private Properties metadataProperties;
 

@@ -35,7 +35,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
     // FIXME
 
     Plane3d plane;
-    private List<List<Point2d>> polygon;
+    private final List<List<Point2d>> polygon;
 
     public PolygonRoofHooksSpace(Point2d p1, Vector2d v1, MultiPolygonList2d pPolygon, Plane3d pPlane) {
         this(p1, v1, toList(pPolygon), pPlane);
@@ -43,7 +43,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
 
     private static List<List<Point2d>> toList(MultiPolygonList2d pPolygon) {
 
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         for (PolygonList2d polygon : pPolygon.getPolygons()) {
 
@@ -68,9 +68,9 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
         this.p1 = TransformationMatrix2d.transform(p1, tr2d);
         this.v1 = TransformationMatrix2d.transform(v1, tr2d);
 
-        List<List<Point2d>> transformPolygons = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> transformPolygons = new ArrayList<>();
         for (List<Point2d> polygon : pPolygon) {
-            List<Point2d> transformPolygon = new ArrayList<Point2d>();
+            List<Point2d> transformPolygon = new ArrayList<>();
             for (Point2d point : polygon) {
                 transformPolygon.add(TransformationMatrix2d.transform(point, tr2d));
             }
@@ -167,9 +167,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
         for (List<Point2d> polygon : pPolygon) {
 
             int size = polygon.size();
-            for (int i = 0; i < size; i++) {
-                Point2d p1 = polygon.get(i);
-
+            for (Point2d p1 : polygon) {
                 empty = false;
 
                 if (p1.y < minY) {
@@ -187,7 +185,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
         return new MinMax(minY, maxY);
     }
 
-    class MinMax {
+    static class MinMax {
         double min;
         double max;
 

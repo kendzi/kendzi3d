@@ -5,8 +5,6 @@ import generated.NodeModel;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,26 +22,23 @@ import kendzi.kendzi3d.models.library.messages.Messages;
 
 public class NodeModelListFrame extends JFrame {
 
-    private JPanel contentPane;
+    private final JPanel contentPane;
 
     protected JTable table;
 
     protected ModelsTableModel dataModel;
-    private JLabel lblFileKey;
+    private final JLabel lblFileKey;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NodeModelListFrame frame = new NodeModelListFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                NodeModelListFrame frame = new NodeModelListFrame();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -87,41 +82,21 @@ public class NodeModelListFrame extends JFrame {
 
         JButton btnEdit = new JButton("Edit");
         btnEdit.setEnabled(false);
-        btnEdit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editNodeModel();
-            }
-        });
+        btnEdit.addActionListener(e -> editNodeModel());
 
         JButton btnView = new JButton(Messages.getString("NodeModelListFrame.btnView.text")); //$NON-NLS-1$
-        btnView.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                viewNodeModel();
-            }
-        });
+        btnView.addActionListener(e -> viewNodeModel());
         panel.add(btnView);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.setEnabled(false);
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addNodeModel();
-            }
-        });
+        btnAdd.addActionListener(e -> addNodeModel());
         panel.add(btnAdd);
         panel.add(btnEdit);
 
         JButton btnDelete = new JButton("Delete");
         btnDelete.setEnabled(false);
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeNodeModel();
-            }
-
-        });
+        btnDelete.addActionListener(e -> removeNodeModel());
         panel.add(btnDelete);
 
         JPanel panel_empty = new JPanel();
@@ -131,12 +106,7 @@ public class NodeModelListFrame extends JFrame {
         panel.add(panel_empty2);
 
         JButton btnOk = new JButton("Ok");
-        btnOk.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnOk.addActionListener(e -> dispose());
         panel.add(btnOk);
     }
 
@@ -156,17 +126,17 @@ public class NodeModelListFrame extends JFrame {
         //
     }
 
-    public class ModelsTableModel extends AbstractTableModel {
+    public static class ModelsTableModel extends AbstractTableModel {
 
         /**
          *
          */
         private static final long serialVersionUID = 1L;
 
-        private List<NodeModel> data = Collections.unmodifiableList(new ArrayList<NodeModel>());
+        private List<NodeModel> data = Collections.unmodifiableList(new ArrayList<>());
 
         public void setData(List<NodeModel> data) {
-            this.data = Collections.unmodifiableList(new ArrayList<NodeModel>(data));
+            this.data = Collections.unmodifiableList(new ArrayList<>(data));
             fireTableStructureChanged();
         }
 

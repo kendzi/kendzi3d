@@ -19,7 +19,6 @@ import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.dto.RoofTypeOutput;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space.PolygonRoofHooksSpace;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space.RectangleRoofHooksSpaces;
-import kendzi.kendzi3d.buildings.builder.roof.shape.type.RectangleRoofTransformationUtil.TransformedHeightCalculator;
 import kendzi.kendzi3d.buildings.model.roof.RoofFrontDirection;
 import kendzi.kendzi3d.buildings.model.roof.RoofOrientation;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
@@ -110,7 +109,7 @@ public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder i
     }
 
     public List<Point3d> createRectangle(Point2d[] rectangleContur) {
-        List<Point3d> rect = new ArrayList<Point3d>();
+        List<Point3d> rect = new ArrayList<>();
         rect.add(new Point3d(rectangleContur[0].x, 0, -rectangleContur[0].y));
         rect.add(new Point3d(rectangleContur[1].x, 0, -rectangleContur[1].y));
         rect.add(new Point3d(rectangleContur[2].x, 0, -rectangleContur[2].y));

@@ -49,9 +49,7 @@ public class UrlUtil {
             uri = url.toURI();
             URI paretnt = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             return paretnt.toURL();
-        } catch (URISyntaxException e) {
-            log.error(e, e);
-        } catch (MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException e) {
             log.error(e, e);
         }
         return null;

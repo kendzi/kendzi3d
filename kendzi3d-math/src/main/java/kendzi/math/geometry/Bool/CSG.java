@@ -62,7 +62,7 @@ import java.util.ArrayList;
  */
 public class CSG {
 
-    ArrayList<Polygon> polygons = null;
+    ArrayList<Polygon> polygons;
 
     /**
      * Construct a CSG solid from a list of `CSG.Polygon` instances.
@@ -75,7 +75,7 @@ public class CSG {
         CSG csg = new CSG();
         csg.polygons = polygons;
         return csg;
-    };
+    }
 
     @Override
     protected CSG clone() {
@@ -83,10 +83,10 @@ public class CSG {
         CSG csg = new CSG();
 
         // Polygon [] polygons = new Polygon[this.polygons.size()];
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>(this.polygons.size());
-        for (int i = 0; i < this.polygons.size(); i++) {
+        ArrayList<Polygon> polygons = new ArrayList<>(this.polygons.size());
+        for (Polygon polygon : this.polygons) {
             // polygons.set(i, this.polygons.get(i).clone());
-            polygons.add(this.polygons.get(i).clone());
+            polygons.add(polygon.clone());
         }
         csg.polygons = polygons;
         // csg.polygons = this.polygons.map(function(p) { return p.clone(); });
@@ -121,8 +121,8 @@ public class CSG {
      * @return
      */
     CSG union(CSG csg) {
-        Node a = new CSG.Node((this.clone().polygons));
-        Node b = new CSG.Node((csg.clone().polygons));
+        Node a = new Node((this.clone().polygons));
+        Node b = new Node((csg.clone().polygons));
         a.clipTo(b);
         b.clipTo(a);
         b.invert();
@@ -155,8 +155,8 @@ public class CSG {
      * @return subtract of csg
      */
     public CSG subtract(CSG csg) {
-        Node a = new CSG.Node((this.clone().polygons));
-        Node b = new CSG.Node((csg.clone().polygons));
+        Node a = new Node((this.clone().polygons));
+        Node b = new Node((csg.clone().polygons));
         a.invert();
         a.clipTo(b);
         b.clipTo(a);
@@ -189,8 +189,8 @@ public class CSG {
      * @return
      */
     CSG intersect(CSG csg) {
-        Node a = new CSG.Node((this.clone().polygons));
-        Node b = new CSG.Node((csg.clone().polygons));
+        Node a = new Node((this.clone().polygons));
+        Node b = new Node((csg.clone().polygons));
         a.invert();
         b.clipTo(a);
         b.invert();
@@ -222,7 +222,7 @@ public class CSG {
     // center: [0, 0, 0],
     // radius: 1
     // });
-    class Parms {
+    static class Parms {
         public Vector radius;
         public Vector center;
     }
@@ -310,7 +310,7 @@ public class CSG {
     // });
     public static CSG sphere(Vector c, Double r, Double pSlices, Double pStacks) {
 
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
         // options = options || {};
         // var c = new CSG.Vector(options.center || [0, 0, 0]);
         // var r = options.radius || 1;
@@ -338,7 +338,7 @@ public class CSG {
 
         for (double i = 0; i < slices; i++) {
             for (double j = 0; j < stacks; j++) {
-                ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+                ArrayList<Vertex> vertices = new ArrayList<>();
                 vertex(i / slices, j / stacks, c, r, vertices);
                 if (j > 0)
                     vertex((i + 1d) / slices, j / stacks, c, r, vertices);
@@ -399,7 +399,7 @@ public class CSG {
         Vertex end = new CSG.Vertex(e, axisZ.unit());
 
         // var polygons = [];
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
 
         for (double i = 0; i < slices; i++) {
             double t0 = i / slices, t1 = (i + 1d) / slices;
@@ -453,7 +453,7 @@ public class CSG {
             this.x = x;
             this.y = y;
             this.z = z;
-        };
+        }
 
         @Override
         public Vector clone() {
@@ -499,7 +499,7 @@ public class CSG {
         public Vector cross(Vector a) {
             return new CSG.Vector(this.y * a.z - this.z * a.y, this.z * a.x - this.x * a.z, this.x * a.y - this.y * a.x);
         }
-    };
+    }
 
     /**
      * Represents a vertex of a polygon. Use your own vertex class instead of this
@@ -655,7 +655,7 @@ public class CSG {
             // four classes.
             int polygonType = 0;
             // var types = [];
-            ArrayList<Integer> types = new ArrayList<Integer>();
+            ArrayList<Integer> types = new ArrayList<>();
 
             for (int i = 0; i < polygon.vertices.length; i++) {
                 double t = this.normal.dot(polygon.vertices[i].pos) - this.w;
@@ -678,8 +678,8 @@ public class CSG {
                 break;
             case SPANNING:
                 // var f = [], b = [];
-                ArrayList<Vertex> f = new ArrayList<Vertex>();
-                ArrayList<Vertex> b = new ArrayList<Vertex>();
+                ArrayList<Vertex> f = new ArrayList<>();
+                ArrayList<Vertex> b = new ArrayList<>();
 
                 for (int i = 0; i < polygon.vertices.length; i++) {
                     int j = (i + 1) % polygon.vertices.length;
@@ -701,9 +701,9 @@ public class CSG {
                 }
                 // XXX
                 if (f.size() >= 3)
-                    front.add(new Polygon(f.toArray(new Vertex[f.size()]), polygon.shared));
+                    front.add(new Polygon(f.toArray(new Vertex[0]), polygon.shared));
                 if (b.size() >= 3)
-                    back.add(new Polygon(b.toArray(new Vertex[b.size()]), polygon.shared));
+                    back.add(new Polygon(b.toArray(new Vertex[0]), polygon.shared));
                 break;
             }
         }
@@ -740,7 +740,7 @@ public class CSG {
             this.vertices = vertices;
             this.shared = shared;
             this.plane = CSG.planeFromPoints(vertices[0].pos, vertices[1].pos, vertices[2].pos);
-        };
+        }
 
         // CSG.Polygon.prototype = {
         @Override
@@ -775,7 +775,7 @@ public class CSG {
             return vertices;
         }
 
-    };
+    }
 
     // # class Node
 
@@ -786,7 +786,7 @@ public class CSG {
      * the front and/or back subtrees. This is not a leafy BSP tree since there is
      * no distinction between internal and leaf nodes.
      */
-    class Node {
+    static class Node {
         // CSG.Node = function(polygons) {
         // this.plane = null;
         // this.front = null;
@@ -797,7 +797,7 @@ public class CSG {
         Plane plane;
         Node front;
         Node back;
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
 
         public Node() {
         }
@@ -806,7 +806,7 @@ public class CSG {
             this.plane = null;
             this.front = null;
             this.back = null;
-            this.polygons = new ArrayList<Polygon>();// Polygon[0];
+            this.polygons = new ArrayList<>();// Polygon[0];
             if (polygons != null) {
                 this.build(polygons);
             }
@@ -814,12 +814,12 @@ public class CSG {
 
         @Override
         protected Node clone() {
-            Node node = new CSG.Node();
+            Node node = new Node();
             node.plane = this.plane == null ? null : this.plane.clone();
             node.front = this.front == null ? null : this.front.clone();
             node.back = this.back == null ? null : this.back.clone();
 
-            ArrayList<Polygon> polygons = new ArrayList<Polygon>(this.polygons.size());
+            ArrayList<Polygon> polygons = new ArrayList<>(this.polygons.size());
             for (int i = 0; i < this.polygons.size(); i++) {
                 polygons.set(i, this.polygons.get(i).clone());
             }
@@ -832,8 +832,8 @@ public class CSG {
          * Convert solid space to empty space and empty space to solid space.
          */
         void invert() {
-            for (int i = 0; i < this.polygons.size(); i++) {
-                this.polygons.get(i).flip();
+            for (Polygon polygon : this.polygons) {
+                polygon.flip();
             }
             this.plane.flip();
             if (this.front != null)
@@ -854,18 +854,18 @@ public class CSG {
         ArrayList<Polygon> clipPolygons(ArrayList<Polygon> polygons) {
             if (this.plane == null)
                 return slice(polygons);
-            ArrayList<Polygon> front = new ArrayList<Polygon>();// = [];
-            ArrayList<Polygon> back = new ArrayList<Polygon>();// = [];
+            ArrayList<Polygon> front = new ArrayList<>();// = [];
+            ArrayList<Polygon> back = new ArrayList<>();// = [];
 
-            for (int i = 0; i < polygons.size(); i++) {
-                this.plane.splitPolygon(polygons.get(i), front, back, front, back);
+            for (Polygon polygon : polygons) {
+                this.plane.splitPolygon(polygon, front, back, front, back);
             }
             if (this.front != null)
                 front = this.front.clipPolygons(front);
             if (this.back != null) {
                 back = this.back.clipPolygons(back);
             } else {
-                back = new ArrayList<Polygon>();// = [];
+                back = new ArrayList<>();// = [];
             }
             return concat(front, back);
         }
@@ -907,7 +907,7 @@ public class CSG {
 
         ArrayList<Polygon> slice(ArrayList<Polygon> polygons) {
             // XXX
-            return new ArrayList<CSG.Polygon>(polygons);
+            return new ArrayList<>(polygons);
         }
 
         Polygon[] concat(Polygon[] polygons, Polygon[] polygons2) {
@@ -920,7 +920,7 @@ public class CSG {
         }
 
         ArrayList<Polygon> concat(ArrayList<Polygon> polygons, ArrayList<Polygon> polygons2) {
-            ArrayList<CSG.Polygon> ret = new ArrayList<CSG.Polygon>(polygons.size() + polygons2.size());
+            ArrayList<CSG.Polygon> ret = new ArrayList<>(polygons.size() + polygons2.size());
             ret.addAll(polygons);
             ret.addAll(polygons2);
             return ret;
@@ -939,20 +939,20 @@ public class CSG {
                 return;
             if (this.plane == null)
                 this.plane = polygons.get(0).plane.clone();
-            ArrayList<Polygon> front = new ArrayList<Polygon>();// null;//[],
-            ArrayList<Polygon> back = new ArrayList<Polygon>();// null;//[];
+            ArrayList<Polygon> front = new ArrayList<>();// null;//[],
+            ArrayList<Polygon> back = new ArrayList<>();// null;//[];
 
-            for (int i = 0; i < polygons.size(); i++) {
-                this.plane.splitPolygon(polygons.get(i), this.polygons, this.polygons, front, back);
+            for (Polygon polygon : polygons) {
+                this.plane.splitPolygon(polygon, this.polygons, this.polygons, front, back);
             }
             if (front.size() > 0) {
                 if (this.front == null)
-                    this.front = new CSG.Node();
+                    this.front = new Node();
                 this.front.build(front);
             }
             if (back.size() > 0) {
                 if (this.back == null)
-                    this.back = new CSG.Node();
+                    this.back = new Node();
                 this.back.build(back);
             }
         }

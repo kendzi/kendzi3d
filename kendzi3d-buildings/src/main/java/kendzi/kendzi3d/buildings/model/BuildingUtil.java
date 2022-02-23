@@ -14,7 +14,7 @@ public class BuildingUtil {
 
         PolygonList2d outerPolygon = wallToOuterPolygon(bp.getWall());
 
-        List<PolygonList2d> innerList = new ArrayList<PolygonList2d>();
+        List<PolygonList2d> innerList = new ArrayList<>();
         if (bp.getInlineWalls() != null) {
             for (Wall innerWall : bp.getInlineWalls()) {
                 PolygonList2d innerPolygon = wallToOuterPolygon(innerWall);
@@ -31,7 +31,7 @@ public class BuildingUtil {
 
     private static PolygonList2d wallPartsToPolygon(List<WallPart> wallParts) {
 
-        List<Point2d> points = new ArrayList<Point2d>();
+        List<Point2d> points = new ArrayList<>();
 
         for (WallPart p : wallParts) {
             if (points.size() > 0 && p.getNodes().size() > 0) {

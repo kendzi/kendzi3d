@@ -6,7 +6,7 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point2d;
@@ -85,7 +85,7 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
         RoofTypeOutput rto = new RoofTypeOutput();
         rto.setHeight(height);
 
-        rto.setMesh(Arrays.asList(meshDome));
+        rto.setMesh(Collections.singletonList(meshDome));
 
         rto.setRoofHooksSpaces(null);
 

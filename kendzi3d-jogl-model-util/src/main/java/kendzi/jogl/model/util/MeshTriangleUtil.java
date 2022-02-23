@@ -28,7 +28,7 @@ public class MeshTriangleUtil {
      */
     public static List<Point3d> toTriangles(Mesh mesh) {
 
-        List<Point3d> points = new ArrayList<Point3d>();
+        List<Point3d> points = new ArrayList<>();
 
         Point3d[] vertices = mesh.vertices;
         for (Face f : mesh.face) {
@@ -42,7 +42,7 @@ public class MeshTriangleUtil {
     }
 
     private static List<Integer> convertToTriangles(int[] vertIndex, int type) {
-        ArrayList<Integer> ret = new ArrayList<Integer>();
+        ArrayList<Integer> ret = new ArrayList<>();
 
         if (type == FaceType.QUADS.getType()) {
 
@@ -65,9 +65,7 @@ public class MeshTriangleUtil {
 
         } else if (type == FaceType.TRIANGLES.getType()) {
 
-            for (int offset = 0; offset < vertIndex.length; offset++) {
-
-                int i0 = vertIndex[offset];
+            for (int i0 : vertIndex) {
 
                 ret.add(i0);
             }

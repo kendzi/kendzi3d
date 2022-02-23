@@ -89,7 +89,7 @@ public class DrawUtil {
         boolean aBlueTile;
         for (int z = -size / 2; z <= size / 2 - 1; z++) {
             // set color type for new
-            aBlueTile = z % 2 == 0 ? true : false;
+            aBlueTile = z % 2 == 0;
             // row
             for (int x = -size / 2; x <= size / 2 - 1; x++) {
                 if (aBlueTile && odd) {

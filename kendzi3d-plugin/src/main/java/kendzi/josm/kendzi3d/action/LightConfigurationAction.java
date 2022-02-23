@@ -31,7 +31,7 @@ public class LightConfigurationAction extends JosmAction {
 
     /** 
      */
-    private LightService lightService;
+    private final LightService lightService;
 
     private LightFrameAction lastFrame;
 

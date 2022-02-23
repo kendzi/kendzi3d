@@ -112,7 +112,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
         this.nodeFilter = nodeFilter;
 
-        modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<>(LOD.class);
 
         scale = new Vector3d(1d, 1d, 1d);
 
@@ -216,7 +216,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
         double offset = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getOffset(), c, 0);
 
         boolean closed = way.isClosed();
-        List<ModelPoint> modelPoints = new ArrayList<ModelPoint>();
+        List<ModelPoint> modelPoints = new ArrayList<>();
         for (int i : nodeFilter) {
             Node node = way.getNode(i);
 
@@ -239,7 +239,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
             c.getVariables().put("osm_node", node);
             c.getVariables().put("bisector", bisector);
 
-            Double direction = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getDirection(), c, 0);
+            double direction = ExpressiongBuilder.evaluateExpectedDouble(nodeModelConf.getDirection(), c, 0);
 
             modelPoints.add(new ModelPoint(point, direction, bisector));
         }
@@ -357,10 +357,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (modelLod.get(pLod) != null) {
-            return true;
-        }
-        return false;
+        return modelLod.get(pLod) != null;
     }
 
     private static void setAmbientColor(Model pModel) {

@@ -18,12 +18,12 @@ public class SelectionChangeEvent {
     /**
      * New selection.
      */
-    private Selection selection;
+    private final Selection selection;
 
     /**
      * Source of selection change.
      */
-    private SelectionEventSource selectionSource;
+    private final SelectionEventSource selectionSource;
 
     /**
      * Selection change event.

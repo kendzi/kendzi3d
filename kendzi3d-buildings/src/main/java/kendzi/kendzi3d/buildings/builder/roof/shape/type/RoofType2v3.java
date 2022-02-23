@@ -47,15 +47,15 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
 
-        Double h2 = getHeight2(conf.getMeasurements());
+        double h2 = getHeight2(conf.getMeasurements());
 
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+        double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
-        Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(),
+        double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecWidth(),
                 conf.getRecWidth() / 4d);
-        Double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(),
+        double l3 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_3, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
 
         if (h2 > h1) {
@@ -175,7 +175,7 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
                 new Vector3d(-(rightHeight - h1), l2, 0));
 
         // //******************
-        List<Point2d> border = new ArrayList<Point2d>();
+        List<Point2d> border = new ArrayList<>();
 
         List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
 

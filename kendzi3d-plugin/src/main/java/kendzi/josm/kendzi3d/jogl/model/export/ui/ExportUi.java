@@ -6,8 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,8 +18,8 @@ import javax.swing.border.EmptyBorder;
 public class ExportUi extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
-    private JTextField txtFilePattern;
-    private JTextField txtNumOfModels;
+    private final JTextField txtFilePattern;
+    private final JTextField txtNumOfModels;
 
     /**
      * Launch the application.
@@ -132,24 +130,14 @@ public class ExportUi extends JDialog {
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
             {
                 JButton okButton = new JButton("Export");
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        onExportAction();
-                    }
-                });
+                okButton.addActionListener(e -> onExportAction());
                 okButton.setActionCommand("OK");
                 buttonPane.add(okButton);
                 getRootPane().setDefaultButton(okButton);
             }
             {
                 JButton cancelButton = new JButton("Cancel");
-                cancelButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        dispose();
-                    }
-                });
+                cancelButton.addActionListener(e -> dispose());
                 cancelButton.setActionCommand("Cancel");
                 buttonPane.add(cancelButton);
             }

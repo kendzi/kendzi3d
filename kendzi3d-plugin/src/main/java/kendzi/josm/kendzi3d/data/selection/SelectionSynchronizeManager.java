@@ -20,7 +20,7 @@ public class SelectionSynchronizeManager implements DataSelectionListener, Selec
 
     private final ObjectSelectionManager objectSelectionManager;
 
-    private long previewSelectionTime = 0;
+    private long previewSelectionTime;
 
     public SelectionSynchronizeManager(ObjectSelectionManager objectSelectionManager) {
         this.objectSelectionManager = objectSelectionManager;

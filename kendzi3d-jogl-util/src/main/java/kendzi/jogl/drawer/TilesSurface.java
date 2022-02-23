@@ -29,12 +29,12 @@ public class TilesSurface implements Gl2Draw {
     /**
      * Odd tiles color.
      */
-    private float[] firstColor;
+    private final float[] firstColor;
 
     /**
      * Not odd tiles color.
      */
-    private float[] secondColor;
+    private final float[] secondColor;
 
     /**
      * Creates tiles surface drawer with blue and green tiles colors.

@@ -40,7 +40,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight() / 2d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight() / 2d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());
@@ -146,7 +146,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
         double cx = recHeight / 2d;
         double cy = h - r;
 
-        List<Point2d> ret = new ArrayList<Point2d>();
+        List<Point2d> ret = new ArrayList<>();
         ret.add(new Point2d());
 
         if (segments <= 0) {
@@ -180,7 +180,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
 
         List<Point2d> round = createRound(pRecHeight, r, height, teta, segments);
 
-        List<RoofType5v2.CrossSectionElement> split = new ArrayList<RoofType5v2.CrossSectionElement>();
+        List<RoofType5v2.CrossSectionElement> split = new ArrayList<>();
 
         for (Point2d p : round) {
             double x = p.x;

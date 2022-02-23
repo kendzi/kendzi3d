@@ -23,13 +23,13 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class LightService implements LightRenderService, LightStorageService {
 
-    private LightDao lightDao;
+    private final LightDao lightDao;
 
-    private float[] diffuseLightColor = new float[4];
+    private final float[] diffuseLightColor = new float[4];
 
-    private float[] ambientLightColor = new float[4];
+    private final float[] ambientLightColor = new float[4];
 
-    private float[] lightPosition = new float[4];
+    private final float[] lightPosition = new float[4];
 
     @Inject
     public LightService(LightDao lightDao) {

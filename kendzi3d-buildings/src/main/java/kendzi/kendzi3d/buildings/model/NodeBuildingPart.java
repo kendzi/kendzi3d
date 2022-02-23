@@ -9,15 +9,15 @@ public interface NodeBuildingPart {
     /**
      * @return the point
      */
-    public abstract Point2d getPoint();
+    Point2d getPoint();
 
     /**
      * @return the height
      */
-    public abstract double getHeight();
+    double getHeight();
 
-    public abstract String getFacadeMaterialType();
+    String getFacadeMaterialType();
 
-    public abstract Color getFacadeColor();
+    Color getFacadeColor();
 
 }

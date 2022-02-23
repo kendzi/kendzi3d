@@ -20,7 +20,7 @@ import javax.vecmath.Vector3d;
  */
 public interface Camera {
 
-    public final static double CAM_HEIGHT = 1.8;
+    double CAM_HEIGHT = 1.8;
 
     /**
      * Camera position point.

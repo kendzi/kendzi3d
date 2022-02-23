@@ -128,10 +128,7 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         if (measurement == null) {
             return false;
         }
-        if (measurementUnit.equals(measurement.getUnit())) {
-            return true;
-        }
-        return false;
+        return measurementUnit.equals(measurement.getUnit());
     }
 
     protected MeshFactory createRoofMesh(RoofMaterials roofTextureData) {

@@ -34,7 +34,7 @@ public final class MultiPartPolygonUtil {
 
         List<Edge<E, V>> all = in;
 
-        Map<Vertex<V>, List<Connection<E, V>>> connections = new HashMap<Vertex<V>, List<Connection<E, V>>>();
+        Map<Vertex<V>, List<Connection<E, V>>> connections = new HashMap<>();
 
         validate(in);
 
@@ -47,7 +47,7 @@ public final class MultiPartPolygonUtil {
             //
         }
 
-        Set<Edge<E, V>> used = new HashSet<Edge<E, V>>();
+        Set<Edge<E, V>> used = new HashSet<>();
         markUsedForNotConnected(all, connections, used);
 
         List<List<EdgeOut<E, V>>> ret = findClosedPolygon(all, connections, used);
@@ -99,7 +99,7 @@ public final class MultiPartPolygonUtil {
     private static <E, V> List<List<EdgeOut<E, V>>> findClosedPolygon(List<Edge<E, V>> all,
             Map<Vertex<V>, List<Connection<E, V>>> connections, Set<Edge<E, V>> used) {
 
-        List<List<EdgeOut<E, V>>> ret = new ArrayList<List<EdgeOut<E, V>>>();
+        List<List<EdgeOut<E, V>>> ret = new ArrayList<>();
         for (Edge<E, V> e : all) {
             if (used.contains(e)) {
                 continue;
@@ -124,18 +124,18 @@ public final class MultiPartPolygonUtil {
     private static <E, V> List<EdgeOut<E, V>> searchGraph(Edge<E, V> startEdge,
             Map<Vertex<V>, List<Connection<E, V>>> connections) {
 
-        List<ConnectionWithParent<E, V>> toProcess = new ArrayList<ConnectionWithParent<E, V>>();
-        Set<Connection<E, V>> processed = new HashSet<Connection<E, V>>();
-        List<ConnectionWithParent<E, V>> processedOrder = new ArrayList<ConnectionWithParent<E, V>>();
+        List<ConnectionWithParent<E, V>> toProcess = new ArrayList<>();
+        Set<Connection<E, V>> processed = new HashSet<>();
+        List<ConnectionWithParent<E, V>> processedOrder = new ArrayList<>();
         // key: current vertex, value: paretn vertex
-        Map<Connection<E, V>, Connection<E, V>> parentList = new HashMap<Connection<E, V>, Connection<E, V>>();
+        Map<Connection<E, V>, Connection<E, V>> parentList = new HashMap<>();
 
         Vertex<V> startVertex = startEdge.getV1();
 
         for (Connection<E, V> connection : connections.get(startVertex)) {
             if (!connection.reverted && connection.getEdge().equals(startEdge)) {
                 parentList.put(connection, null);
-                toProcess.add(new ConnectionWithParent<E, V>(connection, null));
+                toProcess.add(new ConnectionWithParent<>(connection, null));
             }
         }
 
@@ -174,7 +174,7 @@ public final class MultiPartPolygonUtil {
                 }
 
                 parentList.put(connection, process);
-                toProcess.add(new ConnectionWithParent<E, V>(connection, current));
+                toProcess.add(new ConnectionWithParent<>(connection, current));
             }
         }
 
@@ -225,21 +225,21 @@ public final class MultiPartPolygonUtil {
 
     private static <E, V> List<EdgeOut<E, V>> findReturnPath(ConnectionWithParent<E, V> current) {
 
-        List<EdgeOut<E, V>> ret = new ArrayList<EdgeOut<E, V>>();
+        List<EdgeOut<E, V>> ret = new ArrayList<>();
 
         ConnectionWithParent<E, V> last = current;
-        ret.add(new EdgeOut<E, V>(last.connection.getEdge(), last.connection.isReverted()));
+        ret.add(new EdgeOut<>(last.connection.getEdge(), last.connection.isReverted()));
 
         while ((last = last.getParent()) != null) {
 
-            ret.add(new EdgeOut<E, V>(last.connection.getEdge(), last.connection.isReverted()));
+            ret.add(new EdgeOut<>(last.connection.getEdge(), last.connection.isReverted()));
         }
 
         return revers(ret);
     }
 
     private static <E, V> List<EdgeOut<E, V>> revers(List<EdgeOut<E, V>> in) {
-        List<EdgeOut<E, V>> ret = new ArrayList<EdgeOut<E, V>>();
+        List<EdgeOut<E, V>> ret = new ArrayList<>();
         for (int i = in.size() - 1; i >= 0; i--) {
             ret.add(in.get(i));
         }
@@ -385,10 +385,7 @@ public final class MultiPartPolygonUtil {
             } else if (!this.end.equals(other.end)) {
                 return false;
             }
-            if (this.reverted != other.reverted) {
-                return false;
-            }
-            return true;
+            return this.reverted == other.reverted;
         }
     }
 
@@ -453,7 +450,7 @@ public final class MultiPartPolygonUtil {
 
         boolean removed = false;
 
-        for (Vertex<V> vBegin : new HashSet<Vertex<V>>(connections.keySet())) {
+        for (Vertex<V> vBegin : new HashSet<>(connections.keySet())) {
 
             List<Connection<E, V>> list = connections.get(vBegin);
             if (list.size() == 1) {
@@ -483,13 +480,9 @@ public final class MultiPartPolygonUtil {
     private static <V, E> void addVertex(Vertex<V> begin, Vertex<V> end, Edge<E, V> edge,
             Map<Vertex<V>, List<Connection<E, V>>> connections, boolean reverted) {
 
-        List<Connection<E, V>> list = connections.get(begin);
-        if (list == null) {
-            list = new ArrayList<Connection<E, V>>();
-            connections.put(begin, list);
-        }
+        List<Connection<E, V>> list = connections.computeIfAbsent(begin, k -> new ArrayList<>());
 
-        list.add(new Connection<E, V>(begin, end, edge, reverted));
+        list.add(new Connection<>(begin, end, edge, reverted));
     }
 
     /**
@@ -551,14 +544,9 @@ public final class MultiPartPolygonUtil {
             }
             Vertex<V> other = (Vertex<V>) obj;
             if (this.data == null) {
-                if (other.data != null) {
-                    return false;
-                }
-            } else if (!this.data.equals(other.data)) {
-                return false;
-            }
-
-            return true;
+                return other.data == null;
+            } else
+                return this.data.equals(other.data);
         }
 
         /**
@@ -689,13 +677,9 @@ public final class MultiPartPolygonUtil {
                 return false;
             }
             if (this.v2 == null) {
-                if (other.v2 != null) {
-                    return false;
-                }
-            } else if (!this.v2.equals(other.v2)) {
-                return false;
-            }
-            return true;
+                return other.v2 == null;
+            } else
+                return this.v2.equals(other.v2);
         }
 
         /**

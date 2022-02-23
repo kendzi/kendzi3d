@@ -28,7 +28,7 @@ public class SimpleMatrixUtil {
 
         int numChar = 6;
         int precision = 3;
-        sb.append("DenseMatrix64F  numRows = " + mat.numRows + " numCols = " + mat.numCols + "\n");
+        sb.append("DenseMatrix64F  numRows = ").append(mat.numRows).append(" numCols = ").append(mat.numCols).append("\n");
 
         String format = "%" + numChar + "." + precision + "f ";
 

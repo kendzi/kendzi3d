@@ -25,15 +25,12 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NodeModelAddFrameAction frame = new NodeModelAddFrameAction();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                NodeModelAddFrameAction frame = new NodeModelAddFrameAction();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

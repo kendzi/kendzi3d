@@ -20,15 +20,15 @@ public class SkyBoxDrawer {
 
     private SkyBoxConfiguration configuration;
 
-    private Point3d leftBottomBack = new Point3d(-10, -10, -10);
-    private Point3d rightBottomBack = new Point3d(10, -10, -10);
-    private Point3d rightTopBack = new Point3d(10, 10, -10);
-    private Point3d leftTopBack = new Point3d(-10, 10, -10);
+    private final Point3d leftBottomBack = new Point3d(-10, -10, -10);
+    private final Point3d rightBottomBack = new Point3d(10, -10, -10);
+    private final Point3d rightTopBack = new Point3d(10, 10, -10);
+    private final Point3d leftTopBack = new Point3d(-10, 10, -10);
 
-    private Point3d rightBottomFront = new Point3d(10, -10, 10);
-    private Point3d leftBottomFront = new Point3d(-10, -10, 10);
-    private Point3d leftTopFront = new Point3d(-10, 10, 10);
-    private Point3d rightTopFront = new Point3d(10, 10, 10);
+    private final Point3d rightBottomFront = new Point3d(10, -10, 10);
+    private final Point3d leftBottomFront = new Point3d(-10, -10, 10);
+    private final Point3d leftTopFront = new Point3d(-10, 10, 10);
+    private final Point3d rightTopFront = new Point3d(10, 10, 10);
 
     /**
      * Constructor.

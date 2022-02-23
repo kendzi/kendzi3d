@@ -34,7 +34,7 @@ public abstract class AbstractWayModel extends AbstractModel {
     }
 
     private void calcWayPointsAndRadius(Way way) {
-        List<Point2d> pointsList = new ArrayList<Point2d>();
+        List<Point2d> pointsList = new ArrayList<>();
 
         double maxRadius = 0;
 
@@ -66,7 +66,7 @@ public abstract class AbstractWayModel extends AbstractModel {
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
-        Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> set = new HashSet<>();
 
         set.add(way);
 

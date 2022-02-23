@@ -12,14 +12,14 @@ import org.openstreetmap.josm.data.osm.Relation;
 
 public class RelationCloneHeight implements java.lang.Iterable<Double> {
 
-    private double offset = 0;
+    private double offset;
 
-    private int repeat = 0;
+    private int repeat;
 
-    private double every = 0;
+    private double every;
 
     public static List<RelationCloneHeight> buildHeightClone(OsmPrimitive pOsmPrimitive) {
-        List<RelationCloneHeight> ret = new ArrayList<RelationCloneHeight>();
+        List<RelationCloneHeight> ret = new ArrayList<>();
 
         if (pOsmPrimitive == null) {
             return ret;
@@ -111,7 +111,7 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
     public Iterator<Double> iterator() {
         Iterator<Double> ret = new Iterator<Double>() {
 
-            int loop = 0;
+            int loop;
 
             @Override
             public boolean hasNext() {

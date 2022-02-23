@@ -17,8 +17,8 @@ public class SimpleTriangulateInterable implements Iterable<Point2d> {
 
     private final List<Point2d> points;
     private int count;
-    private int size;
-    private static int[] indexes = { 0, 1, 2, 2, 3, 0 };
+    private final int size;
+    private static final int[] indexes = { 0, 1, 2, 2, 3, 0 };
 
     /**
      * Constructor.

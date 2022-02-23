@@ -41,7 +41,7 @@ public abstract class AbstractPointModel extends AbstractModel {
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
-        Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> set = new HashSet<>();
         set.add(node);
 
         return set;

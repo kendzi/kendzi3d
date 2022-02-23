@@ -86,10 +86,7 @@ public class OsmId implements PrimitiveId {
         if (type != other.type) {
             return false;
         }
-        if (uniqueId != other.uniqueId) {
-            return false;
-        }
-        return true;
+        return uniqueId == other.uniqueId;
     }
 
     /*

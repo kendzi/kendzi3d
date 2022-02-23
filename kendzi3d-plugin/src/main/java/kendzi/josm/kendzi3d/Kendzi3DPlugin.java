@@ -14,8 +14,6 @@ import com.google.inject.Injector;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -217,15 +215,11 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         checkBox.setAccelerator(action.getShortcut().getKeyStroke());
 
         action.addButtonModel(checkBox.getModel());
-        action.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("enabled")) {
-                    checkBox.setVisible((Boolean) evt.getNewValue());
-                }
-
+        action.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals("enabled")) {
+                checkBox.setVisible((Boolean) evt.getNewValue());
             }
+
         });
 
         menu.add(checkBox);

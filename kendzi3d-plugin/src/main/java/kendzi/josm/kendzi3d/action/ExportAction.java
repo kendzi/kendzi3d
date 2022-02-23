@@ -47,12 +47,12 @@ public class ExportAction extends JosmAction {
     /**
      * Texture cache service.
      */
-    private TextureCacheService textureCacheService;
+    private final TextureCacheService textureCacheService;
 
     /**
      * Rendering service.
      */
-    private Kendzi3dCore kendzi3dCore;
+    private final Kendzi3dCore kendzi3dCore;
 
     final JFileChooser fc = new JFileChooser();
 
@@ -90,11 +90,11 @@ public class ExportAction extends JosmAction {
     private void exportService(ExportModelConf conf) {
         // it should be service?
 
-        List<ExportItem> itemsToExport = new ArrayList<ExportItem>();
+        List<ExportItem> itemsToExport = new ArrayList<>();
 
         List<EditableObject> allObjects = kendzi3dCore.getEditableObjects();
 
-        List<WorldObject> modelList = new ArrayList<WorldObject>();
+        List<WorldObject> modelList = new ArrayList<>();
         for (EditableObject editableList : allObjects) {
             if (editableList instanceof WorldObject) {
                 modelList.add((WorldObject) editableList);
@@ -118,7 +118,7 @@ public class ExportAction extends JosmAction {
 
     public List<ExportItem> exportLayer(List<WorldObject> modelList, ExportModelConf conf) {
 
-        List<ExportItem> ret = new ArrayList<ExportItem>();
+        List<ExportItem> ret = new ArrayList<>();
 
         for (WorldObject model : modelList) {
             if (model instanceof ExportModel) {

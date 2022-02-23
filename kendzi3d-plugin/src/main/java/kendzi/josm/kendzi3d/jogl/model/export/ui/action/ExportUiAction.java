@@ -6,7 +6,7 @@ import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
 
 public class ExportUiAction extends ExportUi {
 
-    ExportModelConf exportModelConf = null;
+    ExportModelConf exportModelConf;
 
     @Override
     protected void onExportAction() {

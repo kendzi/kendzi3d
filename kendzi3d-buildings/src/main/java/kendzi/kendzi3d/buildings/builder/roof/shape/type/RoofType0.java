@@ -169,7 +169,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
     }
 
     private List<List<Point2d>> innerLists(PolygonWithHolesList2d buildingPolygon) {
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         if (buildingPolygon.getInner() == null) {
             return ret;
@@ -184,7 +184,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
     private List<Double> calcHeightList(List<Point2d> pSplitBorder, double height) {
 
-        List<Double> borderHeights = new ArrayList<Double>(pSplitBorder.size());
+        List<Double> borderHeights = new ArrayList<>(pSplitBorder.size());
         for (Point2d point : pSplitBorder) {
             borderHeights.add(height);
         }

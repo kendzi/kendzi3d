@@ -32,5 +32,5 @@
 package kendzi.swing.ui.panel.equation;
 
 public interface Equation {
-    public double compute(double variable);
+    double compute(double variable);
 }

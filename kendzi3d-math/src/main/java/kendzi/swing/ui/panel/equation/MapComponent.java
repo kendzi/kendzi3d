@@ -14,8 +14,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +35,9 @@ public class MapComponent extends EquationDisplay implements MapChangeListener {
 
     private boolean needByRefreash;
 
-    List<Point2D> path = null;
+    List<Point2D> path;
 
-    private boolean drawEmpty = false;
+    private boolean drawEmpty;
 
     public MapComponent() {
         super(75.0, 75.0, 40.1, 110.1, 40.1, 110.1, 10, 2, 10, 2, true);
@@ -52,13 +50,7 @@ public class MapComponent extends EquationDisplay implements MapChangeListener {
         Dimension size = b1.getPreferredSize();
         b1.setBounds(5 + insets.left, 5 + insets.top, size.width, size.height);
 
-        b1.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showMenuDialog();
-            }
-        });
+        b1.addActionListener(e -> showMenuDialog());
 
     }
 
@@ -174,7 +166,7 @@ public class MapComponent extends EquationDisplay implements MapChangeListener {
         needByRefreash = true;
     }
 
-    List<EquationLayer> mapLayer = new ArrayList<EquationLayer>();
+    List<EquationLayer> mapLayer = new ArrayList<>();
 
     private JButton jb;
 

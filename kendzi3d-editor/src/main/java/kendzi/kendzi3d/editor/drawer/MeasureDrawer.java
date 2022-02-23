@@ -137,7 +137,7 @@ public class MeasureDrawer {
     private void drawNumberBox(GL2 gl, GLU glu, GLUT glut, Point3d point, Double value, Viewport viewport) {
 
         gl.glDisable(GLLightingFunc.GL_LIGHTING);
-        String msg = String.format("%.2f m", (double) value);
+        String msg = String.format("%.2f m", value);
 
         Point2d p = viewport.project(gl, glu, point);
         int fontSize = 18;

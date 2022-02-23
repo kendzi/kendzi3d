@@ -49,7 +49,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
     private final SelectionDrawer selectionDrawer = new SelectionDrawer();
 
-    private boolean windowClosed = false;
+    private boolean windowClosed;
 
     @Override
     public void init(GLAutoDrawable drawable) {
@@ -264,7 +264,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     /**
      * When close window event is requested.
      */
-    private final List<CloseWindowListener> closeWindowListeners = new ArrayList<CloseWindowListener>();
+    private final List<CloseWindowListener> closeWindowListeners = new ArrayList<>();
 
     @Override
     public void addCloseWindowListener(CloseWindowListener listener) {

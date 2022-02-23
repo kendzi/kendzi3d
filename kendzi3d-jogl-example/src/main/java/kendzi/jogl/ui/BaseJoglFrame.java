@@ -39,19 +39,19 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * Position of sun. XXX
      */
-    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    private final float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
     /**
      * Drawer for axis labels.
      */
-    private AxisLabels axisLabels = new AxisLabels();
+    private final AxisLabels axisLabels = new AxisLabels();
 
     /**
      * Drawer for tiles floor.
      */
-    private TilesSurface floor = new TilesSurface();
+    private final TilesSurface floor = new TilesSurface();
 
-    private SimpleMoveAnimator simpleMoveAnimator = new SimpleMoveAnimator();
+    private final SimpleMoveAnimator simpleMoveAnimator = new SimpleMoveAnimator();
 
     CameraMoveListener cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
@@ -83,13 +83,9 @@ public class BaseJoglFrame implements GLEventListener {
                  * Run this on another thread than the AWT event queue to make sure the call to
                  * Animator.stop() completes before exiting.
                  */
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        animator.stop();
-                        System.exit(0);
-                    }
+                new Thread(() -> {
+                    animator.stop();
+                    System.exit(0);
                 }).start();
             }
         });

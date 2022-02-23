@@ -23,9 +23,9 @@ public class Material {
 
     private OtherComponent other = OTHER_COMPONENT;
 
-    private List<String> texturesComponent = new ArrayList<String>();
+    private List<String> texturesComponent = new ArrayList<>();
 
-    private Color texture0Color = null; // Color.WHITE;
+    private Color texture0Color; // Color.WHITE;
 
     public Material() {
         //

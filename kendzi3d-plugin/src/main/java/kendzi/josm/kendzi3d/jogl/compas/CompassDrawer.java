@@ -54,7 +54,7 @@ public class CompassDrawer {
      * Storage For Our Quadratic Objects
      */
     private GLUquadric quadratic;
-    private GLU glu = new GLU();
+    private final GLU glu = new GLU();
 
     /**
      * Initiate compass drawer.

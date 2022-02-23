@@ -83,7 +83,7 @@ public class BuildingBuilder {
      */
     public static BuildingOutput buildModel(BuildingModel buildingModel, BuildingElementsTextureManager tm) {
 
-        List<BuildingPartOutput> partsOut = new ArrayList<BuildingPartOutput>();
+        List<BuildingPartOutput> partsOut = new ArrayList<>();
 
         ModelFactory mf = ModelFactory.modelBuilder();
 
@@ -111,10 +111,7 @@ public class BuildingBuilder {
     private static boolean isWallCounterClockwise(Wall wall) {
         PolygonList2d wallToPolygon = BuildingUtil.wallToOuterPolygon(wall);
 
-        if (0.0f < Triangulate.area(wallToPolygon.getPoints())) {
-            return true;
-        }
-        return false;
+        return 0.0f < Triangulate.area(wallToPolygon.getPoints());
     }
 
     private static BuildingPartOutput buildNodePart(NodeBuildingPart bp, BuildingModel buildingModel, ModelFactory mf,
@@ -383,7 +380,7 @@ public class BuildingBuilder {
     private static Collection<? extends PolygonList2d> createUnderRoofPolygons(Point2d startPoint, Point2d endPoint,
             double wallHeight2, HeightCalculator roofHeightCalculator) {
 
-        List<PolygonList2d> ret = new ArrayList<PolygonList2d>();
+        List<PolygonList2d> ret = new ArrayList<>();
 
         List<SegmentHeight> heightSegments = roofHeightCalculator.height(startPoint, endPoint);
 
@@ -713,7 +710,7 @@ public class BuildingBuilder {
     }
 
     static class CatchFaceFactory {
-        private final Map<String, MeshFactory> catchMesh = new HashMap<String, MeshFactory>();
+        private final Map<String, MeshFactory> catchMesh = new HashMap<>();
         private final ModelFactory mf;
 
         public CatchFaceFactory(ModelFactory mf) {

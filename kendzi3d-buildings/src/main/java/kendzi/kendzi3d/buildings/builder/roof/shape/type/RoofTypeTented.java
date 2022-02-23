@@ -36,7 +36,7 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());

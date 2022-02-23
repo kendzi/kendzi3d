@@ -28,14 +28,14 @@ public interface ArrowEditor extends Editor {
      * @return <code>null</code> if no intersection, otherwise distance from
      *         selection ray source to editor active spot
      */
-    public Double intersect(Ray3d selectionRay);
+    Double intersect(Ray3d selectionRay);
 
     /**
      * Get editor origin.
      *
      * @return editor origin
      */
-    public Point3d getEditorOrigin();
+    Point3d getEditorOrigin();
 
     /**
      * Arrow direction.
@@ -56,15 +56,15 @@ public interface ArrowEditor extends Editor {
      *
      * @return point from arrow end.
      */
-    public Point3d arrowEnd();
+    Point3d arrowEnd();
 
     // XXX
-    public EditorChangeEvent move(Ray3d moveRay, boolean finish);
+    EditorChangeEvent move(Ray3d moveRay, boolean finish);
 
     /**
      * Type of editor active spot.
      * 
      * @return the editorType type of editor
      */
-    public EditorType getEditorType();
+    EditorType getEditorType();
 }

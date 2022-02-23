@@ -53,7 +53,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     /**
      * Axis labels.
      */
-    private final AxisLabels axisLabels = new AxisLabels();;
+    private final AxisLabels axisLabels = new AxisLabels();
 
     /**
      * Drawer for tiles floor.
@@ -129,15 +129,9 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
             /*
              * Check if the extension ARB_multitexture is supported by the Graphic card
              */
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-
-                    JOptionPane.showMessageDialog(null,
-                            "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
-                            "Extension not supported", JOptionPane.ERROR_MESSAGE);
-                }
-            });
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
+                    "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
+                    "Extension not supported", JOptionPane.ERROR_MESSAGE));
 
             return false;
         }

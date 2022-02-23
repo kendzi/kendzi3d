@@ -16,13 +16,13 @@ import java.util.List;
 
 public class FaceFactory {
 
-    public List<Integer> vertIndex = new ArrayList<Integer>();
+    public List<Integer> vertIndex = new ArrayList<>();
 
-    public List<List<Integer>> coordIndexLayers = new ArrayList<List<Integer>>();
+    public List<List<Integer>> coordIndexLayers = new ArrayList<>();
     // public List<Integer> coordIndex = new ArrayList<Integer>();
     // public List<Integer> coordIndex1 = new ArrayList<Integer>();
     // public List<Integer> coordIndex2 = new ArrayList<Integer>();
-    public List<Integer> normalIndex = new ArrayList<Integer>();
+    public List<Integer> normalIndex = new ArrayList<>();
 
     public int count;
 
@@ -41,10 +41,10 @@ public class FaceFactory {
 
     protected FaceFactory(FaceType pFaceType, int numOfLayers) {
         this.type = pFaceType;
-        this.coordIndexLayers = new ArrayList<List<Integer>>();
+        this.coordIndexLayers = new ArrayList<>();
 
         for (int i = 0; i < numOfLayers; i++) {
-            coordIndexLayers.add(new ArrayList<Integer>());
+            coordIndexLayers.add(new ArrayList<>());
         }
     }
 
@@ -72,7 +72,7 @@ public class FaceFactory {
          */
         QUAD_STRIP(GL2.GL_QUAD_STRIP);
 
-        private int type;
+        private final int type;
 
         FaceType(int pType) {
             this.type = pType;

@@ -34,7 +34,7 @@ public class BuildingDebugDrawer {
     /**
      * XXX For the axis labels.
      */
-    private final static float SCALE_FACTOR = 0.01f;
+    private static final float SCALE_FACTOR = 0.01f;
 
     protected RoofDebugOutput debug;
     private List<Point3d> scaledBBox;
@@ -66,9 +66,7 @@ public class BuildingDebugDrawer {
 
         List<Point3d> rectangle = scaledBBox();
 
-        for (int i = 0; i < rectangle.size(); i++) {
-
-            Point3d point3d = rectangle.get(i);
+        for (Point3d point3d : rectangle) {
 
             gl.glVertex3d(point3d.x, point3d.y, point3d.z);
 
@@ -126,7 +124,7 @@ public class BuildingDebugDrawer {
             return null;
         }
 
-        List<Point3d> ret = new ArrayList<Point3d>();
+        List<Point3d> ret = new ArrayList<>();
         double middleX = 0;
         double middleY = 0;
         double middleZ = 0;

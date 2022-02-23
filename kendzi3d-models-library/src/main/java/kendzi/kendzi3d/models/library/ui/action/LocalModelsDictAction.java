@@ -29,19 +29,14 @@ public class LocalModelsDictAction extends LocalModelsDict {
 
         File pluginDir = new File(pluginDirStr + "/models");
 
-        FileFilter fileFilter = new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.getName().endsWith(".obj");
-            }
-        };
+        FileFilter fileFilter = file -> file.getName().endsWith(".obj");
         log.info("pluginDir: " + pluginDir);
         return findRelativeFilesPath(pluginDir, "/models", fileFilter);
     }
 
     private List<String> findRelativeFilesPath(File dir, String parent, FileFilter pFileFilter) {
 
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
 
         File[] files = dir.listFiles(pFileFilter);
 
@@ -49,12 +44,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
             ret.add(parent + "/" + file.getName());
         }
 
-        FileFilter directoryFilter = new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.isDirectory();
-            }
-        };
+        FileFilter directoryFilter = File::isDirectory;
 
         File[] dirs = dir.listFiles(directoryFilter);
         for (File subdir : dirs) {
@@ -76,14 +66,14 @@ public class LocalModelsDictAction extends LocalModelsDict {
         ((FileListModel) this.listModel).setValues(models);
     }
 
-    class FileListModel extends AbstractListModel {
+    static class FileListModel extends AbstractListModel {
 
         /**
          *
          */
         private static final long serialVersionUID = 1L;
 
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
 
         @Override
         public int getSize() {

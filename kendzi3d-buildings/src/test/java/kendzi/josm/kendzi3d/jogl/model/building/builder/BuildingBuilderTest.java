@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,8 +22,6 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.BuildingElementsTextureManager;
 import kendzi.jogl.texture.library.TextureFindCriteria;
 import kendzi.kendzi3d.buildings.builder.BuildingBuilder;
-import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
-import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.model.BuildingModel;
 import kendzi.kendzi3d.buildings.model.BuildingPart;
 import kendzi.kendzi3d.buildings.model.Wall;
@@ -51,14 +50,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.FLAT);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -79,7 +78,7 @@ public class BuildingBuilderTest {
         WallNode n3 = new WallNode(new Point2d(2, 2), null);
         WallNode n4 = new WallNode(new Point2d(1, 2), null);
 
-        List<WallNode> nodes = new ArrayList<WallNode>();
+        List<WallNode> nodes = new ArrayList<>();
         nodes.add(n1);
         nodes.add(n2);
         nodes.add(n3);
@@ -90,7 +89,7 @@ public class BuildingBuilderTest {
         wallPart.setNodes(nodes);
 
         Wall wall = new Wall();
-        wall.setWallParts(Arrays.asList(wallPart));
+        wall.setWallParts(Collections.singletonList(wallPart));
         return wall;
     }
 
@@ -102,14 +101,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.FLAT);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -132,14 +131,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE2_1);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -164,14 +163,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.GABLED);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -193,14 +192,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE3_0);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -222,14 +221,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE4_0);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -251,14 +250,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE4_2);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -280,14 +279,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE5_0);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -309,14 +308,14 @@ public class BuildingBuilderTest {
 
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.ROOF_TYPE5_2);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
 
         BuildingPart part = new BuildingPart();
         part.setWall(wall);
         part.setRoof(roof);
 
         BuildingModel buildingModel = new BuildingModel();
-        buildingModel.setParts(Arrays.asList(part));
+        buildingModel.setParts(Collections.singletonList(part));
 
         BuildingOutput model = BuildingBuilder.buildModel(buildingModel, createMockTextureManager());
 
@@ -336,7 +335,7 @@ public class BuildingBuilderTest {
         WallNode n3 = new WallNode(new Point2d(3, 2), null);
         WallNode n4 = new WallNode(new Point2d(1, 2), null);
 
-        List<WallNode> nodes = new ArrayList<WallNode>();
+        List<WallNode> nodes = new ArrayList<>();
         nodes.add(n1);
         nodes.add(n2);
         nodes.add(n3);
@@ -347,16 +346,16 @@ public class BuildingBuilderTest {
         wallPart.setNodes(nodes);
 
         Wall wall = new Wall();
-        wall.setWallParts(Arrays.asList(wallPart));
+        wall.setWallParts(Collections.singletonList(wallPart));
         return wall;
     }
 
     Set<String> set(String... names) {
-        return new HashSet<String>(Arrays.asList(names));
+        return new HashSet<>(Arrays.asList(names));
     }
 
     private Set<String> colectNames(BuildingOutput model) {
-        Set<String> ret = new HashSet<String>();
+        Set<String> ret = new HashSet<>();
         for (Mesh mesh : model.getModel().mesh) {
             ret.add(mesh.name);
         }
@@ -378,7 +377,7 @@ public class BuildingBuilderTest {
 
     private List<Triangle3d> collectNamedTriangles(String name, Model model) {
 
-        List<Triangle3d> ret = new ArrayList<Triangle3d>();
+        List<Triangle3d> ret = new ArrayList<>();
         for (Mesh mesh : model.mesh) {
 
             if (!name.equals(mesh.name)) {
@@ -394,7 +393,7 @@ public class BuildingBuilderTest {
 
     private Collection<? extends Triangle3d> toTriangles(List<Point3d> triangles) {
 
-        List<Triangle3d> ret = new ArrayList<Triangle3d>();
+        List<Triangle3d> ret = new ArrayList<>();
 
         for (int i = 0; i < triangles.size(); i = i + 3) {
             ret.add(new Triangle3d(triangles.get(i), triangles.get(i + 1), triangles.get(i + 2)));

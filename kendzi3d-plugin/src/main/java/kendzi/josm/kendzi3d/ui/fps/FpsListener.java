@@ -21,5 +21,5 @@ public interface FpsListener {
      * @param fpsChangeEvent
      *            Fps event
      */
-    public abstract void dispatchFpsChange(FpsChangeEvent fpsChangeEvent);
+    void dispatchFpsChange(FpsChangeEvent fpsChangeEvent);
 }

@@ -5,9 +5,7 @@ import generated.WayNodeModel;
 
 import javax.vecmath.Vector3d;
 
-import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
-import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.inter.ResourceUtil;
 import kendzi.util.StringUtil;
@@ -25,13 +23,8 @@ public class ModelsConvertUtil {
 
         if (nodeModel.getTranslateX() != null && nodeModel.getTranslateY() != null && nodeModel.getTranslateZ() != null) {
 
-            pm.setTranslate(new Expression() {
-                @Override
-                public Object evaluate(Context context) {
-
-                    return new Vector3d(nodeModel.getTranslateX(), nodeModel.getTranslateY(), nodeModel.getTranslateZ());
-                }
-            });
+            pm.setTranslate(
+                    context -> new Vector3d(nodeModel.getTranslateX(), nodeModel.getTranslateY(), nodeModel.getTranslateZ()));
         } else {
             pm.setTranslate(ExpressiongBuilder.build(nodeModel.getTranslate()));
         }

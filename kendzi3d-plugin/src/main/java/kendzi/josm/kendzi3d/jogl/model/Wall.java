@@ -174,7 +174,7 @@ public class Wall extends AbstractWayModel {
 
         double width = ModelUtil.parseHeight(way.get("width"), 1d);
 
-        List<WallHole> holeList = new ArrayList<Wall.WallHole>();
+        List<WallHole> holeList = new ArrayList<>();
 
         for (int i = 0; i < way.getNodes().size(); i++) {
             Node node = way.getNode(i);
@@ -214,10 +214,10 @@ public class Wall extends AbstractWayModel {
     }
 
     enum WallHoleType {
-        box;
-    };
+        box
+    }
 
-    class WallHole {
+    static class WallHole {
         WallHoleType wallHoleType;
         double height;
         double width;
@@ -324,7 +324,7 @@ public class Wall extends AbstractWayModel {
 
         buildWallModel(this.points, width, wallMesh);
 
-        List<MeshFactory> holes = new ArrayList<MeshFactory>();
+        List<MeshFactory> holes = new ArrayList<>();
         for (WallHole wh : holeList) {
             MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Point3d(wh.x, wh.height, -wh.y));
             holes.add(cubeMesh);
@@ -471,7 +471,7 @@ public class Wall extends AbstractWayModel {
 
     public static void main(String[] args) {
 
-        List<Point2d> points = new ArrayList<Point2d>();
+        List<Point2d> points = new ArrayList<>();
         points.add(new Point2d(0, 0));
         points.add(new Point2d(1, 0));
         points.add(new Point2d(1, 1));
@@ -568,7 +568,7 @@ public class Wall extends AbstractWayModel {
     }
 
     private CSG meshToSolid(MeshFactory solidModel) {
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
         for (FaceFactory ff : solidModel.faceFactory) {
 
             if (FaceType.QUADS.equals(ff.type)) {

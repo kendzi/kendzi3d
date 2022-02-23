@@ -19,7 +19,7 @@ public class TriangulateTest {
     public static void main(String[] args) {
         Triangulate t = new Triangulate();
 
-        List<Point2d> pContour = new ArrayList<Point2d>();
+        List<Point2d> pContour = new ArrayList<>();
         pContour.add(new Point2d(1.895497121847469, -43.471537857796115));
         pContour.add(new Point2d(-0.9242217038848146, -42.12385244107362));
         pContour.add(new Point2d(-3.743943196278786, -40.77616574981941));

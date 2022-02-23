@@ -18,7 +18,7 @@ public class SquareHoleElement extends BuildingNodeElement {
     /**
      * Minimal height of hole.
      */
-    private double minHeight = 0;
+    private double minHeight;
 
     /**
      * Height of hole. From the lower edge to upper edge.

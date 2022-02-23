@@ -7,6 +7,7 @@
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point2d;
@@ -41,12 +42,12 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+        double l1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
                 conf.getRecHeight() * 0.2);
 
-        Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, l1, 60);
+        double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, l1, 60);
 
-        Double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight() - l1, 10);
+        double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight() - l1, 10);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
                 conf.getRoofTextureData());
@@ -117,7 +118,7 @@ public class RoofType3v0 extends RectangleRoofTypeBuilder {
 
             @Override
             public List<LinePoints2d> getSplittingLines() {
-                return Arrays.asList(mLine);
+                return Collections.singletonList(mLine);
             }
         };
 

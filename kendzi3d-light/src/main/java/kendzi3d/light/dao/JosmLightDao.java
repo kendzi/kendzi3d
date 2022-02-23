@@ -58,6 +58,6 @@ public class JosmLightDao implements LightDao {
 
     private String formatHexColor(Color color) {
         String rgb = Integer.toHexString(color.getRGB());
-        return "#" + rgb.substring(2, rgb.length());
+        return "#" + rgb.substring(2);
     }
 }

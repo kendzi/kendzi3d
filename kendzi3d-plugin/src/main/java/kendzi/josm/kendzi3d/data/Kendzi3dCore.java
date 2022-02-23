@@ -26,7 +26,7 @@ public class Kendzi3dCore implements EditorCore, Perspective3dProvider {
 
     private List<EditableObject> objects = new ArrayList<>(1000);
 
-    private final Map<Layer, Map<OsmId, EditableObject>> layerObjects = new IdentityHashMap<Layer, Map<OsmId, EditableObject>>();
+    private final Map<Layer, Map<OsmId, EditableObject>> layerObjects = new IdentityHashMap<>();
 
     @Inject
     private List<Layer> layers;
@@ -96,11 +96,7 @@ public class Kendzi3dCore implements EditorCore, Perspective3dProvider {
     }
 
     private Map<OsmId, EditableObject> getOrAddLayer(Layer layer) {
-        Map<OsmId, EditableObject> layerCache = layerObjects.get(layer);
-        if (layerCache == null) {
-            layerCache = new HashMap<OsmId, EditableObject>(300);
-            layerObjects.put(layer, layerCache);
-        }
+        Map<OsmId, EditableObject> layerCache = layerObjects.computeIfAbsent(layer, k -> new HashMap<>(300));
         return layerCache;
     }
 

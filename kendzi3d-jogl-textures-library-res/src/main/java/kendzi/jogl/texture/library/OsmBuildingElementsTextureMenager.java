@@ -1,7 +1,7 @@
 package kendzi.jogl.texture.library;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import kendzi.jogl.texture.dto.TextureData;
@@ -87,7 +87,7 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
      * @return
      */
     public List<TextureData> filterByColorable(boolean colorable, List<TextureData> textureSet) {
-        List<TextureData> ret = new ArrayList<TextureData>();
+        List<TextureData> ret = new ArrayList<>();
 
         for (TextureData td : textureSet) {
 
@@ -144,6 +144,6 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
                 best = td;
             }
         }
-        return Arrays.asList(best);
+        return Collections.singletonList(best);
     }
 }

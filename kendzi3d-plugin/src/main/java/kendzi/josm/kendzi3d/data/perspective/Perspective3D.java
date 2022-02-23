@@ -25,9 +25,9 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public class Perspective3D implements Perspective {
 
-    private double scale;
-    private double centerX;
-    private double centerY;
+    private final double scale;
+    private final double centerX;
+    private final double centerY;
 
     public Perspective3D(double scale, double centerX, double centerY) {
         this.scale = scale;

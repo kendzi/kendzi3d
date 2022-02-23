@@ -49,7 +49,7 @@ public class Face {
 
     // FIXME
     enum Type {
-        triangle_list;
+        triangle_list
     }
 
 }

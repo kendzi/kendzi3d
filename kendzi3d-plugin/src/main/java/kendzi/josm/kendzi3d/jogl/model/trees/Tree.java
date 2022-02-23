@@ -89,7 +89,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         super(node, perspective);
 
-        modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<>(LOD.class);
 
         scale = new Vector3d(1d, 1d, 1d);
 
@@ -261,10 +261,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (modelLod.get(pLod) != null) {
-            return true;
-        }
-        return false;
+        return modelLod.get(pLod) != null;
     }
 
     private static void setAmbientColor(Model pModel) {

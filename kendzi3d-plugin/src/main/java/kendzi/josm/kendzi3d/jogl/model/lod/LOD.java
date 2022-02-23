@@ -10,7 +10,7 @@
 package kendzi.josm.kendzi3d.jogl.model.lod;
 
 public enum LOD {
-    LOD1, LOD2, LOD3, LOD4, LOD5;
+    LOD1, LOD2, LOD3, LOD4, LOD5
 
     // toPropertitesName
 }

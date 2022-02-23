@@ -6,7 +6,7 @@
 package kendzi.josm.kendzi3d.jogl.model.building.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import kendzi.josm.kendzi3d.util.ModelUtil;
@@ -76,7 +76,7 @@ public class BuildingParser {
         }
 
         BuildingModel bm = new BuildingModel();
-        List<BuildingPart> bps = new ArrayList<BuildingPart>();
+        List<BuildingPart> bps = new ArrayList<>();
         bm.setParts(bps);
 
         List<BuildingPart> bp = parseBuildingMultiPolygonPart(pRelation, pers);
@@ -97,7 +97,7 @@ public class BuildingParser {
 
         List<AreaWithHoles> waysPolygon = PolygonWithHolesUtil.findAreaWithHoles(pRelation);
 
-        List<BuildingPart> ret = new ArrayList<BuildingPart>();
+        List<BuildingPart> ret = new ArrayList<>();
 
         for (AreaWithHoles waysPolygon2 : waysPolygon) {
             BuildingPart bp = parseBuildingPartAttributes(pRelation);
@@ -110,7 +110,7 @@ public class BuildingParser {
             bp.setWall(parseWall(waysPolygon2.getOuter(), pPerspective));
 
             if (waysPolygon2.getInner() != null) {
-                List<Wall> innerWall = new ArrayList<Wall>();
+                List<Wall> innerWall = new ArrayList<>();
                 for (List<ReversableWay> rwList : waysPolygon2.getInner()) {
                     innerWall.add(parseWall(rwList, pPerspective));
                 }
@@ -190,10 +190,10 @@ public class BuildingParser {
         }
 
         BuildingModel bm = new BuildingModel();
-        List<BuildingPart> bps = new ArrayList<BuildingPart>();
+        List<BuildingPart> bps = new ArrayList<>();
         bm.setParts(bps);
 
-        List<NodeBuildingPart> nbps = new ArrayList<NodeBuildingPart>();
+        List<NodeBuildingPart> nbps = new ArrayList<>();
         bm.setNodeParts(nbps);
 
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
@@ -236,12 +236,8 @@ public class BuildingParser {
 
     private static boolean isNodeBuildingPart(Node node) {
 
-        if (isPrimitiveBuildingPart(node)
-                && OsmAttributeKeys.BUILDING_SHAPE.primitiveKeyHaveValue(node, OsmAttributeValues.SPHERE)) {
-            return true;
-        }
-
-        return false;
+        return isPrimitiveBuildingPart(node)
+                && OsmAttributeKeys.BUILDING_SHAPE.primitiveKeyHaveValue(node, OsmAttributeValues.SPHERE);
     }
 
     private DormerRoofModel marge(DormerRoofModel roof, DormerRoofModel roofClosedWay) {
@@ -323,7 +319,7 @@ public class BuildingParser {
 
         WallPart wp = parseWallPart(new ReversableWay(way, false), pPerspective);
 
-        wall.setWallParts(Arrays.asList(wp));
+        wall.setWallParts(Collections.singletonList(wp));
 
         return wall;
     }
@@ -333,10 +329,7 @@ public class BuildingParser {
     }
 
     static boolean isClosedWay(RelationMember member) {
-        if (OsmPrimitiveType.WAY.equals(member.getType()) && member.getWay().isClosed()) {
-            return true;
-        }
-        return false;
+        return OsmPrimitiveType.WAY.equals(member.getType()) && member.getWay().isClosed();
     }
 
     private static List<NodeBuildingPart> parseBuildingPart(Node node, Perspective pPerspective) {
@@ -348,7 +341,7 @@ public class BuildingParser {
         bp.setFacadeMaterialType(BuildingAttributeParser.parseFacadeMaterialName(node));
         bp.setFacadeColor(BuildingAttributeParser.parseFacadeColor(node));
 
-        return Arrays.asList((NodeBuildingPart) bp);
+        return Collections.singletonList(bp);
     }
 
     private static List<BuildingPart> parseBuildingPart(Way primitive, Perspective pPerspective) {
@@ -366,7 +359,7 @@ public class BuildingParser {
 
         bp.setRoof(RoofParser.parse(primitive, pPerspective));
 
-        List<BuildingPart> bpList = new ArrayList<BuildingPart>();
+        List<BuildingPart> bpList = new ArrayList<>();
         bpList.add(bp);
 
         bpList.addAll(parseRelationClone(primitive, bp));
@@ -376,7 +369,7 @@ public class BuildingParser {
 
     private static List<BuildingPart> parseRelationClone(Way primitive, BuildingPart bp) {
         List<RelationCloneHeight> buildHeightClone = RelationCloneHeight.buildHeightClone(primitive);
-        List<BuildingPart> bpList = new ArrayList<BuildingPart>();
+        List<BuildingPart> bpList = new ArrayList<>();
 
         for (RelationCloneHeight relationCloneHeight : buildHeightClone) {
             for (Double height : relationCloneHeight) {
@@ -389,7 +382,7 @@ public class BuildingParser {
 
     private static Wall parseWall(List<ReversableWay> rwList, Perspective pPerspective) {
         Wall wall = new Wall();
-        List<WallPart> wp = new ArrayList<WallPart>();
+        List<WallPart> wp = new ArrayList<>();
         for (ReversableWay rw : rwList) {
             wp.add(parseWallPart(rw, pPerspective));
         }
@@ -405,7 +398,7 @@ public class BuildingParser {
 
         WallPart wp = new WallPart();
 
-        List<WallNode> wnList = new ArrayList<WallNode>();
+        List<WallNode> wnList = new ArrayList<>();
 
         if (!rw.isReversed()) {
 
@@ -444,7 +437,7 @@ public class BuildingParser {
 
     private static List<BuildingWallElement> parseBuildingAttributeWallElement(Way w) {
 
-        List<BuildingWallElement> ret = new ArrayList<BuildingWallElement>();
+        List<BuildingWallElement> ret = new ArrayList<>();
 
         WindowGridBuildingElement wgbe = BuildingAttributeParser.parseWallWindowsColumns(w);
         if (wgbe != null) {
@@ -458,7 +451,7 @@ public class BuildingParser {
         WallNode wn = new WallNode();
         wn.setPoint(pPerspective.calcPoint(node));
 
-        List<BuildingNodeElement> buildingElements = new ArrayList<BuildingNodeElement>();
+        List<BuildingNodeElement> buildingElements = new ArrayList<>();
         wn.setBuildingNodeElements(buildingElements);
 
         List<RelationCloneHeight> buildHeightClone = RelationCloneHeight.buildHeightClone(node);

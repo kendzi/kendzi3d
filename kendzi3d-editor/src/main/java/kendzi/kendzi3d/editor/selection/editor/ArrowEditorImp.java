@@ -55,7 +55,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     /**
      * Listeners for editor change event.
      */
-    private final List<EditorChangeListener> editorChangeListeners = new LinkedList<EditorChangeListener>();
+    private final List<EditorChangeListener> editorChangeListeners = new LinkedList<>();
 
     /**
      * Constructor.

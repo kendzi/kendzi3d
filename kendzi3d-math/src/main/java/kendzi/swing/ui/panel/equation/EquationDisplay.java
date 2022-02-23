@@ -70,7 +70,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
     private static final float COEFF_ZOOM = 1.1f;
 
-    private List<DrawableEquation> equations;
+    private final List<DrawableEquation> equations;
 
     protected double minX;
     protected double maxX;
@@ -88,21 +88,21 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     private double oldWidth;
     private double oldHeight;
 
-    private boolean sameRatio;
+    private final boolean sameRatio;
 
     private boolean drawText = true;
 
     private Point dragStart;
 
-    private NumberFormat formatter;
+    private final NumberFormat formatter;
 
-    private ZoomHandler zoomHandler;
+    private final ZoomHandler zoomHandler;
 
-    private ComponentResizeHandler resizeHandler;
+    private final ComponentResizeHandler resizeHandler;
 
-    private PanMotionHandler panMotionHandler;
+    private final PanMotionHandler panMotionHandler;
 
-    private PanHandler panHandler;
+    private final PanHandler panHandler;
     private double startMinX;
     private double startMaxX;
     private double startMinY;
@@ -139,7 +139,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
         setParms(originX, originY, minX, maxX, minY, maxY, majorX, minorX, majorY, minorY);
 
-        this.equations = new LinkedList<DrawableEquation>();
+        this.equations = new LinkedList<>();
 
         this.formatter = NumberFormat.getInstance();
         this.formatter.setMaximumFractionDigits(2);
@@ -502,11 +502,11 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     /**
      * @author kendzi
      */
-    private class DrawableEquation {
+    private static class DrawableEquation {
 
-        private AbstractEquation equation;
+        private final AbstractEquation equation;
 
-        private Color color;
+        private final Color color;
 
         DrawableEquation(AbstractEquation equation, Color color) {
             this.equation = equation;

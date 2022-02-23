@@ -33,7 +33,7 @@ public class TextureFilterToggleAction extends ToggleAction {
     /**
      * Texture cache service.
      */
-    private TextureCacheService textureCacheService;
+    private final TextureCacheService textureCacheService;
 
     /**
      * Constructor of debug toggle action.

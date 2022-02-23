@@ -25,13 +25,13 @@ public class ActiveSpotDrawer {
 
     private final GLU glu = new GLU();
 
-    private float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
+    private final float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
 
-    private float[] highlightFillColor1 = ColorUtil.colorToArray(Color.RED.darker().darker());
+    private final float[] highlightFillColor1 = ColorUtil.colorToArray(Color.RED.darker().darker());
 
-    private float[] highlightFillColor2 = ColorUtil.colorToArray(Color.GRAY.darker().darker().darker());
+    private final float[] highlightFillColor2 = ColorUtil.colorToArray(Color.GRAY.darker().darker().darker());
 
-    private float[] normalColor = ColorUtil.colorToArray(Color.GRAY.brighter());
+    private final float[] normalColor = ColorUtil.colorToArray(Color.GRAY.brighter());
 
     /**
      * Type of editor highlighting.

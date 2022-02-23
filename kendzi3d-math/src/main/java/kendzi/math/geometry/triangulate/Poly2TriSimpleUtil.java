@@ -44,7 +44,7 @@ public class Poly2TriSimpleUtil {
             return null;
         }
 
-        List<Triangle2d> out = new ArrayList<Triangle2d>();
+        List<Triangle2d> out = new ArrayList<>();
         for (DelaunayTriangle t : triangles) {
             Triangle2d triangle = new Triangle2d(new Point2d(t.points[0].getX(), t.points[0].getY()),
                     new Point2d(t.points[1].getX(), t.points[1].getY()), new Point2d(t.points[2].getX(), t.points[2].getY()));

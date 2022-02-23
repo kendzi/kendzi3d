@@ -19,8 +19,8 @@ import kendzi.kendzi3d.buildings.model.roof.shape.DormerType;
 
 public interface RoofDormerType {
 
-    public DormerType getType();
+    DormerType getType();
 
-    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
+    RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
             Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData);
 }

@@ -12,7 +12,6 @@ import com.jogamp.opengl.GL2;
 import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
     private OsmPrimitive primitive;
 
-    private List<Selection> selection = Collections.<Selection> emptyList();
+    private List<Selection> selection = Collections.emptyList();
 
     private Bounds bounds;
 
@@ -98,7 +97,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
     private BuildingDebugData debug;
 
-    private final static float[] ROOF_EDGES_COLOR = ColorUtil.colorToArray(Color.RED.darker());
+    private static final float[] ROOF_EDGES_COLOR = ColorUtil.colorToArray(Color.RED.darker());
 
     private List<Editor> editors;
 
@@ -172,8 +171,8 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     private BuildingDebugData prepareDebugInformation(BuildingOutput buildModel) {
         BuildingDebugData d = new BuildingDebugData();
 
-        List<LineSegment3d> edges = new ArrayList<LineSegment3d>();
-        List<BuildingDebugDrawer> debugPart = new ArrayList<BuildingDebugDrawer>();
+        List<LineSegment3d> edges = new ArrayList<>();
+        List<BuildingDebugDrawer> debugPart = new ArrayList<>();
 
         if (buildModel.getBuildingPartOutput() != null) {
             for (BuildingPartOutput bo : buildModel.getBuildingPartOutput()) {
@@ -199,7 +198,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     private List<Selection> parseSelection(long wayId, final BuildingModel bm) {
 
         {
-            List<Editor> updatedEditors = new ArrayList<Editor>();
+            List<Editor> updatedEditors = new ArrayList<>();
             List<BuildingPart> parts = bm.getParts();
             if (parts != null) {
                 for (final BuildingPart bp : parts) {
@@ -219,7 +218,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                                     getBuildingPart().setMaxHeight(value);
 
                                     generatePreview();
-                                };
+                                }
 
                             };
                             editorHeight.setOffset(0.1);
@@ -254,7 +253,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                     if (editorRoofHeight == null) {
                         // don't exist we create fresh one
                         editorRoofHeight = new PartValueEditor(primitive, "roof:height") {
-                            boolean changeRoofShape = false;
+                            boolean changeRoofShape;
 
                             @Override
                             public void preview(double value) {
@@ -271,7 +270,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                                 }
 
                                 generatePreview();
-                            };
+                            }
 
                             @Override
                             protected void updateTags(AbstractMap<String, String> tags) {
@@ -338,7 +337,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         final Bounds bounds = bf.toBounds();
         this.bounds = bounds;
 
-        return Arrays.asList((Selection) new ModelSelection(bounds.getCenter(), bounds.getRadius()) {
+        return Collections.singletonList(new ModelSelection(bounds.getCenter(), bounds.getRadius()) {
 
             @Override
             public List<Editor> getEditors() {
@@ -474,7 +473,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
     private static class BuildingDebugData {
 
-        private List<BuildingDebugDrawer> debugParts = new ArrayList<BuildingDebugDrawer>();
+        private List<BuildingDebugDrawer> debugParts = new ArrayList<>();
         private List<LineSegment3d> edges;
 
         /**

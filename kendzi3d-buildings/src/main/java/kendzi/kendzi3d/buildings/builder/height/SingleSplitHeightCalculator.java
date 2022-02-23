@@ -56,13 +56,13 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
     @Override
     public List<SegmentHeight> height(Point2d p1, Point2d p2) {
 
-        List<Point2d> chain = new ArrayList<Point2d>();
+        List<Point2d> chain = new ArrayList<>();
         chain.add(p1);
         chain.add(p2);
 
         List<Point2d> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain, splittingLine);
 
-        List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
+        List<SegmentHeight> ret = new ArrayList<>();
 
         for (int i = 0; i < enrichedChain.size() - 1; i++) {
             Point2d begin = enrichedChain.get(i);
@@ -114,10 +114,7 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
         if (beginDet > 0 && (endDet >= 0)) {
             return true;
         }
-        if (endDet > 0 && (beginDet >= 0)) {
-            return true;
-        }
-        return false;
+        return endDet > 0 && (beginDet >= 0);
     }
 
     private static boolean equalZero(double number, double epsilon) {

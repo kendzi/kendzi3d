@@ -40,7 +40,7 @@ public abstract class AbstractEquation implements Equation {
     protected List<PropertyChangeListener> listeners;
 
     protected AbstractEquation() {
-        this.listeners = new LinkedList<PropertyChangeListener>();
+        this.listeners = new LinkedList<>();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

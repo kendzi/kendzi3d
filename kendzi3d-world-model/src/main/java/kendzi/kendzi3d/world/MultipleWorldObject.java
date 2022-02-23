@@ -7,7 +7,7 @@ import javax.vecmath.Point3d;
 
 public abstract class MultipleWorldObject implements WorldObject {
 
-    private List<WorldObject> worldObjects = new ArrayList<WorldObject>();
+    private List<WorldObject> worldObjects = new ArrayList<>();
 
     @Override
     public Point3d getPoint() {

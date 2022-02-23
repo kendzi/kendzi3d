@@ -42,7 +42,7 @@ public class SelectableGround {
         }
     }
 
-    public static enum GroundType {
+    public enum GroundType {
         SINGLE_TEXTURE, STYLED_TITLE
     }
 

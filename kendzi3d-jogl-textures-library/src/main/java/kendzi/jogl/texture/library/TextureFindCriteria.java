@@ -159,13 +159,9 @@ public class TextureFindCriteria {
             return false;
         }
         if (this.width == null) {
-            if (other.width != null) {
-                return false;
-            }
-        } else if (!this.width.equals(other.width)) {
-            return false;
-        }
-        return true;
+            return other.width == null;
+        } else
+            return this.width.equals(other.width);
     }
 
     /**

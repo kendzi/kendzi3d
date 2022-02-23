@@ -1,7 +1,7 @@
 package kendzi.kendzi3d.josm.model.polygon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point2d;
@@ -37,12 +37,12 @@ public final class PolygonWithHolesUtil {
      */
     public static List<PolygonWithHolesList2d> findPolygonsWithHoles(Relation pRelation, Perspective pPerspective) {
 
-        List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
+        List<PolygonWithHolesList2d> ret = new ArrayList<>();
 
         List<AreaWithHoles> waysPolygon = PolygonWithHolesUtil.findAreaWithHoles(pRelation);
 
         for (AreaWithHoles waysPolygon2 : waysPolygon) {
-            List<PolygonList2d> inner = new ArrayList<PolygonList2d>();
+            List<PolygonList2d> inner = new ArrayList<>();
 
             PolygonList2d outer = parse(waysPolygon2.getOuter(), pPerspective);
 
@@ -59,7 +59,7 @@ public final class PolygonWithHolesUtil {
     }
 
     private static PolygonList2d parse(List<ReversableWay> outer, Perspective pPerspective) {
-        List<Point2d> poly = new ArrayList<Point2d>();
+        List<Point2d> poly = new ArrayList<>();
 
         for (ReversableWay rw : outer) {
 
@@ -113,7 +113,7 @@ public final class PolygonWithHolesUtil {
     }
 
     private static List<AreaWithHoles> connectPolygonHoles(List<List<ReversableWay>> outers, List<List<ReversableWay>> inners) {
-        List<AreaWithHoles> ret = new ArrayList<AreaWithHoles>();
+        List<AreaWithHoles> ret = new ArrayList<>();
         for (List<ReversableWay> o : outers) {
             AreaWithHoles wp = new AreaWithHoles();
             wp.setOuter(o);
@@ -131,17 +131,17 @@ public final class PolygonWithHolesUtil {
      * @return
      */
     private static List<List<ReversableWay>> connectMultiPolygonParts(List<? extends OsmPrimitive> outersParts) {
-        List<Edge<Way, Node>> in = new ArrayList<MultiPartPolygonUtil.Edge<Way, Node>>();
+        List<Edge<Way, Node>> in = new ArrayList<>();
         for (OsmPrimitive osmPrimitive : outersParts) {
             Way w = (Way) osmPrimitive;
             if (w.getNodesCount() < 2) {
                 // when relation is incomplete
                 continue;
             }
-            Vertex<Node> v1 = new Vertex<Node>(w.getNode(0));
-            Vertex<Node> v2 = new Vertex<Node>(w.getNode(w.getNodesCount() - 1));
+            Vertex<Node> v1 = new Vertex<>(w.getNode(0));
+            Vertex<Node> v2 = new Vertex<>(w.getNode(w.getNodesCount() - 1));
 
-            Edge<Way, Node> e = new Edge<Way, Node>(v1, v2, w);
+            Edge<Way, Node> e = new Edge<>(v1, v2, w);
             in.add(e);
         }
 
@@ -157,9 +157,9 @@ public final class PolygonWithHolesUtil {
      */
     private static List<List<ReversableWay>> convert(List<List<EdgeOut<Way, Node>>> connect) {
 
-        List<List<ReversableWay>> outerWallParts = new ArrayList<List<ReversableWay>>();
+        List<List<ReversableWay>> outerWallParts = new ArrayList<>();
         for (List<EdgeOut<Way, Node>> list : connect) {
-            List<ReversableWay> wallParts = new ArrayList<ReversableWay>();
+            List<ReversableWay> wallParts = new ArrayList<>();
             for (EdgeOut<Way, Node> edgeOut : list) {
                 wallParts.add(new ReversableWay(edgeOut.getEdge().getData(), edgeOut.isReverted()));
             }
@@ -169,9 +169,9 @@ public final class PolygonWithHolesUtil {
     }
 
     private static List<List<ReversableWay>> convertWay(List<? extends OsmPrimitive> outersClosed) {
-        List<List<ReversableWay>> ret = new ArrayList<List<ReversableWay>>();
+        List<List<ReversableWay>> ret = new ArrayList<>();
         for (OsmPrimitive osmPrimitive : outersClosed) {
-            ret.add(Arrays.asList(new ReversableWay((Way) osmPrimitive, false)));
+            ret.add(Collections.singletonList(new ReversableWay((Way) osmPrimitive, false)));
         }
         return ret;
     }

@@ -20,7 +20,7 @@ public enum CardinalEnum {
 
     north(0), east(90), south(180), west(270);
 
-    private double angle;
+    private final double angle;
 
     CardinalEnum(double pAngle) {
         this.angle = pAngle;

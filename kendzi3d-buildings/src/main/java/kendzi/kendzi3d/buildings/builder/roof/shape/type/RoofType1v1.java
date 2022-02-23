@@ -45,9 +45,9 @@ public class RoofType1v1 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0d);
-        Double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight(), 30d);
-        Double h3 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_3, 0, conf.getRecWidth(), 30d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0d);
+        double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight(), 30d);
+        double h3 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_3, 0, conf.getRecWidth(), 30d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, h3,
                 conf.getRoofTextureData());
@@ -91,7 +91,7 @@ public class RoofType1v1 extends RectangleRoofTypeBuilder {
 
             @Override
             public List<LinePoints2d> getSplittingLines() {
-                return Collections.<LinePoints2d> emptyList();
+                return Collections.emptyList();
             }
         };
 

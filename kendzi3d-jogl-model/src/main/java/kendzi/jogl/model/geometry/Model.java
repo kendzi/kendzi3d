@@ -23,7 +23,7 @@ public class Model {
      */
     public Mesh[] mesh;
 
-    public List<Material> materials = new ArrayList<Material>();
+    public List<Material> materials = new ArrayList<>();
 
     /**
      * Model use textures.

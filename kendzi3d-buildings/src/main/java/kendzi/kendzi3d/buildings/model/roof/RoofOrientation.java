@@ -16,5 +16,5 @@ public enum RoofOrientation {
     /**
      * building:roof:orientation=across or roof:orientation=across
      */
-    across;
+    across
 }

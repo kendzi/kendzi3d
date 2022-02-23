@@ -111,9 +111,9 @@ public class Water extends AbstractModel {
     }
 
     List<PolygonWithHolesList2d> getMultiPolygonWithHolesWay(Way way, Perspective perspective) {
-        List<PolygonWithHolesList2d> ret = new ArrayList<PolygonWithHolesList2d>();
+        List<PolygonWithHolesList2d> ret = new ArrayList<>();
 
-        List<Point2d> poly = new ArrayList<Point2d>();
+        List<Point2d> poly = new ArrayList<>();
 
         int size = way.getNodesCount();
         if (size > 0) {

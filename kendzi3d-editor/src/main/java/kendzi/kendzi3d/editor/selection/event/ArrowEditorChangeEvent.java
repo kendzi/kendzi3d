@@ -9,8 +9,8 @@ import javax.vecmath.Point3d;
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditor;
 
 public class ArrowEditorChangeEvent extends EditorChangeEvent {
-    private double length;
-    private Point3d closestPointOnBaseRay;
+    private final double length;
+    private final Point3d closestPointOnBaseRay;
 
     public ArrowEditorChangeEvent(boolean end, ArrowEditor editor, double length, Point3d closestPointOnBaseRay) {
         super(end, editor);

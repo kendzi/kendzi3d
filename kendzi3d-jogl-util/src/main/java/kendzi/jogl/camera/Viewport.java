@@ -46,7 +46,7 @@ public class Viewport implements ViewportPicker {
     /**
      * Last position of camera.
      */
-    private transient Point3d position;
+    private final transient Point3d position;
 
     /**
      * Look at vector.

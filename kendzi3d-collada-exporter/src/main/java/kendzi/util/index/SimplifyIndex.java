@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimplifyIndex<T> {
-    private List<T> data;
+    private final List<T> data;
     private List<T> sdata;
-    private List<Integer> index;
+    private final List<Integer> index;
     private List<Integer> sindex;
     private List<Integer> reindex;
 
@@ -17,9 +17,9 @@ public class SimplifyIndex<T> {
 
     public void simple() {
 
-        reindex = new ArrayList<Integer>(index.size());
-        sindex = new ArrayList<Integer>(index.size());
-        sdata = new ArrayList<T>();
+        reindex = new ArrayList<>(index.size());
+        sindex = new ArrayList<>(index.size());
+        sdata = new ArrayList<>();
 
         for (Integer i : index) {
             sdata.add(data.get(i));

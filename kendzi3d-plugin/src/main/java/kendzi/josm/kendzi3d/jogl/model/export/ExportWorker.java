@@ -18,16 +18,16 @@ public class ExportWorker extends Thread {
     /** Log. */
     private static final Logger log = Logger.getLogger(ExportWorker.class);
 
-    private List<ExportItem> items;
+    private final List<ExportItem> items;
 
-    private ExportModelConf conf;
+    private final ExportModelConf conf;
 
     private ExportOutput logFrame;
 
     /**
      * Texture cache service.
      */
-    private TextureCacheService textureCacheService;
+    private final TextureCacheService textureCacheService;
 
     /**
      * @param items
@@ -142,7 +142,7 @@ public class ExportWorker extends Thread {
         if (i < 0) {
             return "png";
         }
-        String ext = str.substring(str.lastIndexOf('.') + 1, str.length()).toLowerCase();
+        String ext = str.substring(str.lastIndexOf('.') + 1).toLowerCase();
         if ("png".equals(ext)) {
             return ext;
         } else if ("jpg".equals(ext)) {
@@ -153,28 +153,22 @@ public class ExportWorker extends Thread {
 
     private void createLogUi() {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    logFrame = new ExportOutput();
-                    ExportWorker.this.logFrame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                logFrame = new ExportOutput();
+                ExportWorker.this.logFrame.setVisible(true);
+            } catch (Exception e) {
+                log.error(e, e);
             }
         });
     }
 
     private void addToLog(final String str) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ExportWorker.this.logFrame.addLog(str);
-                } catch (Exception e) {
-                    log.error(e);
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                ExportWorker.this.logFrame.addLog(str);
+            } catch (Exception e) {
+                log.error(e);
             }
         });
     }

@@ -4,8 +4,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 public class CameraTest implements Camera {
-    private Point3d point;
-    private Vector3d vector;
+    private final Point3d point;
+    private final Vector3d vector;
 
     public CameraTest(Point3d point, Vector3d vector) {
         super();

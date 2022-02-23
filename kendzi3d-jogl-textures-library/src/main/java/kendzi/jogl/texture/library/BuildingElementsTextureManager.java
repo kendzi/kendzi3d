@@ -4,5 +4,5 @@ import kendzi.jogl.texture.dto.TextureData;
 
 public abstract class BuildingElementsTextureManager {
 
-    abstract public TextureData findTexture(TextureFindCriteria pTextureFindCriteria);
+    public abstract TextureData findTexture(TextureFindCriteria pTextureFindCriteria);
 }

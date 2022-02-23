@@ -22,7 +22,7 @@ public enum TextureLibraryKey {
 
     ;
 
-    private String key;
+    private final String key;
 
     TextureLibraryKey(String pKey) {
         this.key = pKey;

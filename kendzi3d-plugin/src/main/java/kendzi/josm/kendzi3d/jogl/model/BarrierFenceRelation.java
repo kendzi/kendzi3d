@@ -115,8 +115,8 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         super(pRelation, pers);
 
-        List<Double> heights = new ArrayList<Double>();
-        List<Node> nodes = new ArrayList<Node>();
+        List<Double> heights = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);
 
@@ -133,7 +133,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         calcModelCenter(nodes);
 
-        List<Point2d> points = new ArrayList<Point2d>();
+        List<Point2d> points = new ArrayList<>();
         for (Node node : nodes) {
             Point2d point2d = toModelFrame(node);
             points.add(point2d);
@@ -155,9 +155,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
-        HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-
-        set.addAll(nodes);
+        HashSet<OsmPrimitive> set = new HashSet<>(nodes);
 
         return set;
     }

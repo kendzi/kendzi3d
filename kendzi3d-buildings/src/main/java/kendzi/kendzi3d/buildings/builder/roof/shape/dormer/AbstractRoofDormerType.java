@@ -72,10 +72,7 @@ public abstract class AbstractRoofDormerType implements RoofDormerType {
         if (pMeasurement == null) {
             return false;
         }
-        if (pMeasurementUnit.equals(pMeasurement.getUnit())) {
-            return true;
-        }
-        return false;
+        return pMeasurementUnit.equals(pMeasurement.getUnit());
     }
 
 }

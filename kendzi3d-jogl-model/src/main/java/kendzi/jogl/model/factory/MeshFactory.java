@@ -20,10 +20,10 @@ import kendzi.jogl.model.geometry.TextCoord;
 
 public class MeshFactory {
 
-    public List<FaceFactory> faceFactory = new ArrayList<FaceFactory>();
-    public List<Point3d> vertices = new ArrayList<Point3d>();
-    public List<Vector3d> normals = new ArrayList<Vector3d>();
-    public List<TextCoord> textCoords = new ArrayList<TextCoord>();
+    public List<FaceFactory> faceFactory = new ArrayList<>();
+    public List<Point3d> vertices = new ArrayList<>();
+    public List<Vector3d> normals = new ArrayList<>();
+    public List<TextCoord> textCoords = new ArrayList<>();
 
     public int materialID;
 

@@ -1,6 +1,7 @@
 package kendzi.kendzi3d.editor.example.objects;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -14,8 +15,6 @@ import kendzi.kendzi3d.editor.selection.editor.CachePoint3dProvider;
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
 import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
-import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
-import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.EditorChangeListener;
 import org.apache.log4j.Logger;
 
 public class Roof implements EditableObject {
@@ -59,70 +58,62 @@ public class Roof implements EditableObject {
         editorRoofHeight.setLength(roofHeigth);
         editorRoofHeight.setEditorType(EditorType.BOX_SMALL);
 
-        editorHeight.addChangeListener(new EditorChangeListener() {
+        editorHeight.addChangeListener(event -> {
+            if (event instanceof ArrowEditorChangeEvent) {
+                ArrowEditorChangeEvent arrow = (ArrowEditorChangeEvent) event;
 
-            @Override
-            public void onEditorChange(EditorChangeEvent event) {
-                if (event instanceof ArrowEditorChangeEvent) {
-                    ArrowEditorChangeEvent arrow = (ArrowEditorChangeEvent) event;
+                double newHeight = arrow.getLength();
+                LOG.info("editor height changed: " + newHeight);
 
-                    double newHeight = arrow.getLength();
-                    LOG.info("editor height changed: " + newHeight);
+                if (newHeight < 0) {
+                    setHeigth(0);
+                    setRoofHeigth(0);
 
-                    if (newHeight < 0) {
-                        setHeigth(0);
-                        setRoofHeigth(0);
+                    editorHeight.setLength(0);
+                    editorRoofHeight.setLength(0);
 
-                        editorHeight.setLength(0);
-                        editorRoofHeight.setLength(0);
+                } else if (newHeight - roofHeigth < 0) {
 
-                    } else if (newHeight - roofHeigth < 0) {
+                    setHeigth(newHeight);
+                    setRoofHeigth(newHeight);
 
-                        setHeigth(newHeight);
-                        setRoofHeigth(newHeight);
-
-                        editorRoofHeight.setLength(newHeight);
-                    } else {
-                        setHeigth(newHeight);
-                    }
+                    editorRoofHeight.setLength(newHeight);
+                } else {
+                    setHeigth(newHeight);
                 }
             }
         });
 
-        editorRoofHeight.addChangeListener(new EditorChangeListener() {
+        editorRoofHeight.addChangeListener(event -> {
+            if (event instanceof ArrowEditorChangeEvent) {
+                ArrowEditorChangeEvent arrow = (ArrowEditorChangeEvent) event;
 
-            @Override
-            public void onEditorChange(EditorChangeEvent event) {
-                if (event instanceof ArrowEditorChangeEvent) {
-                    ArrowEditorChangeEvent arrow = (ArrowEditorChangeEvent) event;
+                double length = arrow.getLength();
+                LOG.info("editor roof changed: " + length);
 
-                    double length = arrow.getLength();
-                    LOG.info("editor roof changed: " + length);
+                if (length < 0) {
+                    double newHeigth = getHeigth() - length;
 
-                    if (length < 0) {
-                        double newHeigth = getHeigth() - length;
+                    setHeigth(newHeigth);
+                    setRoofHeigth(0);
 
-                        setHeigth(newHeigth);
-                        setRoofHeigth(0);
+                    editorHeight.setLength(newHeigth);
+                    editorRoofHeight.setLength(0);
+                } else if (length > heigth) {
 
-                        editorHeight.setLength(newHeigth);
-                        editorRoofHeight.setLength(0);
-                    } else if (length > heigth) {
+                    setRoofHeigth(heigth);
 
-                        setRoofHeigth(heigth);
+                    editorRoofHeight.setLength(heigth);
+                } else {
 
-                        editorRoofHeight.setLength(heigth);
-                    } else {
-
-                        setRoofHeigth(length);
-                    }
+                    setRoofHeigth(length);
                 }
             }
         });
 
-        final List<Editor> editors = Arrays.asList((Editor) editorHeight, (Editor) editorRoofHeight);
+        final List<Editor> editors = Arrays.asList(editorHeight, editorRoofHeight);
 
-        selections = Arrays.asList((Selection) new SphereSelection(position, heigth) {
+        selections = Collections.singletonList(new SphereSelection(position, heigth) {
 
             @Override
             public List<Editor> getEditors() {

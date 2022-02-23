@@ -19,10 +19,7 @@ public class OsmAttributeUtil {
         }
         String valu = primitive.get(key.getKey());
 
-        if (StringUtil.isBlankOrNull(valu)) {
-            return false;
-        }
-        return true;
+        return !StringUtil.isBlankOrNull(valu);
     }
 
     // public String parsePrimitive(OsmPrimitive primitive) {

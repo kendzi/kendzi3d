@@ -229,7 +229,7 @@ public abstract class AbstractModel extends AbstractWorldObject
 
     @Override
     public List<Selection> getSelection() {
-        return Collections.<Selection> emptyList();
+        return Collections.emptyList();
     }
 
 }

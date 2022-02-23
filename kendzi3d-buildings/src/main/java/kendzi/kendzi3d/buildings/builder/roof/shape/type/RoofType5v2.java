@@ -44,7 +44,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight());
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight());
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());
@@ -53,7 +53,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     List<Double> calcSplitPoint(boolean half, int segments) {
 
         if (half) {
-            List<Double> ret = new ArrayList<Double>();
+            List<Double> ret = new ArrayList<>();
             double step = Math.toRadians(90d / segments);
             ret.add(0d);
             for (int i = 0; i < segments; i++) {
@@ -63,7 +63,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
             return ret;
         }
 
-        List<Double> ret = new ArrayList<Double>();
+        List<Double> ret = new ArrayList<>();
         double step = Math.toRadians(180d / segments);
         ret.add(0d);
         for (int i = 0; i < segments; i++) {
@@ -168,7 +168,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
     List<Point2d> createRound(int segments) {
 
-        List<Point2d> ret = new ArrayList<Point2d>();
+        List<Point2d> ret = new ArrayList<>();
         double step = Math.toRadians(90d / segments);
         ret.add(new Point2d());
         for (int i = 0; i < segments; i++) {
@@ -233,7 +233,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     private List<CrossSectionElement> createCrossSection(double height, double recHeight) {
         List<Point2d> round = createRound(6);
 
-        List<CrossSectionElement> split = new ArrayList<CrossSectionElement>();
+        List<CrossSectionElement> split = new ArrayList<>();
 
         for (Point2d p : round) {
             double x = p.x * height;

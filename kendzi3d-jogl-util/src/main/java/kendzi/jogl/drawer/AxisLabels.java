@@ -48,17 +48,17 @@ public class AxisLabels implements Gl2Draw {
     /**
      * Length of x axis labels.
      */
-    private int lenghtX;
+    private final int lenghtX;
 
     /**
      * Length of y axis labels.
      */
-    private int lenghtY;
+    private final int lenghtY;
 
     /**
      * Length of z axis labels.
      */
-    private int lenghtZ;
+    private final int lenghtZ;
 
     private List<TextToRender> textToRender;
 
@@ -119,7 +119,7 @@ public class AxisLabels implements Gl2Draw {
      */
     private List<TextToRender> createLabels() {
 
-        List<TextToRender> textToRender = new ArrayList<AxisLabels.TextToRender>();
+        List<TextToRender> textToRender = new ArrayList<>();
 
         for (int i = -this.lenghtX / 2; i <= this.lenghtX / 2; i++) {
             // along x-axis
@@ -192,7 +192,7 @@ public class AxisLabels implements Gl2Draw {
         this.axisLabelRenderer.end3DRendering();
     }
 
-    class TextToRender {
+    static class TextToRender {
         private String text;
         private float x;
         private float y;

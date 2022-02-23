@@ -19,11 +19,11 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 
 public class SplitPolygons {
-    List<SplitPolygon> splitPolygons = new ArrayList<SplitPolygon>();
+    List<SplitPolygon> splitPolygons = new ArrayList<>();
 
     @Deprecated
     public List<List<Point2d>> getLeftPolygons() {
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         for (SplitPolygon s : this.splitPolygons) {
             ret.addAll(s.getLeftPolygons());
@@ -37,7 +37,7 @@ public class SplitPolygons {
 
     @Deprecated
     public List<List<Point2d>> getRightPolygons() {
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Point2d>> ret = new ArrayList<>();
 
         for (SplitPolygon s : this.splitPolygons) {
             ret.addAll(s.getRightPolygons());

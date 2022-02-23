@@ -44,11 +44,11 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 1.5d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 1.5d);
 
-        Double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 2.5d);
+        double h2 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 2.5d);
 
-        Double b1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
+        double b1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, b1,
@@ -159,10 +159,7 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
         if (beginDet > 0 && (endDet >= 0)) {
             return true;
         }
-        if (endDet > 0 && (beginDet >= 0)) {
-            return true;
-        }
-        return false;
+        return endDet > 0 && (beginDet >= 0);
     }
 
     private static boolean equalZero(double number, double epsilon) {

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class Context {
 
-    private Map<String, Object> variables = new HashMap<String, Object>();
+    private final Map<String, Object> variables = new HashMap<>();
 
     /**
      * @return variables

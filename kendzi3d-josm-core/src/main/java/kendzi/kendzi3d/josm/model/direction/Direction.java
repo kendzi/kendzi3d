@@ -22,20 +22,20 @@ public interface Direction {
      * 
      * @return direction is cardinal
      */
-    public abstract boolean isCardinal();
+    boolean isCardinal();
 
     /**
      * Direction angle.
      * 
      * @return Direction angle
      */
-    public abstract double getAngle();
+    double getAngle();
 
     /**
      * Direction vector.
      * 
      * @return Direction vector
      */
-    public abstract Vector2d getVector();
+    Vector2d getVector();
 
 }

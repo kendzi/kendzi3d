@@ -12,7 +12,7 @@ public class SimplifyIndexTestArray {
 
         int[] index = new int[] { 2, 4 };
 
-        SimplifyIndexArray<Integer> si = new SimplifyIndexArray<Integer>(data, index);
+        SimplifyIndexArray<Integer> si = new SimplifyIndexArray<>(data, index);
         si.simple(Integer.class);
 
         System.out.println("data");

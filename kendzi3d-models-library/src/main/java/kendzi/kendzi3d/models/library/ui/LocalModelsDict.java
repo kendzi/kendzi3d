@@ -2,8 +2,6 @@ package kendzi.kendzi3d.models.library.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
@@ -77,26 +75,17 @@ public class LocalModelsDict extends JDialog {
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectValueAndClose()) {
-                    dispose();
-                }
+        okButton.addActionListener(e -> {
+            if (selectValueAndClose()) {
+                dispose();
             }
-
         });
         okButton.setActionCommand("OK");
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> dispose());
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 

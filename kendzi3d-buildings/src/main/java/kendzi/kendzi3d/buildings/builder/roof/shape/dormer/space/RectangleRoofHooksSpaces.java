@@ -34,8 +34,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
     @Override
     public List<RoofHooksSpace> getRoofHooksSpaces() {
 
-        return Arrays.asList((RoofHooksSpace) frontSpace, (RoofHooksSpace) rightSpace, (RoofHooksSpace) backSpace,
-                (RoofHooksSpace) leftSpace);
+        return Arrays.asList(frontSpace, rightSpace, backSpace, leftSpace);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
         List<RoofHooksSpace> pRoofHooksSpace = getRoofHooksSpaces();
 
-        List<RoofDormerTypeOutput> ret = new ArrayList<RoofDormerTypeOutput>();
+        List<RoofDormerTypeOutput> ret = new ArrayList<>();
 
         if (areDormers(pRoof.getDormersBack()) || areDormers(pRoof.getDormersFront()) || areDormers(pRoof.getDormersLeft())
                 || areDormers(pRoof.getDormersRight())) {
@@ -73,10 +72,7 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
     }
 
     private boolean areDormers(Map<DormerRow, List<DormerType>> dormers) {
-        if (dormers == null || dormers.isEmpty()) {
-            return false;
-        }
-        return true;
+        return dormers != null && !dormers.isEmpty();
     }
 
     private void build(Map<DormerRow, List<DormerType>> dormersOnSpace, RoofHooksSpace space, List<RoofDormerTypeOutput> ret,
@@ -137,16 +133,16 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
     private List<DormerType> getExtensionType(int i, List<List<DormerType>> roofExtensions) {
         if (roofExtensions == null) {
-            return new ArrayList<DormerType>();
+            return new ArrayList<>();
         }
 
         if (i >= roofExtensions.size()) {
-            return new ArrayList<DormerType>();
+            return new ArrayList<>();
         }
 
         List<DormerType> characters = roofExtensions.get(i);
         if (characters == null) {
-            characters = new ArrayList<DormerType>();
+            characters = new ArrayList<>();
         }
         return characters;
     }

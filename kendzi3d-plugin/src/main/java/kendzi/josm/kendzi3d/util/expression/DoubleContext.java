@@ -28,7 +28,7 @@ public class DoubleContext implements CompileContext, FunctionBuilder {
 
     @Override
     public Set<String> getFunctionsNames() {
-        Set<String> fun = new HashSet<String>();
+        Set<String> fun = new HashSet<>();
         fun.add("scaleHeight");
         fun.add("normalHeight");
         fun.add("wayNodeDirection");

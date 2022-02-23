@@ -19,7 +19,7 @@ public class RectangleRoofTransformationUtil {
 
         PolygonList2d outer = transformPolygon(polygonWithHoles.getOuter(), transformLocal);
 
-        List<PolygonList2d> inner = new ArrayList<PolygonList2d>();
+        List<PolygonList2d> inner = new ArrayList<>();
 
         if (polygonWithHoles.getInner() != null) {
             for (PolygonList2d pi : polygonWithHoles.getInner()) {
@@ -90,10 +90,10 @@ public class RectangleRoofTransformationUtil {
 
     public static class TransformedHeightCalculator implements HeightCalculator {
 
-        private transient HeightCalculator heightCalculator;
-        private transient SimpleMatrix transformationToGlobal;
-        private transient double transformToGlobalHeightOffset;
-        private transient SimpleMatrix transformationToLocal;
+        private final transient HeightCalculator heightCalculator;
+        private final transient SimpleMatrix transformationToGlobal;
+        private final transient double transformToGlobalHeightOffset;
+        private final transient SimpleMatrix transformationToLocal;
 
         public TransformedHeightCalculator(HeightCalculator heightCalculator, SimpleMatrix transformationToGlobal,
                 double transformToGlobalHeightOffset, SimpleMatrix transformationToLocal) {
@@ -107,7 +107,7 @@ public class RectangleRoofTransformationUtil {
         public List<SegmentHeight> height(Point2d p1, Point2d p2) {
 
             List<SegmentHeight> heights = heightCalculator.height(transformToLocal(p1), transformToLocal(p2));
-            List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
+            List<SegmentHeight> ret = new ArrayList<>();
             for (SegmentHeight segmentHeight : heights) {
                 ret.add(transformToGlobal(segmentHeight));
             }

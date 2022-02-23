@@ -16,8 +16,6 @@ import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.BuildingElementsTextureManager;
 import kendzi.jogl.texture.library.TextureFindCriteria;
 import kendzi.kendzi3d.buildings.builder.BuildingBuilder;
-import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
-import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.model.BuildingModel;
 import kendzi.kendzi3d.buildings.model.BuildingPart;
 import kendzi.kendzi3d.buildings.model.Wall;
@@ -63,7 +61,7 @@ public class ColladaExportTest {
     public static Model createBuildingModel() {
 
         WallPart wp = new WallPart();
-        List<WallNode> nodes = new ArrayList<WallNode>();
+        List<WallNode> nodes = new ArrayList<>();
         wp.setNodes(nodes);
         nodes.add(new WallNode(new Point2d(0, 0), null));
         nodes.add(new WallNode(new Point2d(10, 0), null));
@@ -72,7 +70,7 @@ public class ColladaExportTest {
         nodes.add(new WallNode(new Point2d(0, 0), null));
 
         Wall wall = new Wall();
-        List<WallPart> wallParts = new ArrayList<WallPart>();
+        List<WallPart> wallParts = new ArrayList<>();
         wall.setWallParts(wallParts);
         wallParts.add(wp);
 
@@ -80,11 +78,11 @@ public class ColladaExportTest {
         bp.setWall(wall);
         DormerRoofModel roof = new DormerRoofModel();
         roof.setRoofType(RoofTypeAliasEnum.GABLED);
-        roof.setMeasurements(new HashMap<MeasurementKey, Measurement>());
+        roof.setMeasurements(new HashMap<>());
         bp.setRoof(roof);
 
         BuildingModel bm = new BuildingModel();
-        List<BuildingPart> parts = new ArrayList<BuildingPart>();
+        List<BuildingPart> parts = new ArrayList<>();
         bm.setParts(parts);
         parts.add(bp);
 

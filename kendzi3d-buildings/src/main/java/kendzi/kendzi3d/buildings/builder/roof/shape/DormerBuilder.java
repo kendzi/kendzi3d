@@ -32,7 +32,7 @@ public class DormerBuilder {
     public static List<RoofDormerTypeOutput> build(RoofHooksSpaces pRoofHooksSpaces, DormerRoofModel roof,
             Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData) {
 
-        List<RoofDormerTypeOutput> ret = new ArrayList<RoofDormerTypeOutput>();
+        List<RoofDormerTypeOutput> ret = new ArrayList<>();
 
         if (pRoofHooksSpaces == null) {
             return ret;

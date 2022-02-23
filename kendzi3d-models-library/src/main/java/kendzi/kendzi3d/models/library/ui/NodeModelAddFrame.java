@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 public class NodeModelAddFrame extends JDialog {
 
-    private JPanel contentPane;
+    private final JPanel contentPane;
     protected JTextField txtId;
     protected JTextField txtModel;
     protected JTextField txtFilter;
@@ -28,21 +26,18 @@ public class NodeModelAddFrame extends JDialog {
     protected JTextField txtTranslatey;
     protected JTextField txtTranslatez;
     protected JTextField txtMatcher;
-    private JButton btnSave;
+    private final JButton btnSave;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NodeModelAddFrame frame = new NodeModelAddFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                NodeModelAddFrame frame = new NodeModelAddFrame();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -134,12 +129,7 @@ public class NodeModelAddFrame extends JDialog {
         txtModel.setColumns(10);
 
         JButton btnDict = new JButton("Dict");
-        btnDict.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dictAction();
-            }
-        });
+        btnDict.addActionListener(e -> dictAction());
         GridBagConstraints gbc_btnDict = new GridBagConstraints();
         gbc_btnDict.insets = new Insets(0, 0, 5, 5);
         gbc_btnDict.gridx = 2;
@@ -258,21 +248,11 @@ public class NodeModelAddFrame extends JDialog {
         contentPane.add(panelButtons, BorderLayout.SOUTH);
 
         btnSave = new JButton("Save");
-        btnSave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveAction();
-            }
-        });
+        btnSave.addActionListener(e -> saveAction());
         panelButtons.add(btnSave);
 
         JButton btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(e -> dispose());
         panelButtons.add(btnCancel);
     }
 

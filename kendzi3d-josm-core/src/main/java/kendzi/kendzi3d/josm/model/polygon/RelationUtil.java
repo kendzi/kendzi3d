@@ -76,7 +76,7 @@ public final class RelationUtil {
     }
 
     private static List<Way> filterWayByRole(Relation pRelation, String role, Boolean closed) {
-        List<Way> ret = new ArrayList<Way>();
+        List<Way> ret = new ArrayList<>();
 
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);

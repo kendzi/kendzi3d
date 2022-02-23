@@ -33,12 +33,12 @@ public class DebugToggleAction extends ToggleAction {
     /**
      * Debug view property key.
      */
-    public final static String KENDZI_3D_DEBUG_VIEW = "kendzi3d.debug.view";
+    public static final String KENDZI_3D_DEBUG_VIEW = "kendzi3d.debug.view";
 
     /**
      * Model render.
      */
-    private ModelRender modelRender;
+    private final ModelRender modelRender;
 
     /**
      * Constructor of debug toggle action.
