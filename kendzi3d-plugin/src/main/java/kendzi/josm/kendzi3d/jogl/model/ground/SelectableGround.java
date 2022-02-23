@@ -1,9 +1,10 @@
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
+import com.jogamp.opengl.GL2;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 
 public class SelectableGround {

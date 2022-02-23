@@ -59,6 +59,7 @@ public class ExpressiongBuilder {
         if (res.getClass().isInstance(defaultValue)) {
             return (T) res;
         }
-        throw new RuntimeException("expression result is wrong class: " + res.getClass() + " but expected is class: " + defaultValue.getClass());
+        throw new RuntimeException(
+                "expression result is wrong class: " + res.getClass() + " but expected is class: " + defaultValue.getClass());
     }
 }

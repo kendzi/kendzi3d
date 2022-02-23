@@ -6,10 +6,10 @@
 
 package kendzi.jogl.drawer;
 
-import java.awt.Color;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+
+import java.awt.Color;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.util.DrawUtil;

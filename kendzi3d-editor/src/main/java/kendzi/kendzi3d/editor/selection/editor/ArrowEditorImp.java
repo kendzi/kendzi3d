@@ -26,8 +26,8 @@ import kendzi.math.geometry.ray.Ray3dUtil;
 public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, ChangeAwareEditor {
 
     /**
-     * Provide origin of editor. Origin point could be re-calculated before it
-     * is displayed so it need be wrapped with that provider.
+     * Provide origin of editor. Origin point could be re-calculated before it is
+     * displayed so it need be wrapped with that provider.
      */
     private transient Point3dProvider editorOriginProvider;
 
@@ -42,8 +42,8 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     private double length;
 
     /**
-     * Offset for displaying active spot of editor. Offset will be scaled
-     * related to distance of camera.
+     * Offset for displaying active spot of editor. Offset will be scaled related to
+     * distance of camera.
      */
     private double offset;
 
@@ -119,10 +119,10 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     }
 
     /**
-     * Calculates spot offset which depends on distance from camera. To have
-     * better presentation of active editor spot, it should be moved along arrow
-     * vector to be little above edited object. That small offset should be
-     * depend on distance from camera.
+     * Calculates spot offset which depends on distance from camera. To have better
+     * presentation of active editor spot, it should be moved along arrow vector to
+     * be little above edited object. That small offset should be depend on distance
+     * from camera.
      *
      * @param camera
      *            camera location
@@ -141,8 +141,8 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     @Override
     public Double intersect(Ray3d selectionRay) {
         /*
-         * This implementation is depended on distance from ray center and not
-         * actual location of camera!
+         * This implementation is depended on distance from ray center and not actual
+         * location of camera!
          */
         Point3d camera = selectionRay.getPoint();
 

@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
+
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -108,9 +109,8 @@ public class Viewport implements ViewportPicker {
     }
 
     /**
-     * Update viewport position using current camera position and angle.
-     * Calculates parameters of viewport required to back trace click of mouse
-     * in 3d space.
+     * Update viewport position using current camera position and angle. Calculates
+     * parameters of viewport required to back trace click of mouse in 3d space.
      *
      * @param camera
      *            camera position and angle
@@ -165,15 +165,15 @@ public class Viewport implements ViewportPicker {
     }
 
     /**
-     * Converts given 2d coordinates on screen view into ray in 3d space.
-     * Depends on last camera position and set viewport configuration.
+     * Converts given 2d coordinates on screen view into ray in 3d space. Depends on
+     * last camera position and set viewport configuration.
      *
      * @param screenX
      *            screen x coordinate
      * @param screenY
      *            screen y coordinate
-     * @return ray in 3d space from camera location and in direction of given
-     *         screen coordinates
+     * @return ray in 3d space from camera location and in direction of given screen
+     *         coordinates
      */
     public Ray3d picking(float screenX, float screenY) {
 

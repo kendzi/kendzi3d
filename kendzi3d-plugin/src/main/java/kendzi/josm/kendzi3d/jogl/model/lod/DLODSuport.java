@@ -10,18 +10,16 @@
 package kendzi.josm.kendzi3d.jogl.model.lod;
 
 import com.jogamp.opengl.GL2;
-import javax.vecmath.Point3d;
 
+import javax.vecmath.Point3d;
 import kendzi.jogl.camera.Camera;
 
 public interface DLODSuport {
-    //FIXME
+    // FIXME
 
     boolean isModelBuild(LOD pLod);
 
     public void draw(GL2 gl, Camera camera, LOD pLod);
-
-
 
     public void buildModel(LOD pLod);
 

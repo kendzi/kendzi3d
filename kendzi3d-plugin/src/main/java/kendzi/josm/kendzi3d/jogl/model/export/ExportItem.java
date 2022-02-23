@@ -2,14 +2,12 @@ package kendzi.josm.kendzi3d.jogl.model.export;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.geometry.Model;
 
 public class ExportItem {
     private Model model;
     private Point3d point;
     private Vector3d scale;
-
 
     public ExportItem(Model model, Point3d point, Vector3d scale) {
         super();
@@ -26,7 +24,8 @@ public class ExportItem {
     }
 
     /**
-     * @param model the model to set
+     * @param model
+     *            the model to set
      */
     public void setModel(Model model) {
         this.model = model;
@@ -40,7 +39,8 @@ public class ExportItem {
     }
 
     /**
-     * @param point the point to set
+     * @param point
+     *            the point to set
      */
     public void setPoint(Point3d point) {
         this.point = point;
@@ -54,11 +54,11 @@ public class ExportItem {
     }
 
     /**
-     * @param scale the scale to set
+     * @param scale
+     *            the scale to set
      */
     public void setScale(Vector3d scale) {
         this.scale = scale;
     }
-
 
 }

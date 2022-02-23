@@ -1,11 +1,11 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import java.awt.Color;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+
+import java.awt.Color;
 
 import kendzi.jogl.util.ColorUtil;
 import kendzi.jogl.util.DrawUtil;

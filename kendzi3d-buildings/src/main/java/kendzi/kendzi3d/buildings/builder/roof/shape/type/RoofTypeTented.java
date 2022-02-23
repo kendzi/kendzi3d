@@ -86,8 +86,7 @@ public class RoofTypeTented extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mp.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i],
-                    0);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
         }
 
         RoofTypeOutput rto = new RoofTypeOutput();

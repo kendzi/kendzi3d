@@ -1,16 +1,8 @@
 package kendzi.kendzi3d.josm.model.attribute;
 
-public enum OsmAttributeValues{
-    WINDOW("window"),
-    ENTRANCE("entrance"),
-    BEGIN("begin"),
-    END("end"),
-    CLONE_HEIGHT("clone:height"),
-    CLONE_LEVEL("clone:level"),
-    YES("yes"),
-    SPHERE("sphere"),
-    NO("no"),
-    ;
+public enum OsmAttributeValues {
+    WINDOW("window"), ENTRANCE("entrance"), BEGIN("begin"), END("end"), CLONE_HEIGHT("clone:height"), CLONE_LEVEL(
+            "clone:level"), YES("yes"), SPHERE("sphere"), NO("no"),;
 
     String value;
 

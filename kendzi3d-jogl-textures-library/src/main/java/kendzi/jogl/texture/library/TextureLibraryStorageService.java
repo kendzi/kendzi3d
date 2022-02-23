@@ -14,9 +14,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
-
 import kendzi.jogl.texture.dto.TextureData;
-
 
 /**
  * Texture library.
@@ -26,9 +24,11 @@ import kendzi.jogl.texture.dto.TextureData;
 public interface TextureLibraryStorageService {
 
     /**
-     * Always return texture data. If configuration for texture key is not set return default texture data.
+     * Always return texture data. If configuration for texture key is not set
+     * return default texture data.
      *
-     * @param textureKey texture key
+     * @param textureKey
+     *            texture key
      * @return texture data
      */
     public TextureData getTextureDefault(String textureKey);
@@ -39,6 +39,7 @@ public interface TextureLibraryStorageService {
 
     public void reload();
 
-    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException, MalformedURLException;
+    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary)
+            throws FileNotFoundException, JAXBException, MalformedURLException;
 
 }

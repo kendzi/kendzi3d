@@ -1,11 +1,12 @@
 package kendzi.josm.kendzi3d.jogl.compas;
 
-import java.awt.Color;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+
+import java.awt.Color;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 

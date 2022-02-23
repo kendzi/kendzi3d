@@ -78,8 +78,8 @@ public class PolygonSplitHelper {
 
     /**
      * Calculate intersection of left site of polygon cut multiple times by
-     * different splitting lines. The result is on left site of each of
-     * splitting lines.
+     * different splitting lines. The result is on left site of each of splitting
+     * lines.
      * 
      * @param multiPolygon
      *            the polygon to cut
@@ -126,8 +126,7 @@ public class PolygonSplitHelper {
      *            splitting lines
      * @return the polygon which is on left site of each of splitting lines
      */
-    public static MultiPolygonList2d unionOfLeftSideOfMultipleCuts(MultiPolygonList2d multiPolygon,
-            LinePoints2d... lines) {
+    public static MultiPolygonList2d unionOfLeftSideOfMultipleCuts(MultiPolygonList2d multiPolygon, LinePoints2d... lines) {
 
         MultiPolygonList2d leftMultiPolygon = new MultiPolygonList2d();
 

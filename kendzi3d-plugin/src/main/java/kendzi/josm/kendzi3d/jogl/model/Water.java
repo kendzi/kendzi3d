@@ -6,11 +6,12 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import com.jogamp.opengl.GL2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -36,7 +37,6 @@ import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;

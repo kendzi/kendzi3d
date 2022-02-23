@@ -7,7 +7,6 @@
  *
  */
 
-
 package kendzi.josm.kendzi3d.util.expression;
 
 import java.util.Set;
@@ -22,7 +21,9 @@ import kendzi.josm.kendzi3d.util.expression.fun.FunctionBuilder;
  */
 public interface CompileContext extends FunctionBuilder {
 
-    /** Functions in context.
+    /**
+     * Functions in context.
+     * 
      * @return function names
      */
     Set<String> getFunctionsNames();

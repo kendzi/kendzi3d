@@ -28,7 +28,6 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -50,8 +49,8 @@ public class RoofType1v1 extends RectangleRoofTypeBuilder {
         Double h2 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_2, 0, conf.getRecHeight(), 30d);
         Double h3 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_3, 0, conf.getRecWidth(), 30d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                h2, h3, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, h3,
+                conf.getRoofTextureData());
     }
 
     /**

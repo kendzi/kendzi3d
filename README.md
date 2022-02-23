@@ -5,14 +5,14 @@ This is application for generating 3d model from OSM data. It can be used as JOS
 # How to build
 
 This project is currently migrating to maven
-Most of sub-project you can build be using command 
+Most of sub-project you can build be using command
 maven install
 
 JOSM plug-in "kendzi.josm.plugin3d" is build by ant script.
 
 # How to import to eclipse
-Currently conversion to maven is in progress. Build will change in future. 
-Only one of subproject is build by ant all others are maven project. 
+Currently conversion to maven is in progress. Build will change in future.
+Only one of subproject is build by ant all others are maven project.
 
 * Install java JDK 8 64bit from java.oracle.com
 * Install Eclipse EE form eclipse.org
@@ -21,7 +21,7 @@ Only one of subproject is build by ant all others are maven project.
  * Checkstyle
  * FindBugs
  * If it is not Eclipse EE don't forget about m2e plugin
-* Download sources for JOSM as new java project with the same name. Svn url: 
+* Download sources for JOSM as new java project with the same name. Svn url:
 http://josm.openstreetmap.de/svn/trunk
 * Check if JOSM is building correctly by running ant:
 {JOSM}/build.xml dist
@@ -31,7 +31,7 @@ https://github.com/kendzi/kendzi3d-josm-jogl.git
 ```{kendzi3d-josm-jogl}/build.xml```
 * Compile kendzi3d-josm-jogl by calling ant script
 ```{kendzi3d-josm-jogl}/build.xml clean dist```
-* Download source of kendzi3d. Git link: 
+* Download source of kendzi3d. Git link:
 https://github.com/kendzi/kendzi3d.git
  * import from local git repo as java ant project: kendzi.josm.plugin3d
  * import all other sub projects from local git working directory as java maven projects. If need you can import it as general project and later convert to maven by clicking on project: "Convigure>Convert to Maven"
@@ -50,10 +50,10 @@ Select settings like on image ```doc/save_actions.png```
 
 # Release process
 
-* mvn -DignoreSnapshots=true release:clean release:prepare 
- 
+* mvn -DignoreSnapshots=true release:clean release:prepare
+
 * mvn -Darguments="-Dmaven.deploy.skip=true"  release:perform
- 
+
 * update url in: https://josm.openstreetmap.de/wiki/PluginsSource
 
 # License

@@ -7,9 +7,6 @@ import java.util.List;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureFindCriteria.Type;
 
-
-
-
 public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureManager {
 
     TextureLibraryStorageService textureLibraryStorageService;
@@ -44,7 +41,8 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
             throw new RuntimeException("unknown search texture criteria type: " + type);
         }
 
-        String keyStr = this.textureLibraryStorageService.getKey(key, pTextureFindCriteria.getTypeName()/*, pTextureFindCriteria.getSubTypeName()*/);
+        String keyStr = this.textureLibraryStorageService.getKey(key,
+                pTextureFindCriteria.getTypeName()/* , pTextureFindCriteria.getSubTypeName() */);
 
         List<TextureData> textureSet = this.textureLibraryStorageService.findTextureData(keyStr);
         boolean findColorable = false;
@@ -59,8 +57,7 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
             }
         }
 
-
-        if ( pTextureFindCriteria.getHeight() != null ||  pTextureFindCriteria.getWidth() != null) {
+        if (pTextureFindCriteria.getHeight() != null || pTextureFindCriteria.getWidth() != null) {
             textureSet = filterByBestSizeMatch(pTextureFindCriteria, textureSet);
         }
 
@@ -73,10 +70,9 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
         return textureData;
     }
 
-
     public static TextureData getRadnomTextureFromSet(List<TextureData> set, long id) {
 
-        if (set== null || set.size() == 0) {
+        if (set == null || set.size() == 0) {
             return null;
         }
 
@@ -84,13 +80,13 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
 
         return set.get((int) (id % set.size()));
     }
+
     /**
      * @param colorable
      * @param textureSet
      * @return
      */
-    public List<TextureData> filterByColorable(
-            boolean colorable, List<TextureData> textureSet) {
+    public List<TextureData> filterByColorable(boolean colorable, List<TextureData> textureSet) {
         List<TextureData> ret = new ArrayList<TextureData>();
 
         for (TextureData td : textureSet) {
@@ -134,7 +130,7 @@ public class OsmBuildingElementsTextureMenager extends BuildingElementsTextureMa
         TextureData best = null;
         double bestError = Double.MAX_VALUE;
 
-        double height = pTextureFindCriteria.getHeight() == null ? 0 :  pTextureFindCriteria.getHeight();
+        double height = pTextureFindCriteria.getHeight() == null ? 0 : pTextureFindCriteria.getHeight();
         double width = pTextureFindCriteria.getWidth() == null ? 0 : pTextureFindCriteria.getWidth();
 
         for (TextureData td : textureSet) {

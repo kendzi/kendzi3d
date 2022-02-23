@@ -31,8 +31,7 @@ public class RectangleTypeRoofUtil {
      *            direction vector
      * @param polygon
      *            polygon
-     * @return direction vector snaps to best matching orthogonally of polygon
-     *         edges
+     * @return direction vector snaps to best matching orthogonally of polygon edges
      */
     public static Vector2d snapsDirectionToOutline(Vector2d frontDirection, PolygonList2d polygon) {
 

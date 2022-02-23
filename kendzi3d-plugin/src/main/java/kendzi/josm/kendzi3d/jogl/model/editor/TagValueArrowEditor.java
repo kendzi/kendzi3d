@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
+import kendzi.josm.kendzi3d.jogl.model.building.Building;
+import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
+import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
@@ -19,10 +22,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.MainApplication;
-
-import kendzi.josm.kendzi3d.jogl.model.building.Building;
-import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
-import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
 
 /**
  * The simple arrow like editor for primitives.

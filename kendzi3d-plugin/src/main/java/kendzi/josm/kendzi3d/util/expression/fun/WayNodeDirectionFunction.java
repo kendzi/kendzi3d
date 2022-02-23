@@ -18,7 +18,6 @@ import kendzi.math.geometry.point.Vector2dUtil;
 
 public class WayNodeDirectionFunction extends AbstractSimpleFunction<Double> {
 
-
     public WayNodeDirectionFunction(CompileContext context, String[] args) {
         super(context, args);
     }

@@ -6,7 +6,6 @@
 package kendzi.kendzi3d.editor.selection.event;
 
 import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditor;
 
 public class ArrowEditorChangeEvent extends EditorChangeEvent {

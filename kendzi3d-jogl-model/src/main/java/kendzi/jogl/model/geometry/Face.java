@@ -9,27 +9,22 @@
 
 package kendzi.jogl.model.geometry;
 
-
 public class Face {
-	public int [] vertIndex;
+    public int[] vertIndex;
 
-	public int [][] coordIndexLayers;
+    public int[][] coordIndexLayers;
 
-//    public int [] coordIndex;
-//    public int [] coordIndex1;
-//    public int [] coordIndex2;
-    public int [] normalIndex;
+    // public int [] coordIndex;
+    // public int [] coordIndex1;
+    // public int [] coordIndex2;
+    public int[] normalIndex;
 
     public int type;
 
-
-//    /**
-//     * Id of material used by face.
-//     */
-//    public int materialID;
-
-
-
+    // /**
+    // * Id of material used by face.
+    // */
+    // public int materialID;
 
     public Face() {
         //
@@ -42,7 +37,7 @@ public class Face {
     public Face(int pType, int pLength, int numOfTexturesLayers) {
 
         this.vertIndex = new int[pLength];
-        this.coordIndexLayers = new int [numOfTexturesLayers][];//int[pLength];
+        this.coordIndexLayers = new int[numOfTexturesLayers][];// int[pLength];
         for (int i = 0; i < numOfTexturesLayers; i++) {
             this.coordIndexLayers[i] = new int[pLength];
         }
@@ -52,11 +47,9 @@ public class Face {
         this.type = pType;
     }
 
-
-
-    //FIXME
+    // FIXME
     enum Type {
-    	triangle_list;
+        triangle_list;
     }
 
 }

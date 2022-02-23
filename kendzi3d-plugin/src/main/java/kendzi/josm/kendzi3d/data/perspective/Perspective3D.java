@@ -9,7 +9,6 @@ package kendzi.josm.kendzi3d.data.perspective;
 import javax.vecmath.Point2d;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -65,8 +64,8 @@ public class Perspective3D implements Perspective {
     }
 
     /**
-     * Backward projection from local camera coordinate system to global
-     * EastNorth coordinate system.
+     * Backward projection from local camera coordinate system to global EastNorth
+     * coordinate system.
      * 
      * @param x
      *            coordinate x

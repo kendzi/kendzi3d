@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.util.StringUtil;
-
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;

@@ -19,7 +19,6 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
-
 import kendzi.kendzi3d.models.library.messages.Messages;
 
 public class ModelLibraryResourcesListFrame extends JFrame {
@@ -57,7 +56,8 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
-        dataModel = new ModelsFilesTableModel() {};
+        dataModel = new ModelsFilesTableModel() {
+        };
 
         JScrollPane scrollPane = new JScrollPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
@@ -65,7 +65,6 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         table = new JTable();
         scrollPane.setViewportView(table);
         table.setModel(dataModel);
-
 
         JPanel panel_top = new JPanel();
         contentPane.add(panel_top, BorderLayout.NORTH);
@@ -179,8 +178,7 @@ public class ModelLibraryResourcesListFrame extends JFrame {
          */
         private static final long serialVersionUID = 1L;
 
-        private List<String> data =
-                Collections.unmodifiableList(new ArrayList<String>());
+        private List<String> data = Collections.unmodifiableList(new ArrayList<String>());
 
         public void setData(List<String> data) {
             this.data = Collections.unmodifiableList(new ArrayList<String>(data));

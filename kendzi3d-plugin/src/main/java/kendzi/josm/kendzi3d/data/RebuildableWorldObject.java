@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.data;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**

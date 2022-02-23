@@ -10,13 +10,13 @@
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.texture.Texture;
+
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-
-import com.jogamp.opengl.util.texture.Texture;
 
 public class GroundDrawer {
 
@@ -24,8 +24,7 @@ public class GroundDrawer {
 
     private final TextureLibraryStorageService textureLibraryStorageService;
 
-    public GroundDrawer(TextureCacheService textureCacheService,
-            TextureLibraryStorageService TextureLibraryStorageService) {
+    public GroundDrawer(TextureCacheService textureCacheService, TextureLibraryStorageService TextureLibraryStorageService) {
         super();
 
         this.textureCacheService = textureCacheService;

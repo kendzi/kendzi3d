@@ -26,7 +26,6 @@ import kendzi.kendzi3d.buildings.model.WallPart;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 import kendzi.kendzi3d.buildings.model.roof.shape.RoofTypeAliasEnum;
 import kendzi.kendzi3d.buildings.output.BuildingOutput;
-
 import org.junit.Test;
 
 public class ColladaExportTest {
@@ -54,8 +53,8 @@ public class ColladaExportTest {
         exporter.addModel(model);
 
         exporter.marsall("test.dae");
-        //        System.out.println(marshaller);
-        //   exporter.saveFile("/multiText/test.dae", marshaller);
+        // System.out.println(marshaller);
+        // exporter.saveFile("/multiText/test.dae", marshaller);
     }
 
     /**
@@ -66,11 +65,11 @@ public class ColladaExportTest {
         WallPart wp = new WallPart();
         List<WallNode> nodes = new ArrayList<WallNode>();
         wp.setNodes(nodes);
-        nodes.add(new WallNode(new Point2d(0,0), null));
-        nodes.add(new WallNode(new Point2d(10,0), null));
-        nodes.add(new WallNode(new Point2d(10.1,10), null));
-        nodes.add(new WallNode(new Point2d(0,10), null));
-        nodes.add(new WallNode(new Point2d(0,0), null));
+        nodes.add(new WallNode(new Point2d(0, 0), null));
+        nodes.add(new WallNode(new Point2d(10, 0), null));
+        nodes.add(new WallNode(new Point2d(10.1, 10), null));
+        nodes.add(new WallNode(new Point2d(0, 10), null));
+        nodes.add(new WallNode(new Point2d(0, 0), null));
 
         Wall wall = new Wall();
         List<WallPart> wallParts = new ArrayList<WallPart>();
@@ -92,16 +91,15 @@ public class ColladaExportTest {
         BuildingElementsTextureManager tm = new BuildingElementsTextureManager() {
 
             @Override
-            public TextureData findTexture(
-                    TextureFindCriteria pTextureFindCriteria) {
+            public TextureData findTexture(TextureFindCriteria pTextureFindCriteria) {
                 return new TextureData("test.jpg", 2, 2);
             }
         };
 
         BuildingOutput buildModel = BuildingBuilder.buildModel(bm, tm);
         Model ret = buildModel.getModel();
-        //        ret.materialID = 0;
-        //        ret.hasTexture = true;
+        // ret.materialID = 0;
+        // ret.hasTexture = true;
         return ret;
     }
 
@@ -118,7 +116,6 @@ public class ColladaExportTest {
         cubeMesh.materialID = 0;
         cubeMesh.hasTexture = true;
         mf.addMesh(cubeMesh);
-
 
         Model model = mf.toModel();
         model.useLight = true;

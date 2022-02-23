@@ -20,18 +20,18 @@ public interface ResourceService {
 
     public static final String PLUGIN_FILE_PREFIX = "plugin:";
 
-    //    /**
-    //     * Try to get file URL. It is looking at:<br>
-    //     * 1. directory: {PLUGIN_DIR_NAME}/ <br>
-    //     * 2. resources from jar in directory: {PLUGIN_JAR}/ <br>
-    //     *
-    //     *
-    //     * @param pFileName
-    //     *            file name
-    //     * @return file url
-    //     */
-    //    @Deprecated
-    //    URL receiveFileUrl(String pFileName);
+    // /**
+    // * Try to get file URL. It is looking at:<br>
+    // * 1. directory: {PLUGIN_DIR_NAME}/ <br>
+    // * 2. resources from jar in directory: {PLUGIN_JAR}/ <br>
+    // *
+    // *
+    // * @param pFileName
+    // * file name
+    // * @return file url
+    // */
+    // @Deprecated
+    // URL receiveFileUrl(String pFileName);
 
     /**
      * Receive url from directory: {PLUGIN_DIR_NAME}

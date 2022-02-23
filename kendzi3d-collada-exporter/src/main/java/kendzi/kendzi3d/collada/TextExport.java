@@ -18,14 +18,11 @@ public abstract class TextExport {
         try {
             out = new PrintStream(new FileOutputStream(fileName));
             out.print(str);
-        }
-        finally {
+        } finally {
             if (out != null) {
                 out.close();
             }
         }
     }
-
-
 
 }

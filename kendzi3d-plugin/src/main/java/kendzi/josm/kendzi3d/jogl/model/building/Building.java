@@ -6,6 +6,9 @@
 
 package kendzi.josm.kendzi3d.jogl.model.building;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+
 import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -16,15 +19,6 @@ import java.util.List;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.data.osm.Way;
-
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.BoundsFactory;
@@ -61,6 +55,11 @@ import kendzi.kendzi3d.editor.selection.editor.EditorType;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.bbox.Bbox2d;
 import kendzi.math.geometry.line.LineSegment3d;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing building model.
@@ -208,8 +207,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                     PrimitiveId primitive = (PrimitiveId) bp.getContext();
                     {
                         /*
-                         * Check if given editor don't exist already, if so we
-                         * need to update it.
+                         * Check if given editor don't exist already, if so we need to update it.
                          */
                         PartValueEditor editorHeight = findEditor(primitive, editors, "height");
                         if (editorHeight == null) {
@@ -227,9 +225,9 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                             editorHeight.setOffset(0.1);
                         }
                         /*
-                         * We need to re-setup building part. It can change when
-                         * building is change after change made in JOSM dataset.
-                         * It is not important when preview is generated.
+                         * We need to re-setup building part. It can change when building is change
+                         * after change made in JOSM dataset. It is not important when preview is
+                         * generated.
                          */
                         editorHeight.setBuildingPart(bp);
 
@@ -250,8 +248,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                     }
 
                     /*
-                     * Check if given editor don't exist already, if so we need
-                     * to update it.
+                     * Check if given editor don't exist already, if so we need to update it.
                      */
                     PartValueEditor editorRoofHeight = findEditor(primitive, editors, "roof:height");
                     if (editorRoofHeight == null) {
@@ -288,9 +285,9 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                         editorRoofHeight.setVector(new Vector3d(0, -1, 0));
                     }
                     /*
-                     * We need to re-setupeditorRoofHeight building part. It can
-                     * change when building is change after change made in JOSM
-                     * dataset. It is not important when preview is generated.
+                     * We need to re-setupeditorRoofHeight building part. It can change when
+                     * building is change after change made in JOSM dataset. It is not important
+                     * when preview is generated.
                      */
                     editorRoofHeight.setBuildingPart(bp);
 

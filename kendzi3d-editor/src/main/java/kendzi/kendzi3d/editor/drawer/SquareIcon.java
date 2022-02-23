@@ -6,19 +6,19 @@
 
 package kendzi.kendzi3d.editor.drawer;
 
-import javax.inject.Inject;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
+
+import javax.inject.Inject;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
-
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 
 /**
  * Displays given icon.

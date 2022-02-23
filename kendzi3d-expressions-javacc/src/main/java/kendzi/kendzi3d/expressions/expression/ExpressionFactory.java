@@ -9,14 +9,15 @@ import kendzi.kendzi3d.expressions.functions.Function;
 import kendzi.kendzi3d.expressions.functions.OneParamFunction;
 import kendzi.kendzi3d.expressions.functions.ZeroParamFunction;
 
-
 public class ExpressionFactory {
 
     public static class DoubleExpresion implements Expression {
         private double value;
+
         public DoubleExpresion(double value) {
             this.value = value;
         }
+
         public Object evaluate(Context context) {
             return value;
         }
@@ -40,7 +41,7 @@ public class ExpressionFactory {
         } else {
             return funExpression(name, value);
         }
-        //          throw new RuntimeException("wrong num of params");
+        // throw new RuntimeException("wrong num of params");
     }
 
     private static Expression funExpression(final String name, final List<Expression> value) {
@@ -50,8 +51,8 @@ public class ExpressionFactory {
                 Function fun = getFunctionByName(name, context);
 
                 if (fun instanceof AnyParamFunction) {
-                    double [] param = new double[value.size()];
-                    //                    List<double> in  = new ArrayList<double>();
+                    double[] param = new double[value.size()];
+                    // List<double> in = new ArrayList<double>();
                     int i = 0;
                     for (Expression expression : value) {
                         param[i] = convert(expression, context);
@@ -77,7 +78,7 @@ public class ExpressionFactory {
 
                 if (fun instanceof OneParamFunction) {
                     Double param = convert(arg1, context);
-                    //                    Object evaluate = value.evaluate(context);
+                    // Object evaluate = value.evaluate(context);
                     return ((OneParamFunction) fun).evalOneParam(context, param);
 
                 } else if (fun instanceof AnyParamFunction) {
@@ -152,6 +153,7 @@ public class ExpressionFactory {
             }
         };
     }
+
     public static Expression divide(Expression expr1, Expression expr2) {
         return new TwoArgExpression<Double>(expr1, expr2, double.class) {
 
@@ -160,6 +162,7 @@ public class ExpressionFactory {
             }
         };
     }
+
     public static Expression sub(Expression expr1, Expression expr2) {
         return new TwoArgExpression<Double>(expr1, expr2, double.class) {
 

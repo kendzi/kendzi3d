@@ -56,9 +56,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-
 /**
- * @author  kendzi
+ * @author kendzi
  */
 public class EquationDisplay extends JComponent implements PropertyChangeListener {
     private static final Color COLOR_BACKGROUND = Color.WHITE;
@@ -112,26 +111,33 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     private int startHeight;
 
     /**
-     * @param originX pozycja srodka mapy x
-     * @param originY pozycja srodka mapy x
-     * @param minX widoczna czesc
-     * @param maxX widoczna czesc
-     * @param minY widoczna czesc
-     * @param maxY widoczna czesc
-     * @param majorX wielkosc podzialu glownej siatki x
-     * @param minorX ilosc lini podzednego podzialu x
-     * @param majorY wielkosc podzialu glownej siatki y
-     * @param minorY ilosc lini podzednego podzialu y
-     * @param sameRatio the same ratio
+     * @param originX
+     *            pozycja srodka mapy x
+     * @param originY
+     *            pozycja srodka mapy x
+     * @param minX
+     *            widoczna czesc
+     * @param maxX
+     *            widoczna czesc
+     * @param minY
+     *            widoczna czesc
+     * @param maxY
+     *            widoczna czesc
+     * @param majorX
+     *            wielkosc podzialu glownej siatki x
+     * @param minorX
+     *            ilosc lini podzednego podzialu x
+     * @param majorY
+     *            wielkosc podzialu glownej siatki y
+     * @param minorY
+     *            ilosc lini podzednego podzialu y
+     * @param sameRatio
+     *            the same ratio
      */
-    public EquationDisplay(double originX, double originY,
-                           double minX, double maxX,
-                           double minY, double maxY,
-                           double majorX, int minorX,
-                           double majorY, int minorY, boolean sameRatio) {
+    public EquationDisplay(double originX, double originY, double minX, double maxX, double minY, double maxY, double majorX,
+            int minorX, double majorY, int minorY, boolean sameRatio) {
 
-    	setParms(originX, originY, minX, maxX, minY, maxY, majorX, minorX, majorY, minorY);
-
+        setParms(originX, originY, minX, maxX, minY, maxY, majorX, minorX, majorY, minorY);
 
         this.equations = new LinkedList<DrawableEquation>();
 
@@ -153,14 +159,10 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         this.sameRatio = sameRatio;
     }
 
-    public void setParms(
-    		double originX, double originY,
-            double minX, double maxX,
-            double minY, double maxY,
-            double majorX, int minorX,
-            double majorY, int minorY) {
+    public void setParms(double originX, double originY, double minX, double maxX, double minY, double maxY, double majorX,
+            int minorX, double majorY, int minorY) {
 
-    	if (originX < minX || originX > maxX) {
+        if (originX < minX || originX > maxX) {
             throw new IllegalArgumentException("originX must be between minX and maxX");
         }
 
@@ -204,7 +206,6 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         this.startWidth = getWidth();
         this.startHeight = getHeight();
 
-
         this.majorX = majorX;
         this.minorX = minorX;
         this.majorY = majorY;
@@ -214,7 +215,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     @Override
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled) {
-            //super.setEnabled(enabled);
+            // super.setEnabled(enabled);
 
             if (enabled) {
                 addMouseListener(panHandler);
@@ -229,15 +230,16 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     }
 
     /**
-	 * @return if should draw text
-	 */
+     * @return if should draw text
+     */
     public boolean isDrawText() {
         return drawText;
     }
 
     /**
-	 * @param drawText if should draw text
-	 */
+     * @param drawText
+     *            if should draw text
+     */
     public void setDrawText(boolean drawText) {
         this.drawText = drawText;
     }
@@ -253,7 +255,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     public void removeEquation(AbstractEquation equation) {
         if (equation != null) {
             DrawableEquation toRemove = null;
-            for (DrawableEquation drawable: equations) {
+            for (DrawableEquation drawable : equations) {
                 if (drawable.getEquation() == equation) {
                     toRemove = drawable;
                     break;
@@ -307,10 +309,10 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         setupGraphics(g2);
 
         paintBackground(g2);
-//        drawGrid(g2);
-//        drawAxis(g2);
-//
-//        drawEquations(g2);
+        // drawGrid(g2);
+        // drawAxis(g2);
+        //
+        // drawEquations(g2);
 
         paintInformation(g2);
     }
@@ -319,7 +321,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     }
 
     private void drawEquations(Graphics2D g2) {
-        for (DrawableEquation drawable: equations) {
+        for (DrawableEquation drawable : equations) {
             g2.setColor(drawable.getColor());
             drawEquation(g2, drawable.getEquation());
         }
@@ -489,8 +491,7 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     }
 
     protected void setupGraphics(Graphics2D g2) {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                            RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     protected void paintBackground(Graphics2D g2) {
@@ -499,8 +500,8 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
     }
 
     /**
-	 * @author  kendzi
-	 */
+     * @author kendzi
+     */
     private class DrawableEquation {
 
         private AbstractEquation equation;
@@ -512,11 +513,9 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             this.color = color;
         }
 
-
         AbstractEquation getEquation() {
             return equation;
         }
-
 
         Color getColor() {
             return color;
@@ -559,18 +558,18 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
 
     private class ComponentResizeHandler extends ComponentAdapter {
 
-		@Override
-		public void componentResized(ComponentEvent arg0) {
-			super.componentResized(arg0);
+        @Override
+        public void componentResized(ComponentEvent arg0) {
+            super.componentResized(arg0);
 
             int w = getWidth();
             int h = getHeight();
-			double width = w;
-			double height = h;
+            double width = w;
+            double height = h;
 
-            if (( startWidth == 0) || (startHeight == 0)) {
-				startWidth = w;
-				startHeight = h;
+            if ((startWidth == 0) || (startHeight == 0)) {
+                startWidth = w;
+                startHeight = h;
 
                 double dX = startMaxX - startMinX;
                 double dY = startMaxY - startMinY;
@@ -582,21 +581,21 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                     if (radioY > radioX) {
                         // powiekszamy obszar osi x tak aby zachowac radio
                         double dX2 = radioY * width;
-                        double srX = startMinX + dX /2;
+                        double srX = startMinX + dX / 2;
 
-                        startMaxX = srX + dX2/2;
-                        startMinX = srX - dX2/2;
+                        startMaxX = srX + dX2 / 2;
+                        startMinX = srX - dX2 / 2;
 
                         maxX = startMaxX;
                         minX = startMinX;
 
-                    }else {
+                    } else {
                         // powiekszamy obszar osi x tak aby zachowac radio
                         double dY2 = radioX * height;
-                        double srY = startMinY + dY /2;
+                        double srY = startMinY + dY / 2;
 
-                        startMaxY = srY + dY2/2;
-                        startMinY = srY - dY2/2;
+                        startMaxY = srY + dY2 / 2;
+                        startMinY = srY - dY2 / 2;
 
                         maxY = startMaxY;
                         minY = startMinY;
@@ -604,20 +603,19 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
                     }
                 }
 
+            }
 
-			}
+            if ((oldWidth == 0) || (oldHeight == 0)) {
+                oldWidth = width;
+                oldHeight = height;
+            }
 
-			if (( oldWidth == 0) || (oldHeight == 0)) {
-				oldWidth = width;
-				oldHeight = height;
-			}
+            double distanceX = (maxX - minX) * (width / oldWidth);
+            double distanceY = (maxY - minY) * (height / oldHeight);
 
-			double distanceX = (maxX - minX) * (width/oldWidth);
-            double distanceY = (maxY - minY) * (height/oldHeight);
-
-            if ((distanceX == 0) || ( distanceY == 0)) {
-                distanceX = (startMaxX - startMinX) * (width/startWidth);
-                distanceY = (startMaxY - startMinY) * (height/startHeight);
+            if ((distanceX == 0) || (distanceY == 0)) {
+                distanceX = (startMaxX - startMinX) * (width / startWidth);
+                distanceY = (startMaxY - startMinY) * (height / startHeight);
             }
 
             double cursorX = minX + distanceX / 2.0;
@@ -629,14 +627,11 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
             maxY = cursorY + distanceY / 2.0;
 
             oldWidth = width;
-			oldHeight = height;
-
+            oldHeight = height;
 
             repaint();
 
-
-		}
-
+        }
 
     }
 
@@ -645,13 +640,11 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         public void mouseDragged(MouseEvent e) {
             Point dragEnd = e.getPoint();
 
-            double distance = xPixelToPosition(dragEnd.getX()) -
-                              xPixelToPosition(dragStart.getX());
+            double distance = xPixelToPosition(dragEnd.getX()) - xPixelToPosition(dragStart.getX());
             minX -= distance;
             maxX -= distance;
 
-            distance = yPixelToPosition(dragEnd.getY()) -
-                       yPixelToPosition(dragStart.getY());
+            distance = yPixelToPosition(dragEnd.getY()) - yPixelToPosition(dragStart.getY());
             minY -= distance;
             maxY -= distance;
 
@@ -660,67 +653,67 @@ public class EquationDisplay extends JComponent implements PropertyChangeListene
         }
     }
 
-	public double getMinX() {
-		return minX;
-	}
+    public double getMinX() {
+        return minX;
+    }
 
-	public void setMinX(double minX) {
-		this.minX = minX;
-	}
+    public void setMinX(double minX) {
+        this.minX = minX;
+    }
 
-	public double getMaxX() {
-		return maxX;
-	}
+    public double getMaxX() {
+        return maxX;
+    }
 
-	public void setMaxX(double maxX) {
-		this.maxX = maxX;
-	}
+    public void setMaxX(double maxX) {
+        this.maxX = maxX;
+    }
 
-	public double getMinY() {
-		return minY;
-	}
+    public double getMinY() {
+        return minY;
+    }
 
-	public void setMinY(double minY) {
-		this.minY = minY;
-	}
+    public void setMinY(double minY) {
+        this.minY = minY;
+    }
 
-	public double getMaxY() {
-		return maxY;
-	}
+    public double getMaxY() {
+        return maxY;
+    }
 
-	public void setMaxY(double maxY) {
-		this.maxY = maxY;
-	}
+    public void setMaxY(double maxY) {
+        this.maxY = maxY;
+    }
 
-	public double getMajorX() {
-		return majorX;
-	}
+    public double getMajorX() {
+        return majorX;
+    }
 
-	public void setMajorX(double majorX) {
-		this.majorX = majorX;
-	}
+    public void setMajorX(double majorX) {
+        this.majorX = majorX;
+    }
 
-	public int getMinorX() {
-		return minorX;
-	}
+    public int getMinorX() {
+        return minorX;
+    }
 
-	public void setMinorX(int minorX) {
-		this.minorX = minorX;
-	}
+    public void setMinorX(int minorX) {
+        this.minorX = minorX;
+    }
 
-	public double getMajorY() {
-		return majorY;
-	}
+    public double getMajorY() {
+        return majorY;
+    }
 
-	public void setMajorY(double majorY) {
-		this.majorY = majorY;
-	}
+    public void setMajorY(double majorY) {
+        this.majorY = majorY;
+    }
 
-	public int getMinorY() {
-		return minorY;
-	}
+    public int getMinorY() {
+        return minorY;
+    }
 
-	public void setMinorY(int minorY) {
-		this.minorY = minorY;
-	}
+    public void setMinorY(int minorY) {
+        this.minorY = minorY;
+    }
 }

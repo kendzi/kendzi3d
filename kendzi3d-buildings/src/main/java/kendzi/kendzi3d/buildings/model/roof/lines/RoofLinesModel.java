@@ -31,7 +31,8 @@ public class RoofLinesModel implements RoofModel {
     }
 
     /**
-     * @param heights the heights to set
+     * @param heights
+     *            the heights to set
      */
     public void setHeights(Map<Point2d, Double> heights) {
         this.heights = heights;
@@ -45,7 +46,8 @@ public class RoofLinesModel implements RoofModel {
     }
 
     /**
-     * @param innerSegments the innerSegments to set
+     * @param innerSegments
+     *            the innerSegments to set
      */
     public void setInnerSegments(List<LineSegment2d> innerSegments) {
         this.innerSegments = innerSegments;
@@ -60,7 +62,8 @@ public class RoofLinesModel implements RoofModel {
     }
 
     /**
-     * @param roofHeight the roofHeight to set
+     * @param roofHeight
+     *            the roofHeight to set
      */
     public void setRoofHeight(double roofHeight) {
         this.roofHeight = roofHeight;

@@ -10,6 +10,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+
 import javax.vecmath.Point3d;
 
 public class DrawUtil {
@@ -151,9 +152,9 @@ public class DrawUtil {
         // left, right, bottom, top, near, far
 
         /*
-         * In an orthographic projection, the y-axis runs from the bottom-left,
-         * upwards. This is reversed back to the more familiar top-left,
-         * downwards, by switching the the top and bottom values in glOrtho().
+         * In an orthographic projection, the y-axis runs from the bottom-left, upwards.
+         * This is reversed back to the more familiar top-left, downwards, by switching
+         * the the top and bottom values in glOrtho().
          */
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         // save model view settings

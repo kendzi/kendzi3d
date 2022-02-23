@@ -6,11 +6,12 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import com.jogamp.opengl.GL2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -31,7 +32,6 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;

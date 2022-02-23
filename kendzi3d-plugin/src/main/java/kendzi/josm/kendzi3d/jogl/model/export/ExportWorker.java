@@ -11,7 +11,6 @@ import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.ExportOutput;
 import kendzi.kendzi3d.collada.ColladaExport;
 import kendzi.kendzi3d.collada.TextExport;
-
 import org.apache.log4j.Logger;
 
 public class ExportWorker extends Thread {
@@ -54,15 +53,15 @@ public class ExportWorker extends Thread {
 
         TextExport exporter = new ColladaExport();
         // if (conf.type == "obj") {
-        //     saveToObjFile(ei);
+        // saveToObjFile(ei);
         // }
 
         File file = getFile(this.conf.getFilePattern(), 0, this.conf.getExportType());
 
         int c = 0;
-        int count =  this.items.size();
+        int count = this.items.size();
 
-        for(ExportItem ei : this.items) {
+        for (ExportItem ei : this.items) {
             try {
                 c++;
                 addToLog("Export model: " + c + " of " + count);
@@ -93,7 +92,7 @@ public class ExportWorker extends Thread {
                     log.error("cant load image for key: " + textureKey);
                     addToLog("cant load image for key: " + textureKey);
                 }
-//            textureFile.get
+                // textureFile.get
             } catch (Exception e) {
                 log.error(e);
                 addToLog(e.getMessage());
@@ -123,14 +122,13 @@ public class ExportWorker extends Thread {
             throw new RuntimeException("pattern can't be null");
         }
 
-
         if (filePattern.toUpperCase().endsWith(extension.toUpperCase())) {
             filePattern = filePattern.substring(0, filePattern.length() - extension.length());
         }
 
         filePattern = filePattern + "." + i + extension;
 
-        //filePattern = filePattern.replaceAll("\\.dxf^", "." + i + ".dxf");
+        // filePattern = filePattern.replaceAll("\\.dxf^", "." + i + ".dxf");
 
         return new File(filePattern);
     }
@@ -144,7 +142,7 @@ public class ExportWorker extends Thread {
         if (i < 0) {
             return "png";
         }
-        String ext = str.substring(str.lastIndexOf('.')+1, str.length()).toLowerCase();
+        String ext = str.substring(str.lastIndexOf('.') + 1, str.length()).toLowerCase();
         if ("png".equals(ext)) {
             return ext;
         } else if ("jpg".equals(ext)) {

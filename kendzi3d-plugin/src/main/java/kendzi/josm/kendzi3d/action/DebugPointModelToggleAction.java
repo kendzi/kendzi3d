@@ -8,15 +8,14 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import com.google.inject.Inject;
+
 import java.awt.event.ActionEvent;
 
+import kendzi.josm.kendzi3d.jogl.model.PointModel;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.spi.preferences.Config;
-
-import com.google.inject.Inject;
-
-import kendzi.josm.kendzi3d.jogl.model.PointModel;
 
 /**
  * Debug model library toggle action.

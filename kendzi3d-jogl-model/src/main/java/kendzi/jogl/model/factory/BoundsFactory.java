@@ -10,7 +10,6 @@
 package kendzi.jogl.model.factory;
 
 import javax.vecmath.Point3d;
-
 import kendzi.jogl.model.geometry.Bounds;
 
 public class BoundsFactory {
@@ -49,10 +48,8 @@ public class BoundsFactory {
 
     public Bounds toBounds() {
 
-        this.bounds.center = new Point3d(
-                (this.bounds.max.x + this.bounds.min.x) / 2d,
-                (this.bounds.max.y + this.bounds.min.y) / 2d,
-                (this.bounds.max.z + this.bounds.min.z) / 2d);
+        this.bounds.center = new Point3d((this.bounds.max.x + this.bounds.min.x) / 2d,
+                (this.bounds.max.y + this.bounds.min.y) / 2d, (this.bounds.max.z + this.bounds.min.z) / 2d);
 
         double dx = this.bounds.max.x - this.bounds.min.x;
         double dy = this.bounds.max.y - this.bounds.min.y;

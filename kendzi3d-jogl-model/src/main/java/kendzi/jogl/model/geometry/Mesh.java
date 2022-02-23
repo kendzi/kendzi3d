@@ -14,13 +14,13 @@ import javax.vecmath.Vector3d;
 
 public class Mesh {
 
-	public Face [] face;
+    public Face[] face;
 
-	public Point3d [] vertices;
+    public Point3d[] vertices;
 
-	public Vector3d [] normals;
+    public Vector3d[] normals;
 
-	public TextCoord[] texCoords;
+    public TextCoord[] texCoords;
 
     public String name;
 

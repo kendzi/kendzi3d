@@ -8,7 +8,6 @@ public class ExportUiAction extends ExportUi {
 
     ExportModelConf exportModelConf = null;
 
-
     @Override
     protected void onExportAction() {
         // 1. validate
@@ -35,7 +34,6 @@ public class ExportUiAction extends ExportUi {
         return c;
     }
 
-
     public boolean validateData() {
         boolean valid = true;
 
@@ -45,7 +43,6 @@ public class ExportUiAction extends ExportUi {
         return valid;
     }
 
-
     /**
      * @return the exportModelConf
      */
@@ -53,9 +50,9 @@ public class ExportUiAction extends ExportUi {
         return exportModelConf;
     }
 
-
     /**
-     * @param exportModelConf the exportModelConf to set
+     * @param exportModelConf
+     *            the exportModelConf to set
      */
     public void setExportModelConf(ExportModelConf exportModelConf) {
         this.exportModelConf = exportModelConf;

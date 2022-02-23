@@ -9,11 +9,10 @@
 
 package kendzi.jogl.texture;
 
-import java.awt.image.BufferedImage;
-
 import com.jogamp.opengl.GL;
-
 import com.jogamp.opengl.util.texture.Texture;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Textures cache.
@@ -30,8 +29,10 @@ public interface TextureCacheService {
     /**
      * Get texture from cache or load it to cache.
      * 
-     * @param pGl OpenGl context
-     * @param pFileName file name from
+     * @param pGl
+     *            OpenGl context
+     * @param pFileName
+     *            file name from
      * 
      * @return texture texture object
      */
@@ -40,7 +41,8 @@ public interface TextureCacheService {
     /**
      * Test if texture exist in cache.
      * 
-     * @param pFileName name of texture
+     * @param pFileName
+     *            name of texture
      * @return if texture exist
      */
     public boolean isTexture(String pFileName);
@@ -53,7 +55,8 @@ public interface TextureCacheService {
     /**
      * Get texture image from cache.
      *
-     * @param pFileName file name from
+     * @param pFileName
+     *            file name from
      * 
      * @return texture
      */

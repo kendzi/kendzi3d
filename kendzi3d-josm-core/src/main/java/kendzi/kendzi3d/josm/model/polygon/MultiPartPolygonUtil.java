@@ -21,15 +21,14 @@ public final class MultiPartPolygonUtil {
 
     /**
      * Try to connect all edges in the input set to closed polygons. Vertex and
-     * Edges are compared using <B>equal</B> method! Polygon are presented in
-     * form of ordered list of edges. Edges required reversion are marked with
-     * reverted flag. This method try to find all possible smallest polygons in
-     * input list.
+     * Edges are compared using <B>equal</B> method! Polygon are presented in form
+     * of ordered list of edges. Edges required reversion are marked with reverted
+     * flag. This method try to find all possible smallest polygons in input list.
      * 
      * @param in
      *            set of edges
-     * @return list of polygons, each polygon is build from list of edges. Each
-     *         edge can be marked as revesed if need.
+     * @return list of polygons, each polygon is build from list of edges. Each edge
+     *         can be marked as revesed if need.
      */
     public static <E, V> List<List<EdgeOut<E, V>>> connect(List<Edge<E, V>> in) {
 
@@ -122,7 +121,8 @@ public final class MultiPartPolygonUtil {
         return ret;
     }
 
-    private static <E, V> List<EdgeOut<E, V>> searchGraph(Edge<E, V> startEdge, Map<Vertex<V>, List<Connection<E, V>>> connections) {
+    private static <E, V> List<EdgeOut<E, V>> searchGraph(Edge<E, V> startEdge,
+            Map<Vertex<V>, List<Connection<E, V>>> connections) {
 
         List<ConnectionWithParent<E, V>> toProcess = new ArrayList<ConnectionWithParent<E, V>>();
         Set<Connection<E, V>> processed = new HashSet<Connection<E, V>>();
@@ -327,8 +327,8 @@ public final class MultiPartPolygonUtil {
          */
         @Override
         public String toString() {
-            return "Connection [begin=" + this.begin + ", end=" + this.end + ", reverted=" + this.reverted + ", edge="
-                    + this.edge + "]";
+            return "Connection [begin=" + this.begin + ", end=" + this.end + ", reverted=" + this.reverted + ", edge=" + this.edge
+                    + "]";
         }
 
         /**

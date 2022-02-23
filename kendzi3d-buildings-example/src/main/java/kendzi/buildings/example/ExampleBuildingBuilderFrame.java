@@ -1,14 +1,14 @@
 package kendzi.buildings.example;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.vecmath.Point2d;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
@@ -62,9 +62,9 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
         super.init(drawable);
 
         /*
-         * This is required only for textures file finding. Renderer use it to
-         * load files with textures. If textures are not used but only colored
-         * materials it is not required.
+         * This is required only for textures file finding. Renderer use it to load
+         * files with textures. If textures are not used but only colored materials it
+         * is not required.
          */
         ResourceService resourceService = new LocalResourceReciver();
 

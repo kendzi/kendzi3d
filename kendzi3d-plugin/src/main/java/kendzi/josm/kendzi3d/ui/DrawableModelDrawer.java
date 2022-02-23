@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.ui;
 
 import com.jogamp.opengl.GL2;
-
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.jogl.model.DrawableModel;

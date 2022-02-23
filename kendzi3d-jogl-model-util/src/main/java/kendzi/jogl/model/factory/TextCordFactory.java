@@ -21,31 +21,44 @@ public class TextCordFactory {
     /**
      * Texture projection on surface.
      *
-     * @param pPointToCalc to calculates texture coordinates
-     * @param pPlaneNormal normal vector of surface plane
-     * @param pLineVector vector laying on the plane (texture is parallel to this vector)
-     * @param pStartPoint point when texture starts, laying on surface
-     * @param pTexture texture
+     * @param pPointToCalc
+     *            to calculates texture coordinates
+     * @param pPlaneNormal
+     *            normal vector of surface plane
+     * @param pLineVector
+     *            vector laying on the plane (texture is parallel to this vector)
+     * @param pStartPoint
+     *            point when texture starts, laying on surface
+     * @param pTexture
+     *            texture
      * @return uv cordinates for texture
      */
-    public static TextCoord calcFlatSurfaceUV(Point3d pPointToCalc, Vector3d pPlaneNormal, Vector3d pLineVector, Point3d pStartPoint,
-            TextureData pTexture) {
+    public static TextCoord calcFlatSurfaceUV(Point3d pPointToCalc, Vector3d pPlaneNormal, Vector3d pLineVector,
+            Point3d pStartPoint, TextureData pTexture) {
         return calcFlatSurfaceUV(pPointToCalc, pPlaneNormal, pLineVector, pStartPoint, pTexture, 0, 0);
     }
+
     /**
      * Texture projection on surface.
      *
-     * @param pPointToCalc to calculates texture coordinates
-     * @param pPlaneNormal normal vector of surface plane
-     * @param pLineVector vector laying on the plane (texture is parallel to this vector)
-     * @param pStartPoint point when texture starts, laying on surface
-     * @param pTexture texture
-     * @param textureOffsetU offset for texture U
-     * @param textureOffsetV offset for texture V
+     * @param pPointToCalc
+     *            to calculates texture coordinates
+     * @param pPlaneNormal
+     *            normal vector of surface plane
+     * @param pLineVector
+     *            vector laying on the plane (texture is parallel to this vector)
+     * @param pStartPoint
+     *            point when texture starts, laying on surface
+     * @param pTexture
+     *            texture
+     * @param textureOffsetU
+     *            offset for texture U
+     * @param textureOffsetV
+     *            offset for texture V
      * @return uv cordinates for texture
      */
-    public static TextCoord calcFlatSurfaceUV(Point3d pPointToCalc, Vector3d pPlaneNormal, Vector3d pLineVector, Point3d pStartPoint,
-            TextureData pTexture, double textureOffsetU, double textureOffsetV) {
+    public static TextCoord calcFlatSurfaceUV(Point3d pPointToCalc, Vector3d pPlaneNormal, Vector3d pLineVector,
+            Point3d pStartPoint, TextureData pTexture, double textureOffsetU, double textureOffsetV) {
 
         Vector3d p = new Vector3d(pPointToCalc);
         Vector3d base = new Vector3d(pStartPoint);
@@ -64,7 +77,7 @@ public class TextCordFactory {
         Vector3d cross = new Vector3d();
 
         cross.cross(pPlaneNormal, pLineVector);
-        //        cross.cross(pLineVector, pPlaneNormal);
+        // cross.cross(pLineVector, pPlaneNormal);
 
         Vector3d orthogonalProjectionV = Algebra.orthogonalProjection(cross, p);
 

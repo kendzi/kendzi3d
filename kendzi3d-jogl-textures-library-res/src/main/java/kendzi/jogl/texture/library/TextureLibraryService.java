@@ -27,7 +27,6 @@ import javax.xml.bind.Unmarshaller;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.UrlUtil;
-
 import org.apache.log4j.Logger;
 import org.kendzi3d.ObjectFactory;
 import org.kendzi3d.TextureLibrary;
@@ -220,8 +219,8 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     @Override
-    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException,
-            MalformedURLException {
+    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary)
+            throws FileNotFoundException, JAXBException, MalformedURLException {
 
         if (pUrlTextureLibrary == null) {
             return;

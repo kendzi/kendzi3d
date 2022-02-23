@@ -8,7 +8,6 @@ import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.NodeModelAddFrame;
 import kendzi.util.StringUtil;
-
 import org.apache.log4j.Logger;
 
 public class NodeModelAddFrameAction extends NodeModelAddFrame {
@@ -21,7 +20,6 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
      * Point model service.
      */
     private ModelsLibraryService modelsLibraryService;
-
 
     /**
      * Launch the application.
@@ -49,13 +47,12 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
         if (validateData()) {
 
             NodeModel pointModel = save();
-            //            modelsLibraryService.saveOrUpdate(fileKey, pointModel);
+            // modelsLibraryService.saveOrUpdate(fileKey, pointModel);
             //
             dispose();
         }
 
     }
-
 
     public boolean validateData() {
         boolean valid = true;
@@ -83,7 +80,7 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
         }
     }
 
-    void load(NodeModel pNodeModel ) {
+    void load(NodeModel pNodeModel) {
         NodeModel pm = pNodeModel;
 
         txtId.setText("" + pm.getId());
@@ -96,7 +93,7 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
     }
 
     String formatNumber(Number num) {
-        if (num  == null) {
+        if (num == null) {
             return "";
         }
         return "" + num;
@@ -118,9 +115,9 @@ public class NodeModelAddFrameAction extends NodeModelAddFrame {
         return pm;
     }
 
-
     /**
-     * @param modelsLibraryService the modelsLibraryService to set
+     * @param modelsLibraryService
+     *            the modelsLibraryService to set
      */
     public void setModelsLibraryService(ModelsLibraryService modelsLibraryService) {
         this.modelsLibraryService = modelsLibraryService;

@@ -1,5 +1,8 @@
 package kendzi.kendzi3d.editor.example;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.camera.SimpleMoveAnimator;
@@ -16,10 +19,6 @@ import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.BaseEditorGLEventListener;
 import kendzi.kendzi3d.resource.inter.LocalResourceReciver;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 
 public class ExampleModule extends AbstractModule {
 

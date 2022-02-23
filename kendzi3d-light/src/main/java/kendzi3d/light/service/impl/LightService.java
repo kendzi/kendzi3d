@@ -13,7 +13,6 @@ import kendzi3d.light.dao.LightDao;
 import kendzi3d.light.dto.LightConfiguration;
 import kendzi3d.light.service.LightRenderService;
 import kendzi3d.light.service.LightStorageService;
-
 import org.ejml.simple.SimpleMatrix;
 
 /**

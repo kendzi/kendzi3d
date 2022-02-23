@@ -2,9 +2,9 @@ package kendzi.jogl.util;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 import kendzi.math.geometry.point.Vector3dUtil;
 
 /**

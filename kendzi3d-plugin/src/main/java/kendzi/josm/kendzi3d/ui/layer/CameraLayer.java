@@ -16,6 +16,9 @@ import java.util.TimerTask;
 import javax.swing.Action;
 import javax.swing.Icon;
 
+import kendzi.jogl.camera.Camera;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -30,10 +33,6 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import kendzi.jogl.camera.Camera;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 
 /**
  * Layer showing location of camera.
@@ -277,7 +276,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
     }
 
     public void addCameraLayer() {
-        if (MainApplication.getMap() == null ||  MainApplication.getMap().mapView == null) {
+        if (MainApplication.getMap() == null || MainApplication.getMap().mapView == null) {
             return;
         }
         if (isOsmDataLayer()) {

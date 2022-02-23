@@ -45,8 +45,8 @@ public class RoofType4v2 extends RectangleRoofTypeBuilder {
         Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecHeight() / 2,
                 conf.getRecHeight() / 2d * 1d / 3d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                h2, l2, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l2,
+                conf.getRoofTextureData());
 
     }
 
@@ -123,24 +123,24 @@ public class RoofType4v2 extends RectangleRoofTypeBuilder {
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
         MultiPolygonList2d borderMultiPolygon = new MultiPolygonList2d(borderPolygon);
 
-        MultiPolygonList2d topMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftTop,
-                leftMiddleTopPoint, rightMiddleTopPoint, rightTop, leftTop);
+        MultiPolygonList2d topMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftTop, leftMiddleTopPoint,
+                rightMiddleTopPoint, rightTop, leftTop);
         MultiPolygonList2d topMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftMiddleTopPoint,
                 leftCenterPoint, rightCenterPoint, rightMiddleTopPoint, leftMiddleTopPoint);
-        MultiPolygonList2d bottomMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon,
-                leftMiddleBottomPoint, rightMiddleBottomPoint, rightCenterPoint, leftCenterPoint, leftMiddleBottomPoint);
+        MultiPolygonList2d bottomMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftMiddleBottomPoint,
+                rightMiddleBottomPoint, rightCenterPoint, leftCenterPoint, leftMiddleBottomPoint);
         MultiPolygonList2d bottomMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom, rightBottom,
                 rightMiddleBottomPoint, leftMiddleBottomPoint, leftBottom);
 
-        MultiPolygonList2d leftMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom,
-                leftMiddleBottomPoint, leftMiddleTopPoint, leftTop, leftBottom);
-        MultiPolygonList2d leftMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon,
-                leftMiddleBottomPoint, leftCenterPoint, leftMiddleTopPoint, leftMiddleBottomPoint);
+        MultiPolygonList2d leftMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom, leftMiddleBottomPoint,
+                leftMiddleTopPoint, leftTop, leftBottom);
+        MultiPolygonList2d leftMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftMiddleBottomPoint,
+                leftCenterPoint, leftMiddleTopPoint, leftMiddleBottomPoint);
 
         MultiPolygonList2d rightMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightBottom, rightTop,
                 rightMiddleTopPoint, rightMiddleBottomPoint, rightBottom);
-        MultiPolygonList2d rightMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon,
-                rightMiddleBottomPoint, rightMiddleTopPoint, rightCenterPoint, rightMiddleBottomPoint);
+        MultiPolygonList2d rightMiddleMP = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightMiddleBottomPoint,
+                rightMiddleTopPoint, rightCenterPoint, rightMiddleBottomPoint);
 
         Point3d planeLeftBottomPoint = new Point3d(leftMiddleBottomPoint.x, h2, -leftMiddleBottomPoint.y);
 
@@ -170,23 +170,20 @@ public class RoofType4v2 extends RectangleRoofTypeBuilder {
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMiddleMP, planeMiddleTop, roofTopLineVector, roofTexture);
-        MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMiddleMP, planeMiddleBottom, roofBottomLineVector,
-                roofTexture);
+        MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMiddleMP, planeMiddleBottom, roofBottomLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, bottomMP, planeBottom, roofBottomLineVector, roofTexture);
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, leftMP, planeLeft, roofLeftLineVector, roofTexture);
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, leftMiddleMP, planeMiddleLeft, roofLeftLineVector, roofTexture);
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, rightMP, planeRight, roofRightLineVector, roofTexture);
-        MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, rightMiddleMP, planeMiddleRight, roofRightLineVector,
-                roofTexture);
+        MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, rightMiddleMP, planeMiddleRight, roofRightLineVector, roofTexture);
 
         HeightCalculator hc = new MultiSplitHeightCalculator() {
             @Override
             public double calcHeight(Point2d point) {
-                return RoofType4v2.calcHeight(point, mLine, bLine, tLine, lLine, rLine, lbLine, ltLine, rtLine, rbLine,
-                        planeTop, planeMiddleTop, planeMiddleBottom, planeBottom, planeLeft, planeMiddleLeft,
-                        planeRight, planeMiddleRight);
+                return RoofType4v2.calcHeight(point, mLine, bLine, tLine, lLine, rLine, lbLine, ltLine, rtLine, rbLine, planeTop,
+                        planeMiddleTop, planeMiddleBottom, planeBottom, planeLeft, planeMiddleLeft, planeRight, planeMiddleRight);
             }
 
             @Override
@@ -200,8 +197,8 @@ public class RoofType4v2 extends RectangleRoofTypeBuilder {
         rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
-        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(rectangleContur,
-                new PolygonPlane(bottomMP, planeBottom), null, new PolygonPlane(topMP, planeTop), null);
+        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(rectangleContur, new PolygonPlane(bottomMP, planeBottom), null,
+                new PolygonPlane(topMP, planeTop), null);
 
         rto.setRoofHooksSpaces(rhs);
 
@@ -236,9 +233,8 @@ public class RoofType4v2 extends RectangleRoofTypeBuilder {
      */
     private static double calcHeight(Point2d point, LinePoints2d mLine, LinePoints2d bLine, LinePoints2d tLine,
             LinePoints2d lLine, LinePoints2d rLine, LinePoints2d lbLine, LinePoints2d ltLine, LinePoints2d rtLine,
-            LinePoints2d rbLine, Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom,
-            Plane3d planeBottom, Plane3d planeLeft, Plane3d planeMiddleLeft, Plane3d planeRight,
-            Plane3d planeMiddleRight) {
+            LinePoints2d rbLine, Plane3d planeTop, Plane3d planeMiddleTop, Plane3d planeMiddleBottom, Plane3d planeBottom,
+            Plane3d planeLeft, Plane3d planeMiddleLeft, Plane3d planeRight, Plane3d planeMiddleRight) {
 
         double x = point.x;
         double z = -point.y;

@@ -1,8 +1,8 @@
 package kendzi.jogl.texture.builder;
 
-import java.awt.image.BufferedImage;
-
 import com.jogamp.opengl.util.texture.Texture;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Texture builder.
@@ -14,14 +14,16 @@ public interface TextureBuilder {
 
     /**
      * Builder prefix.
+     * 
      * @return prefix
      */
     String getBuilderPrefix();
 
-
     /**
      * Generate texture.
-     * @param pKey key
+     * 
+     * @param pKey
+     *            key
      * @return build texture
      * @throws Exception
      */
@@ -29,10 +31,11 @@ public interface TextureBuilder {
 
     /**
      * Image for model export.
-     * @param pKey key
+     * 
+     * @param pKey
+     *            key
      * @return build image
      */
     BufferedImage buildImage(String pKey);
-
 
 }

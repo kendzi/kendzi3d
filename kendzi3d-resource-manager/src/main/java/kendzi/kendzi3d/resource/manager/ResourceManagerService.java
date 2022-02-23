@@ -4,15 +4,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.inject.Inject;
-
 import kendzi.kendzi3d.resource.inter.ResourceService;
 
 public class ResourceManagerService implements ResourceService {
 
     @Inject
     PluginResourceService pluginResourceService;
-
-
 
     @Override
     public URL receivePluginDirUrl(String pFileName) {
@@ -31,10 +28,11 @@ public class ResourceManagerService implements ResourceService {
 
             if (resourceName.startsWith(PLUGIN_FILE_PREFIX)) {
                 url = pluginResourceService.resourceToUrl(resourceName.substring(PLUGIN_FILE_PREFIX.length()));
-            } else if (resourceName.startsWith("file:") || resourceName.startsWith("http://") || resourceName.startsWith("https://")) {
+            } else if (resourceName.startsWith("file:") || resourceName.startsWith("http://")
+                    || resourceName.startsWith("https://")) {
                 url = new URL(resourceName);
             } else {
-                //url = new File(resourceName).toURI().toURL();
+                // url = new File(resourceName).toURI().toURL();
                 url = pluginResourceService.resourceToUrl(resourceName);
             }
             return url;

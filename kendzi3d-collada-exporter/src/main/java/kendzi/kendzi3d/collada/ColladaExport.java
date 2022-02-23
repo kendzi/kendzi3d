@@ -26,7 +26,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.util.index.SimplifyIndexArray;
-
 import org.collada._2005._11.colladaschema.Accessor;
 import org.collada._2005._11.colladaschema.Asset;
 import org.collada._2005._11.colladaschema.Asset.Contributor;
@@ -73,7 +72,6 @@ public class ColladaExport extends TextExport {
     private Map<Material, String> matCatche = new HashMap<Material, String>();
     private Map<String, String> textureKeys = new HashMap<String, String>();
 
-
     private COLLADA c;
 
     private int id = 0;
@@ -81,8 +79,6 @@ public class ColladaExport extends TextExport {
     public ColladaExport() {
         init();
     }
-
-
 
     private void init() {
         this.c = createCollada();
@@ -92,7 +88,6 @@ public class ColladaExport extends TextExport {
     public Map<String, String> getTextureKeys() {
         return this.textureKeys;
     }
-
 
     @Override
     public void addModel(Model m) throws Exception {
@@ -106,12 +101,11 @@ public class ColladaExport extends TextExport {
 
         vs.getNodes().add(node);
 
-
         for (Mesh mesh : m.mesh) {
 
             Map<Material, String> mats = new HashMap<Material, String>();
 
-            //        String materialId = null;
+            // String materialId = null;
             for (Material mat : m.materials) {
                 String materialId = convert(this.c, mat);
                 mats.put(mat, materialId);
@@ -122,13 +116,10 @@ public class ColladaExport extends TextExport {
                 geometry.setId(getId("geom"));
                 geometry.setName(name(mesh.name));
 
-
-
                 Face face = mesh.face[f];
                 Material faceMaterial = m.getMaterial(mesh.materialID);
 
-                addFace(m, node, mesh, geometry, mats,
-                        face, faceMaterial);
+                addFace(m, node, mesh, geometry, mats, face, faceMaterial);
 
                 lg.getGeometries().add(geometry);
             }
@@ -155,8 +146,6 @@ public class ColladaExport extends TextExport {
         return name;
     }
 
-
-
     /**
      * @param m
      * @param node
@@ -169,20 +158,15 @@ public class ColladaExport extends TextExport {
      * @param normalsSource
      * @param texSource
      */
-    public void addFace(Model m, Node node, Mesh mesh, Geometry geometry,
-            Map<Material, String> mats,
-            Face face ,
-            Material faceMaterial
-            ) {
+    public void addFace(Model m, Node node, Mesh mesh, Geometry geometry, Map<Material, String> mats, Face face,
+            Material faceMaterial) {
 
-        SimplifyIndexArray<Point3d> simpVertex =
-                SimplifyIndexArray.simple(mesh.vertices, face.vertIndex, Point3d.class);
+        SimplifyIndexArray<Point3d> simpVertex = SimplifyIndexArray.simple(mesh.vertices, face.vertIndex, Point3d.class);
 
-        SimplifyIndexArray<Vector3d> simpNormal =
-                SimplifyIndexArray.simple(mesh.normals, face.normalIndex, Vector3d.class);
+        SimplifyIndexArray<Vector3d> simpNormal = SimplifyIndexArray.simple(mesh.normals, face.normalIndex, Vector3d.class);
 
-        SimplifyIndexArray<TextCoord> simpTex0 =
-                SimplifyIndexArray.simple(mesh.texCoords, face.coordIndexLayers[0], TextCoord.class);
+        SimplifyIndexArray<TextCoord> simpTex0 = SimplifyIndexArray.simple(mesh.texCoords, face.coordIndexLayers[0],
+                TextCoord.class);
 
         Source vertexSource = createVertexSource(simpVertex.getSdata());
         Source normalsSource = createNormalSource(simpNormal.getSdata());
@@ -198,14 +182,13 @@ public class ColladaExport extends TextExport {
         cmesh.getSources().add(normalsSource);
         cmesh.getSources().add(tex0Source);
 
-
         int numOfLayers = 0;
         if (face.coordIndexLayers != null) {
             numOfLayers = face.coordIndexLayers.length;
         }
         numOfLayers = 1;
 
-        String [] texSourcesIds = new String[numOfLayers];
+        String[] texSourcesIds = new String[numOfLayers];
         texSourcesIds[0] = tex0Source.getId();
 
         @SuppressWarnings("unchecked")
@@ -214,14 +197,14 @@ public class ColladaExport extends TextExport {
 
         for (int l = 1; l < numOfLayers; l++) {
 
-            SimplifyIndexArray<TextCoord> simpTexN =
-                    SimplifyIndexArray.simple(mesh.texCoords, face.coordIndexLayers[l], TextCoord.class);
+            SimplifyIndexArray<TextCoord> simpTexN = SimplifyIndexArray.simple(mesh.texCoords, face.coordIndexLayers[l],
+                    TextCoord.class);
 
             Source layerUVSource = createTexSource(simpTexN.getSdata());
             layerUVSource.setId(layerUVSource.getId() + "_" + l);
             cmesh.getSources().add(layerUVSource);
 
-            texSourcesIds[l] =layerUVSource.getId();
+            texSourcesIds[l] = layerUVSource.getId();
             texSimpleIndex[l] = simpTexN;
         }
 
@@ -250,12 +233,10 @@ public class ColladaExport extends TextExport {
         inN.setOffset(number(1));
         tri.getInputs().add(inN);
 
-
-
         for (int l = 0; l < numOfLayers; l++) {
             InputLocalOffset inC = new InputLocalOffset();
             inC.setSemantic("TEXCOORD");
-            inC.setSource("#" + texSourcesIds[l]);//texSource.getId());
+            inC.setSource("#" + texSourcesIds[l]);// texSource.getId());
             inC.setOffset(number(2 + l));
             inC.setSet(number(l));
             tri.getInputs().add(inC);
@@ -285,7 +266,7 @@ public class ColladaExport extends TextExport {
         tri.setMaterial(materialSymbolId);
         cmesh.getLinesAndLinestripsAndPolygons().add(tri);
 
-        //linesAndLinestripsAndPolygons
+        // linesAndLinestripsAndPolygons
     }
 
     /**
@@ -294,8 +275,7 @@ public class ColladaExport extends TextExport {
      * @param materialId
      * @return
      */
-    public String createInstanceGeometry(Node node, Geometry geometry,
-            String materialId) {
+    public String createInstanceGeometry(Node node, Geometry geometry, String materialId) {
         String materialSymbolId;
         // instance_geometry
         InstanceGeometry ig = new InstanceGeometry();
@@ -326,8 +306,6 @@ public class ColladaExport extends TextExport {
     public void marsall(String fileName) throws Throwable {
         marshaller(this.c, fileName);
     }
-
-
 
     private Scene getOrCreateScene() {
         if (c.getScene() == null) {
@@ -420,7 +398,6 @@ public class ColladaExport extends TextExport {
         return le;
     }
 
-
     private String convert(COLLADA c, Material mat) {
 
         String matId = this.matCatche.get(mat);
@@ -446,7 +423,7 @@ public class ColladaExport extends TextExport {
         Technique technique = new Technique();
         technique.setSid("common");
 
-        Phong phong  = new Phong();
+        Phong phong = new Phong();
 
         if (textureSampler != null) {
             phong.setDiffuse(createTexture(textureSampler, "texcord"));
@@ -492,8 +469,6 @@ public class ColladaExport extends TextExport {
         return textureName;
     }
 
-
-
     private LibraryMaterials getOrCreateLibraryMaterials() {
         for (Object object : this.c.getLibraryAnimationsAndLibraryAnimationClipsAndLibraryCameras()) {
             if (object instanceof LibraryMaterials) {
@@ -532,12 +507,10 @@ public class ColladaExport extends TextExport {
 
     }
 
-    private static String createTextureSampler(ProfileCOMMON pc,
-            String surfaceId) {
+    private static String createTextureSampler(ProfileCOMMON pc, String surfaceId) {
         CommonNewparamType newparam = new CommonNewparamType();
         String samplerId = surfaceId + "-sampler";
         newparam.setSid(samplerId);
-
 
         FxSampler2DCommon sampler = new FxSampler2DCommon();
         sampler.setSource(surfaceId);
@@ -548,8 +521,7 @@ public class ColladaExport extends TextExport {
 
     }
 
-    private static String createTextureSurface(ProfileCOMMON pc,
-            Image textureId) {
+    private static String createTextureSurface(ProfileCOMMON pc, Image textureId) {
 
         CommonNewparamType newparam = new CommonNewparamType();
         String surfaceId = textureId.getId() + "-surface";
@@ -568,7 +540,6 @@ public class ColladaExport extends TextExport {
         return surfaceId;
     }
 
-
     private static String getTextureFileName(String textureName) {
         // TODO Auto-generated method stub
         return textureName;
@@ -577,7 +548,7 @@ public class ColladaExport extends TextExport {
     private static CommonColorOrTextureType createColor(Color color) {
         CommonColorOrTextureType colorType = new CommonColorOrTextureType();
         org.collada._2005._11.colladaschema.CommonColorOrTextureType.Color c = new org.collada._2005._11.colladaschema.CommonColorOrTextureType.Color();
-        float [] f = new float[4];
+        float[] f = new float[4];
         color.getComponents(f);
 
         c.getValues().add((double) f[0]);
@@ -613,18 +584,18 @@ public class ColladaExport extends TextExport {
         return le;
     }
 
-    private static List<BigInteger>  convertToTriangles(int[] vertIndex, int type) {
+    private static List<BigInteger> convertToTriangles(int[] vertIndex, int type) {
         ArrayList<BigInteger> ret = new ArrayList<BigInteger>();
 
         if (type == FaceType.QUADS.getType()) {
 
-            for (int offset =0; offset < vertIndex.length / 4; offset++ ) {
+            for (int offset = 0; offset < vertIndex.length / 4; offset++) {
                 int i = offset * 4;
 
-                int i0 =  vertIndex[i];
-                int i1 =  vertIndex[i + 1];
-                int i2 =  vertIndex[i + 2];
-                int i3 =  vertIndex[i + 3];
+                int i0 = vertIndex[i];
+                int i1 = vertIndex[i + 1];
+                int i2 = vertIndex[i + 2];
+                int i3 = vertIndex[i + 3];
 
                 ret.add(number(i0));
                 ret.add(number(i1));
@@ -634,24 +605,24 @@ public class ColladaExport extends TextExport {
                 ret.add(number(i2));
                 ret.add(number(i3));
             }
-            //            for (int i : vertIndex) {
-            //                ret.add(number(i));
-            //            }
+            // for (int i : vertIndex) {
+            // ret.add(number(i));
+            // }
         } else if (type == FaceType.TRIANGLES.getType()) {
 
-            for (int offset = 0; offset < vertIndex.length; offset++ ) {
+            for (int offset = 0; offset < vertIndex.length; offset++) {
 
-                int i0 =  vertIndex[offset];
+                int i0 = vertIndex[offset];
 
                 ret.add(number(i0));
             }
         } else if (type == FaceType.TRIANGLE_FAN.getType()) {
 
-            for (int offset = 2; offset < vertIndex.length; offset++ ) {
+            for (int offset = 2; offset < vertIndex.length; offset++) {
 
-                int i0 =  vertIndex[0];
-                int i1 =  vertIndex[offset - 1];
-                int i2 =  vertIndex[offset];
+                int i0 = vertIndex[0];
+                int i1 = vertIndex[offset - 1];
+                int i2 = vertIndex[offset];
 
                 ret.add(number(i0));
                 ret.add(number(i1));
@@ -659,13 +630,13 @@ public class ColladaExport extends TextExport {
             }
         } else if (type == FaceType.QUAD_STRIP.getType()) {
 
-            for (int offset = 1; offset < vertIndex.length / 2; offset++ ) {
+            for (int offset = 1; offset < vertIndex.length / 2; offset++) {
                 int i = offset * 2;
 
-                int i0 =  vertIndex[i - 2];
-                int i1 =  vertIndex[i - 1];
-                int i2 =  vertIndex[i];
-                int i3 =  vertIndex[i + 1];
+                int i0 = vertIndex[i - 2];
+                int i1 = vertIndex[i - 1];
+                int i2 = vertIndex[i];
+                int i3 = vertIndex[i + 1];
 
                 ret.add(number(i0));
                 ret.add(number(i1));
@@ -676,7 +647,7 @@ public class ColladaExport extends TextExport {
                 ret.add(number(i3));
             }
 
-            //throw new RuntimeException("Face type : " + type + " not supported");
+            // throw new RuntimeException("Face type : " + type + " not supported");
         } else {
             throw new RuntimeException("Face type : " + type + " not supported");
         }
@@ -688,9 +659,8 @@ public class ColladaExport extends TextExport {
     public void save(String fileName) throws Throwable {
         marsall(fileName);
         // String xml = marsall(fileName);
-        //saveFile(fileName, xml);
+        // saveFile(fileName, xml);
     }
-
 
     static BigInteger number(int count) {
         return new BigInteger("" + count);
@@ -701,11 +671,11 @@ public class ColladaExport extends TextExport {
      * @param face
      * @return
      */
-    public Source createVertexSource(Point3d [] vertices/*, Face face*/) {
+    public Source createVertexSource(Point3d[] vertices/* , Face face */) {
         FloatArray vertexArray = new FloatArray();
         String vertexArrayId = getId("v");
         vertexArray.setId(vertexArrayId);
-        vertexArray.setCount(new BigInteger("" + vertices.length * 3));//face.vertIndex.length * 3));
+        vertexArray.setCount(new BigInteger("" + vertices.length * 3));// face.vertIndex.length * 3));
 
         for (int vi = 0; vi < vertices.length; vi++) {
             Point3d point = vertices[vi];
@@ -720,7 +690,7 @@ public class ColladaExport extends TextExport {
 
         TechniqueCommon tc = new TechniqueCommon();
         Accessor acc = new Accessor();
-        acc.setSource("#"+vertexArrayId);
+        acc.setSource("#" + vertexArrayId);
         acc.setCount(new BigInteger("" + vertices.length));
         acc.setStride(new BigInteger("3"));
 
@@ -750,7 +720,7 @@ public class ColladaExport extends TextExport {
      * @param face
      * @return
      */
-    public Source createNormalSource(Vector3d [] normals/*, Face face*/) {
+    public Source createNormalSource(Vector3d[] normals/* , Face face */) {
 
         FloatArray normalsArray = new FloatArray();
         String normalsArrayId = getId("n");
@@ -770,7 +740,7 @@ public class ColladaExport extends TextExport {
 
         TechniqueCommon tc = new TechniqueCommon();
         Accessor acc = new Accessor();
-        acc.setSource("#"+normalsArrayId);
+        acc.setSource("#" + normalsArrayId);
         acc.setCount(number(normals.length));
         acc.setStride(number(3));
 
@@ -794,12 +764,13 @@ public class ColladaExport extends TextExport {
         vertexSource.setTechniqueCommon(tc);
         return vertexSource;
     }
+
     /**
      * @param mesh
      * @param face
      * @return
      */
-    public Source createTexSource(TextCoord[] texCoords/*, Face face*/) {
+    public Source createTexSource(TextCoord[] texCoords/* , Face face */) {
 
         FloatArray texArray = new FloatArray();
         String normalsArrayId = getId("n");
@@ -818,7 +789,7 @@ public class ColladaExport extends TextExport {
 
         TechniqueCommon tc = new TechniqueCommon();
         Accessor acc = new Accessor();
-        acc.setSource("#"+normalsArrayId);
+        acc.setSource("#" + normalsArrayId);
         acc.setCount(number(texCoords.length));
         acc.setStride(number(2));
 
@@ -837,51 +808,52 @@ public class ColladaExport extends TextExport {
         return vertexSource;
     }
 
-
     protected String getId(String prefix) {
         this.id++;
-        return "ID_" + prefix + "_"+ this.id;
+        return "ID_" + prefix + "_" + this.id;
     }
-
-
 
     public static void marshaller(COLLADA c, String fileName) throws JAXBException {
         // =============================================================================================================
         // Setup JAXB
         // =============================================================================================================
 
-        // Create a JAXB context passing in the class of the object we want to marshal/unmarshal
+        // Create a JAXB context passing in the class of the object we want to
+        // marshal/unmarshal
         final JAXBContext context = JAXBContext.newInstance(COLLADA.class);
 
         // =============================================================================================================
         // Marshalling OBJECT to XML
         // =============================================================================================================
 
-        // Create the marshaller, this is the nifty little thing that will actually transform the object into XML
+        // Create the marshaller, this is the nifty little thing that will actually
+        // transform the object into XML
         final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         // Create a stringWriter to hold the XML
         final StringWriter stringWriter = new StringWriter();
 
-
-
         // Marshal the javaObject and write the XML to the stringWriter
-        marshaller.marshal(c, new File(fileName));//stringWriter);
+        marshaller.marshal(c, new File(fileName));// stringWriter);
 
         // Print out the contents of the stringWriter
-        return ;
-        //        // =============================================================================================================
-        //        // Unmarshalling XML to OBJECT
-        //        // =============================================================================================================
+        return;
+        // //
+        // =============================================================================================================
+        // // Unmarshalling XML to OBJECT
+        // //
+        // =============================================================================================================
         //
-        //        // Create the unmarshaller, this is the nifty little thing that will actually transform the XML back into an object
-        //        final Unmarshaller unmarshaller = context.createUnmarshaller();
+        // // Create the unmarshaller, this is the nifty little thing that will actually
+        // transform the XML back into an object
+        // final Unmarshaller unmarshaller = context.createUnmarshaller();
         //
-        //        // Unmarshal the XML in the stringWriter back into an object
-        //        final JavaObject javaObject2 = (JavaObject) unmarshaller.unmarshal(new StringReader(stringWriter.toString()));
+        // // Unmarshal the XML in the stringWriter back into an object
+        // final JavaObject javaObject2 = (JavaObject) unmarshaller.unmarshal(new
+        // StringReader(stringWriter.toString()));
         //
-        //        // Print out the contents of the JavaObject we just unmarshalled from the XML
-        //        System.out.println(javaObject2.toString());
+        // // Print out the contents of the JavaObject we just unmarshalled from the XML
+        // System.out.println(javaObject2.toString());
     }
 
 }

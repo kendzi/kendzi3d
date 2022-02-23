@@ -7,8 +7,11 @@
  *
  */
 
-
 package kendzi.josm.kendzi3d.action;
+
+import static org.openstreetmap.josm.tools.I18n.*;
+
+import com.google.inject.Inject;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -25,13 +28,8 @@ import javax.xml.bind.JAXBException;
 
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.jogl.texture.library.UrlTextureLibrary;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
-
-import com.google.inject.Inject;
-
-import static org.openstreetmap.josm.tools.I18n.*;
 
 /**
  * Texture filter toggle action.
@@ -54,22 +52,18 @@ public class LoadTextureLibraryAction extends JosmAction {
      */
     private TextureLibraryStorageService textureLibraryStorageService;
 
-
     final JFileChooser fc = new JFileChooser();
 
     /**
      * Constructor of wiki texture loader toggle action.
-     * @param pWikiTextureLoaderService wiki texture loader service
+     * 
+     * @param pWikiTextureLoaderService
+     *            wiki texture loader service
      */
     @Inject
     public LoadTextureLibraryAction(TextureLibraryStorageService TextureLibraryStorageService) {
-        super(
-                tr("Load texture library from file"),
-                "1323558253_wikipedia-icon_24",
-                tr("Load texture library from file"),
-                null,
-                false
-        );
+        super(tr("Load texture library from file"), "1323558253_wikipedia-icon_24", tr("Load texture library from file"), null,
+                false);
 
         this.textureLibraryStorageService = TextureLibraryStorageService;
     }
@@ -85,7 +79,7 @@ public class LoadTextureLibraryAction extends JosmAction {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = this.fc.getSelectedFile();
-                //This is where a real application would open the file.
+                // This is where a real application would open the file.
                 log.info("Opening: " + file.getName());
 
                 UrlTextureLibrary urlTextureLibrary = new UrlTextureLibrary();
@@ -95,15 +89,14 @@ public class LoadTextureLibraryAction extends JosmAction {
 
                 urlTextureLibrary.setOverwrite(overwrite);
 
-
                 this.textureLibraryStorageService.loadUserFile(urlTextureLibrary);
             } else {
-                log.info("Open command cancelled by user." );
+                log.info("Open command cancelled by user.");
             }
 
-////            LoadRet load = this.textureLibraryStorageService.load();
-//            errors = load.getErrors();
-//            timestamp = load.getTimestamp();
+            //// LoadRet load = this.textureLibraryStorageService.load();
+            // errors = load.getErrors();
+            // timestamp = load.getTimestamp();
 
         } catch (MalformedURLException e) {
             log.error(e, e);
@@ -116,45 +109,41 @@ public class LoadTextureLibraryAction extends JosmAction {
             showError(e);
         }
 
-//        if (errors != null && !errors.isEmpty()) {
-//
-//            StringBuffer sb = new StringBuffer();
-//            for (String err: errors ) {
-//                sb.append(err);
-//                sb.append("\n");
-//            }
-//
-//            JOptionPane.showMessageDialog(null,
-//                    tr("Error downloding textures from urls: ") + "\n" + sb,
-//                    "Error",
-//                    JOptionPane.ERROR_MESSAGE);
-//        } else {
-//            JOptionPane.showMessageDialog(null,
-//                    tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
-//                            + this.wikiTextureLoaderService.getTexturesPath() ,
-//                    "Info",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//        }
+        // if (errors != null && !errors.isEmpty()) {
+        //
+        // StringBuffer sb = new StringBuffer();
+        // for (String err: errors ) {
+        // sb.append(err);
+        // sb.append("\n");
+        // }
+        //
+        // JOptionPane.showMessageDialog(null,
+        // tr("Error downloding textures from urls: ") + "\n" + sb,
+        // "Error",
+        // JOptionPane.ERROR_MESSAGE);
+        // } else {
+        // JOptionPane.showMessageDialog(null,
+        // tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") +
+        // "\n"
+        // + this.wikiTextureLoaderService.getTexturesPath() ,
+        // "Info",
+        // JOptionPane.INFORMATION_MESSAGE);
+        // }
     }
 
     /**
      * @return
      */
     public boolean showOverwriteDialog() {
-        int n = showNegativeConfirmDialog(
-                null,
-                "Overwrite values",
-                "Overwrite values");
-        boolean overwrite = n ==JOptionPane.YES_OPTION;
+        int n = showNegativeConfirmDialog(null, "Overwrite values", "Overwrite values");
+        boolean overwrite = n == JOptionPane.YES_OPTION;
         return overwrite;
     }
 
     private void showError(Exception e) {
-      //custom title, error icon
-        JOptionPane.showMessageDialog(null,
-            "Error loading textures definitions from file: " + e.getMessage(),
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
+        // custom title, error icon
+        JOptionPane.showMessageDialog(null, "Error loading textures definitions from file: " + e.getMessage(), "Error",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -164,7 +153,7 @@ public class LoadTextureLibraryAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
+        // setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
 
     public static int showNegativeConfirmDialog(Component parentComponent, Object message, String title) {
@@ -175,8 +164,8 @@ public class LoadTextureLibraryAction extends JosmAction {
         options.add(UIManager.getString("OptionPane.noButtonText"));
         defaultOption = UIManager.getString("OptionPane.noButtonText");
 
-        return JOptionPane.showOptionDialog(parentComponent, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, options.toArray(), defaultOption);
+        return JOptionPane.showOptionDialog(parentComponent, message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options.toArray(), defaultOption);
     }
 
 }

@@ -6,20 +6,14 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+
 import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.preferences.BooleanProperty;
-import org.openstreetmap.josm.spi.preferences.Config;
-import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -28,7 +22,6 @@ import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
-import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportItem;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModelConf;
 import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
@@ -36,6 +29,7 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Fence for shapes defined as way.
@@ -95,8 +89,8 @@ public class BarrierFence extends AbstractWayModel {
      * @param pTextureLibraryStorageService
      *            texture library service
      */
-    public BarrierFence(Way pWay, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
+    public BarrierFence(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
         super(pWay, perspective);
 
         modelRender = pModelRender;
@@ -113,8 +107,7 @@ public class BarrierFence extends AbstractWayModel {
 
         String fenceType = BarrierFenceRelation.getFenceType(way);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
-                fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         hight = ModelUtil.getHeight(way, fenceHeight);
 
@@ -124,8 +117,7 @@ public class BarrierFence extends AbstractWayModel {
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        MeshFactory meshBorder = BarrierFenceRelation.createMesh(facadeTexture.getTex0(), null, "fence_border",
-                modelBuilder);
+        MeshFactory meshBorder = BarrierFenceRelation.createMesh(facadeTexture.getTex0(), null, "fence_border", modelBuilder);
 
         BarrierFenceRelation.buildWallModel(points, null, minHeight, hight, 0, meshBorder, facadeTexture);
 
@@ -179,8 +171,8 @@ public class BarrierFence extends AbstractWayModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override

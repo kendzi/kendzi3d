@@ -52,7 +52,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param rectangleContur the rectangleContur to set
+     * @param rectangleContur
+     *            the rectangleContur to set
      */
     public void setRectangleContur(Point2d[] rectangleContur) {
         this.rectangleContur = rectangleContur;
@@ -66,7 +67,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param recHeight the recHeight to set
+     * @param recHeight
+     *            the recHeight to set
      */
     public void setRecHeight(double recHeight) {
         this.recHeight = recHeight;
@@ -80,7 +82,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param recWidth the recWidth to set
+     * @param recWidth
+     *            the recWidth to set
      */
     public void setRecWidth(double recWidth) {
         this.recWidth = recWidth;
@@ -94,7 +97,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param roofTypeParameter the roofTypeParameter to set
+     * @param roofTypeParameter
+     *            the roofTypeParameter to set
      */
     public void setRoofTypeParameter(Integer roofTypeParameter) {
         this.roofTypeParameter = roofTypeParameter;
@@ -108,7 +112,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param measurements the measurements to set
+     * @param measurements
+     *            the measurements to set
      */
     public void setMeasurements(Map<MeasurementKey, Measurement> measurements) {
         this.measurements = measurements;
@@ -122,7 +127,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param roofTextureData the roofTextureData to set
+     * @param roofTextureData
+     *            the roofTextureData to set
      */
     public void setRoofTextureData(RoofMaterials roofTextureData) {
         this.roofTextureData = roofTextureData;
@@ -136,7 +142,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param buildingPolygon the buildingPolygon to set
+     * @param buildingPolygon
+     *            the buildingPolygon to set
      */
     public void setBuildingPolygon(PolygonWithHolesList2d buildingPolygon) {
         this.buildingPolygon = buildingPolygon;

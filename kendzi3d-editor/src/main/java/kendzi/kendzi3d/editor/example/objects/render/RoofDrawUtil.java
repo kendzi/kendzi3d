@@ -1,6 +1,7 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
 import com.jogamp.opengl.GL2;
+
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.util.DrawUtil;

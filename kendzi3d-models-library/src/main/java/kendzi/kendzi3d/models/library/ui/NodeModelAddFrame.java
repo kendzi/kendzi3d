@@ -283,6 +283,7 @@ public class NodeModelAddFrame extends JDialog {
     protected void saveAction() {
         //
     }
+
     public JButton getBtnSave() {
         return btnSave;
     }

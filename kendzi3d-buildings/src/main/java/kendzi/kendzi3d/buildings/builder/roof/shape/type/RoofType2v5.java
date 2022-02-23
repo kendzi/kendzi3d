@@ -47,8 +47,8 @@ public class RoofType2v5 extends RectangleRoofTypeBuilder {
         Double b2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                b1, b2, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, b1, b2,
+                conf.getRoofTextureData());
     }
 
     /**
@@ -106,8 +106,7 @@ public class RoofType2v5 extends RectangleRoofTypeBuilder {
         MultiPolygonList2d mpb = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, plb, prb, middlePoint, plb);
         MultiPolygonList2d mpt = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, plt, middlePoint, prt, plt);
         MultiPolygonList2d mpl = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, plb, middlePoint, plt, plb);
-        MultiPolygonList2d mpr = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, middlePoint, prb, prt,
-                middlePoint);
+        MultiPolygonList2d mpr = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, middlePoint, prb, prt, middlePoint);
 
         final Plane3d planeLeft = new Plane3d(planePoint, nl);
 

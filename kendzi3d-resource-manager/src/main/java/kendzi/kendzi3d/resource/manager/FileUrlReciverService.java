@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -33,29 +32,31 @@ public final class FileUrlReciverService implements ResourceService {
      */
     private final String pluginDir;
 
-
-    /** Constructor.
-     * @param resourceDirectory location of resources
+    /**
+     * Constructor.
+     * 
+     * @param resourceDirectory
+     *            location of resources
      *
      */
     @Deprecated
     public FileUrlReciverService(String resourceDirectory) {
         this.pluginDir = resourceDirectory;
     }
-    //    /**
-    //     * Constructor.
-    //     */
-    //    public FileUrlReciverService() {
-    //        //
-    //    }
+    // /**
+    // * Constructor.
+    // */
+    // public FileUrlReciverService() {
+    // //
+    // }
 
-    //    /**
-    //     * Setup plugin directory.
-    //     * @param pPluginDir plugin directory
-    //     */
-    //    public static void initFileReciver(String pPluginDir) {
-    //        pluginDir = pPluginDir;
-    //    }
+    // /**
+    // * Setup plugin directory.
+    // * @param pPluginDir plugin directory
+    // */
+    // public static void initFileReciver(String pPluginDir) {
+    // pluginDir = pPluginDir;
+    // }
     /**
      * {@inheritDoc}
      *
@@ -90,10 +91,12 @@ public final class FileUrlReciverService implements ResourceService {
     }
 
     /**
-     * Try to find URL of file in resources. In some reason getClass().getResource(...) can't find file if it is in jar
-     * and file in sub dir. So at this location it work fine: /res/file but if file is deeper like this: /res/dir/file
-     * url returned by getResource is bad. It is possible that it is bug in URLClassLoader or ClassLoader require some
-     * strange configuration. This function is overround for this bug.
+     * Try to find URL of file in resources. In some reason
+     * getClass().getResource(...) can't find file if it is in jar and file in sub
+     * dir. So at this location it work fine: /res/file but if file is deeper like
+     * this: /res/dir/file url returned by getResource is bad. It is possible that
+     * it is bug in URLClassLoader or ClassLoader require some strange
+     * configuration. This function is overround for this bug.
      *
      * Function require resource name to be taken from root.
      *
@@ -103,21 +106,21 @@ public final class FileUrlReciverService implements ResourceService {
      */
     @Deprecated
     public static URL getResourceUrl(String pResName) {
-        //        ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
-        //        CodeSource codeSource = pDomain.getCodeSource();
-        //        //        if (codeSource == null) throw new CannotFindDirException();
-        //        URL loc = codeSource.getLocation();
-        //        log.info("loc: " + loc);
+        // ProtectionDomain pDomain = FileReciver.class.getProtectionDomain();
+        // CodeSource codeSource = pDomain.getCodeSource();
+        // // if (codeSource == null) throw new CannotFindDirException();
+        // URL loc = codeSource.getLocation();
+        // log.info("loc: " + loc);
 
         URL resource = FileUrlReciverService.class.getResource("");
-        //        log.info("resource: " + resource);
+        // log.info("resource: " + resource);
 
         String resUrl = resource.toString();
         if (resUrl.startsWith("jar:")) {
             // if we are in jar
             try {
                 String newURL = resUrl.substring(0, resUrl.indexOf("!") + 1) + pResName;
-                //                log.info("new url: " + newURL);
+                // log.info("new url: " + newURL);
                 return new URL(newURL);
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -133,11 +136,12 @@ public final class FileUrlReciverService implements ResourceService {
         }
 
         // if it is not from root
-        //THIS MAGICALLY WORK:
+        // THIS MAGICALLY WORK:
 
         // When the string was not a valid URL, try to load it as a resource using
         // an anonymous class in the tree.
-        Object objectpart = new Object() { };
+        Object objectpart = new Object() {
+        };
         Class classpart = objectpart.getClass();
         ClassLoader loaderpart = classpart.getClassLoader();
         URL result = loaderpart.getResource(pResName);
@@ -156,7 +160,6 @@ public final class FileUrlReciverService implements ResourceService {
         return this.pluginDir;
     }
 
-
     @Deprecated
     @Override
     public URL resourceToUrl(String resourceName) {
@@ -165,7 +168,8 @@ public final class FileUrlReciverService implements ResourceService {
 
             if (resourceName.startsWith(PLUGIN_FILE_PREFIX)) {
                 url = receiveFileUrl(resourceName.substring(PLUGIN_FILE_PREFIX.length()));
-            } else if (resourceName.startsWith("file:") || resourceName.startsWith("http://") || resourceName.startsWith("https://")) {
+            } else if (resourceName.startsWith("file:") || resourceName.startsWith("http://")
+                    || resourceName.startsWith("https://")) {
                 url = new URL(resourceName);
             } else {
                 url = new File(resourceName).toURI().toURL();

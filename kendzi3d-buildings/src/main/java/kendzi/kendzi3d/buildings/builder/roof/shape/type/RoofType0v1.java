@@ -33,7 +33,7 @@ public class RoofType0v1 extends RoofType0 {
 
         int type = getType();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
-                0, 0, 0, type, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1, 0,
+                0, 0, type, conf.getRoofTextureData());
     }
 }

@@ -1,11 +1,11 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import java.util.List;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+
+import java.util.List;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.kendzi3d.editor.selection.Selection;

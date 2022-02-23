@@ -6,22 +6,20 @@
 
 package kendzi.josm.kendzi3d.jogl.layer;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
-
 import com.google.inject.Inject;
-
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.josm.kendzi3d.jogl.model.Road;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
 /**
  * Layer for roads.

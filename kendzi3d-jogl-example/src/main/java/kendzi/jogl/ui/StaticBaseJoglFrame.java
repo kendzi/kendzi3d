@@ -6,12 +6,6 @@
 
 package kendzi.jogl.ui;
 
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.geom.Rectangle2D;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -22,12 +16,17 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.awt.TextRenderer;
+
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
-
-import com.jogamp.opengl.util.Animator;
-import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
  */
@@ -242,8 +241,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular color.
-     * components
+     * Set up a point source with ambient, diffuse, and specular color. components
      */
     private void addLight(GL2 gl) {
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
@@ -286,8 +284,8 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * Draw txt at (x,y,z), with the text centered in the x-direction, facing
-     * along the +z axis.
+     * Draw txt at (x,y,z), with the text centered in the x-direction, facing along
+     * the +z axis.
      *
      * @param gl
      * @param txt

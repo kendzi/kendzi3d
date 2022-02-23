@@ -39,5 +39,4 @@ public class AmbientDiffuseComponent {
         return this.diffuseColor;
     }
 
-
 }

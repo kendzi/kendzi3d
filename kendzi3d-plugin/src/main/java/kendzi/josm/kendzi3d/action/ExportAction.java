@@ -8,16 +8,13 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
+import com.google.inject.Inject;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.actions.JosmAction;
-
-import com.google.inject.Inject;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.data.Kendzi3dCore;
@@ -28,6 +25,8 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.world.WorldObject;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * Export action.

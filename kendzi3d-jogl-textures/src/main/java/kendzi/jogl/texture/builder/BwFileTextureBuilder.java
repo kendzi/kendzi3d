@@ -1,5 +1,8 @@
 package kendzi.jogl.texture.builder;
 
+import com.jogamp.opengl.util.awt.TextureRenderer;
+import com.jogamp.opengl.util.texture.Texture;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -9,12 +12,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
-
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
-
 import kendzi.kendzi3d.resource.inter.ResourceService;
+import org.apache.log4j.Logger;
 
 /**
  * Creates black and white texture image from provided image.

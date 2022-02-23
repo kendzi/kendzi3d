@@ -1,16 +1,17 @@
 package kendzi.kendzi3d.editor.ui;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
@@ -25,7 +26,6 @@ import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
-
 import org.apache.log4j.Logger;
 
 public class BaseEditorGLEventListener implements GLEventListener, ViewportProvider, CloseWindowEventSource {
@@ -98,8 +98,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular color.
-     * components.
+     * Set up a point source with ambient, diffuse, and specular color. components.
      *
      * @param gl
      *            gl
@@ -139,8 +138,8 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
         if (windowClosed) {
             /*
-             * Window should be closed. E.g. required extensions are not
-             * available. Skip rendering because it will fail.
+             * Window should be closed. E.g. required extensions are not available. Skip
+             * rendering because it will fail.
              */
             return;
         }
@@ -150,9 +149,9 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
         /*
          * Update viewport using current camera position. View port will store
-         * information required to setup OpenGl model view matrix. Calculates
-         * parameters of viewport required to back trace click of mouse from 2d
-         * space into 3d space.
+         * information required to setup OpenGl model view matrix. Calculates parameters
+         * of viewport required to back trace click of mouse from 2d space into 3d
+         * space.
          */
         viewport.updateViewport(camera);
 

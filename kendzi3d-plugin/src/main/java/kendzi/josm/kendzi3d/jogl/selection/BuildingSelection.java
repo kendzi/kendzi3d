@@ -9,7 +9,6 @@
 package kendzi.josm.kendzi3d.jogl.selection;
 
 import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.SphereSelection;
 
 public abstract class BuildingSelection extends SphereSelection {

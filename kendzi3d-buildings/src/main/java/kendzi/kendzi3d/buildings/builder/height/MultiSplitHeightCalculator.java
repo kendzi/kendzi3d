@@ -37,8 +37,7 @@ public abstract class MultiSplitHeightCalculator implements HeightCalculator {
 
         List<LinePoints2d> splittingLines = getSplittingLines();
         for (LinePoints2d splittingLine : splittingLines) {
-            enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(enrichedChain,
-                    splittingLine);
+            enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(enrichedChain, splittingLine);
         }
 
         List<SegmentHeight> ret = new ArrayList<SegmentHeight>();

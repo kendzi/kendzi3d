@@ -11,7 +11,6 @@ import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
 
 public class RectangleRoofTransformationUtil {
@@ -35,8 +34,8 @@ public class RectangleRoofTransformationUtil {
     }
 
     /**
-     * Prepare transformation matrix from local rectangle roof coordinates to
-     * global building coordinates.
+     * Prepare transformation matrix from local rectangle roof coordinates to global
+     * building coordinates.
      * 
      * @param startPoint
      *            rectangle roof starting point
@@ -55,8 +54,8 @@ public class RectangleRoofTransformationUtil {
     }
 
     /**
-     * Prepare transformation matrix from local rectangle roof coordinates to
-     * global building coordinates.
+     * Prepare transformation matrix from local rectangle roof coordinates to global
+     * building coordinates.
      * 
      * @param startPoint
      *            rectangle roof starting point
@@ -124,9 +123,9 @@ public class RectangleRoofTransformationUtil {
 
             /* Do transformation to global frame. */
             return new SegmentHeight( //
-                    TransformationMatrix2d.transform(begin, transformationToGlobal),//
+                    TransformationMatrix2d.transform(begin, transformationToGlobal), //
                     beginHeight + transformToGlobalHeightOffset, //
-                    TransformationMatrix2d.transform(end, transformationToGlobal),//
+                    TransformationMatrix2d.transform(end, transformationToGlobal), //
                     endHeight + transformToGlobalHeightOffset);
         }
 

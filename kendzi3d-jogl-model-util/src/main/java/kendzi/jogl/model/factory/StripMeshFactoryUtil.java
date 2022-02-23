@@ -33,9 +33,8 @@ public class StripMeshFactoryUtil {
      * @param isCounterClockwise
      *            the direction of normals
      */
-    public static void verticalStripMesh(List<Point2d> stripPoints, HeightProvider minHeights,
-            HeightProvider maxHeights, MeshFactory mesh, TextureData textureData, boolean closed,
-            boolean isCounterClockwise) {
+    public static void verticalStripMesh(List<Point2d> stripPoints, HeightProvider minHeights, HeightProvider maxHeights,
+            MeshFactory mesh, TextureData textureData, boolean closed, boolean isCounterClockwise) {
 
         int size = stripPoints.size();
         if (!closed) {

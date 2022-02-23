@@ -22,7 +22,6 @@ import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
-
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -138,7 +137,8 @@ public class RoofParser {
      */
     private static RoofFrontDirection findDirectionByDirectionTag(OsmPrimitive pWay) {
 
-        RoofFrontDirection roofDirection = parseDirectionStr(OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay), Ortagonal.NONE);
+        RoofFrontDirection roofDirection = parseDirectionStr(OsmAttributeKeys.ROOF_DIRECTION.primitiveValue(pWay),
+                Ortagonal.NONE);
 
         if (roofDirection != null) {
             return roofDirection;

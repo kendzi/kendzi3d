@@ -13,6 +13,7 @@ public class Messages {
     private Messages() {
         // do not instantiate
     }
+
     ////////////////////////////////////////////////////////////////////////////
     //
     // Bundle access
@@ -20,9 +21,11 @@ public class Messages {
     ////////////////////////////////////////////////////////////////////////////
     private static final String BUNDLE_NAME = "kendzi.kendzi3d.models.library.messages.messages"; //$NON-NLS-1$
     private static final ResourceBundle RESOURCE_BUNDLE = loadBundle();
+
     private static ResourceBundle loadBundle() {
         return ResourceBundle.getBundle(BUNDLE_NAME);
     }
+
     ////////////////////////////////////////////////////////////////////////////
     //
     // Strings access

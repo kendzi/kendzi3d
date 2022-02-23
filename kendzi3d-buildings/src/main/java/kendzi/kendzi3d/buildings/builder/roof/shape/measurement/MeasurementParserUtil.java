@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
  */
 public class MeasurementParserUtil {
 
-
     /** Log. */
     private static final Logger log = Logger.getLogger(MeasurementParserUtil.class);
 
@@ -62,6 +61,5 @@ public class MeasurementParserUtil {
 
         return "util: " + utilStr + " for key: " + pMeasurementKey;
     }
-
 
 }

@@ -8,15 +8,14 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.ToggleAction;
-import org.openstreetmap.josm.gui.MainApplication;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.TextureCacheServiceImpl;
+import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Texture filter toggle action.

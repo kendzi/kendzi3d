@@ -30,15 +30,12 @@ public class VectorFunction implements SimpleFunction<Vector3d> {
     @Override
     public Vector3d eval(Context context) {
 
-
         if (this.args == null || this.args.length != 3) {
             return new Vector3d();
         }
 
-        return new Vector3d(
-                SimpleDoubleExpressionParser.evalueDouble(this.args[0]),
-                SimpleDoubleExpressionParser.evalueDouble(this.args[1]),
-                SimpleDoubleExpressionParser.evalueDouble(this.args[2]));
+        return new Vector3d(SimpleDoubleExpressionParser.evalueDouble(this.args[0]),
+                SimpleDoubleExpressionParser.evalueDouble(this.args[1]), SimpleDoubleExpressionParser.evalueDouble(this.args[2]));
 
     }
 

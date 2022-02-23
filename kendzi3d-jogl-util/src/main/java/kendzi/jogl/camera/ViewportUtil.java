@@ -3,6 +3,7 @@ package kendzi.jogl.camera;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 

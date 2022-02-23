@@ -7,10 +7,11 @@
  *
  */
 
-
 package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import com.google.inject.Inject;
 
 import java.awt.event.ActionEvent;
 
@@ -18,11 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
-
-import com.google.inject.Inject;
 
 /**
  * Texture filter toggle action.
@@ -43,7 +41,8 @@ public class ShowPluginDirAction extends JosmAction {
     /**
      * Plugin directory.
      */
-    @Inject @Kendzi3dPluginDirectory
+    @Inject
+    @Kendzi3dPluginDirectory
     private String pluginDir;
 
     /**
@@ -51,13 +50,7 @@ public class ShowPluginDirAction extends JosmAction {
      */
     @Inject
     public ShowPluginDirAction() {
-        super(
-                tr("Show plugin directory"),
-                "1323558253_wikipedia-icon_24",
-                tr("Show plugin directory"),
-                null,
-                false
-        );
+        super(tr("Show plugin directory"), "1323558253_wikipedia-icon_24", tr("Show plugin directory"), null, false);
     }
 
     private void showPluginDirectory() {
@@ -65,10 +58,7 @@ public class ShowPluginDirAction extends JosmAction {
         JTextArea area = new JTextArea("Plugin directory: \n" + this.pluginDir);
         area.setEditable(false);
 
-        JOptionPane.showMessageDialog(null,
-                area,
-                "Directory",
-                JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, area, "Directory", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -78,6 +68,6 @@ public class ShowPluginDirAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
+        // setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
 }

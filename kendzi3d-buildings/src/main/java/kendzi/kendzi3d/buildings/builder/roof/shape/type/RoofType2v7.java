@@ -50,8 +50,8 @@ public class RoofType2v7 extends RectangleRoofTypeBuilder {
         Double l2 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_2, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                l1, l2, conf.getRoofTextureData(), left);
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, l1, l2,
+                conf.getRoofTextureData(), left);
     }
 
     public boolean isLeft() {
@@ -103,8 +103,7 @@ public class RoofType2v7 extends RectangleRoofTypeBuilder {
 
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
-        MultiPolygonSplitResult leftSplit = PolygonSplitHelper.splitMultiPolygon(new MultiPolygonList2d(borderPolygon),
-                lLine);
+        MultiPolygonSplitResult leftSplit = PolygonSplitHelper.splitMultiPolygon(new MultiPolygonList2d(borderPolygon), lLine);
 
         MultiPolygonList2d leftMP = leftSplit.getLeftMultiPolygon();
         MultiPolygonList2d middleMP = leftSplit.getRightMultiPolygon();
@@ -151,9 +150,8 @@ public class RoofType2v7 extends RectangleRoofTypeBuilder {
         rto.setHeightCalculator(hc);
         rto.setMesh(Arrays.asList(meshBorder, meshRoof));
 
-        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(rectangleContur,
-                new PolygonPlane(middleMP, planeBottom), new PolygonPlane(rightMP, planeRight), null,
-                isLeft ? new PolygonPlane(leftMP, planeLeft) : null);
+        RectangleRoofHooksSpaces rhs = buildRectRoofHooksSpace(rectangleContur, new PolygonPlane(middleMP, planeBottom),
+                new PolygonPlane(rightMP, planeRight), null, isLeft ? new PolygonPlane(leftMP, planeLeft) : null);
 
         rto.setRoofHooksSpaces(rhs);
 
@@ -177,8 +175,8 @@ public class RoofType2v7 extends RectangleRoofTypeBuilder {
      *            the bottom plane
      * @return height of point
      */
-    private static double calcHeight(Point2d point, LinePoints2d rLine, LinePoints2d lLine, Plane3d planeLeft,
-            Plane3d planeRight, Plane3d planeButtom) {
+    private static double calcHeight(Point2d point, LinePoints2d rLine, LinePoints2d lLine, Plane3d planeLeft, Plane3d planeRight,
+            Plane3d planeButtom) {
 
         double x = point.x;
         double z = -point.y;

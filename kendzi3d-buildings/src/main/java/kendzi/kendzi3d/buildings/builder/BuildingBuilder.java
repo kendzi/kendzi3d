@@ -239,8 +239,8 @@ public class BuildingBuilder {
         mesh.materialID = mf.cacheMaterial(mat);
 
         PolygonWithHolesList2d buildingPolygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
-        MeshFactoryUtil.addPolygonWithHolesInYRevert(buildingPolygon, minHeight, mesh, roofTextureData, 0, 0, new Vector3d(1, 0,
-                0));
+        MeshFactoryUtil.addPolygonWithHolesInYRevert(buildingPolygon, minHeight, mesh, roofTextureData, 0, 0,
+                new Vector3d(1, 0, 0));
     }
 
     private static WallPart getFirstWallPart(Wall w) {
@@ -357,9 +357,8 @@ public class BuildingBuilder {
                         tex[0] = segmentPointToTextureDataIndex(p, wallDistance, 0d, mesh, facadeTextureData);
 
                         /*
-                         * First over layer have always the same coordinates as
-                         * base layer. It is used to create two color wall
-                         * texture.
+                         * First over layer have always the same coordinates as base layer. It is used
+                         * to create two color wall texture.
                          */
                         if (isOverLayer) {
                             tex[1] = tex[0];
@@ -401,8 +400,8 @@ public class BuildingBuilder {
 
             if (shrinkLeft && shrinkRight) {
                 /*
-                 * Same height of begin end and desired height so no point to
-                 * generate empty size polygon.
+                 * Same height of begin end and desired height so no point to generate empty
+                 * size polygon.
                  */
                 continue;
             }
@@ -441,8 +440,8 @@ public class BuildingBuilder {
             int facadeLevels = getFacadeLevels(wall, buildingPart);
 
             /*
-             * Adjust texture data size to match wall size multiply by number of
-             * window columns and levels.
+             * Adjust texture data size to match wall size multiply by number of window
+             * columns and levels.
              */
             double windowsSegmentHeight = (wallHeight - minHeight) / facadeLevels;
 

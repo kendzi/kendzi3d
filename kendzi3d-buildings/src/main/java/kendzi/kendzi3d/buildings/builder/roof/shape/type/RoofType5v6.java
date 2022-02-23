@@ -36,7 +36,6 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
 
 /**

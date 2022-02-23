@@ -25,7 +25,7 @@ public class Material {
 
     private List<String> texturesComponent = new ArrayList<String>();
 
-    private Color texture0Color = null; //Color.WHITE;
+    private Color texture0Color = null; // Color.WHITE;
 
     public Material() {
         //
@@ -47,7 +47,8 @@ public class Material {
     /**
      * Set first texture.
      * 
-     * @param key texture key
+     * @param key
+     *            texture key
      */
     public void setTexture0(String key) {
         if (this.texturesComponent.size() == 0) {
@@ -77,7 +78,8 @@ public class Material {
     }
 
     /**
-     * @param ambientDiffuse the ambientDiffuse to set
+     * @param ambientDiffuse
+     *            the ambientDiffuse to set
      */
     public void setAmbientDiffuse(AmbientDiffuseComponent ambientDiffuse) {
         this.ambientDiffuse = ambientDiffuse;
@@ -91,7 +93,8 @@ public class Material {
     }
 
     /**
-     * @param other the other to set
+     * @param other
+     *            the other to set
      */
     public void setOther(OtherComponent other) {
         this.other = other;
@@ -105,7 +108,8 @@ public class Material {
     }
 
     /**
-     * @param texturesComponent the texturesComponent to set
+     * @param texturesComponent
+     *            the texturesComponent to set
      */
     public void setTexturesComponent(List<String> texturesComponent) {
         this.texturesComponent = texturesComponent;
@@ -119,7 +123,8 @@ public class Material {
     }
 
     /**
-     * @param texture0Color the texture0Color to set
+     * @param texture0Color
+     *            the texture0Color to set
      */
     public void setTexture0Color(Color texture0Color) {
         this.texture0Color = texture0Color;

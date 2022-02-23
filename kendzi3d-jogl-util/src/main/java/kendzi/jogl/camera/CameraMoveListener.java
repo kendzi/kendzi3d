@@ -43,6 +43,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
      */
     @Override
@@ -55,6 +56,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
      */
     @Override
@@ -65,6 +67,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseExited(java.awt.event.MouseEvent)
      */
     @Override
@@ -75,6 +78,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseMoved(java.awt.event.MouseEvent)
      */
     @Override
@@ -84,6 +88,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseDragged(java.awt.event.MouseEvent)
      */
     @Override

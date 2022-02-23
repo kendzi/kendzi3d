@@ -39,12 +39,11 @@ public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
     @SuppressWarnings("unchecked")
     public <W> W getRequiredArgument(int num, Class<W> type) {
         if (args == null || args.length < num) {
-            throw new RuntimeException("there is no required argument: " + num + " type "+ type);
+            throw new RuntimeException("there is no required argument: " + num + " type " + type);
         }
 
         return getArgument(num, type);
     }
-
 
     public <W> W getRequiredContextVariable(String string, Context context, Class<W> class1) {
         Object obj = context.getVariable("bisector");
@@ -53,12 +52,12 @@ public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
 
         }
         if (!class1.isAssignableFrom(obj.getClass())) {
-             throw new RuntimeException(String.format("can't take required variable %s of type %s from context, wrong class", string, class1));
+            throw new RuntimeException(
+                    String.format("can't take required variable %s of type %s from context, wrong class", string, class1));
         }
 
         return (W) obj;
     }
-
 
     @Override
     public CompileContext getContext() {

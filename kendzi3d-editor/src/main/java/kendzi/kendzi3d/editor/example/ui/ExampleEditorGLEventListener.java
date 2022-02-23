@@ -2,7 +2,6 @@ package kendzi.kendzi3d.editor.example.ui;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
-
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;

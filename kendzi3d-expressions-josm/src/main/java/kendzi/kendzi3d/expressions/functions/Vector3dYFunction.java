@@ -1,7 +1,6 @@
 package kendzi.kendzi3d.expressions.functions;
 
 import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.expressions.Context;
 
 public class Vector3dYFunction extends OneParamFunction implements NamedFunction {

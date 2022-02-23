@@ -37,7 +37,8 @@ public class BuildingOutput {
     }
 
     /**
-     * @param model the model to set
+     * @param model
+     *            the model to set
      */
     public void setModel(Model model) {
         this.model = model;
@@ -51,7 +52,8 @@ public class BuildingOutput {
     }
 
     /**
-     * @param buildingPartOutput the buildingPartOutput to set
+     * @param buildingPartOutput
+     *            the buildingPartOutput to set
      */
     public void setBuildingPartOutput(List<BuildingPartOutput> buildingPartOutput) {
         this.buildingPartOutput = buildingPartOutput;

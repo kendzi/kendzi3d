@@ -7,7 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import com.jogamp.opengl.GL2;
-
 import kendzi.jogl.camera.Camera;
 
 /**

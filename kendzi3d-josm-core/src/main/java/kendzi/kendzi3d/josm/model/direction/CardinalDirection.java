@@ -20,7 +20,9 @@ public class CardinalDirection implements Direction {
 
     /**
      * Direction in Cardinal.
-     * @param pCardinalEnum Cardinal enum
+     * 
+     * @param pCardinalEnum
+     *            Cardinal enum
      */
     public CardinalDirection(CardinalEnum pCardinalEnum) {
         this.direction = pCardinalEnum;

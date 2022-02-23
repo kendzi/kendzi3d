@@ -5,11 +5,6 @@ import static org.junit.Assert.*;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import org.junit.Test;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.spi.preferences.Config;
-import org.openstreetmap.josm.spi.preferences.MemoryPreferences;
-
 import kendzi.kendzi3d.expressions.exeption.ExpressionExeption;
 import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.expressions.functions.HeightFunction;
@@ -18,6 +13,10 @@ import kendzi.kendzi3d.expressions.functions.Vector3dXFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dYFunction;
 import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
+import org.junit.Test;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.spi.preferences.MemoryPreferences;
 
 /**
  * Unit test for ExpressiongBuilder.

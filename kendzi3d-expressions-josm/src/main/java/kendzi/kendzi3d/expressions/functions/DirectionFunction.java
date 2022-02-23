@@ -4,7 +4,6 @@ import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.direction.Direction;
 import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class DirectionFunction extends OneParamFunction implements NamedFunction {

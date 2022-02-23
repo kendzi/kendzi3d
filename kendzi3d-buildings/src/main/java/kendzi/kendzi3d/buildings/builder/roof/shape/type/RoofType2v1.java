@@ -51,8 +51,8 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
         Double b1 = getLenghtMetersPersent(conf.getMeasurements(), MeasurementKey.LENGTH_1, conf.getRecHeight(),
                 conf.getRecHeight() / 2d);
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                h2, b1, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, b1,
+                conf.getRoofTextureData());
     }
 
     /**
@@ -69,8 +69,7 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
      * @return
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double recHeight, double recWidth,
-            Point2d[] rectangleContur, double roofHeightBottom, double roofHeightTop, double l1,
-            RoofMaterials roofTextureData) {
+            Point2d[] rectangleContur, double roofHeightBottom, double roofHeightTop, double l1, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -95,8 +94,8 @@ public class RoofType2v1 extends RectangleRoofTypeBuilder {
         List<Point2d> outline = PolygonUtil.makeCounterClockwise(buildingPolygon.getOuter().getPoints());
         PolygonList2d borderPolygon = new PolygonList2d(outline);
 
-        MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(
-                new MultiPolygonList2d(borderPolygon), middleRoofLine);
+        MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(new MultiPolygonList2d(borderPolygon),
+                middleRoofLine);
 
         MultiPolygonList2d topMP = middleSplit.getLeftMultiPolygon();
         MultiPolygonList2d bottomMP = middleSplit.getRightMultiPolygon();

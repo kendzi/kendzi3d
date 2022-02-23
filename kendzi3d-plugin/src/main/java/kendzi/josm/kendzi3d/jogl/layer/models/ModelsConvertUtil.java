@@ -1,18 +1,18 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
-import javax.vecmath.Vector3d;
-
-import org.openstreetmap.josm.data.osm.search.SearchCompiler;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
-
 import generated.NodeModel;
 import generated.WayNodeModel;
+
+import javax.vecmath.Vector3d;
+
 import kendzi.kendzi3d.expressions.Context;
 import kendzi.kendzi3d.expressions.ExpressiongBuilder;
 import kendzi.kendzi3d.expressions.expression.Expression;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.resource.inter.ResourceUtil;
 import kendzi.util.StringUtil;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 public class ModelsConvertUtil {
 

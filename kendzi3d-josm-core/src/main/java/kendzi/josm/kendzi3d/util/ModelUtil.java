@@ -10,7 +10,6 @@
 package kendzi.josm.kendzi3d.util;
 
 import kendzi.util.StringUtil;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 

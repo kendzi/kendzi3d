@@ -19,7 +19,6 @@ import kendzi.kendzi3d.buildings.model.roof.shape.DormerRow;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.point.TransformationMatrix3d;
-
 import org.ejml.simple.SimpleMatrix;
 
 public class RectangleRoofHooksSpace implements RoofHooksSpace {
@@ -33,10 +32,9 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
 
     public RectangleRoofHooksSpace(Point2d p1, Vector2d v1, double b, Plane3d pPlane) {
         super();
-//        this.p1 = p1;
-//        this.v1 = v1;
+        // this.p1 = p1;
+        // this.v1 = v1;
         this.b = b;
-
 
         double angle = Math.atan2(v1.y, v1.x);
         // Math.toDegrees(angle);
@@ -46,8 +44,7 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
         this.p1 = TransformationMatrix2d.transform(p1, tr2d);
         this.v1 = TransformationMatrix2d.transform(v1, tr2d);
 
-
-        Point3d planePoint= TransformationMatrix3d.transform(pPlane.getPoint(), tr3d);
+        Point3d planePoint = TransformationMatrix3d.transform(pPlane.getPoint(), tr3d);
         Vector3d planeNormal = TransformationMatrix3d.transform(pPlane.getNormal(), tr3d);
 
         this.plane = new Plane3d(planePoint, planeNormal);
@@ -62,7 +59,6 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
 
         Vector2d v = new Vector2d(this.v1);
 
-
         v.scale(1d / (pNumber + 1d));
 
         Point2d p = new Point2d(this.p1);
@@ -73,8 +69,7 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
 
             double y = this.plane.calcYOfPlane(p.x, -p.y);
 
-            double z =
-                limitZToPolygon(p.y);
+            double z = limitZToPolygon(p.y);
 
             Point3d pp = new Point3d(p.x, y, -z);
 
@@ -100,6 +95,5 @@ public class RectangleRoofHooksSpace implements RoofHooksSpace {
     public SimpleMatrix getTransformationMatrix() {
         return this.transformationMatrix;
     }
-
 
 }

@@ -13,9 +13,6 @@ import java.awt.Graphics2D;
 
 abstract public class EquationLayer {
 
-
-	abstract public void draw(Graphics2D g2d, EquationDisplay disp);
-
-
+    abstract public void draw(Graphics2D g2d, EquationDisplay disp);
 
 }

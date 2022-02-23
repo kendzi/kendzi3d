@@ -8,14 +8,13 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
+import com.google.inject.Inject;
+
 import java.awt.event.ActionEvent;
 
 import kendzi3d.light.service.impl.LightService;
 import kendzi3d.light.ui.action.LightFrameAction;
-
 import org.openstreetmap.josm.actions.JosmAction;
-
-import com.google.inject.Inject;
 
 /**
  * Light configuration action.

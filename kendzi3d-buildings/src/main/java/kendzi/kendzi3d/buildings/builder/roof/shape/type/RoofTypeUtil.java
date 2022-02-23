@@ -21,7 +21,6 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
-
 import org.apache.log4j.Logger;
 
 public class RoofTypeUtil {
@@ -30,8 +29,8 @@ public class RoofTypeUtil {
     private static final Logger log = Logger.getLogger(RoofTypeUtil.class);
 
     /**
-     * Make mesh of vertical wall e.g. It is wall under the roof. The wall base
-     * is on zero height.
+     * Make mesh of vertical wall e.g. It is wall under the roof. The wall base is
+     * on zero height.
      * 
      * 
      * @param stripPoints
@@ -67,7 +66,7 @@ public class RoofTypeUtil {
             MeshFactory mesh, TextureData textureData) {
 
         StripMeshFactoryUtil.verticalStripMesh(stripPoints, //
-                new StripMeshFactoryUtil.ConstHeightProvider(minHeight),//
+                new StripMeshFactoryUtil.ConstHeightProvider(minHeight), //
                 new StripMeshFactoryUtil.ListHeightProvider(stripPointHeights), //
                 mesh, //
                 textureData, //
@@ -136,7 +135,7 @@ public class RoofTypeUtil {
                 segmentHeights.add(segmentHeight.getEndHeight());
 
                 StripMeshFactoryUtil.verticalStripMesh(segment, //
-                        new StripMeshFactoryUtil.ConstHeightProvider(minHeight),//
+                        new StripMeshFactoryUtil.ConstHeightProvider(minHeight), //
                         new StripMeshFactoryUtil.ListHeightProvider(segmentHeights), //
                         mesh, //
                         textureData, //
@@ -147,8 +146,8 @@ public class RoofTypeUtil {
     }
 
     /**
-     * Find minimal rectangle containing list of points. Save as list of 3d
-     * points to display.
+     * Find minimal rectangle containing list of points. Save as list of 3d points
+     * to display.
      *
      * XXX this should by changed!
      *

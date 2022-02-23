@@ -64,8 +64,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
 
         boolean skipLeft = getSkipLeft();
 
-        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
-                h2, l1, l2, l3, skipLeft, conf.getRoofTextureData());
+        return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1, h2, l1,
+                l2, l3, skipLeft, conf.getRoofTextureData());
 
     }
 
@@ -168,11 +168,11 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
             rightHeight = planeTop.calcYOfPlane(rightTop.x, -rightTop.y);
         }
 
-        final Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y), new Vector3d(
-                -(h1 - leftHeight), l2, 0));
+        final Plane3d planeLeft = new Plane3d(new Point3d(leftCenter.x, h1, -leftCenter.y),
+                new Vector3d(-(h1 - leftHeight), l2, 0));
 
-        final Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y), new Vector3d(
-                -(rightHeight - h1), l2, 0));
+        final Plane3d planeRight = new Plane3d(new Point3d(rightCenter.x, h1, -rightCenter.y),
+                new Vector3d(-(rightHeight - h1), l2, 0));
 
         // //******************
         List<Point2d> border = new ArrayList<Point2d>();
@@ -189,14 +189,12 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
         MultiPolygonList2d borderMultiPolygon = new MultiPolygonList2d(borderPolygon);
 
-        MultiPolygonList2d mpb = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightBottom, rightCenter,
-                leftCenter, leftBottom);
-        MultiPolygonList2d mpt = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftTop, leftCenter,
-                rightCenter, rightTop);
-        MultiPolygonList2d mpl = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom, leftCenter,
-                leftTop);
-        MultiPolygonList2d mpr = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightTop, rightCenter,
-                rightBottom);
+        MultiPolygonList2d mpb = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightBottom, rightCenter, leftCenter,
+                leftBottom);
+        MultiPolygonList2d mpt = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftTop, leftCenter, rightCenter,
+                rightTop);
+        MultiPolygonList2d mpl = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, leftBottom, leftCenter, leftTop);
+        MultiPolygonList2d mpr = intersectionOfLeftSideOfMultipleCuts(borderMultiPolygon, rightTop, rightCenter, rightBottom);
 
         Vector3d roofLeftLineVector = new Vector3d(0, 0, recWidth);
 
@@ -213,8 +211,8 @@ public class RoofType2v3 extends RectangleRoofTypeBuilder {
         HeightCalculator hc = new MultiSplitHeightCalculator() {
             @Override
             public double calcHeight(Point2d point) {
-                return RoofType2v3.calcHeight(point, middleLine, rightTopLine, rightBottomLine, leftTopLine,
-                        leftBottomLine, planeLeft, planeRight, planeTop, planeBottom);
+                return RoofType2v3.calcHeight(point, middleLine, rightTopLine, rightBottomLine, leftTopLine, leftBottomLine,
+                        planeLeft, planeRight, planeTop, planeBottom);
             }
 
             @Override

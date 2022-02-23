@@ -55,8 +55,7 @@ public class ArrowDrawUtil {
     }
 
     /**
-     * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y
-     * axis.
+     * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y axis.
      *
      * @param gl
      *            gl
@@ -85,8 +84,8 @@ public class ArrowDrawUtil {
     }
 
     /**
-     * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y
-     * axis. This method don't calculate normals!
+     * Draws arrowhead. Arrowhead starts at origin and it is directed at +Y axis.
+     * This method don't calculate normals!
      *
      * @param gl
      *            gl

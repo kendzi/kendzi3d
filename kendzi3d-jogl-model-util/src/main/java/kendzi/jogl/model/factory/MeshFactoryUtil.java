@@ -17,7 +17,6 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
-
 import org.apache.log4j.Logger;
 
 public class MeshFactoryUtil {
@@ -118,8 +117,8 @@ public class MeshFactoryUtil {
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
             Vector3d textureDirection) {
 
-        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX,
-                textureStartPointY, textureDirection, true);
+        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
+                textureDirection, true);
     }
 
     /**
@@ -138,8 +137,8 @@ public class MeshFactoryUtil {
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
             Vector3d textureDirection) {
 
-        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX,
-                textureStartPointY, textureDirection, false);
+        addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
+                textureDirection, false);
     }
 
     private static void addPolygonWithHolesInY(PolygonWithHolesList2d polygonWithHolesList2d, double height,
@@ -274,8 +273,7 @@ public class MeshFactoryUtil {
 
     /**
      * Add 2d triangles list to mesh. Triangle height is calculate from plane.
-     * Texture offset is taken from plane point, textureVector and
-     * textureOffset.
+     * Texture offset is taken from plane point, textureVector and textureOffset.
      * 
      * @param pMeshRoof
      *            roof mesh
@@ -299,12 +297,12 @@ public class MeshFactoryUtil {
 
         for (Triangle2d triangle : pTriangles) {
 
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP1());
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP2());
-            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV,
-                    normalIndex, face, triangle.getP3());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP1());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP2());
+            addPointToTriangleFace(pMeshRoof, pPlane, pTextureVector, pTextureData, textureOffsetU, textureOffsetV, normalIndex,
+                    face, triangle.getP3());
 
         }
     }
@@ -336,8 +334,8 @@ public class MeshFactoryUtil {
 
         face.addNormalIndex(normalIndex);
 
-        TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, pPlane.getNormal(), pTextureVector,
-                pPlane.getPoint(), pTextureData, textureOffsetU, textureOffsetV);
+        TextCoord calcUV = TextCordFactory.calcFlatSurfaceUV(point3d, pPlane.getNormal(), pTextureVector, pPlane.getPoint(),
+                pTextureData, textureOffsetU, textureOffsetV);
 
         int tci = pMeshRoof.addTextCoord(calcUV);
 

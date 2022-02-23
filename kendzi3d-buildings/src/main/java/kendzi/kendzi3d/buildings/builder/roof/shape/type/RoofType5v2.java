@@ -112,8 +112,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         for (int i = 0; i < mps.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0,
-                    offsets[i]);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);

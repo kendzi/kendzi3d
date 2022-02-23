@@ -18,8 +18,8 @@ import kendzi.jogl.model.geometry.Mesh;
 public class MeshTriangleUtil {
 
     /**
-     * Converts given mesh into list of triangles. Triangles points are returned
-     * in single list. Size of that list is always factor of three. <br>
+     * Converts given mesh into list of triangles. Triangles points are returned in
+     * single list. Size of that list is always factor of three. <br>
      * <b> XXX This method is not optimal, should be re-write as iterator. </b>
      *
      * @param mesh

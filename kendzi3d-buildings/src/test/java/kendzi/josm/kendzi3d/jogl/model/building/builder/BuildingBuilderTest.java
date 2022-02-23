@@ -33,7 +33,6 @@ import kendzi.kendzi3d.buildings.model.roof.shape.RoofTypeAliasEnum;
 import kendzi.kendzi3d.buildings.output.BuildingOutput;
 import kendzi.math.geometry.Triangle3d;
 import kendzi.math.geometry.triangle.Triangle3dUtil;
-
 import org.junit.Test;
 
 public class BuildingBuilderTest {

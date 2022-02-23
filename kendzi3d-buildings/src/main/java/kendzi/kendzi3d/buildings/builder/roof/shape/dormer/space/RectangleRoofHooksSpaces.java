@@ -24,7 +24,6 @@ import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRow;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerType;
 
-
 public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
     PolygonRoofHooksSpace frontSpace;
@@ -39,27 +38,21 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
                 (RoofHooksSpace) leftSpace);
     }
 
-
-
     @Override
     public List<RoofDormerTypeOutput> buildDormers(DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
         List<RoofHooksSpace> pRoofHooksSpace = getRoofHooksSpaces();
 
-
         List<RoofDormerTypeOutput> ret = new ArrayList<RoofDormerTypeOutput>();
 
-
-        if (areDormers(pRoof.getDormersBack())
-            || areDormers(pRoof.getDormersFront())
-            || areDormers(pRoof.getDormersLeft())
-            || areDormers(pRoof.getDormersRight())) {
+        if (areDormers(pRoof.getDormersBack()) || areDormers(pRoof.getDormersFront()) || areDormers(pRoof.getDormersLeft())
+                || areDormers(pRoof.getDormersRight())) {
             // method 1
 
-            build(pRoof.getDormersFront() , this.frontSpace, ret, pRoof, pRoofTextureData);
-            build(pRoof.getDormersBack() , this.backSpace, ret, pRoof, pRoofTextureData);
-            build(pRoof.getDormersRight() , this.rightSpace, ret, pRoof, pRoofTextureData);
-            build(pRoof.getDormersLeft() , this.leftSpace, ret, pRoof, pRoofTextureData);
+            build(pRoof.getDormersFront(), this.frontSpace, ret, pRoof, pRoofTextureData);
+            build(pRoof.getDormersBack(), this.backSpace, ret, pRoof, pRoofTextureData);
+            build(pRoof.getDormersRight(), this.rightSpace, ret, pRoof, pRoofTextureData);
+            build(pRoof.getDormersLeft(), this.leftSpace, ret, pRoof, pRoofTextureData);
 
         } else {
             // method 2 Deprecated?
@@ -69,8 +62,8 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
             for (int i = 0; i < pRoofHooksSpace.size(); i++) {
                 RoofHooksSpace space = pRoofHooksSpace.get(i);
 
-//                char[] extensionTypes = getExtensionType(i, roofExtensions);
-                List<DormerType>  dormersOnSpace = getExtensionType(i, dormers);
+                // char[] extensionTypes = getExtensionType(i, roofExtensions);
+                List<DormerType> dormersOnSpace = getExtensionType(i, dormers);
 
                 build(dormersOnSpace, DormerRow.ROW_1, 1, space, ret, pRoof, pRoofTextureData);
             }
@@ -86,13 +79,8 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
         return true;
     }
 
-
-
-
-
-    private void build(Map<DormerRow, List<DormerType>> dormersOnSpace, RoofHooksSpace space,
-            List<RoofDormerTypeOutput> ret, DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
-
+    private void build(Map<DormerRow, List<DormerType>> dormersOnSpace, RoofHooksSpace space, List<RoofDormerTypeOutput> ret,
+            DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
         int dormerRowNum = findMaxRow(dormersOnSpace.keySet());
 
@@ -104,7 +92,6 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
         }
 
     }
-
 
     private int findMaxRow(Set<DormerRow> keySet) {
 
@@ -126,14 +113,12 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
      * @param pRoof
      * @param pRoofTextureData
      */
-    private void build(List<DormerType> dormersOnSpace, DormerRow dormerRow, int dormerRowNum, RoofHooksSpace space, List<RoofDormerTypeOutput> ret,
-            DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
+    private void build(List<DormerType> dormersOnSpace, DormerRow dormerRow, int dormerRowNum, RoofHooksSpace space,
+            List<RoofDormerTypeOutput> ret, DormerRoofModel pRoof, RoofMaterials pRoofTextureData) {
 
         if (space == null) {
             return;
         }
-
-
 
         RoofHookPoint[] roofHookPoints = space.getRoofHookPoints(dormersOnSpace.size(), dormerRow, dormerRowNum);
 
@@ -141,7 +126,8 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
 
             RoofDormerType roofType = getRoofExtansionType(dormersOnSpace.get(ei));
 
-            RoofDormerTypeOutput buildRoof = roofType.buildRoof(roofHookPoints[ei], space, pRoof.getMeasurements(), pRoofTextureData);
+            RoofDormerTypeOutput buildRoof = roofType.buildRoof(roofHookPoints[ei], space, pRoof.getMeasurements(),
+                    pRoofTextureData);
 
             ret.add(buildRoof);
 
@@ -177,41 +163,36 @@ public class RectangleRoofHooksSpaces implements RoofHooksSpaces {
         return null;
     }
 
-
     /**
-     * @param frontSpace the frontSpace to set
+     * @param frontSpace
+     *            the frontSpace to set
      */
     public void setFrontSpace(PolygonRoofHooksSpace frontSpace) {
         this.frontSpace = frontSpace;
     }
 
-
-
     /**
-     * @param rightSpace the rightSpace to set
+     * @param rightSpace
+     *            the rightSpace to set
      */
     public void setRightSpace(PolygonRoofHooksSpace rightSpace) {
         this.rightSpace = rightSpace;
     }
 
-
-
     /**
-     * @param backSpace the backSpace to set
+     * @param backSpace
+     *            the backSpace to set
      */
     public void setBackSpace(PolygonRoofHooksSpace backSpace) {
         this.backSpace = backSpace;
     }
 
-
-
     /**
-     * @param leftSpace the leftSpace to set
+     * @param leftSpace
+     *            the leftSpace to set
      */
     public void setLeftSpace(PolygonRoofHooksSpace leftSpace) {
         this.leftSpace = leftSpace;
     }
-
-
 
 }

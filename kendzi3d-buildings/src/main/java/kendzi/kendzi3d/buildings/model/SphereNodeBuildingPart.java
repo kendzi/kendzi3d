@@ -15,6 +15,7 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     private Color facadeColor;
 
     private String facadeMaterialType;
+
     /**
      * {@inheritDoc}
      *
@@ -26,7 +27,8 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     }
 
     /**
-     * @param point the point to set
+     * @param point
+     *            the point to set
      */
     public void setPoint(Point2d point) {
         this.point = point;
@@ -43,7 +45,8 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     }
 
     /**
-     * @param height the height to set
+     * @param height
+     *            the height to set
      */
     public void setHeight(double height) {
         this.height = height;
@@ -57,7 +60,8 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     }
 
     /**
-     * @param radius the radius to set
+     * @param radius
+     *            the radius to set
      */
     public void setRadius(double radius) {
         this.radius = radius;
@@ -71,7 +75,8 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     }
 
     /**
-     * @param facadeColor the facadeColor to set
+     * @param facadeColor
+     *            the facadeColor to set
      */
     public void setFacadeColor(Color facadeColor) {
         this.facadeColor = facadeColor;
@@ -85,7 +90,8 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
     }
 
     /**
-     * @param facadeMaterialType the facadeMaterialType to set
+     * @param facadeMaterialType
+     *            the facadeMaterialType to set
      */
     public void setFacadeMaterialType(String facadeMaterialType) {
         this.facadeMaterialType = facadeMaterialType;

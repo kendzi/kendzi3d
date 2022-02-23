@@ -34,11 +34,10 @@ public class SimplifyIndexTest {
         Assert.assertEquals(0, (int) si.getSindex().get(0));
         Assert.assertEquals(1, (int) si.getSindex().get(1));
 
-        //		System.out.println("data");
-        //		print(si.getSdata());
-        //		System.out.println("index");
-        //		print(si.getSindex());
-
+        // System.out.println("data");
+        // print(si.getSdata());
+        // System.out.println("index");
+        // print(si.getSindex());
 
     }
 

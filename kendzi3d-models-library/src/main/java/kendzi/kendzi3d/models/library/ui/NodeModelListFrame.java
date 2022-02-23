@@ -20,7 +20,6 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
-
 import kendzi.kendzi3d.models.library.messages.Messages;
 
 public class NodeModelListFrame extends JFrame {
@@ -59,7 +58,8 @@ public class NodeModelListFrame extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
-        dataModel = new ModelsTableModel() {};
+        dataModel = new ModelsTableModel() {
+        };
 
         JScrollPane scrollPane = new JScrollPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
@@ -67,7 +67,6 @@ public class NodeModelListFrame extends JFrame {
         table = new JTable();
         scrollPane.setViewportView(table);
         table.setModel(dataModel);
-
 
         JPanel panel_1 = new JPanel();
         contentPane.add(panel_1, BorderLayout.NORTH);
@@ -122,7 +121,6 @@ public class NodeModelListFrame extends JFrame {
                 removeNodeModel();
             }
 
-
         });
         panel.add(btnDelete);
 
@@ -141,8 +139,6 @@ public class NodeModelListFrame extends JFrame {
         });
         panel.add(btnOk);
     }
-
-
 
     protected void viewNodeModel() {
         //
@@ -167,8 +163,7 @@ public class NodeModelListFrame extends JFrame {
          */
         private static final long serialVersionUID = 1L;
 
-        private List<NodeModel> data =
-                Collections.unmodifiableList(new ArrayList<NodeModel>());
+        private List<NodeModel> data = Collections.unmodifiableList(new ArrayList<NodeModel>());
 
         public void setData(List<NodeModel> data) {
             this.data = Collections.unmodifiableList(new ArrayList<NodeModel>(data));
@@ -209,9 +204,9 @@ public class NodeModelListFrame extends JFrame {
                 return null;
             }
 
-            //            row[3] = pm.getTranslateX();
-            //            row[4] = pm.getTranslateY();
-            //            row[5] = pm.getTranslateZ();
+            // row[3] = pm.getTranslateX();
+            // row[4] = pm.getTranslateY();
+            // row[5] = pm.getTranslateZ();
         }
 
         Class[] columnTypes = new Class[] { String.class, String.class, String.class };
@@ -251,7 +246,6 @@ public class NodeModelListFrame extends JFrame {
             }
         }
     }
-
 
     public JLabel getLblFileKey() {
         return lblFileKey;

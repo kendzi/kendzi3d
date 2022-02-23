@@ -19,7 +19,8 @@ public class ExpressiongBuilderTest extends TestCase {
     /**
      * Create the test case
      * 
-     * @param testName name of the test case
+     * @param testName
+     *            name of the test case
      */
     public ExpressiongBuilderTest(String testName) {
         super(testName);
@@ -57,7 +58,6 @@ public class ExpressiongBuilderTest extends TestCase {
         assertEquals(7d, value);
     }
 
-
     public void testExpression4() throws ExpressionExeption {
         Context c = new Context();
         Map<String, Object> var = new HashMap<String, Object>();
@@ -69,31 +69,24 @@ public class ExpressiongBuilderTest extends TestCase {
         assertEquals(6d, value);
     }
 
-
-
-    //    class DoubleFunction extends ArgExpression<Double> {
+    // class DoubleFunction extends ArgExpression<Double> {
     //
-    //        public DoubleFunction(Class<Double> expectedParamType) {
-    //            super(expectedParamType);
-    //            // TODO Auto-generated constructor stub
-    //        }
+    // public DoubleFunction(Class<Double> expectedParamType) {
+    // super(expectedParamType);
+    // // TODO Auto-generated constructor stub
+    // }
     //
-    //    }
+    // }
 
-
-
-
-    interface OneArgFunction  {
+    interface OneArgFunction {
         Expression build(Expression e);
     }
-
 
     public void testExpression5() throws ExpressionExeption {
         Context c = new Context();
         Map<String, Object> var = new HashMap<String, Object>();
         var.put("A", 5d);
         c.setVariables(var);
-
 
         Map<String, Function> fun = new HashMap<String, Function>();
         c.setFunctions(fun);
@@ -104,7 +97,6 @@ public class ExpressiongBuilderTest extends TestCase {
                 return 1 + param;
             }
         });
-
 
         Expression build = ExpressiongBuilder.build("1+funArgPlusOne(1)");
         Object value = build.evaluate(c);
@@ -117,7 +109,6 @@ public class ExpressiongBuilderTest extends TestCase {
         var.put("A", 5d);
         c.setVariables(var);
 
-
         Map<String, Function> fun = new HashMap<String, Function>();
         c.setFunctions(fun);
         fun.put("funTree", new ZeroParamFunction() {
@@ -127,7 +118,6 @@ public class ExpressiongBuilderTest extends TestCase {
                 return 3d;
             }
         });
-
 
         Expression build = ExpressiongBuilder.build("funTree()");
         Object value = build.evaluate(c);

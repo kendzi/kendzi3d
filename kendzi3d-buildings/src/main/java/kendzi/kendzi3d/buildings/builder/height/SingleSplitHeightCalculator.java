@@ -60,8 +60,7 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
         chain.add(p1);
         chain.add(p2);
 
-        List<Point2d> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain,
-                splittingLine);
+        List<Point2d> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain, splittingLine);
 
         List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
 

@@ -11,7 +11,6 @@ import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
-
 import org.poly2tri.Poly2Tri;
 import org.poly2tri.triangulation.Triangulatable;
 import org.poly2tri.triangulation.TriangulationAlgorithm;
@@ -215,8 +214,8 @@ public class Poly2TriUtil {
                 continue;
             }
 
-            triangles.add(new Triangle2d(new Point2d(t.points[0].getX(), t.points[0].getY()), new Point2d(t.points[1].getX(),
-                    t.points[1].getY()), new Point2d(t.points[2].getX(), t.points[2].getY())));
+            triangles.add(new Triangle2d(new Point2d(t.points[0].getX(), t.points[0].getY()),
+                    new Point2d(t.points[1].getX(), t.points[1].getY()), new Point2d(t.points[2].getX(), t.points[2].getY())));
         }
 
         return triangles;

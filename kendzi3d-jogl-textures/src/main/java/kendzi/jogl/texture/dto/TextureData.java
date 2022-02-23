@@ -25,6 +25,7 @@ public class TextureData {
     public TextureData(String pTex0, double pWidth, double pHeight) {
         this(pTex0, null, pWidth, pHeight, false);
     }
+
     public TextureData(String pTex0, String pTex1, double pWidth, double pHeight, Boolean colorable) {
         super();
         this.tex0 = pTex0;
@@ -78,6 +79,7 @@ public class TextureData {
     public void setHeight(double pHeight) {
         this.height = pHeight;
     }
+
     /**
      * @return the tex1
      */
@@ -86,7 +88,8 @@ public class TextureData {
     }
 
     /**
-     * @param tex1 the tex1 to set
+     * @param tex1
+     *            the tex1 to set
      */
     public void setTex1(String tex1) {
         this.tex1 = tex1;
@@ -110,6 +113,7 @@ public class TextureData {
         result = prime * result + ((tex1 == null) ? 0 : tex1.hashCode());
         return result;
     }
+
     /**
      * {@inheritDoc}
      *
@@ -149,20 +153,25 @@ public class TextureData {
         }
         return true;
     }
+
     /**
      * @return the colorable
      */
     public Boolean isColorable() {
         return colorable;
     }
+
     /**
-     * @param colorable the colorable to set
+     * @param colorable
+     *            the colorable to set
      */
     public void setColorable(Boolean colorable) {
         this.colorable = colorable;
     }
+
     /**
-     * @param width the width to set
+     * @param width
+     *            the width to set
      */
     public void setWidth(double width) {
         this.width = width;

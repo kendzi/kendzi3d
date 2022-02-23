@@ -1,16 +1,15 @@
 package kendzi.josm.kendzi3d.jogl.skybox;
 
+import com.google.inject.Inject;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import javax.vecmath.Point3d;
-
-import kendzi.jogl.texture.TextureCacheService;
-
-import com.google.inject.Inject;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
+
+import javax.vecmath.Point3d;
+import kendzi.jogl.texture.TextureCacheService;
 
 /**
  * Drawer for skybox.

@@ -1,6 +1,5 @@
 package kendzi.jogl.texture.library;
 
-
 public class TextureFindCriteria {
 
     public enum Type {
@@ -32,16 +31,13 @@ public class TextureFindCriteria {
         return this.type;
     }
 
-
-
     /**
-     * @param type the pType to set
+     * @param type
+     *            the pType to set
      */
     public void setType(Type type) {
         this.type = type;
     }
-
-
 
     /**
      * @return the typeName
@@ -50,16 +46,13 @@ public class TextureFindCriteria {
         return this.typeName;
     }
 
-
-
     /**
-     * @param typeName the typeName to set
+     * @param typeName
+     *            the typeName to set
      */
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
-
-
 
     /**
      * @return the subTypeName
@@ -68,16 +61,13 @@ public class TextureFindCriteria {
         return this.subTypeName;
     }
 
-
-
     /**
-     * @param subTypeName the subTypeName to set
+     * @param subTypeName
+     *            the subTypeName to set
      */
     public void setSubTypeName(String subTypeName) {
         this.subTypeName = subTypeName;
     }
-
-
 
     /**
      * @return the width
@@ -86,16 +76,13 @@ public class TextureFindCriteria {
         return this.width;
     }
 
-
-
     /**
-     * @param width the width to set
+     * @param width
+     *            the width to set
      */
     public void setWidth(Double width) {
         this.width = width;
     }
-
-
 
     /**
      * @return the height
@@ -104,16 +91,13 @@ public class TextureFindCriteria {
         return this.height;
     }
 
-
-
     /**
-     * @param height the height to set
+     * @param height
+     *            the height to set
      */
     public void setHeight(Double height) {
         this.height = height;
     }
-
-
 
     /**
      * {@inheritDoc}
@@ -131,8 +115,6 @@ public class TextureFindCriteria {
         result = prime * result + ((this.width == null) ? 0 : this.width.hashCode());
         return result;
     }
-
-
 
     /**
      * {@inheritDoc}
@@ -194,7 +176,8 @@ public class TextureFindCriteria {
     }
 
     /**
-     * @param colorable the colorable to set
+     * @param colorable
+     *            the colorable to set
      */
     public void setColorable(boolean colorable) {
         this.colorable = colorable;
@@ -208,7 +191,8 @@ public class TextureFindCriteria {
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId(int id) {
         this.id = id;

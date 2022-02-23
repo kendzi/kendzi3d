@@ -39,7 +39,6 @@ import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 import kendzi.kendzi3d.buildings.output.RoofDebugOutput;
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -62,8 +61,7 @@ public class ShapeRoofBuilder {
      *            texture data
      * @return roof model
      */
-    public static RoofOutput build(BuildingPart buildingPart, double height, ModelFactory mf,
-            RoofTextureData roofTextureData) {
+    public static RoofOutput build(BuildingPart buildingPart, double height, ModelFactory mf, RoofTextureData roofTextureData) {
 
         RoofMaterials roofMaterials = addMaterials(roofTextureData, mf);
 
@@ -75,15 +73,13 @@ public class ShapeRoofBuilder {
 
         {
             // FIXME
-            if (dormerRoof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null
-                    && buildingPart.getRoofLevels() != null) {
+            if (dormerRoof.getMeasurements().get(MeasurementKey.HEIGHT_1) == null && buildingPart.getRoofLevels() != null) {
 
                 double roofHeight = buildingPart.getDefaultRoofHeight();
                 if (buildingPart.getRoofLevels() < 1) {
                     roofHeight = 1d;
                 }
-                dormerRoof.getMeasurements().put(MeasurementKey.HEIGHT_1,
-                        new Measurement(roofHeight, MeasurementUnit.METERS));
+                dormerRoof.getMeasurements().put(MeasurementKey.HEIGHT_1, new Measurement(roofHeight, MeasurementUnit.METERS));
             }
         }
 
@@ -209,8 +205,7 @@ public class ShapeRoofBuilder {
         return out;
     }
 
-    private static void buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList,
-            ModelFactory modelFactory) {
+    private static void buildModel(RoofTypeOutput rto, List<RoofDormerTypeOutput> roofExtensionsList, ModelFactory modelFactory) {
 
         for (MeshFactory mf : rto.getMesh()) {
             transformMeshFactory(mf, rto.getTransformationMatrix());
@@ -222,8 +217,7 @@ public class ShapeRoofBuilder {
                 continue;
             }
 
-            SimpleMatrix roofMatrix = rto.getTransformationMatrix()
-                    .mult(roofDormerTypeOutput.getTransformationMatrix());
+            SimpleMatrix roofMatrix = rto.getTransformationMatrix().mult(roofDormerTypeOutput.getTransformationMatrix());
 
             for (MeshFactory mf : roofDormerTypeOutput.getMesh()) {
 

@@ -9,17 +9,14 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space;
 
-import org.ejml.simple.SimpleMatrix;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.RoofHookPoint;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRow;
+import org.ejml.simple.SimpleMatrix;
 
 public interface RoofHooksSpace {
 
-    RoofHookPoint [] getRoofHookPoints(int number, DormerRow dormerRow, int dormerRowNum);
+    RoofHookPoint[] getRoofHookPoints(int number, DormerRow dormerRow, int dormerRowNum);
 
     SimpleMatrix getTransformationMatrix();
-
-
 
 }

@@ -29,27 +29,30 @@ public class ModelFactory {
         return new ModelFactory();
     }
 
-
     private List<MeshFactory> mashFactory = new ArrayList<MeshFactory>();;
 
     protected ModelFactory() {
         //
     }
 
+    // public void addMesh(MashFactory mf) {
+    // mashFactory.add(mf);
+    // }
 
-    //	public void addMesh(MashFactory mf) {
-    //		mashFactory.add(mf);
-    //	}
-
-    /** Add mesh to model.
+    /**
+     * Add mesh to model.
+     * 
      * @return added mesh
      */
     public MeshFactory addMesh() {
         return addMesh((String) null);
     }
 
-    /** Add mesh to model.
-     * @param pName name of mesh
+    /**
+     * Add mesh to model.
+     * 
+     * @param pName
+     *            name of mesh
      * @return added mesh
      */
     public MeshFactory addMesh(String pName) {
@@ -59,8 +62,11 @@ public class ModelFactory {
         return mf;
     }
 
-    /** Add mesh to model.
-     * @param pMesh mesh
+    /**
+     * Add mesh to model.
+     * 
+     * @param pMesh
+     *            mesh
      * @return added mesh
      */
     public MeshFactory addMesh(MeshFactory pMesh) {
@@ -68,14 +74,9 @@ public class ModelFactory {
         return pMesh;
     }
 
-
-
-
-
-
-
-
-    /** Convert Factory object into model.
+    /**
+     * Convert Factory object into model.
+     * 
      * @return model generated from ModelFactory
      */
     public Model toModel() {
@@ -99,26 +100,24 @@ public class ModelFactory {
             mesh.vertices = mf.vertices.toArray(new Point3d[0]);
             mesh.normals = mf.normals.toArray(new Vector3d[0]);
             mesh.texCoords = mf.textCoords.toArray(new TextCoord[0]);
-            //            mesh.texture = mf.getTexture();
-            //            //XXX
-            //            mesh.hasTexture = mf.getTexture() != null;
+            // mesh.texture = mf.getTexture();
+            // //XXX
+            // mesh.hasTexture = mf.getTexture() != null;
 
             for (Point3d v : mesh.vertices) {
                 bf.addPoint(v);
             }
 
-
             List<FaceFactory> faceFactory = mf.faceFactory;
-
 
             m.mesh[meshCount] = mesh;
 
-            Face [] faces = new Face[faceFactory.size()];
+            Face[] faces = new Face[faceFactory.size()];
             int j = 0;
             for (FaceFactory ff : faceFactory) {
                 Face f = new Face(ff.type.getType(), ff.vertIndex.size(), ff.numOfTexturesLayers());
-//                f.type = ff.type.getType();
-//                f.coordIndex = new int[ff.coordIndex.size()];
+                // f.type = ff.type.getType();
+                // f.coordIndex = new int[ff.coordIndex.size()];
                 for (int l = 0; l < ff.numOfTexturesLayers(); l++) {
                     List<Integer> coordIndex = ff.coordIndexLayers.get(l);
 
@@ -127,30 +126,30 @@ public class ModelFactory {
                     }
                 }
 
-//                if (ff.coordIndex1 != null) {
-//                    f.coordIndex1 = new int[ff.coordIndex1.size()];
-//                    for (int i = 0; i < ff.coordIndex1.size(); i++) {
-//                        f.coordIndex1[i] = ff.coordIndex1.get(i);
-//                    }
-//                }
-//
-//                if (ff.coordIndex2 != null) {
-//                    f.coordIndex2 = new int[ff.coordIndex2.size()];
-//                    for (int i = 0; i < ff.coordIndex2.size(); i++) {
-//                        f.coordIndex2[i] = ff.coordIndex2.get(i);
-//                    }
-//                }
+                // if (ff.coordIndex1 != null) {
+                // f.coordIndex1 = new int[ff.coordIndex1.size()];
+                // for (int i = 0; i < ff.coordIndex1.size(); i++) {
+                // f.coordIndex1[i] = ff.coordIndex1.get(i);
+                // }
+                // }
+                //
+                // if (ff.coordIndex2 != null) {
+                // f.coordIndex2 = new int[ff.coordIndex2.size()];
+                // for (int i = 0; i < ff.coordIndex2.size(); i++) {
+                // f.coordIndex2[i] = ff.coordIndex2.get(i);
+                // }
+                // }
 
-//                f.normalIndex = new int[ff.normalIndex.size()];
+                // f.normalIndex = new int[ff.normalIndex.size()];
                 for (int i = 0; i < ff.normalIndex.size(); i++) {
                     f.normalIndex[i] = ff.normalIndex.get(i);
                 }
-//                f.vertIndex = new int[ff.vertIndex.size()];
+                // f.vertIndex = new int[ff.vertIndex.size()];
                 for (int i = 0; i < ff.vertIndex.size(); i++) {
                     f.vertIndex[i] = ff.vertIndex.get(i);
                 }
-//                if (no face material)
-//                f.materialID = mesh.materialID;
+                // if (no face material)
+                // f.materialID = mesh.materialID;
 
                 faces[j] = f;
 
@@ -167,9 +166,11 @@ public class ModelFactory {
         return m;
     }
 
-
-    /** Add material used in model.
-     * @param mat material
+    /**
+     * Add material used in model.
+     * 
+     * @param mat
+     *            material
      * @return id of material in model
      */
     public int addMaterial(Material mat) {
@@ -181,13 +182,12 @@ public class ModelFactory {
     public int cacheMaterial(Material mat) {
 
         int i = this.materials.indexOf(mat);
-        if ( i >= 0 ) {
+        if (i >= 0) {
             return i;
         }
 
         return addMaterial(mat);
     }
-
 
     /**
      * @return the mashFactory

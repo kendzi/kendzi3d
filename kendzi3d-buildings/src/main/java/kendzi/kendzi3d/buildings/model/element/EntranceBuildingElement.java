@@ -60,7 +60,8 @@ public class EntranceBuildingElement extends SquareHoleElement {
     }
 
     /**
-     * @param entranceType the entranceType to set
+     * @param entranceType
+     *            the entranceType to set
      */
     public void setEntranceType(String entranceType) {
         this.entranceType = entranceType;

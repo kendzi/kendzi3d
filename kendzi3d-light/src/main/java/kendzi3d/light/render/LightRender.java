@@ -1,9 +1,10 @@
 package kendzi3d.light.render;
 
-import javax.inject.Inject;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+
+import javax.inject.Inject;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi3d.light.service.LightRenderService;

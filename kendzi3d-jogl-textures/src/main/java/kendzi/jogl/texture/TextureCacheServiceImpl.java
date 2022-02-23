@@ -6,6 +6,14 @@
 
 package kendzi.jogl.texture;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -15,19 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.glu.GLU;
 
 import kendzi.jogl.texture.builder.TextureBuilder;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
 import org.apache.log4j.Logger;
-
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
-import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCacheService {
 

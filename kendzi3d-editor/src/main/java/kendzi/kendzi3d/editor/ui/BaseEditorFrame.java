@@ -1,15 +1,17 @@
 package kendzi.kendzi3d.editor.ui;
 
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.Animator;
+
 import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.inject.Inject;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
 
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
@@ -136,8 +138,8 @@ public abstract class BaseEditorFrame extends Frame {
 
     private void closeWindowRequest(final Frame frame, final AnimatorBase animator) {
         /*
-         * Run this on another thread than the AWT event queue to make sure the
-         * call to Animator.stop() completes before exiting.
+         * Run this on another thread than the AWT event queue to make sure the call to
+         * Animator.stop() completes before exiting.
          */
         new Thread(new Runnable() {
 

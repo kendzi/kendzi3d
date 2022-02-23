@@ -6,6 +6,9 @@
 
 package kendzi.josm.kendzi3d.jogl.model.trees;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -17,12 +20,6 @@ import java.util.Random;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Way;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Bounds;
@@ -41,6 +38,8 @@ import kendzi.kendzi3d.world.MultiPointWorldObject;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Representing trees in row model.

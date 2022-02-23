@@ -100,14 +100,13 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             LinePoints2d bLine = new LinePoints2d(new Point2d(0, l1), new Point2d(pRecWidth, l1));
 
-            MultiPolygonSplitResult middleSplit = PolygonSplitHelper.splitMultiPolygon(new MultiPolygonList2d(
-                    new PolygonList2d(borderList)), bLine);
+            MultiPolygonSplitResult middleSplit = PolygonSplitHelper
+                    .splitMultiPolygon(new MultiPolygonList2d(new PolygonList2d(borderList)), bLine);
 
             MultiPolygonList2d centerMP = middleSplit.getLeftMultiPolygon();
 
             if (type >= 2) {
-                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2,
-                        pRecHeight));
+                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2, pRecHeight));
 
                 MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, rLine);
 
@@ -117,8 +116,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             if (type >= 3) {
 
-                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0,
-                        pRecHeight - l3));
+                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0, pRecHeight - l3));
 
                 MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, tLine);
 

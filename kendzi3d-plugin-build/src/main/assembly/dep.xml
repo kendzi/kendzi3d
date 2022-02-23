@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <assembly>
   <!-- TODO: a jarjar format would be better -->
   <id>dep</id>
@@ -7,7 +8,7 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-    <directory>${basedir}</directory>
+      <directory>${basedir}</directory>
       <includes>
         <include>*.txt</include>
       </includes>

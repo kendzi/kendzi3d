@@ -5,6 +5,8 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
+
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -12,8 +14,6 @@ import javax.vecmath.Vector3d;
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.math.geometry.point.Vector3dUtil;
-
-import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * Drawer for measure tap.
@@ -107,12 +107,12 @@ public class MeasureDrawer {
 
         gl.glVertex3d(arrowheadPoint.x, arrowheadPoint.y, arrowheadPoint.z);
         gl.glVertex3d(//
-                arrowheadPoint.x + arrowheadVector.x + arrowheadWidthVector.x,//
-                arrowheadPoint.y + arrowheadVector.y + arrowheadWidthVector.y,//
+                arrowheadPoint.x + arrowheadVector.x + arrowheadWidthVector.x, //
+                arrowheadPoint.y + arrowheadVector.y + arrowheadWidthVector.y, //
                 arrowheadPoint.z + arrowheadVector.z + arrowheadWidthVector.z);
         gl.glVertex3d( //
-                arrowheadPoint.x + arrowheadVector.x - arrowheadWidthVector.x,//
-                arrowheadPoint.y + arrowheadVector.y - arrowheadWidthVector.y,//
+                arrowheadPoint.x + arrowheadVector.x - arrowheadWidthVector.x, //
+                arrowheadPoint.y + arrowheadVector.y - arrowheadWidthVector.y, //
                 arrowheadPoint.z + arrowheadVector.z - arrowheadWidthVector.z);
 
         gl.glEnd();

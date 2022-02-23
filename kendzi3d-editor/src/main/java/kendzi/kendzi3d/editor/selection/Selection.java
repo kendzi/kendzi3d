@@ -18,8 +18,8 @@ public interface Selection {
     Double intersect(Ray3d ray);
 
     /**
-     * Fast check if given object is candidate to be selected. Exact result can
-     * be check with method intersect.
+     * Fast check if given object is candidate to be selected. Exact result can be
+     * check with method intersect.
      * 
      * @see kendzi.kendzi3d.editor.selection.Selection#intersect(Ray3d)
      * 

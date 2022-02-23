@@ -8,17 +8,16 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.JosmAction;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * Clean up action.

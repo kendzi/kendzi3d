@@ -3,7 +3,6 @@ package kendzi.kendzi3d.buildings.model;
 import java.util.List;
 
 import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.model.element.BuildingNodeElement;
 
 public class WallNode {
@@ -31,7 +30,8 @@ public class WallNode {
     }
 
     /**
-     * @param point the point to set
+     * @param point
+     *            the point to set
      */
     public void setPoint(Point2d point) {
         this.point = point;
@@ -45,11 +45,11 @@ public class WallNode {
     }
 
     /**
-     * @param buildingElements the buildingElements to set
+     * @param buildingElements
+     *            the buildingElements to set
      */
     public void setBuildingNodeElements(List<BuildingNodeElement> buildingElements) {
         this.buildingNodeElements = buildingElements;
     }
-
 
 }

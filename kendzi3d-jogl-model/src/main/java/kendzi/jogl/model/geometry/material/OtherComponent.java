@@ -8,13 +8,12 @@ public class OtherComponent {
     private Color emissive = Color.BLACK;
     private float shininess;
 
-
-//  public float shininess2;
-//  public float transparency;
-//  public float uTile;
-//  public float vTile;
-//  public float uOffset;
-//  public float vOffset;
+    // public float shininess2;
+    // public float transparency;
+    // public float uTile;
+    // public float vTile;
+    // public float uOffset;
+    // public float vOffset;
 
     /**
      *
@@ -63,7 +62,5 @@ public class OtherComponent {
     public float getShininess() {
         return this.shininess;
     }
-
-
 
 }

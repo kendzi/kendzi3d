@@ -8,7 +8,6 @@ import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementParserUtil;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementUnit;
-
 import org.apache.log4j.Logger;
 
 public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {

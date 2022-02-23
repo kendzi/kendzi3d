@@ -8,10 +8,9 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
+import org.apache.log4j.Logger;
 
 /**
  * Roof type 2.2.

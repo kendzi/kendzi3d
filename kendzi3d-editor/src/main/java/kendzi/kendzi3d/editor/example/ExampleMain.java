@@ -1,11 +1,9 @@
 package kendzi.kendzi3d.editor.example;
 
-import kendzi.kendzi3d.editor.example.ui.ExampleFrame;
-
-import org.apache.log4j.BasicConfigurator;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import kendzi.kendzi3d.editor.example.ui.ExampleFrame;
+import org.apache.log4j.BasicConfigurator;
 
 public class ExampleMain {
 

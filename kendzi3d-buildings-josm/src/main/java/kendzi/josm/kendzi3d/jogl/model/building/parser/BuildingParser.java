@@ -31,7 +31,6 @@ import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil;
 import kendzi.kendzi3d.josm.model.polygon.PolygonWithHolesUtil.AreaWithHoles;
 import kendzi.kendzi3d.josm.model.polygon.ReversableWay;
 import kendzi.util.StringUtil;
-
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;

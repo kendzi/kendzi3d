@@ -1,7 +1,6 @@
 package kendzi.kendzi3d.world;
 
 import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.EditableObject;
 
 /**

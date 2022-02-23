@@ -1,7 +1,6 @@
 package kendzi.kendzi3d.editor;
 
 import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.Selectable;
 
 /**

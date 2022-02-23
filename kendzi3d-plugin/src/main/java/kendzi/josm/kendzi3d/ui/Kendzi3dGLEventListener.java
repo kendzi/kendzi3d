@@ -1,11 +1,11 @@
 package kendzi.josm.kendzi3d.ui;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+
 import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
@@ -127,8 +127,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
         if (!gl.isExtensionAvailable("GL_ARB_multitexture")) {
 
             /*
-             * Check if the extension ARB_multitexture is supported by the
-             * Graphic card
+             * Check if the extension ARB_multitexture is supported by the Graphic card
              */
             SwingUtilities.invokeLater(new Runnable() {
                 @Override

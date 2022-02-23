@@ -7,10 +7,11 @@
  *
  */
 
-
 package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import com.google.inject.Inject;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -22,11 +23,8 @@ import javax.xml.bind.JAXBException;
 
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
-
-import com.google.inject.Inject;
 
 /**
  * Texture filter toggle action.
@@ -51,17 +49,13 @@ public class WikiTextureLoaderAction extends JosmAction {
 
     /**
      * Constructor of wiki texture loader toggle action.
-     * @param pWikiTextureLoaderService wiki texture loader service
+     * 
+     * @param pWikiTextureLoaderService
+     *            wiki texture loader service
      */
     @Inject
     public WikiTextureLoaderAction(WikiTextureLoaderService pWikiTextureLoaderService) {
-        super(
-                tr("Load textures from wiki"),
-                "1323558253_wikipedia-icon_24",
-                tr("Load textures from wiki"),
-                null,
-                false
-        );
+        super(tr("Load textures from wiki"), "1323558253_wikipedia-icon_24", tr("Load textures from wiki"), null, false);
 
         this.wikiTextureLoaderService = pWikiTextureLoaderService;
     }
@@ -91,30 +85,23 @@ public class WikiTextureLoaderAction extends JosmAction {
         if (errors != null && !errors.isEmpty()) {
 
             StringBuffer sb = new StringBuffer();
-            for (String err: errors ) {
+            for (String err : errors) {
                 sb.append(err);
                 sb.append("\n");
             }
 
-            JOptionPane.showMessageDialog(null,
-                    tr("Error downloding textures from urls: ") + "\n" + sb,
-                    "Error",
+            JOptionPane.showMessageDialog(null, tr("Error downloding textures from urls: ") + "\n" + sb, "Error",
                     JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null,
-                    tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
-                            + this.wikiTextureLoaderService.getTexturesPath() ,
-                    "Info",
-                    JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("Downloded textures from wiki timestamp: " + timestamp + " to path: ") + "\n"
+                    + this.wikiTextureLoaderService.getTexturesPath(), "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     private void showError(Exception e) {
-      //custom title, error icon
-        JOptionPane.showMessageDialog(null,
-            "Error downloding textures from wiki: " + e.getMessage(),
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
+        // custom title, error icon
+        JOptionPane.showMessageDialog(null, "Error downloding textures from wiki: " + e.getMessage(), "Error",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -124,6 +111,6 @@ public class WikiTextureLoaderAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-//        setEnabled(Main.map != null && Main.main.getEditLayer() != null);
+        // setEnabled(Main.map != null && Main.main.getEditLayer() != null);
     }
 }

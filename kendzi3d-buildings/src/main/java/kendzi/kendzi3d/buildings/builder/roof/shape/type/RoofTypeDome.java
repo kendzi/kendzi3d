@@ -31,7 +31,6 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -112,8 +111,8 @@ public class RoofTypeDome extends AbstractRoofTypeBuilder {
         buildRotaryShape(meshFactory, center, borderList, crossSection, roofTexture);
     }
 
-    public static void buildRotaryShape(MeshFactory meshFactory, Point2d center, List<Point2d> borderList,
-            Point2d[] crossSection, TextureData roofTexture) {
+    public static void buildRotaryShape(MeshFactory meshFactory, Point2d center, List<Point2d> borderList, Point2d[] crossSection,
+            TextureData roofTexture) {
 
         int crossCount = crossSection.length;
         int pointCount = borderList.size();

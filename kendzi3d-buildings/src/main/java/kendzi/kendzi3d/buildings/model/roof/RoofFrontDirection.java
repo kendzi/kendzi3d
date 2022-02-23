@@ -24,24 +24,28 @@ public class RoofFrontDirection {
     public Vector2d getDirection() {
         return this.direction;
     }
+
     /**
-     * @param direction the direction to set
+     * @param direction
+     *            the direction to set
      */
     public void setDirection(Vector2d direction) {
         this.direction = direction;
     }
+
     /**
      * @return the soft
      */
     public boolean isSoft() {
         return this.soft;
     }
+
     /**
-     * @param soft the soft to set
+     * @param soft
+     *            the soft to set
      */
     public void setSoft(boolean soft) {
         this.soft = soft;
     }
-
 
 }

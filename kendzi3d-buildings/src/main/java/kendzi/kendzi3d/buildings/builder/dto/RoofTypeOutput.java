@@ -13,7 +13,6 @@ import javax.vecmath.Point3d;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.kendzi3d.buildings.builder.height.HeightCalculator;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space.RoofHooksSpaces;
-
 import org.ejml.simple.SimpleMatrix;
 
 public class RoofTypeOutput {

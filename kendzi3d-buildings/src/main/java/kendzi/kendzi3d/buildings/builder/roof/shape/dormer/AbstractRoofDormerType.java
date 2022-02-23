@@ -11,12 +11,11 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementParserUtil;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementUnit;
+import org.apache.log4j.Logger;
 
 public abstract class AbstractRoofDormerType implements RoofDormerType {
 
@@ -62,8 +61,7 @@ public abstract class AbstractRoofDormerType implements RoofDormerType {
         }
     }
 
-    protected static Measurement getMeasurement(MeasurementKey pDormerWidth1,
-            Map<MeasurementKey, Measurement> pMeasurements) {
+    protected static Measurement getMeasurement(MeasurementKey pDormerWidth1, Map<MeasurementKey, Measurement> pMeasurements) {
         if (pMeasurements == null) {
             return null;
         }

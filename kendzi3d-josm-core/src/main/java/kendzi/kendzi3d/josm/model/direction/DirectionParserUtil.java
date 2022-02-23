@@ -8,7 +8,6 @@
  */
 package kendzi.kendzi3d.josm.model.direction;
 
-
 /**
  * Direction parser util.
  *
@@ -18,7 +17,9 @@ public class DirectionParserUtil {
 
     /**
      * Parse string to direction.
-     * @param pDirection direction string
+     * 
+     * @param pDirection
+     *            direction string
      * @return direction
      */
     public static Direction parse(String pDirection) {

@@ -13,12 +13,11 @@ import java.util.Set;
 
 import javax.vecmath.Point2d;
 
+import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
+import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-
-import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
-import kendzi.kendzi3d.josm.model.perspective.Perspective;
 
 public abstract class AbstractWayModel extends AbstractModel {
 

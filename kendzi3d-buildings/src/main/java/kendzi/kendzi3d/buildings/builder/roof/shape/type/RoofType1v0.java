@@ -6,10 +6,9 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofTypeOutput;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
+import org.apache.log4j.Logger;
 
 /**
  * Roof type 1.0.

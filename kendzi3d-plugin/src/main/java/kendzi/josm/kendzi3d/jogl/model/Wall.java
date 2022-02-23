@@ -6,13 +6,14 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
@@ -45,7 +46,6 @@ import kendzi.math.geometry.Bool.CSG.Vertex;
 import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
 import kendzi.math.geometry.point.Vector2dUtil;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
@@ -110,8 +110,8 @@ public class Wall extends AbstractWayModel {
      * @param pMetadataCacheService
      *            metadata cache service
      */
-    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
+    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pWay, perspective);
 
@@ -129,8 +129,7 @@ public class Wall extends AbstractWayModel {
 
         String fenceType = BarrierFenceRelation.getFenceType(way);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
-                fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         hight = ModelUtil.getHeight(way, fenceHeight);
 
@@ -318,8 +317,8 @@ public class Wall extends AbstractWayModel {
 
     }
 
-    private MeshFactory buildWallModelWithHoles(List<Point2d> points, List<WallHole> holeList, double min_height,
-            double height, double width) {
+    private MeshFactory buildWallModelWithHoles(List<Point2d> points, List<WallHole> holeList, double min_height, double height,
+            double width) {
 
         MeshFactory wallMesh = new MeshFactory();
 
@@ -696,8 +695,8 @@ public class Wall extends AbstractWayModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override

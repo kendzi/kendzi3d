@@ -6,19 +6,15 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -39,6 +35,9 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Fence for shapes defined as way.
@@ -102,8 +101,8 @@ public class BarrierWall extends AbstractWayModel {
      * @param pTextureLibraryStorageService
      *            texture library service
      */
-    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
+    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
         super(pWay, perspective);
 
         modelRender = pModelRender;
@@ -134,8 +133,7 @@ public class BarrierWall extends AbstractWayModel {
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border",
-                modelBuilder);
+        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border", modelBuilder);
 
         BarrierFenceRelation.buildWallModel(points, null, minHeight, hight, 0, meshBorder, wallTexture);
 
@@ -243,8 +241,8 @@ public class BarrierWall extends AbstractWayModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override

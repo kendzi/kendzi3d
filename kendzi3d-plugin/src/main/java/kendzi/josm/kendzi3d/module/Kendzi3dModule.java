@@ -1,11 +1,11 @@
 package kendzi.josm.kendzi3d.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.CameraMoveListener;
@@ -80,9 +80,8 @@ public class Kendzi3dModule extends AbstractModule {
         bindConstant().annotatedWith(Kendzi3dPluginDirectory.class).to(pluginDirectory);
 
         /*
-         * This tells Guice that whenever it sees a dependency on a
-         * UrlReciverService, it should satisfy the dependency using a
-         * FileUrlReciverService.
+         * This tells Guice that whenever it sees a dependency on a UrlReciverService,
+         * it should satisfy the dependency using a FileUrlReciverService.
          */
         bind(ResourceService.class).to(ResourceManagerService.class);
 

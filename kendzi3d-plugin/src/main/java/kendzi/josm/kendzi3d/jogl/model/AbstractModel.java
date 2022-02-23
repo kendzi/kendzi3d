@@ -22,7 +22,6 @@ import kendzi.kendzi3d.editor.selection.Selectable;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.AbstractWorldObject;
-
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -34,11 +33,11 @@ import org.openstreetmap.josm.data.preferences.BooleanProperty;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public abstract class AbstractModel extends AbstractWorldObject implements Selectable, DrawableModel, ModelFrame, GlobalFrame,
-OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
+public abstract class AbstractModel extends AbstractWorldObject
+        implements Selectable, DrawableModel, ModelFrame, GlobalFrame, OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
-    protected static final BooleanProperty PREFER_TWO_SIDED =
-            new BooleanProperty("kendzi3d.models.preferTwoSidedLightingOverFaceCulling", true);
+    protected static final BooleanProperty PREFER_TWO_SIDED = new BooleanProperty(
+            "kendzi3d.models.preferTwoSidedLightingOverFaceCulling", true);
 
     protected double radius;
 
@@ -187,6 +186,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalX()
      */
     @Override
@@ -197,6 +197,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalY()
      */
     @Override
@@ -207,6 +208,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see
      * kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrame(javax.vecmath
      * .Point2d)

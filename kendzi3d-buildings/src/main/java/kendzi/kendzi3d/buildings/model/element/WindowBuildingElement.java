@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.buildings.model.element;
 
-
 /**
  * Window on building part outline.
  * 
@@ -54,7 +53,8 @@ public class WindowBuildingElement extends SquareHoleElement {
     }
 
     /**
-     * @param windowType the windowType to set
+     * @param windowType
+     *            the windowType to set
      */
     public void setWindowType(String windowType) {
         this.windowType = windowType;

@@ -114,8 +114,8 @@ public class Kendzi3dCore implements EditorCore, Perspective3dProvider {
                 objectsHasChanged = false;
             } catch (ConcurrentModificationException e) {
                 /*
-                 * Don't care about concurrent exception, new object will be
-                 * processed in next frame.
+                 * Don't care about concurrent exception, new object will be processed in next
+                 * frame.
                  */
             }
         }

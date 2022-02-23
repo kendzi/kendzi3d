@@ -14,7 +14,6 @@ import javax.vecmath.Point2d;
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
-
 import org.apache.log4j.Logger;
 
 /**

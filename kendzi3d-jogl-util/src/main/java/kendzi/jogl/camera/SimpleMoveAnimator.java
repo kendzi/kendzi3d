@@ -12,7 +12,6 @@ import java.util.EnumMap;
 import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
-
 import kendzi.math.geometry.point.PointUtil;
 
 /**
@@ -84,9 +83,8 @@ public class SimpleMoveAnimator implements Camera {
     private static final double ROTATE_ACCELERATRION = Math.toRadians(180);
 
     /**
-     * Timeout for key press. After that time if key is not activate any longer
-     * it should be deactivated event if window lost focus and event key_up
-     * don't come.
+     * Timeout for key press. After that time if key is not activate any longer it
+     * should be deactivated event if window lost focus and event key_up don't come.
      */
     private static final double SPEED_ACTIVE_TIMEOUT = 3d;
 
@@ -476,7 +474,7 @@ public class SimpleMoveAnimator implements Camera {
                 + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
                 + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
 
-        + "]";
+                + "]";
     }
 
     String format(Tuple3d tuple) {

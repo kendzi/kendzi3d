@@ -25,7 +25,6 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -119,24 +118,24 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         if (numOfBend > 1) {
             Double h2 = getHeightMeters(measurements, MeasurementKey.HEIGHT_2, h1 * 1 / numOfBend);
-            Double l2 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_2, ratius, ratius * (numOfBend - 1)
-                    / numOfBend);
+            Double l2 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_2, ratius,
+                    ratius * (numOfBend - 1) / numOfBend);
 
             bends[1] = new Bend(h2, l2);
         }
 
         if (numOfBend > 2) {
             Double h3 = getHeightMeters(measurements, MeasurementKey.HEIGHT_3, h1 * 2 / numOfBend);
-            Double l3 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_3, ratius, ratius * (numOfBend - 2)
-                    / numOfBend);
+            Double l3 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_3, ratius,
+                    ratius * (numOfBend - 2) / numOfBend);
 
             bends[2] = new Bend(h3, l3);
         }
 
         if (numOfBend > 3) {
             Double h4 = getHeightMeters(measurements, MeasurementKey.HEIGHT_4, h1 * 3 / numOfBend);
-            Double l4 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_4, ratius, ratius * (numOfBend - 3)
-                    / numOfBend);
+            Double l4 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_4, ratius,
+                    ratius * (numOfBend - 3) / numOfBend);
 
             bends[3] = new Bend(h4, l4);
         }

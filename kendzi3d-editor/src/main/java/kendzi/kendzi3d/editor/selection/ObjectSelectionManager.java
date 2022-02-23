@@ -26,7 +26,6 @@ import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -101,9 +100,9 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     }
 
     /**
-     * Translates 2d mouse coordinates in window space into 3d ray inside 3d
-     * screen. Ray position and direction depends on mouse location and current
-     * viewport settings.
+     * Translates 2d mouse coordinates in window space into 3d ray inside 3d screen.
+     * Ray position and direction depends on mouse location and current viewport
+     * settings.
      *
      * @param x
      *            mouse x location in window space

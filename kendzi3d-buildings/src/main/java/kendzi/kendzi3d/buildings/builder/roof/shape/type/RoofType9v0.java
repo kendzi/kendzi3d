@@ -39,7 +39,6 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2dUtil;
 import kendzi.math.geometry.skeleton.EdgeOutput;
 import kendzi.math.geometry.skeleton.Skeleton;
 import kendzi.math.geometry.skeleton.SkeletonOutput;
-
 import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
 

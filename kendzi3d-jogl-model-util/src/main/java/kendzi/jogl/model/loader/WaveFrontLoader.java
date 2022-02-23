@@ -30,7 +30,6 @@ import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -43,11 +42,8 @@ public class WaveFrontLoader implements iLoader {
     /** Log. */
     private static final Logger log = Logger.getLogger(WaveFrontLoader.class);
 
-
-    //  = ApplicationContextUtil.getFileUrlReciverService();
+    // = ApplicationContextUtil.getFileUrlReciverService();
     ResourceService urlReciverService;
-
-
 
     public static final String VERTEX_DATA = "v ";
     public static final String NORMAL_DATA = "vn ";
@@ -67,11 +63,10 @@ public class WaveFrontLoader implements iLoader {
     // the model
     private Model model = null;
     /** Bounds of the model. */
-    //    private Bounds bounds = new Bounds();
+    // private Bounds bounds = new Bounds();
     /** Center of the model. */
-    //    private Point3d center = new Point3d(0.0f, 0.0f, 0.0f);
+    // private Point3d center = new Point3d(0.0f, 0.0f, 0.0f);
     private String baseDir = null;
-
 
     /**
      * Creates a new instance of myWaveFrontLoader.
@@ -84,8 +79,11 @@ public class WaveFrontLoader implements iLoader {
 
     /**
      * Creates a new instance of myWaveFrontLoader.
-     * @param replaceTextureMaterialName load and replace texture for given material name
-     * @param replaceTextureNewKey new texture for given material name
+     * 
+     * @param replaceTextureMaterialName
+     *            load and replace texture for given material name
+     * @param replaceTextureNewKey
+     *            new texture for given material name
      * 
      * @param urlReciverService
      */
@@ -106,7 +104,6 @@ public class WaveFrontLoader implements iLoader {
 
     private List<Vector3d> vectorList = new ArrayList<Vector3d>();
 
-
     private String replaceTextureMaterialName;
 
     private String replaceTextureNewKey;
@@ -117,11 +114,9 @@ public class WaveFrontLoader implements iLoader {
         this.model = new Model(path);
         Mesh mesh = null;
 
-
-
         this.baseDir = "";
         path = replacePathSign(path);
-        String [] tokens = path.split("/");
+        String[] tokens = path.split("/");
         for (int i = 0; i < tokens.length - 1; i++) {
             this.baseDir += tokens[i] + "/";
         }
@@ -130,7 +125,7 @@ public class WaveFrontLoader implements iLoader {
         String fileName = this.model.getSource();
         try {
 
-            //            stream = ResourceRetriever.getResourceAsInputStream(model.getSource());
+            // stream = ResourceRetriever.getResourceAsInputStream(model.getSource());
             URL modelURL = this.urlReciverService.resourceToUrl(fileName);
 
             if (modelURL != null) {
@@ -140,14 +135,14 @@ public class WaveFrontLoader implements iLoader {
                 throw new ModelLoadException("Stream is null for resource: " + this.model.getSource());
             }
         } catch (IOException e) {
-            //FIXME
+            // FIXME
             throw new ModelLoadException("Caught IO exception for file : " + fileName + " " + e);
         }
 
         try {
             // Open a file handle and read the models data
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-            String  line = null;
+            String line = null;
             while ((line = this.lastLineToProcess) != null || (line = br.readLine()) != null) {
                 this.lastLineToProcess = null;
 
@@ -180,8 +175,8 @@ public class WaveFrontLoader implements iLoader {
                     }
 
                     this.vertexList.addAll(getPoints1(line, br));
-                    //                    mesh.vertices = (Point3d[]) getPoints(VERTEX_DATA, line, br);
-                    //                    mesh.numOfVerts = mesh.vertices.length;
+                    // mesh.vertices = (Point3d[]) getPoints(VERTEX_DATA, line, br);
+                    // mesh.numOfVerts = mesh.vertices.length;
                 }
 
                 if (lineIs(TEXTURE_DATA, line)) {
@@ -190,9 +185,9 @@ public class WaveFrontLoader implements iLoader {
                     }
 
                     this.texCoordsList.addAll(getTexCoords1(line, br));
-                    //                    mesh.texCoords = getTexCoords(TEXTURE_DATA, line, br);
+                    // mesh.texCoords = getTexCoords(TEXTURE_DATA, line, br);
                     mesh.hasTexture = true;
-                    //                    mesh.numTexCoords = mesh.texCoords.length;
+                    // mesh.numTexCoords = mesh.texCoords.length;
                 }
 
                 if (lineIs(NORMAL_DATA, line)) {
@@ -202,10 +197,10 @@ public class WaveFrontLoader implements iLoader {
 
                     this.vectorList.addAll(getNormals(line, br));
 
-                    //                    Vector3d [] normals = (Vector3d []) getPoints(NORMAL_DATA, line, br);
-                    //                    if (!this.rebildNormals) {
-                    //                        mesh.normals = normals;
-                    //                    }
+                    // Vector3d [] normals = (Vector3d []) getPoints(NORMAL_DATA, line, br);
+                    // if (!this.rebildNormals) {
+                    // mesh.normals = normals;
+                    // }
                 }
 
                 if (lineIs(FACE_DATA, line)) {
@@ -214,12 +209,11 @@ public class WaveFrontLoader implements iLoader {
                     }
 
                     mesh.face = getFaces(line, mesh, br);
-                    //                    mesh.numOfFaces = mesh.face.length;
+                    // mesh.numOfFaces = mesh.face.length;
 
                     if (mesh.face != null && mesh.face.length > 0 && mesh.face[0].coordIndexLayers.length > 0) {
                         mesh.hasTexture = true;
                     }
-
 
                 }
 
@@ -238,27 +232,25 @@ public class WaveFrontLoader implements iLoader {
             throw new ModelLoadException("Failed to find or read OBJ: " + stream);
         }
 
-
         // FIXME
         if (mesh.vertices != null) {
             addMesh(mesh);
         }
-        //        model.addMesh(mesh);
-
+        // model.addMesh(mesh);
 
         mesh = null;
 
-        Point3d[] vertexArray = this.vertexList.toArray(new Point3d [0]);
-        TextCoord[] texCoordsArray = this.texCoordsList.toArray(new TextCoord [0]);
-        Vector3d[] vectorArray = this.vectorList.toArray(new Vector3d [0]);
+        Point3d[] vertexArray = this.vertexList.toArray(new Point3d[0]);
+        TextCoord[] texCoordsArray = this.texCoordsList.toArray(new TextCoord[0]);
+        Vector3d[] vectorArray = this.vectorList.toArray(new Vector3d[0]);
 
         for (Mesh m : this.model.mesh) {
             m.vertices = vertexArray;
-            //            m.numOfVerts = vertexArray.length;
+            // m.numOfVerts = vertexArray.length;
             m.texCoords = texCoordsArray;
-            //            m.numOfTextCord = texCoordsArray.length;
+            // m.numOfTextCord = texCoordsArray.length;
             m.normals = vectorArray;
-            //            m.numOf= vertexArray.length;
+            // m.numOf= vertexArray.length;
         }
 
         for (int i = 0; i < this.model.getNumberOfMaterials(); i++) {
@@ -282,12 +274,12 @@ public class WaveFrontLoader implements iLoader {
      * @param mesh
      */
     public void addMesh(Mesh mesh) {
-        //FIXME
+        // FIXME
         if (this.model.mesh == null) {
-            this.model.mesh = new Mesh [0];
+            this.model.mesh = new Mesh[0];
         }
 
-        Mesh [] ma = new Mesh[ this.model.mesh.length + 1];
+        Mesh[] ma = new Mesh[this.model.mesh.length + 1];
 
         System.arraycopy(this.model.mesh, 0, ma, 0, this.model.mesh.length);
         ma[ma.length - 1] = mesh;
@@ -295,15 +287,19 @@ public class WaveFrontLoader implements iLoader {
         this.model.mesh = ma;
     }
 
-    /** Get full texture path. Textures in obj files are described by file name.
-     * This function add to texture name prefix taken from model location.
-     * @param pModelFile path to model
+    /**
+     * Get full texture path. Textures in obj files are described by file name. This
+     * function add to texture name prefix taken from model location.
+     * 
+     * @param pModelFile
+     *            path to model
      * @return path in project
      */
     public String getFullTexturePath(String pModelFile) {
         String subFileName = "";
 
-        // If this is read from a jar file, then try to find the path relative to the model
+        // If this is read from a jar file, then try to find the path relative to the
+        // model
         int index = pModelFile.lastIndexOf('/');
         if (index != -1) {
             subFileName = pModelFile.substring(0, index + 1);
@@ -319,7 +315,6 @@ public class WaveFrontLoader implements iLoader {
         return subFileName;
     }
 
-
     private boolean lineIs(String type, String line) {
         return line.startsWith(type);
     }
@@ -333,7 +328,6 @@ public class WaveFrontLoader implements iLoader {
         // so go ahead and parse it
 
         points.add(parsePoint(currLine));
-
 
         // parse through the rest of the points
         String line = null;
@@ -350,15 +344,14 @@ public class WaveFrontLoader implements iLoader {
 
         }
 
-        //        if (isVertices) {
-        //            // Calculate the center of the model
-        //            this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
-        //            this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
-        //            this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
-        //        }
+        // if (isVertices) {
+        // // Calculate the center of the model
+        // this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
+        // this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
+        // this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
+        // }
 
         // return the points
-
 
         return points;
 
@@ -366,7 +359,7 @@ public class WaveFrontLoader implements iLoader {
 
     private List<Vector3d> getNormals(String currLine, BufferedReader br) throws IOException {
 
-        String prefix =NORMAL_DATA;
+        String prefix = NORMAL_DATA;
 
         List<Vector3d> points = new ArrayList<Vector3d>();
 
@@ -374,7 +367,6 @@ public class WaveFrontLoader implements iLoader {
         // so go ahead and parse it
 
         points.add(parseVector(currLine));
-
 
         // parse through the rest of the points
         String line = null;
@@ -384,18 +376,17 @@ public class WaveFrontLoader implements iLoader {
                 break;
             }
 
-
             Vector3d point = parseVector(line);
             points.add(point);
 
         }
 
-        //        if (isVertices) {
-        //            // Calculate the center of the model
-        //            this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
-        //            this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
-        //            this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
-        //        }
+        // if (isVertices) {
+        // // Calculate the center of the model
+        // this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
+        // this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
+        // this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
+        // }
 
         // return the points
 
@@ -434,19 +425,19 @@ public class WaveFrontLoader implements iLoader {
             }
         }
 
-        //        if (isVertices) {
-        //            // Calculate the center of the model
-        //            this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
-        //            this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
-        //            this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
-        //        }
+        // if (isVertices) {
+        // // Calculate the center of the model
+        // this.center.x = 0.5f * (this.bounds.max.x + this.bounds.min.x);
+        // this.center.y = 0.5f * (this.bounds.max.y + this.bounds.min.y);
+        // this.center.z = 0.5f * (this.bounds.max.z + this.bounds.min.z);
+        // }
 
         // return the points
         if (isVertices) {
-            Point3d [] values = new Point3d[points.size()];
+            Point3d[] values = new Point3d[points.size()];
             return points.toArray(values);
         } else {
-            Vector3d [] values = new Vector3d[points.size()];
+            Vector3d[] values = new Vector3d[points.size()];
             return points.toArray(values);
 
         }
@@ -459,7 +450,7 @@ public class WaveFrontLoader implements iLoader {
     private TextCoord[] getTexCoords(String prefix, String currLine, BufferedReader br) throws IOException {
         Vector<TextCoord> texCoords = new Vector<TextCoord>();
 
-        String [] s = currLine.split("\\s+");
+        String[] s = currLine.split("\\s+");
         TextCoord texCoord = new TextCoord();
         texCoord.u = Float.parseFloat(s[1]);
         texCoord.v = Float.parseFloat(s[2]);
@@ -484,7 +475,7 @@ public class WaveFrontLoader implements iLoader {
         }
 
         // return the texture coordinates
-        TextCoord [] values = new TextCoord[texCoords.size()];
+        TextCoord[] values = new TextCoord[texCoords.size()];
         return texCoords.toArray(values);
     }
 
@@ -493,7 +484,7 @@ public class WaveFrontLoader implements iLoader {
         String prefix = TEXTURE_DATA;
         List<TextCoord> texCoords = new ArrayList<TextCoord>();
 
-        String [] s = currLine.split("\\s+");
+        String[] s = currLine.split("\\s+");
         TextCoord texCoord = new TextCoord();
         texCoord.u = Float.parseFloat(s[1]);
         texCoord.v = Float.parseFloat(s[2]);
@@ -521,9 +512,9 @@ public class WaveFrontLoader implements iLoader {
         return texCoords;
     }
 
-    //    String markAndRead(BufferedReader br) {
-    //        br.mark(readAheadLimit)
-    //    }
+    // String markAndRead(BufferedReader br) {
+    // br.mark(readAheadLimit)
+    // }
 
     private Face[] getFaces(String currLine, Mesh mesh, BufferedReader br) throws IOException {
         Vector<Face> faces = new Vector<Face>();
@@ -541,8 +532,8 @@ public class WaveFrontLoader implements iLoader {
                     smoothing = true;
                 }
                 continue;
-                //            } else if (lineIs("usemtl ", line)) {
-                //                processMaterialType(line, mesh);
+                // } else if (lineIs("usemtl ", line)) {
+                // processMaterialType(line, mesh);
             } else if (lineIs(FACE_DATA, line)) {
                 Face face = parseFace(line);
                 if (smoothing) {
@@ -555,49 +546,50 @@ public class WaveFrontLoader implements iLoader {
             }
         }
 
-        //        mesh.normals = ObjLoader.addMissingNormals(mesh.normals, mesh.vertices, faces);
+        // mesh.normals = ObjLoader.addMissingNormals(mesh.normals, mesh.vertices,
+        // faces);
 
         // move at end of model generation
-        //        if (this.rebildNormals) {
-        //            List<Vector3d> normals = new ArrayList<Vector3d>();
+        // if (this.rebildNormals) {
+        // List<Vector3d> normals = new ArrayList<Vector3d>();
         //
-        //            for (Face face : faces) {
-        //                if (face.vertIndex.length > 2) {
-        //                    Vector3d normal = Normal.calcNormalNorm(
-        //                            mesh.vertices[face.vertIndex[0]],
-        //                            mesh.vertices[face.vertIndex[1]],
-        //                            mesh.vertices[face.vertIndex[2]]);
-        //                    normals.add(normal);
-        //                    int ni = normals.indexOf(normal);
+        // for (Face face : faces) {
+        // if (face.vertIndex.length > 2) {
+        // Vector3d normal = Normal.calcNormalNorm(
+        // mesh.vertices[face.vertIndex[0]],
+        // mesh.vertices[face.vertIndex[1]],
+        // mesh.vertices[face.vertIndex[2]]);
+        // normals.add(normal);
+        // int ni = normals.indexOf(normal);
         //
-        //                    face.normalIndex = new int[face.vertIndex.length];
-        //                    for (int vi = 0; vi < face.vertIndex.length; vi++) {
-        //                        face.normalIndex[vi] = ni;
-        //                    }
-        //                } else {
-        //                    log.error("Ups face don't have three vertex, can't calc new normal vector");
-        ////                    ??
-        //                }
-        //            }
-        //            if (mesh.normals == null) {
-        //                mesh.normals = new Vector3d[0];
-        //            }
-        //            Vector3d [] newNormals = new Vector3d[mesh.normals.length + normals.size()];
-        //            System.arraycopy(mesh.normals, 0, newNormals, 0, mesh.normals.length);
+        // face.normalIndex = new int[face.vertIndex.length];
+        // for (int vi = 0; vi < face.vertIndex.length; vi++) {
+        // face.normalIndex[vi] = ni;
+        // }
+        // } else {
+        // log.error("Ups face don't have three vertex, can't calc new normal vector");
+        //// ??
+        // }
+        // }
+        // if (mesh.normals == null) {
+        // mesh.normals = new Vector3d[0];
+        // }
+        // Vector3d [] newNormals = new Vector3d[mesh.normals.length + normals.size()];
+        // System.arraycopy(mesh.normals, 0, newNormals, 0, mesh.normals.length);
         //
-        //            int s = mesh.normals.length;
-        //            for (int i = 0; i < normals.size(); i++) {
-        //                newNormals[s + i] = normals.get(i);
-        //            }
-        //            mesh.normals = newNormals;
-        //        }
+        // int s = mesh.normals.length;
+        // for (int i = 0; i < normals.size(); i++) {
+        // newNormals[s + i] = normals.get(i);
+        // }
+        // mesh.normals = newNormals;
+        // }
 
         // return the faces
         return faces.toArray(new Face[faces.size()]);
     }
 
     private boolean startSmoothingGroup(String line) {
-        String [] s = line.split("\\s+");
+        String[] s = line.split("\\s+");
         if (s.length > 1) {
             if ("1".equals(s[1])) {
                 return true;
@@ -608,18 +600,18 @@ public class WaveFrontLoader implements iLoader {
 
     private Face parseFace(String line) {
         boolean hasTexture = true;
-        String [] s = line.split("\\s+");
+        String[] s = line.split("\\s+");
         if (line.contains("//")) { // Pattern is present if obj has no texture
             for (int loop = 1; loop < s.length; loop++) {
-                s[loop] = s[loop].replaceAll("//","/-1/"); //insert -1 for missing vt data
+                s[loop] = s[loop].replaceAll("//", "/-1/"); // insert -1 for missing vt data
             }
         }
 
         int[] vdata = new int[s.length - 1];
         int[] vtdata = new int[s.length - 1];
         int[] vndata = new int[s.length - 1];
-        int type = FaceType.TRIANGLES.getType(); //XXX
-        if (s.length > 4) { //XXX
+        int type = FaceType.TRIANGLES.getType(); // XXX
+        if (s.length > 4) { // XXX
             type = FaceType.TRIANGLE_FAN.getType();
         }
         Face face = new Face(type, s.length - 1);
@@ -665,7 +657,7 @@ public class WaveFrontLoader implements iLoader {
     private Point3d parsePoint(String line) {
         Point3d point = new Point3d();
 
-        final String [] s = line.split("\\s+");
+        final String[] s = line.split("\\s+");
 
         point.x = Float.parseFloat(s[1]);
         point.y = Float.parseFloat(s[2]);
@@ -677,7 +669,7 @@ public class WaveFrontLoader implements iLoader {
     private Vector3d parseVector(String line) {
         Vector3d point = new Vector3d();
 
-        final String [] s = line.split("\\s+");
+        final String[] s = line.split("\\s+");
 
         point.x = Float.parseFloat(s[1]);
         point.y = Float.parseFloat(s[2]);
@@ -689,7 +681,7 @@ public class WaveFrontLoader implements iLoader {
     private String parseName(String line) {
         String name;
 
-        final String [] s = line.split("\\s+");
+        final String[] s = line.split("\\s+");
 
         name = s[1];
 
@@ -697,7 +689,7 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private void processMaterialLib(String mtlData) {
-        String [] s = mtlData.split("\\s+");
+        String[] s = mtlData.split("\\s+");
 
         Material mat = new Material();
         InputStream stream = null;
@@ -705,12 +697,12 @@ public class WaveFrontLoader implements iLoader {
             URL materialURL = this.urlReciverService.resourceToUrl(this.baseDir + s[1]);
             stream = materialURL.openStream();
 
-            //            stream = ResourceRetriever.getResourceAsInputStream(this.baseDir + s[1]);
+            // stream = ResourceRetriever.getResourceAsInputStream(this.baseDir + s[1]);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-        if(stream == null) {
+        if (stream == null) {
             try {
                 stream = new FileInputStream(this.baseDir + s[1]);
             } catch (FileNotFoundException ex) {
@@ -722,23 +714,20 @@ public class WaveFrontLoader implements iLoader {
     }
 
     private void processMaterialType(String line, Mesh mesh) {
-        String [] s = line.split("\\s+");
+        String[] s = line.split("\\s+");
 
         String materialName = s.length > 1 ? s[1] : null;
 
         int materialID = -1;
         boolean hasTexture = false;
 
-        for(int i = 0; i < this.model.getNumberOfMaterials(); i++){
+        for (int i = 0; i < this.model.getNumberOfMaterials(); i++) {
             EditableMaterial mat = (EditableMaterial) this.model.getMaterial(i);
 
-            if(
-                    mat.getName() != null && mat.getName().equals(materialName)
-                    || mat.getName() == null && materialName == null
-                    ){
+            if (mat.getName() != null && mat.getName().equals(materialName) || mat.getName() == null && materialName == null) {
 
                 materialID = i;
-                if(mat.getTexture0() != null) {
+                if (mat.getTexture0() != null) {
                     hasTexture = true;
                 } else {
                     hasTexture = false;
@@ -762,7 +751,7 @@ public class WaveFrontLoader implements iLoader {
 
             while ((line = br.readLine()) != null) {
 
-                String [] parts = line.trim().split("\\s+");
+                String[] parts = line.trim().split("\\s+");
 
                 if (parts[0].equals("newmtl")) {
                     if (mat != null) {
@@ -773,7 +762,7 @@ public class WaveFrontLoader implements iLoader {
                     if (parts.length > 1) {
                         mat.setName(parts[1]);
                     }
-                    //                    mat.textureId = texId++;
+                    // mat.textureId = texId++;
 
                 } else if (parts[0].equals("Ks")) {
                     mat.setSpecularColor(parseColor(line));
@@ -814,7 +803,7 @@ public class WaveFrontLoader implements iLoader {
     /**
      * @param mat
      * @param parts
-     * XXX this is not good pace for this method
+     *            XXX this is not good pace for this method
      */
     private void setTexture(EditableMaterial mat, String[] parts) {
 
@@ -829,13 +818,11 @@ public class WaveFrontLoader implements iLoader {
         if (path == null) {
             return null;
         }
-        return  path = path.replaceAll("\\\\", "/");
+        return path = path.replaceAll("\\\\", "/");
     }
 
     private class EditableMaterial extends Material {
         String name;
-
-
 
         void setAmbientColor(Color c) {
             this.setAmbientDiffuse(new AmbientDiffuseComponent(c, this.getAmbientDiffuse().getDiffuseColor()));
@@ -861,7 +848,8 @@ public class WaveFrontLoader implements iLoader {
         }
 
         /**
-         * @param name the name to set
+         * @param name
+         *            the name to set
          */
         public void setName(String name) {
             this.name = name;
@@ -880,7 +868,8 @@ public class WaveFrontLoader implements iLoader {
         WaveFrontLoader loader = new WaveFrontLoader(null);
         try {
             loader.load("C:\\dane_tomekk\\eclipse\\workspace2\\kendzi.josm.kendzi3d\\models\\obj\\tree1.obj");
-            //loader.load("C:\\Documents and Settings\\RodgersGB\\My Documents\\Projects\\JOGLUTILS\\src\\net\\java\\joglutils\\examples\\models\\obj\\penguin.obj");
+            // loader.load("C:\\Documents and Settings\\RodgersGB\\My
+            // Documents\\Projects\\JOGLUTILS\\src\\net\\java\\joglutils\\examples\\models\\obj\\penguin.obj");
         } catch (ModelLoadException ex) {
             ex.printStackTrace();
         }

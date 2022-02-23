@@ -23,8 +23,8 @@ public class SimplifyIndex<T> {
 
         for (Integer i : index) {
             sdata.add(data.get(i));
-            sindex.add(sdata.size()-1);
-            //			reindex.add()
+            sindex.add(sdata.size() - 1);
+            // reindex.add()
         }
 
     }

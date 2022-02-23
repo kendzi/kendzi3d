@@ -6,6 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
+import com.google.inject.Inject;
 import generated.NodeModel;
 import generated.WayNodeModel;
 
@@ -24,16 +25,13 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-
-import com.google.inject.Inject;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
  * Layer allow loading custom models.
@@ -175,9 +173,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
                     if (nodeModel.getMatcher().match(primitive)) {
 
-                        getWorldObjects().add(
-                                new kendzi.josm.kendzi3d.jogl.model.PointModel((Node) primitive, nodeModel, perspective,
-                                        modelRender, modelCacheService));
+                        getWorldObjects().add(new kendzi.josm.kendzi3d.jogl.model.PointModel((Node) primitive, nodeModel,
+                                perspective, modelRender, modelCacheService));
                     }
                 }
 
@@ -211,9 +208,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
                             List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), (Way) primitive);
                             if (!selectedNodes.isEmpty()) {
-                                getWorldObjects().add(
-                                        new kendzi.josm.kendzi3d.jogl.model.WayNodeModel((Way) primitive, selectedNodes,
-                                                nodeModel, perspective, modelRender, modelCacheService));
+                                getWorldObjects().add(new kendzi.josm.kendzi3d.jogl.model.WayNodeModel((Way) primitive,
+                                        selectedNodes, nodeModel, perspective, modelRender, modelCacheService));
                             }
                         }
                     }

@@ -42,20 +42,17 @@ public class StreamUtil {
             out.flush();
 
             return byteCount;
-        }
-        finally {
+        } finally {
 
             try {
                 in.close();
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 //
             }
 
             try {
                 out.close();
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 //
             }
         }

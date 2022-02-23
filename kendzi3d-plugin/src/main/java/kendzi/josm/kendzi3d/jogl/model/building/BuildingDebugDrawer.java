@@ -1,19 +1,19 @@
 package kendzi.josm.kendzi3d.jogl.model.building;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.awt.TextRenderer;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.buildings.output.RoofDebugOutput;
-
-import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
  * 
@@ -112,8 +112,7 @@ public class BuildingDebugDrawer {
     }
 
     /**
-     * Scale polygon described by list of points. Scale from polygon "middle"
-     * point.
+     * Scale polygon described by list of points. Scale from polygon "middle" point.
      * 
      * @param points
      *            polygon
@@ -155,8 +154,8 @@ public class BuildingDebugDrawer {
     }
 
     /**
-     * Draw txt at (x,y,z), with the text centered in the x-direction, facing
-     * along the +z axis.
+     * Draw txt at (x,y,z), with the text centered in the x-direction, facing along
+     * the +z axis.
      * 
      * @param gl
      * @param txt

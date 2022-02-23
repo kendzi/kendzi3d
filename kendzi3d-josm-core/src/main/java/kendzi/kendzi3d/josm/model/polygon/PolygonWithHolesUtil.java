@@ -12,7 +12,6 @@ import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.EdgeOut;
 import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Vertex;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -71,7 +70,8 @@ public final class PolygonWithHolesUtil {
 
                 if (!rw.isReversed()) {
 
-                    // do not take the last node, it is either first of next way or first of first way
+                    // do not take the last node, it is either first of next way or first of first
+                    // way
                     for (int i = 0; i < size - 1; i++) {
                         Point2d p = pPerspective.calcPoint(way.getNode(i));
 
@@ -79,7 +79,8 @@ public final class PolygonWithHolesUtil {
                     }
                 } else {
 
-                    // do not take the last node, it is either first of next way or first of first way
+                    // do not take the last node, it is either first of next way or first of first
+                    // way
                     for (int i = size - 1; i > 0; i--) {
                         Point2d p = pPerspective.calcPoint(way.getNode(i));
 
@@ -110,8 +111,6 @@ public final class PolygonWithHolesUtil {
 
         return connectPolygonHoles(outers, inners);
     }
-
-
 
     private static List<AreaWithHoles> connectPolygonHoles(List<List<ReversableWay>> outers, List<List<ReversableWay>> inners) {
         List<AreaWithHoles> ret = new ArrayList<AreaWithHoles>();
@@ -169,8 +168,6 @@ public final class PolygonWithHolesUtil {
         return outerWallParts;
     }
 
-
-
     private static List<List<ReversableWay>> convertWay(List<? extends OsmPrimitive> outersClosed) {
         List<List<ReversableWay>> ret = new ArrayList<List<ReversableWay>>();
         for (OsmPrimitive osmPrimitive : outersClosed) {
@@ -191,7 +188,8 @@ public final class PolygonWithHolesUtil {
         }
 
         /**
-         * @param outer the outer to set
+         * @param outer
+         *            the outer to set
          */
         public void setOuter(List<ReversableWay> outer) {
             this.outer = outer;
@@ -205,7 +203,8 @@ public final class PolygonWithHolesUtil {
         }
 
         /**
-         * @param inner the inner to set
+         * @param inner
+         *            the inner to set
          */
         public void setInner(List<List<ReversableWay>> inner) {
             this.inner = inner;

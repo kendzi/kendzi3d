@@ -48,9 +48,6 @@ public class MeshFactory {
         return new MeshFactory(string);
     }
 
-
-
-
     public FaceFactory addFace(FaceType faceType, int numOfTextures) {
         FaceFactory ff = new FaceFactory(faceType, numOfTextures);
         this.faceFactory.add(ff);

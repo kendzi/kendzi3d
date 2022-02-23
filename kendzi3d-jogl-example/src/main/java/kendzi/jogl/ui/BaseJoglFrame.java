@@ -6,10 +6,6 @@
 
 package kendzi.jogl.ui;
 
-import java.awt.Frame;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -20,6 +16,12 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.Animator;
+
+import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -28,8 +30,6 @@ import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
 import kendzi.math.geometry.point.PointUtil;
-
-import com.jogamp.opengl.util.Animator;
 
 /**
  * Base for test jogl applications.
@@ -80,8 +80,8 @@ public class BaseJoglFrame implements GLEventListener {
             @Override
             public void windowClosing(WindowEvent e) {
                 /*
-                 * Run this on another thread than the AWT event queue to make
-                 * sure the call to Animator.stop() completes before exiting.
+                 * Run this on another thread than the AWT event queue to make sure the call to
+                 * Animator.stop() completes before exiting.
                  */
                 new Thread(new Runnable() {
 
@@ -250,8 +250,7 @@ public class BaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular color.
-     * components
+     * Set up a point source with ambient, diffuse, and specular color. components
      */
     private void addLight(GL2 gl) {
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);

@@ -8,18 +8,17 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.gui.MainApplication;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Move camera action.

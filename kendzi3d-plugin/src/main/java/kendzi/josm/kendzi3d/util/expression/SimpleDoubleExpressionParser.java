@@ -17,8 +17,8 @@ import kendzi.josm.kendzi3d.util.expression.fun.SimpleFunction;
 import kendzi.util.StringUtil;
 
 /**
- * Simple expression parser. It expects double value or function defined in context.
- * After function evalue it always return double as result.
+ * Simple expression parser. It expects double value or function defined in
+ * context. After function evalue it always return double as result.
  *
  * @author Tomasz Kędziora (kendzi)
  * @param <T>
@@ -29,10 +29,13 @@ public class SimpleDoubleExpressionParser<T> {
     static Pattern functionName = Pattern.compile("^\\s*(\\w*)\\((.*)\\)\\s*$");
 
     /**
-     * @param expression expression it can be double or function defined in context
-     * @param pContext functions definition
+     * @param expression
+     *            expression it can be double or function defined in context
+     * @param pContext
+     *            functions definition
      * @return compiled functions
-     * @throws Exception on errors
+     * @throws Exception
+     *             on errors
      */
     public static <T> SimpleFunction<T> compile(String expression, CompileContext pContext) throws Exception {
         try {
@@ -70,8 +73,8 @@ public class SimpleDoubleExpressionParser<T> {
         boolean b = m.matches() && true;
         if (b) {
             String funName = m.group(1);
-            String [] parms = null;
-            if (m.groupCount() > 1 ) {
+            String[] parms = null;
+            if (m.groupCount() > 1) {
                 String parmsStr = m.group(2);
                 if (!StringUtil.isBlankOrNull(parmsStr)) {
                     parms = parmsStr.split(",");

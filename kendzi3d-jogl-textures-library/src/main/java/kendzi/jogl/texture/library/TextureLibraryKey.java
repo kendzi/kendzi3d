@@ -15,15 +15,10 @@ package kendzi.jogl.texture.library;
  * @author Tomasz Kędziora (Kendzi)
  */
 public enum TextureLibraryKey {
-    BARRIER_FENCE("barrier.fence_{0}"),
-    BARRIER_WALL("barrier.wall_{0}"),
-    BUILDING_FACADE("buildings.facade_{0}"),
-    BUILDING_FLOOR("buildings.floor_{0}"),
-    BUILDING_ROOF("buildings.roof_{0}"),
-    BUILDING_WINDOW("buildings.window_{0}"),
-    BUILDING_WINDOWS("buildings.windows_{0}"),
-    BUILDING_ENTRANCE("buildings.entrance_{0}"),
-    WATER("landuse.water_{0}"),
+    BARRIER_FENCE("barrier.fence_{0}"), BARRIER_WALL("barrier.wall_{0}"), BUILDING_FACADE("buildings.facade_{0}"), BUILDING_FLOOR(
+            "buildings.floor_{0}"), BUILDING_ROOF("buildings.roof_{0}"), BUILDING_WINDOW(
+                    "buildings.window_{0}"), BUILDING_WINDOWS(
+                            "buildings.windows_{0}"), BUILDING_ENTRANCE("buildings.entrance_{0}"), WATER("landuse.water_{0}"),
 
     ;
 

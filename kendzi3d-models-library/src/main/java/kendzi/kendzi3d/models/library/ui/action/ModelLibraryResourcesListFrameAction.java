@@ -23,7 +23,6 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.ModelLibraryResourcesListFrame;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.StringUtil;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -124,7 +123,6 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         fc.addChoosableFileFilter(new ModelLibraryFilter());
         fc.setAcceptAllFileFilterUsed(false);
 
-
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
             File selectedFile = fc.getSelectedFile();
@@ -181,7 +179,6 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         modelsLibraryService.removeResourcesPath(fileName);
         loadTableData();
     }
-
 
     @Override
     protected void onDefaultResources() {
