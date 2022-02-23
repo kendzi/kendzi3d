@@ -10,6 +10,10 @@
       <version>${log4j.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+    </dependency>
+    <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-jogl-textures</artifactId>
       <version>1.0.206-SNAPSHOT</version>
