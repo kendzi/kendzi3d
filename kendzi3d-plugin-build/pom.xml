@@ -70,7 +70,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
-                </configuration>
+				</configuration>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -80,7 +80,7 @@
             <index>true</index>
             <manifest>
 
-                        </manifest>
+						</manifest>
             <manifestEntries>
               <Author>Tomasz K&#x119;dziora (kendzi)</Author>
               <Plugin-Class>kendzi.josm.kendzi3d.Kendzi3DPlugin</Plugin-Class>
@@ -107,6 +107,32 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy-installed</id>
+            <phase>install</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${project.version}</version>
+              <type>${project.packaging}</type>
+              <outputDirectory>${project.basedir}/../../josm/JOSM/plugins</outputDirectory>
+              <destFileName>kendzi3d.jar</destFileName>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
       </plugin>
     </plugins>
   </build>

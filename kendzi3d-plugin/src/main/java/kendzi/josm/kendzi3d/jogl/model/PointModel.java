@@ -6,13 +6,11 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -48,6 +46,7 @@ import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 
 /**
@@ -218,21 +217,21 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         //
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
-            gl.glPushMatrix();
-            gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+            GL11.glPushMatrix();
+            GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
             drawDebug(gl, translate, 0);
 
-            gl.glTranslated(translate.x, translate.y, translate.z);
+            GL11.glTranslated(translate.x, translate.y, translate.z);
 
-            gl.glEnable(GLLightingFunc.GL_NORMALIZE); // XXX
-            gl.glScaled(scale.x, scale.y, scale.z);
-            gl.glRotated(rotateY, 0d, 1d, 0d);
+            GL11.glEnable(GL11.GL_NORMALIZE); // XXX
+            GL11.glScaled(scale.x, scale.y, scale.z);
+            GL11.glRotated(rotateY, 0d, 1d, 0d);
 
             modelRenderer.render(gl, model2);
 
-            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glDisable(GL11.GL_NORMALIZE);
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -242,12 +241,12 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             return;
         }
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-        gl.glDisable(GL.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
 
         float[] colorArrays = new float[4];
         Color color = Color.ORANGE.darker();
-        gl.glColor3fv(color.getRGBComponents(colorArrays), 0);
+        GL11.glColor3fv(color.getRGBComponents(colorArrays));
 
         GLU glu = new GLU();
         GLUquadric quadratic = glu.gluNewQuadric();
@@ -260,69 +259,69 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
                 translate.x, translate.y, translate.z);
 
         // bottom Y
-        gl.glPushMatrix();
-        gl.glColor3fv(CompassDrawer.Y_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        GL11.glPushMatrix();
+        GL11.glColor3fv(CompassDrawer.Y_AXIS_COLOR.getRGBComponents(colorArrays));
 
         DrawUtil.drawLine(gl, translate.x, 0, translate.z, //
                 translate.x, translate.y, translate.z);
 
-        gl.glTranslated(translate.x, 0.15, translate.z);
+        GL11.glTranslated(translate.x, 0.15, translate.z);
 
         DrawUtil.drawDotY(gl, 0.3, 9);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
         // back X
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glColor3fv(CompassDrawer.X_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        GL11.glColor3fv(CompassDrawer.X_AXIS_COLOR.getRGBComponents(colorArrays));
 
         DrawUtil.drawLine(gl, 0, translate.y, translate.z, //
                 translate.x, translate.y, translate.z);
 
-        gl.glTranslated(0, translate.y, translate.z);
+        GL11.glTranslated(0, translate.y, translate.z);
 
-        // gl.glRotated(90, 0d, 0d, 1d);
+        // GL11.glRotated(90, 0d, 0d, 1d);
 
         DrawUtil.drawDotY(gl, 0.3, 9);
 
         // XXX
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
         // right Z
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glColor3fv(CompassDrawer.Z_AXIS_COLOR.getRGBComponents(colorArrays), 0);
+        GL11.glColor3fv(CompassDrawer.Z_AXIS_COLOR.getRGBComponents(colorArrays));
 
         DrawUtil.drawLine(gl, translate.x, translate.y, 0, //
                 translate.x, translate.y, translate.z);
 
-        gl.glTranslated(translate.x, translate.y, 0);
+        GL11.glTranslated(translate.x, translate.y, 0);
 
-        gl.glRotated(90, 1d, 0d, 0d);
+        GL11.glRotated(90, 1d, 0d, 0d);
 
         DrawUtil.drawDotY(gl, 0.3, 9);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
         // model center
-        gl.glPushMatrix();
-        gl.glColor3fv(color.darker().getRGBComponents(colorArrays), 0);
+        GL11.glPushMatrix();
+        GL11.glColor3fv(color.darker().getRGBComponents(colorArrays));
 
-        gl.glTranslated(translate.x, translate.y, translate.z);
+        GL11.glTranslated(translate.x, translate.y, translate.z);
 
-        // gl.glRotated(90, 0d, 1d, 0d);
+        // GL11.glRotated(90, 0d, 1d, 0d);
 
         glu.gluSphere(quadratic, 0.3, 9, 9);
         // drawYArrow
         double scale = 2;
 
-        gl.glRotated(direction, 0d, 1d, 0d);
+        GL11.glRotated(direction, 0d, 1d, 0d);
 
         DrawUtil.drawFlatArrowY(gl, scale * 1.2, scale * 0.3, scale * 0.11, scale * 0.3);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
     }
 

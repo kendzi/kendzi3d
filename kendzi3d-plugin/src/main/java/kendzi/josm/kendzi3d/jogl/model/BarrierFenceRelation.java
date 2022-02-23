@@ -7,9 +7,8 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -42,6 +41,7 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -155,7 +155,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
-        HashSet<OsmPrimitive> set = new HashSet<>(nodes);
+        HashSet<OsmPrimitive> set = new HashSet<>();
+
+        set.addAll(nodes);
 
         return set;
     }
@@ -375,19 +377,19 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     public void draw(GL2 gl, Camera camera) {
 
         // replace the quad colors with the texture
-        // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-        // GL2.GL_REPLACE);
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+        // GL11.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        gl.glPushMatrix();
-        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
 
             modelRender.render(gl, model);
         } finally {
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 

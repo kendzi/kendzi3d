@@ -7,9 +7,8 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,6 +35,7 @@ import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -208,10 +208,10 @@ public class BarrierWall extends AbstractWayModel {
     @Override
     public void draw(GL2 gl, Camera camera) {
 
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        gl.glPushMatrix();
-        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
             modelRender.render(gl, model);
@@ -219,18 +219,18 @@ public class BarrierWall extends AbstractWayModel {
             for (RelationCloneHeight cloner : heightClone) {
                 for (Double height : cloner) {
 
-                    gl.glPushMatrix();
-                    gl.glTranslated(0, height, 0);
+                    GL11.glPushMatrix();
+                    GL11.glTranslated(0, height, 0);
 
                     modelRender.render(gl, model);
-                    gl.glPopMatrix();
+                    GL11.glPopMatrix();
 
                 }
             }
 
         } finally {
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
 
     }

@@ -38,6 +38,7 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -181,14 +182,14 @@ public class Water extends AbstractModel {
     @Override
     public void draw(GL2 pGl, Camera camera) {
 
-        pGl.glPushMatrix();
-        pGl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
             modelRender.render(pGl, model);
 
         } finally {
-            pGl.glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 

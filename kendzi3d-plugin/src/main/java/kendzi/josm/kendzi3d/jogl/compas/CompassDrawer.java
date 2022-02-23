@@ -1,11 +1,10 @@
 package kendzi.josm.kendzi3d.jogl.compas;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -14,6 +13,7 @@ import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.kendzi3d.editor.drawer.ArrowDrawUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Drawer for compass.
@@ -103,10 +103,10 @@ public class CompassDrawer {
      */
     public void draw(GL2 gl, Point3d point) {
 
-        gl.glPushMatrix();
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_LIGHTING);
 
-        gl.glTranslated(point.x, point.y, point.z);
+        GL11.glTranslated(point.x, point.y, point.z);
 
         double camDistanceRatio = 0.07d;
         int section = 8;
@@ -116,17 +116,17 @@ public class CompassDrawer {
         double baseRadius = 0.05d * camDistanceRatio;
         double arrowRadius = 0.2d * camDistanceRatio;
 
-        gl.glColor3fv(Y_AXIS_COLOR_ARRAY, 0);
+        GL11.glColor3fv(Y_AXIS_COLOR_ARRAY);
         ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glRotated(-90d, 0d, 0d, 1d);
-        gl.glColor3fv(X_AXIS_COLOR_ARRAY, 0);
+        GL11.glRotated(-90d, 0d, 0d, 1d);
+        GL11.glColor3fv(X_AXIS_COLOR_ARRAY);
         ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glRotated(90d, 1d, 0d, 0d);
-        gl.glColor3fv(Z_AXIS_COLOR_ARRAY, 0);
+        GL11.glRotated(90d, 1d, 0d, 0d);
+        GL11.glColor3fv(Z_AXIS_COLOR_ARRAY);
         ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 }

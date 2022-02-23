@@ -7,7 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +28,7 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -142,26 +142,26 @@ public class BarrierFence extends AbstractWayModel {
     public void draw(GL2 gl, Camera camera) {
 
         // replace the quad colors with the texture
-        // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-        // GL2.GL_REPLACE);
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+        // GL11.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        gl.glPushMatrix();
-        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         modelRender.render(gl, model);
 
         for (RelationCloneHeight cloner : heightClone) {
             for (Double height : cloner) {
 
-                gl.glPushMatrix();
-                gl.glTranslated(0, height, 0);
+                GL11.glPushMatrix();
+                GL11.glTranslated(0, height, 0);
                 modelRender.render(gl, model);
-                gl.glPopMatrix();
+                GL11.glPopMatrix();
             }
         }
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
     }
 

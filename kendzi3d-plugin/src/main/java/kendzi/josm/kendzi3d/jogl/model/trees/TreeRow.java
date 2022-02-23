@@ -7,7 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model.trees;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -32,6 +31,7 @@ import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.MultiPointWorldObject;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -229,22 +229,22 @@ public class TreeRow extends AbstractWayModel implements DLODSuport, MultiPointW
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
 
-            gl.glEnable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glEnable(GL11.GL_NORMALIZE);
 
             for (Point2d hook : hookPoints) {
 
-                gl.glPushMatrix();
+                GL11.glPushMatrix();
 
-                gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
+                GL11.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                gl.glScaled(scale.x, scale.y, scale.z);
+                GL11.glScaled(scale.x, scale.y, scale.z);
 
                 modelRender.render(gl, model2);
 
-                gl.glPopMatrix();
+                GL11.glPopMatrix();
             }
 
-            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glDisable(GL11.GL_NORMALIZE);
         }
     }
 

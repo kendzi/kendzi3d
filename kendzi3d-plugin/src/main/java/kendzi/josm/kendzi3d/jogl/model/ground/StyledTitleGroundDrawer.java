@@ -6,15 +6,11 @@
 
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES3;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 import javax.vecmath.Point3d;
 
@@ -23,6 +19,7 @@ import kendzi.jogl.texture.TextureCacheServiceImpl;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -179,26 +176,26 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
             texture = textureCacheService.getTexture(gl, textName);
         }
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glEnable(GL.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         texture.enable(gl);
         texture.bind(gl);
 
-        gl.glBegin(GL2ES3.GL_QUADS);
-        gl.glNormal3d(0d, 1d, 0d);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glNormal3d(0d, 1d, 0d);
 
         double h = -0.1d;
 
-        gl.glTexCoord2d(0, 1);
-        gl.glVertex3d(x1, h, z1);
-        gl.glTexCoord2d(1, 1);
-        gl.glVertex3d(x2, h, z2);
-        gl.glTexCoord2d(1, 0);
-        gl.glVertex3d(x3, h, z3);
-        gl.glTexCoord2d(0, 0);
-        gl.glVertex3d(x4, h, z4);
-        gl.glEnd();
+        GL11.glTexCoord2d(0, 1);
+        GL11.glVertex3d(x1, h, z1);
+        GL11.glTexCoord2d(1, 1);
+        GL11.glVertex3d(x2, h, z2);
+        GL11.glTexCoord2d(1, 0);
+        GL11.glVertex3d(x3, h, z3);
+        GL11.glTexCoord2d(0, 0);
+        GL11.glVertex3d(x4, h, z4);
+        GL11.glEnd();
 
         texture.disable(gl);
     }

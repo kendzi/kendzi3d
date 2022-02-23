@@ -9,6 +9,10 @@
       <artifactId>josm</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.openstreetmap.josm.plugins</groupId>
+      <artifactId>lwjgl</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>

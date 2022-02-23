@@ -6,12 +6,12 @@
 
 package kendzi.josm.kendzi3d.jogl.model.building;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,6 +55,7 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.bbox.Bbox2d;
 import kendzi.math.geometry.line.LineSegment3d;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -337,7 +338,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         final Bounds bounds = bf.toBounds();
         this.bounds = bounds;
 
-        return Collections.singletonList(new ModelSelection(bounds.getCenter(), bounds.getRadius()) {
+        return Arrays.asList(new ModelSelection(bounds.getCenter(), bounds.getRadius()) {
 
             @Override
             public List<Editor> getEditors() {
@@ -404,11 +405,11 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     @Override
     public void draw(GL2 gl, Camera pCamera, boolean selected) {
         // XXX move draw debug do new method
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
         Point3d position = getPosition();
 
-        gl.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x, position.y, position.z);
 
         modelRender.render(gl, model);
 
@@ -416,28 +417,28 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
             drawEdges(gl, debug.getEdges());
         }
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     private void drawEdges(GL2 gl, List<LineSegment3d> edges) {
 
         // Lift up a little to avoid z-buffer problems
-        gl.glTranslated(0, 0.1, 0);
+        GL11.glTranslated(0, 0.1, 0);
 
-        gl.glLineWidth(6);
-        gl.glColor3fv(ROOF_EDGES_COLOR, 0);
+        GL11.glLineWidth(6);
+        GL11.glColor3fv(ROOF_EDGES_COLOR);
 
         for (LineSegment3d line : edges) {
 
-            gl.glBegin(GL.GL_LINES);
+            GL11.glBegin(GL11.GL_LINES);
 
             Point3d begin = line.getBegin();
             Point3d end = line.getEnd();
 
-            gl.glVertex3d(begin.x, begin.y, begin.z);
-            gl.glVertex3d(end.x, end.y, end.z);
+            GL11.glVertex3d(begin.x, begin.y, begin.z);
+            GL11.glVertex3d(end.x, end.y, end.z);
 
-            gl.glEnd();
+            GL11.glEnd();
         }
     }
 
@@ -515,17 +516,17 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
             return;
         }
 
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
         Point3d position = getPosition();
 
-        gl.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x, position.y, position.z);
 
         if (debug != null && debug.getEdges() != null) {
             drawEdges(gl, debug.getEdges());
         }
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
         SelectionDrawUtil.drawSphereSelection(gl, this);
     }

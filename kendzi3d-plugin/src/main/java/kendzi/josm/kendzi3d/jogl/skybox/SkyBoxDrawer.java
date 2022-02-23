@@ -1,15 +1,14 @@
 package kendzi.josm.kendzi3d.jogl.skybox;
 
 import com.google.inject.Inject;
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
 import javax.vecmath.Point3d;
+
 import kendzi.jogl.texture.TextureCacheService;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Drawer for skybox.
@@ -58,21 +57,21 @@ public class SkyBoxDrawer {
             return;
         }
 
-        gl.glDisable(GL.GL_DEPTH_TEST);
-        gl.glEnable(GL.GL_TEXTURE_2D);
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         // Set white color for texture
-        gl.glColor4f(1f, 1f, 1f, 1f);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
 
         // Mix transparency color with texture
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_REPLACE);
 
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glTranslated(cameraLocation.x, cameraLocation.y, cameraLocation.z);
+        GL11.glTranslated(cameraLocation.x, cameraLocation.y, cameraLocation.z);
 
-        gl.glRotated(180d, 0, 1, 0);
+        GL11.glRotated(180d, 0, 1, 0);
 
         drawPolygon(gl, configuration.getFrontTexture(), leftBottomBack, rightBottomBack, rightTopBack, leftTopBack);
 
@@ -84,11 +83,11 @@ public class SkyBoxDrawer {
 
         drawPolygon(gl, configuration.getTopTexture(), leftTopBack, rightTopBack, rightTopFront, leftTopFront);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glDisable(GL.GL_TEXTURE_2D);
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
     }
 
@@ -111,18 +110,18 @@ public class SkyBoxDrawer {
             tc = texture.getImageTexCoords();
         }
 
-        gl.glBegin(GL2.GL_POLYGON);
+        GL11.glBegin(GL11.GL_POLYGON);
 
-        gl.glTexCoord2d(tc.left(), tc.bottom());
-        gl.glVertex3d(p1.x, p1.y, p1.z);
-        gl.glTexCoord2d(tc.right(), tc.bottom());
-        gl.glVertex3d(p2.x, p2.y, p2.z);
-        gl.glTexCoord2d(tc.right(), tc.top());
-        gl.glVertex3d(p3.x, p3.y, p3.z);
-        gl.glTexCoord2d(tc.left(), tc.top());
-        gl.glVertex3d(p4.x, p4.y, p4.z);
+        GL11.glTexCoord2d(tc.left(), tc.bottom());
+        GL11.glVertex3d(p1.x, p1.y, p1.z);
+        GL11.glTexCoord2d(tc.right(), tc.bottom());
+        GL11.glVertex3d(p2.x, p2.y, p2.z);
+        GL11.glTexCoord2d(tc.right(), tc.top());
+        GL11.glVertex3d(p3.x, p3.y, p3.z);
+        GL11.glTexCoord2d(tc.left(), tc.top());
+        GL11.glVertex3d(p4.x, p4.y, p4.z);
 
-        gl.glEnd();
+        GL11.glEnd();
 
         if (textureName != null) {
             Texture t = textureCacheService.getTexture(gl, textureName);

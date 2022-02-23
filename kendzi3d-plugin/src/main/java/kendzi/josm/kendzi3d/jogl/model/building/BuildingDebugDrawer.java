@@ -3,8 +3,7 @@ package kendzi.josm.kendzi3d.jogl.model.building;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import javax.vecmath.Vector3d;
 
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.buildings.output.RoofDebugOutput;
+import org.lwjgl.opengl.GL11;
 
 /**
  * 
@@ -52,26 +52,26 @@ public class BuildingDebugDrawer {
      */
     public void drawDebugRoof(GL2 gl) {
 
-        gl.glDisable(GL2.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         // red
-        gl.glColor3f(1.0f, 0f, 0f);
+        GL11.glColor3f(1.0f, 0f, 0f);
 
         // Set line width to 4
-        gl.glLineWidth(6);
+        GL11.glLineWidth(6);
         // Repeat count, repeat pattern
-        gl.glLineStipple(1, (short) 0xf0f0);
+        GL11.glLineStipple(1, (short) 0xf0f0);
 
-        gl.glBegin(GL2.GL_LINE_LOOP);
+        GL11.glBegin(GL11.GL_LINE_LOOP);
 
         List<Point3d> rectangle = scaledBBox();
 
         for (Point3d point3d : rectangle) {
 
-            gl.glVertex3d(point3d.x, point3d.y, point3d.z);
+            GL11.glVertex3d(point3d.x, point3d.y, point3d.z);
 
         }
-        gl.glEnd();
+        GL11.glEnd();
 
         for (int i = 0; i < rectangle.size(); i++) {
             Point3d point3d = rectangle.get(i);
@@ -82,7 +82,7 @@ public class BuildingDebugDrawer {
 
         float[] rgba = new float[4];
         // green
-        gl.glColor3fv(Color.RED.darker().getRGBComponents(rgba), 0);
+        GL11.glColor3fv(Color.RED.darker().getRGBComponents(rgba));
 
         if (this.debug != null && this.debug.getStartPoint() != null) {
 
@@ -91,13 +91,13 @@ public class BuildingDebugDrawer {
             double z = this.debug.getStartPoint().z;
             double d = 0.25;
 
-            gl.glPushMatrix();
+            GL11.glPushMatrix();
 
-            gl.glTranslated(x, y, z);
+            GL11.glTranslated(x, y, z);
 
             DrawUtil.drawDotY(gl, d, 12);
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
 
     }

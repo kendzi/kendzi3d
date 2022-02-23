@@ -7,7 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model.trees;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -428,41 +428,41 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                 dl = createDisplayList(gl, model2);
             }
 
-            gl.glEnable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glEnable(GL11.GL_NORMALIZE);
 
             for (Point2d hook : hookPoints) {
 
-                gl.glPushMatrix();
+                GL11.glPushMatrix();
 
-                gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
+                GL11.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                gl.glScaled(scale.x, scale.y, scale.z);
+                GL11.glScaled(scale.x, scale.y, scale.z);
 
-                gl.glCallList(dl);
+                GL11.glCallList(dl);
 
-                gl.glPopMatrix();
+                GL11.glPopMatrix();
             }
 
-            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glDisable(GL11.GL_NORMALIZE);
         }
     }
 
     private int createDisplayList(GL2 gl, Model model2) {
 
         // create one display list
-        int index = gl.glGenLists(1);
+        int index = GL11.glGenLists(1);
 
         // XXX for texture download
         modelRender.render(gl, model2);
 
         // compile the display list, store a triangle in it
-        gl.glNewList(index, GL2.GL_COMPILE);
+        GL11.glNewList(index, GL11.GL_COMPILE);
 
         modelRender.resetFaceCount();
         modelRender.render(gl, model2);
         log.info("***> face count: " + modelRender.getFaceCount());
 
-        gl.glEndList();
+        GL11.glEndList();
 
         displayList.put(model2, index == 0 ? null : index);
 
@@ -489,13 +489,13 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         for (HeightCluster c : clusterHook) {
 
             if (modelRender.isDebugging()) {
-                gl.glPushMatrix();
+                GL11.glPushMatrix();
 
-                gl.glTranslated(c.getCenter().x + getGlobalX(), 2, c.getCenter().z - getGlobalY());
+                GL11.glTranslated(c.getCenter().x + getGlobalX(), 2, c.getCenter().z - getGlobalY());
 
                 DrawUtil.drawDotY(gl, 6d, 6);
 
-                gl.glPopMatrix();
+                GL11.glPopMatrix();
             }
 
             LOD lod = getLods(c.getCenter(), localCamera);
@@ -512,26 +512,26 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                     dl = createDisplayList(gl, model2);
                 }
 
-                gl.glEnable(GLLightingFunc.GL_NORMALIZE);
+                GL11.glEnable(GL11.GL_NORMALIZE);
 
                 int i = 0;
                 for (Point2d hook : hookPoints) {
 
                     double height = heights[i];
 
-                    gl.glPushMatrix();
+                    GL11.glPushMatrix();
 
-                    gl.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
+                    GL11.glTranslated(getGlobalX() + hook.x, 0, -(getGlobalY() + hook.y));
 
-                    gl.glScaled(scale.x * height, scale.y * height, scale.z * height);
+                    GL11.glScaled(scale.x * height, scale.y * height, scale.z * height);
 
-                    gl.glCallList(dl);
+                    GL11.glCallList(dl);
 
-                    gl.glPopMatrix();
+                    GL11.glPopMatrix();
                     i++;
                 }
 
-                gl.glDisable(GLLightingFunc.GL_NORMALIZE);
+                GL11.glDisable(GL11.GL_NORMALIZE);
             }
 
         }

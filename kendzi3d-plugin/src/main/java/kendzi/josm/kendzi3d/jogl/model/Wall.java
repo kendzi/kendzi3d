@@ -6,9 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +45,7 @@ import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
 import kendzi.math.geometry.point.Vector2dUtil;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -645,25 +644,25 @@ public class Wall extends AbstractWayModel {
         // }
 
         // do not draw the transparent parts of the texture
-        pGl.glEnable(GL.GL_BLEND);
-        pGl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         // don't show source alpha parts in the destination
 
         // determine which areas of the polygon are to be rendered
-        pGl.glEnable(GL2ES1.GL_ALPHA_TEST);
-        pGl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0); // only render if alpha > 0
 
         // replace the quad colors with the texture
-        // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-        // GL2.GL_REPLACE);
-        pGl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+        // GL11.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        pGl.glEnable(GL.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_CULL_FACE);
 
-        pGl.glPushMatrix();
-        pGl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
-        // pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
+        // GL11.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
         // 255);
 
         try {
@@ -672,20 +671,20 @@ public class Wall extends AbstractWayModel {
             // for (RelationCloneHeight cloner : this.heightClone) {
             // for (Double height : cloner) {
             //
-            // pGl.glPushMatrix();
-            // pGl.glTranslated(0, height, 0);
+            // GL11.glPushMatrix();
+            // GL11.glTranslated(0, height, 0);
             //
             // this.modelRender.render(pGl, this.model);
-            // pGl.glPopMatrix();
+            // GL11.glPopMatrix();
             //
             // }
             // }
 
         } finally {
 
-            pGl.glPopMatrix();
+            GL11.glPopMatrix();
 
-            pGl.glDisable(GL.GL_CULL_FACE);
+            GL11.glDisable(GL11.GL_CULL_FACE);
         }
     }
 
