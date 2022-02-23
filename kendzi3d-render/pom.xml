@@ -43,6 +43,10 @@
       <version>2.0-b57-20120502</version>
     </dependency>
     <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+    </dependency>
+    <dependency>
       <groupId>java3d</groupId>
       <artifactId>vecmath</artifactId>
       <version>${vecmath.version}</version>
@@ -85,17 +89,17 @@
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-jogl-textures</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.206-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-models-library</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.206-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>kendzi.math</groupId>
       <artifactId>kendzi-math-geometry</artifactId>
-      <version>0.0.8</version>
+      <version>${kendzi.math.version}</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -119,7 +123,7 @@
   <parent>
     <groupId>kendzi.kendzi3d</groupId>
     <artifactId>kendzi3d-parent</artifactId>
-    <version>1.0.179-SNAPSHOT</version>
+    <version>1.0.206-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 </project>
