@@ -1,13 +1,13 @@
 package kendzi.jogl.texture.builder;
 
 import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
+import kendzi.jogl.util.texture.Texture;
+import kendzi.jogl.util.texture.TextureIO;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import org.apache.log4j.Logger;
 

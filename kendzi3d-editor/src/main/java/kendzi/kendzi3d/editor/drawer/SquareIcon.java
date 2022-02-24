@@ -7,14 +7,14 @@
 package kendzi.kendzi3d.editor.drawer;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 
 import javax.inject.Inject;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.util.DrawUtil;
+import kendzi.jogl.util.texture.Texture;
+import kendzi.jogl.util.texture.TextureCoords;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import org.lwjgl.opengl.GL11;
 
@@ -83,12 +83,12 @@ public class SquareIcon implements Gl2Draw {
         double miny = y;
         double maxy = miny + size;
 
-        Texture texture = textureCacheService.getTexture(gl, icon);
+        Texture texture = textureCacheService.getTexture(icon);
         if (texture == null) {
             return;
         }
-        texture.enable(gl);
-        texture.bind(gl);
+        texture.enable();
+        texture.bind();
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);

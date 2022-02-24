@@ -10,13 +10,13 @@
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.texture.Texture;
 
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
+import kendzi.jogl.util.texture.Texture;
 import org.lwjgl.opengl.GL11;
 
 public class GroundDrawer {
@@ -41,10 +41,10 @@ public class GroundDrawer {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         TextureData td = this.textureLibraryStorageService.getTextureDefault("ground.unknown");
-        Texture texture = this.textureCacheService.getTexture(gl, td.getTex0());
+        Texture texture = this.textureCacheService.getTexture(td.getTex0());
 
-        texture.enable(gl);
-        texture.bind(gl);
+        texture.enable();
+        texture.bind();
 
         GL11.glBegin(GL11.GL_POLYGON);
         GL11.glColor3f((float) 123 / 256, (float) 111 / 256, (float) 100 / 255);

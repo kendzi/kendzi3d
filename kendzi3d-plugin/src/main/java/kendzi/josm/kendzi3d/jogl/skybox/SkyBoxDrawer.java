@@ -2,12 +2,12 @@ package kendzi.josm.kendzi3d.jogl.skybox;
 
 import com.google.inject.Inject;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.util.texture.Texture;
+import kendzi.jogl.util.texture.TextureCoords;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -102,7 +102,7 @@ public class SkyBoxDrawer {
     public void drawPolygon(GL2 gl, String textureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName != null) {
-            Texture texture = textureCacheService.getTexture(gl, textureName);
+            Texture texture = textureCacheService.getTexture(textureName);
 
             texture.enable(gl);
             texture.bind(gl);
@@ -124,7 +124,7 @@ public class SkyBoxDrawer {
         GL11.glEnd();
 
         if (textureName != null) {
-            Texture t = textureCacheService.getTexture(gl, textureName);
+            Texture t = textureCacheService.getTexture(textureName);
             if (t != null) {
                 t.disable(gl);
             }

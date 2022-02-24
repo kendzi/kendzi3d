@@ -6,9 +6,7 @@
 
 package kendzi.jogl.model.render;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.texture.Texture;
 
 import java.util.List;
 
@@ -19,6 +17,7 @@ import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.util.texture.Texture;
 import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -251,7 +250,7 @@ public class ModelRender {
             GL13.glActiveTexture(GL_TEXTURE[curLayer]);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-            Texture texture = getTexture(gl, texturesComponent.get(curLayer));
+            Texture texture = getTexture(texturesComponent.get(curLayer));
             // enableTransparentText(gl);
             bindTexture(gl, texture);
 
@@ -312,7 +311,7 @@ public class ModelRender {
             GL13.glActiveTexture(GL_TEXTURE[curLayer]);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-            Texture texture = getTexture(gl, texturesComponent.get(curLayer - 1));
+            Texture texture = getTexture(texturesComponent.get(curLayer - 1));
             bindTexture(gl, texture);
 
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
@@ -378,8 +377,8 @@ public class ModelRender {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
         // enable, bind
-        texture.enable(gl);
-        texture.bind(gl);
+        texture.enable();
+        texture.bind();
     }
 
     /**
@@ -470,12 +469,12 @@ public class ModelRender {
         return lastAmbientDiffuseComponent == null || !lastAmbientDiffuseComponent.equals(ambientDiffuse);
     }
 
-    private Texture getTexture(GL gl, String file) {
+    private Texture getTexture(String file) {
 
         if (file != null) {
-            return textureCacheService.getTexture(gl, file);
+            return textureCacheService.getTexture(file);
         }
-        return textureCacheService.getTexture(gl, "/textures/undefined.png");
+        return textureCacheService.getTexture("/textures/undefined.png");
     }
 
     /**

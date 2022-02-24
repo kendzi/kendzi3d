@@ -7,8 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
 
 import java.awt.*;
 
@@ -16,6 +14,8 @@ import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.jogl.util.awt.TextureRenderer;
+import kendzi.jogl.util.texture.Texture;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
 import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
 import org.apache.log4j.Logger;
@@ -169,11 +169,11 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
                 }
 
             } else {
-                texture = textureCacheService.getTexture(gl, TextureCacheService.TEXTURES_UNDEFINED_PNG);
+                texture = textureCacheService.getTexture(TextureCacheService.TEXTURES_UNDEFINED_PNG);
             }
 
         } else {
-            texture = textureCacheService.getTexture(gl, textName);
+            texture = textureCacheService.getTexture(textName);
         }
 
         GL11.glEnable(GL11.GL_LIGHTING);

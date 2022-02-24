@@ -1,14 +1,13 @@
 package kendzi.jogl.texture.builder;
 
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import kendzi.jogl.util.awt.TextureRenderer;
+import kendzi.jogl.util.texture.Texture;
 import kendzi.josm.kendzi3d.util.ColorUtil;
 
 /**

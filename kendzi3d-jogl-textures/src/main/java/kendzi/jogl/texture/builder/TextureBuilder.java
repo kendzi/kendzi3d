@@ -1,8 +1,8 @@
 package kendzi.jogl.texture.builder;
 
-import com.jogamp.opengl.util.texture.Texture;
-
 import java.awt.image.BufferedImage;
+
+import kendzi.jogl.util.texture.Texture;
 
 /**
  * Texture builder.
