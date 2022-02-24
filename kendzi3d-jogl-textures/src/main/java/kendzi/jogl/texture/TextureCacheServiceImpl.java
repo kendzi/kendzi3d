@@ -9,7 +9,6 @@ package kendzi.jogl.texture;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
@@ -24,6 +23,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import kendzi.jogl.glu.GLU;
 import kendzi.jogl.texture.builder.TextureBuilder;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import org.apache.log4j.Logger;
@@ -250,7 +250,7 @@ public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCache
                         // gl.getGL4().glGetErrorString
                         int errorCode = gl.glGetError();
                         String errorStr = "";
-                        errorStr = new GLU().gluErrorString(errorCode);
+                        errorStr = GLU.gluErrorString(errorCode);
                         System.err.println(errorStr);
                         log.error("Error loading texture: " + pName + " texture url: " + pName, e);
                     }

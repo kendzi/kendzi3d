@@ -11,6 +11,11 @@
     </dependency>
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>
+      <artifactId>kendzi3d-jogl-util</artifactId>
+      <version>1.0.206-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-resource-interface</artifactId>
       <version>1.0.206-SNAPSHOT</version>
     </dependency>
