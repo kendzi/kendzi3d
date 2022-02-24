@@ -1,9 +1,9 @@
 package kendzi.jogl.camera;
 
-import com.jogamp.opengl.glu.GLU;
-
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import kendzi.jogl.glu.GLU;
 import org.lwjgl.opengl.GL11;
 
 public class ViewportUtil {
@@ -25,7 +25,8 @@ public class ViewportUtil {
         Vector3d lookUp = viewport.getLookUp();
 
         // sets camera position and direction
-        new GLU().gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, lookUp.x, lookUp.y, lookUp.z);
+        GLU.gluLookAt((float) position.x, (float) position.y, (float) position.z, (float) lookAt.x, (float) lookAt.y,
+                (float) lookAt.z, (float) lookUp.x, (float) lookUp.y, (float) lookUp.z);
     }
 
     /**
@@ -46,6 +47,7 @@ public class ViewportUtil {
         GL11.glLoadIdentity();
 
         // setup projection perspective
-        new GLU().gluPerspective(viewport.getFovy(), viewport.viewportAspectRatio(), viewport.getZNear(), viewport.getZFar());
+        GLU.gluPerspective((float) viewport.getFovy(), (float) viewport.viewportAspectRatio(), (float) viewport.getZNear(),
+                (float) viewport.getZFar());
     }
 }

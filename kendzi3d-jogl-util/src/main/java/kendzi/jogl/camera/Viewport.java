@@ -1,13 +1,16 @@
 package kendzi.jogl.camera;
 
-import com.jogamp.opengl.glu.GLU;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.glu.GLU;
 import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -197,12 +200,12 @@ public class Viewport implements ViewportPicker {
         return new Ray3d(new Point3d(position), vector);
     }
 
-    public Point2d project(GLU glu, Point3d point) {
+    public Point2d project(Object glu, Point3d point) {
         // FIXME
-        float[] modelview = new float[16];
-        float[] projectionview = new float[16];
-        int[] viewportview = new int[4];
-        float[] objectPos = new float[4];
+        FloatBuffer modelview = BufferUtils.createFloatBuffer(16);
+        FloatBuffer projectionview = BufferUtils.createFloatBuffer(16);
+        IntBuffer viewportview = BufferUtils.createIntBuffer(4);
+        FloatBuffer objectPos = BufferUtils.createFloatBuffer(4);
         // objectPos.clear();
         // modelview.clear();
         // projectionview.clear();
@@ -210,10 +213,9 @@ public class Viewport implements ViewportPicker {
         GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelview);
         GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionview);
         GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewportview);
-        glu.gluProject((float) point.x, (float) point.y, (float) point.z, modelview, 0, projectionview, 0, viewportview, 0,
-                objectPos, 0);
+        GLU.gluProject((float) point.x, (float) point.y, (float) point.z, modelview, projectionview, viewportview, objectPos);
 
-        Point2d p = new Point2d(objectPos[0], height - objectPos[1]);
+        Point2d p = new Point2d(objectPos.get(0), height - objectPos.get(1));
 
         return p;
         // Matrix4f view = new Matrix4f ();
