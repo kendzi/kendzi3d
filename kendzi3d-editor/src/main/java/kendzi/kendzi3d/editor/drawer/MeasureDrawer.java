@@ -1,12 +1,11 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.util.gl2.GLUT;
-
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Viewport;
+import kendzi.jogl.glu.GLUT;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.math.geometry.point.Vector3dUtil;
 import org.lwjgl.opengl.GL11;
@@ -15,9 +14,6 @@ import org.lwjgl.opengl.GL11;
  * Drawer for measure tap.
  */
 public class MeasureDrawer {
-
-    private final GLUT glut = new GLUT();
-
     /**
      * Draws measure tap with distance arrows and distance value. Measure tap is
      * draw in Y direction always rotated to camera. XXX add measure begin point
@@ -91,7 +87,7 @@ public class MeasureDrawer {
         center.add(topArrowhead);
         center.scale(0.5);
 
-        drawNumberBox(glut, center, value, viewport);
+        drawNumberBox(center, value, viewport);
     }
 
     private void drawFlatArrowhead(Point3d arrowheadPoint, Vector3d arrowheadVector, Vector3d arrowheadWidthVector) {
@@ -126,14 +122,14 @@ public class MeasureDrawer {
         GL11.glEnd();
     }
 
-    private void drawNumberBox(GLUT glut, Point3d point, Double value, Viewport viewport) {
+    private void drawNumberBox(Point3d point, Double value, Viewport viewport) {
 
         GL11.glDisable(GL11.GL_LIGHTING);
         String msg = String.format("%.2f m", value);
 
         Point2d p = viewport.project(null, point);
         int fontSize = 18;
-        int msgWidth = glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_18, msg);
+        int msgWidth = GLUT.glutBitmapLength(GLUT.BITMAP_HELVETICA_18, msg);
 
         // Use a bitmap font (since no scaling required)
         // get (x,y) for centering the text on screen
@@ -156,7 +152,7 @@ public class MeasureDrawer {
         GL11.glColor3f(0.1f, 0.1f, 0.1f);
 
         GL11.glRasterPos2i(x, y - 2);
-        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, msg);
+        GLUT.glutBitmapString(GLUT.BITMAP_HELVETICA_18, msg);
         // Switch back to 3D viewing
         DrawUtil.end2D();
         GL11.glEnable(GL11.GL_LIGHTING);
