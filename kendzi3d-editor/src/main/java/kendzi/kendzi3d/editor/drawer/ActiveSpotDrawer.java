@@ -1,10 +1,10 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
 import java.awt.Color;
 
+import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
@@ -21,8 +21,6 @@ public class ActiveSpotDrawer {
      * Storage For Our Quadratic Objects
      */
     private GLUquadric quadratic;
-
-    private final GLU glu = new GLU();
 
     private final float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
 
@@ -45,9 +43,9 @@ public class ActiveSpotDrawer {
      */
     public void init() {
         // Quadric for geometry
-        quadratic = glu.gluNewQuadric();
+        quadratic = GLU.gluNewQuadric();
         // Create smooth normals quadric
-        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+        GLU.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
     }
 
     /**
@@ -105,13 +103,13 @@ public class ActiveSpotDrawer {
 
         switch (type) {
         case ARROW:
-            drawArrow(glu, quadratic, editorRadius);
+            drawArrow(null, quadratic, editorRadius);
             break;
         case ARROW_HEAD:
             drawArrowhead(editorRadius);
             break;
         case SPHERE:
-            drawSphere(glu, quadratic, editorRadius);
+            drawSphere(quadratic, editorRadius);
             break;
         case BOX:
             DrawUtil.drawBox(editorRadius);
@@ -126,8 +124,8 @@ public class ActiveSpotDrawer {
 
     }
 
-    private static void drawSphere(GLU glu, GLUquadric quadratic, double editorRadius) {
-        glu.gluSphere(quadratic, editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
+    private static void drawSphere(GLUquadric quadratic, double editorRadius) {
+        GLU.gluSphere(quadratic, (float) editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
     }
 
     private static void drawArrowhead(double editorRadius) {
@@ -141,7 +139,7 @@ public class ActiveSpotDrawer {
         GL11.glPopMatrix();
     }
 
-    private static void drawArrow(GLU glu, GLUquadric quadratic, double editorRadius) {
+    private static void drawArrow(Object glu, GLUquadric quadratic, double editorRadius) {
 
         double length = 2d * editorRadius;
 

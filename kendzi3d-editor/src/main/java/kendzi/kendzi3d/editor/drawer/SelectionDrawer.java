@@ -1,9 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
-
 import java.util.List;
 
 import kendzi.jogl.camera.Viewport;
@@ -15,19 +11,11 @@ import org.lwjgl.opengl.GL11;
 public class SelectionDrawer {
 
     /* Storage For Our Quadratic Objects. */
-    private GLUquadric quadratic;
-
-    private final GLU glu = new GLU();
 
     private final ActiveSpotDrawer activeSpotDrawer = new ActiveSpotDrawer();
     private final ArrowEditorDrawer arrowEditorDrawer = new ArrowEditorDrawer();
 
-    public void init(GL2 gl) {
-        // Quadric for geometry
-        quadratic = glu.gluNewQuadric();
-        // Create smooth normals quadric
-        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
-
+    public void init(Object gl) {
         activeSpotDrawer.init();
         arrowEditorDrawer.init();
     }

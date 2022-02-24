@@ -1,7 +1,7 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+import kendzi.jogl.glu.GLU;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -27,7 +27,7 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrow(GLU glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
+    public static void drawArrow(Object glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
             double arrowheadRadius, int section) {
         GL11.glPushMatrix();
 
@@ -37,16 +37,16 @@ public class ArrowDrawUtil {
 
         GL11.glPushMatrix();
         GL11.glRotated(180d, 1d, 0d, 0d);
-        glu.gluDisk(quadratic, 0, baseRadius, section, 2);
+        GLU.gluDisk(quadratic, 0, (float) baseRadius, section, 2);
         GL11.glPopMatrix();
 
-        glu.gluCylinder(quadratic, baseRadius, baseRadius, baseLength, section, 2);
+        GLU.gluCylinder(quadratic, (float) baseRadius, (float) baseRadius, (float) baseLength, section, 2);
 
         GL11.glTranslated(0, 0, baseLength);
 
-        glu.gluCylinder(quadratic, arrowheadRadius, 0, arrowheadLength, section, 2);
+        GLU.gluCylinder(quadratic, (float) arrowheadRadius, 0, (float) arrowheadLength, section, 2);
         GL11.glRotated(180d, 1d, 0d, 0d);
-        glu.gluDisk(quadratic, 0, arrowheadRadius, section, 2);
+        GLU.gluDisk(quadratic, 0, (float) arrowheadRadius, section, 2);
 
         GL11.glPopMatrix();
     }
@@ -65,15 +65,15 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrowhead(GLU glu, GLUquadric quadratic, double length, double radius, int section) {
+    public static void drawArrowhead(Object glu, GLUquadric quadratic, double length, double radius, int section) {
         GL11.glPushMatrix();
 
         GL11.glRotated(-90d, 1d, 0d, 0d);
 
-        glu.gluCylinder(quadratic, radius, 0, length, section, 2);
+        GLU.gluCylinder(quadratic, (float) radius, 0, (float) length, section, 2);
 
         GL11.glRotated(180d, 1d, 0d, 0d);
-        glu.gluDisk(quadratic, 0, radius, section, 2);
+        GLU.gluDisk(quadratic, 0, (float) radius, section, 2);
 
         GL11.glPopMatrix();
     }
