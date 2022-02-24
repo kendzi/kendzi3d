@@ -12,7 +12,6 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -24,6 +23,7 @@ import java.awt.geom.Rectangle2D;
 
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
+import kendzi.jogl.glu.GLU;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -169,7 +169,6 @@ public class StaticBaseJoglFrame implements GLEventListener {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
-        GLU glu = new GLU();
 
         if (height <= 0) { // avoid a divide by zero error!
 
@@ -180,7 +179,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 1500.0); // 5
+        GLU.gluPerspective(45.0f, (float) width / (float) height, 1.0f, 1500.0f); // 5
     }
 
     @Override
@@ -188,8 +187,6 @@ public class StaticBaseJoglFrame implements GLEventListener {
 
         GL2 gl = drawable.getGL().getGL2();
         // System.err.println("INIT GL IS: " + GL11.getClass().getName());
-
-        GLU glu = new GLU();
 
         // _direction_
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPos);
@@ -200,7 +197,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
 
-        setCamera(glu);
+        setCamera();
 
         GL11.glEnable(GL13.GL_MULTISAMPLE);
 
@@ -220,12 +217,10 @@ public class StaticBaseJoglFrame implements GLEventListener {
     /**
      * Sets camera position and rotation.
      *
-     * @param pGlu
-     *            GLU
      */
-    private void setCamera(GLU pGlu) {
+    private void setCamera() {
 
-        pGlu.gluLookAt(10, 3, 0, 0, 0, 0, 0, 1, 0);
+        GLU.gluLookAt(10, 3, 0, 0, 0, 0, 0, 1, 0);
     }
 
     @Override
