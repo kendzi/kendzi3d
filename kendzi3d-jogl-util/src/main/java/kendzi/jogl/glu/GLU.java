@@ -40,13 +40,10 @@ import static org.lwjgl.opengl.GL11.GL_STACK_OVERFLOW;
 import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
-import com.jogamp.opengl.glu.GLUquadric;
-
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import jogamp.opengl.glu.GLUquadricImpl;
 import kendzi.jogl.glu.tessellation.GLUtessellatorImpl;
 import org.lwjgl.opengl.ARBImaging;
 import org.lwjgl.opengl.EXTFramebufferObject;
@@ -437,36 +434,15 @@ public class GLU {
         return new GLUtessellatorImpl();
     }
 
-    public static void gluDisk(GLUquadric quadratic, float innerRadius, float outerRadius, int slices, int loops) {
-        applyQuadratic(DISK, quadratic);
+    public static void gluDisk(float innerRadius, float outerRadius, int slices, int loops) {
         DISK.draw(innerRadius, outerRadius, slices, loops);
     }
 
-    public static void gluCylinder(GLUquadric quadratic, float baseRadius, float topRadius, float height, int slice, int stacks) {
-        applyQuadratic(CYLINDER, quadratic);
+    public static void gluCylinder(float baseRadius, float topRadius, float height, int slice, int stacks) {
         CYLINDER.draw(baseRadius, topRadius, height, slice, stacks);
     }
 
-    public static void gluSphere(GLUquadric quadratic, float radius, int slices, int stacks) {
-        applyQuadratic(SPHERE, quadratic);
+    public static void gluSphere(float radius, int slices, int stacks) {
         SPHERE.draw(radius, slices, stacks);
-    }
-
-    private static void applyQuadratic(final Quadric quadric, final GLUquadric quadratic) {
-        if (quadratic instanceof GLUquadricImpl) {
-            GLUquadricImpl impl = (GLUquadricImpl) quadratic;
-            quadric.setNormals(impl.getNormals());
-            quadric.setDrawStyle(impl.getDrawStyle());
-            quadric.setOrientation(impl.getOrientation());
-            quadric.setTextureFlag(impl.getTextureFlag());
-        }
-    }
-
-    public static GLUquadric gluNewQuadric() {
-        return new com.jogamp.opengl.glu.GLU().gluNewQuadric();
-    }
-
-    public static void gluQuadricNormals(GLUquadric quadratic, int normal) {
-        new com.jogamp.opengl.glu.GLU().gluQuadricNormals(quadratic, normal);
     }
 }

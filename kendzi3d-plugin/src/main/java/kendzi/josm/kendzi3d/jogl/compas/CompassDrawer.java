@@ -1,14 +1,11 @@
 package kendzi.josm.kendzi3d.jogl.compas;
 
-import com.jogamp.opengl.glu.GLUquadric;
-
 import java.awt.*;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Viewport;
-import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.kendzi3d.editor.drawer.ArrowDrawUtil;
 import kendzi.math.geometry.ray.Ray3d;
@@ -50,18 +47,11 @@ public class CompassDrawer {
     private static final float[] Z_AXIS_COLOR_ARRAY = ColorUtil.colorToArray(Z_AXIS_COLOR);
 
     /**
-     * Storage For Our Quadratic Objects
-     */
-    private GLUquadric quadratic;
-
-    /**
      * Initiate compass drawer.
      *
      */
     public void init() {
-        quadratic = GLU.gluNewQuadric();
-        // Create Smooth Normals
-        GLU.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+        // do nothing -- GLU_SMOOTH is the default normal
     }
 
     /**
@@ -109,15 +99,15 @@ public class CompassDrawer {
         double arrowRadius = 0.2d * camDistanceRatio;
 
         GL11.glColor3fv(Y_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(null, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glRotated(-90d, 0d, 0d, 1d);
         GL11.glColor3fv(X_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(null, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glRotated(90d, 1d, 0d, 0d);
         GL11.glColor3fv(Z_AXIS_COLOR_ARRAY);
-        ArrowDrawUtil.drawArrow(null, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
         GL11.glPopMatrix();
     }

@@ -1,7 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.glu.GLUquadric;
-
 import java.awt.Color;
 
 import kendzi.jogl.glu.GLU;
@@ -16,11 +14,6 @@ import org.lwjgl.opengl.GL11;
 public class ActiveSpotDrawer {
 
     private static final int NUMBER_OF_SECTIONS = 16;
-
-    /**
-     * Storage For Our Quadratic Objects
-     */
-    private GLUquadric quadratic;
 
     private final float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
 
@@ -42,10 +35,7 @@ public class ActiveSpotDrawer {
      *
      */
     public void init() {
-        // Quadric for geometry
-        quadratic = GLU.gluNewQuadric();
-        // Create smooth normals quadric
-        GLU.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+        // do nothing right now -- GLU_SMOOTH is default
     }
 
     /**
@@ -103,13 +93,13 @@ public class ActiveSpotDrawer {
 
         switch (type) {
         case ARROW:
-            drawArrow(null, quadratic, editorRadius);
+            drawArrow(editorRadius);
             break;
         case ARROW_HEAD:
             drawArrowhead(editorRadius);
             break;
         case SPHERE:
-            drawSphere(quadratic, editorRadius);
+            drawSphere(editorRadius);
             break;
         case BOX:
             DrawUtil.drawBox(editorRadius);
@@ -124,8 +114,8 @@ public class ActiveSpotDrawer {
 
     }
 
-    private static void drawSphere(GLUquadric quadratic, double editorRadius) {
-        GLU.gluSphere(quadratic, (float) editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
+    private static void drawSphere(double editorRadius) {
+        GLU.gluSphere((float) editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
     }
 
     private static void drawArrowhead(double editorRadius) {
@@ -139,7 +129,7 @@ public class ActiveSpotDrawer {
         GL11.glPopMatrix();
     }
 
-    private static void drawArrow(Object glu, GLUquadric quadratic, double editorRadius) {
+    private static void drawArrow(double editorRadius) {
 
         double length = 2d * editorRadius;
 
@@ -149,7 +139,7 @@ public class ActiveSpotDrawer {
 
         GL11.glPushMatrix();
         GL11.glTranslated(0, -length / 2d, 0);
-        ArrowDrawUtil.drawArrow(glu, quadratic, length, arrowheadLength, baseRadius, arrowheadRadius, NUMBER_OF_SECTIONS);
+        ArrowDrawUtil.drawArrow(null, length, arrowheadLength, baseRadius, arrowheadRadius, NUMBER_OF_SECTIONS);
         GL11.glPopMatrix();
     }
 }

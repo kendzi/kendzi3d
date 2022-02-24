@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.glu.GLUquadric;
 import kendzi.jogl.glu.GLU;
 import org.lwjgl.opengl.GL11;
 
@@ -14,8 +13,6 @@ public class ArrowDrawUtil {
      *
      * @param glu
      *            glu
-     * @param quadratic
-     *            quadratic
      * @param length
      *            total length of arrow (arrowhead and base)
      * @param arrowheadLength
@@ -27,8 +24,8 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrow(Object glu, GLUquadric quadratic, double length, double arrowheadLength, double baseRadius,
-            double arrowheadRadius, int section) {
+    public static void drawArrow(Object glu, double length, double arrowheadLength, double baseRadius, double arrowheadRadius,
+            int section) {
         GL11.glPushMatrix();
 
         GL11.glRotated(-90d, 1d, 0d, 0d);
@@ -37,16 +34,16 @@ public class ArrowDrawUtil {
 
         GL11.glPushMatrix();
         GL11.glRotated(180d, 1d, 0d, 0d);
-        GLU.gluDisk(quadratic, 0, (float) baseRadius, section, 2);
+        GLU.gluDisk(0, (float) baseRadius, section, 2);
         GL11.glPopMatrix();
 
-        GLU.gluCylinder(quadratic, (float) baseRadius, (float) baseRadius, (float) baseLength, section, 2);
+        GLU.gluCylinder((float) baseRadius, (float) baseRadius, (float) baseLength, section, 2);
 
         GL11.glTranslated(0, 0, baseLength);
 
-        GLU.gluCylinder(quadratic, (float) arrowheadRadius, 0, (float) arrowheadLength, section, 2);
+        GLU.gluCylinder((float) arrowheadRadius, 0, (float) arrowheadLength, section, 2);
         GL11.glRotated(180d, 1d, 0d, 0d);
-        GLU.gluDisk(quadratic, 0, (float) arrowheadRadius, section, 2);
+        GLU.gluDisk(0, (float) arrowheadRadius, section, 2);
 
         GL11.glPopMatrix();
     }
@@ -56,8 +53,6 @@ public class ArrowDrawUtil {
      *
      * @param glu
      *            glu
-     * @param quadratic
-     *            quadratic
      * @param length
      *            length of arrowhead
      * @param radius
@@ -65,15 +60,15 @@ public class ArrowDrawUtil {
      * @param section
      *            number of section
      */
-    public static void drawArrowhead(Object glu, GLUquadric quadratic, double length, double radius, int section) {
+    public static void drawArrowhead(Object glu, double length, double radius, int section) {
         GL11.glPushMatrix();
 
         GL11.glRotated(-90d, 1d, 0d, 0d);
 
-        GLU.gluCylinder(quadratic, (float) radius, 0, (float) length, section, 2);
+        GLU.gluCylinder((float) radius, 0, (float) length, section, 2);
 
         GL11.glRotated(180d, 1d, 0d, 0d);
-        GLU.gluDisk(quadratic, 0, (float) radius, section, 2);
+        GLU.gluDisk(0, (float) radius, section, 2);
 
         GL11.glPopMatrix();
     }

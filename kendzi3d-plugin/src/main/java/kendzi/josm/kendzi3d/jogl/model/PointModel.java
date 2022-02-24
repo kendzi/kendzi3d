@@ -7,7 +7,6 @@
 package kendzi.josm.kendzi3d.jogl.model;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLUquadric;
 
 import java.awt.*;
 import java.util.Collections;
@@ -248,11 +247,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         Color color = Color.ORANGE.darker();
         GL11.glColor3fv(color.getRGBComponents(colorArrays));
 
-        GLUquadric quadratic = GLU.gluNewQuadric();
-
-        GLU.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
-
-        GLU.gluSphere(quadratic, 0.3f, 9, 9);
+        GLU.gluSphere(0.3f, 9, 9);
 
         DrawUtil.drawLine(0, 0, 0, //
                 translate.x, translate.y, translate.z);
@@ -312,7 +307,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         // GL11.glRotated(90, 0d, 1d, 0d);
 
-        GLU.gluSphere(quadratic, 0.3f, 9, 9);
+        GLU.gluSphere(0.3f, 9, 9);
         // drawYArrow
         double scale = 2;
 
