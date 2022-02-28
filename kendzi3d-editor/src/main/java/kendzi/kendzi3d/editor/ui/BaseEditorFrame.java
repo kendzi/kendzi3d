@@ -11,12 +11,12 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
-
-import com.jogamp.opengl.util.Animator;
 
 /**
  * Example frame with 3d editor.
@@ -84,7 +84,7 @@ public abstract class BaseEditorFrame extends Frame {
         frame.setSize(640, 480);
 
         // Setup animator for canvas.
-        final Animator animator = new Animator(canvas);
+        final AnimatorBase animator = new FPSAnimator(canvas, 5);
 
         if (listener instanceof CloseWindowEventSource) {
             // if listener could be source of window close event
@@ -134,7 +134,7 @@ public abstract class BaseEditorFrame extends Frame {
         //
     }
 
-    private void closeWindowRequest(final Frame frame, final Animator animator) {
+    private void closeWindowRequest(final Frame frame, final AnimatorBase animator) {
         /*
          * Run this on another thread than the AWT event queue to make sure the
          * call to Animator.stop() completes before exiting.
