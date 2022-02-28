@@ -6,8 +6,6 @@
 
 package kendzi.jogl.model.render;
 
-import com.jogamp.opengl.GL2;
-
 import java.util.List;
 
 import kendzi.jogl.model.geometry.Face;
@@ -85,18 +83,16 @@ public class ModelRender {
     /**
      * Renders model.
      *
-     * @param gl
-     *            gl context
      * @param model
      *            model to render
      */
-    public void render(GL2 gl, Model model) {
+    public void render(Model model) {
 
         if (model.useLight) {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
 
-        draw(gl, model);
+        draw(model);
 
         if (model.useLight) {
             GL11.glDisable(GL11.GL_LIGHTING);
@@ -114,11 +110,11 @@ public class ModelRender {
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
     }
 
-    public void renderRaw(GL2 gl, Model model) {
-        draw(gl, model);
+    public void renderRaw(Model model) {
+        draw(model);
     }
 
-    private void draw(GL2 gl, Model model) {
+    private void draw(Model model) {
 
         int mi = 0;
         int fi = 0;
@@ -142,7 +138,7 @@ public class ModelRender {
                     if (model.useTextureAlpha) {
                         enableTransparentText();
                     }
-                    setupTextures(gl, material, mesh.hasTexture);
+                    setupTextures(material, mesh.hasTexture);
                 }
 
                 faceCount += mesh.face.length;
@@ -231,7 +227,7 @@ public class ModelRender {
         }
     }
 
-    private void setupTextures(GL2 gl, Material material, boolean useTextures) {
+    private void setupTextures(Material material, boolean useTextures) {
 
         List<String> texturesComponent = material.getTexturesComponent();
         boolean colored = material.getTexture0Color() != null;
@@ -252,7 +248,7 @@ public class ModelRender {
 
             Texture texture = getTexture(texturesComponent.get(curLayer));
             // enableTransparentText(gl);
-            bindTexture(gl, texture);
+            bindTexture(texture);
 
             if (curLayer == 0) {
                 if (colored) {
@@ -312,7 +308,7 @@ public class ModelRender {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
 
             Texture texture = getTexture(texturesComponent.get(curLayer - 1));
-            bindTexture(gl, texture);
+            bindTexture(texture);
 
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_RGB, GL11.GL_MODULATE);
@@ -352,12 +348,10 @@ public class ModelRender {
     /**
      * Bind texture.
      *
-     * @param gl
-     *            context
      * @param texture
      *            the texture
      */
-    public void bindTexture(GL2 gl, Texture texture) {
+    public void bindTexture(Texture texture) {
         // switch to texture mode and push a new matrix on the stack
         GL11.glMatrixMode(GL11.GL_TEXTURE);
         GL11.glPushMatrix();

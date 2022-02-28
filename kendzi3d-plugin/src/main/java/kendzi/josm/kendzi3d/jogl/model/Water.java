@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -175,18 +173,18 @@ public class Water extends AbstractModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 pGl, Camera camera) {
+    public void draw(Camera camera) {
 
         GL11.glPushMatrix();
         GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
-            modelRender.render(pGl, model);
+            modelRender.render(model);
 
         } finally {
             GL11.glPopMatrix();

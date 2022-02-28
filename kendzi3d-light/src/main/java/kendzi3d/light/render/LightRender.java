@@ -1,7 +1,5 @@
 package kendzi3d.light.render;
 
-import com.jogamp.opengl.GL2;
-
 import javax.inject.Inject;
 
 import kendzi.jogl.Gl2Draw;
@@ -16,11 +14,9 @@ public class LightRender implements Gl2Draw {
     /**
      * Set up a light position and color.
      *
-     * @param gl
-     *            gl
      */
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
         // GL11.glMatrixMode(GL11.GL_MODELVIEW);
         //

@@ -1,7 +1,5 @@
 package kendzi.josm.kendzi3d.objects.drawer;
 
-import com.jogamp.opengl.GL2;
-
 import javax.inject.Inject;
 import javax.vecmath.Point3d;
 
@@ -19,7 +17,7 @@ public class StaticModelWorldObjectDrawer {
     @Inject
     private ModelRender modelRender;
 
-    public void draw(GL2 gl, StaticModelWorldObject modelObject, boolean selected) {
+    public void draw(StaticModelWorldObject modelObject, boolean selected) {
 
         GL11.glPushMatrix();
 
@@ -39,10 +37,10 @@ public class StaticModelWorldObjectDrawer {
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-            HighlightDrawer.drawHighlight(modelGl2Draw, gl);
+            HighlightDrawer.drawHighlight(modelGl2Draw);
 
         } else {
-            modelRender.render(gl, model);
+            modelRender.render(model);
         }
 
         GL11.glPopMatrix();
@@ -55,8 +53,8 @@ public class StaticModelWorldObjectDrawer {
         private Model model;
 
         @Override
-        public void draw(GL2 gl) {
-            modelRender.renderRaw(gl, model);
+        public void draw() {
+            modelRender.renderRaw(model);
         }
 
         /**

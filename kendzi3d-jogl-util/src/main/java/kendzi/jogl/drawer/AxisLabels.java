@@ -6,7 +6,6 @@
 
 package kendzi.jogl.drawer;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 import java.awt.*;
@@ -96,12 +95,10 @@ public class AxisLabels implements Gl2Draw {
     /**
      * Place numbers along the x- and z-axes at the integer positions.
      *
-     * @param gl
-     *            gl2
      */
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
         GL11.glDisable(GL11.GL_LIGHTING);
 

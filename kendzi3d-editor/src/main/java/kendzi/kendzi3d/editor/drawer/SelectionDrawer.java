@@ -15,7 +15,7 @@ public class SelectionDrawer {
     private final ActiveSpotDrawer activeSpotDrawer = new ActiveSpotDrawer();
     private final ArrowEditorDrawer arrowEditorDrawer = new ArrowEditorDrawer();
 
-    public void init(Object gl) {
+    public void init() {
         activeSpotDrawer.init();
         arrowEditorDrawer.init();
     }

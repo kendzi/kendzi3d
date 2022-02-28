@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -134,12 +132,12 @@ public class BarrierFence extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
         // replace the quad colors with the texture
         // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
@@ -149,14 +147,14 @@ public class BarrierFence extends AbstractWayModel {
         GL11.glPushMatrix();
         GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
-        modelRender.render(gl, model);
+        modelRender.render(model);
 
         for (RelationCloneHeight cloner : heightClone) {
             for (Double height : cloner) {
 
                 GL11.glPushMatrix();
                 GL11.glTranslated(0, height, 0);
-                modelRender.render(gl, model);
+                modelRender.render(model);
                 GL11.glPopMatrix();
             }
         }

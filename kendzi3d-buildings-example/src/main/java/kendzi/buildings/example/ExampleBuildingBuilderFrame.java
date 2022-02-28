@@ -158,7 +158,7 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
 
         GL2 gl = drawable.getGL().getGL2();
 
-        modelRender.render(gl, model);
+        modelRender.render(model);
     }
 
     public static void main(String[] args) {

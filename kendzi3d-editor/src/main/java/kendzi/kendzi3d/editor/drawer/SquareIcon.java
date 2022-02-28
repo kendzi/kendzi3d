@@ -6,8 +6,6 @@
 
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
-
 import javax.inject.Inject;
 
 import kendzi.jogl.Gl2Draw;
@@ -62,12 +60,10 @@ public class SquareIcon implements Gl2Draw {
     /**
      * Draws icon.
      *
-     * @param gl
-     *            gl2
      */
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
         if (icon == null) {
             return;
@@ -123,7 +119,7 @@ public class SquareIcon implements Gl2Draw {
 
         GL11.glEnable(GL11.GL_LIGHTING);
 
-        texture.disable(gl);
+        texture.disable();
 
         DrawUtil.end2D();
 

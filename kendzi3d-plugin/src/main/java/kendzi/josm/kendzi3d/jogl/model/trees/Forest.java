@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.trees;
 
-import com.jogamp.opengl.GL2;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -417,7 +415,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         return modelLod.get(pLod) != null;
     }
 
-    public void draw(GL2 gl, Camera camera, LOD pLod) {
+    public void draw(Camera camera, LOD pLod) {
         Model model2 = modelLod.get(pLod);
 
         if (model2 != null) {
@@ -425,7 +423,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
             Integer dl = getDisplayList(model2);
 
             if (dl == null) {
-                dl = createDisplayList(gl, model2);
+                dl = createDisplayList(model2);
             }
 
             GL11.glEnable(GL11.GL_NORMALIZE);
@@ -447,19 +445,19 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
         }
     }
 
-    private int createDisplayList(GL2 gl, Model model2) {
+    private int createDisplayList(Model model2) {
 
         // create one display list
         int index = GL11.glGenLists(1);
 
         // XXX for texture download
-        modelRender.render(gl, model2);
+        modelRender.render(model2);
 
         // compile the display list, store a triangle in it
         GL11.glNewList(index, GL11.GL_COMPILE);
 
         modelRender.resetFaceCount();
-        modelRender.render(gl, model2);
+        modelRender.render(model2);
         log.info("***> face count: " + modelRender.getFaceCount());
 
         GL11.glEndList();
@@ -476,12 +474,12 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
         Point3d localCamera = new Point3d(camera.getPoint().x - getGlobalX(), camera.getPoint().y,
                 camera.getPoint().z + getGlobalY());
@@ -509,7 +507,7 @@ public class Forest extends AbstractWayModel implements MultiPointWorldObject {
                 Integer dl = getDisplayList(model2);
 
                 if (dl == null) {
-                    dl = createDisplayList(gl, model2);
+                    dl = createDisplayList(model2);
                 }
 
                 GL11.glEnable(GL11.GL_NORMALIZE);

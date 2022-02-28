@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.building;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -398,12 +396,12 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
-        draw(gl, camera, false);
+    public void draw(Camera camera) {
+        draw(camera, false);
     }
 
     @Override
-    public void draw(GL2 gl, Camera pCamera, boolean selected) {
+    public void draw(Camera pCamera, boolean selected) {
         // XXX move draw debug do new method
         GL11.glPushMatrix();
 
@@ -411,7 +409,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
         GL11.glTranslated(position.x, position.y, position.z);
 
-        modelRender.render(gl, model);
+        modelRender.render(model);
 
         if (debug != null && debug.getEdges() != null) {
             drawEdges(debug.getEdges());

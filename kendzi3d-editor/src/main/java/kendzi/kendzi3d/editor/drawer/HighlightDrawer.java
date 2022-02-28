@@ -1,7 +1,5 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 
 import kendzi.jogl.Gl2Draw;
@@ -21,16 +19,14 @@ public class HighlightDrawer {
      *
      * @param object
      *            object to draw
-     * @param gl
-     *            gl
      */
-    public static void drawHighlight(Gl2Draw object, GL2 gl) {
+    public static void drawHighlight(Gl2Draw object) {
 
-        drawSelectedFill(object, gl);
-        drawGreenOutline(object, gl);
+        drawSelectedFill(object);
+        drawGreenOutline(object);
     }
 
-    private static void drawSelectedFill(Gl2Draw drawer, GL2 gl) {
+    private static void drawSelectedFill(Gl2Draw drawer) {
 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
@@ -38,23 +34,23 @@ public class HighlightDrawer {
         // offset polygons to front
         GL11.glPolygonOffset(-2.0f, -2.0f);
 
-        drawer.draw(gl);
+        drawer.draw();
 
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
     }
 
-    private static void drawGreenOutline(Gl2Draw drawer, GL2 gl) {
+    private static void drawGreenOutline(Gl2Draw drawer) {
 
         // selection color
         GL11.glColor4fv(selectionColor);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
         SimpleOutlineDrawUtil.beginSimpleOutlineLine();
-        drawer.draw(gl);
+        drawer.draw();
 
         SimpleOutlineDrawUtil.beginSimpleOutlinePoint();
-        drawer.draw(gl);
+        drawer.draw();
 
         SimpleOutlineDrawUtil.endSimpleOutline();
     }

@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.jogl.skybox;
 
 import com.google.inject.Inject;
-import com.jogamp.opengl.GL2;
 
 import javax.vecmath.Point3d;
 
@@ -46,12 +45,10 @@ public class SkyBoxDrawer {
     /**
      * Draws skybox.
      *
-     * @param gl
-     *            gl
      * @param cameraLocation
      *            camera location
      */
-    public void draw(GL2 gl, Point3d cameraLocation) {
+    public void draw(Point3d cameraLocation) {
 
         if (configuration == null) {
             return;
@@ -73,15 +70,15 @@ public class SkyBoxDrawer {
 
         GL11.glRotated(180d, 0, 1, 0);
 
-        drawPolygon(gl, configuration.getFrontTexture(), leftBottomBack, rightBottomBack, rightTopBack, leftTopBack);
+        drawPolygon(configuration.getFrontTexture(), leftBottomBack, rightBottomBack, rightTopBack, leftTopBack);
 
-        drawPolygon(gl, configuration.getBackTexture(), rightBottomFront, leftBottomFront, leftTopFront, rightTopFront);
+        drawPolygon(configuration.getBackTexture(), rightBottomFront, leftBottomFront, leftTopFront, rightTopFront);
 
-        drawPolygon(gl, configuration.getRightTexture(), rightBottomBack, rightBottomFront, rightTopFront, rightTopBack);
+        drawPolygon(configuration.getRightTexture(), rightBottomBack, rightBottomFront, rightTopFront, rightTopBack);
 
-        drawPolygon(gl, configuration.getLeftTexture(), leftBottomFront, leftBottomBack, leftTopBack, leftTopFront);
+        drawPolygon(configuration.getLeftTexture(), leftBottomFront, leftBottomBack, leftTopBack, leftTopFront);
 
-        drawPolygon(gl, configuration.getTopTexture(), leftTopBack, rightTopBack, rightTopFront, leftTopFront);
+        drawPolygon(configuration.getTopTexture(), leftTopBack, rightTopBack, rightTopFront, leftTopFront);
 
         GL11.glPopMatrix();
 
@@ -92,20 +89,19 @@ public class SkyBoxDrawer {
     }
 
     /**
-     * @param gl
      * @param textureName
      * @param p1
      * @param p2
      * @param p3
      * @param p4
      */
-    public void drawPolygon(GL2 gl, String textureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
+    public void drawPolygon(String textureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName != null) {
             Texture texture = textureCacheService.getTexture(textureName);
 
-            texture.enable(gl);
-            texture.bind(gl);
+            texture.enable();
+            texture.bind();
 
             tc = texture.getImageTexCoords();
         }
@@ -126,7 +122,7 @@ public class SkyBoxDrawer {
         if (textureName != null) {
             Texture t = textureCacheService.getTexture(textureName);
             if (t != null) {
-                t.disable(gl);
+                t.disable();
             }
         }
     }

@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 
 import javax.vecmath.Point3d;
@@ -83,7 +81,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     }
 
     @Override
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(Point3d cameraPosition) {
 
         Perspective3D perspective = perspective3dProvider.getPerspective3d();
         if (perspective == null) {
@@ -103,7 +101,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         int titlesRows = 2;
         for (int ie = -titlesRows; ie <= titlesRows; ie++) {
             for (int in = -titlesRows; in <= titlesRows; in++) {
-                drawTitle(gl, e + ie, n + in, perspective);
+                drawTitle(e + ie, n + in, perspective);
             }
         }
     }
@@ -111,8 +109,6 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     /**
      * Draws title.
      *
-     * @param gl
-     *            gl
      * @param e
      *            east title key
      * @param n
@@ -120,7 +116,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
      * @param perspective3d
      *            perspective
      */
-    private void drawTitle(GL2 gl, int e, int n, Perspective3D perspective3d) {
+    private void drawTitle(int e, int n, Perspective3D perspective3d) {
 
         double xCenter = e * TITLE_LENGTH;
         double yCenter = n * TITLE_LENGTH;
@@ -179,8 +175,8 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-        texture.enable(gl);
-        texture.bind(gl);
+        texture.enable();
+        texture.bind();
 
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glNormal3d(0d, 1d, 0d);
@@ -197,7 +193,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         GL11.glVertex3d(x4, h, z4);
         GL11.glEnd();
 
-        texture.disable(gl);
+        texture.disable();
     }
 
     /**

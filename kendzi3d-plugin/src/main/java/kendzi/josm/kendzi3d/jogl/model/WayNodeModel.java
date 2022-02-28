@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -370,7 +368,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, LOD pLod) {
+    public void draw(Camera camera, LOD pLod) {
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
             GL11.glPushMatrix();
@@ -401,7 +399,7 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
                 GL11.glScaled(scale.x, scale.y, scale.z);
                 GL11.glRotated(modelPoint.getDirection(), 0d, 1d, 0d);
 
-                modelRenderer.render(gl, model2);
+                modelRenderer.render(model2);
                 GL11.glPopMatrix();
             }
 
@@ -412,13 +410,13 @@ public class WayNodeModel extends AbstractWayModel implements DLODSuport {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
-        draw(gl, camera, LOD.LOD1);
+    public void draw(Camera camera) {
+        draw(camera, LOD.LOD1);
     }
 
     @Override

@@ -204,9 +204,9 @@ public class StaticBaseJoglFrame implements GLEventListener {
         // String versionStr = GL11.glGetString( GL11.GL_VERSION );
         // log.info( "GL version:"+versionStr );
 
-        floor.draw(gl);
+        floor.draw();
 
-        axisLabels.draw(gl);
+        axisLabels.draw();
 
         // drawTextInfo(gl, this.simpleMoveAnimator.info());
 

@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -201,12 +199,12 @@ public class BarrierWall extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
         GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
@@ -214,7 +212,7 @@ public class BarrierWall extends AbstractWayModel {
         GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
-            modelRender.render(gl, model);
+            modelRender.render(model);
 
             for (RelationCloneHeight cloner : heightClone) {
                 for (Double height : cloner) {
@@ -222,7 +220,7 @@ public class BarrierWall extends AbstractWayModel {
                     GL11.glPushMatrix();
                     GL11.glTranslated(0, height, 0);
 
-                    modelRender.render(gl, model);
+                    modelRender.render(model);
                     GL11.glPopMatrix();
 
                 }

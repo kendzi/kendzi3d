@@ -6,8 +6,6 @@
 
 package kendzi.jogl.drawer;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 
 import kendzi.jogl.Gl2Draw;
@@ -63,12 +61,10 @@ public class TilesSurface implements Gl2Draw {
     /**
      * Draws tiles surface in two colors.
      *
-     * @param gl
-     *            gl context
      */
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
         GL11.glDisable(GL11.GL_LIGHTING);
 

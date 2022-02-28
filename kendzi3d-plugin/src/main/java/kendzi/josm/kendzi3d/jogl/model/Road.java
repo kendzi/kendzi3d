@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -378,14 +376,14 @@ public class Road extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 pGl, Camera pCamera) {
+    public void draw(Camera pCamera) {
         // FIXME object is not in local coordinates!
-        modelRender.render(pGl, model);
+        modelRender.render(model);
 
     }
 

@@ -6,7 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
 import kendzi.jogl.camera.Camera;
 import kendzi.kendzi3d.world.BuildableWorldObject;
 
@@ -48,25 +47,20 @@ public interface DrawableModel extends BuildableWorldObject {
 
     /**
      * Draw using openGl.
-     * 
-     * @param gl
-     *            openGl
+     *
      * @param camera
      *            camera
      */
-    void draw(GL2 gl, Camera camera);
+    void draw(Camera camera);
 
     /**
      * Draw using openGl. When object can be selectable.
      * 
-     * @param gl
-     *            openGl
      * @param camera
      *            camera
      * @param selected
-     *            if object is selected
      */
-    void draw(GL2 gl, Camera camera, boolean selected);
+    void draw(Camera camera, boolean selected);
 
     /**
      * When error occurred in time of model building/rendering.

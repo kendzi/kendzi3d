@@ -6,8 +6,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import com.jogamp.opengl.GL2;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -369,12 +367,12 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
         // replace the quad colors with the texture
         // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
@@ -386,7 +384,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         try {
 
-            modelRender.render(gl, model);
+            modelRender.render(model);
         } finally {
 
             GL11.glPopMatrix();

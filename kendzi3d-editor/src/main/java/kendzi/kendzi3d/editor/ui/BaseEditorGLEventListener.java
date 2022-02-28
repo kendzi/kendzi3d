@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.ui;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
@@ -25,6 +24,7 @@ import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCapabilities;
 
 public class BaseEditorGLEventListener implements GLEventListener, ViewportProvider, CloseWindowEventSource {
 
@@ -51,18 +51,16 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
     @Override
     public void init(GLAutoDrawable drawable) {
-        org.lwjgl.opengl.GL.createCapabilities();
+        final GLCapabilities capabilities = org.lwjgl.opengl.GL.createCapabilities();
 
-        GL2 gl = drawable.getGL().getGL2();
-
-        if (!checkRequiredExtensions(gl)) {
+        if (!checkRequiredExtensions(capabilities)) {
             LOG.error("can't find required openGl extensions closing window");
             windowClosed = true;
             fireCloseWindow();
         }
 
-        // Enable VSync.
-        gl.setSwapInterval(1);
+        // FIXME TODO Enable VSync.
+        // gl.setSwapInterval(1);
 
         // Clear z-buffer.
         GL11.glClearDepth(1.0);
@@ -92,7 +90,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         // Adds light for screen.
         addLight();
 
-        selectionDrawer.init(gl);
+        selectionDrawer.init();
 
     }
 
@@ -152,47 +150,44 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
          */
         viewport.updateViewport(camera);
 
-        // Gl 2 context.
-        GL2 gl = drawable.getGL().getGL2();
-
         // Clear color and depth buffers.
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
         // Draw before camera is set.
-        drawBeforeSetCamera(gl, viewport);
+        drawBeforeSetCamera(viewport);
 
         // Sets new view matrix.
         ViewportUtil.lookAt(viewport);
 
-        drawBeforeEditorObjects(gl, viewport);
+        drawBeforeEditorObjects(viewport);
 
-        drawEditorObjects(gl, viewport);
+        drawEditorObjects(viewport);
 
-        drawAfterEditorObjects(gl, viewport);
+        drawAfterEditorObjects(viewport);
 
         { // XXX remove!
 
             GL11.glColor3fv(ColorUtil.colorToArray(new Color(0.0f, 0.5f, 0.1f)));
 
         }
-        drawSelection(gl);
+        drawSelection();
 
         GL11.glFlush();
     }
 
-    protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {
+    protected void drawBeforeSetCamera(Viewport viewport) {
         //
     }
 
-    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport) {
+    protected void drawBeforeEditorObjects(Viewport viewport) {
         //
     }
 
-    protected void drawAfterEditorObjects(GL2 gl, Viewport viewport) {
+    protected void drawAfterEditorObjects(Viewport viewport) {
         //
     }
 
-    private void drawSelection(GL2 gl) {
+    private void drawSelection() {
 
         Selection lastSelection = objectSelectionListener.getLastSelection();
         if (lastSelection != null) {
@@ -200,7 +195,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
             Object editableObject = lastSelection.getSource();
 
-            drawHighlightEditorObject(gl, editableObject);
+            drawHighlightEditorObject(editableObject);
 
             selectionDrawer.draw(lastSelection, objectSelectionListener.getLastActiveEditor(),
                     objectSelectionListener.getLastHighlightedEditor(), viewport);
@@ -212,35 +207,32 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
             squareIcon.addIcon(null);
         }
 
-        squareIcon.draw(gl);
+        squareIcon.draw();
     }
 
-    protected void drawHighlightEditorObject(GL2 gl, Object editableObject) {
+    protected void drawHighlightEditorObject(Object editableObject) {
         throw new IllegalStateException("unsupported editor object: " + editableObject);
     }
 
-    protected void drawEditorObjects(GL2 gl, Viewport viewport) {
+    protected void drawEditorObjects(Viewport viewport) {
 
         try {
             List<EditableObject> editableObjects = core.getEditableObjects();
 
             for (EditableObject editableObject : editableObjects) {
-                drawEditorObject(gl, editableObject, viewport);
+                drawEditorObject(editableObject, viewport);
             }
         } catch (Exception e) {
             LOG.error("can't draw editor objects", e);
         }
     }
 
-    protected void drawEditorObject(GL2 gl, EditableObject editableObject, Viewport viewport) {
+    protected void drawEditorObject(EditableObject editableObject, Viewport viewport) {
         throw new IllegalStateException("unsupported editor object: " + editableObject);
     }
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-
-        GL2 gl = drawable.getGL().getGL2();
-
         // Avoid a divide by zero error!
         if (height <= 0) {
             height = 1;
@@ -279,7 +271,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
         }
     }
 
-    protected boolean checkRequiredExtensions(GL2 gl) {
+    protected boolean checkRequiredExtensions(GLCapabilities cap) {
         return true;
     }
 }

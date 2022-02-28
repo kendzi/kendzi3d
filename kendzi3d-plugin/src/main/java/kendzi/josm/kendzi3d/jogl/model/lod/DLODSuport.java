@@ -9,8 +9,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.lod;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 import kendzi.jogl.camera.Camera;
 
@@ -19,7 +17,7 @@ public interface DLODSuport {
 
     boolean isModelBuild(LOD pLod);
 
-    void draw(GL2 gl, Camera camera, LOD pLod);
+    void draw(Camera camera, LOD pLod);
 
     void buildModel(LOD pLod);
 

@@ -9,8 +9,6 @@
 
 package kendzi.josm.kendzi3d.jogl.model.ground;
 
-import com.jogamp.opengl.GL2;
-
 import javax.vecmath.Point3d;
 
 import kendzi.jogl.texture.TextureCacheService;
@@ -36,7 +34,7 @@ public class GroundDrawer {
         //
     }
 
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(Point3d cameraPosition) {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -73,7 +71,7 @@ public class GroundDrawer {
 
         GL11.glEnd();
 
-        texture.disable(gl);
+        texture.disable();
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
     }

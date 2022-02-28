@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.editor.example.ui;
 
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.drawer.AxisLabels;
@@ -37,13 +36,13 @@ public class ExampleEditorGLEventListener extends BaseEditorGLEventListener {
     private final RoofHighlightDrawer roofHighlightDrawer = new RoofHighlightDrawer();
 
     @Override
-    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
-        floor.draw(gl);
+    protected void drawBeforeEditorObjects(Viewport viewport2) {
+        floor.draw();
     }
 
     @Override
-    protected void drawAfterEditorObjects(GL2 gl, Viewport viewport2) {
-        axisLabels.draw(gl);
+    protected void drawAfterEditorObjects(Viewport viewport2) {
+        axisLabels.draw();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class ExampleEditorGLEventListener extends BaseEditorGLEventListener {
     }
 
     @Override
-    protected void drawEditorObject(GL2 gl, EditableObject editableObject, Viewport viewport) {
+    protected void drawEditorObject(EditableObject editableObject, Viewport viewport) {
         //
         if (editableObject instanceof Box) {
 
@@ -68,16 +67,16 @@ public class ExampleEditorGLEventListener extends BaseEditorGLEventListener {
     }
 
     @Override
-    protected void drawHighlightEditorObject(GL2 gl, Object editableObject) {
+    protected void drawHighlightEditorObject(Object editableObject) {
 
         if (editableObject instanceof Box) {
 
             boxHighlightDrawer.setBox((Box) editableObject);
-            HighlightDrawer.drawHighlight(boxHighlightDrawer, gl);
+            HighlightDrawer.drawHighlight(boxHighlightDrawer);
         } else if (editableObject instanceof Roof) {
 
             roofHighlightDrawer.setRoof((Roof) editableObject);
-            HighlightDrawer.drawHighlight(roofHighlightDrawer, gl);
+            HighlightDrawer.drawHighlight(roofHighlightDrawer);
         }
     }
 }

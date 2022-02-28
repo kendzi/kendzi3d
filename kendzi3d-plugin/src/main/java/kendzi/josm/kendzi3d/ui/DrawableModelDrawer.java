@@ -1,6 +1,5 @@
 package kendzi.josm.kendzi3d.ui;
 
-import com.jogamp.opengl.GL2;
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.jogl.model.DrawableModel;
@@ -17,7 +16,7 @@ public class DrawableModelDrawer implements Gl2Draw {
     }
 
     @Override
-    public void draw(GL2 gl) {
-        drawableModel.draw(gl, camera, true);
+    public void draw() {
+        drawableModel.draw(camera, true);
     }
 }
