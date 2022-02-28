@@ -74,6 +74,12 @@
         <version>${lwjgl.version}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>org.lwjglx</groupId>
+        <artifactId>lwjgl3-awt</artifactId>
+        <version>${lwjgl3-awt.version}</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>

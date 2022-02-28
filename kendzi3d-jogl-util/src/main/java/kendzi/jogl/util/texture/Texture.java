@@ -342,17 +342,10 @@ public class Texture {
      * maximize performance when using many Texture objects.
      * </p>
      * 
-     * @param gl
-     *            the current GL object
-     *
      * @throws GLException
      *             if no OpenGL context was current or if any OpenGL-related errors
      *             occurred
      */
-    public void enable(Object gl) {
-        this.enable();
-    }
-
     public void enable() throws GLException {
         final GLCapabilities cap = GL.getCapabilities();
         if (!cap.forwardCompatible) {
@@ -377,18 +370,11 @@ public class Texture {
      * maximize performance when using many Texture objects.
      * </p>
      * 
-     * @param gl
-     *            the current GL object
-     *
      * @throws GLException
      *             if no OpenGL context was current or if any OpenGL-related errors
      *             occurred
      */
-    public void disable(final Object gl) throws GLException {
-        this.disable();
-    }
-
-    public void disable() {
+    public void disable() throws GLException {
         final GLCapabilities cap = GL.getCapabilities();
         if (!cap.forwardCompatible) {
             GL11.glDisable(target);
@@ -410,10 +396,6 @@ public class Texture {
      *             if no OpenGL context was current or if any OpenGL-related errors
      *             occurred
      */
-    public void bind(final Object gl) {
-        this.bind();
-    }
-
     public void bind() throws GLException {
         validateTexID(true);
         GL11.glBindTexture(target, texID);
@@ -425,11 +407,7 @@ public class Texture {
      * @throws GLException
      *             if any OpenGL-related errors occurred
      */
-    public void destroy(final Object gl) throws GLException {
-        this.destroy();
-    }
-
-    public void destroy() {
+    public void destroy() throws GLException {
         if (0 != texID) {
             GL11.glDeleteTextures(texID);
             texID = 0;

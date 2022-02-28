@@ -6,19 +6,16 @@
 
 package kendzi.jogl.ui;
 
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
-
-import java.awt.*;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import kendzi.jogl.GLAutoDrawable;
+import kendzi.jogl.animator.AnimatorBase;
+import kendzi.jogl.animator.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.drawer.AxisLabels;
@@ -28,6 +25,7 @@ import kendzi.jogl.util.GLEventListener;
 import kendzi.math.geometry.point.PointUtil;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.awt.GLData;
 
 /**
  * Base for test jogl applications.
@@ -61,13 +59,11 @@ public class BaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * @param frame
-     * @param sj
      */
     public void initUi() {
         Frame frame = new Frame("Simple JOGL Application");
 
-        GLCanvas canvas = createCanvas();
+        GLAutoDrawable canvas = createCanvas();
 
         canvas.addGLEventListener(this);
         frame.add(canvas);
@@ -101,27 +97,27 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * @return
      */
-    public static GLCanvas createCanvas() {
-        // create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
+    public static GLAutoDrawable createCanvas() {
 
+        // create a profile, in this case OpenGL 2 or later
         // configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
+        GLData glData = new GLData();
+        glData.majorVersion = 2;
 
         // setup z-buffer
-        capabilities.setDepthBits(16);
+        glData.depthSize = 16;
 
         // for anti-aliasing
         // FIXME enabling sample buffers on dual screen ubuntu cause problems...
         // capabilities.setSampleBuffers(true);
         // capabilities.setNumSamples(2);
+        glData.samples = 2;
 
         // initialize a GLDrawable of your choice
-        GLCanvas canvas = new GLCanvas(capabilities);
-        return canvas;
+        return new GLAutoDrawable(glData);
     }
 
-    private static void addSimpleMover(GLCanvas canvas, final BaseJoglFrame sj) {
+    private static void addSimpleMover(GLAutoDrawable canvas, final BaseJoglFrame sj) {
         canvas.addKeyListener(sj.cameraMoveListener);
 
         canvas.addMouseMotionListener(sj.cameraMoveListener);

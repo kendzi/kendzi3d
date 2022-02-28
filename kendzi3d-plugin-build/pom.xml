@@ -33,16 +33,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.jogamp.gluegen</groupId>
-      <artifactId>gluegen-rt-main</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jogamp.jogl</groupId>
-      <artifactId>jogl-all-main</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-plugin</artifactId>
       <version>1.0.206-SNAPSHOT</version>

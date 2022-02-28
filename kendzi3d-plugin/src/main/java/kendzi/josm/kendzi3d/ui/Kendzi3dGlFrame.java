@@ -33,6 +33,7 @@ public class Kendzi3dGlFrame extends BaseEditorFrame {
 
     @Override
     protected void onOpenWindow() {
+        super.onOpenWindow();
         dataConsumersMonitor.addDataConsumer();
 
         /*
@@ -50,6 +51,7 @@ public class Kendzi3dGlFrame extends BaseEditorFrame {
 
     @Override
     protected void onCloseWindow() {
+        super.onCloseWindow();
         dataConsumersMonitor.removeDataConsumer();
     }
 

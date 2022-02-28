@@ -6,17 +6,15 @@
 
 package kendzi.jogl.ui;
 
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
-
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 
+import kendzi.jogl.GLAutoDrawable;
+import kendzi.jogl.animator.AnimatorBase;
+import kendzi.jogl.animator.FPSAnimator;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
 import kendzi.jogl.glu.GLU;
@@ -72,14 +70,10 @@ public class StaticBaseJoglFrame implements GLEventListener {
 
     }
 
-    /**
-     * @param frame
-     * @param sj
-     */
     public void initUi() {
         Frame frame = new Frame("Simple JOGL Application");
 
-        GLCanvas canvas = createCanvas();
+        GLAutoDrawable canvas = createCanvas();
 
         canvas.addGLEventListener(this);
         frame.add(canvas);
@@ -110,23 +104,8 @@ public class StaticBaseJoglFrame implements GLEventListener {
     /**
      * @return
      */
-    public static GLCanvas createCanvas() {
-        // create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
-
-        // configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
-
-        // setup z-buffer
-        capabilities.setDepthBits(16);
-
-        // for anti-aliasing
-        capabilities.setSampleBuffers(true);
-        capabilities.setNumSamples(2);
-
-        // initialize a GLDrawable of your choice
-        GLCanvas canvas = new GLCanvas(capabilities);
-        return canvas;
+    public static GLAutoDrawable createCanvas() {
+        return StaticBaseJoglFrame.createCanvas();
     }
 
     @Override

@@ -34,10 +34,6 @@
       <artifactId>lwjgl-opengl</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jogamp.jogl</groupId>
-      <artifactId>jogl-all-main</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
       <version>${inject.version}</version>

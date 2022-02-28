@@ -21,6 +21,7 @@ import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
 import org.apache.log4j.Logger;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 
@@ -49,7 +50,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
 
     @Override
     public void init() {
-        final GLCapabilities capabilities = org.lwjgl.opengl.GL.createCapabilities();
+        final GLCapabilities capabilities = GL.getCapabilities();
 
         if (!checkRequiredExtensions(capabilities)) {
             LOG.error("can't find required openGl extensions closing window");

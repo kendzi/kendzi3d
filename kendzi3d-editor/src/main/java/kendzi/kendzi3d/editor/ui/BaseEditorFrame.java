@@ -1,11 +1,5 @@
 package kendzi.kendzi3d.editor.ui;
 
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
-
 import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
@@ -13,10 +7,14 @@ import java.awt.event.WindowEvent;
 
 import javax.inject.Inject;
 
+import kendzi.jogl.GLAutoDrawable;
+import kendzi.jogl.animator.AnimatorBase;
+import kendzi.jogl.animator.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.util.GLEventListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
+import org.lwjgl.opengl.awt.GLData;
 
 /**
  * Example frame with 3d editor.
@@ -75,7 +73,7 @@ public abstract class BaseEditorFrame extends Frame {
         final Frame frame = this;
 
         // Creates canvas.
-        GLCanvas canvas = createCanvas();
+        GLAutoDrawable canvas = createCanvas();
         // Adds canvas drawer.
         canvas.addGLEventListener(listener);
 
@@ -111,13 +109,12 @@ public abstract class BaseEditorFrame extends Frame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // Start animate.
-        animator.start();
-
         // Request focus to enable keyboard input.
         canvas.setFocusable(true);
         canvas.requestFocus();
 
+        // Start animate.
+        animator.start();
         onOpenWindow();
     }
 
@@ -152,26 +149,28 @@ public abstract class BaseEditorFrame extends Frame {
     /**
      * @return canvas with GL2 profile.
      */
-    private static GLCanvas createCanvas() {
+    private static GLAutoDrawable createCanvas() {
         // create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
-
+        final GLData glData = new GLData();
         // configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
+        glData.majorVersion = 2;
+        // We currently use deprecated functionality from OpenGL 1.1
+        glData.forwardCompatible = false;
 
         // setup z-buffer
-        capabilities.setDepthBits(16);
+        glData.depthSize = 16;
 
         // for anti-aliasing
         // FIXME enabling sample buffers on dual screen ubuntu cause problems...
         // capabilities.setSampleBuffers(true);
         // capabilities.setNumSamples(2);
+        glData.samples = 2;
 
         // initialize a GLDrawable of your choice
-        return new GLCanvas(capabilities);
+        return new GLAutoDrawable(glData);
     }
 
-    private static void addCameraMoveListener(GLCanvas canvas, final CameraMoveListener cameraMoveListener) {
+    private static void addCameraMoveListener(GLAutoDrawable canvas, final CameraMoveListener cameraMoveListener) {
 
         canvas.addKeyListener(cameraMoveListener);
         canvas.addMouseMotionListener(cameraMoveListener);

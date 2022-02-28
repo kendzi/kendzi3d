@@ -46,6 +46,7 @@ public class ExampleEditorGLEventListener extends BaseEditorGLEventListener {
 
     @Override
     public void init() {
+        super.init();
         axisLabels.init();
     }
 
