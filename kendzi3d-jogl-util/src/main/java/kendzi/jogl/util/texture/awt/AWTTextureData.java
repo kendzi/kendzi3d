@@ -37,8 +37,6 @@
 
 package kendzi.jogl.util.texture.awt;
 
-import com.jogamp.opengl.GLException;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ComponentColorModel;
@@ -56,6 +54,7 @@ import java.awt.image.SinglePixelPackedSampleModel;
 import java.awt.image.WritableRaster;
 import java.nio.ByteBuffer;
 
+import kendzi.jogl.glu.GLException;
 import kendzi.jogl.util.GLPixelBuffer;
 import kendzi.jogl.util.GLPixelBuffer.GLPixelAttributes;
 import kendzi.jogl.util.texture.TextureData;

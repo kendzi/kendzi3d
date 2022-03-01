@@ -38,12 +38,12 @@
 package kendzi.jogl.util.texture;
 
 import com.jogamp.nativewindow.NativeWindowFactory;
-import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.spi.DDSImage;
 
 import java.nio.*;
 import java.util.Objects;
 
+import kendzi.jogl.glu.GLException;
 import kendzi.jogl.glu.GLU;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;

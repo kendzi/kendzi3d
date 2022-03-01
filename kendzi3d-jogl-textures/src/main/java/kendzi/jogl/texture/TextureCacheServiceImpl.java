@@ -6,10 +6,6 @@
 
 package kendzi.jogl.texture;
 
-import static kendzi.jogl.texture.TextureCacheService.TEXTURES_UNDEFINED_PNG;
-
-import com.jogamp.opengl.GLException;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +16,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import kendzi.jogl.glu.GLException;
 import kendzi.jogl.glu.GLU;
 import kendzi.jogl.texture.builder.TextureBuilder;
 import kendzi.jogl.util.texture.Texture;

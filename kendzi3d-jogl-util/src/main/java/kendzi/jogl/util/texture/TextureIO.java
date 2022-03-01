@@ -44,7 +44,6 @@ import com.jogamp.common.util.IOUtil;
 import com.jogamp.nativewindow.util.Dimension;
 import com.jogamp.nativewindow.util.DimensionImmutable;
 import com.jogamp.nativewindow.util.PixelFormat;
-import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.PNGPixelRect;
 import com.jogamp.opengl.util.texture.ImageType;
 import com.jogamp.opengl.util.texture.spi.DDSImage;
@@ -71,6 +70,7 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import kendzi.jogl.glu.GLException;
 import kendzi.jogl.util.GLPixelBuffer;
 import kendzi.jogl.util.GLPixelStorageModes;
 import kendzi.jogl.util.texture.spi.TextureProvider;

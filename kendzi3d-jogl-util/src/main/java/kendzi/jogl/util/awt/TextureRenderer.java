@@ -39,8 +39,6 @@
  */
 package kendzi.jogl.util.awt;
 
-import com.jogamp.opengl.GLException;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -48,6 +46,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.*;
 
+import kendzi.jogl.glu.GLException;
 import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.texture.Texture;
 import kendzi.jogl.util.texture.TextureCoords;

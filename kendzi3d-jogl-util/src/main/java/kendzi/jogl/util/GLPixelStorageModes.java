@@ -28,7 +28,7 @@
 
 package kendzi.jogl.util;
 
-import com.jogamp.opengl.GLException;
+import kendzi.jogl.glu.GLException;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

@@ -29,11 +29,11 @@ package kendzi.jogl.util;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.nativewindow.util.PixelFormat;
-import com.jogamp.opengl.GLException;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
+import kendzi.jogl.glu.GLException;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
