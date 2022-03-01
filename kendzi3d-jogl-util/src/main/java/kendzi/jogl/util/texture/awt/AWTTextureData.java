@@ -469,10 +469,17 @@ public class AWTTextureData extends TextureData {
         final DataBuffer data = image.getRaster().getDataBuffer();
         if (data instanceof DataBufferByte) {
             return ByteBuffer.wrap(((DataBufferByte) data).getData());
+        } else if (data instanceof DataBufferInt) {
+            if (image.getType() == BufferedImage.TYPE_INT_ARGB || image.getType() == BufferedImage.TYPE_INT_ARGB_PRE) {
+                BufferedImage converted = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+                converted.getGraphics().drawImage(image, 0, 0, null);
+                return wrapImageDataBuffer(converted);
+            }
+            throw new RuntimeException("Unexpected DataBufferInt type? " + image.getType());
         } else if (data instanceof DataBufferDouble) {
             throw new RuntimeException("DataBufferDouble rasters not supported by OpenGL");
         } else {
-            throw new RuntimeException("Unexpected DataBuffer type?");
+            throw new RuntimeException("Unexpected DataBuffer type? " + data.getClass());
         }
     }
 }
