@@ -6,14 +6,13 @@
 
 package kendzi.jogl.drawer;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import kendzi.jogl.Gl2Draw;
+import kendzi.jogl.util.texture.awt.TextRenderer;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -121,13 +120,13 @@ public class AxisLabels implements Gl2Draw {
         for (int i = -this.lenghtX / 2; i <= this.lenghtX / 2; i++) {
             // along x-axis
             // drawAxisText(pGl, "x: " + i, i, 0.0f, 0.0f);
-            textToRender.add(new TextToRender("x: " + i, i, 0.0f, 0.0f));
+            textToRender.add(new TextToRender("x: " + i, i, 0.25f, i == 0 ? -0.25f : 0.0f));
         }
 
         for (int i = -this.lenghtY / 2; i <= this.lenghtY / 2; i++) {
             // along z-axis
             // drawAxisText(pGl, "z: " + i, 0.0f, 0.0f, i);
-            textToRender.add(new TextToRender("z: " + i, 0.0f, 0.0f, i));
+            textToRender.add(new TextToRender("z: " + i, i == 0 ? 0.25f : 0.0f, 0.25f, i));
         }
 
         for (int i = -this.lenghtZ / 2; i <= this.lenghtZ / 2; i++) {

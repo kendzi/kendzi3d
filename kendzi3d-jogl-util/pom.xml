@@ -24,6 +24,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-stb</artifactId>
+      <version>${lwjgl.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jogamp.gluegen</groupId>
       <artifactId>gluegen-rt-main</artifactId>
       <version>${gluegen.version}</version>

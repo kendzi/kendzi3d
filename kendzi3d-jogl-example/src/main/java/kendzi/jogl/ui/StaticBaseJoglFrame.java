@@ -14,7 +14,6 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.awt.TextRenderer;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -24,6 +23,7 @@ import java.awt.geom.Rectangle2D;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
 import kendzi.jogl.glu.GLU;
+import kendzi.jogl.util.texture.awt.TextRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 

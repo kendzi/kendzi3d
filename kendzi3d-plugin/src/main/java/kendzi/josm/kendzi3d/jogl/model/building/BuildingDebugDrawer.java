@@ -1,7 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.model.building;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -11,6 +9,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import kendzi.jogl.util.DrawUtil;
+import kendzi.jogl.util.texture.awt.TextRenderer;
 import kendzi.kendzi3d.buildings.output.RoofDebugOutput;
 import org.lwjgl.opengl.GL11;
 
