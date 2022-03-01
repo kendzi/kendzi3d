@@ -1,7 +1,6 @@
 package kendzi.kendzi3d.editor.ui;
 
 import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
@@ -15,6 +14,7 @@ import java.awt.event.WindowEvent;
 import javax.inject.Inject;
 
 import kendzi.jogl.camera.CameraMoveListener;
+import kendzi.jogl.util.GLEventListener;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 

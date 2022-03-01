@@ -1,8 +1,5 @@
 package kendzi.kendzi3d.editor.ui;
 
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +10,7 @@ import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.camera.ViewportUtil;
 import kendzi.jogl.util.ColorUtil;
+import kendzi.jogl.util.GLEventListener;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.EditorCore;
 import kendzi.kendzi3d.editor.drawer.SelectionDrawer;
@@ -50,7 +48,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     private boolean windowClosed;
 
     @Override
-    public void init(GLAutoDrawable drawable) {
+    public void init() {
         final GLCapabilities capabilities = org.lwjgl.opengl.GL.createCapabilities();
 
         if (!checkRequiredExtensions(capabilities)) {
@@ -124,12 +122,12 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     }
 
     @Override
-    public void dispose(GLAutoDrawable drawable) {
+    public void dispose() {
         //
     }
 
     @Override
-    public void display(GLAutoDrawable drawable) {
+    public void display() {
 
         if (windowClosed) {
             /*
@@ -232,7 +230,7 @@ public class BaseEditorGLEventListener implements GLEventListener, ViewportProvi
     }
 
     @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+    public void reshape(int x, int y, int width, int height) {
         // Avoid a divide by zero error!
         if (height <= 0) {
             height = 1;

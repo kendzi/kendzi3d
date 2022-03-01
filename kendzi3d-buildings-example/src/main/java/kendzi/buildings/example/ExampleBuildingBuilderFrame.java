@@ -1,8 +1,5 @@
 package kendzi.buildings.example;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,8 +52,8 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
      * @see kendzi.buildings.example.BaseJoglFrame#init(com.jogamp.opengl.GLAutoDrawable)
      */
     @Override
-    public void init(GLAutoDrawable drawable) {
-        super.init(drawable);
+    public void init() {
+        super.init();
 
         /*
          * This is required only for textures file finding. Renderer use it to load
@@ -153,11 +150,8 @@ public class ExampleBuildingBuilderFrame extends BaseJoglFrame {
      * @see kendzi.buildings.example.BaseJoglFrame#display(com.jogamp.opengl.GLAutoDrawable)
      */
     @Override
-    public void display(GLAutoDrawable drawable) {
-        super.display(drawable);
-
-        GL2 gl = drawable.getGL().getGL2();
-
+    public void display() {
+        super.display();
         modelRender.render(model);
     }
 

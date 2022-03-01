@@ -1,7 +1,5 @@
 package kendzi.josm.kendzi3d.ui;
 
-import com.jogamp.opengl.GLAutoDrawable;
-
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -80,8 +78,8 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     private final DrawableModelDrawer highlightModelDrawer = new DrawableModelDrawer();
 
     @Override
-    public void init(GLAutoDrawable drawable) {
-        super.init(drawable);
+    public void init() {
+        super.init();
 
         axisLabels.init();
         compass.init();

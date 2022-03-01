@@ -6,10 +6,7 @@
 
 package kendzi.jogl.ui;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
@@ -23,6 +20,7 @@ import java.awt.geom.Rectangle2D;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
 import kendzi.jogl.glu.GLU;
+import kendzi.jogl.util.GLEventListener;
 import kendzi.jogl.util.texture.awt.TextRenderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -132,15 +130,12 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     @Override
-    public void init(GLAutoDrawable drawable) {
+    public void init() {
         // Use debug pipeline
         // drawable.setGL(new DebugGL(drawable.getGL()));
 
-        GL2 gl = drawable.getGL().getGL2();
-        System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        // Enable VSync
-        gl.setSwapInterval(1);
+        // FIXME Enable VSync
+        // gl.setSwapInterval(1);
 
         // Setup the drawing area and shading mode
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -167,9 +162,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL2 gl = drawable.getGL().getGL2();
-
+    public void reshape(int x, int y, int width, int height) {
         if (height <= 0) { // avoid a divide by zero error!
 
             height = 1;
@@ -183,9 +176,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     @Override
-    public void display(GLAutoDrawable drawable) {
-
-        GL2 gl = drawable.getGL().getGL2();
+    public void display() {
         // System.err.println("INIT GL IS: " + GL11.getClass().getName());
 
         // _direction_
@@ -224,10 +215,7 @@ public class StaticBaseJoglFrame implements GLEventListener {
     }
 
     @Override
-    public void dispose(GLAutoDrawable drawable) {
-    }
-
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+    public void dispose() {
     }
 
     /**
