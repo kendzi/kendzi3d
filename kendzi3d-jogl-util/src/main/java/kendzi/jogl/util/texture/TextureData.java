@@ -37,12 +37,12 @@
 
 package kendzi.jogl.util.texture;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.ImageType;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
+import kendzi.jogl.util.Buffers;
 import kendzi.jogl.util.GLPixelBuffer;
 
 /**

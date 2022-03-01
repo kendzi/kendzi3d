@@ -38,12 +38,11 @@
  */
 package kendzi.jogl.util;
 
-import com.jogamp.common.nio.Buffers;
-
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import kendzi.jogl.glu.GLException;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTABGR;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -141,7 +140,7 @@ public class GLBuffers extends Buffers {
         case GL11.GL_UNSIGNED_BYTE:
         case GL41.GL_UNSIGNED_BYTE_3_3_2:
         case GL41.GL_UNSIGNED_BYTE_2_3_3_REV:
-            return SIZEOF_BYTE;
+            return Byte.BYTES;
 
         case GL11.GL_SHORT:
         case GL11.GL_UNSIGNED_SHORT:
@@ -155,7 +154,7 @@ public class GLBuffers extends Buffers {
         case APPLERGB422.GL_UNSIGNED_SHORT_8_8_REV_APPLE:
         case GL41.GL_HALF_FLOAT:
         case OESTextureHalfFloat.GL_HALF_FLOAT_OES:
-            return SIZEOF_SHORT;
+            return Short.BYTES;
 
         case GL41.GL_FIXED:
         case GL11.GL_INT:
@@ -169,16 +168,16 @@ public class GLBuffers extends Buffers {
         case GL41.GL_UNSIGNED_INT_5_9_9_9_REV:
         case NVTextureShader.GL_HILO16_NV:
         case NVTextureShader.GL_SIGNED_HILO16_NV:
-            return SIZEOF_INT;
+            return Integer.BYTES;
 
         case GL41.GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
-            return SIZEOF_LONG;
+            return Long.BYTES;
 
         case GL11.GL_FLOAT:
-            return SIZEOF_FLOAT;
+            return Float.BYTES;
 
         case GL11.GL_DOUBLE:
-            return SIZEOF_DOUBLE;
+            return Double.BYTES;
         }
         return -1;
     }
@@ -216,7 +215,7 @@ public class GLBuffers extends Buffers {
         case GL11.GL_UNSIGNED_BYTE:
         case GL41.GL_UNSIGNED_BYTE_3_3_2:
         case GL41.GL_UNSIGNED_BYTE_2_3_3_REV:
-            return newDirectByteBuffer(numElements);
+            return BufferUtils.createByteBuffer(numElements);
 
         case GL11.GL_SHORT:
         case GL11.GL_UNSIGNED_SHORT:
@@ -230,7 +229,7 @@ public class GLBuffers extends Buffers {
         case APPLERGB422.GL_UNSIGNED_SHORT_8_8_REV_APPLE:
         case GL41.GL_HALF_FLOAT:
         case OESTextureHalfFloat.GL_HALF_FLOAT_OES:
-            return newDirectShortBuffer(numElements);
+            return BufferUtils.createShortBuffer(numElements);
 
         case GL41.GL_FIXED:
         case GL11.GL_INT:
@@ -244,16 +243,16 @@ public class GLBuffers extends Buffers {
         case GL41.GL_UNSIGNED_INT_5_9_9_9_REV:
         case NVTextureShader.GL_HILO16_NV:
         case NVTextureShader.GL_SIGNED_HILO16_NV:
-            return newDirectIntBuffer(numElements);
+            return BufferUtils.createIntBuffer(numElements);
 
         case GL41.GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
-            return newDirectLongBuffer(numElements);
+            return BufferUtils.createLongBuffer(numElements);
 
         case GL11.GL_FLOAT:
-            return newDirectFloatBuffer(numElements);
+            return BufferUtils.createFloatBuffer(numElements);
 
         case GL11.GL_DOUBLE:
-            return newDirectDoubleBuffer(numElements);
+            return BufferUtils.createDoubleBuffer(numElements);
         }
         return null;
     }

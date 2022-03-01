@@ -27,13 +27,13 @@
  */
 package kendzi.jogl.util;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.nativewindow.util.PixelFormat;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import kendzi.jogl.glu.GLException;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -256,12 +256,12 @@ public class GLPixelBuffer {
                 final int depth, final int minByteSize) {
             // unused: hostPixComp
             if (minByteSize > 0) {
-                return new GLPixelBuffer(pixelAttributes, pack, width, height, depth, Buffers.newDirectByteBuffer(minByteSize),
+                return new GLPixelBuffer(pixelAttributes, pack, width, height, depth, BufferUtils.createByteBuffer(minByteSize),
                         getAllowRowStride());
             } else {
                 final int[] tmp = { 0 };
                 final int byteSize = GLBuffers.sizeof(tmp, pixelAttributes.pfmt.comp.bytesPerPixel(), width, height, depth, pack);
-                return new GLPixelBuffer(pixelAttributes, pack, width, height, depth, Buffers.newDirectByteBuffer(byteSize),
+                return new GLPixelBuffer(pixelAttributes, pack, width, height, depth, BufferUtils.createByteBuffer(byteSize),
                         getAllowRowStride());
             }
         }
@@ -722,8 +722,8 @@ public class GLPixelBuffer {
         this.depth = depth;
         this.pack = pack;
         this.buffer = buffer;
-        this.byteSize = Buffers.remainingBytes(buffer);
         this.bufferElemSize = Buffers.sizeOfBufferElem(buffer);
+        this.byteSize = buffer.remaining() * this.bufferElemSize;
         this.allowRowStride = allowRowStride;
     }
 
