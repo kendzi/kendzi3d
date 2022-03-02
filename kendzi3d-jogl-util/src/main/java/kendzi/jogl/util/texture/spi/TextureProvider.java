@@ -39,11 +39,10 @@
 
 package kendzi.jogl.util.texture.spi;
 
-import com.jogamp.opengl.util.texture.ImageType;
-
 import java.io.*;
 import java.net.*;
 
+import kendzi.jogl.util.texture.ImageType;
 import kendzi.jogl.util.texture.TextureData;
 
 /**

@@ -80,7 +80,7 @@
               <Plugin-Link>https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
               <Plugin-Mainversion>14258</Plugin-Mainversion>
               <Plugin-Version>${project.version}</Plugin-Version>
-              <Plugin-Requires>log4j;jaxb;jogl;kendzi3d-resources</Plugin-Requires>
+              <Plugin-Requires>log4j;lwjgl;jaxb;jogl;kendzi3d-resources</Plugin-Requires>
               <url>${project.url}</url>
               <Class-Path>./kendzi3d-resources.jar</Class-Path>
             </manifestEntries>

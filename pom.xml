@@ -28,10 +28,8 @@
     <slf4j.version>1.7.25</slf4j.version>
     <guice.version>5.1.0</guice.version>
     <inject.version>1</inject.version>
-    <jogl.version>2.3.2</jogl.version>
     <lwjgl.version>3.3.1</lwjgl.version>
     <lwjgl3-awt.version>0.1.8</lwjgl3-awt.version>
-    <gluegen.version>2.3.2</gluegen.version>
     <kendzi.math.version>0.0.13-SNAPSHOT</kendzi.math.version>
     <kendzi3d-resources.version>0.0.3-SNAPSHOT</kendzi3d-resources.version>
   </properties>
@@ -47,16 +45,6 @@
         <groupId>org.openstreetmap.josm.plugins</groupId>
         <artifactId>lwjgl</artifactId>
         <version>SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jogamp.jogl</groupId>
-        <artifactId>jogl-all-main</artifactId>
-        <version>${jogl.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jogamp.gluegen</groupId>
-        <artifactId>gluegen-rt-main</artifactId>
-        <version>${gluegen.version}</version>
       </dependency>
       <dependency>
         <groupId>kendzi.kendzi3d</groupId>
