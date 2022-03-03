@@ -187,11 +187,11 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
             // move backwards
             kinematicsSimpleAnimator.moveBackwards(start);
 
-        } else if (keyCode == KeyEvent.VK_PAGE_UP || keyCode == KeyEvent.VK_E) {
+        } else if (keyCode == KeyEvent.VK_PAGE_UP || keyCode == KeyEvent.VK_E || keyCode == KeyEvent.VK_SPACE) {
             // move up
             kinematicsSimpleAnimator.moveUp(start);
 
-        } else if (keyCode == KeyEvent.VK_PAGE_DOWN || keyCode == KeyEvent.VK_Q) {
+        } else if (keyCode == KeyEvent.VK_PAGE_DOWN || keyCode == KeyEvent.VK_Q || keyCode == KeyEvent.VK_SHIFT) {
             // move down
             kinematicsSimpleAnimator.moveDown(start);
 
