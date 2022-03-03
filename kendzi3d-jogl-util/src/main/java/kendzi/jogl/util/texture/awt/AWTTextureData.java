@@ -37,7 +37,9 @@
 
 package kendzi.jogl.util.texture.awt;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.ComponentSampleModel;
@@ -58,6 +60,7 @@ import kendzi.jogl.glu.GLException;
 import kendzi.jogl.util.GLPixelBuffer;
 import kendzi.jogl.util.GLPixelBuffer.GLPixelAttributes;
 import kendzi.jogl.util.texture.TextureData;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTABGR;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -461,7 +464,10 @@ public class AWTTextureData extends TextureData {
 
         final DataBuffer data = image.getRaster().getDataBuffer();
         if (data instanceof DataBufferByte) {
-            return ByteBuffer.wrap(((DataBufferByte) data).getData());
+            final ByteBuffer byteBuffer = BufferUtils.createByteBuffer(((DataBufferByte) data).getData().length);
+            byteBuffer.put(((DataBufferByte) data).getData());
+            byteBuffer.rewind();
+            return byteBuffer;
         } else if (data instanceof DataBufferInt) {
             if (image.getType() == BufferedImage.TYPE_INT_ARGB || image.getType() == BufferedImage.TYPE_INT_ARGB_PRE) {
                 BufferedImage converted = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
