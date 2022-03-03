@@ -64,29 +64,6 @@ public class TextureCoords {
     }
 
     /**
-     * Transfers <code>{s * ss, t * ts}</code> from this object into the given
-     * <code>float[8+d_off]</code> in the following order:
-     * 
-     * <pre>
-     *   left,  bottom
-     *   right, bottom
-     *   left,  top
-     *   right  top
-     * </pre>
-     */
-    public float[] getST_LB_RB_LT_RT(final float[] d, final int d_off, final float ss, final float ts) {
-        d[0 + d_off] = left * ss;
-        d[1 + d_off] = bottom * ts;
-        d[2 + d_off] = right * ss;
-        d[3 + d_off] = bottom * ts;
-        d[4 + d_off] = left * ss;
-        d[5 + d_off] = top * ts;
-        d[6 + d_off] = right * ss;
-        d[7 + d_off] = top * ts;
-        return d;
-    }
-
-    /**
      * Returns the leftmost (x) texture coordinate of this rectangle.
      */
     public float left() {

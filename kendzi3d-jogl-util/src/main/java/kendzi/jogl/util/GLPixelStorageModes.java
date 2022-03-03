@@ -28,7 +28,6 @@
 
 package kendzi.jogl.util;
 
-import kendzi.jogl.glu.GLException;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -61,79 +60,6 @@ public class GLPixelStorageModes {
     }
 
     /**
-     * Sets the {@link GL#GL_PACK_ALIGNMENT}.
-     * <p>
-     * Saves the PACK pixel storage modes and {@link #resetPack() resets} them if
-     * not saved yet, see {@link #savePack()}.
-     * </p>
-     */
-    public final void setPackAlignment(final int packAlignment) {
-        savePack();
-        GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, packAlignment);
-    }
-
-    /**
-     * Sets the {@link GL#GL_UNPACK_ALIGNMENT}.
-     * <p>
-     * Saves the UNPACK pixel storage modes and {@link #resetUnpack() resets} them
-     * if not saved yet, see {@link #saveUnpack()}.
-     * </p>
-     */
-    public final void setUnpackAlignment(final int unpackAlignment) {
-        saveUnpack();
-        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, unpackAlignment);
-    }
-
-    /**
-     * Sets the {@link GL#GL_PACK_ALIGNMENT} and {@link GL#GL_UNPACK_ALIGNMENT}.
-     * <p>
-     * Saves the PACK and UNPACK pixel storage modes and resets them if not saved
-     * yet, see {@link #saveAll()}.
-     * </p>
-     */
-    public final void setAlignment(final int packAlignment, final int unpackAlignment) {
-        setPackAlignment(packAlignment);
-        setUnpackAlignment(unpackAlignment);
-    }
-
-    /**
-     * Sets the {@link GL2ES3#GL_PACK_ROW_LENGTH}.
-     * <p>
-     * Saves the PACK pixel storage modes and {@link #resetPack() resets} them if
-     * not saved yet, see {@link #savePack()}.
-     * </p>
-     */
-    public final void setPackRowLength(final int packRowLength) {
-        savePack();
-        GL11.glPixelStorei(GL11.GL_PACK_ROW_LENGTH, packRowLength);
-    }
-
-    /**
-     * Sets the {@link GL2ES2#GL_UNPACK_ROW_LENGTH}.
-     * <p>
-     * Saves the UNPACK pixel storage modes and {@link #resetUnpack() resets} them
-     * if not saved yet, see {@link #saveUnpack()}.
-     * </p>
-     */
-    public final void setUnpackRowLength(final int unpackRowLength) {
-        saveUnpack();
-        GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, unpackRowLength);
-    }
-
-    /**
-     * Sets the {@link GL2ES3#GL_PACK_ROW_LENGTH} and
-     * {@link GL2ES2#GL_UNPACK_ROW_LENGTH} if {@link GL#isGL2ES3()}.
-     * <p>
-     * Saves the PACK and UNPACK pixel storage modes and resets them if not saved
-     * yet, see {@link #saveAll()}.
-     * </p>
-     */
-    public final void setRowLength(final int packRowLength, final int unpackRowLength) {
-        setPackRowLength(packRowLength);
-        setUnpackRowLength(unpackRowLength);
-    }
-
-    /**
      * Saves PACK and UNPACK pixel storage modes and {@link #resetAll() resets}
      * them, i.e. issues {@link #savePack()} and {@link #saveUnpack()}.
      * <p>
@@ -146,36 +72,6 @@ public class GLPixelStorageModes {
     public final void saveAll() {
         savePack();
         saveUnpack();
-    }
-
-    /**
-     * Resets PACK and UNPACK pixel storage modes to their default value, i.e.
-     * issues {@link #resetPack()} and {@link #resetUnpack()}.
-     */
-    public final void resetAll() {
-        resetPack();
-        resetUnpack();
-    }
-
-    /**
-     * Restores PACK and UNPACK pixel storage mode previously saved w/
-     * {@link #saveAll()} or {@link #savePack()} and {@link #saveUnpack()}.
-     * 
-     * @throws GLException
-     *             if neither PACK nor UNPACK modes were saved.
-     */
-    public final void restore() throws GLException {
-        if (!savedPack && !savedUnpack) {
-            throw new GLException("Neither PACK nor UNPACK pixel storage modes were saved");
-        }
-        if (savedPack) {
-            restorePack();
-            savedPack = false;
-        }
-        if (savedUnpack) {
-            restoreUnpack();
-            savedUnpack = false;
-        }
     }
 
     /**

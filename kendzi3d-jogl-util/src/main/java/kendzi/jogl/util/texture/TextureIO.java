@@ -41,44 +41,29 @@
 package kendzi.jogl.util.texture;
 
 import com.jogamp.common.util.IOUtil;
-import com.jogamp.nativewindow.util.Dimension;
-import com.jogamp.nativewindow.util.DimensionImmutable;
-import com.jogamp.nativewindow.util.PixelFormat;
 import com.jogamp.opengl.util.PNGPixelRect;
-import com.jogamp.opengl.util.texture.spi.DDSImage;
 import com.jogamp.opengl.util.texture.spi.JPEGImage;
-import com.jogamp.opengl.util.texture.spi.SGIImage;
-import com.jogamp.opengl.util.texture.spi.TGAImage;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import kendzi.jogl.glu.GLException;
 import kendzi.jogl.util.GLPixelBuffer;
-import kendzi.jogl.util.GLPixelStorageModes;
+import kendzi.jogl.util.texture.awt.AWTTextureData;
 import kendzi.jogl.util.texture.spi.TextureProvider;
-import kendzi.jogl.util.texture.spi.TextureWriter;
-import org.lwjgl.opengl.EXTABGR;
-import org.lwjgl.opengl.EXTTextureCompressionS3TC;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLCapabilities;
 
 /**
@@ -139,102 +124,12 @@ import org.lwjgl.opengl.GLCapabilities;
 
 @Deprecated
 public class TextureIO {
-    /**
-     * Constant which can be used as a file suffix to indicate a DirectDraw Surface
-     * file, value {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_DDS}.
-     * </p>
-     */
-    public static final String DDS = ImageType.T_DDS;
-
-    /**
-     * Constant which can be used as a file suffix to indicate an SGI RGB file,
-     * value {@value}.
-     * <p>
-     * Same semantics as {@link ImageType#SGI_RGB} and {@link #SGI_RGB}.
-     * </p>
-     */
-    public static final String SGI = "sgi";
-
-    /**
-     * Constant which can be used as a file suffix to indicate an SGI RGB file,
-     * value {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_SGI_RGB}.
-     * </p>
-     */
-    public static final String SGI_RGB = ImageType.T_SGI_RGB;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a GIF file, value
-     * {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_GIF}.
-     * </p>
-     */
-    public static final String GIF = ImageType.T_GIF;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a JPEG file, value
-     * {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_JPG}.
-     * </p>
-     */
-    public static final String JPG = ImageType.T_JPG;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a PNG file, value
-     * {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_PNG}.
-     * </p>
-     */
-    public static final String PNG = ImageType.T_PNG;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a Targa file, value
-     * {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_TGA}.
-     * </p>
-     */
-    public static final String TGA = ImageType.T_TGA;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a TIFF file, value
-     * {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_TIFF}.
-     * </p>
-     */
-    public static final String TIFF = ImageType.T_TIFF;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a PAM file, NetPbm
-     * magic 7 - binary RGB and RGBA. Write support only, value {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_PAM}.
-     * </p>
-     */
-    public static final String PAM = ImageType.T_PAM;
-
-    /**
-     * Constant which can be used as a file suffix to indicate a PAM file, NetPbm
-     * magic 6 - binary RGB. Write support only, value {@value}.
-     * <p>
-     * Alias for {@link ImageType#T_PPM}.
-     * </p>
-     */
-    public static final String PPM = ImageType.T_PPM;
 
     // For manually disabling the use of the texture rectangle
     // extensions so you know the texture target is GL_TEXTURE_2D; this
     // is useful for shader writers (thanks to Chris Campbell for this
     // observation)
     private static boolean texRectEnabled = true;
-    private static final boolean DEBUG = false;
 
     // ----------------------------------------------------------------------
     // methods that *do not* require a current context
@@ -244,58 +139,6 @@ public class TextureIO {
     // specify it wherever it is known.
     // Some texture providers may also only support one kind of input,
     // i.e., reading from a file as opposed to a stream.
-
-    /**
-     * Creates a TextureData from the given file. Does no OpenGL work.
-     *
-     * @param file
-     *            the file from which to read the texture data
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @return the texture data from the file, or null if none of the registered
-     *         texture providers could read the file
-     * @throws IOException
-     *             if an error occurred while reading the file
-     */
-    public static TextureData newTextureData(final File file, final boolean mipmap, String fileSuffix) throws IOException {
-        if (fileSuffix == null) {
-            fileSuffix = IOUtil.getFileSuffix(file);
-        }
-        return newTextureDataImpl(file, 0, 0, mipmap, fileSuffix);
-    }
-
-    /**
-     * Creates a TextureData from the given stream. Does no OpenGL work.
-     *
-     * @param stream
-     *            the stream from which to read the texture data
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @return the texture data from the stream, or null if none of the registered
-     *         texture providers could read the stream
-     * @throws IOException
-     *             if an error occurred while reading the stream
-     */
-    public static TextureData newTextureData(final InputStream stream, final boolean mipmap, final String fileSuffix)
-            throws IOException {
-        return newTextureDataImpl(stream, 0, 0, mipmap, fileSuffix);
-    }
 
     /**
      * Creates a TextureData from the given URL. Does no OpenGL work.
@@ -331,155 +174,9 @@ public class TextureIO {
     // for either the internalFormat or the pixelFormat;
     // IllegalArgumentException will be thrown in this case.
 
-    /**
-     * Creates a TextureData from the given file, using the specified OpenGL
-     * internal format and pixel format for the texture which will eventually
-     * result. The internalFormat and pixelFormat must be specified and may not be
-     * zero; to use default values, use the variant of this method which does not
-     * take these arguments. Does no OpenGL work.
-     *
-     * @param file
-     *            the file from which to read the texture data
-     * @param internalFormat
-     *            the OpenGL internal format of the texture which will eventually
-     *            result from the TextureData
-     * @param pixelFormat
-     *            the OpenGL pixel format of the texture which will eventually
-     *            result from the TextureData
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @return the texture data from the file, or null if none of the registered
-     *         texture providers could read the file
-     * @throws IllegalArgumentException
-     *             if either internalFormat or pixelFormat was 0
-     * @throws IOException
-     *             if an error occurred while reading the file
-     */
-    public static TextureData newTextureData(final File file, final int internalFormat, final int pixelFormat,
-            final boolean mipmap, String fileSuffix) throws IOException, IllegalArgumentException {
-        if ((internalFormat == 0) || (pixelFormat == 0)) {
-            throw new IllegalArgumentException("internalFormat and pixelFormat must be non-zero");
-        }
-
-        if (fileSuffix == null) {
-            fileSuffix = IOUtil.getFileSuffix(file);
-        }
-
-        return newTextureDataImpl(file, internalFormat, pixelFormat, mipmap, fileSuffix);
-    }
-
-    /**
-     * Creates a TextureData from the given stream, using the specified OpenGL
-     * internal format and pixel format for the texture which will eventually
-     * result. The internalFormat and pixelFormat must be specified and may not be
-     * zero; to use default values, use the variant of this method which does not
-     * take these arguments. Does no OpenGL work.
-     *
-     * @param stream
-     *            the stream from which to read the texture data
-     * @param internalFormat
-     *            the OpenGL internal format of the texture which will eventually
-     *            result from the TextureData
-     * @param pixelFormat
-     *            the OpenGL pixel format of the texture which will eventually
-     *            result from the TextureData
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @return the texture data from the stream, or null if none of the registered
-     *         texture providers could read the stream
-     * @throws IllegalArgumentException
-     *             if either internalFormat or pixelFormat was 0
-     * @throws IOException
-     *             if an error occurred while reading the stream
-     */
-    public static TextureData newTextureData(final InputStream stream, final int internalFormat, final int pixelFormat,
-            final boolean mipmap, final String fileSuffix) throws IOException, IllegalArgumentException {
-        if ((internalFormat == 0) || (pixelFormat == 0)) {
-            throw new IllegalArgumentException("internalFormat and pixelFormat must be non-zero");
-        }
-
-        return newTextureDataImpl(stream, internalFormat, pixelFormat, mipmap, fileSuffix);
-    }
-
-    /**
-     * Creates a TextureData from the given URL, using the specified OpenGL internal
-     * format and pixel format for the texture which will eventually result. The
-     * internalFormat and pixelFormat must be specified and may not be zero; to use
-     * default values, use the variant of this method which does not take these
-     * arguments. Does no OpenGL work.
-     *
-     * @param url
-     *            the URL from which to read the texture data
-     * @param internalFormat
-     *            the OpenGL internal format of the texture which will eventually
-     *            result from the TextureData
-     * @param pixelFormat
-     *            the OpenGL pixel format of the texture which will eventually
-     *            result from the TextureData
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @return the texture data from the URL, or null if none of the registered
-     *         texture providers could read the URL
-     * @throws IllegalArgumentException
-     *             if either internalFormat or pixelFormat was 0
-     * @throws IOException
-     *             if an error occurred while reading the URL
-     */
-    public static TextureData newTextureData(final URL url, final int internalFormat, final int pixelFormat, final boolean mipmap,
-            String fileSuffix) throws IOException, IllegalArgumentException {
-        if ((internalFormat == 0) || (pixelFormat == 0)) {
-            throw new IllegalArgumentException("internalFormat and pixelFormat must be non-zero");
-        }
-
-        if (fileSuffix == null) {
-            fileSuffix = IOUtil.getFileSuffix(url.getPath());
-        }
-
-        return newTextureDataImpl(url, internalFormat, pixelFormat, mipmap, fileSuffix);
-    }
-
     // ----------------------------------------------------------------------
     // methods that *do* require a current context
     //
-
-    /**
-     * Creates an OpenGL texture object from the specified TextureData using the
-     * current OpenGL context.
-     *
-     * @param data
-     *            the texture data to turn into an OpenGL texture
-     * @throws GLException
-     *             if no OpenGL context is current or if an OpenGL error occurred
-     * @throws IllegalArgumentException
-     *             if the passed TextureData was null
-     */
-    public static Texture newTexture(final TextureData data) throws GLException, IllegalArgumentException {
-        return newTexture(null, data);
-    }
 
     /**
      * Creates an OpenGL texture object from the specified TextureData using the
@@ -492,63 +189,11 @@ public class TextureIO {
      * @throws IllegalArgumentException
      *             if the passed TextureData was null
      */
-    public static Texture newTexture(final Object gl, final TextureData data) throws GLException, IllegalArgumentException {
+    public static Texture newTexture(final TextureData data) throws GLException, IllegalArgumentException {
         if (data == null) {
             throw new IllegalArgumentException("Null TextureData");
         }
-        return new Texture(gl, data);
-    }
-
-    /**
-     * Creates an OpenGL texture object from the specified file using the current
-     * OpenGL context.
-     *
-     * @param file
-     *            the file from which to read the texture data
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @throws IOException
-     *             if an error occurred while reading the file
-     * @throws GLException
-     *             if no OpenGL context is current or if an OpenGL error occurred
-     */
-    public static Texture newTexture(final File file, final boolean mipmap) throws IOException, GLException {
-        final TextureData data = newTextureData(file, mipmap, IOUtil.getFileSuffix(file));
-        final Texture texture = newTexture(null, data);
-        data.flush();
-        return texture;
-    }
-
-    /**
-     * Creates an OpenGL texture object from the specified stream using the current
-     * OpenGL context.
-     *
-     * @param stream
-     *            the stream from which to read the texture data
-     * @param mipmap
-     *            whether mipmaps should be produced for this texture either by
-     *            autogenerating them or reading them from the file. Some file
-     *            formats support multiple mipmaps in a single file in which case
-     *            those mipmaps will be used rather than generating them.
-     * @param fileSuffix
-     *            the suffix of the file name to be used as a hint of the file
-     *            format to the underlying texture provider, or null if none and
-     *            should be auto-detected (some texture providers do not support
-     *            this)
-     * @throws IOException
-     *             if an error occurred while reading the stream
-     * @throws GLException
-     *             if no OpenGL context is current or if an OpenGL error occurred
-     */
-    public static Texture newTexture(final InputStream stream, final boolean mipmap, final String fileSuffix)
-            throws IOException, GLException {
-        final TextureData data = newTextureData(stream, mipmap, fileSuffix);
-        final Texture texture = newTexture(data);
-        data.flush();
-        return texture;
+        return new Texture(data);
     }
 
     /**
@@ -580,131 +225,6 @@ public class TextureIO {
         final Texture texture = newTexture(data);
         data.flush();
         return texture;
-    }
-
-    /**
-     * Creates an OpenGL texture object associated with the given OpenGL texture
-     * target. The texture has no initial data. This is used, for example, to
-     * construct cube maps out of multiple TextureData objects.
-     *
-     * @param target
-     *            the OpenGL target type, eg GL11.GL_TEXTURE_2D,
-     *            GL11.GL_TEXTURE_RECTANGLE_ARB
-     */
-    public static Texture newTexture(final int target) {
-        return new Texture(target);
-    }
-
-    /**
-     * Writes the given texture to a file. The type of the file is inferred from its
-     * suffix. An OpenGL context must be current in order to fetch the texture data
-     * back from the OpenGL pipeline. This method causes the specified Texture to be
-     * bound to the GL_TEXTURE_2D state. If no suitable writer for the requested
-     * file format was found, throws an IOException.
-     * <P>
-     *
-     * Reasonable attempts are made to produce good results in the resulting images.
-     * The Targa, SGI and ImageIO writers produce results in the correct vertical
-     * orientation for those file formats. The DDS writer performs no vertical flip
-     * of the data, even in uncompressed mode. (It is impossible to perform such a
-     * vertical flip with compressed data.) Applications should keep this in mind
-     * when using this routine to save textures to disk for later re-loading.
-     * <P>
-     *
-     * Any mipmaps for the specified texture are currently discarded when it is
-     * written to disk, regardless of whether the underlying file format supports
-     * multiple mipmaps in a given file.
-     *
-     * <p>
-     * Method required a {@link GL2GL3} {@link Object#GL2GL3 profile}.
-     * </p>
-     *
-     * @throws IOException
-     *             if an error occurred during writing or no suitable writer was
-     *             found
-     * @throws GLException
-     *             if no OpenGL context was current or an OpenGL-related error
-     *             occurred
-     */
-    public static void write(final Texture texture, final File file) throws IOException, GLException {
-        if (texture.getTarget() != GL11.GL_TEXTURE_2D) {
-            throw new GLException("Only GL_TEXTURE_2D textures are supported");
-        }
-
-        // First fetch the texture data
-        final GLCapabilities cap = GL.getCapabilities();
-        if (!(cap.OpenGL20 && cap.forwardCompatible)) {
-            throw new GLException(
-                    "Implementation only supports GL2GL3 (Use GLReadBufferUtil and the TextureData variant), have: " + cap);
-        }
-
-        texture.bind();
-        final int internalFormat = glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT);
-        final int width = glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
-        final int height = glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
-        final int border = glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_BORDER);
-        TextureData data = null;
-        if (internalFormat == EXTTextureCompressionS3TC.GL_COMPRESSED_RGB_S3TC_DXT1_EXT
-                || internalFormat == EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
-                || internalFormat == EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT
-                || internalFormat == EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT) {
-            // Fetch using glGetCompressedTexImage
-            final int size = glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL13.GL_TEXTURE_COMPRESSED_IMAGE_SIZE);
-            final ByteBuffer res = ByteBuffer.allocate(size);
-            GL20.glGetCompressedTexImage(GL11.GL_TEXTURE_2D, 0, res);
-            data = new TextureData(internalFormat, width, height, border, internalFormat, GL11.GL_UNSIGNED_BYTE, false, true,
-                    true, res, null);
-        } else {
-            int bytesPerPixel = 0;
-            int fetchedFormat = 0;
-            switch (internalFormat) {
-            case GL11.GL_RGB:
-            case GL12.GL_BGR:
-            case GL11.GL_RGB8:
-                bytesPerPixel = 3;
-                fetchedFormat = GL11.GL_RGB;
-                break;
-            case GL11.GL_RGBA:
-            case GL12.GL_BGRA:
-            case EXTABGR.GL_ABGR_EXT:
-            case GL11.GL_RGBA8:
-                bytesPerPixel = 4;
-                fetchedFormat = GL11.GL_RGBA;
-                break;
-            default:
-                throw new IOException("Unsupported texture internal format 0x" + Integer.toHexString(internalFormat));
-            }
-
-            // Fetch using glGetTexImage
-            final GLPixelStorageModes psm = new GLPixelStorageModes();
-            psm.setPackAlignment(1);
-
-            final ByteBuffer res = ByteBuffer.allocate((width + (2 * border)) * (height + (2 * border)) * bytesPerPixel);
-            if (DEBUG) {
-                System.out.println("Allocated buffer of size " + res.remaining() + " for fetched image ("
-                        + ((fetchedFormat == GL11.GL_RGB) ? "GL_RGB" : "GL_RGBA") + ")");
-            }
-            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, fetchedFormat, GL11.GL_UNSIGNED_BYTE, res);
-
-            psm.restore();
-
-            data = new TextureData(internalFormat, width, height, border, fetchedFormat, GL11.GL_UNSIGNED_BYTE, false, false,
-                    false, res, null);
-
-        }
-
-        write(data, file);
-    }
-
-    public static void write(final TextureData data, final File file) throws IOException, GLException {
-        for (final Iterator<TextureWriter> iter = textureWriters.iterator(); iter.hasNext();) {
-            final TextureWriter writer = iter.next();
-            if (writer.write(file, data)) {
-                return;
-            }
-        }
-
-        throw new IOException("No suitable texture writer found for " + file.getAbsolutePath());
     }
 
     // ----------------------------------------------------------------------
@@ -739,39 +259,9 @@ public class TextureIO {
         }
     }
 
-    /**
-     * Adds a TextureWriter to support writing of a new file format.
-     * <p>
-     * The last provider added, will be the first provider to be tested.
-     * </p>
-     */
-    public static void addTextureWriter(final TextureWriter writer) {
-        // Must always add at the front so the ImageIO writer is last,
-        // so we don't accidentally use it instead of a user's possibly
-        // more optimal writer
-        textureWriters.add(0, writer);
-    }
-
     // ---------------------------------------------------------------------------
     // Global disabling of texture rectangle extension
     //
-
-    /**
-     * Toggles the use of the GL_ARB_texture_rectangle extension by the TextureIO
-     * classes. By default, on hardware supporting this extension, the TextureIO
-     * classes may use the GL_ARB_texture_rectangle extension for non-power-of-two
-     * textures. (If the hardware supports the GL_ARB_texture_non_power_of_two
-     * extension, that one is preferred.) In some situations, for example when
-     * writing shaders, it is advantageous to force the texture target to always be
-     * GL_TEXTURE_2D in order to have one version of the shader, even at the expense
-     * of texture memory in the case where NPOT textures are not supported. This
-     * method allows the use of the GL_ARB_texture_rectangle extension to be turned
-     * off globally for this purpose. The default is that the use of the extension
-     * is enabled.
-     */
-    public static void setTexRectEnabled(final boolean enabled) {
-        texRectEnabled = enabled;
-    }
 
     /**
      * Indicates whether the GL_ARB_texture_rectangle extension is allowed to be
@@ -786,55 +276,14 @@ public class TextureIO {
     // Internals only below this point
     //
 
-    private static List<TextureProvider> textureProviders = new ArrayList<TextureProvider>();
-    private static Map<ImageType, TextureProvider> imageType2TextureProvider = new HashMap<ImageType, TextureProvider>();
-    private static List<TextureWriter> textureWriters = new ArrayList<TextureWriter>();
+    private static List<TextureProvider> textureProviders = new ArrayList<>();
+    private static Map<ImageType, TextureProvider> imageType2TextureProvider = new HashMap<>();
 
     static {
-        // ImageIO provider, the fall-back, must be the first one added
-        try {
-            Class.forName("javax.swing.SwingConstants");
-            // Use reflection to avoid compile-time dependencies on AWT-related classes
-            final TextureProvider provider = (TextureProvider) Class
-                    .forName("com.jogamp.opengl.util.texture.spi.awt.IIOTextureProvider").newInstance();
-            addTextureProvider(provider);
-        } catch (final Exception e) {
-            if (DEBUG) {
-                e.printStackTrace();
-            }
-        }
-
+        addTextureProvider(new IIOTextureProvider());
         // Other special-case providers
-        addTextureProvider(new DDSTextureProvider());
-        addTextureProvider(new SGITextureProvider());
-        addTextureProvider(new TGATextureProvider());
         addTextureProvider(new JPGTextureProvider());
         addTextureProvider(new PNGTextureProvider());
-
-        // ImageIO writer, the fall-back, must be the first one added
-        try {
-            Class.forName("javax.swing.SwingUtilities");
-            // Use reflection to avoid compile-time dependencies on AWT-related classes
-            final TextureWriter writer = (TextureWriter) Class.forName("com.jogamp.opengl.util.texture.spi.awt.IIOTextureWriter")
-                    .newInstance();
-            addTextureWriter(writer);
-        } catch (final Exception e) {
-            if (DEBUG) {
-                e.printStackTrace();
-            }
-        } catch (final Error e) {
-            if (DEBUG) {
-                e.printStackTrace();
-            }
-        }
-
-        // Other special-case writers
-        addTextureWriter(new DDSTextureWriter());
-        addTextureWriter(new SGITextureWriter());
-        addTextureWriter(new TGATextureWriter());
-        // Hopefully not needed...
-        // addTextureWriter(new NetPbmTextureWriter());
-        addTextureWriter(new PNGTextureWriter());
     }
 
     // Implementation methods
@@ -883,22 +332,6 @@ public class TextureIO {
         throw new IOException("No suitable reader for given stream");
     }
 
-    private static TextureData newTextureDataImpl(final File file, final int internalFormat, final int pixelFormat,
-            final boolean mipmap, final String fileSuffix) throws IOException {
-        if (file == null) {
-            throw new IOException("File was null");
-        }
-        final InputStream stream = new BufferedInputStream(new FileInputStream(file));
-        try {
-            return newTextureDataImpl(stream, internalFormat, pixelFormat, mipmap,
-                    (fileSuffix != null) ? fileSuffix : IOUtil.getFileSuffix(file));
-        } catch (final IOException ioe) {
-            throw new IOException(ioe.getMessage() + ", given file " + file.getAbsolutePath(), ioe);
-        } finally {
-            stream.close();
-        }
-    }
-
     private static TextureData newTextureDataImpl(final URL url, final int internalFormat, final int pixelFormat,
             final boolean mipmap, final String fileSuffix) throws IOException {
         if (url == null) {
@@ -916,7 +349,7 @@ public class TextureIO {
 
     // ----------------------------------------------------------------------
     // Base class for internal image providers, only providing stream based data!
-    static abstract class StreamBasedTextureProvider implements TextureProvider, TextureProvider.SupportsImageTypes {
+    abstract static class StreamBasedTextureProvider implements TextureProvider, TextureProvider.SupportsImageTypes {
         @Override
         public final TextureData newTextureData(final File file, final int internalFormat, final int pixelFormat,
                 final boolean mipmap, final String fileSuffix) throws IOException {
@@ -930,155 +363,27 @@ public class TextureIO {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // DDS image provider
-    static class DDSTextureProvider extends StreamBasedTextureProvider {
-        private static final ImageType[] imageTypes = new ImageType[] { new ImageType(ImageType.T_DDS) };
+    static class IIOTextureProvider implements TextureProvider {
 
         @Override
-        public final ImageType[] getImageTypes() {
-            return imageTypes;
+        public TextureData newTextureData(File file, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
+                throws IOException {
+            return Optional.ofNullable(ImageIO.read(file))
+                    .map(img -> new AWTTextureData(internalFormat, pixelFormat, mipmap, img)).orElse(null);
         }
 
         @Override
-        public TextureData newTextureData(final InputStream stream, final int internalFormat, final int pixelFormat,
-                final boolean mipmap, final String fileSuffix) throws IOException {
-            if (ImageType.T_DDS.equals(fileSuffix) || ImageType.T_DDS.equals(ImageType.Util.getFileSuffix(stream))) {
-                final byte[] data = IOUtil.copyStream2ByteArray(stream);
-                final ByteBuffer buf = ByteBuffer.wrap(data);
-                final DDSImage image = DDSImage.read(buf);
-                return newTextureData(image, internalFormat, pixelFormat, mipmap);
-            }
-
-            return null;
-        }
-
-        private TextureData newTextureData(final DDSImage image, int internalFormat, int pixelFormat, boolean mipmap) {
-            final DDSImage.ImageInfo info = image.getMipMap(0);
-            if (pixelFormat == 0) {
-                switch (image.getPixelFormat()) {
-                case DDSImage.D3DFMT_R8G8B8:
-                    pixelFormat = GL11.GL_RGB;
-                    break;
-                default:
-                    pixelFormat = GL11.GL_RGBA;
-                    break;
-                }
-            }
-            if (info.isCompressed()) {
-                switch (info.getCompressionFormat()) {
-                case DDSImage.D3DFMT_DXT1:
-                    internalFormat = EXTTextureCompressionS3TC.GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-                    break;
-                case DDSImage.D3DFMT_DXT3:
-                    internalFormat = EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-                    break;
-                case DDSImage.D3DFMT_DXT5:
-                    internalFormat = EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-                    break;
-                default:
-                    throw new RuntimeException("Unsupported DDS compression format \""
-                            + DDSImage.getCompressionFormatName(info.getCompressionFormat()) + "\"");
-                }
-            }
-            if (internalFormat == 0) {
-                switch (image.getPixelFormat()) {
-                case DDSImage.D3DFMT_R8G8B8:
-                    pixelFormat = GL11.GL_RGB;
-                    break;
-                default:
-                    pixelFormat = GL11.GL_RGBA;
-                    break;
-                }
-            }
-            final TextureData.Flusher flusher = new TextureData.Flusher() {
-                @Override
-                public void flush() {
-                    image.close();
-                }
-            };
-            TextureData data;
-            if (mipmap && image.getNumMipMaps() > 0) {
-                final ByteBuffer[] mipmapData = new ByteBuffer[image.getNumMipMaps()];
-                for (int i = 0; i < image.getNumMipMaps(); i++) {
-                    mipmapData[i] = image.getMipMap(i).getData();
-                }
-                data = new TextureData(internalFormat, info.getWidth(), info.getHeight(), 0, pixelFormat, GL11.GL_UNSIGNED_BYTE,
-                        info.isCompressed(), true, mipmapData, flusher);
-            } else {
-                // Fix this up for the end user because we can't generate
-                // mipmaps for compressed textures
-                mipmap = false;
-                data = new TextureData(internalFormat, info.getWidth(), info.getHeight(), 0, pixelFormat, GL11.GL_UNSIGNED_BYTE,
-                        mipmap, info.isCompressed(), true, info.getData(), flusher);
-            }
-            return data;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // SGI RGB image provider
-    static class SGITextureProvider extends StreamBasedTextureProvider {
-        private static final ImageType[] imageTypes = new ImageType[] { new ImageType(ImageType.T_SGI_RGB) };
-
-        @Override
-        public final ImageType[] getImageTypes() {
-            return imageTypes;
+        public TextureData newTextureData(InputStream stream, int internalFormat, int pixelFormat, boolean mipmap,
+                String fileSuffix) throws IOException {
+            return Optional.ofNullable(ImageIO.read(stream))
+                    .map(img -> new AWTTextureData(internalFormat, pixelFormat, mipmap, img)).orElse(null);
         }
 
         @Override
-        public TextureData newTextureData(final InputStream stream, int internalFormat, int pixelFormat, final boolean mipmap,
-                final String fileSuffix) throws IOException {
-            if (SGI.equals(fileSuffix) || ImageType.T_SGI_RGB.equals(fileSuffix)
-                    || SGI.equals(ImageType.Util.getFileSuffix(stream))
-                    || ImageType.T_SGI_RGB.equals(ImageType.Util.getFileSuffix(stream))) {
-                final SGIImage image = SGIImage.read(stream);
-                if (pixelFormat == 0) {
-                    pixelFormat = image.getFormat();
-                }
-                if (internalFormat == 0) {
-                    internalFormat = image.getFormat();
-                }
-                return new TextureData(internalFormat, image.getWidth(), image.getHeight(), 0, pixelFormat, GL11.GL_UNSIGNED_BYTE,
-                        mipmap, false, false, ByteBuffer.wrap(image.getData()), null);
-            }
-
-            return null;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // TGA (Targa) image provider
-    static class TGATextureProvider extends StreamBasedTextureProvider {
-        private static final ImageType[] imageTypes = new ImageType[] { new ImageType(ImageType.T_TGA) };
-
-        @Override
-        public final ImageType[] getImageTypes() {
-            return imageTypes;
-        }
-
-        @Override
-        public TextureData newTextureData(final InputStream stream, int internalFormat, int pixelFormat, final boolean mipmap,
-                final String fileSuffix) throws IOException {
-            final GLCapabilities cap = GL.getCapabilities();
-            if (ImageType.T_TGA.equals(fileSuffix)) {
-                // Hopefully we don't need TGAImage. We'll see.
-                final TGAImage image = TGAImage.read(null, stream);
-                if (pixelFormat == 0) {
-                    pixelFormat = image.getGLFormat();
-                }
-                if (internalFormat == 0) {
-                    if (cap.OpenGL20) {
-                        internalFormat = (image.getBytesPerPixel() == 4) ? GL11.GL_RGBA8 : GL11.GL_RGB8;
-                    } else {
-                        internalFormat = (image.getBytesPerPixel() == 4) ? GL11.GL_RGBA : GL11.GL_RGB;
-                    }
-                }
-                return new TextureData(internalFormat, image.getWidth(), image.getHeight(), 0, pixelFormat, GL11.GL_UNSIGNED_BYTE,
-                        mipmap, false, false, image.getData(), null);
-            }
-
-            return null;
+        public TextureData newTextureData(URL url, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
+                throws IOException {
+            return Optional.ofNullable(ImageIO.read(url)).map(img -> new AWTTextureData(internalFormat, pixelFormat, mipmap, img))
+                    .orElse(null);
         }
     }
 
@@ -1154,208 +459,8 @@ public class TextureIO {
     }
 
     // ----------------------------------------------------------------------
-    // DDS texture writer
-    //
-    static class DDSTextureWriter implements TextureWriter {
-        @Override
-        public boolean write(final File file, final TextureData data) throws IOException {
-            if (ImageType.T_DDS.equals(IOUtil.getFileSuffix(file))) {
-                // See whether the DDS writer can handle this TextureData
-                final GLPixelBuffer.GLPixelAttributes pixelAttribs = data.getPixelAttributes();
-                final int pixelFormat = pixelAttribs.format;
-                final int pixelType = pixelAttribs.type;
-                if (pixelType != GL11.GL_BYTE && pixelType != GL11.GL_UNSIGNED_BYTE) {
-                    throw new IOException("DDS writer only supports byte / unsigned byte textures");
-                }
-
-                int d3dFormat = 0;
-                // FIXME: some of these are probably not completely correct and would require
-                // swizzling
-                switch (pixelFormat) {
-                case GL11.GL_RGB:
-                    d3dFormat = DDSImage.D3DFMT_R8G8B8;
-                    break;
-                case GL11.GL_RGBA:
-                    d3dFormat = DDSImage.D3DFMT_A8R8G8B8;
-                    break;
-                case EXTTextureCompressionS3TC.GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-                    d3dFormat = DDSImage.D3DFMT_DXT1;
-                    break;
-                case EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                    throw new IOException("RGBA DXT1 not yet supported");
-                case EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-                    d3dFormat = DDSImage.D3DFMT_DXT3;
-                    break;
-                case EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-                    d3dFormat = DDSImage.D3DFMT_DXT5;
-                    break;
-                default:
-                    throw new IOException("Unsupported pixel format 0x" + Integer.toHexString(pixelFormat) + " by DDS writer");
-                }
-
-                ByteBuffer[] mipmaps = null;
-                if (data.getMipmapData() != null) {
-                    mipmaps = new ByteBuffer[data.getMipmapData().length];
-                    for (int i = 0; i < mipmaps.length; i++) {
-                        mipmaps[i] = (ByteBuffer) data.getMipmapData()[i];
-                    }
-                } else {
-                    mipmaps = new ByteBuffer[] { (ByteBuffer) data.getBuffer() };
-                }
-
-                final DDSImage image = DDSImage.createFromData(d3dFormat, data.getWidth(), data.getHeight(), mipmaps);
-                image.write(file);
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // SGI (rgb) texture writer
-    //
-    static class SGITextureWriter implements TextureWriter {
-        @Override
-        public boolean write(final File file, final TextureData data) throws IOException {
-            final String fileSuffix = IOUtil.getFileSuffix(file);
-            if (SGI.equals(fileSuffix) || ImageType.T_SGI_RGB.equals(fileSuffix)) {
-                // See whether the SGI writer can handle this TextureData
-                final GLPixelBuffer.GLPixelAttributes pixelAttribs = data.getPixelAttributes();
-                final int pixelFormat = pixelAttribs.format;
-                final int pixelType = pixelAttribs.type;
-                if ((pixelFormat == GL11.GL_RGB || pixelFormat == GL11.GL_RGBA)
-                        && (pixelType == GL11.GL_BYTE || pixelType == GL11.GL_UNSIGNED_BYTE)) {
-                    final ByteBuffer buf = ((data.getBuffer() != null) ? (ByteBuffer) data.getBuffer()
-                            : (ByteBuffer) data.getMipmapData()[0]);
-                    byte[] bytes;
-                    if (buf.hasArray()) {
-                        bytes = buf.array();
-                    } else {
-                        buf.rewind();
-                        bytes = new byte[buf.remaining()];
-                        buf.get(bytes);
-                        buf.rewind();
-                    }
-
-                    final SGIImage image = SGIImage.createFromData(data.getWidth(), data.getHeight(),
-                            (pixelFormat == GL11.GL_RGBA), bytes);
-                    image.write(file, false);
-                    return true;
-                }
-
-                throw new IOException("SGI writer doesn't support this pixel format / type (only GL_RGB/A + bytes)");
-            }
-
-            return false;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // TGA (Targa) texture writer
-
-    static class TGATextureWriter implements TextureWriter {
-        @Override
-        public boolean write(final File file, final TextureData data) throws IOException {
-            if (ImageType.T_TGA.equals(IOUtil.getFileSuffix(file))) {
-                // See whether the TGA writer can handle this TextureData
-                final GLPixelBuffer.GLPixelAttributes pixelAttribs = data.getPixelAttributes();
-                final int pixelFormat = pixelAttribs.format;
-                final int pixelType = pixelAttribs.type;
-                if ((pixelFormat == GL11.GL_RGB || pixelFormat == GL11.GL_RGBA || pixelFormat == GL12.GL_BGR
-                        || pixelFormat == GL12.GL_BGRA) && (pixelType == GL11.GL_BYTE || pixelType == GL11.GL_UNSIGNED_BYTE)) {
-
-                    ByteBuffer buf = (ByteBuffer) data.getBuffer();
-                    if (null == buf) {
-                        buf = (ByteBuffer) data.getMipmapData()[0];
-                    }
-                    buf.rewind();
-
-                    if (pixelFormat == GL11.GL_RGB || pixelFormat == GL11.GL_RGBA) {
-                        // Must reverse order of red and blue channels to get correct results
-                        final int skip = ((pixelFormat == GL11.GL_RGB) ? 3 : 4);
-                        for (int i = 0; i < buf.remaining(); i += skip) {
-                            final byte red = buf.get(i + 0);
-                            final byte blue = buf.get(i + 2);
-                            buf.put(i + 0, blue);
-                            buf.put(i + 2, red);
-                        }
-                    }
-
-                    final TGAImage image = TGAImage.createFromData(data.getWidth(), data.getHeight(),
-                            (pixelFormat == GL11.GL_RGBA || pixelFormat == GL12.GL_BGRA), false, buf);
-                    image.write(file);
-                    return true;
-                }
-                throw new IOException("TGA writer doesn't support this pixel format 0x" + Integer.toHexString(pixelFormat)
-                        + " / type 0x" + Integer.toHexString(pixelFormat) + " (only GL_RGB/A, GL_BGR/A + bytes)");
-            }
-
-            return false;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // PNG texture writer
-
-    static class PNGTextureWriter implements TextureWriter {
-        @Override
-        public boolean write(final File file, final TextureData data) throws IOException {
-            if (ImageType.T_PNG.equals(IOUtil.getFileSuffix(file))) {
-                // See whether the PNG writer can handle this TextureData
-                final GLPixelBuffer.GLPixelAttributes pixelAttribs = data.getPixelAttributes();
-                final int pixelFormat = pixelAttribs.format;
-                final int pixelType = pixelAttribs.type;
-                final int bytesPerPixel = pixelAttribs.pfmt.comp.bytesPerPixel();
-                final PixelFormat pixFmt = pixelAttribs.pfmt;
-                if ((1 == bytesPerPixel || 3 == bytesPerPixel || 4 == bytesPerPixel)
-                        && (pixelType == GL11.GL_BYTE || pixelType == GL11.GL_UNSIGNED_BYTE)) {
-                    Buffer buf0 = data.getBuffer();
-                    if (null == buf0) {
-                        buf0 = data.getMipmapData()[0];
-                    }
-                    if (null == buf0) {
-                        throw new IOException("Pixel storage buffer is null");
-                    }
-                    final DimensionImmutable size = new Dimension(data.getWidth(), data.getHeight());
-                    if (buf0 instanceof ByteBuffer) {
-                        final ByteBuffer buf = (ByteBuffer) buf0;
-                        buf.rewind();
-                        final PNGPixelRect image = new PNGPixelRect(pixFmt, size, 0 /* stride */,
-                                !data.getMustFlipVertically() /* isGLOriented */, buf /* pixels */, -1f, -1f);
-                        final OutputStream outs = new BufferedOutputStream(
-                                IOUtil.getFileOutputStream(file, true /* allowOverwrite */));
-                        image.write(outs, true /* close */);
-                        return true;
-                    } else if (buf0 instanceof IntBuffer) {
-                        final IntBuffer buf = (IntBuffer) buf0;
-                        buf.rewind();
-                        final OutputStream outs = new BufferedOutputStream(
-                                IOUtil.getFileOutputStream(file, true /* allowOverwrite */));
-                        PNGPixelRect.write(pixFmt, size, 0 /* stride */, !data.getMustFlipVertically() /* isGLOriented */,
-                                buf /* pixels */, -1f, -1f, outs, true /* closeOutstream */);
-                        return true;
-                    } else {
-                        throw new IOException(
-                                "PNG writer doesn't support pixel storage buffer of type " + buf0.getClass().getName());
-                    }
-                }
-                throw new IOException("PNG writer doesn't support this pixel format 0x" + Integer.toHexString(pixelFormat)
-                        + " / type 0x" + Integer.toHexString(pixelFormat) + " (only GL_RGB/A, GL_BGR/A + bytes)");
-            }
-            return false;
-        }
-    }
-
-    // ----------------------------------------------------------------------
     // Helper routines
     //
-
-    private static int glGetTexLevelParameteri(final int target, final int level, final int pname) {
-        final int[] tmp = new int[1];
-        GL11.glGetTexLevelParameteriv(target, level, pname, tmp);
-        return tmp[0];
-    }
 
     private static String toLowerCase(final String arg) {
         if (arg == null) {

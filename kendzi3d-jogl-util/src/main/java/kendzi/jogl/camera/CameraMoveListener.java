@@ -125,7 +125,6 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
             moveAction(pEvent, start);
         }
-
     }
 
     @Override

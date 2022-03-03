@@ -40,7 +40,7 @@ package kendzi.jogl.util.texture;
 import com.jogamp.nativewindow.NativeWindowFactory;
 import com.jogamp.opengl.util.texture.spi.DDSImage;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 import kendzi.jogl.glu.GLException;
@@ -234,11 +234,6 @@ public class Texture {
     /** The height of the image. */
     private int imgHeight;
     /**
-     * The original aspect ratio of the image, before any rescaling that might have
-     * occurred due to using the GLU mipmap routines.
-     */
-    private float aspectRatio;
-    /**
      * Indicates whether the TextureData requires a vertical flip of the texture
      * coords.
      */
@@ -263,11 +258,11 @@ public class Texture {
     /** An estimate of the amount of texture memory this texture consumes. */
     private int estimatedMemorySize;
 
-    public Texture(final Object gl, final TextureData data) throws GLException {
+    public Texture(final TextureData data) throws GLException {
         this.texID = 0;
         this.target = 0;
         this.imageTarget = 0;
-        updateImage(gl, data);
+        updateImage(data);
     }
 
     /**
@@ -319,7 +314,6 @@ public class Texture {
         this.mustFlipVertically = mustFlipVertically;
         this.texWidth = texWidth;
         this.texHeight = texHeight;
-        this.aspectRatio = (float) imgWidth / (float) imgHeight;
         this.imgWidth = imgWidth;
         this.imgHeight = imgHeight;
         this.updateTexCoords();
@@ -415,84 +409,6 @@ public class Texture {
     }
 
     /**
-     * Returns the OpenGL "target" of this texture.
-     * 
-     * @see GL11#GL_TEXTURE_2D
-     * @see GL31#GL_TEXTURE_RECTANGLE
-     */
-    public int getTarget() {
-        return target;
-    }
-
-    /**
-     * Returns the image OpenGL "target" of this texture, or its sub-components if
-     * cubemap.
-     * 
-     * @see GL11#GL_TEXTURE_2D
-     * @see GL31#GL_TEXTURE_RECTANGLE
-     */
-    public int getImageTarget() {
-        return imageTarget;
-    }
-
-    /**
-     * Returns the width of the allocated OpenGL texture in pixels. Note that the
-     * texture width will be greater than or equal to the width of the image
-     * contained within.
-     *
-     * @return the width of the texture
-     */
-    public int getWidth() {
-        return texWidth;
-    }
-
-    /**
-     * Returns the height of the allocated OpenGL texture in pixels. Note that the
-     * texture height will be greater than or equal to the height of the image
-     * contained within.
-     *
-     * @return the height of the texture
-     */
-    public int getHeight() {
-        return texHeight;
-    }
-
-    /**
-     * Returns the width of the image contained within this texture. Note that for
-     * non-power-of-two textures in particular this may not be equal to the result
-     * of {@link #getWidth}. It is recommended that applications call
-     * {@link #getImageTexCoords} and {@link #getSubImageTexCoords} rather than
-     * using this API directly.
-     *
-     * @return the width of the image
-     */
-    public int getImageWidth() {
-        return imgWidth;
-    }
-
-    /**
-     * Returns the height of the image contained within this texture. Note that for
-     * non-power-of-two textures in particular this may not be equal to the result
-     * of {@link #getHeight}. It is recommended that applications call
-     * {@link #getImageTexCoords} and {@link #getSubImageTexCoords} rather than
-     * using this API directly.
-     *
-     * @return the height of the image
-     */
-    public int getImageHeight() {
-        return imgHeight;
-    }
-
-    /**
-     * Returns the original aspect ratio of the image, defined as (image width) /
-     * (image height), before any scaling that might have occurred as a result of
-     * using the GLU mipmap routines.
-     */
-    public float getAspectRatio() {
-        return aspectRatio;
-    }
-
-    /**
      * Returns the set of texture coordinates corresponding to the entire image. If
      * the TextureData indicated that the texture coordinates must be flipped
      * vertically, the returned TextureCoords will take that into account.
@@ -504,47 +420,14 @@ public class Texture {
     }
 
     /**
-     * Returns the set of texture coordinates corresponding to the specified
-     * sub-image. The (x1, y1) and (x2, y2) points are specified in terms of pixels
-     * starting from the lower-left of the image. (x1, y1) should specify the
-     * lower-left corner of the sub-image and (x2, y2) the upper-right corner of the
-     * sub-image. If the TextureData indicated that the texture coordinates must be
-     * flipped vertically, the returned TextureCoords will take that into account;
-     * this should not be handled by the end user in the specification of the y1 and
-     * y2 coordinates.
-     *
-     * @return the texture coordinates corresponding to the specified sub-image
-     */
-    public TextureCoords getSubImageTexCoords(final int x1, final int y1, final int x2, final int y2) {
-        if (GL31.GL_TEXTURE_RECTANGLE == imageTarget) {
-            if (mustFlipVertically) {
-                return new TextureCoords(x1, texHeight - y1, x2, texHeight - y2);
-            } else {
-                return new TextureCoords(x1, y1, x2, y2);
-            }
-        } else {
-            final float tx1 = (float) x1 / (float) texWidth;
-            final float ty1 = (float) y1 / (float) texHeight;
-            final float tx2 = (float) x2 / (float) texWidth;
-            final float ty2 = (float) y2 / (float) texHeight;
-            if (mustFlipVertically) {
-                final float yMax = (float) imgHeight / (float) texHeight;
-                return new TextureCoords(tx1, yMax - ty1, tx2, yMax - ty2);
-            } else {
-                return new TextureCoords(tx1, ty1, tx2, ty2);
-            }
-        }
-    }
-
-    /**
      * Updates the entire content area incl. {@link TextureCoords} of this texture
      * using the data in the given image.
      *
      * @throws GLException
      *             if any OpenGL-related errors occurred
      */
-    public void updateImage(final Object gl, final TextureData data) throws GLException {
-        updateImage(gl, data, 0);
+    public void updateImage(final TextureData data) throws GLException {
+        updateImage(data, 0);
     }
 
     /**
@@ -559,20 +442,6 @@ public class Texture {
     }
 
     /**
-     * Change whether the TextureData requires a vertical flip of the texture
-     * coords.
-     * <p>
-     * No-op if no change, otherwise generates new {@link TextureCoords}.
-     * </p>
-     */
-    public void setMustFlipVertically(final boolean v) {
-        if (v != mustFlipVertically) {
-            mustFlipVertically = v;
-            updateTexCoords();
-        }
-    }
-
-    /**
      * Updates the content area incl. {@link TextureCoords} of the specified target
      * of this texture using the data in the given image. In general this is
      * intended for construction of cube maps.
@@ -580,12 +449,11 @@ public class Texture {
      * @throws GLException
      *             if any OpenGL-related errors occurred
      */
-    public void updateImage(final Object gl, final TextureData data, final int targetOverride) throws GLException {
+    public void updateImage(final TextureData data, final int targetOverride) throws GLException {
         validateTexID(true);
 
         imgWidth = data.getWidth();
         imgHeight = data.getHeight();
-        aspectRatio = (float) imgWidth / (float) imgHeight;
         mustFlipVertically = data.getMustFlipVertically();
 
         int texTarget = 0;
@@ -784,42 +652,6 @@ public class Texture {
     }
 
     /**
-     * Updates a subregion of the content area of this texture using the given data.
-     * If automatic mipmap generation is in use (see
-     * {@link #isUsingAutoMipmapGeneration isUsingAutoMipmapGeneration}), updates to
-     * the base (level 0) mipmap will cause the lower-level mipmaps to be
-     * regenerated, and updates to other mipmap levels will be ignored. Otherwise,
-     * if automatic mipmap generation is not in use, only updates the specified
-     * mipmap level and does not re-generate mipmaps if they were originally
-     * produced or loaded.
-     *
-     * @param data
-     *            the image data to be uploaded to this texture
-     * @param mipmapLevel
-     *            the mipmap level of the texture to set. If this is non-zero and
-     *            the TextureData contains mipmap data, the appropriate mipmap level
-     *            will be selected.
-     * @param x
-     *            the x offset (in pixels) relative to the lower-left corner of this
-     *            texture
-     * @param y
-     *            the y offset (in pixels) relative to the lower-left corner of this
-     *            texture
-     *
-     * @throws GLException
-     *             if any OpenGL-related errors occurred
-     */
-    public void updateSubImage(final TextureData data, final int mipmapLevel, final int x, final int y) throws GLException {
-        if (usingAutoMipmapGeneration && mipmapLevel != 0) {
-            // When we're using mipmap generation via GL_GENERATE_MIPMAP, we
-            // don't need to update other mipmap levels
-            return;
-        }
-        bind();
-        updateSubImageImpl(data, target, mipmapLevel, x, y, 0, 0, data.getWidth(), data.getHeight());
-    }
-
-    /**
      * Updates a subregion of the content area of this texture using the specified
      * sub-region of the given data. If automatic mipmap generation is in use (see
      * {@link #isUsingAutoMipmapGeneration isUsingAutoMipmapGeneration}), updates to
@@ -872,44 +704,6 @@ public class Texture {
     }
 
     /**
-     * Sets the OpenGL floating-point texture parameter for the texture's target.
-     * This gives control over parameters such as GL_TEXTURE_MAX_ANISOTROPY_EXT.
-     * Causes this texture to be bound to the current texture state.
-     *
-     * @throws GLException
-     *             if no OpenGL context was current or if any OpenGL-related errors
-     *             occurred
-     */
-    public void setTexParameterf(final int parameterName, final float value) {
-        bind();
-        GL11.glTexParameterf(target, parameterName, value);
-    }
-
-    /**
-     * Sets the OpenGL multi-floating-point texture parameter for the texture's
-     * target. Causes this texture to be bound to the current texture state.
-     *
-     * @throws GLException
-     *             if any OpenGL-related errors occurred
-     */
-    public void setTexParameterfv(final int parameterName, final FloatBuffer params) {
-        bind();
-        GL11.glTexParameterfv(target, parameterName, params);
-    }
-
-    /**
-     * Sets the OpenGL multi-floating-point texture parameter for the texture's
-     * target. Causes this texture to be bound to the current texture state.
-     *
-     * @throws GLException
-     *             if any OpenGL-related errors occurred
-     */
-    public void setTexParameterfv(final int parameterName, final float[] params, final int params_offset) {
-        bind();
-        GL11.glTexParameterfv(target, parameterName, params);
-    }
-
-    /**
      * Sets the OpenGL integer texture parameter for the texture's target. This
      * gives control over parameters such as GL_TEXTURE_WRAP_S and
      * GL_TEXTURE_WRAP_T, which by default are set to GL_CLAMP_TO_EDGE if OpenGL 1.2
@@ -922,54 +716,6 @@ public class Texture {
     public void setTexParameteri(final int parameterName, final int value) {
         bind();
         GL11.glTexParameteri(target, parameterName, value);
-    }
-
-    /**
-     * Sets the OpenGL multi-integer texture parameter for the texture's target.
-     * Causes this texture to be bound to the current texture state.
-     *
-     * @throws GLException
-     *             if any OpenGL-related errors occurred
-     */
-    public void setTexParameteriv(final int parameterName, final IntBuffer params) {
-        bind();
-        GL11.glTexParameteriv(target, parameterName, params);
-    }
-
-    /**
-     * Sets the OpenGL multi-integer texture parameter for the texture's target.
-     * Causes this texture to be bound to the current texture state.
-     *
-     * @throws GLException
-     *             if any OpenGL-related errors occurred
-     */
-    public void setTexParameteriv(final int parameterName, final int[] params, final int params_offset) {
-        bind();
-        GL11.glTexParameteriv(target, parameterName, params);
-    }
-
-    /**
-     * Returns the underlying OpenGL texture object for this texture, maybe
-     * <code>0</code> if not yet generated.
-     * <p>
-     * Most applications will not need to access this, since it is handled
-     * automatically by the bind(GL) and destroy(GL) APIs.
-     * </p>
-     * 
-     * @see #getTextureObject()
-     */
-    public int getTextureObject() {
-        return texID;
-    }
-
-    /**
-     * Returns an estimate of the amount of texture memory in bytes this Texture
-     * consumes. It should only be treated as an estimate; most applications should
-     * not need to query this but instead let the OpenGL implementation page
-     * textures in and out as necessary.
-     */
-    public int getEstimatedMemorySize() {
-        return estimatedMemorySize;
     }
 
     /**

@@ -130,12 +130,6 @@ public class AWTTextureData extends TextureData {
     }
 
     @Override
-    public GLPixelAttributes getPixelAttributes() {
-        validatePixelAttributes();
-        return super.getPixelAttributes();
-    }
-
-    @Override
     public int getPixelFormat() {
         validatePixelAttributes();
         return super.getPixelFormat();

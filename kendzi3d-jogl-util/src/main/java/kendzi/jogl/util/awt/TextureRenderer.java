@@ -39,17 +39,14 @@
  */
 package kendzi.jogl.util.awt;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 
 import kendzi.jogl.glu.GLException;
 import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.texture.Texture;
-import kendzi.jogl.util.texture.TextureCoords;
 import kendzi.jogl.util.texture.TextureIO;
 import kendzi.jogl.util.texture.awt.AWTTextureData;
 import org.lwjgl.opengl.GL11;
@@ -105,22 +102,6 @@ public class TextureRenderer {
     /**
      * Creates a new renderer with backing store of the specified width and height.
      * If <CODE>alpha</CODE> is true, allocates an alpha channel in the backing
-     * store image. No mipmap support is requested.
-     * 
-     * @param width
-     *            the width of the texture to render into
-     * @param height
-     *            the height of the texture to render into
-     * @param alpha
-     *            whether to allocate an alpha channel for the texture
-     */
-    public TextureRenderer(final int width, final int height, final boolean alpha) {
-        this(width, height, alpha, false);
-    }
-
-    /**
-     * Creates a new renderer with backing store of the specified width and height.
-     * If <CODE>alpha</CODE> is true, allocates an alpha channel in the backing
      * store image. If <CODE>mipmap</CODE> is true, attempts to use OpenGL's
      * automatic mipmap generation for better smoothing when rendering the
      * TextureRenderer's contents at a distance.
@@ -149,126 +130,6 @@ public class TextureRenderer {
     }
 
     /**
-     * Creates a new renderer with a special kind of backing store which acts only
-     * as an alpha channel. No mipmap support is requested. Internally, this
-     * associates a GL_INTENSITY OpenGL texture with the backing store.
-     */
-    public static TextureRenderer createAlphaOnlyRenderer(final int width, final int height) {
-        return createAlphaOnlyRenderer(width, height, false);
-    }
-
-    /**
-     * Creates a new renderer with a special kind of backing store which acts only
-     * as an alpha channel. If <CODE>mipmap</CODE> is true, attempts to use OpenGL's
-     * automatic mipmap generation for better smoothing when rendering the
-     * TextureRenderer's contents at a distance. Internally, this associates a
-     * GL_INTENSITY OpenGL texture with the backing store.
-     */
-    public static TextureRenderer createAlphaOnlyRenderer(final int width, final int height, final boolean mipmap) {
-        return new TextureRenderer(width, height, false, true, mipmap);
-    }
-
-    /**
-     * Returns the width of the backing store of this renderer.
-     * 
-     * @return the width of the backing store of this renderer
-     */
-    public int getWidth() {
-        return image.getWidth();
-    }
-
-    /**
-     * Returns the height of the backing store of this renderer.
-     * 
-     * @return the height of the backing store of this renderer
-     */
-    public int getHeight() {
-        return image.getHeight();
-    }
-
-    /**
-     * Returns the size of the backing store of this renderer in a newly-allocated
-     * {@link java.awt.Dimension Dimension} object.
-     * 
-     * @return the size of the backing store of this renderer
-     */
-    public Dimension getSize() {
-        return getSize(null);
-    }
-
-    /**
-     * Returns the size of the backing store of this renderer. Uses the
-     * {@link java.awt.Dimension Dimension} object if one is supplied, or allocates
-     * a new one if null is passed.
-     * 
-     * @param d
-     *            a {@link java.awt.Dimension Dimension} object in which to store
-     *            the results, or null to allocate a new one
-     * 
-     * @return the size of the backing store of this renderer
-     */
-    public Dimension getSize(Dimension d) {
-        if (d == null)
-            d = new Dimension();
-        d.setSize(image.getWidth(), image.getHeight());
-        return d;
-    }
-
-    /**
-     * Sets the size of the backing store of this renderer. This may cause the
-     * OpenGL texture object associated with this renderer to be invalidated; it is
-     * not recommended to cache this texture object outside this class but to
-     * instead call {@link #getTexture getTexture} when it is needed.
-     * 
-     * @param width
-     *            the new width of the backing store of this renderer
-     * @param height
-     *            the new height of the backing store of this renderer
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void setSize(final int width, final int height) throws GLException {
-        init(width, height);
-    }
-
-    /**
-     * Sets the size of the backing store of this renderer. This may cause the
-     * OpenGL texture object associated with this renderer to be invalidated.
-     * 
-     * @param d
-     *            the new size of the backing store of this renderer
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void setSize(final Dimension d) throws GLException {
-        setSize(d.width, d.height);
-    }
-
-    /**
-     * Sets whether smoothing is enabled for the OpenGL texture; if so, uses
-     * GL_LINEAR interpolation for the minification and magnification filters.
-     * Defaults to true. Changes to this setting will not take effect until the next
-     * call to {@link #beginOrthoRendering beginOrthoRendering}.
-     * 
-     * @param smoothing
-     *            whether smoothing is enabled for the OpenGL texture
-     */
-    public void setSmoothing(final boolean smoothing) {
-        this.smoothing = smoothing;
-        smoothingChanged = true;
-    }
-
-    /**
-     * Returns whether smoothing is enabled for the OpenGL texture; see
-     * {@link #setSmoothing setSmoothing}. Defaults to true.
-     * 
-     * @return whether smoothing is enabled for the OpenGL texture
-     */
-    public boolean getSmoothing() {
-        return smoothing;
-    }
-
-    /**
      * Creates a {@link java.awt.Graphics2D Graphics2D} instance for rendering to
      * the backing store of this renderer. The returned object should be disposed of
      * using the normal {@link java.awt.Graphics#dispose() Graphics.dispose()}
@@ -290,33 +151,6 @@ public class TextureRenderer {
     }
 
     /**
-     * Marks the given region of the TextureRenderer as dirty. This region, and any
-     * previously set dirty regions, will be automatically synchronized with the
-     * underlying Texture during the next {@link #getTexture getTexture} operation,
-     * at which point the dirty region will be cleared. It is not necessary for an
-     * OpenGL context to be current when this method is called.
-     * 
-     * @param x
-     *            the x coordinate (in Java 2D coordinates -- relative to upper
-     *            left) of the region to update
-     * @param y
-     *            the y coordinate (in Java 2D coordinates -- relative to upper
-     *            left) of the region to update
-     * @param width
-     *            the width of the region to update
-     * @param height
-     *            the height of the region to update
-     */
-    public void markDirty(final int x, final int y, final int width, final int height) {
-        final Rectangle curRegion = new Rectangle(x, y, width, height);
-        if (dirtyRegion == null) {
-            dirtyRegion = curRegion;
-        } else {
-            dirtyRegion.add(curRegion);
-        }
-    }
-
-    /**
      * Returns the underlying OpenGL Texture object associated with this renderer,
      * synchronizing any dirty regions of the TextureRenderer with the underlying
      * OpenGL texture.
@@ -335,72 +169,6 @@ public class TextureRenderer {
     }
 
     /**
-     * Disposes all resources associated with this renderer. It is not valid to use
-     * this renderer after calling this method.
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void dispose() throws GLException {
-        if (texture != null) {
-            texture.destroy();
-            texture = null;
-        }
-        if (image != null) {
-            image.flush();
-            image = null;
-        }
-    }
-
-    /**
-     * Convenience method which assists in rendering portions of the OpenGL texture
-     * to the screen, if the application intends to draw them as a flat overlay on
-     * to the screen. Pushes OpenGL state bits (GL_ENABLE_BIT, GL_DEPTH_BUFFER_BIT
-     * and GL_TRANSFORM_BIT); disables the depth test, back-face culling, and
-     * lighting; enables the texture in this renderer; and sets up the viewing
-     * matrices for orthographic rendering where the coordinates go from (0, 0) at
-     * the lower left to (width, height) at the upper right. Equivalent to
-     * beginOrthoRendering(width, height, true). {@link #endOrthoRendering} must be
-     * used in conjunction with this method to restore all OpenGL states.
-     * 
-     * @param width
-     *            the width of the current on-screen OpenGL drawable
-     * @param height
-     *            the height of the current on-screen OpenGL drawable
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void beginOrthoRendering(final int width, final int height) throws GLException {
-        beginOrthoRendering(width, height, true);
-    }
-
-    /**
-     * Convenience method which assists in rendering portions of the OpenGL texture
-     * to the screen, if the application intends to draw them as a flat overlay on
-     * to the screen. Pushes OpenGL state bits (GL_ENABLE_BIT, GL_DEPTH_BUFFER_BIT
-     * and GL_TRANSFORM_BIT); disables the depth test (if the "disableDepthTest"
-     * argument is true), back-face culling, and lighting; enables the texture in
-     * this renderer; and sets up the viewing matrices for orthographic rendering
-     * where the coordinates go from (0, 0) at the lower left to (width, height) at
-     * the upper right. {@link #endOrthoRendering} must be used in conjunction with
-     * this method to restore all OpenGL states.
-     * 
-     * @param width
-     *            the width of the current on-screen OpenGL drawable
-     * @param height
-     *            the height of the current on-screen OpenGL drawable
-     * @param disableDepthTest
-     *            whether the depth test should be disabled
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void beginOrthoRendering(final int width, final int height, final boolean disableDepthTest) throws GLException {
-        beginRendering(true, width, height, disableDepthTest);
-    }
-
-    /**
      * Convenience method which assists in rendering portions of the OpenGL texture
      * to the screen as 2D quads in 3D space. Pushes OpenGL state (GL_ENABLE_BIT);
      * disables lighting; and enables the texture in this renderer. Unlike
@@ -415,198 +183,6 @@ public class TextureRenderer {
      */
     public void begin3DRendering() throws GLException {
         beginRendering(false, 0, 0, false);
-    }
-
-    /**
-     * Changes the color of the polygons, and therefore the drawn images, this
-     * TextureRenderer produces. Use of this method is optional. The TextureRenderer
-     * uses the GL_MODULATE texture environment mode, which causes the portions of
-     * the rendered texture to be multiplied by the color of the rendered polygons.
-     * The polygon color can be varied to achieve effects like tinting of the
-     * overall output or fading in and out by changing the alpha of the color.
-     * <P>
-     * 
-     * Each component ranges from 0.0f - 1.0f. The alpha component, if used, does
-     * not need to be premultiplied into the color channels as described in the
-     * documentation for {@link Texture}, although premultiplied colors are used
-     * internally. The default color is opaque white.
-     * 
-     * @param r
-     *            the red component of the new color
-     * @param g
-     *            the green component of the new color
-     * @param b
-     *            the blue component of the new color
-     * @param a
-     *            the alpha component of the new color, 0.0f = completely
-     *            transparent, 1.0f = completely opaque
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void setColor(final float r, final float g, final float b, final float a) throws GLException {
-        this.r = r * a;
-        this.g = g * a;
-        this.b = b * a;
-        this.a = a;
-
-        GL11.glColor4f(this.r, this.g, this.b, this.a);
-    }
-
-    private float[] compArray;
-
-    /**
-     * Changes the current color of this TextureRenderer to the supplied one. The
-     * default color is opaque white. See {@link #setColor(float,float,float,float)
-     * setColor} for more details.
-     * 
-     * @param color
-     *            the new color to use for rendering
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void setColor(final Color color) throws GLException {
-        // Get color's RGBA components as floats in the range [0,1].
-        if (compArray == null) {
-            compArray = new float[4];
-        }
-        color.getRGBComponents(compArray);
-        setColor(compArray[0], compArray[1], compArray[2], compArray[3]);
-    }
-
-    /**
-     * Draws an orthographically projected rectangle containing all of the
-     * underlying texture to the specified location on the screen. All (x, y)
-     * coordinates are specified relative to the lower left corner of either the
-     * texture image or the current OpenGL drawable. This method is equivalent to
-     * <code>drawOrthoRect(screenx, screeny, 0, 0, getWidth(),
-     getHeight());</code>.
-     * 
-     * @param screenx
-     *            the on-screen x coordinate at which to draw the rectangle
-     * @param screeny
-     *            the on-screen y coordinate (relative to lower left) at which to
-     *            draw the rectangle
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void drawOrthoRect(final int screenx, final int screeny) throws GLException {
-        drawOrthoRect(screenx, screeny, 0, 0, getWidth(), getHeight());
-    }
-
-    /**
-     * Draws an orthographically projected rectangle of the underlying texture to
-     * the specified location on the screen. All (x, y) coordinates are specified
-     * relative to the lower left corner of either the texture image or the current
-     * OpenGL drawable.
-     * 
-     * @param screenx
-     *            the on-screen x coordinate at which to draw the rectangle
-     * @param screeny
-     *            the on-screen y coordinate (relative to lower left) at which to
-     *            draw the rectangle
-     * @param texturex
-     *            the x coordinate of the pixel in the texture of the lower left
-     *            portion of the rectangle to draw
-     * @param texturey
-     *            the y coordinate of the pixel in the texture (relative to lower
-     *            left) of the lower left portion of the rectangle to draw
-     * @param width
-     *            the width of the rectangle to draw
-     * @param height
-     *            the height of the rectangle to draw
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void drawOrthoRect(final int screenx, final int screeny, final int texturex, final int texturey, final int width,
-            final int height) throws GLException {
-        draw3DRect(screenx, screeny, 0, texturex, texturey, width, height, 1);
-    }
-
-    /**
-     * Draws a rectangle of the underlying texture to the specified 3D location. In
-     * the current coordinate system, the lower left corner of the rectangle is
-     * placed at (x, y, z), and the upper right corner is placed at (x + width *
-     * scaleFactor, y + height * scaleFactor, z). The lower left corner of the
-     * sub-rectangle of the texture is (texturex, texturey) and the upper right
-     * corner is (texturex + width, texturey + height). For back-face culling
-     * purposes, the rectangle is drawn with counterclockwise orientation of the
-     * vertices when viewed from the front.
-     * 
-     * @param x
-     *            the x coordinate at which to draw the rectangle
-     * @param y
-     *            the y coordinate at which to draw the rectangle
-     * @param z
-     *            the z coordinate at which to draw the rectangle
-     * @param texturex
-     *            the x coordinate of the pixel in the texture of the lower left
-     *            portion of the rectangle to draw
-     * @param texturey
-     *            the y coordinate of the pixel in the texture (relative to lower
-     *            left) of the lower left portion of the rectangle to draw
-     * @param width
-     *            the width in texels of the rectangle to draw
-     * @param height
-     *            the height in texels of the rectangle to draw
-     * @param scaleFactor
-     *            the scale factor to apply (multiplicatively) to the size of the
-     *            drawn rectangle
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void draw3DRect(final float x, final float y, final float z, final int texturex, final int texturey, final int width,
-            final int height, final float scaleFactor) throws GLException {
-        final Texture texture = getTexture();
-        final TextureCoords coords = texture.getSubImageTexCoords(texturex, texturey, texturex + width, texturey + height);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(coords.left(), coords.bottom());
-        GL11.glVertex3f(x, y, z);
-        GL11.glTexCoord2f(coords.right(), coords.bottom());
-        GL11.glVertex3f(x + width * scaleFactor, y, z);
-        GL11.glTexCoord2f(coords.right(), coords.top());
-        GL11.glVertex3f(x + width * scaleFactor, y + height * scaleFactor, z);
-        GL11.glTexCoord2f(coords.left(), coords.top());
-        GL11.glVertex3f(x, y + height * scaleFactor, z);
-        GL11.glEnd();
-    }
-
-    /**
-     * Convenience method which assists in rendering portions of the OpenGL texture
-     * to the screen, if the application intends to draw them as a flat overlay on
-     * to the screen. Must be used if {@link #beginOrthoRendering} is used to set up
-     * the rendering stage for this overlay.
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void endOrthoRendering() throws GLException {
-        endRendering(true);
-    }
-
-    /**
-     * Convenience method which assists in rendering portions of the OpenGL texture
-     * to the screen as 2D quads in 3D space. Must be used if
-     * {@link #begin3DRendering} is used to set up the rendering stage for this
-     * overlay.
-     * 
-     * @throws GLException
-     *             If an OpenGL context is not current when this method is called
-     */
-    public void end3DRendering() throws GLException {
-        endRendering(false);
-    }
-
-    /**
-     * Indicates whether automatic mipmap generation is in use for this
-     * TextureRenderer. The result of this method may change from true to false if
-     * it is discovered during allocation of the TextureRenderer's backing store
-     * that automatic mipmap generation is not supported at the OpenGL level.
-     */
-    public boolean isUsingAutoMipmapGeneration() {
-        return mipmap;
     }
 
     // ----------------------------------------------------------------------
@@ -656,20 +232,6 @@ public class TextureRenderer {
                 texture.setTexParameteri(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
         }
-    }
-
-    private void endRendering(final boolean ortho) {
-        final Texture texture = getTexture();
-        texture.disable();
-        if (ortho) {
-            GL11.glMatrixMode(GL11.GL_PROJECTION);
-            GL11.glPopMatrix();
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
-            GL11.glPopMatrix();
-            GL11.glMatrixMode(GL11.GL_TEXTURE);
-            GL11.glPopMatrix();
-        }
-        GL11.glPopAttrib();
     }
 
     private void init(final int width, final int height) {

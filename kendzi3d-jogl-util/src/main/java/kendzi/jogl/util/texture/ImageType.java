@@ -1096,15 +1096,6 @@ public class ImageType {
     public static final String T_XPM = "xpm";
 
     /**
-     * Constant which can be used as a file suffix to indicate a Targa stream, value
-     * {@value}.
-     * <ul>
-     * <li>{@code }</li>
-     * </ul>
-     */
-    public static final String T_TGA = "tga";
-
-    /**
      * The determined unique type, e.g. {@link #T_PNG}, {@link #T_JPG}, etc.
      * <p>
      * Maybe {@code null} if undetermined, i.e. {@link #isDefined()} returns
@@ -1112,20 +1103,6 @@ public class ImageType {
      * </p>
      */
     public final String type;
-
-    /**
-     * The optionally read header of size {@link #MAGIC_MAX_SIZE} bytes as used to
-     * determine the {@link #type}, i.e. {@link #ImageType(InputStream)}.
-     * <p>
-     * May be {@code null}, if {@link #type} has been determined otherwise, i.e
-     * {@link #ImageType(String)}.
-     * </p>
-     * <p>
-     * The header is <i>not</i> being used for {@link #hashCode()} and
-     * {@link #equals(Object)}!
-     * </p>
-     */
-    public final byte[] header;
 
     private final int hash;
 
@@ -1141,7 +1118,6 @@ public class ImageType {
     public ImageType(final InputStream stream) throws IOException {
         final byte[] _header = new byte[MAGIC_MAX_SIZE];
         type = Util.getFileSuffix(stream, _header);
-        this.header = _header;
         this.hash = null != this.type ? this.type.hashCode() : 0;
     }
 
@@ -1152,7 +1128,6 @@ public class ImageType {
      *            must be one of {@link #T_PNG}, {@link #T_JPG}, etc.
      */
     public ImageType(final String type) {
-        this.header = null;
         this.type = type;
         this.hash = this.type.hashCode();
     }

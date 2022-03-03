@@ -57,7 +57,6 @@ import kendzi.jogl.util.GLPixelBuffer;
 public class TextureData {
     /** ColorSpace of pixel data. */
     public static enum ColorSpace {
-        RGB, YCbCr, YCCK, CMYK
     };
 
     protected int width;
@@ -81,7 +80,6 @@ public class TextureData {
     // These booleans are a concession to the AWTTextureData subclass
     protected boolean haveEXTABGR;
     protected boolean haveGL12;
-    protected ColorSpace pixelCS = ColorSpace.RGB;
 
     // TODO: final, and set via ctor for 2.4.X
     /* pp */ ImageType srcImageType;
@@ -289,38 +287,9 @@ public class TextureData {
         }
     }
 
-    /**
-     * Returns the color space of the pixel data.
-     * 
-     * @see #setColorSpace(ColorSpace)
-     */
-    public ColorSpace getColorSpace() {
-        return pixelCS;
-    }
-
-    /**
-     * Set the color space of the pixel data, which defaults to
-     * {@link ColorSpace#RGB}.
-     * 
-     * @see #getColorSpace()
-     */
-    public void setColorSpace(final ColorSpace cs) {
-        pixelCS = cs;
-    }
-
     /** Used only by subclasses */
     protected TextureData() {
         this.pixelAttributes = GLPixelBuffer.GLPixelAttributes.UNDEF;
-    }
-
-    /**
-     * Returns the source {@link ImageType} if applicable and known, otherwise
-     * {@code null}.
-     * 
-     * @since 2.3.2
-     */
-    public final ImageType getSourceImageType() {
-        return srcImageType;
     }
 
     /** Returns the width in pixels of the texture data. */
@@ -336,14 +305,6 @@ public class TextureData {
     /** Returns the border in pixels of the texture data. */
     public int getBorder() {
         return border;
-    }
-
-    /**
-     * Returns the intended OpenGL {@link GLPixelAttributes} of the texture data,
-     * i.e. format and type.
-     */
-    public GLPixelBuffer.GLPixelAttributes getPixelAttributes() {
-        return pixelAttributes;
     }
 
     /**
@@ -411,94 +372,9 @@ public class TextureData {
         return rowLength;
     }
 
-    /** Sets the width in pixels of the texture data. */
-    public void setWidth(final int width) {
-        this.width = width;
-    }
-
-    /** Sets the height in pixels of the texture data. */
-    public void setHeight(final int height) {
-        this.height = height;
-    }
-
-    /** Sets the border in pixels of the texture data. */
-    public void setBorder(final int border) {
-        this.border = border;
-    }
-
-    /** Sets the intended OpenGL pixel format of the texture data. */
-    public void setPixelAttributes(final GLPixelBuffer.GLPixelAttributes pixelAttributes) {
-        this.pixelAttributes = pixelAttributes;
-    }
-
-    /**
-     * Sets the intended OpenGL pixel format component of {@link GLPixelAttributes}
-     * of the texture data.
-     * <p>
-     * Use {@link #setPixelAttributes(GLPixelAttributes)}, if setting format and
-     * type.
-     * </p>
-     */
-    public void setPixelFormat(final int pixelFormat) {
-        if (pixelAttributes.format != pixelFormat) {
-            pixelAttributes = new GLPixelBuffer.GLPixelAttributes(pixelFormat, pixelAttributes.type);
-        }
-    }
-
-    /**
-     * Sets the intended OpenGL pixel type component of {@link GLPixelAttributes} of
-     * the texture data.
-     * <p>
-     * Use {@link #setPixelAttributes(GLPixelAttributes)}, if setting format and
-     * type.
-     * </p>
-     */
-    public void setPixelType(final int pixelType) {
-        if (pixelAttributes.type != pixelType) {
-            pixelAttributes = new GLPixelBuffer.GLPixelAttributes(pixelAttributes.format, pixelType);
-        }
-    }
-
-    /** Sets the intended OpenGL internal format of the texture data. */
-    public void setInternalFormat(final int internalFormat) {
-        this.internalFormat = internalFormat;
-    }
-
     /** Sets whether mipmaps should be generated for the texture data. */
     public void setMipmap(final boolean mipmap) {
         this.mipmap = mipmap;
-    }
-
-    /** Sets whether the texture data is in compressed form. */
-    public void setIsDataCompressed(final boolean compressed) {
-        this.dataIsCompressed = compressed;
-    }
-
-    /**
-     * Sets whether the texture coordinates must be flipped vertically for proper
-     * display.
-     */
-    public void setMustFlipVertically(final boolean mustFlipVertically) {
-        this.mustFlipVertically = mustFlipVertically;
-    }
-
-    /** Sets the texture data. */
-    public void setBuffer(final ByteBuffer buffer) {
-        this.buffer = buffer;
-        estimatedMemorySize = estimatedMemorySize(buffer);
-    }
-
-    /** Sets the required byte alignment for the texture data. */
-    public void setAlignment(final int alignment) {
-        this.alignment = alignment;
-    }
-
-    /**
-     * Sets the row length needed for correct GL_UNPACK_ROW_LENGTH specification.
-     * This is currently only supported for non-mipmapped, non-compressed textures.
-     */
-    public void setRowLength(final int rowLength) {
-        this.rowLength = rowLength;
     }
 
     /**
@@ -537,15 +413,6 @@ public class TextureData {
             flusher.flush();
             flusher = null;
         }
-    }
-
-    /**
-     * Calls flush()
-     * 
-     * @see #flush()
-     */
-    public void destroy() {
-        flush();
     }
 
     /**
