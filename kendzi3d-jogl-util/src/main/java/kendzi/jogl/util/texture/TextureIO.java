@@ -40,10 +40,6 @@
 
 package kendzi.jogl.util.texture;
 
-import com.jogamp.common.util.IOUtil;
-import com.jogamp.opengl.util.PNGPixelRect;
-import com.jogamp.opengl.util.texture.spi.JPEGImage;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -59,12 +55,8 @@ import java.util.Optional;
 import javax.imageio.ImageIO;
 
 import kendzi.jogl.glu.GLException;
-import kendzi.jogl.util.GLPixelBuffer;
 import kendzi.jogl.util.texture.awt.AWTTextureData;
 import kendzi.jogl.util.texture.spi.TextureProvider;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLCapabilities;
 
 /**
  * <P>
@@ -162,7 +154,8 @@ public class TextureIO {
      */
     public static TextureData newTextureData(final URL url, final boolean mipmap, String fileSuffix) throws IOException {
         if (fileSuffix == null) {
-            fileSuffix = IOUtil.getFileSuffix(url.getPath());
+            fileSuffix = Optional.ofNullable(url.getPath()).filter(path -> path.contains("."))
+                    .map(path -> path.substring(path.lastIndexOf(".") + 1)).orElse(null);
         }
         return newTextureDataImpl(url, 0, 0, mipmap, fileSuffix);
     }
@@ -219,7 +212,8 @@ public class TextureIO {
      */
     public static Texture newTexture(final URL url, final boolean mipmap, String fileSuffix) throws IOException, GLException {
         if (fileSuffix == null) {
-            fileSuffix = IOUtil.getFileSuffix(url.getPath());
+            fileSuffix = Optional.ofNullable(url.getPath()).filter(path -> path.contains("."))
+                    .map(path -> path.substring(path.lastIndexOf(".") + 1)).orElse(null);
         }
         final TextureData data = newTextureData(url, mipmap, fileSuffix);
         final Texture texture = newTexture(data);
@@ -281,9 +275,6 @@ public class TextureIO {
 
     static {
         addTextureProvider(new IIOTextureProvider());
-        // Other special-case providers
-        addTextureProvider(new JPGTextureProvider());
-        addTextureProvider(new PNGTextureProvider());
     }
 
     // Implementation methods
@@ -384,77 +375,6 @@ public class TextureIO {
                 throws IOException {
             return Optional.ofNullable(ImageIO.read(url)).map(img -> new AWTTextureData(internalFormat, pixelFormat, mipmap, img))
                     .orElse(null);
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // PNG image provider
-    static class PNGTextureProvider extends StreamBasedTextureProvider {
-        private static final ImageType[] imageTypes = new ImageType[] { new ImageType(ImageType.T_PNG) };
-
-        @Override
-        public final ImageType[] getImageTypes() {
-            return imageTypes;
-        }
-
-        @Override
-        public TextureData newTextureData(final InputStream stream, int internalFormat, int pixelFormat, final boolean mipmap,
-                final String fileSuffix) throws IOException {
-            final GLCapabilities cap = GL.getCapabilities();
-            if (ImageType.T_PNG.equals(fileSuffix) || ImageType.T_PNG.equals(ImageType.Util.getFileSuffix(stream))) {
-                final PNGPixelRect image = PNGPixelRect.read(stream, null, true /* directBuffer */, 0 /* destMinStrideInBytes */,
-                        true /* destIsGLOriented */);
-                final GLPixelBuffer.GLPixelAttributes glpa = new GLPixelBuffer.GLPixelAttributes(image.getPixelformat(),
-                        false /* pack */);
-                if (0 == pixelFormat) {
-                    pixelFormat = glpa.format;
-                } // else FIXME: Actually not supported w/ preset pixelFormat!
-                if (0 == internalFormat) {
-                    final boolean hasAlpha = 4 == glpa.pfmt.comp.bytesPerPixel();
-                    if (cap.OpenGL20) {
-                        internalFormat = hasAlpha ? GL11.GL_RGBA8 : GL11.GL_RGB8;
-                    } else {
-                        internalFormat = hasAlpha ? GL11.GL_RGBA : GL11.GL_RGB;
-                    }
-                }
-                return new TextureData(internalFormat, image.getSize().getWidth(), image.getSize().getHeight(), 0, pixelFormat,
-                        glpa.type, mipmap, false, false, image.getPixels(), null);
-            }
-
-            return null;
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // JPEG image provider
-    static class JPGTextureProvider extends StreamBasedTextureProvider {
-        private static final ImageType[] imageTypes = new ImageType[] { new ImageType(ImageType.T_JPG) };
-
-        @Override
-        public final ImageType[] getImageTypes() {
-            return imageTypes;
-        }
-
-        @Override
-        public TextureData newTextureData(final InputStream stream, int internalFormat, int pixelFormat, final boolean mipmap,
-                final String fileSuffix) throws IOException {
-            if (ImageType.T_JPG.equals(fileSuffix) || ImageType.T_JPG.equals(ImageType.Util.getFileSuffix(stream))) {
-                final JPEGImage image = JPEGImage.read(/* glp, */ stream);
-                if (pixelFormat == 0) {
-                    pixelFormat = image.getGLFormat();
-                }
-                if (internalFormat == 0) {
-                    if (GL.getCapabilities().forwardCompatible) {
-                        internalFormat = (image.getBytesPerPixel() == 4) ? GL11.GL_RGBA8 : GL11.GL_RGB8;
-                    } else {
-                        internalFormat = (image.getBytesPerPixel() == 4) ? GL11.GL_RGBA : GL11.GL_RGB;
-                    }
-                }
-                return new TextureData(internalFormat, image.getWidth(), image.getHeight(), 0, pixelFormat, image.getGLType(),
-                        mipmap, false, false, image.getData(), null);
-            }
-
-            return null;
         }
     }
 
