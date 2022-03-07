@@ -16,9 +16,10 @@ import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.util.texture.Texture;
-import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Renderer for models. Main interaction with opengl backend.
@@ -26,7 +27,7 @@ import org.lwjgl.opengl.GL13;
 public class ModelRender {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelRender.class);
+    private static final Logger log = LoggerFactory.getLogger(ModelRender.class);
 
     private static final int[] GL_TEXTURE = { GL13.GL_TEXTURE0, GL13.GL_TEXTURE1, GL13.GL_TEXTURE2, GL13.GL_TEXTURE3 };
 

@@ -29,7 +29,8 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -42,7 +43,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 public class Tree extends AbstractPointModel implements DLODSuport {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Tree.class);
+    private static final Logger log = LogManager.getLogger(Tree.class);
 
     /**
      * Renderer of model.

@@ -29,7 +29,8 @@ import kendzi.jogl.texture.library.TextureLibraryService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.kendzi3d.TextureData;
 import org.kendzi3d.TextureLibrary;
 import org.kendzi3d.TextureSet;
@@ -46,7 +47,7 @@ import org.xml.sax.SAXException;
 public class WikiTextureLoaderService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(WikiTextureLoaderService.class);
+    private static final Logger log = LogManager.getLogger(WikiTextureLoaderService.class);
 
     /**
      * Plugin directory.

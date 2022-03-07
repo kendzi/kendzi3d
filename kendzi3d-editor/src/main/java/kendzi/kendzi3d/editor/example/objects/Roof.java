@@ -15,11 +15,12 @@ import kendzi.kendzi3d.editor.selection.editor.CachePoint3dProvider;
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
 import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Roof implements EditableObject {
 
-    private static final Logger LOG = Logger.getLogger(Roof.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Roof.class);
 
     private final Point3d position = new Point3d(0, 0, 1);
 

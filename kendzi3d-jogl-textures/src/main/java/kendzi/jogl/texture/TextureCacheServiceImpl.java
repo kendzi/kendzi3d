@@ -22,13 +22,14 @@ import kendzi.jogl.texture.builder.TextureBuilder;
 import kendzi.jogl.util.texture.Texture;
 import kendzi.jogl.util.texture.TextureIO;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TextureCacheServiceImpl implements kendzi.jogl.texture.TextureCacheService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(TextureCacheServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(TextureCacheServiceImpl.class);
 
     /**
      * File url reciver service.

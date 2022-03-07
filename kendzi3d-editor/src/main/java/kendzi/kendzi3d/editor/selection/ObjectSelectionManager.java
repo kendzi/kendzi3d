@@ -26,7 +26,8 @@ import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -35,7 +36,7 @@ import org.apache.log4j.Logger;
 public class ObjectSelectionManager extends ObjectSelectionListener {
 
     /** Log. */
-    private static final Logger LOG = Logger.getLogger(ObjectSelectionManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectSelectionManager.class);
 
     private transient Editor lastActiveEditor;
 

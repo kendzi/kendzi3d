@@ -15,12 +15,13 @@ import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.ModelLibraryXmlDao;
 import kendzi.kendzi3d.models.library.exception.ModelLibraryLoadException;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelsLibraryService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelsLibraryService.class);
+    private static final Logger log = LoggerFactory.getLogger(ModelsLibraryService.class);
 
     public static final String GLOBAL = "global";
 

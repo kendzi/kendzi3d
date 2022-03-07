@@ -15,11 +15,6 @@
       <version>1.0.206-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
-    </dependency>
-    <dependency>
       <groupId>kendzi.math</groupId>
       <artifactId>kendzi-math-geometry</artifactId>
       <version>${kendzi.math.version}</version>
@@ -32,6 +27,11 @@
     <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opengl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.inject</groupId>

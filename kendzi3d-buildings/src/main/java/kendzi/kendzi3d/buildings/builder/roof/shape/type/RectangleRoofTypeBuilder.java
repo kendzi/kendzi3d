@@ -28,14 +28,15 @@ import kendzi.math.geometry.point.TransformationMatrix2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.rectangle.RectanglePointVector2d;
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class RectangleRoofTypeBuilder extends AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RectangleRoofTypeBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(RectangleRoofTypeBuilder.class);
 
     @Override
     public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,

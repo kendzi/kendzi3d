@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Point2d;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Based on:
@@ -17,7 +19,7 @@ import org.apache.log4j.Logger;
 public class Triangulate {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Triangulate.class);
+    private static final Logger log = LoggerFactory.getLogger(Triangulate.class);
 
     public static final float EPSILON = 0.0000000001f;
 

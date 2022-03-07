@@ -28,8 +28,9 @@ import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerType;
 import kendzi.math.geometry.point.TransformationMatrix3d;
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Dormer type B.
@@ -40,7 +41,7 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofDormerTypeB.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofDormerTypeB.class);
 
     @Override
     public DormerType getType() {

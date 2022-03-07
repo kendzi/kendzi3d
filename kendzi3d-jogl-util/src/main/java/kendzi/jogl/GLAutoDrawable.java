@@ -7,20 +7,21 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 import kendzi.jogl.util.GLEventListener;
-import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Adapt GLEventListener from JOGL
  */
 public class GLAutoDrawable extends AWTGLCanvas implements ComponentListener {
-    private static final Logger log = Logger.getLogger(GLAutoDrawable.class);
+    private static final Logger log = LoggerFactory.getLogger(GLAutoDrawable.class);
 
     protected Collection<GLEventListener> listeners = new LinkedHashSet<>();
 
@@ -115,8 +116,7 @@ public class GLAutoDrawable extends AWTGLCanvas implements ComponentListener {
             try {
                 callable.accept(listener);
             } catch (Exception exception) {
-                log.error(exception);
-                throw exception;
+                log.error("", exception);
             }
         }
     }

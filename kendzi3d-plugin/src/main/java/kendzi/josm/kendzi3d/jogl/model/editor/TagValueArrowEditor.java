@@ -15,7 +15,8 @@ import java.util.Locale;
 import kendzi.josm.kendzi3d.jogl.model.building.Building;
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
 import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -29,7 +30,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     /** Log. */
-    private static final Logger LOG = Logger.getLogger(Building.class);
+    private static final Logger LOG = LogManager.getLogger(Building.class);
 
     private PrimitiveId primitiveId;
 

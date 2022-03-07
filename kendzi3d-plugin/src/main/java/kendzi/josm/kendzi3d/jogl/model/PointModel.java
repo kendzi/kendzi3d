@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -42,7 +42,8 @@ import kendzi.kendzi3d.expressions.functions.Vector3dZFunction;
 import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -55,7 +56,7 @@ import org.openstreetmap.josm.data.osm.Node;
 public class PointModel extends AbstractPointModel implements DLODSuport {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(PointModel.class);
+    private static final Logger log = LogManager.getLogger(PointModel.class);
 
     public static boolean debug;
 

@@ -6,7 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
 public class UrlUtil {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(UrlUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(UrlUtil.class);
 
     /**
      * Test if file from url exist.
@@ -50,7 +51,7 @@ public class UrlUtil {
             URI paretnt = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             return paretnt.toURL();
         } catch (URISyntaxException | MalformedURLException e) {
-            log.error(e, e);
+            log.error(url.toExternalForm(), e);
         }
         return null;
     }

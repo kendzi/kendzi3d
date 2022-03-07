@@ -12,12 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CameraMoveListener implements KeyListener, MouseMotionListener, MouseListener {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(CameraMoveListener.class);
+    private static final Logger log = LoggerFactory.getLogger(CameraMoveListener.class);
 
     private final SimpleMoveAnimator kinematicsSimpleAnimator;
 

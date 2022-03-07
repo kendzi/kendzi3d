@@ -22,7 +22,8 @@ import javax.xml.bind.JAXBException;
 
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService;
 import kendzi.josm.kendzi3d.service.WikiTextureLoaderService.LoadRet;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 /**
@@ -34,7 +35,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class WikiTextureLoaderAction extends JosmAction {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(WikiTextureLoaderAction.class);
+    private static final Logger log = LogManager.getLogger(WikiTextureLoaderAction.class);
 
     /**
      *

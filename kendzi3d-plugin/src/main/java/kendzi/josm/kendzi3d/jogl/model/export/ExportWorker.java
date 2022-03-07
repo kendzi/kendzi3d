@@ -11,12 +11,13 @@ import kendzi.jogl.texture.TextureCacheService;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.ExportOutput;
 import kendzi.kendzi3d.collada.ColladaExport;
 import kendzi.kendzi3d.collada.TextExport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ExportWorker extends Thread {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ExportWorker.class);
+    private static final Logger log = LogManager.getLogger(ExportWorker.class);
 
     private final List<ExportItem> items;
 

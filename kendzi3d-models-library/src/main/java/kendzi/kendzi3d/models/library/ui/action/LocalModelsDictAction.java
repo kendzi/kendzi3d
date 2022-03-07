@@ -12,12 +12,13 @@ import javax.swing.WindowConstants;
 
 import kendzi.kendzi3d.models.library.ui.LocalModelsDict;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalModelsDictAction extends LocalModelsDict {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(LocalModelsDictAction.class);
+    private static final Logger log = LoggerFactory.getLogger(LocalModelsDictAction.class);
 
     private ResourceService urlReciverService;
 

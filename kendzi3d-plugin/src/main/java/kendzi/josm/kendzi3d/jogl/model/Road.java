@@ -30,7 +30,8 @@ import kendzi.josm.kendzi3d.jogl.model.tmp.AbstractWayModel;
 import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -46,7 +47,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public class Road extends AbstractWayModel {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Road.class);
+    private static final Logger log = LogManager.getLogger(Road.class);
 
     /**
      * Default width of road.

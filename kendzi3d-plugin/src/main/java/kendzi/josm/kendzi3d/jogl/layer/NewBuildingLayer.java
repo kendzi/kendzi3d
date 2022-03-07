@@ -14,7 +14,8 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -30,7 +31,7 @@ import org.openstreetmap.josm.data.osm.search.SearchParseError;
 public class NewBuildingLayer implements Layer {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(NewBuildingLayer.class);
+    private static final Logger log = LogManager.getLogger(NewBuildingLayer.class);
 
     /**
      * Model renderer.

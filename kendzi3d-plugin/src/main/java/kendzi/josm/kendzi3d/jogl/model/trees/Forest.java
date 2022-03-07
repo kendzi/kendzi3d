@@ -36,7 +36,8 @@ import kendzi.kendzi3d.world.MultiPointWorldObject;
 import kendzi.math.geometry.Triangulate;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -48,7 +49,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public class Forest extends AbstractWayModel implements MultiPointWorldObject {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Forest.class);
+    private static final Logger log = LogManager.getLogger(Forest.class);
 
     ModelCacheService modelCacheService;
     MetadataCacheService metadataCacheService;

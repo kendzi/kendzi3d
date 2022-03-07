@@ -18,7 +18,8 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.BuildableWorldObject;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -37,7 +38,7 @@ import org.openstreetmap.josm.gui.MainApplication;
  */
 public class EditorObjectsProducer implements Runnable, DataEventListener {
 
-    private static final Logger LOG = Logger.getLogger(EditorObjectsProducer.class);
+    private static final Logger LOG = LogManager.getLogger(EditorObjectsProducer.class);
 
     private final DataEventQueue eventQueue;
 

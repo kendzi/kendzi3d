@@ -6,7 +6,8 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Roof type 2.9.
@@ -18,7 +19,7 @@ public class RoofType2v9 extends RoofType2v8 {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType2v9.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofType2v9.class);
 
     @Override
     protected double getMiddleLineHeight(Double h1, Double h2) {

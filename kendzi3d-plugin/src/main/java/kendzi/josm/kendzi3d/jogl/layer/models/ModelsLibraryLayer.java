@@ -25,7 +25,8 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -42,7 +43,7 @@ import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelsLibraryLayer.class);
+    private static final Logger log = LogManager.getLogger(ModelsLibraryLayer.class);
 
     /**
      * List of model definitions.

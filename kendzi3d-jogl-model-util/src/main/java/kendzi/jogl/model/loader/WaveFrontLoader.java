@@ -30,7 +30,8 @@ import kendzi.jogl.model.geometry.material.AmbientDiffuseComponent;
 import kendzi.jogl.model.geometry.material.Material;
 import kendzi.jogl.model.geometry.material.OtherComponent;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -40,7 +41,7 @@ import org.apache.log4j.Logger;
 public class WaveFrontLoader implements iLoader {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(WaveFrontLoader.class);
+    private static final Logger log = LoggerFactory.getLogger(WaveFrontLoader.class);
 
     // = ApplicationContextUtil.getFileUrlReciverService();
     ResourceService urlReciverService;
@@ -261,7 +262,7 @@ public class WaveFrontLoader implements iLoader {
         }
 
         Bounds bounds = this.boundsFactory.toBounds();
-        log.info(bounds);
+        log.info(bounds.toString());
         this.model.setBounds(bounds);
         this.model.setCenterPoint(bounds.center);
 

@@ -10,8 +10,9 @@
 package kendzi.josm.kendzi3d.util;
 
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Util for josm model.
@@ -22,7 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 public final class ModelUtil {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(ModelUtil.class);
 
     /**
      * It is Util no public constructor is allowed.

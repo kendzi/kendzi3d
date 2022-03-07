@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.model;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +38,8 @@ import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -54,7 +55,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(BarrierFenceRelation.class);
+    private static final Logger log = LogManager.getLogger(BarrierFenceRelation.class);
 
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 

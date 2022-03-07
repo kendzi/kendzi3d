@@ -8,11 +8,12 @@ import kendzi.jogl.glu.GLException;
 import kendzi.jogl.util.texture.Texture;
 import kendzi.jogl.util.texture.TextureIO;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileTextureBuilder implements TextureBuilder {
     /** Log. */
-    private static final Logger log = Logger.getLogger(FileTextureBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(FileTextureBuilder.class);
 
     /**
      * File url reciver service.

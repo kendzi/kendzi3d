@@ -6,7 +6,7 @@
 
 package kendzi.josm.kendzi3d.action;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import com.google.inject.Inject;
 
@@ -25,7 +25,6 @@ import kendzi.josm.kendzi3d.jogl.model.export.ExportWorker;
 import kendzi.josm.kendzi3d.jogl.model.export.ui.action.ExportUiAction;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.world.WorldObject;
-import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 
 /**
@@ -35,10 +34,6 @@ import org.openstreetmap.josm.actions.JosmAction;
  *
  */
 public class ExportAction extends JosmAction {
-
-    /** Log. */
-    private static final Logger log = Logger.getLogger(ExportAction.class);
-
     /**
      *
      */

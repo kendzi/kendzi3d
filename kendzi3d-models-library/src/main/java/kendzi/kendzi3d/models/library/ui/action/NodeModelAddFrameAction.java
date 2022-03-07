@@ -8,13 +8,14 @@ import kendzi.josm.kendzi3d.ui.validate.ValidateUtil;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.NodeModelAddFrame;
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NodeModelAddFrameAction extends NodeModelAddFrame {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(NodeModelAddFrameAction.class);
+    private static final Logger log = LoggerFactory.getLogger(NodeModelAddFrameAction.class);
 
     /**
      * Point model service.

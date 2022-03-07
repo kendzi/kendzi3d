@@ -14,7 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import kendzi.kendzi3d.resource.inter.ResourceService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Receive files stored locally in resources and plugin directory.
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
 public final class FileUrlReciverService implements ResourceService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(FileUrlReciverService.class);
+    private static final Logger log = LoggerFactory.getLogger(FileUrlReciverService.class);
 
     /**
      * Plugin directory.

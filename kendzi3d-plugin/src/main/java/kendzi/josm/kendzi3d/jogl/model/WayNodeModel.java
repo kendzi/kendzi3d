@@ -42,7 +42,8 @@ import kendzi.kendzi3d.expressions.functions.WayNodeDirectionFunction;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
@@ -56,7 +57,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public class WayNodeModel extends AbstractWayModel implements DLODSuport {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(WayNodeModel.class);
+    private static final Logger log = LogManager.getLogger(WayNodeModel.class);
 
     /**
      * Model renderer.

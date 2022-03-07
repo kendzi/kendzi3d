@@ -39,8 +39,9 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2dUtil;
 import kendzi.math.geometry.skeleton.EdgeOutput;
 import kendzi.math.geometry.skeleton.Skeleton;
 import kendzi.math.geometry.skeleton.SkeletonOutput;
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Roof type 9.0.
@@ -52,7 +53,7 @@ import org.ejml.simple.SimpleMatrix;
 public class RoofType9v0 extends AbstractRoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofType9v0.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofType9v0.class);
 
     @Override
     public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,

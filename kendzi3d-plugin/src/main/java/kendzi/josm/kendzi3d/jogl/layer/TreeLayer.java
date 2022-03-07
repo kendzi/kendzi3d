@@ -16,7 +16,8 @@ import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -33,7 +34,7 @@ public class TreeLayer implements Layer {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TreeLayer.class);
+    private static final Logger log = LogManager.getLogger(TreeLayer.class);
 
     /**
      * Model renderer.

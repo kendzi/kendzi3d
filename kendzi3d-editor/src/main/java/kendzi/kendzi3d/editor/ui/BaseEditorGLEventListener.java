@@ -15,19 +15,19 @@ import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.EditorCore;
 import kendzi.kendzi3d.editor.drawer.SelectionDrawer;
 import kendzi.kendzi3d.editor.drawer.SquareIcon;
-import kendzi.kendzi3d.editor.example.objects.Box;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.ViewportProvider;
 import kendzi.kendzi3d.editor.ui.event.CloseWindowListener;
-import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseEditorGLEventListener implements GLEventListener, ViewportProvider, CloseWindowEventSource {
 
-    private static final Logger LOG = Logger.getLogger(Box.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseEditorGLEventListener.class);
 
     @Inject
     private Viewport viewport;

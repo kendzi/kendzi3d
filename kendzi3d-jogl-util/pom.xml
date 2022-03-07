@@ -9,11 +9,6 @@
       <version>${kendzi.math.version}</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opengl</artifactId>
     </dependency>
@@ -34,18 +29,9 @@
       <artifactId>lwjgl3-awt</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jogamp.gluegen</groupId>
-      <artifactId>gluegen-rt-main</artifactId>
-      <version>2.3.2</version>
-      <!-- provided by JOGL plugin -->
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jogamp.jogl</groupId>
-      <artifactId>jogl-all-noawt</artifactId>
-      <version>2.3.2</version>
-      <!-- provided by JOGL plugin -->
-      <scope>provided</scope>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
   <parent>

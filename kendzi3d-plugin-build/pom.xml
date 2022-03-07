@@ -17,17 +17,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>kendzi.kendzi3d</groupId>
-      <artifactId>josm-jogl</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-resources</artifactId>
       <scope>provided</scope>
@@ -80,7 +69,7 @@
               <Plugin-Link>https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
               <Plugin-Mainversion>14258</Plugin-Mainversion>
               <Plugin-Version>${project.version}</Plugin-Version>
-              <Plugin-Requires>log4j;lwjgl;jaxb;jogl;kendzi3d-resources</Plugin-Requires>
+              <Plugin-Requires>log4j;lwjgl;jaxb;kendzi3d-resources</Plugin-Requires>
               <url>${project.url}</url>
               <Class-Path>./kendzi3d-resources.jar</Class-Path>
             </manifestEntries>

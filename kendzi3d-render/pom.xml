@@ -4,8 +4,7 @@
   <artifactId>kendzi3d-render</artifactId>
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
   <properties>
-    <java.version>1.6</java.version>
-    <!--   
+    <!--
 		3.1.0.RELEASE
 		-->
     <spring.version>3.2.0.M2</spring.version>
@@ -19,9 +18,9 @@
       <version>0.8.3</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>
