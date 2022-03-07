@@ -37,14 +37,13 @@
 
 package kendzi.jogl.util.texture;
 
-import com.jogamp.nativewindow.NativeWindowFactory;
-import com.jogamp.opengl.util.texture.spi.DDSImage;
-
 import java.nio.ByteBuffer;
-import java.util.Objects;
+import java.util.Optional;
 
 import kendzi.jogl.glu.GLException;
 import kendzi.jogl.glu.GLU;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureCompressionS3TC;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -604,7 +603,11 @@ public class Texture {
                         GL13.glCompressedTexImage2D(texTarget, 0, data.getInternalFormat(), texWidth, texHeight, data.getBorder(),
                                 data.getBuffer());
                     } else {
-                        final ByteBuffer buf = DDSImage.allocateBlankBuffer(texWidth, texHeight, data.getInternalFormat());
+                        final ByteBuffer buf = BufferUtils.createByteBuffer(texWidth * texHeight
+                                / (data.getInternalFormat() == EXTTextureCompressionS3TC.GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+                                        || data.getInternalFormat() == EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+                                                ? 2
+                                                : 1));
                         GL13.glCompressedTexImage2D(texTarget, 0, data.getInternalFormat(), texWidth, texHeight, data.getBorder(),
                                 buf);
                         updateSubImageImpl(data, texTarget, 0, 0, 0, 0, 0, data.getWidth(), data.getHeight());
@@ -907,7 +910,7 @@ public class Texture {
         // Prefer GL_ARB_texture_rectangle on ATI hardware on Mac OS X
         // due to software fallbacks
 
-        if (Objects.equals(NativeWindowFactory.TYPE_MACOSX, NativeWindowFactory.getNativeWindowType(false))) {
+        if (Optional.ofNullable(System.getProperty("os.name")).filter(os -> os.contains("mac")).isPresent()) {
             final String vendor = GL11.glGetString(GL11.GL_VENDOR);
             if (vendor != null && vendor.startsWith("ATI")) {
                 return true;

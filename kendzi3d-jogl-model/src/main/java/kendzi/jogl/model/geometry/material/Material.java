@@ -51,7 +51,7 @@ public class Material {
      *            texture key
      */
     public void setTexture0(String key) {
-        if (this.texturesComponent.size() == 0) {
+        if (this.texturesComponent.isEmpty()) {
             this.texturesComponent.add(key);
         } else {
             this.texturesComponent.set(0, key);
@@ -64,7 +64,7 @@ public class Material {
      * @return first texture
      */
     public String getTexture0() {
-        if (this.texturesComponent.size() == 0) {
+        if (this.texturesComponent.isEmpty()) {
             return null;
         }
         return this.texturesComponent.get(0);
