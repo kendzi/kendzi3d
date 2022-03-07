@@ -114,14 +114,16 @@
         <configuration>
           <artifactItems>
             <artifactItem>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>${project.artifactId}</artifactId>
-              <version>${project.version}</version>
-              <type>${project.packaging}</type>
-              <outputDirectory>${project.basedir}/../../josm/JOSM/plugins</outputDirectory>
-              <destFileName>kendzi3d.jar</destFileName>
+              <groupId>${groupId}</groupId>
+              <artifactId>${artifactId}</artifactId>
+              <version>${version}</version>
+              <classifier>dep</classifier>
+              <type>jar</type>
+              <destFileName>kendzi3d-dev.jar</destFileName>
+              <overWrite>true</overWrite>
             </artifactItem>
           </artifactItems>
+          <outputDirectory>${user.home}/Library/JOSM/plugins</outputDirectory>
         </configuration>
       </plugin>
     </plugins>
