@@ -56,8 +56,8 @@ import kendzi.jogl.util.GLPixelBuffer;
 @Deprecated
 public class TextureData {
     /** ColorSpace of pixel data. */
-    public static enum ColorSpace {
-    };
+    public enum ColorSpace {
+    }
 
     protected int width;
     protected int height;
@@ -420,11 +420,11 @@ public class TextureData {
      * native resources (memory-mapped files, etc.) associated with a particular
      * TextureData.
      */
-    public static interface Flusher {
+    public interface Flusher {
         /**
          * Flushes any native resources associated with this TextureData.
          */
-        public void flush();
+        void flush();
     }
 
     @Override

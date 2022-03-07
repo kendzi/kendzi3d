@@ -121,7 +121,7 @@ public class TextureIO {
     // extensions so you know the texture target is GL_TEXTURE_2D; this
     // is useful for shader writers (thanks to Chris Campbell for this
     // observation)
-    private static boolean texRectEnabled = true;
+    private static final boolean texRectEnabled = true;
 
     // ----------------------------------------------------------------------
     // methods that *do not* require a current context
@@ -270,8 +270,8 @@ public class TextureIO {
     // Internals only below this point
     //
 
-    private static List<TextureProvider> textureProviders = new ArrayList<>();
-    private static Map<ImageType, TextureProvider> imageType2TextureProvider = new HashMap<>();
+    private static final List<TextureProvider> textureProviders = new ArrayList<>();
+    private static final Map<ImageType, TextureProvider> imageType2TextureProvider = new HashMap<>();
 
     static {
         addTextureProvider(new IIOTextureProvider());

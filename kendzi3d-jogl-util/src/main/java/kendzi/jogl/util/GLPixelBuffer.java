@@ -27,8 +27,6 @@
  */
 package kendzi.jogl.util;
 
-import com.jogamp.nativewindow.util.PixelFormat;
-
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
@@ -368,7 +366,7 @@ public class GLPixelBuffer {
     /** Buffer element size in bytes. */
     public final int bufferElemSize;
 
-    private boolean disposed = false;
+    private final boolean disposed = false;
 
     public StringBuilder toString(StringBuilder sb) {
         if (null == sb) {

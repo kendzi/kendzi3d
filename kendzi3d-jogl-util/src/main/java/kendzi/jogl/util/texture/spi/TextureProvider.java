@@ -62,7 +62,7 @@ public interface TextureProvider {
      * Use case: Mapping of {@link ImageType}s to {@link TextureProvider}.
      * </p>
      */
-    public static interface SupportsImageTypes {
+    interface SupportsImageTypes {
         /** Returns the supported {@link ImageType}s. */
         ImageType[] getImageTypes();
     }
@@ -93,7 +93,7 @@ public interface TextureProvider {
      * @throws IOException if an error occurred while reading the file @deprecated
      * Use {@link #newTextureData(InputStream, int, int, boolean, String)
      */
-    public TextureData newTextureData(File file, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
+    TextureData newTextureData(File file, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
             throws IOException;
 
     /**
@@ -127,7 +127,7 @@ public interface TextureProvider {
      * @throws IOException
      *             if an error occurred while reading the stream
      */
-    public TextureData newTextureData(InputStream stream, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
+    TextureData newTextureData(InputStream stream, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
             throws IOException;
 
     /**
@@ -156,6 +156,6 @@ public interface TextureProvider {
      * @throws IOException if an error occurred while reading the URL @deprecated
      * Use {@link #newTextureData(InputStream, int, int, boolean, String)
      */
-    public TextureData newTextureData(URL url, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
+    TextureData newTextureData(URL url, int internalFormat, int pixelFormat, boolean mipmap, String fileSuffix)
             throws IOException;
 }

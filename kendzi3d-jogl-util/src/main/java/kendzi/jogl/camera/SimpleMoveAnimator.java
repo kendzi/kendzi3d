@@ -465,7 +465,7 @@ public class SimpleMoveAnimator implements Camera {
         for (Speeds s : Speeds.values()) {
             SpeedData speedData = speeds.get(s);
 
-            speedsStr.append("").append(s).append(", active: ").append(speedData.active).append(", last: ").append(speedData.last)
+            speedsStr.append(s).append(", active: ").append(speedData.active).append(", last: ").append(speedData.last)
                     .append(", start: ").append(speedData.start).append("\n");
 
         }

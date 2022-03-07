@@ -82,7 +82,7 @@ public class TextureRenderer {
 
     // Whether smoothing is enabled for the OpenGL texture (switching
     // between GL_LINEAR and GL_NEAREST filtering)
-    private boolean smoothing = true;
+    private final boolean smoothing = true;
     private boolean smoothingChanged;
 
     // The backing store itself
@@ -94,10 +94,10 @@ public class TextureRenderer {
     private Rectangle dirtyRegion;
 
     // Current color
-    private float r = 1.0f;
-    private float g = 1.0f;
-    private float b = 1.0f;
-    private float a = 1.0f;
+    private final float r = 1.0f;
+    private final float g = 1.0f;
+    private final float b = 1.0f;
+    private final float a = 1.0f;
 
     /**
      * Creates a new renderer with backing store of the specified width and height.

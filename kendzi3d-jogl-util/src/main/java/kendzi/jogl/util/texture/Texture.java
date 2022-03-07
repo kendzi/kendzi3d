@@ -912,9 +912,7 @@ public class Texture {
 
         if (Optional.ofNullable(System.getProperty("os.name")).filter(os -> os.contains("mac")).isPresent()) {
             final String vendor = GL11.glGetString(GL11.GL_VENDOR);
-            if (vendor != null && vendor.startsWith("ATI")) {
-                return true;
-            }
+            return vendor != null && vendor.startsWith("ATI");
         }
 
         return false;

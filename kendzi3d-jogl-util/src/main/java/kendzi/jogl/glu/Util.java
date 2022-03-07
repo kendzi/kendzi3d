@@ -52,7 +52,7 @@ public class Util {
     /**
      * temp IntBuffer of one for getting an int from some GL functions
      */
-    private static IntBuffer scratch = BufferUtils.createIntBuffer(16);
+    private static final IntBuffer scratch = BufferUtils.createIntBuffer(16);
 
     /**
      * Return ceiling of integer division
