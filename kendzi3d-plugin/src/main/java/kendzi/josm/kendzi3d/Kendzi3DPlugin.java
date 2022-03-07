@@ -21,7 +21,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import kendzi.josm.jogl.JoglPlugin;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
@@ -45,11 +44,12 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class Kendzi3DPlugin extends NativeLibPlugin {
+public class Kendzi3DPlugin extends Plugin {
 
     /**
      * Menu in JOSM.
@@ -69,17 +69,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      */
     public Kendzi3DPlugin(PluginInformation pInfo) {
         super(pInfo);
-
-        ExceptionHandler.registerExceptionHandler();
-
-        try {
-
-            JoglPlugin.addJoglToClassPath();
-
-            loadLibrary();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDirs().getUserDataDirectory(false).getPath()));
 
