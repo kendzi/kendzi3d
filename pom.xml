@@ -132,17 +132,6 @@
       </snapshots>
       <url>https://josm.openstreetmap.de/nexus/content/repositories/public/</url>
     </repository>
-    <repository>
-      <id>repo_local</id>
-      <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <url>file://${project.basedir}/repo</url>
-    </repository>
   </repositories>
   <build>
     <extensions>
