@@ -34,6 +34,11 @@
       <artifactId>vecmath</artifactId>
       <version>${vecmath.version}</version>
     </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>${jaxb.version}</version>
+    </dependency>
   </dependencies>
   <parent>
     <groupId>kendzi.kendzi3d</groupId>
