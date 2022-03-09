@@ -81,8 +81,8 @@ public class GLAutoDrawable extends AWTGLCanvas implements ComponentListener {
     public void disposeCanvas() {
         this.componentHidden(new ComponentEvent(this, ComponentEvent.COMPONENT_HIDDEN));
         this.removeComponentListener(this);
+        this.runCommand(GLEventListener::dispose);
         super.disposeCanvas();
-        this.runInContext(() -> this.runCommand(GLEventListener::dispose));
     }
 
     @Override
