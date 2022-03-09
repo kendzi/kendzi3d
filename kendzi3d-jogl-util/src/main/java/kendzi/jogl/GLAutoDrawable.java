@@ -68,7 +68,7 @@ public class GLAutoDrawable extends AWTGLCanvas implements ComponentListener {
         // Ensure that the viewport is initialized (requires GL.createCapabilities to
         // have been called)
         this.addComponentListener(this);
-        this.componentResized(new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED));
+        SwingUtilities.invokeLater(() -> this.componentResized(new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED)));
     }
 
     @Override
