@@ -5,6 +5,14 @@
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
   <dependencies>
     <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>kendzi</groupId>
       <artifactId>kendzi-util</artifactId>
       <version>1.0.206-SNAPSHOT</version>
@@ -20,19 +28,9 @@
       <version>1.0.206-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>${inject.version}</version>
-    </dependency>
-    <dependency>
       <groupId>java3d</groupId>
       <artifactId>vecmath</artifactId>
       <version>${vecmath.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>${jaxb.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

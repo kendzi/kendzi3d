@@ -4,14 +4,6 @@
   <artifactId>kendzi3d-expressions</artifactId>
   <packaging>pom</packaging>
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
   <modules>
     <module>../kendzi3d-expressions-javacc</module>
     <module>../kendzi3d-expressions-josm</module>

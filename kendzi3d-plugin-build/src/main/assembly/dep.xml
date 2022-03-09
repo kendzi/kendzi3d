@@ -21,13 +21,41 @@
       <unpack>true</unpack>
       <scope>runtime</scope>
       <excludes>
-        <exclude>commons-lang:commons-lang</exclude>
-        <exclude>commons-logging:commons-logging</exclude>
-        <exclude>commons-cli:commons-cli</exclude>
+        <!-- Unnecessary -->
+        <exclude>com.google.code.findbugs:jsr305</exclude>
+        <exclude>com.google.errorprone:error_prone_annotations</exclude>
+        <!--<exclude>com.google.guava:failureaccess</exclude> Needed by guava-->
+        <!--<exclude>com.google.guava:guava</exclude> - Needed by inject-->
+        <exclude>com.google.guava:listenablefuture</exclude>
+        <exclude>com.google.j2objc:j2objc-annotations</exclude>
+        <!-- From jaxb plugin -->
+        <exclude>jakarta.activation:jakarta.activation-api</exclude>
+        <!--<exclude>jakarta.inject:jakarta.inject-api</exclude> - Not currently included in base plugin -->
+        <exclude>jakarta.xml.bind:jakarta.xml.bind-api</exclude>
         <exclude>javax.xml.bind:jaxb-api</exclude>
-        <exclude>com.sun.xml.bind:jaxb-core</exclude>
-        <exclude>com.sun.xml.bind:jaxb-impl</exclude>
-        <exclude>javax.activation:activation</exclude>
+        <exclude>javax.inject:javax.inject</exclude>
+        <!-- Unnecessary -->
+        <exclude>org.checkerframework:checker-qual</exclude>
+        <!-- from EJML plugin -->
+        <exclude>org.ejml:ejml-cdense</exclude>
+        <exclude>org.ejml:ejml-core</exclude>
+        <exclude>org.ejml:ejml-ddense</exclude>
+        <exclude>org.ejml:ejml-dsparse</exclude>
+        <exclude>org.ejml:ejml-fdense</exclude>
+        <exclude>org.ejml:ejml-fsparse</exclude>
+        <exclude>org.ejml:ejml-simple</exclude>
+        <exclude>org.ejml:ejml-zdense</exclude>
+        <!-- From LWJGL plugin -->
+        <exclude>org.joml:joml</exclude>
+        <exclude>org.lwjgl:lwjgl-jawt</exclude>
+        <exclude>org.lwjgl:lwjgl-opengl</exclude>
+        <exclude>org.lwjgl:lwjgl</exclude>
+        <exclude>org.lwjglx:lwjgl3-awt</exclude>
+        <!-- Unnecessary -->
+        <exclude>org.slf4j:slf4j-simple</exclude>
+        <exclude>org.apache.logging.log4j:log4j-core</exclude>
+        <exclude>org.apache.logging.log4j:log4j-api</exclude>
+        <exclude>org.apache.logging.log4j:log4j-slf4j-impl</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>

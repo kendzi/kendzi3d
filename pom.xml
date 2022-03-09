@@ -40,33 +40,61 @@
         <groupId>org.openstreetmap.josm</groupId>
         <artifactId>josm</artifactId>
         <version>SNAPSHOT</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openstreetmap.josm.plugins</groupId>
+        <artifactId>ejml</artifactId>
+        <version>SNAPSHOT</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openstreetmap.josm.plugins</groupId>
+        <artifactId>log4j</artifactId>
+        <version>SNAPSHOT</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.openstreetmap.josm.plugins</groupId>
         <artifactId>lwjgl</artifactId>
         <version>SNAPSHOT</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>kendzi.kendzi3d</groupId>
         <artifactId>kendzi3d-resources</artifactId>
         <version>${kendzi3d-resources.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>kendzi.kendzi3d</groupId>
-        <artifactId>josm-jogl</artifactId>
-        <version>1.2.4-SNAPSHOT</version>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>1.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
+        <version>1.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ejml</groupId>
+        <artifactId>ejml-simple</artifactId>
+        <version>${ejml.version}</version>
       </dependency>
       <dependency>
         <groupId>org.lwjgl</groupId>
         <artifactId>lwjgl-opengl</artifactId>
         <version>${lwjgl.version}</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.lwjglx</groupId>
         <artifactId>lwjgl3-awt</artifactId>
         <version>${lwjgl3-awt.version}</version>
-        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

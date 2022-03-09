@@ -10,7 +10,15 @@
     </dependency>
     <dependency>
       <groupId>org.openstreetmap.josm.plugins</groupId>
+      <artifactId>ejml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openstreetmap.josm.plugins</groupId>
       <artifactId>lwjgl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openstreetmap.josm.plugins</groupId>
+      <artifactId>log4j</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -18,13 +26,8 @@
       <version>${guice.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>${inject.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>kendzi.kendzi3d</groupId>
-      <artifactId>josm-jogl</artifactId>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
     </dependency>
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>

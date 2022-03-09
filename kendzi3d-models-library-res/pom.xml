@@ -3,6 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kendzi3d-models-library-res</artifactId>
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+  </dependencies>
   <parent>
     <groupId>kendzi.kendzi3d</groupId>
     <artifactId>kendzi3d-parent</artifactId>

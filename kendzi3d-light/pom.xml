@@ -5,6 +5,10 @@
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
   <dependencies>
     <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-jogl-util</artifactId>
       <version>1.0.206-SNAPSHOT</version>
@@ -29,6 +33,10 @@
       <artifactId>lwjgl-opengl</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.openstreetmap.josm</groupId>
+      <artifactId>josm</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
@@ -37,11 +45,6 @@
       <groupId>org.ejml</groupId>
       <artifactId>ejml-simple</artifactId>
       <version>${ejml.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>${inject.version}</version>
     </dependency>
   </dependencies>
   <parent>

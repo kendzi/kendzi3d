@@ -4,6 +4,10 @@
   <artifactId>kendzi3d-editor</artifactId>
   <dependencies>
     <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opengl</artifactId>
     </dependency>
@@ -35,11 +39,6 @@
       <groupId>kendzi.kendzi3d</groupId>
       <artifactId>kendzi3d-jogl-model-render</artifactId>
       <version>1.0.206-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>${inject.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
