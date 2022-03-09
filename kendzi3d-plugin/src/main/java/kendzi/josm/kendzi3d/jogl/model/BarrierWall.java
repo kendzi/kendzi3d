@@ -10,9 +10,6 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
@@ -34,6 +31,8 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -241,7 +240,7 @@ public class BarrierWall extends AbstractWayModel {
         }
 
         return Collections
-                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -250,7 +249,7 @@ public class BarrierWall extends AbstractWayModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

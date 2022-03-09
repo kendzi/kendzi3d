@@ -3,20 +3,19 @@ package kendzi.kendzi3d.buildings.model.roof.lines;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.model.roof.RoofModel;
 import kendzi.math.geometry.line.LineSegment2d;
+import org.joml.Vector2dc;
 
 public class RoofLinesModel implements RoofModel {
 
-    private Map<Point2d, Double> heights;
+    private Map<Vector2dc, Double> heights;
 
     private List<LineSegment2d> innerSegments;
 
     private double roofHeight;
 
-    public RoofLinesModel(Map<Point2d, Double> heights, List<LineSegment2d> innerSegments, double roofHeight) {
+    public RoofLinesModel(Map<Vector2dc, Double> heights, List<LineSegment2d> innerSegments, double roofHeight) {
         super();
         this.heights = heights;
         this.innerSegments = innerSegments;
@@ -26,7 +25,7 @@ public class RoofLinesModel implements RoofModel {
     /**
      * @return the heights
      */
-    public Map<Point2d, Double> getHeights() {
+    public Map<Vector2dc, Double> getHeights() {
         return this.heights;
     }
 
@@ -34,7 +33,7 @@ public class RoofLinesModel implements RoofModel {
      * @param heights
      *            the heights to set
      */
-    public void setHeights(Map<Point2d, Double> heights) {
+    public void setHeights(Map<Vector2dc, Double> heights) {
         this.heights = heights;
     }
 

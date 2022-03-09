@@ -6,7 +6,7 @@
 
 package kendzi.jogl.util;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 public class DrawUtil {
@@ -214,82 +214,82 @@ public class DrawUtil {
         GL11.glEnd();
     }
 
-    public static void drawFullBox(Point3d max, Point3d min) {
+    public static void drawFullBox(Vector3dc max, Vector3dc min) {
 
         // right
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glNormal3d(1d, 0, 0);
-        GL11.glVertex3d(max.x, max.y, max.z);
-        GL11.glVertex3d(max.x, min.y, max.z);
-        GL11.glVertex3d(max.x, min.y, min.z);
-        GL11.glVertex3d(max.x, max.y, min.z);
+        GL11.glVertex3d(max.x(), max.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), min.z());
+        GL11.glVertex3d(max.x(), max.y(), min.z());
 
         // back
         GL11.glNormal3d(0, 0, -1d);
-        GL11.glVertex3d(max.x, max.y, min.z);
-        GL11.glVertex3d(max.x, min.y, min.z);
-        GL11.glVertex3d(min.x, min.y, min.z);
-        GL11.glVertex3d(min.x, max.y, min.z);
+        GL11.glVertex3d(max.x(), max.y(), min.z());
+        GL11.glVertex3d(max.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), min.z());
 
         // left
         GL11.glNormal3d(-1d, 0, 0);
-        GL11.glVertex3d(min.x, max.y, min.z);
-        GL11.glVertex3d(min.x, min.y, min.z);
-        GL11.glVertex3d(min.x, min.y, max.z);
-        GL11.glVertex3d(min.x, max.y, max.z);
+        GL11.glVertex3d(min.x(), max.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), max.z());
+        GL11.glVertex3d(min.x(), max.y(), max.z());
 
         // front
         GL11.glNormal3d(0, 0, 1d);
-        GL11.glVertex3d(min.x, max.y, max.z);
-        GL11.glVertex3d(min.x, min.y, max.z);
-        GL11.glVertex3d(max.x, min.y, max.z);
-        GL11.glVertex3d(max.x, max.y, max.z);
+        GL11.glVertex3d(min.x(), max.y(), max.z());
+        GL11.glVertex3d(min.x(), min.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), max.z());
+        GL11.glVertex3d(max.x(), max.y(), max.z());
 
         // top
         GL11.glNormal3d(0, 1d, 0);
-        GL11.glVertex3d(max.x, max.y, max.z);
-        GL11.glVertex3d(max.x, max.y, min.z);
-        GL11.glVertex3d(min.x, max.y, min.z);
-        GL11.glVertex3d(min.x, max.y, max.z);
+        GL11.glVertex3d(max.x(), max.y(), max.z());
+        GL11.glVertex3d(max.x(), max.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), max.z());
 
         // bottom
         GL11.glNormal3d(0, -1d, 0);
-        GL11.glVertex3d(max.x, min.y, max.z);
-        GL11.glVertex3d(max.x, min.y, min.z);
-        GL11.glVertex3d(min.x, min.y, min.z);
-        GL11.glVertex3d(min.x, min.y, max.z);
+        GL11.glVertex3d(max.x(), min.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), max.z());
 
         GL11.glEnd();
     }
 
-    public static void drawBox(Point3d max, Point3d min) {
+    public static void drawBox(Vector3dc max, Vector3dc min) {
 
         GL11.glBegin(GL11.GL_LINES);
 
-        GL11.glVertex3d(max.x, max.y, min.z);
-        GL11.glVertex3d(min.x, max.y, min.z);
+        GL11.glVertex3d(max.x(), max.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), min.z());
 
-        GL11.glVertex3d(max.x, min.y, min.z);
-        GL11.glVertex3d(min.x, min.y, min.z);
+        GL11.glVertex3d(max.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), min.y(), min.z());
 
-        GL11.glVertex3d(max.x, min.y, max.z);
-        GL11.glVertex3d(min.x, min.y, max.z);
+        GL11.glVertex3d(max.x(), min.y(), max.z());
+        GL11.glVertex3d(min.x(), min.y(), max.z());
 
         GL11.glEnd();
 
         GL11.glBegin(GL11.GL_LINE_LOOP);
 
-        GL11.glVertex3d(max.x, max.y, max.z);
-        GL11.glVertex3d(max.x, min.y, max.z);
-        GL11.glVertex3d(max.x, min.y, min.z);
-        GL11.glVertex3d(max.x, max.y, min.z);
-        GL11.glVertex3d(max.x, max.y, max.z);
+        GL11.glVertex3d(max.x(), max.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), max.z());
+        GL11.glVertex3d(max.x(), min.y(), min.z());
+        GL11.glVertex3d(max.x(), max.y(), min.z());
+        GL11.glVertex3d(max.x(), max.y(), max.z());
 
-        GL11.glVertex3d(min.x, max.y, max.z);
-        GL11.glVertex3d(min.x, min.y, max.z);
-        GL11.glVertex3d(min.x, min.y, min.z);
-        GL11.glVertex3d(min.x, max.y, min.z);
-        GL11.glVertex3d(min.x, max.y, max.z);
+        GL11.glVertex3d(min.x(), max.y(), max.z());
+        GL11.glVertex3d(min.x(), min.y(), max.z());
+        GL11.glVertex3d(min.x(), min.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), min.z());
+        GL11.glVertex3d(min.x(), max.y(), max.z());
 
         GL11.glEnd();
     }

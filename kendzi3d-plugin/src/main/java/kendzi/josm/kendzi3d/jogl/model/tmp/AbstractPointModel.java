@@ -9,11 +9,10 @@ package kendzi.josm.kendzi3d.jogl.model.tmp;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-
 import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
@@ -24,9 +23,9 @@ public abstract class AbstractPointModel extends AbstractModel {
     public AbstractPointModel(Node node, Perspective perspective) {
         super(perspective);
 
-        Point2d point = perspective.calcPoint(node);
+        Vector2dc point = perspective.calcPoint(node);
 
-        setPoint(new Point3d(point.x, 0, -point.y));
+        setPoint(new Vector3d(point.x(), 0, -point.y()));
 
         this.node = node;
 

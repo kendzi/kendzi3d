@@ -35,6 +35,10 @@
       <version>1.0.206-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.openstreetmap.josm</groupId>
       <artifactId>josm</artifactId>
     </dependency>

@@ -14,10 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.MaterialFactory;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.MeshFactoryUtil;
@@ -40,6 +36,9 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriUtil;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public class RoofLinesBuildier {
         RoofLinesModel roof = (RoofLinesModel) bp.getRoof();
         PolygonWithHolesList2d polygon = BuildingUtil.buildingPartToPolygonWithHoles(bp);
 
-        final Map<Point2d, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
+        final Map<Vector2dc, Double> heights = normalizeRoofHeights(maxHeight, roof.getRoofHeight(), roof.getHeights());
 
         PolygonList2d outer = polygon.getOuter();
         Collection<PolygonList2d> holes = polygon.getInner();
@@ -90,29 +89,24 @@ public class RoofLinesBuildier {
 
         List<Triangle2d> triangles = Poly2TriUtil.triangulate(outer, holes, segments, Collections.emptyList());
 
-        Vector3d up = new Vector3d(0d, 1d, 0d);
+        Vector3dc up = new Vector3d(0d, 1d, 0d);
         for (Triangle2d triangle : triangles) {
-            Point2d p1 = triangle.getP1();
-            Point2d p2 = triangle.getP2();
-            Point2d p3 = triangle.getP3();
+            Vector2dc p1 = triangle.getP1();
+            Vector2dc p2 = triangle.getP2();
+            Vector2dc p3 = triangle.getP3();
 
             double h1 = getHeight(heights, p1);
             double h2 = getHeight(heights, p2);
             double h3 = getHeight(heights, p3);
 
-            Point3d pp1 = new Point3d(p1.x, h1, -p1.y);
-            Point3d pp2 = new Point3d(p2.x, h2, -p2.y);
-            Point3d pp3 = new Point3d(p3.x, h3, -p3.y);
+            Vector3dc pp1 = new Vector3d(p1.x(), h1, -p1.y());
+            Vector3dc pp2 = new Vector3d(p2.x(), h2, -p2.y());
+            Vector3dc pp3 = new Vector3d(p3.x(), h3, -p3.y());
 
-            Vector3d n = Vector3dUtil.fromTo(pp1, pp2);
-            n.cross(n, Vector3dUtil.fromTo(pp1, pp3));
-            // Vector3d n = new Vector3d(p2.x - p1.x, h2 - h1, -(p2.y - p1.y));
-            // n.cross(n, new Vector3d(p3.x - p1.x, h3 - h1, -(p3.y - p1.y)));
-            n.normalize();
+            Vector3dc n = Vector3dUtil.fromTo(pp1, pp2).cross(Vector3dUtil.fromTo(pp1, pp3)).normalize();
 
-            Vector3d rl = new Vector3d();
+            Vector3dc rl = up.cross(n, new Vector3d());
             // XXX
-            rl.cross(up, n);
 
             MultiPolygonList2d topMP = new MultiPolygonList2d(new PolygonList2d(p1, p2, p3));
             Plane3d planeTop = new Plane3d(pp1, n);
@@ -143,7 +137,7 @@ public class RoofLinesBuildier {
      * @param p1
      * @return
      */
-    public static double getHeight(final Map<Point2d, Double> heights, Point2d p1) {
+    public static double getHeight(final Map<Vector2dc, Double> heights, Vector2dc p1) {
         Double height = heights.get(p1);
         if (height == null) {
             log.error("unmaped height for point: " + p1);
@@ -152,11 +146,12 @@ public class RoofLinesBuildier {
         return height;
     }
 
-    private static Map<Point2d, Double> normalizeRoofHeights(double maxHeight, double roofHeight, Map<Point2d, Double> heights) {
-        Map<Point2d, Double> ret = new HashMap<>();
+    private static Map<Vector2dc, Double> normalizeRoofHeights(double maxHeight, double roofHeight,
+            Map<Vector2dc, Double> heights) {
+        Map<Vector2dc, Double> ret = new HashMap<>();
 
         double cullisHeight = maxHeight - roofHeight;
-        for (Entry<Point2d, Double> entry : heights.entrySet()) {
+        for (Entry<Vector2dc, Double> entry : heights.entrySet()) {
 
             Double value = entry.getValue();
             if (value < 0) {
@@ -188,7 +183,7 @@ public class RoofLinesBuildier {
         return meshRoof;
     }
 
-    private static List<LineSegment3d> createEdgesDebug(Collection<LineSegment2d> segments, Map<Point2d, Double> heights) {
+    private static List<LineSegment3d> createEdgesDebug(Collection<LineSegment2d> segments, Map<Vector2dc, Double> heights) {
 
         List<LineSegment3d> ret = new ArrayList<>();
 
@@ -200,8 +195,8 @@ public class RoofLinesBuildier {
 
             double heightBegin = RoofLinesBuildier.getHeight(heights, line.getBegin());
             double heightEnd = RoofLinesBuildier.getHeight(heights, line.getEnd());
-            Point3d begin = new Point3d(line.getBegin().x, heightBegin, -line.getBegin().y);
-            Point3d end = new Point3d(line.getEnd().x, heightEnd, -line.getEnd().y);
+            Vector3dc begin = new Vector3d(line.getBegin().x(), heightBegin, -line.getBegin().y());
+            Vector3dc end = new Vector3d(line.getEnd().x(), heightEnd, -line.getEnd().y());
 
             ret.add(new LineSegment3d(begin, end));
 

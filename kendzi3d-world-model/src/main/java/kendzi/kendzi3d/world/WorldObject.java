@@ -1,7 +1,7 @@
 package kendzi.kendzi3d.world;
 
-import javax.vecmath.Point3d;
 import kendzi.kendzi3d.editor.EditableObject;
+import org.joml.Vector3dc;
 
 /**
  * Represents object in world.
@@ -16,7 +16,7 @@ public interface WorldObject extends EditableObject {
      *
      * @return the point
      */
-    Point3d getPoint();
+    Vector3dc getPoint();
 
     /**
      * Sets object location in world.
@@ -24,5 +24,5 @@ public interface WorldObject extends EditableObject {
      * @param point
      *            the point to set
      */
-    void setPoint(Point3d point);
+    void setPoint(Vector3dc point);
 }

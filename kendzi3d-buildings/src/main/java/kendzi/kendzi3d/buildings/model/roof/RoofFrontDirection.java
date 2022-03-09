@@ -1,10 +1,11 @@
 package kendzi.kendzi3d.buildings.model.roof;
 
-import javax.vecmath.Vector2d;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
 
 public class RoofFrontDirection {
 
-    private Vector2d direction;
+    private Vector2dc direction;
 
     private boolean soft;
 
@@ -12,7 +13,7 @@ public class RoofFrontDirection {
         this(new Vector2d(), false);
     }
 
-    public RoofFrontDirection(Vector2d direction, boolean soft) {
+    public RoofFrontDirection(Vector2dc direction, boolean soft) {
         super();
         this.direction = direction;
         this.soft = soft;
@@ -21,7 +22,7 @@ public class RoofFrontDirection {
     /**
      * @return the direction
      */
-    public Vector2d getDirection() {
+    public Vector2dc getDirection() {
         return this.direction;
     }
 
@@ -29,7 +30,7 @@ public class RoofFrontDirection {
      * @param direction
      *            the direction to set
      */
-    public void setDirection(Vector2d direction) {
+    public void setDirection(Vector2dc direction) {
         this.direction = direction;
     }
 

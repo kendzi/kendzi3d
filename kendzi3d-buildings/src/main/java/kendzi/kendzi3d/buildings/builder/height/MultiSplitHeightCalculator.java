@@ -3,10 +3,9 @@ package kendzi.kendzi3d.buildings.builder.height;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
+import org.joml.Vector2dc;
 
 /**
  * Calculates segments height of walls for roof splitted multiple times by
@@ -22,18 +21,18 @@ public abstract class MultiSplitHeightCalculator implements HeightCalculator {
 
     }
 
-    public abstract double calcHeight(Point2d point);
+    public abstract double calcHeight(Vector2dc point);
 
     public abstract List<LinePoints2d> getSplittingLines();
 
     @Override
-    public List<SegmentHeight> height(Point2d p1, Point2d p2) {
+    public List<SegmentHeight> height(Vector2dc p1, Vector2dc p2) {
 
-        List<Point2d> chain = new ArrayList<>();
+        List<Vector2dc> chain = new ArrayList<>();
         chain.add(p1);
         chain.add(p2);
 
-        List<Point2d> enrichedChain = chain;
+        List<Vector2dc> enrichedChain = chain;
 
         List<LinePoints2d> splittingLines = getSplittingLines();
         for (LinePoints2d splittingLine : splittingLines) {
@@ -43,8 +42,8 @@ public abstract class MultiSplitHeightCalculator implements HeightCalculator {
         List<SegmentHeight> ret = new ArrayList<>();
 
         for (int i = 0; i < enrichedChain.size() - 1; i++) {
-            Point2d begin = enrichedChain.get(i);
-            Point2d end = enrichedChain.get(i + 1);
+            Vector2dc begin = enrichedChain.get(i);
+            Vector2dc end = enrichedChain.get(i + 1);
 
             ret.add(new SegmentHeight( //
                     begin, calcHeight(begin), //

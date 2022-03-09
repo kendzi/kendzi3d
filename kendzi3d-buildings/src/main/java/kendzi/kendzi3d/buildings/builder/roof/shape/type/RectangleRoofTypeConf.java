@@ -10,12 +10,11 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.Map;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2dc;
 
 /**
  * Rectangle roof builder parameters.
@@ -24,14 +23,14 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
  */
 public class RectangleRoofTypeConf {
     private PolygonWithHolesList2d buildingPolygon;
-    private Point2d[] rectangleContur;
+    private Vector2dc[] rectangleContur;
     private double recHeight;
     private double recWidth;
     private Integer roofTypeParameter;
     private Map<MeasurementKey, Measurement> measurements;
     private RoofMaterials roofTextureData;
 
-    public RectangleRoofTypeConf(PolygonWithHolesList2d transfBuildingPolygon, Point2d[] rectangleContur, double recHeight,
+    public RectangleRoofTypeConf(PolygonWithHolesList2d transfBuildingPolygon, Vector2dc[] rectangleContur, double recHeight,
             double recWidth, Integer roofTypeParameter, Map<MeasurementKey, Measurement> measurements,
             RoofMaterials roofTextureData) {
         super();
@@ -47,7 +46,7 @@ public class RectangleRoofTypeConf {
     /**
      * @return the rectangleContur
      */
-    public Point2d[] getRectangleContur() {
+    public Vector2dc[] getRectangleContur() {
         return rectangleContur;
     }
 
@@ -55,7 +54,7 @@ public class RectangleRoofTypeConf {
      * @param rectangleContur
      *            the rectangleContur to set
      */
-    public void setRectangleContur(Point2d[] rectangleContur) {
+    public void setRectangleContur(Vector2dc[] rectangleContur) {
         this.rectangleContur = rectangleContur;
     }
 

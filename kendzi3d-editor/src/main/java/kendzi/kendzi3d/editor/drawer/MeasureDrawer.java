@@ -1,13 +1,12 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.glu.GLUT;
 import kendzi.jogl.util.DrawUtil;
 import kendzi.math.geometry.point.Vector3dUtil;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -35,45 +34,37 @@ public class MeasureDrawer {
      * @param lineWidth
      *            line width
      */
-    public void drawYMeasureWithArrows(Point3d begin, Point3d end, double value, Viewport viewport, double horizontalDistance,
+    public void drawYMeasureWithArrows(Vector3dc begin, Vector3dc end, double value, Viewport viewport, double horizontalDistance,
             double arrowHeight, double arrowWidth, float lineWidth) {
 
         GL11.glLineWidth(lineWidth);
 
-        Vector3d screenHorizontally = new Vector3d(viewport.getScreenHorizontally());
-        screenHorizontally.normalize();
+        Vector3d screenHorizontally = new Vector3d(viewport.getScreenHorizontally()).normalize();
 
-        Vector3d arrowheadBaseWidthVector = new Vector3d(screenHorizontally);
-        arrowheadBaseWidthVector.scale(arrowWidth);
+        Vector3d arrowheadBaseWidthVector = new Vector3d(screenHorizontally).mul(arrowWidth);
 
-        screenHorizontally.scale(horizontalDistance);
+        screenHorizontally.mul(horizontalDistance);
 
         // top horizontal line
-        drawLine(end.x, end.y, end.z, //
-                end.x + screenHorizontally.x, end.y + screenHorizontally.y, end.z + screenHorizontally.z);
+        drawLine(end.x(), end.y(), end.z(), //
+                end.x() + screenHorizontally.x(), end.y() + screenHorizontally.y(), end.z() + screenHorizontally.z());
 
         // bottom horizontal line
-        drawLine(begin.x, begin.y, begin.z, //
-                begin.x + screenHorizontally.x, begin.y + screenHorizontally.y, begin.z + screenHorizontally.z);
+        drawLine(begin.x(), begin.y(), begin.z(), //
+                begin.x() + screenHorizontally.x(), begin.y() + screenHorizontally.y(), begin.z() + screenHorizontally.z());
 
-        screenHorizontally.scale(0.5);
+        screenHorizontally.mul(0.5);
 
-        Point3d bottomArrowhead = new Point3d(screenHorizontally);
-        bottomArrowhead.add(begin);
-        Point3d topArrowhead = new Point3d(screenHorizontally);
-        topArrowhead.add(end);
+        Vector3dc bottomArrowhead = new Vector3d(screenHorizontally).add(begin);
+        Vector3dc topArrowhead = new Vector3d(screenHorizontally).add(end);
 
         // vertical line
         drawLine(bottomArrowhead, topArrowhead);
 
         // vertical line arrows
-        Vector3d arrowVector = Vector3dUtil.fromTo(bottomArrowhead, topArrowhead);
-        arrowVector.normalize();
-        arrowVector.scale(arrowHeight);
+        Vector3d arrowVector = Vector3dUtil.fromTo(bottomArrowhead, topArrowhead).normalize().mul(arrowHeight);
 
-        Point3d bottomArrowheadRight = new Point3d(bottomArrowhead);
-        bottomArrowheadRight.add(arrowVector);
-        bottomArrowheadRight.sub(arrowheadBaseWidthVector);
+        Vector3dc bottomArrowheadRight = new Vector3d(bottomArrowhead).add(arrowVector).sub(arrowheadBaseWidthVector);
 
         // bottom arrow
         drawFlatArrowhead(bottomArrowhead, arrowVector, arrowheadBaseWidthVector);
@@ -83,25 +74,23 @@ public class MeasureDrawer {
         // top arrow
         drawFlatArrowhead(topArrowhead, arrowVector, arrowheadBaseWidthVector);
 
-        Point3d center = new Point3d(bottomArrowhead);
-        center.add(topArrowhead);
-        center.scale(0.5);
+        Vector3dc center = new Vector3d(bottomArrowhead).add(topArrowhead).mul(0.5);
 
         drawNumberBox(center, value, viewport);
     }
 
-    private void drawFlatArrowhead(Point3d arrowheadPoint, Vector3d arrowheadVector, Vector3d arrowheadWidthVector) {
+    private void drawFlatArrowhead(Vector3dc arrowheadPoint, Vector3dc arrowheadVector, Vector3dc arrowheadWidthVector) {
         GL11.glBegin(GL11.GL_TRIANGLES);
 
-        GL11.glVertex3d(arrowheadPoint.x, arrowheadPoint.y, arrowheadPoint.z);
+        GL11.glVertex3d(arrowheadPoint.x(), arrowheadPoint.y(), arrowheadPoint.z());
         GL11.glVertex3d(//
-                arrowheadPoint.x + arrowheadVector.x + arrowheadWidthVector.x, //
-                arrowheadPoint.y + arrowheadVector.y + arrowheadWidthVector.y, //
-                arrowheadPoint.z + arrowheadVector.z + arrowheadWidthVector.z);
+                arrowheadPoint.x() + arrowheadVector.x() + arrowheadWidthVector.x(), //
+                arrowheadPoint.y() + arrowheadVector.y() + arrowheadWidthVector.y(), //
+                arrowheadPoint.z() + arrowheadVector.z() + arrowheadWidthVector.z());
         GL11.glVertex3d( //
-                arrowheadPoint.x + arrowheadVector.x - arrowheadWidthVector.x, //
-                arrowheadPoint.y + arrowheadVector.y - arrowheadWidthVector.y, //
-                arrowheadPoint.z + arrowheadVector.z - arrowheadWidthVector.z);
+                arrowheadPoint.x() + arrowheadVector.x() - arrowheadWidthVector.x(), //
+                arrowheadPoint.y() + arrowheadVector.y() - arrowheadWidthVector.y(), //
+                arrowheadPoint.z() + arrowheadVector.z() - arrowheadWidthVector.z());
 
         GL11.glEnd();
     }
@@ -114,27 +103,27 @@ public class MeasureDrawer {
         GL11.glEnd();
     }
 
-    private void drawLine(Point3d begin, Point3d end) {
+    private void drawLine(Vector3dc begin, Vector3dc end) {
 
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(begin.x, begin.y, begin.z);
-        GL11.glVertex3d(end.x, end.y, end.z);
+        GL11.glVertex3d(begin.x(), begin.y(), begin.z());
+        GL11.glVertex3d(end.x(), end.y(), end.z());
         GL11.glEnd();
     }
 
-    private void drawNumberBox(Point3d point, Double value, Viewport viewport) {
+    private void drawNumberBox(Vector3dc point, Double value, Viewport viewport) {
 
         GL11.glDisable(GL11.GL_LIGHTING);
         String msg = String.format("%.2f m", value);
 
-        Point2d p = viewport.project(point);
+        Vector2dc p = viewport.project(point);
         int fontSize = 18;
         int msgWidth = GLUT.glutBitmapLength(GLUT.BITMAP_HELVETICA_18, msg);
 
         // Use a bitmap font (since no scaling required)
         // get (x,y) for centering the text on screen
-        int x = (int) p.x + 18;
-        int y = (int) p.y + fontSize / 2;
+        int x = (int) p.x() + 18;
+        int y = (int) p.y() + fontSize / 2;
 
         // Switch to 2D viewing
         DrawUtil.begin2D(viewport.getWidth(), viewport.getHeight());

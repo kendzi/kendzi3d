@@ -178,7 +178,7 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      * @return
      */
     private double get2dX(Camera camera) {
-        return camera.getPoint().x;
+        return camera.getPoint().x();
     }
 
     /**
@@ -186,11 +186,11 @@ public class CameraLayer extends Layer implements LayerChangeListener {
      * @return
      */
     private double get2dY(Camera camera) {
-        return -camera.getPoint().z;
+        return -camera.getPoint().z();
     }
 
     private double get2dAngle(Camera camera) {
-        return camera.getAngle().y;
+        return camera.getAngle().y();
     }
 
     @Override

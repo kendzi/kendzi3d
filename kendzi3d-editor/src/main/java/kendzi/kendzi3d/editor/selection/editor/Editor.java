@@ -5,7 +5,7 @@
  */
 package kendzi.kendzi3d.editor.selection.editor;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 /**
  * Interface for editable features.
@@ -21,7 +21,7 @@ public interface Editor {
      *
      * @return editor active zone location
      */
-    Point3d getActiveSpot();
+    Vector3dc getActiveSpot();
 
     /**
      * Gets center location of editor active zone. Location of active spot may
@@ -32,7 +32,7 @@ public interface Editor {
      *
      * @return editor active zone location
      */
-    Point3d getActiveSpot(Point3d camera);
+    Vector3dc getActiveSpot(Vector3dc camera);
 
     /**
      * Gets radius of editor active zone.

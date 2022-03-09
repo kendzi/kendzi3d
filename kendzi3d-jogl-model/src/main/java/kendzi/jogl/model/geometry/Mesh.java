@@ -9,16 +9,17 @@
 
 package kendzi.jogl.model.geometry;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import org.joml.Vector3dc;
 
 public class Mesh {
 
     public Face[] face;
 
-    public Point3d[] vertices;
+    /** An array of vertex points (point) */
+    public Vector3dc[] vertices;
 
-    public Vector3d[] normals;
+    /** An array of vertex normals (vector) */
+    public Vector3dc[] normals;
 
     public TextCoord[] texCoords;
 

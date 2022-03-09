@@ -2,14 +2,14 @@ package kendzi.kendzi3d.buildings.model;
 
 import java.awt.Color;
 
-import javax.vecmath.Point2d;
+import org.joml.Vector2dc;
 
 public interface NodeBuildingPart {
 
     /**
      * @return the point
      */
-    Point2d getPoint();
+    Vector2dc getPoint();
 
     /**
      * @return the height

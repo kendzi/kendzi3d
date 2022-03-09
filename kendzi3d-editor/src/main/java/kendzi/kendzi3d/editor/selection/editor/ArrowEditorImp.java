@@ -8,15 +8,14 @@ package kendzi.kendzi3d.editor.selection.editor;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.EditorChangeListener;
 import kendzi.math.geometry.point.Vector3dUtil;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Implementation of simple arrow editor.
@@ -34,7 +33,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     /**
      * Normalized vector with direction of editor.
      */
-    private Vector3d vector;
+    private Vector3dc vector;
 
     /**
      * Distance from editor origin to editor end.
@@ -63,7 +62,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     public ArrowEditorImp() {
         super();
 
-        editorOriginProvider = new Point3dProvider(new Point3d());
+        editorOriginProvider = new Point3dProvider(new Vector3d());
         vector = new Vector3d(0, 1, 0);
         length = 1;
         offset = 0;
@@ -79,43 +78,43 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
      * @param length
      *            arrow length
      */
-    public ArrowEditorImp(Point3d origin, Vector3d vector, double length) {
+    public ArrowEditorImp(Vector3dc origin, Vector3dc vector, double length) {
         super();
 
-        editorOriginProvider = new Point3dProvider(origin);
+        editorOriginProvider = new Point3dProvider(new Vector3d(origin));
         this.vector = vector;
         this.length = length;
         offset = 0;
     }
 
     @Override
-    public Point3d arrowEnd() {
-        Point3d point = getEditorOrigin();
+    public Vector3dc arrowEnd() {
+        Vector3dc point = getEditorOrigin();
 
-        return new Point3d(//
-                point.x + vector.x * length, //
-                point.y + vector.y * length, //
-                point.z + vector.z * length);
+        return new Vector3d(//
+                point.x() + vector.x() * length, //
+                point.y() + vector.y() * length, //
+                point.z() + vector.z() * length);
     }
 
     @Override
-    public Point3d getActiveSpot() {
+    public Vector3dc getActiveSpot() {
         return arrowEnd();
     }
 
     @Override
-    public Point3d getActiveSpot(Point3d camera) {
+    public Vector3dc getActiveSpot(Vector3dc camera) {
 
         double scaledOffset = spotFloatingOffset(camera);
 
         double spotDistance = length + scaledOffset;
 
-        Point3d point = getEditorOrigin();
+        Vector3dc point = getEditorOrigin();
 
-        return new Point3d(//
-                point.x + vector.x * spotDistance, //
-                point.y + vector.y * spotDistance, //
-                point.z + vector.z * spotDistance);
+        return new Vector3d(//
+                point.x() + vector.x() * spotDistance, //
+                point.y() + vector.y() * spotDistance, //
+                point.z() + vector.z() * spotDistance);
     }
 
     /**
@@ -128,12 +127,12 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
      *            camera location
      * @return offset of active spot from real length
      */
-    private double spotFloatingOffset(Point3d camera) {
+    private double spotFloatingOffset(Vector3dc camera) {
 
         return offset * distanse(camera);
     }
 
-    private double distanse(Point3d camera) {
+    private double distanse(Vector3dc camera) {
         return arrowEnd().distance(camera);
 
     }
@@ -144,7 +143,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
          * This implementation is depended on distance from ray center and not actual
          * location of camera!
          */
-        Point3d camera = selectionRay.getPoint();
+        Vector3dc camera = selectionRay.getPoint();
 
         double distanse = distanse(camera);
 
@@ -153,7 +152,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     }
 
     @Override
-    public Point3d getEditorOrigin() {
+    public Vector3dc getEditorOrigin() {
         return editorOriginProvider.provide();
     }
 
@@ -161,7 +160,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
      * @param vector
      *            the vector to set
      */
-    public void setVector(Vector3d vector) {
+    public void setVector(Vector3dc vector) {
         this.vector = vector;
     }
 
@@ -173,16 +172,15 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     @Override
     public EditorChangeEvent move(Ray3d moveRay, boolean finish) {
 
-        Point3d editorOrigin = getEditorOrigin();
+        Vector3dc editorOrigin = getEditorOrigin();
 
-        Vector3d normal = new Vector3d(getVector());
-        normal.normalize();
+        Vector3dc normal = new Vector3d(getVector()).normalize();
 
         Ray3d arrowRay = new Ray3d(editorOrigin, normal);
 
-        Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
+        Vector3dc closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
-        Vector3d moveVector = Vector3dUtil.fromTo(editorOrigin, closestPointOnBaseRay);
+        Vector3dc moveVector = Vector3dUtil.fromTo(editorOrigin, closestPointOnBaseRay);
 
         double lenghtOnEditor = normal.dot(moveVector);
 
@@ -207,8 +205,8 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
      * @param point
      *            the point to set
      */
-    public void setEditorOrigin(Point3d point) {
-        editorOriginProvider = new Point3dProvider(point);
+    public void setEditorOrigin(Vector3dc point) {
+        editorOriginProvider = new Point3dProvider(new Vector3d(point));
     }
 
     /**
@@ -220,7 +218,7 @@ public class ArrowEditorImp extends AbstractEditor implements ArrowEditor, Chang
     }
 
     @Override
-    public Vector3d getVector() {
+    public Vector3dc getVector() {
         return vector;
     }
 

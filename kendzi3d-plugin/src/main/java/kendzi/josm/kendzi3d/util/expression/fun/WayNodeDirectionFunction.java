@@ -9,12 +9,11 @@
 
 package kendzi.josm.kendzi3d.util.expression.fun;
 
-import javax.vecmath.Vector2d;
-
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.math.geometry.AngleUtil;
 import kendzi.math.geometry.point.Vector2dUtil;
+import org.joml.Vector2dc;
 
 public class WayNodeDirectionFunction extends AbstractSimpleFunction<Double> {
 
@@ -28,7 +27,7 @@ public class WayNodeDirectionFunction extends AbstractSimpleFunction<Double> {
         if (argument == null) {
             argument = 0d;
         }
-        Vector2d bisector = getRequiredContextVariable("bisector", context, Vector2d.class);
+        Vector2dc bisector = getRequiredContextVariable("bisector", context, Vector2dc.class);
 
         return Math.toDegrees(AngleUtil.angle(Vector2dUtil.orthogonalLeft(bisector))) + argument;
     }

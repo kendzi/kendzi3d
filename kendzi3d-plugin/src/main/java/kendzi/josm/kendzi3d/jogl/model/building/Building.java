@@ -6,16 +6,12 @@
 
 package kendzi.josm.kendzi3d.jogl.model.building;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.BoundsFactory;
@@ -52,6 +48,9 @@ import kendzi.kendzi3d.editor.selection.editor.EditorType;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.bbox.Bbox2d;
 import kendzi.math.geometry.line.LineSegment3d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -228,7 +227,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
                         double minHeight = bp.getDefaultMinHeight();
                         double maxHeight = bp.getDefaultMaxHeight();
-                        Point3d partCenter = new Point3d( //
+                        Vector3dc partCenter = new Vector3d( //
                                 (bounds.getxMax() + bounds.getxMin()) / 2d, //
                                 minHeight, //
                                 -(bounds.getyMax() + bounds.getyMin()) / 2d);
@@ -289,9 +288,8 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                     double roofHeight = bp.getRoof().getRoofHeight();
 
                     final CachePoint3dProvider roofHeightCenter = new CachePoint3dProvider() {
-
                         @Override
-                        public void beforeProvide(Point3d point) {
+                        public void beforeProvide(Vector3d point) {
                             point.x = (bounds.getxMax() + bounds.getxMin()) / 2d;
                             point.y = bp.getDefaultMaxHeight();
                             point.z = -(bounds.getyMax() + bounds.getyMin()) / 2d;
@@ -319,10 +317,10 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
                 for (WallPart wp : wallParts) {
                     for (WallNode wn : wp.getNodes()) {
 
-                        Point2d p = wn.getPoint();
+                        Vector2dc p = wn.getPoint();
 
-                        bf.addPoint(p.x, bp.getDefaultMinHeight(), -p.y);
-                        bf.addPoint(p.x, bp.getDefaultMaxHeight(), -p.y);
+                        bf.addPoint(p.x(), bp.getDefaultMinHeight(), -p.y());
+                        bf.addPoint(p.x(), bp.getDefaultMaxHeight(), -p.y());
                     }
                 }
             }
@@ -381,7 +379,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         for (WallPart wp : wallParts) {
             for (WallNode wn : wp.getNodes()) {
 
-                Point2d p = wn.getPoint();
+                Vector2dc p = wn.getPoint();
 
                 bbox.addPoint(p);
             }
@@ -400,9 +398,9 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         // XXX move draw debug do new method
         GL11.glPushMatrix();
 
-        Point3d position = getPosition();
+        Vector3dc position = getPosition();
 
-        GL11.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x(), position.y(), position.z());
 
         modelRender.render(model);
 
@@ -425,11 +423,11 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
             GL11.glBegin(GL11.GL_LINES);
 
-            Point3d begin = line.getBegin();
-            Point3d end = line.getEnd();
+            Vector3dc begin = line.getBegin();
+            Vector3dc end = line.getEnd();
 
-            GL11.glVertex3d(begin.x, begin.y, begin.z);
-            GL11.glVertex3d(end.x, end.y, end.z);
+            GL11.glVertex3d(begin.x(), begin.y(), begin.z());
+            GL11.glVertex3d(end.x(), end.y(), end.z());
 
             GL11.glEnd();
         }
@@ -442,7 +440,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
         }
 
         return Collections
-                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -461,7 +459,7 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 
@@ -511,9 +509,9 @@ public class Building extends AbstractModel implements RebuildableWorldObject, W
 
         GL11.glPushMatrix();
 
-        Point3d position = getPosition();
+        Vector3dc position = getPosition();
 
-        GL11.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x(), position.y(), position.z());
 
         if (debug != null && debug.getEdges() != null) {
             drawEdges(debug.getEdges());

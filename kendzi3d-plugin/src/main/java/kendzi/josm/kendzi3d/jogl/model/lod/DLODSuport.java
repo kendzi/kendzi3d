@@ -9,8 +9,8 @@
 
 package kendzi.josm.kendzi3d.jogl.model.lod;
 
-import javax.vecmath.Point3d;
 import kendzi.jogl.camera.Camera;
+import org.joml.Vector3dc;
 
 public interface DLODSuport {
     // FIXME
@@ -21,5 +21,5 @@ public interface DLODSuport {
 
     void buildModel(LOD pLod);
 
-    Point3d getPoint();
+    Vector3dc getPoint();
 }

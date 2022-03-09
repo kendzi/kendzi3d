@@ -4,11 +4,6 @@
   <artifactId>kendzi3d-collada-exporter</artifactId>
   <dependencies>
     <dependency>
-      <groupId>java3d</groupId>
-      <artifactId>vecmath</artifactId>
-      <version>${vecmath.version}</version>
-    </dependency>
-    <dependency>
       <groupId>jakarta.activation</groupId>
       <artifactId>jakarta.activation-api</artifactId>
     </dependency>
@@ -42,8 +37,16 @@
     </dependency>
     <dependency>
       <groupId>org.ejml</groupId>
-      <artifactId>ejml-core</artifactId>
-      <version>${ejml.version}</version>
+      <artifactId>ejml-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -2,7 +2,7 @@ package kendzi.kendzi3d.world;
 
 import java.util.List;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 // XXX name
 public interface MultiPointWorldObject extends StaticModelWorldObject {
@@ -10,6 +10,6 @@ public interface MultiPointWorldObject extends StaticModelWorldObject {
     /**
      * @return the points
      */
-    List<Point3d> getPoints();
+    List<Vector3dc> getPoints();
 
 }

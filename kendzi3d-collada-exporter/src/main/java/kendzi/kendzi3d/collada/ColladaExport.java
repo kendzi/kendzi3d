@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -66,6 +64,7 @@ import org.collada._2005._11.colladaschema.Triangles;
 import org.collada._2005._11.colladaschema.UpAxisType;
 import org.collada._2005._11.colladaschema.Vertices;
 import org.collada._2005._11.colladaschema.VisualScene;
+import org.joml.Vector3dc;
 
 public class ColladaExport extends TextExport {
 
@@ -161,9 +160,9 @@ public class ColladaExport extends TextExport {
     public void addFace(Model m, Node node, Mesh mesh, Geometry geometry, Map<Material, String> mats, Face face,
             Material faceMaterial) {
 
-        SimplifyIndexArray<Point3d> simpVertex = SimplifyIndexArray.simple(mesh.vertices, face.vertIndex, Point3d.class);
+        SimplifyIndexArray<Vector3dc> simpVertex = SimplifyIndexArray.simple(mesh.vertices, face.vertIndex, Vector3dc.class);
 
-        SimplifyIndexArray<Vector3d> simpNormal = SimplifyIndexArray.simple(mesh.normals, face.normalIndex, Vector3d.class);
+        SimplifyIndexArray<Vector3dc> simpNormal = SimplifyIndexArray.simple(mesh.normals, face.normalIndex, Vector3dc.class);
 
         SimplifyIndexArray<TextCoord> simpTex0 = SimplifyIndexArray.simple(mesh.texCoords, face.coordIndexLayers[0],
                 TextCoord.class);
@@ -669,16 +668,16 @@ public class ColladaExport extends TextExport {
      * @param face
      * @return
      */
-    public Source createVertexSource(Point3d[] vertices/* , Face face */) {
+    public Source createVertexSource(Vector3dc[] vertices/* , Face face */) {
         FloatArray vertexArray = new FloatArray();
         String vertexArrayId = getId("v");
         vertexArray.setId(vertexArrayId);
         vertexArray.setCount(new BigInteger("" + vertices.length * 3));// face.vertIndex.length * 3));
 
-        for (Point3d point : vertices) {
-            vertexArray.getValues().add(point.x);
-            vertexArray.getValues().add(point.y);
-            vertexArray.getValues().add(point.z);
+        for (Vector3dc point : vertices) {
+            vertexArray.getValues().add(point.x());
+            vertexArray.getValues().add(point.y());
+            vertexArray.getValues().add(point.z());
         }
 
         Source vertexSource = new Source();
@@ -717,17 +716,17 @@ public class ColladaExport extends TextExport {
      * @param face
      * @return
      */
-    public Source createNormalSource(Vector3d[] normals/* , Face face */) {
+    public Source createNormalSource(Vector3dc[] normals/* , Face face */) {
 
         FloatArray normalsArray = new FloatArray();
         String normalsArrayId = getId("n");
         normalsArray.setId(normalsArrayId);
         normalsArray.setCount(new BigInteger("" + normals.length * 3));
 
-        for (Vector3d v : normals) {
-            normalsArray.getValues().add(v.x);
-            normalsArray.getValues().add(v.y);
-            normalsArray.getValues().add(v.z);
+        for (Vector3dc v : normals) {
+            normalsArray.getValues().add(v.x());
+            normalsArray.getValues().add(v.y());
+            normalsArray.getValues().add(v.z());
         }
 
         Source vertexSource = new Source();

@@ -2,11 +2,11 @@ package kendzi.kendzi3d.buildings.model;
 
 import java.awt.Color;
 
-import javax.vecmath.Point2d;
+import org.joml.Vector2dc;
 
 public class SphereNodeBuildingPart implements NodeBuildingPart {
 
-    private Point2d point;
+    private Vector2dc point;
 
     private double height;
 
@@ -22,7 +22,7 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
      * @see kendzi.kendzi3d.buildings.model.NodeBuildingPart#getPoint()
      */
     @Override
-    public Point2d getPoint() {
+    public Vector2dc getPoint() {
         return point;
     }
 
@@ -30,7 +30,7 @@ public class SphereNodeBuildingPart implements NodeBuildingPart {
      * @param point
      *            the point to set
      */
-    public void setPoint(Point2d point) {
+    public void setPoint(Vector2dc point) {
         this.point = point;
     }
 

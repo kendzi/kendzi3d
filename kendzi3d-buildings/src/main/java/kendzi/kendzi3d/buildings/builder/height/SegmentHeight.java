@@ -1,14 +1,14 @@
 package kendzi.kendzi3d.buildings.builder.height;
 
-import javax.vecmath.Point2d;
 import kendzi.math.geometry.line.LineSegment2d;
+import org.joml.Vector2dc;
 
 public class SegmentHeight extends LineSegment2d {
 
     private double beginHeight;
     private double endHeight;
 
-    public SegmentHeight(Point2d begin, double beginHeight, Point2d end, double endHeight) {
+    public SegmentHeight(Vector2dc begin, double beginHeight, Vector2dc end, double endHeight) {
         super(begin, end);
 
         this.beginHeight = beginHeight;

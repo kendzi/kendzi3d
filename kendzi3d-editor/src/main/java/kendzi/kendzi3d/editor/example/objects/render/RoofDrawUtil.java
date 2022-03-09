@@ -1,9 +1,8 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.example.objects.Roof;
+import org.joml.Vector3d;
 
 /**
  * Util to draw roof.
@@ -26,15 +25,9 @@ public final class RoofDrawUtil {
         double width = roof.getWidth();
         double roofHeigth = roof.getRoofHeigth();
 
-        Point3d max = new Point3d(roof.getPosition());
-        max.x += width;
-        max.y += height - roofHeigth;
-        max.z += width;
+        Vector3d max = new Vector3d(roof.getPosition()).add(width, height - roofHeigth, width);
 
-        Point3d min = new Point3d(roof.getPosition());
-        min.x -= width;
-        min.y -= 0;
-        min.z -= width;
+        Vector3d min = new Vector3d(roof.getPosition()).sub(width, 0, width);
 
         // roof base
         DrawUtil.drawFullBox(max, min);

@@ -10,9 +10,6 @@ import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.GLAutoDrawable;
 import kendzi.jogl.animator.AnimatorBase;
 import kendzi.jogl.animator.FPSAnimator;
@@ -23,6 +20,8 @@ import kendzi.jogl.drawer.TilesSurface;
 import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.GLEventListener;
 import kendzi.math.geometry.point.PointUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.awt.GLData;
@@ -206,17 +205,17 @@ public class BaseJoglFrame implements GLEventListener {
      */
     private void setCamera() {
 
-        Point3d pos = this.simpleMoveAnimator.getPoint();
+        Vector3dc pos = this.simpleMoveAnimator.getPoint();
         Vector3d posLookAt = new Vector3d(100, 0, 0);
-        Vector3d rotate = this.simpleMoveAnimator.getAngle();
+        Vector3dc rotate = this.simpleMoveAnimator.getAngle();
 
-        posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z);
-        posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y);
+        posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z());
+        posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y());
 
         posLookAt.add(pos);
 
-        GLU.gluLookAt((float) pos.x, (float) pos.y, (float) pos.z, (float) posLookAt.x, (float) posLookAt.y, (float) posLookAt.z,
-                0, 1, 0);
+        GLU.gluLookAt((float) pos.x(), (float) pos.y(), (float) pos.z(), (float) posLookAt.x(), (float) posLookAt.y(),
+                (float) posLookAt.z(), 0, 1, 0);
     }
 
     @Override

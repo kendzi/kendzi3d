@@ -9,14 +9,14 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 public class RoofHookPoint {
 
     /**
      * Hook point.
      */
-    private Point3d point;
+    private Vector3dc point;
 
     /**
      * Extenstion start angle.
@@ -45,7 +45,7 @@ public class RoofHookPoint {
      * @param pEndAngle
      *            extenstion end angle.
      */
-    public RoofHookPoint(Point3d pPoint, double pStartAngle, double pDepth, double pEndAngle) {
+    public RoofHookPoint(Vector3dc pPoint, double pStartAngle, double pDepth, double pEndAngle) {
         super();
         this.point = pPoint;
         this.startAngle = pStartAngle;
@@ -56,7 +56,7 @@ public class RoofHookPoint {
     /**
      * @return the point
      */
-    public Point3d getPoint() {
+    public Vector3dc getPoint() {
         return this.point;
     }
 
@@ -64,7 +64,7 @@ public class RoofHookPoint {
      * @param pPoint
      *            the point to set
      */
-    public void setPoint(Point3d pPoint) {
+    public void setPoint(Vector3dc pPoint) {
         this.point = pPoint;
     }
 

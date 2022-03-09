@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.buildings.model.roof.lines.RoofLinesModel;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
@@ -17,6 +15,7 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.josm.model.polygon.RelationUtil;
 import kendzi.math.geometry.line.LineSegment2d;
+import org.joml.Vector2dc;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -78,7 +77,7 @@ public class RoofLinesParser {
 
     public static RoofLinesModel parse(OsmPrimitive primitive, Perspective perspective) {
 
-        Map<Point2d, Double> roofHeightMap = new HashMap<>();
+        Map<Vector2dc, Double> roofHeightMap = new HashMap<>();
 
         List<Way> edgesWay = new ArrayList<>();
         List<Way> ridgesWay = new ArrayList<>();
@@ -149,7 +148,7 @@ public class RoofLinesParser {
 
         for (Way edgeWay : edgesWay) {
             // ?
-            Point2d[] points = transform(edgeWay, perspective);
+            Vector2dc[] points = transform(edgeWay, perspective);
             for (int i = 1; i < points.length; i++) {
                 innerSegments.add(new LineSegment2d(points[i - 1], points[i]));
             }
@@ -159,8 +158,8 @@ public class RoofLinesParser {
             String height = OsmAttributeKeys.ROOF_HEIGHT.primitiveValue(ridgeWay);
             Double ridgeHeight = ModelUtil.parseHeight(height, roofHeight);
 
-            Point2d[] points = transform(ridgeWay, perspective);
-            for (Point2d point : points) {
+            Vector2dc[] points = transform(ridgeWay, perspective);
+            for (Vector2dc point : points) {
                 roofHeightMap.put(point, ridgeHeight);
             }
 
@@ -171,7 +170,7 @@ public class RoofLinesParser {
 
         for (Node apexNodee : apexNode) {
 
-            Point2d point = perspective.calcPoint(apexNodee);
+            Vector2dc point = perspective.calcPoint(apexNodee);
             roofHeightMap.put(point, roofHeight);
 
         }
@@ -192,9 +191,9 @@ public class RoofLinesParser {
      * @param roofHeightMap
      * @param way
      */
-    private static void setNodesAsMinHeight(Perspective perspective, Map<Point2d, Double> roofHeightMap, Way way) {
-        Point2d[] points = transform(way, perspective);
-        for (Point2d point2d : points) {
+    private static void setNodesAsMinHeight(Perspective perspective, Map<Vector2dc, Double> roofHeightMap, Way way) {
+        Vector2dc[] points = transform(way, perspective);
+        for (Vector2dc point2d : points) {
             roofHeightMap.putIfAbsent(point2d, MIN_HEIGHT);
         }
     }
@@ -227,9 +226,9 @@ public class RoofLinesParser {
         return roofHeight;
     }
 
-    private static Point2d[] transform(Way way, Perspective perspective) {
+    private static Vector2dc[] transform(Way way, Perspective perspective) {
 
-        Point2d[] ret = new Point2d[way.getNodesCount()];
+        Vector2dc[] ret = new Vector2dc[way.getNodesCount()];
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);

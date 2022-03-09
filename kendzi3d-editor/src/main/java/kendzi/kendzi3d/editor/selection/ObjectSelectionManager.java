@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.vecmath.Point3d;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.camera.ViewportPicker;
@@ -26,6 +25,7 @@ import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
+import org.joml.Vector3dc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
     private transient Selection lastSelection;
 
-    private transient Point3d lastClosestPointOnBaseRay;
+    private transient Vector3dc lastClosestPointOnBaseRay;
 
     private final ViewportPicker viewportPicker;
 
@@ -159,7 +159,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             raiseEditorChange(event);
 
             Ray3d arrowRay = new Ray3d(arrow.getEditorOrigin(), arrow.getVector());
-            Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
+            Vector3dc closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
             lastClosestPointOnBaseRay = closestPointOnBaseRay;
 
@@ -308,7 +308,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     /**
      * @return the lastClosestPointOnBaseRay
      */
-    public Point3d getLastClosestPointOnBaseRay() {
+    public Vector3dc getLastClosestPointOnBaseRay() {
         return lastClosestPointOnBaseRay;
     }
 

@@ -9,14 +9,13 @@
       <artifactId>josm</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>kendzi</groupId>
       <artifactId>kendzi-util</artifactId>
       <version>1.0.206-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>java3d</groupId>
-      <artifactId>vecmath</artifactId>
-      <version>${vecmath.version}</version>
     </dependency>
     <dependency>
       <groupId>kendzi.kendzi3d</groupId>

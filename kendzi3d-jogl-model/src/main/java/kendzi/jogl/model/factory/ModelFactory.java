@@ -12,14 +12,12 @@ package kendzi.jogl.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.geometry.Face;
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.model.geometry.material.Material;
+import org.joml.Vector3dc;
 
 public class ModelFactory {
 
@@ -97,14 +95,14 @@ public class ModelFactory {
             mesh.hasTexture = mf.hasTexture;
             mesh.name = mf.name;
 
-            mesh.vertices = mf.vertices.toArray(new Point3d[0]);
-            mesh.normals = mf.normals.toArray(new Vector3d[0]);
+            mesh.vertices = mf.vertices.toArray(new Vector3dc[0]);
+            mesh.normals = mf.normals.toArray(new Vector3dc[0]);
             mesh.texCoords = mf.textCoords.toArray(new TextCoord[0]);
             // mesh.texture = mf.getTexture();
             // //XXX
             // mesh.hasTexture = mf.getTexture() != null;
 
-            for (Point3d v : mesh.vertices) {
+            for (Vector3dc v : mesh.vertices) {
                 bf.addPoint(v);
             }
 

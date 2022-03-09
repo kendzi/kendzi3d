@@ -11,17 +11,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-
 import kendzi.josm.kendzi3d.jogl.model.AbstractModel;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import org.joml.Vector2dc;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 public abstract class AbstractWayModel extends AbstractModel {
 
-    protected List<Point2d> points;
+    protected List<Vector2dc> points;
 
     protected Way way;
 
@@ -34,17 +33,17 @@ public abstract class AbstractWayModel extends AbstractModel {
     }
 
     private void calcWayPointsAndRadius(Way way) {
-        List<Point2d> pointsList = new ArrayList<>();
+        List<Vector2dc> pointsList = new ArrayList<>();
 
         double maxRadius = 0;
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
 
-            Point2d p = toModelFrame(node);
+            Vector2dc p = toModelFrame(node);
             pointsList.add(p);
-            double dx = p.x;
-            double dy = p.y;
+            double dx = p.x();
+            double dy = p.y();
 
             double radius = dx * dx + dy * dy;
             if (radius > maxRadius) {

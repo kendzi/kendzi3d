@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Edge;
 import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.EdgeOut;
 import kendzi.kendzi3d.josm.model.polygon.MultiPartPolygonUtil.Vertex;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2dc;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -59,7 +58,7 @@ public final class PolygonWithHolesUtil {
     }
 
     private static PolygonList2d parse(List<ReversableWay> outer, Perspective pPerspective) {
-        List<Point2d> poly = new ArrayList<>();
+        List<Vector2dc> poly = new ArrayList<>();
 
         for (ReversableWay rw : outer) {
 
@@ -73,7 +72,7 @@ public final class PolygonWithHolesUtil {
                     // do not take the last node, it is either first of next way or first of first
                     // way
                     for (int i = 0; i < size - 1; i++) {
-                        Point2d p = pPerspective.calcPoint(way.getNode(i));
+                        Vector2dc p = pPerspective.calcPoint(way.getNode(i));
 
                         poly.add(p);
                     }
@@ -82,7 +81,7 @@ public final class PolygonWithHolesUtil {
                     // do not take the last node, it is either first of next way or first of first
                     // way
                     for (int i = size - 1; i > 0; i--) {
-                        Point2d p = pPerspective.calcPoint(way.getNode(i));
+                        Vector2dc p = pPerspective.calcPoint(way.getNode(i));
 
                         poly.add(p);
                     }

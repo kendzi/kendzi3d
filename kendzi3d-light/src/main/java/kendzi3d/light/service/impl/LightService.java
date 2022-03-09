@@ -6,7 +6,6 @@
 package kendzi3d.light.service.impl;
 
 import javax.inject.Inject;
-import javax.vecmath.Vector3d;
 
 import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi3d.light.dao.LightDao;
@@ -14,6 +13,8 @@ import kendzi3d.light.dto.LightConfiguration;
 import kendzi3d.light.service.LightRenderService;
 import kendzi3d.light.service.LightStorageService;
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Store light configuration, cache data for rendering.
@@ -73,18 +74,18 @@ public class LightService implements LightRenderService, LightStorageService {
         lightLocation.getAmbientColor().getColorComponents(ambientLightColor);
         lightLocation.getDiffuseColor().getColorComponents(diffuseLightColor);
 
-        Vector3d vector = new Vector3d(0, 0, -1);
+        Vector3dc vector = new Vector3d(0, 0, -1);
 
         SimpleMatrix directionMatric = TransformationMatrix3d.rotYA(Math.toRadians(-lightLocation.getDirection()));
         SimpleMatrix angleMatric = TransformationMatrix3d.rotXA(Math.toRadians(lightLocation.getAngle()));
 
         SimpleMatrix matrix = directionMatric.mult(angleMatric);
 
-        Vector3d position = TransformationMatrix3d.transform(vector, matrix);
+        Vector3dc position = TransformationMatrix3d.transform(vector, matrix, false);
 
-        lightPosition[0] = (float) position.x;
-        lightPosition[1] = (float) position.y;
-        lightPosition[2] = (float) position.z;
+        lightPosition[0] = (float) position.x();
+        lightPosition[1] = (float) position.y();
+        lightPosition[2] = (float) position.z();
         lightPosition[3] = 0f;
     }
 

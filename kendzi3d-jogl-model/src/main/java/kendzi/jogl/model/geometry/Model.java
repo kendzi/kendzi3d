@@ -12,9 +12,9 @@ package kendzi.jogl.model.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 import kendzi.jogl.model.geometry.material.Material;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class Model {
 
@@ -63,9 +63,9 @@ public class Model {
     /** FIXME Bounds of the model */
     protected Bounds bounds = new Bounds();
     /** FIXME Center point of the model */
-    private Point3d centerPoint = new Point3d(0.0f, 0.0f, 0.0f);
+    private Vector3dc centerPoint = new Vector3d(0.0f, 0.0f, 0.0f);
 
-    public Vector3d scale = new Vector3d(1d, 1d, 1d);
+    public Vector3dc scale = new Vector3d(1d, 1d, 1d);
 
     // FIXME
     int numberOfMaterials;
@@ -139,7 +139,7 @@ public class Model {
     /**
      * @return the centerPoint
      */
-    public Point3d getCenterPoint() {
+    public Vector3dc getCenterPoint() {
         return this.centerPoint;
     }
 
@@ -147,7 +147,7 @@ public class Model {
      * @param pCenterPoint
      *            the centerPoint to set
      */
-    public void setCenterPoint(Point3d pCenterPoint) {
+    public void setCenterPoint(Vector3dc pCenterPoint) {
         this.centerPoint = pCenterPoint;
     }
 
@@ -191,7 +191,7 @@ public class Model {
     }
 
     /**
-     * @param pUseTexture
+     * @param pUseTextureAlpha
      *            the useTextureAlpha to set
      */
     public void setUseTextureAlpha(boolean pUseTextureAlpha) {

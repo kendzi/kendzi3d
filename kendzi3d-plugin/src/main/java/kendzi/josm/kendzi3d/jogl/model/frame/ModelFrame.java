@@ -1,6 +1,6 @@
 package kendzi.josm.kendzi3d.jogl.model.frame;
 
-import javax.vecmath.Point2d;
+import org.joml.Vector2dc;
 import org.openstreetmap.josm.data.osm.Node;
 
 /**
@@ -10,5 +10,5 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public interface ModelFrame {
 
-    Point2d toModelFrame(Node node);
+    Vector2dc toModelFrame(Node node);
 }

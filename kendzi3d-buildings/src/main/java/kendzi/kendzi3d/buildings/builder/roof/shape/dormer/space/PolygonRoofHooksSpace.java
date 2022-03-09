@@ -12,11 +12,6 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.RoofHookPoint;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRow;
 import kendzi.math.geometry.Plane3d;
@@ -26,73 +21,77 @@ import kendzi.math.geometry.point.TransformationMatrix3d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class PolygonRoofHooksSpace implements RoofHooksSpace {
-    Point2d p1;
-    Vector2d v1;
+    Vector2dc p1;
+    Vector2dc v1;
     double b;
     SimpleMatrix transformationMatrix;
     // FIXME
 
     Plane3d plane;
-    private final List<List<Point2d>> polygon;
+    private final List<List<Vector2dc>> polygon;
 
-    public PolygonRoofHooksSpace(Point2d p1, Vector2d v1, MultiPolygonList2d pPolygon, Plane3d pPlane) {
+    public PolygonRoofHooksSpace(Vector2dc p1, Vector2dc v1, MultiPolygonList2d pPolygon, Plane3d pPlane) {
         this(p1, v1, toList(pPolygon), pPlane);
     }
 
-    private static List<List<Point2d>> toList(MultiPolygonList2d pPolygon) {
+    private static List<List<Vector2dc>> toList(MultiPolygonList2d pPolygon) {
 
-        List<List<Point2d>> ret = new ArrayList<>();
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         for (PolygonList2d polygon : pPolygon.getPolygons()) {
 
-            List<Point2d> poly = polygon.getPoints();
+            List<Vector2dc> poly = polygon.getPoints();
 
             ret.add(poly);
         }
         return ret;
     }
 
-    public PolygonRoofHooksSpace(Point2d p1, Vector2d v1, List<List<Point2d>> pPolygon, Plane3d pPlane) {
+    public PolygonRoofHooksSpace(Vector2dc p1, Vector2dc v1, List<List<Vector2dc>> pPolygon, Plane3d pPlane) {
         super();
         // this.p1 = p1;
         // this.v1 = v1;
         this.b = this.b;
 
-        double angle = Math.atan2(v1.y, v1.x);
+        double angle = Math.atan2(v1.y(), v1.x());
         // Math.toDegrees(angle);
-        SimpleMatrix tr2d = TransformationMatrix2d.rotZA(-angle).mult(TransformationMatrix2d.tranA(-p1.x, -p1.y));
-        SimpleMatrix tr3d = TransformationMatrix3d.rotYA(-angle).mult(TransformationMatrix3d.tranA(-p1.x, 0, p1.y));
+        SimpleMatrix tr2d = TransformationMatrix2d.rotZA(-angle).mult(TransformationMatrix2d.tranA(-p1.x(), -p1.y()));
+        SimpleMatrix tr3d = TransformationMatrix3d.rotYA(-angle).mult(TransformationMatrix3d.tranA(-p1.x(), 0, p1.y()));
 
-        this.p1 = TransformationMatrix2d.transform(p1, tr2d);
-        this.v1 = TransformationMatrix2d.transform(v1, tr2d);
+        this.p1 = TransformationMatrix2d.transform(p1, tr2d, true);
+        this.v1 = TransformationMatrix2d.transform(v1, tr2d, false);
 
-        List<List<Point2d>> transformPolygons = new ArrayList<>();
-        for (List<Point2d> polygon : pPolygon) {
-            List<Point2d> transformPolygon = new ArrayList<>();
-            for (Point2d point : polygon) {
-                transformPolygon.add(TransformationMatrix2d.transform(point, tr2d));
+        List<List<Vector2dc>> transformPolygons = new ArrayList<>();
+        for (List<Vector2dc> polygon : pPolygon) {
+            List<Vector2dc> transformPolygon = new ArrayList<>();
+            for (Vector2dc point : polygon) {
+                transformPolygon.add(TransformationMatrix2d.transform(point, tr2d, true));
             }
             transformPolygons.add(transformPolygon);
         }
         this.polygon = transformPolygons;
 
-        Point3d planePoint = TransformationMatrix3d.transform(pPlane.getPoint(), tr3d);
-        Vector3d planeNormal = TransformationMatrix3d.transform(pPlane.getNormal(), tr3d);
+        Vector3dc planePoint = TransformationMatrix3d.transform(pPlane.getPoint(), tr3d, true);
+        Vector3dc planeNormal = TransformationMatrix3d.transform(pPlane.getNormal(), tr3d, false);
 
         this.plane = new Plane3d(planePoint, planeNormal);
-        SimpleMatrix trBack = TransformationMatrix3d.tranA(p1.x, 0, -p1.y).mult(TransformationMatrix3d.rotYA(angle));
+        SimpleMatrix trBack = TransformationMatrix3d.tranA(p1.x(), 0, -p1.y()).mult(TransformationMatrix3d.rotYA(angle));
         // SimpleMatrix trBack =
-        // TransformationMatrix3d.rotYA(angle).mult(TransformationMatrix3d.tranA(-p1.x,
-        // 0, p1.y));
+        // TransformationMatrix3d.rotYA(angle).mult(TransformationMatrix3d.tranA(-p1.x(),
+        // 0, p1.y()));
         // TransformationMatrix3d.transform(planePoint, trBack)
         this.transformationMatrix = trBack;
     }
 
     @Override
     public RoofHookPoint[] getRoofHookPoints(int pNumber, DormerRow dormerRow, int dormerRowNum) {
-        Vector2d v = new Vector2d(this.v1);
+        Vector2d v = new Vector2d(this.v1).div(pNumber + 1d);
 
         MinMax polygonMinMaxY = findMinMaxY(this.polygon);
         if (polygonMinMaxY == null) {
@@ -100,23 +99,21 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
             polygonMinMaxY = new MinMax(0, 1d);
         }
 
-        v.scale(1d / (pNumber + 1d));
-
-        Point2d p = new Point2d(this.p1);
+        Vector2d p = new Vector2d(this.p1);
 
         RoofHookPoint[] ret = new RoofHookPoint[pNumber];
         for (int i = 0; i < pNumber; i++) {
             p.add(v);
 
-            MinMax minMaxY = limitZToPolygon(p.x);
+            MinMax minMaxY = limitZToPolygon(p.x());
 
             double z = calcRowPosition(minMaxY, dormerRow, dormerRowNum);
 
             // double z = minMaxY.getMin();
 
-            double y = this.plane.calcYOfPlane(p.x, -z);
+            double y = this.plane.calcYOfPlane(p.x(), -z);
 
-            Point3d pp = new Point3d(p.x, y, -z);
+            Vector3dc pp = new Vector3d(p.x(), y, -z);
 
             double b = minMaxY.getMax() - z;// (minMaxY.getMax() - minMaxY.getMin()) - z;
 
@@ -144,7 +141,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
     // double minY = 0;
     // double maxY = 0;
     //
-    // for (List<Point2d> polygon : polygon) {
+    // for (List<Vector2dc> polygon : polygon) {
     // double limitZToPolygon = limitZToPolygon(x, polygon);
     //
     // xxx
@@ -153,7 +150,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
     //
     // }
 
-    private MinMax findMinMaxY(List<List<Point2d>> pPolygon) {
+    private MinMax findMinMaxY(List<List<Vector2dc>> pPolygon) {
 
         double minY = Double.MAX_VALUE;
         double maxY = -Double.MAX_VALUE;
@@ -164,18 +161,18 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
             return null;
         }
 
-        for (List<Point2d> polygon : pPolygon) {
+        for (List<Vector2dc> polygon : pPolygon) {
 
             int size = polygon.size();
-            for (Point2d p1 : polygon) {
+            for (Vector2dc p1 : polygon) {
                 empty = false;
 
-                if (p1.y < minY) {
-                    minY = p1.y;
+                if (p1.y() < minY) {
+                    minY = p1.y();
                 }
 
-                if (p1.y > maxY) {
-                    maxY = p1.y;
+                if (p1.y() > maxY) {
+                    maxY = p1.y();
                 }
             }
         }
@@ -228,7 +225,7 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
     }
 
     /**
-     * @param y
+     * @param x
      * @return
      */
     private MinMax limitZToPolygon(double x) {
@@ -238,28 +235,28 @@ public class PolygonRoofHooksSpace implements RoofHooksSpace {
 
         boolean isMach = false;
 
-        LineLinear2d parnel = new LineLinear2d(new Point2d(x, 0), new Point2d(x, 1));
+        LineLinear2d parnel = new LineLinear2d(new Vector2d(x, 0), new Vector2d(x, 1));
 
-        for (List<Point2d> polygon : this.polygon) {
+        for (List<Vector2dc> polygon : this.polygon) {
 
             int size = polygon.size();
             for (int i = 0; i < size; i++) {
-                Point2d p1 = polygon.get(i);
-                Point2d p2 = polygon.get((i + 1) % size);
+                Vector2dc p1 = polygon.get(i);
+                Vector2dc p2 = polygon.get((i + 1) % size);
 
-                if (Math.min(p1.x, p2.x) < x && Math.max(p1.x, p2.x) >= x) {
+                if (Math.min(p1.x(), p2.x()) < x && Math.max(p1.x(), p2.x()) >= x) {
 
                     isMach = true;
 
                     LineLinear2d edge = new LineLinear2d(p1, p2);
 
-                    Point2d collide = parnel.collide(edge);
+                    Vector2dc collide = parnel.collide(edge);
 
-                    if (collide.y < minY) {
-                        minY = collide.y;
+                    if (collide.y() < minY) {
+                        minY = collide.y();
                     }
-                    if (collide.y > maxY) {
-                        maxY = collide.y;
+                    if (collide.y() > maxY) {
+                        maxY = collide.y();
                     }
                 }
             }

@@ -1,9 +1,8 @@
 package kendzi.jogl.util;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.math.geometry.point.Vector3dUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -21,18 +20,16 @@ public class LineDrawUtil {
      * @param segmentLength
      *            length of line segment
      */
-    public static void drawDottedLine(Point3d begin, Point3d end, double segmentLength) {
+    public static void drawDottedLine(Vector3dc begin, Vector3dc end, double segmentLength) {
 
         double distance = begin.distance(end);
 
-        Vector3d segmentVector = Vector3dUtil.fromTo(begin, end);
-        segmentVector.normalize();
-        segmentVector.scale(segmentLength);
+        Vector3dc segmentVector = Vector3dUtil.fromTo(begin, end).normalize().mul(segmentLength);
 
         boolean fill = true;
         double drawedDistance = 0;
 
-        Point3d drawPoint = new Point3d(begin);
+        Vector3d drawPoint = new Vector3d(begin);
 
         GL11.glBegin(GL11.GL_LINES);
 
@@ -40,18 +37,18 @@ public class LineDrawUtil {
             drawedDistance += segmentLength;
 
             if (fill) {
-                GL11.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-                GL11.glVertex3d(drawPoint.x + segmentVector.x, //
-                        drawPoint.y + segmentVector.y, //
-                        drawPoint.z + segmentVector.z);
+                GL11.glVertex3d(drawPoint.x(), drawPoint.y(), drawPoint.z());
+                GL11.glVertex3d(drawPoint.x() + segmentVector.x(), //
+                        drawPoint.y() + segmentVector.y(), //
+                        drawPoint.z() + segmentVector.z());
             }
             fill = !fill;
             drawPoint.add(segmentVector);
         }
 
         if (fill) {
-            GL11.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-            GL11.glVertex3d(end.x, end.y, end.z);
+            GL11.glVertex3d(drawPoint.x(), drawPoint.y(), drawPoint.z());
+            GL11.glVertex3d(end.x(), end.y(), end.z());
 
         }
 

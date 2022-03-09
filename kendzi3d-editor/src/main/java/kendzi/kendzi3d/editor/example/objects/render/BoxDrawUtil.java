@@ -1,10 +1,10 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.drawer.SimpleOutlineDrawUtil;
 import kendzi.kendzi3d.editor.example.objects.Box;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -26,12 +26,12 @@ public final class BoxDrawUtil {
 
         double size = box.getSize();
 
-        Point3d max = new Point3d(box.getPosition());
+        Vector3d max = new Vector3d(box.getPosition());
         max.x += size;
         max.y += size;
         max.z += size;
 
-        Point3d min = new Point3d(box.getPosition());
+        Vector3d min = new Vector3d(box.getPosition());
         min.x -= size;
         min.y -= size;
         min.z -= size;
@@ -39,12 +39,12 @@ public final class BoxDrawUtil {
         DrawUtil.drawFullBox(max, min);
     }
 
-    private static void drawSelected(Point3d max, Point3d min) {
+    private static void drawSelected(Vector3dc max, Vector3dc min) {
         drawSelectedFill(max, min);
         drawGreenOutline(max, min);
     }
 
-    private static void drawSelectedFill(Point3d max, Point3d min) {
+    private static void drawSelectedFill(Vector3dc max, Vector3dc min) {
 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
@@ -58,7 +58,7 @@ public final class BoxDrawUtil {
 
     }
 
-    private static void drawGreenOutline(Point3d max, Point3d min) {
+    private static void drawGreenOutline(Vector3dc max, Vector3dc min) {
 
         // green
         GL11.glColor3f(0.5f, 1.0f, 0.5f);

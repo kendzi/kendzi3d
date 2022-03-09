@@ -10,11 +10,10 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Vector2d;
-
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
 
 /**
  * Rectangle type roof util.
@@ -33,19 +32,17 @@ public class RectangleTypeRoofUtil {
      *            polygon
      * @return direction vector snaps to best matching orthogonally of polygon edges
      */
-    public static Vector2d snapsDirectionToOutline(Vector2d frontDirection, PolygonList2d polygon) {
+    public static Vector2dc snapsDirectionToOutline(Vector2dc frontDirection, PolygonList2d polygon) {
 
-        Vector2d direction = Vector2dUtil.orthogonalLeft(frontDirection);
-        List<Point2d> points = polygon.getPoints();
+        Vector2dc direction = Vector2dUtil.orthogonalLeft(frontDirection);
+        List<Vector2dc> points = polygon.getPoints();
 
         double maxD = -Double.MAX_VALUE;
         Vector2d maxV = null;
 
-        Point2d end = points.get(points.size() - 1);
-        for (Point2d begin : points) {
-            Vector2d v = new Vector2d(end);
-            v.sub(begin);
-            v.normalize();
+        Vector2dc end = points.get(points.size() - 1);
+        for (Vector2dc begin : points) {
+            Vector2d v = new Vector2d(end).sub(begin).normalize();
 
             double d = v.dot(direction);
             if (d > maxD) {

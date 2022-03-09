@@ -9,9 +9,6 @@ package kendzi.josm.kendzi3d.jogl.model;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
@@ -26,6 +23,8 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -170,7 +169,7 @@ public class BarrierFence extends AbstractWayModel {
         }
 
         return Collections
-                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -179,7 +178,7 @@ public class BarrierFence extends AbstractWayModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

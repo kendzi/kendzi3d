@@ -160,7 +160,8 @@ public class ModelRender {
                         // face.normalIndex.length > i) {
                         int normalIndex = face.normalIndex[i];
 
-                        GL11.glNormal3d(mesh.normals[normalIndex].x, mesh.normals[normalIndex].y, mesh.normals[normalIndex].z);
+                        GL11.glNormal3d(mesh.normals[normalIndex].x(), mesh.normals[normalIndex].y(),
+                                mesh.normals[normalIndex].z());
                         // }
 
                         for (int tl = 0; tl < numOfTextureLayers; tl++) {
@@ -169,7 +170,8 @@ public class ModelRender {
                                     mesh.texCoords[textureIndex].v);
                         }
 
-                        GL11.glVertex3d(mesh.vertices[vetexIndex].x, mesh.vertices[vetexIndex].y, mesh.vertices[vetexIndex].z);
+                        GL11.glVertex3d(mesh.vertices[vetexIndex].x(), mesh.vertices[vetexIndex].y(),
+                                mesh.vertices[vetexIndex].z());
                     }
 
                     GL11.glEnd();

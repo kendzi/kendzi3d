@@ -3,11 +3,10 @@ package kendzi.jogl.model.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.Face;
 import kendzi.jogl.model.geometry.Mesh;
+import org.joml.Vector3dc;
 
 /**
  * Util for mesh conversion.
@@ -26,11 +25,11 @@ public class MeshTriangleUtil {
      *            mesh
      * @return list of triangles read from mesh
      */
-    public static List<Point3d> toTriangles(Mesh mesh) {
+    public static List<Vector3dc> toTriangles(Mesh mesh) {
 
-        List<Point3d> points = new ArrayList<>();
+        List<Vector3dc> points = new ArrayList<>();
 
-        Point3d[] vertices = mesh.vertices;
+        Vector3dc[] vertices = mesh.vertices;
         for (Face f : mesh.face) {
             List<Integer> ti = convertToTriangles(f.vertIndex, f.type);
 

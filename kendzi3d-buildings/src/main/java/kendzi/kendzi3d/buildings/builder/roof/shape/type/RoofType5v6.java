@@ -9,11 +9,6 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -37,6 +32,10 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Roof type 5.6.
@@ -46,12 +45,12 @@ import org.ejml.simple.SimpleMatrix;
 public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
+    public RoofTypeOutput buildRoof(Vector2dc pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
             double height, RoofMaterials roofTextureData) {
 
-        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
+        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x(), -pStartPoint.y());
 
-        List<Point2d> polygon = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> polygon = buildingPolygon.getOuter().getPoints();
 
         polygon = TransformationMatrix2d.transformList(polygon, transformLocal);
 
@@ -66,13 +65,13 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
         RoofTypeOutput rto = build(polygon, h1, angle, roofTextureData);
 
-        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(), -pStartPoint.y);
+        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x(), height - rto.getHeight(), -pStartPoint.y());
         rto.setTransformationMatrix(transformGlobal);
 
         return rto;
     }
 
-    protected RoofTypeOutput build(List<Point2d> borderList, Double height, Double angle, RoofMaterials roofTextureData) {
+    protected RoofTypeOutput build(List<Vector2dc> borderList, Double height, Double angle, RoofMaterials roofTextureData) {
 
         MeshFactory meshDome = createRoofMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -107,13 +106,13 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
         MultiPolygonList2d topMP = new MultiPolygonList2d(borderPolygon);
         // build flat
-        Point3d planeRightTopPoint = new Point3d(0, 0, 0);
+        Vector3dc planeRightTopPoint = new Vector3d(0, 0, 0);
 
-        Vector3d nt = new Vector3d(0, 1, 0);
+        Vector3dc nt = new Vector3d(0, 1, 0);
 
         Plane3d planeTop = new Plane3d(planeRightTopPoint, nt);
 
-        Vector3d roofTopLineVector = new Vector3d(-1d, 0, 0);
+        Vector3dc roofTopLineVector = new Vector3d(-1d, 0, 0);
 
         MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, topMP, planeTop, roofTopLineVector, roofTexture);
 
@@ -124,23 +123,23 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         int crossCount = numberOfCrossSplits + 1;
 
         // create cross section
-        Point2d[] crossSection = new Point2d[crossCount];
+        Vector2dc[] crossSection = new Vector2d[crossCount];
         for (int i = 0; i < crossCount; i++) {
             double a = Math.toRadians(90) / (crossCount - 1) * i;
 
-            crossSection[i] = new Point2d(Math.cos(a) * circle.getRadius(), Math.sin(a) * circle.getRadius());
+            crossSection[i] = new Vector2d(Math.cos(a) * circle.getRadius(), Math.sin(a) * circle.getRadius());
         }
 
         buildRotaryShape(meshFactory, circle.getPoint(), pIsection, crossSection, soft);
     }
 
-    public static void buildRotaryShape(MeshFactory meshFactory, Point2d center, int sectionCount, Point2d[] crossSection,
+    public static void buildRotaryShape(MeshFactory meshFactory, Vector2dc center, int sectionCount, Vector2dc[] crossSection,
             boolean soft) {
 
         int crossCount = crossSection.length;
 
         // create points
-        Point3d[][] mesh = buildMesh(center, crossSection, sectionCount);
+        Vector3dc[][] mesh = buildMesh(center, crossSection, sectionCount);
 
         TextureQuadIndex[] tc = buildRotaryShapeTextureMapping(meshFactory, crossCount, sectionCount, mesh);
 
@@ -157,8 +156,8 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
         // add faces to mesh
         for (int i = 0; i < sectionCount; i++) {
-            Point3d[] c1 = mesh[i];
-            Point3d[] c2 = mesh[(i + 1) % sectionCount];
+            Vector3dc[] c1 = mesh[i];
+            Vector3dc[] c2 = mesh[(i + 1) % sectionCount];
 
             int i2 = (i + 1) % sectionCount;
 
@@ -177,11 +176,11 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
                 if (!soft) {
                     // hard normals
 
-                    Point3d c1p1 = c1[j];
-                    Point3d c2p1 = c2[j];
-                    Point3d c1p2 = c1[j + 1];
+                    Vector3dc c1p1 = c1[j];
+                    Vector3dc c2p1 = c2[j];
+                    Vector3dc c1p2 = c1[j + 1];
 
-                    Vector3d n = calcNormal(c1p1, c2p1, c1p2);
+                    Vector3dc n = calcNormal(c1p1, c2p1, c1p2);
                     int in = meshFactory.addNormal(n);
 
                     ic1p1n = in;
@@ -207,12 +206,12 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         }
     }
 
-    public static int[][] addVertexToMeshFactory(MeshFactory meshFactory, Point3d[][] mesh, int pointCount, int crossCount) {
+    public static int[][] addVertexToMeshFactory(MeshFactory meshFactory, Vector3dc[][] mesh, int pointCount, int crossCount) {
         int[][] pointsIntex = new int[pointCount][];
         for (int i = 0; i < pointCount; i++) {
             pointsIntex[i] = new int[crossCount];
             for (int j = 0; j < crossCount; j++) {
-                Point3d p = mesh[i][j];
+                Vector3dc p = mesh[i][j];
                 int ip = meshFactory.addVertex(p);
                 pointsIntex[i][j] = ip;
             }
@@ -220,27 +219,27 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         return pointsIntex;
     }
 
-    private static Point3d[][] buildMesh(Point2d center, Point2d[] crossSection, int sectionCount) {
+    private static Vector3dc[][] buildMesh(Vector2dc center, Vector2dc[] crossSection, int sectionCount) {
 
         int crossCount = crossSection.length;
 
-        Point3d[][] mesh = new Point3d[sectionCount][];
+        Vector3dc[][] mesh = new Vector3d[sectionCount][];
         for (int i = 0; i < sectionCount; i++) {
             double a = Math.toRadians(360) / sectionCount * i;
 
-            SimpleMatrix tranA = TransformationMatrix3d.tranA(center.x, 0, -center.y);
+            SimpleMatrix tranA = TransformationMatrix3d.tranA(center.x(), 0, -center.y());
             SimpleMatrix rotY = TransformationMatrix3d.rotYA(a);
 
             SimpleMatrix trans = tranA.mult(rotY);
 
-            Point3d[] crossMesh = new Point3d[crossCount];
+            Vector3dc[] crossMesh = new Vector3d[crossCount];
 
             for (int j = 0; j < crossSection.length; j++) {
                 // point
-                Point2d cross = crossSection[j];
-                Point3d p = new Point3d(cross.x, cross.y, 0);
+                Vector2dc cross = crossSection[j];
+                Vector3dc p = new Vector3d(cross.x(), cross.y(), 0);
 
-                crossMesh[j] = TransformationMatrix3d.transform(p, trans);
+                crossMesh[j] = TransformationMatrix3d.transform(p, trans, true);
 
             }
             mesh[i] = crossMesh;
@@ -248,10 +247,10 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         return mesh;
     }
 
-    private static int[][] buildSoftNormalsIndexs(MeshFactory meshFactory, int sectionCount, Point2d[] crossSection,
+    private static int[][] buildSoftNormalsIndexs(MeshFactory meshFactory, int sectionCount, Vector2dc[] crossSection,
             int crossCount) {
 
-        Vector2d[] crossSectionSoftNormals = calsSoftNormals(crossSection);
+        Vector2dc[] crossSectionSoftNormals = calsSoftNormals(crossSection);
 
         int[][] softNormalsIntex = new int[sectionCount][];
         for (int i = 0; i < sectionCount; i++) {
@@ -262,10 +261,10 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
 
             for (int j = 0; j < crossSection.length; j++) {
                 // point
-                Vector2d n2d = crossSectionSoftNormals[j];
-                Vector3d n = new Vector3d(n2d.x, n2d.y, 0);
+                Vector2dc n2d = crossSectionSoftNormals[j];
+                Vector3dc n = new Vector3d(n2d.x(), n2d.y(), 0);
 
-                Vector3d transform = TransformationMatrix3d.transform(n, rotY);
+                Vector3dc transform = TransformationMatrix3d.transform(n, rotY, false);
 
                 int in = meshFactory.addNormal(transform);
                 softNormalsIntex[i][j] = in;
@@ -274,24 +273,21 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
         return softNormalsIntex;
     }
 
-    private static Vector2d[] calsSoftNormals(Point2d[] crossSection) {
+    private static Vector2dc[] calsSoftNormals(Vector2dc[] crossSection) {
 
         Vector2d[] ret = new Vector2d[crossSection.length];
 
-        Vector2d[] normals = new Vector2d[crossSection.length - 1];
+        Vector2dc[] normals = new Vector2d[crossSection.length - 1];
         for (int i = 0; i < crossSection.length - 1; i++) {
-            Vector2d n = new Vector2d(crossSection[i + 1]);
-            n.sub(crossSection[i]);
-            n.normalize();
+            Vector2dc n = new Vector2d(crossSection[i + 1]).sub(crossSection[i]).normalize();
             normals[i] = n;
         }
 
         for (int i = 1; i < crossSection.length - 1; i++) {
-            Vector2d n1 = normals[i - 1];
-            Vector2d n2 = normals[i];
+            Vector2dc n1 = normals[i - 1];
+            Vector2dc n2 = normals[i];
 
-            Vector2d n = Vector2dUtil.bisectorNormalized(n1, n2);
-            n.normalize();
+            Vector2d n = Vector2dUtil.bisectorNormalized(n1, n2).normalize();
 
             ret[i] = n;
         }
@@ -308,42 +304,37 @@ public class RoofType5v6 extends AbstractRoofTypeBuilder {
     }
 
     private static TextureQuadIndex[] buildRotaryShapeTextureMapping(MeshFactory meshFactory, int crossCount, int sectionCount,
-            Point3d[][] mesh) {
+            Vector3dc[][] mesh) {
         // texture mapping only for one section, all others are the same
         int i = 0;
 
         return buildTextureMappingForCross(meshFactory, mesh, sectionCount, crossCount, i);
     }
 
-    private static Vector3d calcNormal(Point3d p1, Point3d p2, Point3d p3) {
-        Vector3d n = new Vector3d(p2);
-        n.sub(p1);
-
-        Vector3d n2 = new Vector3d(p3);
-        n2.sub(p2);
-
-        n.cross(n, n2);
-        n.normalize();
-        return n;
+    private static Vector3dc calcNormal(Vector3dc p1, Vector3dc p2, Vector3dc p3) {
+        Vector3dc n2 = new Vector3d(p3).sub(p2);
+        return new Vector3d(p2).sub(p1).cross(n2).normalize();
     }
 
-    public static TextureQuadIndex[] buildTextureMappingForCross(MeshFactory meshFactory, Point3d[][] mesh, int pointCount,
+    public static TextureQuadIndex[] buildTextureMappingForCross(MeshFactory meshFactory, Vector3dc[][] mesh, int pointCount,
             int crossCount, int i) {
 
         TextureQuadIndex[] crossTc = new TextureQuadIndex[crossCount];
 
         double textHeightDown = 0;
 
-        Point3d[] c1 = mesh[i];
-        Point3d[] c2 = mesh[(i + 1) % pointCount];
+        Vector3dc[] c1 = mesh[i];
+        Vector3dc[] c2 = mesh[(i + 1) % pointCount];
 
-        Point3d middleDown = new Point3d((c1[0].x + c2[0].x) / 2d, (c1[0].y + c2[0].y) / 2d, (c1[0].z + c2[0].z) / 2d);
+        Vector3dc middleDown = new Vector3d((c1[0].x() + c2[0].x()) / 2d, (c1[0].y() + c2[0].y()) / 2d,
+                (c1[0].z() + c2[0].z()) / 2d);
 
         double widthDown = middleDown.distance(c2[0]);
 
         for (int j = 1; j < crossCount; j++) {
 
-            Point3d middleTop = new Point3d((c1[j].x + c2[j].x) / 2d, (c1[j].y + c2[j].y) / 2d, (c1[j].z + c2[j].z) / 2d);
+            Vector3dc middleTop = new Vector3d((c1[j].x() + c2[j].x()) / 2d, (c1[j].y() + c2[j].y()) / 2d,
+                    (c1[j].z() + c2[j].z()) / 2d);
 
             double widthTop = middleTop.distance(c2[j]);
             double height = middleDown.distance(middleTop);

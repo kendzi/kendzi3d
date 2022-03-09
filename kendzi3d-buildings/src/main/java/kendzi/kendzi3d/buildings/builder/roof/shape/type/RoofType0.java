@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
@@ -27,6 +23,10 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Roof type 0.X.
@@ -58,7 +58,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
      * @return
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
-            Point2d[] pRectangleContur, double h1, double h2, double l1, double l2, double l3, double l4, int type,
+            Vector2dc[] pRectangleContur, double h1, double h2, double l1, double l2, double l3, double l4, int type,
             // ModelFactory model,
             RoofMaterials roofTextureData) {
 
@@ -68,16 +68,16 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
         TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        Vector3d nt = new Vector3d(0, 1, 0);
+        Vector3dc nt = new Vector3d(0, 1, 0);
 
-        Vector3d roofTopLineVector = new Vector3d(-pRecWidth, 0, 0);
+        Vector3dc roofTopLineVector = new Vector3d(-pRecWidth, 0, 0);
 
-        Point3d planeRightCenterPoint = new Point3d(0, h1 + h2, 0);
+        Vector3dc planeRightCenterPoint = new Vector3d(0, h1 + h2, 0);
 
         Plane3d planeCenter = new Plane3d(planeRightCenterPoint, nt);
 
-        List<Point2d> borderList = buildingPolygon.getOuter().getPoints();
-        List<List<Point2d>> innerLists = innerLists(buildingPolygon);
+        List<Vector2dc> borderList = buildingPolygon.getOuter().getPoints();
+        List<List<Vector2dc>> innerLists = innerLists(buildingPolygon);
 
         MeshFactoryUtil.addPolygonWithHolesInY(buildingPolygon, h1, meshRoof, roofTexture, 0, 0, roofTopLineVector);
 
@@ -86,7 +86,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
         if (h1 > 0) {
             RoofTypeUtil.makeRoofBorderMesh(borderList, borderHeights, meshBorder, facadeTexture);
 
-            for (List<Point2d> inner : innerLists) {
+            for (List<Vector2dc> inner : innerLists) {
                 // for inners
                 List<Double> innerHeights = calcHeightList(inner, h1);
 
@@ -98,7 +98,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
         if (type >= 1) {
 
-            LinePoints2d bLine = new LinePoints2d(new Point2d(0, l1), new Point2d(pRecWidth, l1));
+            LinePoints2d bLine = new LinePoints2d(new Vector2d(0, l1), new Vector2d(pRecWidth, l1));
 
             MultiPolygonSplitResult middleSplit = PolygonSplitHelper
                     .splitMultiPolygon(new MultiPolygonList2d(new PolygonList2d(borderList)), bLine);
@@ -106,7 +106,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
             MultiPolygonList2d centerMP = middleSplit.getLeftMultiPolygon();
 
             if (type >= 2) {
-                LinePoints2d rLine = new LinePoints2d(new Point2d(pRecWidth - l2, 0), new Point2d(pRecWidth - l2, pRecHeight));
+                LinePoints2d rLine = new LinePoints2d(new Vector2d(pRecWidth - l2, 0), new Vector2d(pRecWidth - l2, pRecHeight));
 
                 MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, rLine);
 
@@ -116,7 +116,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             if (type >= 3) {
 
-                LinePoints2d tLine = new LinePoints2d(new Point2d(pRecWidth, pRecHeight - l3), new Point2d(0, pRecHeight - l3));
+                LinePoints2d tLine = new LinePoints2d(new Vector2d(pRecWidth, pRecHeight - l3), new Vector2d(0, pRecHeight - l3));
 
                 MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, tLine);
 
@@ -126,7 +126,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             if (type >= 4) {
 
-                LinePoints2d tLine = new LinePoints2d(new Point2d(l4, pRecHeight), new Point2d(l4, 0));
+                LinePoints2d tLine = new LinePoints2d(new Vector2d(l4, pRecHeight), new Vector2d(l4, 0));
 
                 MultiPolygonSplitResult topSplit = PolygonSplitHelper.splitMultiPolygon(centerMP, tLine);
 
@@ -138,7 +138,7 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
 
             for (PolygonList2d polygon : centerMP.getPolygons()) {
 
-                List<Point2d> centerPolygonPoints = polygon.getPoints();
+                List<Vector2dc> centerPolygonPoints = polygon.getPoints();
 
                 List<Double> centerHeights = calcHeightList(centerPolygonPoints, h1 + h2);
 
@@ -168,8 +168,8 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
         return rto;
     }
 
-    private List<List<Point2d>> innerLists(PolygonWithHolesList2d buildingPolygon) {
-        List<List<Point2d>> ret = new ArrayList<>();
+    private List<List<Vector2dc>> innerLists(PolygonWithHolesList2d buildingPolygon) {
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         if (buildingPolygon.getInner() == null) {
             return ret;
@@ -182,10 +182,10 @@ public abstract class RoofType0 extends RectangleRoofTypeBuilder {
         return ret;
     }
 
-    private List<Double> calcHeightList(List<Point2d> pSplitBorder, double height) {
+    private List<Double> calcHeightList(List<Vector2dc> pSplitBorder, double height) {
 
         List<Double> borderHeights = new ArrayList<>(pSplitBorder.size());
-        for (Point2d point : pSplitBorder) {
+        for (Vector2dc point : pSplitBorder) {
             borderHeights.add(height);
         }
 

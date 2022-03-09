@@ -6,12 +6,11 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.dto.RoofTypeOutput;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2dc;
 
 /**
  * Interface for roof type buildier.
@@ -37,7 +36,7 @@ public interface RoofTypeBuilder {
      *            roof material
      * @return builded roof
      */
-    RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d wallPolygon, DormerRoofModel roof, double height,
+    RoofTypeOutput buildRoof(Vector2dc pStartPoint, PolygonWithHolesList2d wallPolygon, DormerRoofModel roof, double height,
             RoofMaterials roofMaterials);
 
 }

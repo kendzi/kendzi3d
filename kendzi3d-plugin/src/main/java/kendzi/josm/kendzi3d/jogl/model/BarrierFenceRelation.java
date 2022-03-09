@@ -13,10 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -40,6 +36,9 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -89,7 +88,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
      */
     private Model model;
 
-    private final List<Point2d> points;
+    private final List<Vector2dc> points;
 
     private final List<Double> heights;
 
@@ -132,9 +131,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         calcModelCenter(nodes);
 
-        List<Point2d> points = new ArrayList<>();
+        List<Vector2dc> points = new ArrayList<>();
         for (Node node : nodes) {
-            Point2d point2d = toModelFrame(node);
+            Vector2dc point2d = toModelFrame(node);
             points.add(point2d);
         }
 
@@ -236,7 +235,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
      * @param pWallTexture
      *            texture
      */
-    public static void buildWallModel(List<Point2d> pPoints, List<Double> pHeights, double pMinHeight, double pHeight,
+    public static void buildWallModel(List<Vector2dc> pPoints, List<Double> pHeights, double pMinHeight, double pHeight,
             double pWidth, MeshFactory pMeshBorder, TextureData pWallTexture
 
     ) {
@@ -246,11 +245,11 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             faceLeft = pMeshBorder.addFace(FaceType.QUADS);
         }
 
-        Point2d start = pPoints.get(0);
+        Vector2dc start = pPoints.get(0);
         Double startHeight = getHeight(0, pHeights);
 
-        int startMi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pMinHeight, -start.y));
-        int startHi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pHeight, -start.y));
+        int startMi = pMeshBorder.addVertex(new Vector3d(start.x(), startHeight + pMinHeight, -start.y()));
+        int startHi = pMeshBorder.addVertex(new Vector3d(start.x(), startHeight + pHeight, -start.y()));
 
         TextCoord bm = new TextCoord(0, 0);
         TextCoord bh = new TextCoord(0, 1);
@@ -259,14 +258,13 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         int bhi = pMeshBorder.addTextCoord(bh);
 
         for (int i = 1; i < pPoints.size(); i++) {
-            Point2d end = pPoints.get(i);
+            Vector2dc end = pPoints.get(i);
             Double endHeight = getHeight(i, pHeights);
 
-            int endMi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pMinHeight, -end.y));
-            int endHi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pHeight, -end.y));
+            int endMi = pMeshBorder.addVertex(new Vector3d(end.x(), endHeight + pMinHeight, -end.y()));
+            int endHi = pMeshBorder.addVertex(new Vector3d(end.x(), endHeight + pHeight, -end.y()));
 
-            Vector3d normal = new Vector3d(end.y - start.y, 0, end.x - start.x);
-            normal.normalize();
+            Vector3dc normal = new Vector3d(end.y() - start.y(), 0, end.x() - start.x()).normalize();
 
             int n1i = pMeshBorder.addNormal(normal);
 
@@ -286,7 +284,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             faceRight.addVert(endHi, ehi, n1i);
 
             if (faceLeft != null) {
-                Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
+                Vector3dc normal2 = new Vector3d(-normal.x(), -normal.y(), -normal.z());
 
                 int n2i = pMeshBorder.addNormal(normal2);
 
@@ -399,7 +397,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         }
 
         return Collections
-                .singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -408,7 +406,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

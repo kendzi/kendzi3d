@@ -9,8 +9,7 @@
 
 package kendzi.jogl.camera;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Camera position and angle.
@@ -27,12 +26,12 @@ public interface Camera {
      *
      * @return position
      */
-    Point3d getPoint();
+    Vector3dc getPoint();
 
     /**
      * Camera angles vector.
      *
      * @return angles
      */
-    Vector3d getAngle();
+    Vector3dc getAngle();
 }

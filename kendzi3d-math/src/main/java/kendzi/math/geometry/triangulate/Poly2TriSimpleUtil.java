@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2d;
 import org.poly2tri.Poly2Tri;
 import org.poly2tri.geometry.polygon.Polygon;
 import org.poly2tri.geometry.polygon.PolygonPoint;
@@ -46,8 +45,8 @@ public class Poly2TriSimpleUtil {
 
         List<Triangle2d> out = new ArrayList<>();
         for (DelaunayTriangle t : triangles) {
-            Triangle2d triangle = new Triangle2d(new Point2d(t.points[0].getX(), t.points[0].getY()),
-                    new Point2d(t.points[1].getX(), t.points[1].getY()), new Point2d(t.points[2].getX(), t.points[2].getY()));
+            Triangle2d triangle = new Triangle2d(new Vector2d(t.points[0].getX(), t.points[0].getY()),
+                    new Vector2d(t.points[1].getX(), t.points[1].getY()), new Vector2d(t.points[2].getX(), t.points[2].getY()));
 
             out.add(triangle);
         }
@@ -68,7 +67,7 @@ public class Poly2TriSimpleUtil {
 
     private static Polygon convert(PolygonList2d polygon) {
 
-        return new Polygon(polygon.getPoints().stream().map(p -> new PolygonPoint(p.x, p.y))
+        return new Polygon(polygon.getPoints().stream().map(p -> new PolygonPoint(p.x(), p.y()))
                 .collect(Collectors.toCollection(ArrayList<PolygonPoint>::new)));
     }
 }

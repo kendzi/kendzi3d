@@ -1,12 +1,11 @@
 package kendzi.josm.kendzi3d.jogl.skybox;
 
 import com.google.inject.Inject;
-
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.util.texture.Texture;
 import kendzi.jogl.util.texture.TextureCoords;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -18,15 +17,15 @@ public class SkyBoxDrawer {
 
     private SkyBoxConfiguration configuration;
 
-    private final Point3d leftBottomBack = new Point3d(-10, -10, -10);
-    private final Point3d rightBottomBack = new Point3d(10, -10, -10);
-    private final Point3d rightTopBack = new Point3d(10, 10, -10);
-    private final Point3d leftTopBack = new Point3d(-10, 10, -10);
+    private final Vector3dc leftBottomBack = new Vector3d(-10, -10, -10);
+    private final Vector3dc rightBottomBack = new Vector3d(10, -10, -10);
+    private final Vector3dc rightTopBack = new Vector3d(10, 10, -10);
+    private final Vector3dc leftTopBack = new Vector3d(-10, 10, -10);
 
-    private final Point3d rightBottomFront = new Point3d(10, -10, 10);
-    private final Point3d leftBottomFront = new Point3d(-10, -10, 10);
-    private final Point3d leftTopFront = new Point3d(-10, 10, 10);
-    private final Point3d rightTopFront = new Point3d(10, 10, 10);
+    private final Vector3dc rightBottomFront = new Vector3d(10, -10, 10);
+    private final Vector3dc leftBottomFront = new Vector3d(-10, -10, 10);
+    private final Vector3dc leftTopFront = new Vector3d(-10, 10, 10);
+    private final Vector3dc rightTopFront = new Vector3d(10, 10, 10);
 
     /**
      * Constructor.
@@ -48,7 +47,7 @@ public class SkyBoxDrawer {
      * @param cameraLocation
      *            camera location
      */
-    public void draw(Point3d cameraLocation) {
+    public void draw(Vector3dc cameraLocation) {
 
         if (configuration == null) {
             return;
@@ -66,7 +65,7 @@ public class SkyBoxDrawer {
 
         GL11.glPushMatrix();
 
-        GL11.glTranslated(cameraLocation.x, cameraLocation.y, cameraLocation.z);
+        GL11.glTranslated(cameraLocation.x(), cameraLocation.y(), cameraLocation.z());
 
         GL11.glRotated(180d, 0, 1, 0);
 
@@ -95,7 +94,7 @@ public class SkyBoxDrawer {
      * @param p3
      * @param p4
      */
-    public void drawPolygon(String textureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
+    public void drawPolygon(String textureName, Vector3dc p1, Vector3dc p2, Vector3dc p3, Vector3dc p4) {
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName != null) {
             Texture texture = textureCacheService.getTexture(textureName);
@@ -109,13 +108,13 @@ public class SkyBoxDrawer {
         GL11.glBegin(GL11.GL_POLYGON);
 
         GL11.glTexCoord2d(tc.left(), tc.bottom());
-        GL11.glVertex3d(p1.x, p1.y, p1.z);
+        GL11.glVertex3d(p1.x(), p1.y(), p1.z());
         GL11.glTexCoord2d(tc.right(), tc.bottom());
-        GL11.glVertex3d(p2.x, p2.y, p2.z);
+        GL11.glVertex3d(p2.x(), p2.y(), p2.z());
         GL11.glTexCoord2d(tc.right(), tc.top());
-        GL11.glVertex3d(p3.x, p3.y, p3.z);
+        GL11.glVertex3d(p3.x(), p3.y(), p3.z());
         GL11.glTexCoord2d(tc.left(), tc.top());
-        GL11.glVertex3d(p4.x, p4.y, p4.z);
+        GL11.glVertex3d(p4.x(), p4.y(), p4.z());
 
         GL11.glEnd();
 

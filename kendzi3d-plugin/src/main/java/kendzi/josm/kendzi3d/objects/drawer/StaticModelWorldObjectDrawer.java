@@ -1,13 +1,13 @@
 package kendzi.josm.kendzi3d.objects.drawer;
 
 import javax.inject.Inject;
-import javax.vecmath.Point3d;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.kendzi3d.editor.drawer.HighlightDrawer;
 import kendzi.kendzi3d.world.StaticModelWorldObject;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 public class StaticModelWorldObjectDrawer {
@@ -22,11 +22,11 @@ public class StaticModelWorldObjectDrawer {
         GL11.glPushMatrix();
 
         // global position
-        Point3d position = modelObject.getPosition();
+        Vector3dc position = modelObject.getPosition();
         Model model = modelObject.getModel();
 
         // move to global space
-        GL11.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x(), position.y(), position.z());
 
         if (selected) {
             modelGl2Draw.setModel(model);

@@ -11,9 +11,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.glu.GLU;
 import kendzi.jogl.model.geometry.Model;
@@ -44,6 +41,8 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -75,12 +74,12 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     /**
      * Model scale;
      */
-    private Vector3d scale;
+    private Vector3dc scale;
 
     /**
      * Model translation.
      */
-    private Vector3d translate;
+    private Vector3dc translate;
 
     /**
      * Model configuration.
@@ -169,7 +168,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         if (pModel == null) {
             return null;
         }
-        return 1d / (pModel.getBounds().max.y - 0);// pModel.getBounds().min.y);
+        return 1d / (pModel.getBounds().max.y() - 0);// pModel.getBounds().min.y());
     }
 
     private static Model getModel(NodeModelConf nodeModelConf, LOD pLod, ModelCacheService modelCacheService) {
@@ -219,10 +218,10 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
             GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
             drawDebug(translate, 0);
 
-            GL11.glTranslated(translate.x, translate.y, translate.z);
+            GL11.glTranslated(translate.x(), translate.y(), translate.z());
 
             GL11.glEnable(GL11.GL_NORMALIZE); // XXX
-            GL11.glScaled(scale.x, scale.y, scale.z);
+            GL11.glScaled(scale.x(), scale.y(), scale.z());
             GL11.glRotated(rotateY, 0d, 1d, 0d);
 
             modelRenderer.render(model2);
@@ -233,7 +232,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         }
     }
 
-    public static void drawDebug(Vector3d translate, double direction) {
+    public static void drawDebug(Vector3dc translate, double direction) {
 
         if (!debug) {
             return;
@@ -249,16 +248,16 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         GLU.gluSphere(0.3f, 9, 9);
 
         DrawUtil.drawLine(0, 0, 0, //
-                translate.x, translate.y, translate.z);
+                translate.x(), translate.y(), translate.z());
 
         // bottom Y
         GL11.glPushMatrix();
         GL11.glColor3fv(CompassDrawer.Y_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(translate.x, 0, translate.z, //
-                translate.x, translate.y, translate.z);
+        DrawUtil.drawLine(translate.x(), 0, translate.z(), //
+                translate.x(), translate.y(), translate.z());
 
-        GL11.glTranslated(translate.x, 0.15, translate.z);
+        GL11.glTranslated(translate.x(), 0.15, translate.z());
 
         DrawUtil.drawDotY(0.3, 9);
 
@@ -269,10 +268,10 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         GL11.glColor3fv(CompassDrawer.X_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(0, translate.y, translate.z, //
-                translate.x, translate.y, translate.z);
+        DrawUtil.drawLine(0, translate.y(), translate.z(), //
+                translate.x(), translate.y(), translate.z());
 
-        GL11.glTranslated(0, translate.y, translate.z);
+        GL11.glTranslated(0, translate.y(), translate.z());
 
         // GL11.glRotated(90, 0d, 0d, 1d);
 
@@ -287,10 +286,10 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
 
         GL11.glColor3fv(CompassDrawer.Z_AXIS_COLOR.getRGBComponents(colorArrays));
 
-        DrawUtil.drawLine(translate.x, translate.y, 0, //
-                translate.x, translate.y, translate.z);
+        DrawUtil.drawLine(translate.x(), translate.y(), 0, //
+                translate.x(), translate.y(), translate.z());
 
-        GL11.glTranslated(translate.x, translate.y, 0);
+        GL11.glTranslated(translate.x(), translate.y(), 0);
 
         GL11.glRotated(90, 1d, 0d, 0d);
 
@@ -302,7 +301,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         GL11.glPushMatrix();
         GL11.glColor3fv(color.darker().getRGBComponents(colorArrays));
 
-        GL11.glTranslated(translate.x, translate.y, translate.z);
+        GL11.glTranslated(translate.x(), translate.y(), translate.z());
 
         // GL11.glRotated(90, 0d, 1d, 0d);
 
@@ -335,7 +334,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
         }
 
         return Collections.singletonList(
-                new ExportItem(modelLod.get(LOD.LOD1), new Point3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
+                new ExportItem(modelLod.get(LOD.LOD1), new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -344,7 +343,7 @@ public class PointModel extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

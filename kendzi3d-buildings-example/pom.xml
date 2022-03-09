@@ -37,6 +37,11 @@
       <artifactId>kendzi3d-jogl-textures-library-res</artifactId>
       <version>1.0.206-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <parent>
     <groupId>kendzi.kendzi3d</groupId>

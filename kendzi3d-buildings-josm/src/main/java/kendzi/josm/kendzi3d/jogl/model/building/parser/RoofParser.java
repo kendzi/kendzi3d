@@ -2,9 +2,6 @@ package kendzi.josm.kendzi3d.jogl.model.building.parser;
 
 import java.util.Map;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Vector2d;
-
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
@@ -22,6 +19,8 @@ import kendzi.kendzi3d.josm.model.direction.DirectionParserUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.math.geometry.point.Vector2dUtil;
 import kendzi.util.StringUtil;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -172,13 +171,13 @@ public class RoofParser {
         boolean soft = false;
         Direction direction = DirectionParserUtil.parse(directionValue);
         if (direction != null) {
-            Vector2d directionVector = direction.getVector();
+            Vector2dc directionVector = direction.getVector();
             soft = !(direction instanceof AngleDirection);
 
             if (Ortagonal.LEFT.equals(orthogonal)) {
-                directionVector = new Vector2d(-directionVector.y, directionVector.x);
+                directionVector = new Vector2d(-directionVector.y(), directionVector.x());
             } else if (Ortagonal.RIGHT.equals(orthogonal)) {
-                directionVector = new Vector2d(directionVector.y, -directionVector.x);
+                directionVector = new Vector2d(directionVector.y(), -directionVector.x());
             }
             return new RoofFrontDirection(directionVector, soft);
         }
@@ -191,7 +190,7 @@ public class RoofParser {
 
     private static RoofFrontDirection findDirection(OsmPrimitive pWay, Perspective pPerspective) {
 
-        Vector2d direction = null;
+        Vector2dc direction = null;
         boolean soft = false;
 
         direction = findDirectionByRelation(pWay, pPerspective);
@@ -211,7 +210,7 @@ public class RoofParser {
 
     }
 
-    private static Vector2d findDirectionByRelation(OsmPrimitive osmPrimitive, Perspective perspective) {
+    private static Vector2dc findDirectionByRelation(OsmPrimitive osmPrimitive, Perspective perspective) {
         if (osmPrimitive instanceof Relation) {
             Relation rel = (Relation) osmPrimitive;
 
@@ -235,24 +234,21 @@ public class RoofParser {
 
             if (begin != null && end != null) {
 
-                Point2d directionBegin = perspective.calcPoint(begin);
-                Point2d directionEnd = perspective.calcPoint(end);
+                Vector2dc directionBegin = perspective.calcPoint(begin);
+                Vector2dc directionEnd = perspective.calcPoint(end);
 
-                Vector2d direction = new Vector2d(directionEnd);
-                direction.sub(directionBegin);
-
-                return direction;
+                return new Vector2d(directionEnd).sub(directionBegin);
             }
         }
         return null;
     }
 
-    private static Vector2d findDirectionByPoints(Way pWay, Perspective pPerspective) {
-        Point2d direction3drBegin = null;
-        Point2d direction3drEnd = null;
+    private static Vector2dc findDirectionByPoints(Way pWay, Perspective pPerspective) {
+        Vector2dc direction3drBegin = null;
+        Vector2dc direction3drEnd = null;
 
-        Point2d directionBegin = null;
-        Point2d directionEnd = null;
+        Vector2dc directionBegin = null;
+        Vector2dc directionEnd = null;
 
         for (int i = pWay.getNodesCount() - 1; i >= 0; i--) {
             Node node = pWay.getNode(i);
@@ -276,22 +272,18 @@ public class RoofParser {
         }
 
         if (direction3drBegin != null && direction3drEnd != null) {
-            Vector2d direction = new Vector2d(direction3drEnd);
-            direction.sub(direction3drBegin);
+            Vector2dc direction = new Vector2d(direction3drEnd).sub(direction3drBegin);
             return Vector2dUtil.orthogonalRight(direction);
         }
 
         if (directionBegin != null && directionEnd != null) {
-            Vector2d direction = new Vector2d(directionEnd);
-            direction.sub(directionBegin);
-
-            return direction;
+            return new Vector2d(directionEnd).sub(directionBegin);
         }
 
         return null;
     }
 
-    private static Point2d findPoint(String pKey, String pValue, Way pWay, Perspective pPerspective) {
+    private static Vector2dc findPoint(String pKey, String pValue, Way pWay, Perspective pPerspective) {
 
         for (int i = 0; i < pWay.getNodesCount(); i++) {
 

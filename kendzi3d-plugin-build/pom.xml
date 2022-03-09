@@ -69,7 +69,9 @@
               <Plugin-Link>https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Kendzi3D</Plugin-Link>
               <Plugin-Mainversion>14258</Plugin-Mainversion>
               <Plugin-Version>${project.version}</Plugin-Version>
-              <Plugin-Requires>log4j;lwjgl;jaxb;kendzi3d-resources</Plugin-Requires>
+              <Plugin-Requires>ejml;log4j;lwjgl;jaxb;kendzi3d-resources</Plugin-Requires>
+              <!-- Needed since sometimes LWJGL isn't loaded prior to kendzi3d (2022-03-09, check if fixed) -->
+              <Plugin-Stage>51</Plugin-Stage>
               <url>${project.url}</url>
               <Class-Path>./kendzi3d-resources.jar</Class-Path>
             </manifestEntries>
@@ -103,9 +105,9 @@
         <configuration>
           <artifactItems>
             <artifactItem>
-              <groupId>${groupId}</groupId>
-              <artifactId>${artifactId}</artifactId>
-              <version>${version}</version>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${project.version}</version>
               <classifier>dep</classifier>
               <type>jar</type>
               <destFileName>kendzi3d-dev.jar</destFileName>

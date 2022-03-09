@@ -3,9 +3,6 @@ package kendzi.kendzi3d.editor.example.objects;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SphereSelection;
@@ -15,6 +12,8 @@ import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.kendzi3d.editor.selection.event.SelectEvent;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.EditorChangeListener;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ public class Box implements EditableObject, EditorChangeListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(Box.class);
 
-    private final Point3d position = new Point3d(0, 0, -2);
+    private final Vector3dc position = new Vector3d(0, 0, -2);
 
     private double size = 1;
 
@@ -88,7 +87,7 @@ public class Box implements EditableObject, EditorChangeListener {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return position;
     }
 

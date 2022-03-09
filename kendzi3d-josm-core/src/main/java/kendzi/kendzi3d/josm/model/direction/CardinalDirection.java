@@ -8,7 +8,7 @@
  */
 package kendzi.kendzi3d.josm.model.direction;
 
-import javax.vecmath.Vector2d;
+import org.joml.Vector2d;
 
 /**
  * Direction in Cardinal.

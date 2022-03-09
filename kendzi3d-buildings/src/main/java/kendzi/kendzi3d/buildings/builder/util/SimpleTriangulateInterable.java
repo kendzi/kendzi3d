@@ -3,7 +3,7 @@ package kendzi.kendzi3d.buildings.builder.util;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.vecmath.Point2d;
+import org.joml.Vector2dc;
 
 /**
  * Simple triangulation interator. To change rectangle polygons into triangles.
@@ -13,9 +13,9 @@ import javax.vecmath.Point2d;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public class SimpleTriangulateInterable implements Iterable<Point2d> {
+public class SimpleTriangulateInterable implements Iterable<Vector2dc> {
 
-    private final List<Point2d> points;
+    private final List<Vector2dc> points;
     private int count;
     private final int size;
     private static final int[] indexes = { 0, 1, 2, 2, 3, 0 };
@@ -26,7 +26,7 @@ public class SimpleTriangulateInterable implements Iterable<Point2d> {
      * @param points
      *            the list of polygon points
      */
-    public SimpleTriangulateInterable(List<Point2d> points) {
+    public SimpleTriangulateInterable(List<Vector2dc> points) {
         this.points = points;
         if (points.size() == 4) {
             size = 6;
@@ -38,9 +38,9 @@ public class SimpleTriangulateInterable implements Iterable<Point2d> {
     }
 
     @Override
-    public Iterator<Point2d> iterator() {
+    public Iterator<Vector2dc> iterator() {
 
-        return new Iterator<Point2d>() {
+        return new Iterator<Vector2dc>() {
 
             @Override
             public boolean hasNext() {
@@ -48,8 +48,8 @@ public class SimpleTriangulateInterable implements Iterable<Point2d> {
             }
 
             @Override
-            public Point2d next() {
-                Point2d point2d = points.get(indexes[count]);
+            public Vector2dc next() {
+                Vector2dc point2d = points.get(indexes[count]);
                 count++;
                 return point2d;
             }

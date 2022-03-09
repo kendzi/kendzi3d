@@ -3,12 +3,11 @@ package kendzi.math.geometry.polygon.split;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.split.PlygonSplitUtil.SplitResult;
+import org.joml.Vector2dc;
 
 public class PolygonSplitHelper {
 
@@ -25,10 +24,10 @@ public class PolygonSplitHelper {
 
     }
 
-    private static MultiPolygonList2d toMultiPolygon(List<List<Point2d>> leftPolygons) {
+    private static MultiPolygonList2d toMultiPolygon(List<List<Vector2dc>> leftPolygons) {
         List<PolygonList2d> polygons = new ArrayList<>();
 
-        for (List<Point2d> polygon : leftPolygons) {
+        for (List<Vector2dc> polygon : leftPolygons) {
             polygons.add(new PolygonList2d(polygon));
         }
         return new MultiPolygonList2d(polygons);
@@ -61,8 +60,8 @@ public class PolygonSplitHelper {
     }
 
     public static PlygonSplitUtil.SplitResult split(MultiPolygonList2d multiPolygon, LinePoints2d splittingLine) {
-        final List<List<Point2d>> leftPolygons = new ArrayList<>();
-        final List<List<Point2d>> rightPolygons = new ArrayList<>();
+        final List<List<Vector2dc>> leftPolygons = new ArrayList<>();
+        final List<List<Vector2dc>> rightPolygons = new ArrayList<>();
 
         for (PolygonList2d polygon : multiPolygon.getPolygons()) {
 
@@ -101,13 +100,13 @@ public class PolygonSplitHelper {
         return leftMultiPolygon;
     }
 
-    public static LinePoints2d[] polygonalChaniToLineArray(Point2d... lines) {
+    public static LinePoints2d[] polygonalChaniToLineArray(Vector2dc... lines) {
         LinePoints2d[] linesArray = new LinePoints2d[lines.length - 1];
 
         for (int i = 0; i < lines.length - 1; i++) {
 
-            Point2d p1 = lines[i];
-            Point2d p2 = lines[i + 1];
+            Vector2dc p1 = lines[i];
+            Vector2dc p2 = lines[i + 1];
 
             linesArray[i] = new LinePoints2d(p1, p2);
         }

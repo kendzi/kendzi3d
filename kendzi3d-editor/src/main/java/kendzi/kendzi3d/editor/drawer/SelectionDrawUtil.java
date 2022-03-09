@@ -1,11 +1,10 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.util.DrawUtil;
 import kendzi.kendzi3d.editor.selection.Selectable;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SphereSelection;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 public class SelectionDrawUtil {
@@ -18,11 +17,11 @@ public class SelectionDrawUtil {
                 SphereSelection s = (SphereSelection) selection;
                 GL11.glPushMatrix();
 
-                Point3d p = s.getCenter();
+                Vector3dc p = s.getCenter();
 
-                double dx = p.x;
-                double dy = p.y;
-                double dz = p.z;
+                double dx = p.x();
+                double dy = p.y();
+                double dz = p.z();
 
                 GL11.glLineWidth(1);
                 GL11.glTranslated(dx, dy, dz);

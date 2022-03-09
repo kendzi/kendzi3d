@@ -10,9 +10,8 @@
       <version>${kendzi.math.version}</version>
     </dependency>
     <dependency>
-      <groupId>java3d</groupId>
-      <artifactId>vecmath</artifactId>
-      <version>${vecmath.version}</version>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

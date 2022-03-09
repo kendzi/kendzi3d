@@ -1,14 +1,13 @@
 package kendzi.josm.kendzi3d.jogl.compas;
 
-import java.awt.*;
-
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import java.awt.Color;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.kendzi3d.editor.drawer.ArrowDrawUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -65,13 +64,8 @@ public class CompassDrawer {
 
         Ray3d ray3d = viewport.picking(distance, viewport.getHeight() - distance);
 
-        Point3d point = ray3d.getPoint();
-
-        Vector3d vector = ray3d.getVector();
-        vector.normalize();
-        vector.scale(1.5);
-
-        point.add(vector);
+        Vector3dc vector = ray3d.getVector().normalize(new Vector3d()).mul(1.5);
+        Vector3d point = ray3d.getPoint().add(vector, new Vector3d());
 
         draw(point);
     }
@@ -83,12 +77,12 @@ public class CompassDrawer {
      *            location
      *
      */
-    public void draw(Point3d point) {
+    public void draw(Vector3dc point) {
 
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        GL11.glTranslated(point.x, point.y, point.z);
+        GL11.glTranslated(point.x(), point.y(), point.z());
 
         double camDistanceRatio = 0.07d;
         int section = 8;

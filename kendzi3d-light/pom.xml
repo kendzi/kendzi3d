@@ -42,9 +42,12 @@
       <version>${slf4j.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.ejml</groupId>
       <artifactId>ejml-simple</artifactId>
-      <version>${ejml.version}</version>
     </dependency>
   </dependencies>
   <parent>

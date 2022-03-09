@@ -5,6 +5,10 @@
   <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
   <dependencies>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opengl</artifactId>
       <version>${lwjgl.version}</version>
@@ -13,11 +17,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>java3d</groupId>
-      <artifactId>vecmath</artifactId>
-      <version>${vecmath.version}</version>
     </dependency>
   </dependencies>
   <parent>

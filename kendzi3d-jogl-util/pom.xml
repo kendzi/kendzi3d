@@ -29,6 +29,10 @@
       <artifactId>lwjgl3-awt</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>

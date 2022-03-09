@@ -30,10 +30,17 @@
       <version>1.0.3</version>
     </dependency>
     <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.ejml</groupId>
       <artifactId>ejml-simple</artifactId>
-      <version>${ejml.version}</version>
-      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <parent>

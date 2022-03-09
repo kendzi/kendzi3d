@@ -6,7 +6,10 @@
 
 package kendzi.kendzi3d.buildings.builder;
 
-import static kendzi.kendzi3d.buildings.builder.util.BuildingTextureUtil.*;
+import static kendzi.kendzi3d.buildings.builder.util.BuildingTextureUtil.findWindowTextureData;
+import static kendzi.kendzi3d.buildings.builder.util.BuildingTextureUtil.takeFacadeTextureData;
+import static kendzi.kendzi3d.buildings.builder.util.BuildingTextureUtil.takeFloorTextureData;
+import static kendzi.kendzi3d.buildings.builder.util.BuildingTextureUtil.takeWindowsColumnsTextureData;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -14,11 +17,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -62,6 +60,10 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Builder for 3d model of building.
@@ -134,14 +136,14 @@ public class BuildingBuilder {
 
             double height = sphere.getHeight();
             double radius = sphere.getRadius();
-            Point2d point = sphere.getPoint();
+            Vector2dc point = sphere.getPoint();
 
             // create cross section
-            Point2d[] crossSection = new Point2d[icross];
+            Vector2dc[] crossSection = new Vector2dc[icross];
             for (int i = 0; i < icross; i++) {
                 double a = Math.toRadians(180) / (icross - 1) * i - Math.toRadians(90);
 
-                crossSection[i] = new Point2d(Math.cos(a) * radius, Math.sin(a) * radius + height);
+                crossSection[i] = new Vector2d(Math.cos(a) * radius, Math.sin(a) * radius + height);
             }
 
             int pIsection = 12;
@@ -307,22 +309,18 @@ public class BuildingBuilder {
                 WallNode n1 = nodes.get(beginWallNodeIndex);
                 WallNode n2 = nodes.get(endWallNodeIndex);
 
-                Point2d startPoint = n1.getPoint();
-                Point2d endPoint = n2.getPoint();
+                Vector2dc startPoint = n1.getPoint();
+                Vector2dc endPoint = n2.getPoint();
                 double segmentDistance = startPoint.distance(endPoint);
-                Vector2d direction = new Vector2d(endPoint);
-                direction.sub(startPoint);
-                direction.normalize();
+                Vector2dc direction = new Vector2d(endPoint).sub(startPoint).normalize();
 
-                Point2d vbl = new Point2d(0, minHeight);
-                Point2d vbr = new Point2d(segmentDistance, minHeight);
+                Vector2dc vbl = new Vector2d(0, minHeight);
+                Vector2dc vbr = new Vector2d(segmentDistance, minHeight);
 
-                Point2d vtr = new Point2d(segmentDistance, wallHeight);
-                Point2d vtl = new Point2d(0, wallHeight);
+                Vector2dc vtr = new Vector2d(segmentDistance, wallHeight);
+                Vector2dc vtl = new Vector2d(0, wallHeight);
 
-                Vector3d normal = new Vector3d(-direction.y, 0, -direction.x);
-
-                normal.negate();
+                Vector3dc normal = new Vector3d(-direction.y(), 0, -direction.x()).negate();
 
                 int iN = mesh.addNormal(normal);
 
@@ -342,9 +340,9 @@ public class BuildingBuilder {
 
                 for (PolygonList2d polygon : mPoly.getPolygons()) {
 
-                    Iterable<Point2d> trianglePoint = new SimpleTriangulateInterable(polygon.getPoints());
+                    Iterable<Vector2dc> trianglePoint = new SimpleTriangulateInterable(polygon.getPoints());
 
-                    for (Point2d p : trianglePoint) {
+                    for (Vector2dc p : trianglePoint) {
 
                         int vi = segmentPointToVertex3dIndex(p, startPoint, direction, mesh);
 
@@ -377,7 +375,7 @@ public class BuildingBuilder {
         }
     }
 
-    private static Collection<? extends PolygonList2d> createUnderRoofPolygons(Point2d startPoint, Point2d endPoint,
+    private static Collection<? extends PolygonList2d> createUnderRoofPolygons(Vector2dc startPoint, Vector2dc endPoint,
             double wallHeight2, HeightCalculator roofHeightCalculator) {
 
         List<PolygonList2d> ret = new ArrayList<>();
@@ -403,11 +401,11 @@ public class BuildingBuilder {
                 continue;
             }
 
-            Point2d bottomLeft = new Point2d(distance, wallHeight2);
-            Point2d bottomRight = new Point2d(distance + segmentDistance, wallHeight2);
+            Vector2dc bottomLeft = new Vector2d(distance, wallHeight2);
+            Vector2dc bottomRight = new Vector2d(distance + segmentDistance, wallHeight2);
 
-            Point2d topRight = new Point2d(distance + segmentDistance, rightHeight);
-            Point2d topLeft = new Point2d(distance, leftHeight);
+            Vector2dc topRight = new Vector2d(distance + segmentDistance, rightHeight);
+            Vector2dc topLeft = new Vector2d(distance, leftHeight);
 
             ret.add(new PolygonList2d(bottomLeft, bottomRight, topRight, topLeft));
 
@@ -607,7 +605,7 @@ public class BuildingBuilder {
     }
 
     private static MultiPolygonList2d applyWindows(MultiPolygonList2d mPoly, List<BuildingNodeElement> buildingNodeElements,
-            Point2d segmentStart, Vector2d segmentDirection, double displacementOnSegment, boolean beginEnd,
+            Vector2dc segmentStart, Vector2dc segmentDirection, double displacementOnSegment, boolean beginEnd,
             CatchFaceFactory catchFaceFactory, BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
 
         if (buildingNodeElements != null) {
@@ -625,17 +623,17 @@ public class BuildingBuilder {
         return mPoly;
     }
 
-    private static MultiPolygonList2d applyWindowsBegin(MultiPolygonList2d mPoly, BuildingNodeElement be, Point2d segmentStart,
-            Vector2d segmentDirection, double nodeDisplacement, CatchFaceFactory pCatchFaceFactory,
+    private static MultiPolygonList2d applyWindowsBegin(MultiPolygonList2d mPoly, BuildingNodeElement be, Vector2dc segmentStart,
+            Vector2dc segmentDirection, double nodeDisplacement, CatchFaceFactory pCatchFaceFactory,
             BuildingElementsTextureManager pTextureMenager, boolean counterClockwise) {
 
         if (be instanceof SquareHoleElement) {
             SquareHoleElement she = (SquareHoleElement) be;
 
-            Point2d mbp = new Point2d(0, she.getMinHeight());
-            Point2d rbp = new Point2d(she.getWidth() / 2.0, she.getMinHeight());
-            Point2d rtp = new Point2d(she.getWidth() / 2.0, she.getMaxHeight());
-            Point2d mtp = new Point2d(0, she.getMaxHeight());
+            Vector2dc mbp = new Vector2d(0, she.getMinHeight());
+            Vector2dc rbp = new Vector2d(she.getWidth() / 2.0, she.getMinHeight());
+            Vector2dc rtp = new Vector2d(she.getWidth() / 2.0, she.getMaxHeight());
+            Vector2dc mtp = new Vector2d(0, she.getMaxHeight());
 
             mPoly = PolygonSplitHelper.unionOfLeftSideOfMultipleCuts(mPoly, new LinePoints2d(rtp, rbp),
                     new LinePoints2d(mtp, rtp), new LinePoints2d(rbp, mbp));
@@ -646,7 +644,7 @@ public class BuildingBuilder {
 
             FaceFactory face = mesh.addFace(FaceType.QUADS);
 
-            Vector3d n = new Vector3d(-segmentDirection.y, 0, -segmentDirection.x);
+            Vector3d n = new Vector3d(-segmentDirection.y(), 0, -segmentDirection.x());
             // if (counterClockwise) {
             n.negate();
             // }
@@ -668,17 +666,17 @@ public class BuildingBuilder {
         return mPoly;
     }
 
-    private static MultiPolygonList2d applyWindowsEnd(MultiPolygonList2d mPoly, BuildingNodeElement be, Point2d segmentStart,
-            Vector2d segmentDirection, double nodeDisplacement, CatchFaceFactory catchFaceFactory,
+    private static MultiPolygonList2d applyWindowsEnd(MultiPolygonList2d mPoly, BuildingNodeElement be, Vector2dc segmentStart,
+            Vector2dc segmentDirection, double nodeDisplacement, CatchFaceFactory catchFaceFactory,
             BuildingElementsTextureManager textureMenager, boolean counterClockwise) {
 
         if (be instanceof SquareHoleElement) {
             SquareHoleElement she = (SquareHoleElement) be;
 
-            Point2d lbp = new Point2d(nodeDisplacement - she.getWidth() / 2.0, she.getMinHeight());
-            Point2d mbp = new Point2d(nodeDisplacement, she.getMinHeight());
-            Point2d mtp = new Point2d(nodeDisplacement, she.getMaxHeight());
-            Point2d ltp = new Point2d(nodeDisplacement - she.getWidth() / 2.0, she.getMaxHeight());
+            Vector2dc lbp = new Vector2d(nodeDisplacement - she.getWidth() / 2.0, she.getMinHeight());
+            Vector2dc mbp = new Vector2d(nodeDisplacement, she.getMinHeight());
+            Vector2dc mtp = new Vector2d(nodeDisplacement, she.getMaxHeight());
+            Vector2dc ltp = new Vector2d(nodeDisplacement - she.getWidth() / 2.0, she.getMaxHeight());
 
             mPoly = PolygonSplitHelper.unionOfLeftSideOfMultipleCuts(mPoly, new LinePoints2d(lbp, ltp),
                     new LinePoints2d(ltp, mtp), new LinePoints2d(mbp, lbp));
@@ -689,8 +687,7 @@ public class BuildingBuilder {
 
             FaceFactory face = mesh.addFace(FaceType.QUADS);
 
-            Vector3d n = new Vector3d(-segmentDirection.y, 0, -segmentDirection.x);
-            n.negate();
+            Vector3dc n = new Vector3d(-segmentDirection.y(), 0, -segmentDirection.x()).negate();
 
             int iN = mesh.addNormal(n);
 
@@ -736,20 +733,19 @@ public class BuildingBuilder {
         }
     }
 
-    private static int segmentPointToTextureDataIndex(Point2d point, double offsetX, double offsetY, MeshFactory mesh,
+    private static int segmentPointToTextureDataIndex(Vector2dc point, double offsetX, double offsetY, MeshFactory mesh,
             TextureData td) {
 
-        return mesh.addTextCoord(new TextCoord((point.x + offsetX) / td.getWidth(), (point.y + offsetY) / td.getHeight()));
+        return mesh.addTextCoord(new TextCoord((point.x() + offsetX) / td.getWidth(), (point.y() + offsetY) / td.getHeight()));
     }
 
-    private static int segmentPointToVertex3dIndex(Point2d point, Point2d start, Vector2d direction, MeshFactory mesh) {
-        Point3d vertex = new Point3d(direction.x, 0, -direction.y);
+    private static int segmentPointToVertex3dIndex(Vector2dc point, Vector2dc start, Vector2dc direction, MeshFactory mesh) {
+        Vector3d vertex = new Vector3d(direction.x(), 0, -direction.y()).mul(point.x());
 
-        vertex.scale(point.x);
-        vertex.x += start.x;
-        vertex.z -= start.y;
+        vertex.x += start.x();
+        vertex.z -= start.y();
 
-        vertex.y = point.y;
+        vertex.y = point.y();
 
         int iV = mesh.addVertex(vertex);
         return iV;

@@ -9,7 +9,8 @@
 
 package kendzi.jogl.model.geometry;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Bounds of model. Minimal border, maximal border, radius and center.
@@ -20,12 +21,12 @@ public class Bounds {
     /**
      * Minimal point of bounds.
      */
-    public Point3d min;
+    public Vector3d min;
 
     /**
      * Maximal point of bounds.
      */
-    public Point3d max;
+    public Vector3d max;
 
     /**
      * Radius of bounds.
@@ -34,12 +35,12 @@ public class Bounds {
     /**
      * Center of bounds.
      */
-    public Point3d center;
+    public Vector3dc center;
 
     /**
      * @return the min
      */
-    public Point3d getMin() {
+    public Vector3dc getMin() {
         return min;
     }
 
@@ -47,14 +48,14 @@ public class Bounds {
      * @param min
      *            the min to set
      */
-    public void setMin(Point3d min) {
+    public void setMin(Vector3d min) {
         this.min = min;
     }
 
     /**
      * @return the max
      */
-    public Point3d getMax() {
+    public Vector3dc getMax() {
         return max;
     }
 
@@ -62,7 +63,7 @@ public class Bounds {
      * @param max
      *            the max to set
      */
-    public void setMax(Point3d max) {
+    public void setMax(Vector3d max) {
         this.max = max;
     }
 
@@ -84,7 +85,7 @@ public class Bounds {
     /**
      * @return the center
      */
-    public Point3d getCenter() {
+    public Vector3dc getCenter() {
         return center;
     }
 
@@ -92,7 +93,7 @@ public class Bounds {
      * @param center
      *            the center to set
      */
-    public void setCenter(Point3d center) {
+    public void setCenter(Vector3dc center) {
         this.center = center;
     }
 

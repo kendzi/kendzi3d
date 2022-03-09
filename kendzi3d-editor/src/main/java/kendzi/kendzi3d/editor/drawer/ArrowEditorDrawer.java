@@ -1,8 +1,6 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import java.awt.*;
-
-import javax.vecmath.Point3d;
+import java.awt.Color;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
@@ -11,6 +9,7 @@ import kendzi.kendzi3d.editor.drawer.ActiveSpotDrawer.EditorMode;
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditor;
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
+import org.joml.Vector3dc;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -52,9 +51,9 @@ public class ArrowEditorDrawer {
      */
     public void draw(ArrowEditor ae, boolean isActiveEditor, boolean isHighlightedEditor, Viewport viewport) {
 
-        Point3d cameraPoint = viewport.getPosition();
+        Vector3dc cameraPoint = viewport.getPosition();
 
-        Point3d activeSpot = ae.getActiveSpot(cameraPoint);
+        Vector3dc activeSpot = ae.getActiveSpot(cameraPoint);
 
         double distanceRatio = distanceRatio(ae, viewport);
 
@@ -73,8 +72,8 @@ public class ArrowEditorDrawer {
 
     private double distanceRatio(ArrowEditor ae, Viewport viewport) {
 
-        Point3d point = ae.getEditorOrigin();
-        Point3d cameraPoint = viewport.getPosition();
+        Vector3dc point = ae.getEditorOrigin();
+        Vector3dc cameraPoint = viewport.getPosition();
 
         return cameraPoint.distance(point) * 480d / viewport.getHeight();
     }
@@ -82,8 +81,8 @@ public class ArrowEditorDrawer {
     private void drawMeasure(ArrowEditor ae, Viewport viewport, double distanceRatio) {
         GL11.glColor3fv(measureColor);
 
-        Point3d origin = ae.getEditorOrigin();
-        Point3d arrowEnd = ae.arrowEnd();
+        Vector3dc origin = ae.getEditorOrigin();
+        Vector3dc arrowEnd = ae.arrowEnd();
 
         double distanceScale = DISTANCE_RATIO_SCALE * distanceRatio;
 
@@ -96,9 +95,9 @@ public class ArrowEditorDrawer {
                 arrowWidth, lineWidth);
     }
 
-    private void drawActiveSpot(Point3d activeSpot, boolean isHighlightedEditor, EditorType editorType, double distanceRatio) {
+    private void drawActiveSpot(Vector3dc activeSpot, boolean isHighlightedEditor, EditorType editorType, double distanceRatio) {
         GL11.glPushMatrix();
-        GL11.glTranslated(activeSpot.x, activeSpot.y, activeSpot.z);
+        GL11.glTranslated(activeSpot.x(), activeSpot.y(), activeSpot.z());
 
         EditorMode highlight = EditorMode.HIGHLIGHT_2;
         if (isHighlightedEditor) {
@@ -115,8 +114,8 @@ public class ArrowEditorDrawer {
         GL11.glColor3fv(arrowEditorDottedLines);
 
         GL11.glLineWidth(DOTTED_LINE_WIDTH);
-        Point3d editorOrigin = ae.getEditorOrigin();
-        Point3d arrowEnd = ae.arrowEnd();
+        Vector3dc editorOrigin = ae.getEditorOrigin();
+        Vector3dc arrowEnd = ae.arrowEnd();
         LineDrawUtil.drawDottedLine(editorOrigin, arrowEnd, DOTTED_LINE_SEGMENT_LENGTH);
     }
 }

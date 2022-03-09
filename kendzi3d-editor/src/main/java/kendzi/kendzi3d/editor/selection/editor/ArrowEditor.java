@@ -5,11 +5,9 @@
  */
 package kendzi.kendzi3d.editor.selection.editor;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.math.geometry.ray.Ray3d;
+import org.joml.Vector3dc;
 
 /**
  * Arrow like editor.
@@ -35,14 +33,14 @@ public interface ArrowEditor extends Editor {
      *
      * @return editor origin
      */
-    Point3d getEditorOrigin();
+    Vector3dc getEditorOrigin();
 
     /**
      * Arrow direction.
      *
      * @return the vector
      */
-    Vector3d getVector();
+    Vector3dc getVector();
 
     /**
      * Arrow length.
@@ -56,7 +54,7 @@ public interface ArrowEditor extends Editor {
      *
      * @return point from arrow end.
      */
-    Point3d arrowEnd();
+    Vector3dc arrowEnd();
 
     // XXX
     EditorChangeEvent move(Ray3d moveRay, boolean finish);

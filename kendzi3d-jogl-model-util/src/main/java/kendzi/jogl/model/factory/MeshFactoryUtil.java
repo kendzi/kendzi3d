@@ -3,10 +3,6 @@ package kendzi.jogl.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.texture.dto.TextureData;
@@ -17,6 +13,10 @@ import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.triangulate.Poly2TriSimpleUtil;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,22 +25,22 @@ public class MeshFactoryUtil {
     /** Log. */
     private static final Logger log = LoggerFactory.getLogger(MeshFactoryUtil.class);
 
-    public static kendzi.jogl.model.factory.MeshFactory cubeMesh(Point3d start) {
+    public static kendzi.jogl.model.factory.MeshFactory cubeMesh(Vector3dc start) {
         return cubeMesh(start, new Vector3d(1, 1, 1));
     }
 
-    public static kendzi.jogl.model.factory.MeshFactory cubeMesh(Point3d start, Vector3d size) {
+    public static kendzi.jogl.model.factory.MeshFactory cubeMesh(Vector3dc start, Vector3dc size) {
 
         MeshFactory mf = new MeshFactory();
         FaceFactory face = mf.addFace(FaceType.QUADS);
 
-        double x = start.x;
-        double y = start.y;
-        double z = start.z;
+        double x = start.x();
+        double y = start.y();
+        double z = start.z();
 
-        double sx = size.x / 2d;
-        double sy = size.y / 2d;
-        double sz = size.z / 2d;
+        double sx = size.x() / 2d;
+        double sy = size.y() / 2d;
+        double sz = size.z() / 2d;
 
         int tld = mf.addTextCoord(new TextCoord(0, 0));
         int trd = mf.addTextCoord(new TextCoord(1, 0));
@@ -54,15 +54,15 @@ public class MeshFactoryUtil {
         int nt = mf.addNormal(new Vector3d(0, 1, 0));
         int nd = mf.addNormal(new Vector3d(0, -1, 0));
 
-        int ruf = mf.addVertex(new Point3d(x + sx, y + sy, z + sz));
-        int rub = mf.addVertex(new Point3d(x + sx, y + sy, z - sz));
-        int rdf = mf.addVertex(new Point3d(x + sx, y - sy, z + sz));
-        int rdb = mf.addVertex(new Point3d(x + sx, y - sy, z - sz));
+        int ruf = mf.addVertex(new Vector3d(x + sx, y + sy, z + sz));
+        int rub = mf.addVertex(new Vector3d(x + sx, y + sy, z - sz));
+        int rdf = mf.addVertex(new Vector3d(x + sx, y - sy, z + sz));
+        int rdb = mf.addVertex(new Vector3d(x + sx, y - sy, z - sz));
 
-        int luf = mf.addVertex(new Point3d(x - sx, y + sy, z + sz));
-        int lub = mf.addVertex(new Point3d(x - sx, y + sy, z - sz));
-        int ldf = mf.addVertex(new Point3d(x - sx, y - sy, z + sz));
-        int ldb = mf.addVertex(new Point3d(x - sx, y - sy, z - sz));
+        int luf = mf.addVertex(new Vector3d(x - sx, y + sy, z + sz));
+        int lub = mf.addVertex(new Vector3d(x - sx, y + sy, z - sz));
+        int ldf = mf.addVertex(new Vector3d(x - sx, y - sy, z + sz));
+        int ldb = mf.addVertex(new Vector3d(x - sx, y - sy, z - sz));
 
         // front
         face.addVert(ldf, tld, nf);
@@ -116,7 +116,7 @@ public class MeshFactoryUtil {
      */
     public static void addPolygonWithHolesInY(PolygonWithHolesList2d polygonWithHolesList2d, double height,
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
-            Vector3d textureDirection) {
+            Vector3dc textureDirection) {
 
         addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
                 textureDirection, true);
@@ -124,7 +124,7 @@ public class MeshFactoryUtil {
 
     /**
      * @see kendzi.jogl.model.factory.MeshFactoryUtil#addPolygonWithHolesInY(PolygonWithHolesList2d,
-     *      double, MeshFactory, TextureData, double, double, Vector3d)
+     *      double, MeshFactory, TextureData, double, double, Vector3dc)
      * 
      * @param polygonWithHolesList2d
      * @param height
@@ -136,7 +136,7 @@ public class MeshFactoryUtil {
      */
     public static void addPolygonWithHolesInYRevert(PolygonWithHolesList2d polygonWithHolesList2d, double height,
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
-            Vector3d textureDirection) {
+            Vector3dc textureDirection) {
 
         addPolygonWithHolesInY(polygonWithHolesList2d, height, meshFactory, textureData, textureStartPointX, textureStartPointY,
                 textureDirection, false);
@@ -144,14 +144,14 @@ public class MeshFactoryUtil {
 
     private static void addPolygonWithHolesInY(PolygonWithHolesList2d polygonWithHolesList2d, double height,
             MeshFactory meshFactory, TextureData textureData, double textureStartPointX, double textureStartPointY,
-            Vector3d textureDirection, boolean top) {
+            Vector3dc textureDirection, boolean top) {
 
         List<Triangle2d> topMP = Poly2TriSimpleUtil.triangulate(polygonWithHolesList2d);
         Vector3d yt = new Vector3d(0, 1, 0);
         if (!top) {
             yt.negate();
         }
-        Point3d textureStartPoint = new Point3d(textureStartPointX, height, -textureStartPointY);
+        Vector3dc textureStartPoint = new Vector3d(textureStartPointX, height, -textureStartPointY);
         Plane3d planeTop = new Plane3d(textureStartPoint, yt);
 
         addPolygonToRoofMesh(meshFactory, topMP, planeTop, textureDirection, textureData, 0, 0);
@@ -170,7 +170,7 @@ public class MeshFactoryUtil {
      * 
      */
     public static void addPolygonToRoofMesh(MeshFactory meshRoof, MultiPolygonList2d multiPolygons, Plane3d plane,
-            Vector3d pRoofLineVector, TextureData roofTexture) {
+            Vector3dc pRoofLineVector, TextureData roofTexture) {
         addPolygonToRoofMesh(meshRoof, multiPolygons, plane, pRoofLineVector, roofTexture, 0, 0);
     }
 
@@ -193,7 +193,7 @@ public class MeshFactoryUtil {
      */
     @Deprecated
     public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, MultiPolygonList2d pMultiPolygons, Plane3d plane2,
-            Vector3d pRoofLineVector, TextureData roofTexture, double textureOffsetU, double textureOffsetV) {
+            Vector3dc pRoofLineVector, TextureData roofTexture, double textureOffsetU, double textureOffsetV) {
 
         // FIXME this method need to be rewrite!
         int normalIndex = pMeshRoof.addNormal(plane2.getNormal());
@@ -202,11 +202,11 @@ public class MeshFactoryUtil {
         // connect all polygon in mesh
         for (PolygonList2d polygon : pMultiPolygons.getPolygons()) {
 
-            List<Point2d> poly = polygon.getPoints();
+            List<Vector2dc> poly = polygon.getPoints();
 
             Integer[] pointsIndex = new Integer[poly.size()];
 
-            // List<Point2d> poly = makeListFromIndex(pPolygonsPoints,
+            // List<Vector2dc> poly = makeListFromIndex(pPolygonsPoints,
             // polyIndex);
 
             if (poly.size() < 3) {
@@ -245,18 +245,18 @@ public class MeshFactoryUtil {
                 if (pointsIndex[pointIndex] == null) {
                     // don't calc points twice.
 
-                    Point2d point2d = poly.get(i);
+                    Vector2dc point2d = poly.get(i);
 
-                    double h = plane2.calcYOfPlane(point2d.x, -point2d.y);
+                    double h = plane2.calcYOfPlane(point2d.x(), -point2d.y());
 
-                    int vi = pMeshRoof.addVertex(new Point3d(point2d.x, h, -point2d.y));
+                    int vi = pMeshRoof.addVertex(new Vector3d(point2d.x(), h, -point2d.y()));
 
                     pointsIndex[pointIndex] = vi;
                 }
 
                 int vi = pointsIndex[pointIndex];
 
-                Point3d point3d = pMeshRoof.vertices.get(vi);
+                Vector3dc point3d = pMeshRoof.vertices.get(vi);
 
                 face.addVertIndex(vi);
 
@@ -290,7 +290,7 @@ public class MeshFactoryUtil {
      * 
      */
     public static void addPolygonToRoofMesh(MeshFactory pMeshRoof, List<Triangle2d> pTriangles, Plane3d pPlane,
-            Vector3d pTextureVector, TextureData pTextureData, double textureOffsetU, double textureOffsetV) {
+            Vector3dc pTextureVector, TextureData pTextureData, double textureOffsetU, double textureOffsetV) {
 
         int normalIndex = pMeshRoof.addNormal(pPlane.getNormal());
 
@@ -319,17 +319,17 @@ public class MeshFactoryUtil {
      * @param face
      * @param point2d
      */
-    private static void addPointToTriangleFace(MeshFactory pMeshRoof, Plane3d pPlane, Vector3d pTextureVector,
+    private static void addPointToTriangleFace(MeshFactory pMeshRoof, Plane3d pPlane, Vector3dc pTextureVector,
             TextureData pTextureData, double textureOffsetU, double textureOffsetV, int normalIndex, FaceFactory face,
-            Point2d point2d) {
+            Vector2dc point2d) {
 
-        double h = pPlane.calcYOfPlane(point2d.x, -point2d.y);
+        double h = pPlane.calcYOfPlane(point2d.x(), -point2d.y());
 
-        Point3d point3d = new Point3d(point2d.x, h, -point2d.y);
+        Vector3d point3d = new Vector3d(point2d.x(), h, -point2d.y());
 
         int vi = pMeshRoof.addVertex(point3d);
 
-        // Point3d point3d = pMeshRoof.vertices.get(vi);
+        // Vector3dc point3d = pMeshRoof.vertices.get(vi);
 
         face.addVertIndex(vi);
 
@@ -344,14 +344,14 @@ public class MeshFactoryUtil {
     }
 
     @Deprecated
-    private static List<Integer> trianglePolytriangulateSweeped(List<Point2d> poly) {
+    private static List<Integer> trianglePolytriangulateSweeped(List<Vector2dc> poly) {
 
         // FIXME remove this method and switch to PolygonUtil
         int size = poly.size();
 
-        List<Point2d> polySweeped = new ArrayList<>();
-        for (Point2d point2d : poly) {
-            polySweeped.add(new Point2d(point2d.x + 0.3 + Double.MIN_VALUE, point2d.y + 0.3 + Double.MIN_VALUE));
+        List<Vector2dc> polySweeped = new ArrayList<>();
+        for (Vector2dc point2d : poly) {
+            polySweeped.add(new Vector2d(point2d.x() + 0.3 + Double.MIN_VALUE, point2d.y() + 0.3 + Double.MIN_VALUE));
         }
 
         // sweep

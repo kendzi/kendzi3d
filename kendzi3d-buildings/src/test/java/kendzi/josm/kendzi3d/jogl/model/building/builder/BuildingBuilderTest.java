@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.util.MeshTriangleUtil;
@@ -32,6 +29,8 @@ import kendzi.kendzi3d.buildings.model.roof.shape.RoofTypeAliasEnum;
 import kendzi.kendzi3d.buildings.output.BuildingOutput;
 import kendzi.math.geometry.Triangle3d;
 import kendzi.math.geometry.triangle.Triangle3dUtil;
+import org.joml.Vector2d;
+import org.joml.Vector3dc;
 import org.junit.Test;
 
 public class BuildingBuilderTest {
@@ -73,10 +72,10 @@ public class BuildingBuilderTest {
     }
 
     private Wall createSquareWall() {
-        WallNode n1 = new WallNode(new Point2d(1, 1), null);
-        WallNode n2 = new WallNode(new Point2d(2, 1), null);
-        WallNode n3 = new WallNode(new Point2d(2, 2), null);
-        WallNode n4 = new WallNode(new Point2d(1, 2), null);
+        WallNode n1 = new WallNode(new Vector2d(1, 1), null);
+        WallNode n2 = new WallNode(new Vector2d(2, 1), null);
+        WallNode n3 = new WallNode(new Vector2d(2, 2), null);
+        WallNode n4 = new WallNode(new Vector2d(1, 2), null);
 
         List<WallNode> nodes = new ArrayList<>();
         nodes.add(n1);
@@ -330,10 +329,10 @@ public class BuildingBuilderTest {
     }
 
     private Wall createRectWall() {
-        WallNode n1 = new WallNode(new Point2d(1, 1), null);
-        WallNode n2 = new WallNode(new Point2d(3, 1), null);
-        WallNode n3 = new WallNode(new Point2d(3, 2), null);
-        WallNode n4 = new WallNode(new Point2d(1, 2), null);
+        WallNode n1 = new WallNode(new Vector2d(1, 1), null);
+        WallNode n2 = new WallNode(new Vector2d(3, 1), null);
+        WallNode n3 = new WallNode(new Vector2d(3, 2), null);
+        WallNode n4 = new WallNode(new Vector2d(1, 2), null);
 
         List<WallNode> nodes = new ArrayList<>();
         nodes.add(n1);
@@ -384,14 +383,14 @@ public class BuildingBuilderTest {
                 continue;
             }
 
-            List<Point3d> triangles = MeshTriangleUtil.toTriangles(mesh);
+            List<Vector3dc> triangles = MeshTriangleUtil.toTriangles(mesh);
 
             ret.addAll(toTriangles(triangles));
         }
         return ret;
     }
 
-    private Collection<? extends Triangle3d> toTriangles(List<Point3d> triangles) {
+    private Collection<? extends Triangle3d> toTriangles(List<Vector3dc> triangles) {
 
         List<Triangle3d> ret = new ArrayList<>();
 

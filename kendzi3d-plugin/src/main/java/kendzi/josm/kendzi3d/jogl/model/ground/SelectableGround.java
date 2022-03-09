@@ -3,7 +3,7 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 public class SelectableGround {
 
@@ -31,7 +31,7 @@ public class SelectableGround {
         }
     }
 
-    public void draw(Point3d cameraPosition) {
+    public void draw(Vector3dc cameraPosition) {
 
         GroundDrawer ground = grounds.get(selectedGroundType);
 
