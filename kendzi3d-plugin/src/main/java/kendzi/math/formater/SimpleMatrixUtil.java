@@ -13,13 +13,13 @@ import java.text.DecimalFormat;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
 public class SimpleMatrixUtil {
 
     public static String matrixToString(SimpleMatrix m) {
-        DenseMatrix64F mat = m.getMatrix();
+        DMatrixRMaj mat = m.getMatrix();
         StringBuilder sb = new StringBuilder();
         // Send all output to the Appendable object sb
         Formatter formatter = new Formatter(sb, Locale.US);
@@ -52,7 +52,7 @@ public class SimpleMatrixUtil {
             return " [ ]; ";
         }
 
-        DenseMatrix64F mat = m.getMatrix();
+        DMatrixRMaj mat = m.getMatrix();
         StringBuilder sb = new StringBuilder();
 
         String space = "        ";

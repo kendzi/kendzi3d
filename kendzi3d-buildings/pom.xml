@@ -29,6 +29,12 @@
       <artifactId>miniball</artifactId>
       <version>1.0.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.ejml</groupId>
+      <artifactId>ejml-simple</artifactId>
+      <version>${ejml.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <parent>
     <groupId>kendzi.kendzi3d</groupId>
