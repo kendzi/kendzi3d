@@ -4,7 +4,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import kendzi.jogl.glu.GLU;
-import kendzi.math.geometry.point.PointUtil;
 import kendzi.math.geometry.ray.Ray3d;
 import org.joml.Vector2d;
 import org.joml.Vector2dc;
@@ -47,22 +46,22 @@ public class Viewport implements ViewportPicker {
     /**
      * Last position of camera.
      */
-    private final transient Vector3d position;
+    private final transient Vector3d position = new Vector3d();
 
     /**
      * Look at vector.
      */
-    private transient Vector3dc lookAt;
+    private transient final Vector3d lookAt = new Vector3d();
 
     /**
      * Look up vector.
      */
-    private transient Vector3dc lookUp;
+    private transient final Vector3d lookUp = new Vector3d();
 
     /**
      * Look direction.
      */
-    private transient Vector3dc view = new Vector3d();
+    private transient final Vector3d view = new Vector3d();
 
     private transient Vector3d screenHorizontally = new Vector3d();
 
@@ -74,7 +73,6 @@ public class Viewport implements ViewportPicker {
     public Viewport() {
         width = 1;
         height = 1;
-        position = new Vector3d();
     }
 
     /**
@@ -89,8 +87,6 @@ public class Viewport implements ViewportPicker {
         super();
         this.width = width;
         this.height = height;
-
-        position = new Vector3d();
     }
 
     public void reshape(int width, int height, Camera camera) {
@@ -117,45 +113,27 @@ public class Viewport implements ViewportPicker {
      *            camera position and angle
      */
     public void updateViewport(Camera camera) {
-        Vector3dc position = camera.getPoint();
-
-        Vector3d lookAt = new Vector3d(100, 0, 0);
-        Vector3d lookUp = new Vector3d(0, 1, 0);
-
+        this.position.set(camera.getPoint());
         Vector3dc rotate = camera.getAngle();
 
-        lookAt = PointUtil.rotateZ3d(lookAt, rotate.z());
-        lookAt = PointUtil.rotateY3d(lookAt, rotate.y());
-        // posLookAt = PointUtil.rotateX3d(posLookAt, rotate.x());
-
-        lookUp = PointUtil.rotateZ3d(lookUp, rotate.z());
-        lookUp = PointUtil.rotateY3d(lookUp, rotate.y());
-
-        lookAt.add(position);
+        this.lookAt.set(100, 0, 0).rotateZ(rotate.z()).rotateY(rotate.y()).add(this.position);
+        this.lookUp.set(0, 1, 0).rotateZ(rotate.z()).rotateY(rotate.y());
 
         // look direction
-        Vector3d view = lookAt.sub(position, new Vector3d()).normalize();
+        this.lookAt.sub(this.position, this.view).normalize();
 
         // screenX
-        Vector3d screenHorizontally = view.cross(lookUp, new Vector3d()).normalize();
+        this.view.cross(this.lookUp, this.screenHorizontally).normalize();
 
         // screenY
-        Vector3d screenVertically = screenHorizontally.cross(view, new Vector3d()).normalize();
+        this.screenHorizontally.cross(this.view, this.screenVertically).normalize();
 
         final float radians = (float) (PERSP_VIEW_ANGLE * Math.PI / 180f);
         float halfHeight = (float) (Math.tan(radians / 2) * PERSP_NEAR_CLIPPING_PLANE_DISTANCE);
         float halfScaledAspectRatio = (float) (halfHeight * viewportAspectRatio());
 
-        screenVertically.mul(halfHeight);
-        screenHorizontally.mul(halfScaledAspectRatio);
-
-        this.position.set(position);
-        this.lookAt = lookAt;
-        this.lookUp = lookUp;
-        this.view = view;
-        this.screenHorizontally = screenHorizontally;
-        this.screenVertically = screenVertically;
-
+        this.screenVertically.mul(halfHeight);
+        this.screenHorizontally.mul(halfScaledAspectRatio);
     }
 
     /**
@@ -174,8 +152,7 @@ public class Viewport implements ViewportPicker {
         double viewportWidth = width;
         double viewportHeight = height;
 
-        Vector3d vector = new Vector3d(position);
-        vector.add(view);
+        Vector3d vector = new Vector3d(position).add(view);
 
         screenX -= (float) viewportWidth / 2f;
         screenY = (float) viewportHeight / 2f - screenY;
