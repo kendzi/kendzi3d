@@ -127,7 +127,7 @@ public class MeasureDrawer {
         GL11.glDisable(GL11.GL_LIGHTING);
         String msg = String.format("%.2f m", value);
 
-        Point2d p = viewport.project(null, point);
+        Point2d p = viewport.project(point);
         int fontSize = 18;
         int msgWidth = GLUT.glutBitmapLength(GLUT.BITMAP_HELVETICA_18, msg);
 

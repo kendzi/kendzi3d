@@ -200,7 +200,7 @@ public class Viewport implements ViewportPicker {
         return new Ray3d(new Point3d(position), vector);
     }
 
-    public Point2d project(Object glu, Point3d point) {
+    public Point2d project(Point3d point) {
         // FIXME
         FloatBuffer modelview = BufferUtils.createFloatBuffer(16);
         FloatBuffer projectionview = BufferUtils.createFloatBuffer(16);
