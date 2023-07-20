@@ -10,9 +10,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.resource.inter.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Receive files stored locally in resources or plugin directory.
@@ -22,7 +22,7 @@ import kendzi.kendzi3d.resource.inter.ResourceService;
 public final class PluginResourceService implements ResourceService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(PluginResourceService.class);
+    private static final Logger log = LoggerFactory.getLogger(PluginResourceService.class);
 
     /**
      * Plug-in directory.
@@ -59,11 +59,11 @@ public final class PluginResourceService implements ResourceService {
 
     /**
      * Try to find URL of file in resources. In some reason
-     * getClass().getResource(...) can't find file if it is in jar and file in
-     * sub dir. So at this location it work fine: /res/file but if file is
-     * deeper like this: /res/dir/file url returned by getResource is bad. It is
-     * possible that it is bug in URLClassLoader or ClassLoader require some
-     * strange configuration. This function is overround for this bug.
+     * getClass().getResource(...) can't find file if it is in jar and file in sub
+     * dir. So at this location it work fine: /res/file but if file is deeper like
+     * this: /res/dir/file url returned by getResource is bad. It is possible that
+     * it is bug in URLClassLoader or ClassLoader require some strange
+     * configuration. This function is overround for this bug.
      * 
      * Function require resource name to be taken from root.
      * 

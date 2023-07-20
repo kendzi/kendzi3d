@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
-
-import org.apache.log4j.Logger;
+import org.joml.Vector2dc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Calculate heights on line segments. Height is stored in planes. Planes are
@@ -26,7 +25,7 @@ import org.apache.log4j.Logger;
 public class BetweenLinesHeightCalculator implements HeightCalculator {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(BetweenLinesHeightCalculator.class);
+    private static final Logger log = LoggerFactory.getLogger(BetweenLinesHeightCalculator.class);
 
     /**
      * Lines splitting 2d surface on smaller parts.
@@ -51,21 +50,21 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
     }
 
     @Override
-    public List<SegmentHeight> height(Point2d p1, Point2d p2) {
+    public List<SegmentHeight> height(Vector2dc p1, Vector2dc p2) {
 
-        List<Point2d> splitPolygon = Arrays.asList(p1, p2);
+        List<Vector2dc> splitPolygon = Arrays.asList(p1, p2);
 
         for (LinePoints2d line : lines) {
             splitPolygon = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(splitPolygon, line);
         }
 
-        List<SegmentHeight> ret = new ArrayList<SegmentHeight>(splitPolygon.size() - 1);
+        List<SegmentHeight> ret = new ArrayList<>(splitPolygon.size() - 1);
 
         for (int i = 0; i < splitPolygon.size() - 1; i++) {
             int j = i + 1;
 
-            Point2d begin = splitPolygon.get(i);
-            Point2d end = splitPolygon.get(j);
+            Vector2dc begin = splitPolygon.get(i);
+            Vector2dc end = splitPolygon.get(j);
 
             double beginHeight = calcHeight(begin, lines, planes);
             double endHeight = calcHeight(end, lines, planes);
@@ -86,10 +85,10 @@ public class BetweenLinesHeightCalculator implements HeightCalculator {
      * @param planes
      * @return
      */
-    private double calcHeight(Point2d point, LinePoints2d[] lines, Plane3d[] planes) {
+    private double calcHeight(Vector2dc point, LinePoints2d[] lines, Plane3d[] planes) {
 
-        double x = point.x;
-        double z = -point.y;
+        double x = point.x();
+        double z = -point.y();
 
         for (int i = 0; i < lines.length; i++) {
             LinePoints2d line_mi = lines[i];

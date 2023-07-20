@@ -1,13 +1,10 @@
 package kendzi.kendzi3d.editor.drawer;
 
-import java.awt.Color;
-
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2GL3;
+import java.awt.*;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.util.ColorUtil;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Simple highlight drawer for object.
@@ -15,48 +12,46 @@ import kendzi.jogl.util.ColorUtil;
  */
 public class HighlightDrawer {
 
-    private static float[] selectionColor = ColorUtil.colorToArray(new Color(0.5f, 1.0f, 0.5f));
+    private static final float[] selectionColor = ColorUtil.colorToArray(new Color(0.5f, 1.0f, 0.5f));
 
     /**
      * Draw object with highlight.
      *
      * @param object
      *            object to draw
-     * @param gl
-     *            gl
      */
-    public static void drawHighlight(Gl2Draw object, GL2 gl) {
+    public static void drawHighlight(Gl2Draw object) {
 
-        drawSelectedFill(object, gl);
-        drawGreenOutline(object, gl);
+        drawSelectedFill(object);
+        drawGreenOutline(object);
     }
 
-    private static void drawSelectedFill(Gl2Draw drawer, GL2 gl) {
+    private static void drawSelectedFill(Gl2Draw drawer) {
 
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
-        gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
+        GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
         // offset polygons to front
-        gl.glPolygonOffset(-2.0f, -2.0f);
+        GL11.glPolygonOffset(-2.0f, -2.0f);
 
-        drawer.draw(gl);
+        drawer.draw();
 
-        gl.glDisable(GL.GL_POLYGON_OFFSET_FILL);
+        GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
     }
 
-    private static void drawGreenOutline(Gl2Draw drawer, GL2 gl) {
+    private static void drawGreenOutline(Gl2Draw drawer) {
 
         // selection color
-        gl.glColor4fv(selectionColor, 0);
-        gl.glDisable(GL.GL_TEXTURE_2D);
+        GL11.glColor4fv(selectionColor);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-        SimpleOutlineDrawUtil.beginSimpleOutlineLine(gl);
-        drawer.draw(gl);
+        SimpleOutlineDrawUtil.beginSimpleOutlineLine();
+        drawer.draw();
 
-        SimpleOutlineDrawUtil.beginSimpleOutlinePoint(gl);
-        drawer.draw(gl);
+        SimpleOutlineDrawUtil.beginSimpleOutlinePoint();
+        drawer.draw();
 
-        SimpleOutlineDrawUtil.endSimpleOutline(gl);
+        SimpleOutlineDrawUtil.endSimpleOutline();
     }
 }

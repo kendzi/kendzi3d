@@ -13,17 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import org.joml.Vector2dc;
 
 public class SplitPolygons {
-    List<SplitPolygon> splitPolygons = new ArrayList<SplitPolygon>();
+    List<SplitPolygon> splitPolygons = new ArrayList<>();
 
     @Deprecated
-    public List<List<Point2d>> getLeftPolygons() {
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+    public List<List<Vector2dc>> getLeftPolygons() {
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         for (SplitPolygon s : this.splitPolygons) {
             ret.addAll(s.getLeftPolygons());
@@ -36,8 +35,8 @@ public class SplitPolygons {
     }
 
     @Deprecated
-    public List<List<Point2d>> getRightPolygons() {
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+    public List<List<Vector2dc>> getRightPolygons() {
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         for (SplitPolygon s : this.splitPolygons) {
             ret.addAll(s.getRightPolygons());

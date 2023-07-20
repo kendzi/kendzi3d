@@ -9,11 +9,9 @@ package kendzi.jogl.camera;
 import java.text.DecimalFormat;
 import java.util.EnumMap;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Tuple3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.math.geometry.point.PointUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Simple camera move animator.
@@ -84,9 +82,8 @@ public class SimpleMoveAnimator implements Camera {
     private static final double ROTATE_ACCELERATRION = Math.toRadians(180);
 
     /**
-     * Timeout for key press. After that time if key is not activate any longer
-     * it should be deactivated event if window lost focus and event key_up
-     * don't come.
+     * Timeout for key press. After that time if key is not activate any longer it
+     * should be deactivated event if window lost focus and event key_up don't come.
      */
     private static final double SPEED_ACTIVE_TIMEOUT = 3d;
 
@@ -119,7 +116,7 @@ public class SimpleMoveAnimator implements Camera {
      * @author Tomasz Kędziora (Kendzi)
      *
      */
-    private class SpeedData {
+    private static class SpeedData {
 
         /**
          * Speed change start time.
@@ -144,7 +141,7 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Location of camera.
      */
-    private final Point3d point = new Point3d(-8, 1.8, 0);
+    private final Vector3d point = new Vector3d(-8, 1.8, 0);
 
     /**
      * Rotate angles vector of camera.
@@ -164,22 +161,22 @@ public class SimpleMoveAnimator implements Camera {
     /**
      * Speed forward.
      */
-    private double vf = 0;
+    private double vf;
 
     /**
      * Speed side.
      */
-    private double vs = 0;
+    private double vs;
 
     /**
      * Speed up/down.
      */
-    private double vu = 0;
+    private double vu;
 
     /**
      * Angular speed horizontal.
      */
-    private double wh = 0;
+    private double wh;
 
     /**
      * Number formater.
@@ -199,19 +196,16 @@ public class SimpleMoveAnimator implements Camera {
 
         Vector3d speed = new Vector3d(vf, vu, vs);
 
-        speed = PointUtil.rotateZ3d(speed, angle.z);
-        speed = PointUtil.rotateY3d(speed, angle.y);
+        speed = PointUtil.rotateZ3d(speed, angle.z());
+        speed = PointUtil.rotateY3d(speed, angle.y());
 
-        Vector3d dx = speed;
-        dx.scale(dt);
+        speed.mul(dt);
 
-        point.add(dx);
+        point.add(speed);
 
-        Vector3d angleSpeed = new Vector3d(0, wh, 0);
-        Vector3d dOmega = angleSpeed;
-        dOmega.scale(dt);
+        Vector3dc angleSpeed = new Vector3d(0, wh, 0).mul(dt);
 
-        angle.add(dOmega);
+        angle.add(angleSpeed);
     }
 
     /**
@@ -384,7 +378,7 @@ public class SimpleMoveAnimator implements Camera {
      */
     public SimpleMoveAnimator() {
 
-        speeds = new EnumMap<SimpleMoveAnimator.Speeds, SimpleMoveAnimator.SpeedData>(SimpleMoveAnimator.Speeds.class);
+        speeds = new EnumMap<>(SimpleMoveAnimator.Speeds.class);
 
         for (Speeds s : Speeds.values()) {
             speeds.put(s, new SpeedData());
@@ -463,12 +457,12 @@ public class SimpleMoveAnimator implements Camera {
     @SuppressWarnings("unqualified-field-access")
     public String info() {
 
-        String speedsStr = "";
+        StringBuilder speedsStr = new StringBuilder();
         for (Speeds s : Speeds.values()) {
             SpeedData speedData = speeds.get(s);
 
-            speedsStr += "" + s + ", active: " + speedData.active + ", last: " + speedData.last + ", start: " + speedData.start
-                    + "\n";
+            speedsStr.append(s).append(", active: ").append(speedData.active).append(", last: ").append(speedData.last)
+                    .append(", start: ").append(speedData.start).append("\n");
 
         }
 
@@ -476,17 +470,17 @@ public class SimpleMoveAnimator implements Camera {
                 + df.format(lastTime) + ",\n vf=" + df.format(vf) + ",\n vs=" + df.format(vs) + ",\n wh="
                 + df.format(Math.toDegrees(wh)) + ",\n speeds:\n" + speedsStr
 
-        + "]";
+                + "]";
     }
 
-    String format(Tuple3d tuple) {
-        return "( " + df.format(tuple.x) + ", " + df.format(tuple.y) + ", " + df.format(tuple.z) + " )";
+    String format(Vector3dc tuple) {
+        return "( " + df.format(tuple.x()) + ", " + df.format(tuple.y()) + ", " + df.format(tuple.z()) + " )";
 
     }
 
-    String formatAngle(Tuple3d tuple) {
-        return "( " + df.format(Math.toDegrees(tuple.x)) + ", " + df.format(Math.toDegrees(tuple.y)) + ", "
-                + df.format(Math.toDegrees(tuple.z)) + " )";
+    String formatAngle(Vector3dc tuple) {
+        return "( " + df.format(Math.toDegrees(tuple.x())) + ", " + df.format(Math.toDegrees(tuple.y())) + ", "
+                + df.format(Math.toDegrees(tuple.z())) + " )";
 
     }
 
@@ -494,7 +488,7 @@ public class SimpleMoveAnimator implements Camera {
      * @return the point
      */
     @Override
-    public Point3d getPoint() {
+    public Vector3d getPoint() {
         return point;
     }
 
@@ -502,7 +496,7 @@ public class SimpleMoveAnimator implements Camera {
      * @return the angle
      */
     @Override
-    public Vector3d getAngle() {
+    public Vector3dc getAngle() {
         return angle;
     }
 

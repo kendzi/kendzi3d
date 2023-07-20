@@ -15,7 +15,6 @@ public class FunctionUtil {
         }
     }
 
-
     public static double getReqiredParam(int i, double[] e) {
         int params = 0;
         if (e != null) {
@@ -23,7 +22,8 @@ public class FunctionUtil {
         }
 
         if (i >= params) {
-            throw new FunctionExeption(String.format("can't get function required parameter %s , function recive only %s parameters", i, params));
+            throw new FunctionExeption(
+                    String.format("can't get function required parameter %s , function recive only %s parameters", i, params));
         }
         return e[i];
     }

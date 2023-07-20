@@ -1,16 +1,12 @@
 package kendzi.josm.kendzi3d.jogl.skybox;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import javax.vecmath.Point3d;
-
-import kendzi.jogl.texture.TextureCacheService;
-
 import com.google.inject.Inject;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.util.texture.Texture;
+import kendzi.jogl.util.texture.TextureCoords;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Drawer for skybox.
@@ -21,15 +17,15 @@ public class SkyBoxDrawer {
 
     private SkyBoxConfiguration configuration;
 
-    private Point3d leftBottomBack = new Point3d(-10, -10, -10);
-    private Point3d rightBottomBack = new Point3d(10, -10, -10);
-    private Point3d rightTopBack = new Point3d(10, 10, -10);
-    private Point3d leftTopBack = new Point3d(-10, 10, -10);
+    private final Vector3dc leftBottomBack = new Vector3d(-10, -10, -10);
+    private final Vector3dc rightBottomBack = new Vector3d(10, -10, -10);
+    private final Vector3dc rightTopBack = new Vector3d(10, 10, -10);
+    private final Vector3dc leftTopBack = new Vector3d(-10, 10, -10);
 
-    private Point3d rightBottomFront = new Point3d(10, -10, 10);
-    private Point3d leftBottomFront = new Point3d(-10, -10, 10);
-    private Point3d leftTopFront = new Point3d(-10, 10, 10);
-    private Point3d rightTopFront = new Point3d(10, 10, 10);
+    private final Vector3dc rightBottomFront = new Vector3d(10, -10, 10);
+    private final Vector3dc leftBottomFront = new Vector3d(-10, -10, 10);
+    private final Vector3dc leftTopFront = new Vector3d(-10, 10, 10);
+    private final Vector3dc rightTopFront = new Vector3d(10, 10, 10);
 
     /**
      * Constructor.
@@ -48,87 +44,84 @@ public class SkyBoxDrawer {
     /**
      * Draws skybox.
      *
-     * @param gl
-     *            gl
      * @param cameraLocation
      *            camera location
      */
-    public void draw(GL2 gl, Point3d cameraLocation) {
+    public void draw(Vector3dc cameraLocation) {
 
         if (configuration == null) {
             return;
         }
 
-        gl.glDisable(GL.GL_DEPTH_TEST);
-        gl.glEnable(GL.GL_TEXTURE_2D);
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         // Set white color for texture
-        gl.glColor4f(1f, 1f, 1f, 1f);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
 
         // Mix transparency color with texture
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_REPLACE);
 
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
-        gl.glTranslated(cameraLocation.x, cameraLocation.y, cameraLocation.z);
+        GL11.glTranslated(cameraLocation.x(), cameraLocation.y(), cameraLocation.z());
 
-        gl.glRotated(180d, 0, 1, 0);
+        GL11.glRotated(180d, 0, 1, 0);
 
-        drawPolygon(gl, configuration.getFrontTexture(), leftBottomBack, rightBottomBack, rightTopBack, leftTopBack);
+        drawPolygon(configuration.getFrontTexture(), leftBottomBack, rightBottomBack, rightTopBack, leftTopBack);
 
-        drawPolygon(gl, configuration.getBackTexture(), rightBottomFront, leftBottomFront, leftTopFront, rightTopFront);
+        drawPolygon(configuration.getBackTexture(), rightBottomFront, leftBottomFront, leftTopFront, rightTopFront);
 
-        drawPolygon(gl, configuration.getRightTexture(), rightBottomBack, rightBottomFront, rightTopFront, rightTopBack);
+        drawPolygon(configuration.getRightTexture(), rightBottomBack, rightBottomFront, rightTopFront, rightTopBack);
 
-        drawPolygon(gl, configuration.getLeftTexture(), leftBottomFront, leftBottomBack, leftTopBack, leftTopFront);
+        drawPolygon(configuration.getLeftTexture(), leftBottomFront, leftBottomBack, leftTopBack, leftTopFront);
 
-        drawPolygon(gl, configuration.getTopTexture(), leftTopBack, rightTopBack, rightTopFront, leftTopFront);
+        drawPolygon(configuration.getTopTexture(), leftTopBack, rightTopBack, rightTopFront, leftTopFront);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glDisable(GL.GL_TEXTURE_2D);
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
     }
 
     /**
-     * @param gl
      * @param textureName
      * @param p1
      * @param p2
      * @param p3
      * @param p4
      */
-    public void drawPolygon(GL2 gl, String textureName, Point3d p1, Point3d p2, Point3d p3, Point3d p4) {
+    public void drawPolygon(String textureName, Vector3dc p1, Vector3dc p2, Vector3dc p3, Vector3dc p4) {
         TextureCoords tc = new TextureCoords(0, 0, 1, 1);
         if (textureName != null) {
-            Texture texture = textureCacheService.getTexture(gl, textureName);
+            Texture texture = textureCacheService.getTexture(textureName);
 
-            texture.enable(gl);
-            texture.bind(gl);
+            texture.enable();
+            texture.bind();
 
             tc = texture.getImageTexCoords();
         }
 
-        gl.glBegin(GL2.GL_POLYGON);
+        GL11.glBegin(GL11.GL_POLYGON);
 
-        gl.glTexCoord2d(tc.left(), tc.bottom());
-        gl.glVertex3d(p1.x, p1.y, p1.z);
-        gl.glTexCoord2d(tc.right(), tc.bottom());
-        gl.glVertex3d(p2.x, p2.y, p2.z);
-        gl.glTexCoord2d(tc.right(), tc.top());
-        gl.glVertex3d(p3.x, p3.y, p3.z);
-        gl.glTexCoord2d(tc.left(), tc.top());
-        gl.glVertex3d(p4.x, p4.y, p4.z);
+        GL11.glTexCoord2d(tc.left(), tc.bottom());
+        GL11.glVertex3d(p1.x(), p1.y(), p1.z());
+        GL11.glTexCoord2d(tc.right(), tc.bottom());
+        GL11.glVertex3d(p2.x(), p2.y(), p2.z());
+        GL11.glTexCoord2d(tc.right(), tc.top());
+        GL11.glVertex3d(p3.x(), p3.y(), p3.z());
+        GL11.glTexCoord2d(tc.left(), tc.top());
+        GL11.glVertex3d(p4.x(), p4.y(), p4.z());
 
-        gl.glEnd();
+        GL11.glEnd();
 
         if (textureName != null) {
-            Texture t = textureCacheService.getTexture(gl, textureName);
+            Texture t = textureCacheService.getTexture(textureName);
             if (t != null) {
-                t.disable(gl);
+                t.disable();
             }
         }
     }

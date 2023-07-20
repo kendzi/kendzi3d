@@ -19,8 +19,6 @@ public class Measurement {
 
     private MeasurementUnit unit;
 
-
-
     public Measurement(double pValue, MeasurementUnit pUnit) {
 
         this.value = pValue;
@@ -35,7 +33,8 @@ public class Measurement {
     }
 
     /**
-     * @param pValue the value to set
+     * @param pValue
+     *            the value to set
      */
     public void setValue(double pValue) {
         this.value = pValue;
@@ -49,14 +48,11 @@ public class Measurement {
     }
 
     /**
-     * @param pUnit the unit to set
+     * @param pUnit
+     *            the unit to set
      */
     public void setUnit(MeasurementUnit pUnit) {
         this.unit = pUnit;
     }
-
-
-
-
 
 }

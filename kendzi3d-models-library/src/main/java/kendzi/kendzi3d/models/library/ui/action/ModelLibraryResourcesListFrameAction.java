@@ -23,8 +23,8 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.ModelLibraryResourcesListFrame;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.StringUtil;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ui for list of resource in models library.
@@ -34,12 +34,12 @@ import org.apache.log4j.Logger;
 public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesListFrame {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelLibraryResourcesListFrameAction.class);
+    private static final Logger log = LoggerFactory.getLogger(ModelLibraryResourcesListFrameAction.class);
 
     /**
      * Point model service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     public ModelLibraryResourcesListFrameAction(ModelsLibraryService modelsLibraryService) {
         super();
@@ -50,20 +50,17 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ResourceService urlReciverService = new UrlReciverServiceTest();
-                    ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
-                    pms.init();
-                    ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
+        EventQueue.invokeLater(() -> {
+            try {
+                ResourceService urlReciverService = new UrlReciverServiceTest();
+                ModelsLibraryService pms = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
+                pms.init();
+                ModelLibraryResourcesListFrameAction frame = new ModelLibraryResourcesListFrameAction(pms);
 
-                    frame.loadTableData();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e);
-                }
+                frame.loadTableData();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                log.error(String.join(" ", args), e);
             }
         });
     }
@@ -124,7 +121,6 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         fc.addChoosableFileFilter(new ModelLibraryFilter());
         fc.setAcceptAllFileFilterUsed(false);
 
-
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
             File selectedFile = fc.getSelectedFile();
@@ -156,7 +152,7 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         }
     }
 
-    private class ModelLibraryFilter extends FileFilter {
+    private static class ModelLibraryFilter extends FileFilter {
         @Override
         public boolean accept(File f) {
             if (f == null) {
@@ -181,7 +177,6 @@ public class ModelLibraryResourcesListFrameAction extends ModelLibraryResourcesL
         modelsLibraryService.removeResourcesPath(fileName);
         loadTableData();
     }
-
 
     @Override
     protected void onDefaultResources() {

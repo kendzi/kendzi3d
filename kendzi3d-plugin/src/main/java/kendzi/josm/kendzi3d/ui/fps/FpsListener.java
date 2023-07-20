@@ -15,9 +15,11 @@ package kendzi.josm.kendzi3d.ui.fps;
  */
 public interface FpsListener {
 
-    /** Fire when fps value is calculated.
-     * @param fpsChangeEvent Fps event
+    /**
+     * Fire when fps value is calculated.
+     * 
+     * @param fpsChangeEvent
+     *            Fps event
      */
-    public abstract void dispatchFpsChange(FpsChangeEvent fpsChangeEvent);
+    void dispatchFpsChange(FpsChangeEvent fpsChangeEvent);
 }
-

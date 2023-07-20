@@ -1,10 +1,9 @@
 package kendzi.kendzi3d.expressions.functions;
 
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.expressions.Context;
+import org.joml.Vector3d;
 
-public class Vector3dFunction implements AnyParamFunction, Function, NamedFunction {
+public class Vector3dFunction implements AnyParamFunction, Function<Vector3d>, NamedFunction<Vector3d> {
 
     @Override
     public String functionName() {
@@ -12,7 +11,7 @@ public class Vector3dFunction implements AnyParamFunction, Function, NamedFuncti
     }
 
     @Override
-    public Object eval(Context context, double... e) {
+    public Vector3d eval(Context context, double... e) {
         if (e.length != 0 && e.length != 3) {
             throw new IllegalArgumentException("wrong number of parameters, expected 0 or 3");
         }

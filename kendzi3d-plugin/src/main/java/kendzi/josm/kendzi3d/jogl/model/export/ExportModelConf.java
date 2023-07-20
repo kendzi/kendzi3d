@@ -1,6 +1,5 @@
 package kendzi.josm.kendzi3d.jogl.model.export;
 
-
 public class ExportModelConf {
 
     private Object exportType;
@@ -17,7 +16,8 @@ public class ExportModelConf {
     }
 
     /**
-     * @param exportType the exportType to set
+     * @param exportType
+     *            the exportType to set
      */
     public void setExportType(Object exportType) {
         this.exportType = exportType;
@@ -31,7 +31,8 @@ public class ExportModelConf {
     }
 
     /**
-     * @param filePattern the filePattern to set
+     * @param filePattern
+     *            the filePattern to set
      */
     public void setFilePattern(String filePattern) {
         this.filePattern = filePattern;
@@ -45,7 +46,8 @@ public class ExportModelConf {
     }
 
     /**
-     * @param numOfModels the numOfModels to set
+     * @param numOfModels
+     *            the numOfModels to set
      */
     public void setNumOfModels(int numOfModels) {
         this.numOfModels = numOfModels;

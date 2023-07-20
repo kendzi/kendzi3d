@@ -14,7 +14,6 @@ import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.josm.kendzi3d.util.expression.DoubleContext;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class NormalHeightFunction implements SimpleFunction {

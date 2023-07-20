@@ -9,12 +9,11 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
-
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
-
+import kendzi.jogl.util.awt.TextureRenderer;
+import kendzi.jogl.util.texture.Texture;
 import kendzi.kendzi3d.resource.inter.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Creates black and white texture image from provided image.
@@ -24,7 +23,7 @@ import kendzi.kendzi3d.resource.inter.ResourceService;
  */
 public class BwFileTextureBuilder implements TextureBuilder {
     /** Log. */
-    private static final Logger log = Logger.getLogger(BwFileTextureBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(BwFileTextureBuilder.class);
 
     /**
      * File url receiver service.

@@ -5,11 +5,9 @@
  */
 package kendzi.kendzi3d.editor.selection.editor;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.kendzi3d.editor.selection.event.EditorChangeEvent;
 import kendzi.math.geometry.ray.Ray3d;
+import org.joml.Vector3dc;
 
 /**
  * Arrow like editor.
@@ -28,21 +26,21 @@ public interface ArrowEditor extends Editor {
      * @return <code>null</code> if no intersection, otherwise distance from
      *         selection ray source to editor active spot
      */
-    public Double intersect(Ray3d selectionRay);
+    Double intersect(Ray3d selectionRay);
 
     /**
      * Get editor origin.
      *
      * @return editor origin
      */
-    public Point3d getEditorOrigin();
+    Vector3dc getEditorOrigin();
 
     /**
      * Arrow direction.
      *
      * @return the vector
      */
-    Vector3d getVector();
+    Vector3dc getVector();
 
     /**
      * Arrow length.
@@ -56,15 +54,15 @@ public interface ArrowEditor extends Editor {
      *
      * @return point from arrow end.
      */
-    public Point3d arrowEnd();
+    Vector3dc arrowEnd();
 
     // XXX
-    public EditorChangeEvent move(Ray3d moveRay, boolean finish);
+    EditorChangeEvent move(Ray3d moveRay, boolean finish);
 
     /**
      * Type of editor active spot.
      * 
      * @return the editorType type of editor
      */
-    public EditorType getEditorType();
+    EditorType getEditorType();
 }

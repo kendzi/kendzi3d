@@ -5,13 +5,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.Triangle2d;
 import kendzi.math.geometry.line.LineSegment2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
-
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
 import org.poly2tri.Poly2Tri;
 import org.poly2tri.triangulation.Triangulatable;
 import org.poly2tri.triangulation.TriangulationAlgorithm;
@@ -26,23 +25,23 @@ import org.poly2tri.triangulation.point.TPoint;
  */
 public class Poly2TriUtil {
     static class CDTSet implements Triangulatable {
-        List<TriangulationPoint> points = new ArrayList<TriangulationPoint>(20);
-        List<DelaunayTriangle> triangles = new ArrayList<DelaunayTriangle>(20);
-        ArrayList<LineSegment2d> segmentSet = new ArrayList<LineSegment2d>();
+        List<TriangulationPoint> points = new ArrayList<>(20);
+        List<DelaunayTriangle> triangles = new ArrayList<>(20);
+        ArrayList<LineSegment2d> segmentSet = new ArrayList<>();
 
         // it seems poly2tri requires points to be unique objects
-        HashMap<Point2d, TriangulationPoint> pointSet = new HashMap<Point2d, TriangulationPoint>();
+        HashMap<Vector2dc, TriangulationPoint> pointSet = new HashMap<>();
 
         public CDTSet(PolygonList2d polygon, Collection<PolygonList2d> holes, Collection<LineSegment2d> cSegments,
-                Collection<Point2d> cPoints) {
+                Collection<Vector2dc> cPoints) {
 
-            List<Point2d> vertices = polygon.getPoints();
+            List<Vector2dc> vertices = polygon.getPoints();
 
             segmentSet.addAll(cSegments);
 
-            for (Point2d p : cPoints) {
+            for (Vector2dc p : cPoints) {
                 if (!pointSet.containsKey(p)) {
-                    TPoint tp = new TPoint(p.x, p.y);
+                    TPoint tp = new TPoint(p.x(), p.y());
                     pointSet.put(p, tp);
                     points.add(tp);
                 }
@@ -70,7 +69,7 @@ public class Poly2TriUtil {
                 for (int j = i + 1; j < size; j++) {
                     LineSegment2d l2 = segmentSet.get(j);
 
-                    Point2d crossing;
+                    Vector2dc crossing;
 
                     if ((crossing = l1.intersectEpsilon(l2, 10E9)) != null) {
                         // if ((crossing = l1.getIntersection(l2.getBegin(),
@@ -155,14 +154,14 @@ public class Poly2TriUtil {
                 TriangulationPoint tp1, tp2;
 
                 if (!pointSet.containsKey(l.getBegin())) {
-                    tp1 = new TPoint(l.getBegin().x, l.getBegin().y);
+                    tp1 = new TPoint(l.getBegin().x(), l.getBegin().y());
                     pointSet.put(l.getBegin(), tp1);
                     points.add(tp1);
                 } else {
                     tp1 = pointSet.get(l.getBegin());
                 }
                 if (!pointSet.containsKey(l.getEnd())) {
-                    tp2 = new TPoint(l.getEnd().x, l.getEnd().y);
+                    tp2 = new TPoint(l.getEnd().x(), l.getEnd().y());
                     pointSet.put(l.getEnd(), tp2);
                     points.add(tp2);
                 } else {
@@ -180,7 +179,7 @@ public class Poly2TriUtil {
     }
 
     public static final List<Triangle2d> triangulate(PolygonList2d polygon, Collection<PolygonList2d> holes,
-            Collection<LineSegment2d> segments, Collection<Point2d> points) {
+            Collection<LineSegment2d> segments, Collection<Vector2dc> points) {
 
         CDTSet cdt = new CDTSet(polygon, holes, segments, points);
         TriangulationContext<?> tcx = Poly2Tri.createContext(TriangulationAlgorithm.DTSweep);
@@ -188,7 +187,7 @@ public class Poly2TriUtil {
 
         Poly2Tri.triangulate(tcx);
 
-        List<Triangle2d> triangles = new ArrayList<Triangle2d>();
+        List<Triangle2d> triangles = new ArrayList<>();
 
         List<DelaunayTriangle> result = cdt.getTriangles();
 
@@ -199,7 +198,7 @@ public class Poly2TriUtil {
         for (DelaunayTriangle t : result) {
 
             TriangulationPoint tCenter = t.centroid();
-            Point2d center = new Point2d(tCenter.getX(), tCenter.getY());
+            Vector2dc center = new Vector2d(tCenter.getX(), tCenter.getY());
 
             boolean triangleInHole = false;
             for (PolygonList2d hole : holes) {
@@ -215,8 +214,8 @@ public class Poly2TriUtil {
                 continue;
             }
 
-            triangles.add(new Triangle2d(new Point2d(t.points[0].getX(), t.points[0].getY()), new Point2d(t.points[1].getX(),
-                    t.points[1].getY()), new Point2d(t.points[2].getX(), t.points[2].getY())));
+            triangles.add(new Triangle2d(new Vector2d(t.points[0].getX(), t.points[0].getY()),
+                    new Vector2d(t.points[1].getX(), t.points[1].getY()), new Vector2d(t.points[2].getX(), t.points[2].getY())));
         }
 
         return triangles;

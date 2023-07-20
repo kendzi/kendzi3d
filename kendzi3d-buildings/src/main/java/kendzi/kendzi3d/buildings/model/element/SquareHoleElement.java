@@ -13,12 +13,12 @@ package kendzi.kendzi3d.buildings.model.element;
  * 
  * @author Tomasz Kędziora (Kendzi)
  */
-public class SquareHoleElement extends BuildingNodeElement{
+public class SquareHoleElement extends BuildingNodeElement {
 
     /**
      * Minimal height of hole.
      */
-    private double minHeight = 0;
+    private double minHeight;
 
     /**
      * Height of hole. From the lower edge to upper edge.
@@ -30,8 +30,6 @@ public class SquareHoleElement extends BuildingNodeElement{
      */
     private double width = 1d;
 
-
-
     /**
      * Con.
      */
@@ -42,9 +40,12 @@ public class SquareHoleElement extends BuildingNodeElement{
     /**
      * Con.
      * 
-     * @param minHeight minimal height of hole
-     * @param height height of hole
-     * @param width width of hole
+     * @param minHeight
+     *            minimal height of hole
+     * @param height
+     *            height of hole
+     * @param width
+     *            width of hole
      */
     public SquareHoleElement(double minHeight, double height, double width) {
         super();
@@ -70,7 +71,8 @@ public class SquareHoleElement extends BuildingNodeElement{
     }
 
     /**
-     * @param minHeight the minHeight to set
+     * @param minHeight
+     *            the minHeight to set
      */
     public void setMinHeight(double minHeight) {
         this.minHeight = minHeight;
@@ -84,7 +86,8 @@ public class SquareHoleElement extends BuildingNodeElement{
     }
 
     /**
-     * @param height the height to set
+     * @param height
+     *            the height to set
      */
     public void setHeight(double height) {
         this.height = height;
@@ -98,7 +101,8 @@ public class SquareHoleElement extends BuildingNodeElement{
     }
 
     /**
-     * @param width the width to set
+     * @param width
+     *            the width to set
      */
     public void setWidth(double width) {
         this.width = width;
@@ -117,7 +121,5 @@ public class SquareHoleElement extends BuildingNodeElement{
         wbe.setWidth(this.getWidth());
         return wbe;
     }
-
-
 
 }

@@ -18,7 +18,6 @@ import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.buildings.model.WindowGridBuildingElement;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.util.StringUtil;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -39,8 +38,10 @@ public final class BuildingAttributeParser {
     /**
      * Gets facade texture.
      * 
-     * @param facadeMaterialName facade material name
-     * @param textureLibraryStorageService texture library storage service
+     * @param facadeMaterialName
+     *            facade material name
+     * @param textureLibraryStorageService
+     *            texture library storage service
      * @return facade texture data
      */
     public static TextureData parseFacadeTexture(String facadeMaterialName,
@@ -60,7 +61,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets facade texture.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return facade texture data
      */
     public static String parseFacadeMaterialName(OsmPrimitive primitive) {
@@ -81,7 +83,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets floor texture.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return facade texture data
      */
     public static String parseFloorMaterialName(OsmPrimitive primitive) {
@@ -91,7 +94,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets facade texture.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return facade texture data
      */
     public static String parseRoofMaterialName(OsmPrimitive primitive) {
@@ -107,7 +111,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets facade texture.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return facade texture
      */
     public static Color parseFacadeColor(OsmPrimitive primitive) {
@@ -132,7 +137,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets floor texture.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return facade texture
      */
     public static Color parseFloorColor(OsmPrimitive primitive) {
@@ -151,7 +157,8 @@ public final class BuildingAttributeParser {
     /**
      * Gets roof color.
      * 
-     * @param primitive osm primitive
+     * @param primitive
+     *            osm primitive
      * @return roof color
      */
     public static Color parseRoofColor(OsmPrimitive primitive) {
@@ -176,7 +183,8 @@ public final class BuildingAttributeParser {
     /**
      * Parse maximal height value.
      * 
-     * @param osmPrimitive osm primitive
+     * @param osmPrimitive
+     *            osm primitive
      * @return maximal height
      */
     public static Double parseMaxHeight(OsmPrimitive osmPrimitive) {
@@ -191,7 +199,8 @@ public final class BuildingAttributeParser {
     /**
      * Parse minimal height value.
      * 
-     * @param osmPrimitive osm primitive
+     * @param osmPrimitive
+     *            osm primitive
      * @return minimal height
      */
     public static Double parseMinHeight(OsmPrimitive osmPrimitive) {
@@ -201,7 +210,8 @@ public final class BuildingAttributeParser {
     /**
      * Parse number of roof levels.
      * 
-     * @param osmPrimitive osm primitive
+     * @param osmPrimitive
+     *            osm primitive
      * @return number of roof levels
      */
     public static Integer parseRoofLevels(OsmPrimitive osmPrimitive) {
@@ -213,20 +223,21 @@ public final class BuildingAttributeParser {
     /**
      * Parse maximal number of levels.
      * 
-     * @param osmPrimitive osm primitive
+     * @param osmPrimitive
+     *            osm primitive
      * @return maximal number of levels
      */
     public static Integer parseMaxLevel(OsmPrimitive osmPrimitive) {
-        Integer level = roundToInteger(ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_MAX_LEVEL.getKey(),
-                null));
+        Integer level = roundToInteger(
+                ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_MAX_LEVEL.getKey(), null));
 
         if (level == null) {
             level = roundToInteger(ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_LEVELS.getKey(), null));
         }
 
         if (level == null) {
-            level = roundToInteger(ModelUtil.getNumberAttribute(osmPrimitive,
-                    OsmAttributeKeys.BUILDING_LEVELS_ABOVEGROUND.getKey(), null));
+            level = roundToInteger(
+                    ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_LEVELS_ABOVEGROUND.getKey(), null));
         }
 
         if (level != null) {
@@ -251,16 +262,17 @@ public final class BuildingAttributeParser {
     /**
      * Parse minimal number of levels.
      * 
-     * @param osmPrimitive osm primitive
+     * @param osmPrimitive
+     *            osm primitive
      * @return minimal number of levels
      */
     public static Integer parseMinLevel(OsmPrimitive osmPrimitive) {
-        Integer level = roundToInteger(ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_MIN_LEVEL.getKey(),
-                null));
+        Integer level = roundToInteger(
+                ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_MIN_LEVEL.getKey(), null));
 
         if (level == null) {
-            level = roundToInteger(ModelUtil.getNumberAttribute(osmPrimitive,
-                    OsmAttributeKeys.BUILDING_LEVELS_UNDERGROUND.getKey(), null));
+            level = roundToInteger(
+                    ModelUtil.getNumberAttribute(osmPrimitive, OsmAttributeKeys.BUILDING_LEVELS_UNDERGROUND.getKey(), null));
             if (level != null) {
                 level = -level;
             }
@@ -272,7 +284,8 @@ public final class BuildingAttributeParser {
     /**
      * Parse number of window columns on wall.
      * 
-     * @param way way
+     * @param way
+     *            way
      * @return number of window columns on wall
      */
     public static WindowGridBuildingElement parseWallWindowsColumns(Way way) {

@@ -10,14 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -45,8 +37,13 @@ import kendzi.math.geometry.Bool.CSG.Vertex;
 import kendzi.math.geometry.line.LineLinear2d;
 import kendzi.math.geometry.line.LineParametric2d;
 import kendzi.math.geometry.point.Vector2dUtil;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -59,7 +56,7 @@ public class Wall extends AbstractWayModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(Wall.class);
+    private static final Logger log = LogManager.getLogger(Wall.class);
 
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 
@@ -110,8 +107,8 @@ public class Wall extends AbstractWayModel {
      * @param pMetadataCacheService
      *            metadata cache service
      */
-    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
+    public Wall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
 
         super(pWay, perspective);
 
@@ -129,8 +126,7 @@ public class Wall extends AbstractWayModel {
 
         String fenceType = BarrierFenceRelation.getFenceType(way);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
-                fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         hight = ModelUtil.getHeight(way, fenceHeight);
 
@@ -156,9 +152,9 @@ public class Wall extends AbstractWayModel {
         // CSG cube = CSG.cube();
         // CSG sphere2 = CSG.sphere(null, 1.2d, null, null);
         // CSG sphere = CSG.cylinder(null, null, null, 4d);
-        MeshFactory cubeMesh2 = MeshFactoryUtil.cubeMesh(new Point3d(), new Vector3d(2d, 2d, 2d));
+        MeshFactory cubeMesh2 = MeshFactoryUtil.cubeMesh(new Vector3d(), new Vector3d(2d, 2d, 2d));
         CSG sphere = meshToSolid(cubeMesh2);
-        MeshFactory cubeMesh3 = MeshFactoryUtil.cubeMesh(new Point3d(1, 1, 1), new Vector3d(2d, 2d, 2d));
+        MeshFactory cubeMesh3 = MeshFactoryUtil.cubeMesh(new Vector3d(1, 1, 1), new Vector3d(2d, 2d, 2d));
         CSG sphere2 = meshToSolid(cubeMesh3);
 
         // toModel(testMesh, sphere.toPolygons());
@@ -175,7 +171,7 @@ public class Wall extends AbstractWayModel {
 
         double width = ModelUtil.parseHeight(way.get("width"), 1d);
 
-        List<WallHole> holeList = new ArrayList<Wall.WallHole>();
+        List<WallHole> holeList = new ArrayList<>();
 
         for (int i = 0; i < way.getNodes().size(); i++) {
             Node node = way.getNode(i);
@@ -186,8 +182,8 @@ public class Wall extends AbstractWayModel {
                 wh.setHeight(ModelUtil.getHeight(node, 2d));
                 wh.setWidth(ModelUtil.parseHeight(node.get("width"), 1d));
                 wh.setDepth(width * 2d);
-                wh.setX(points.get(i).x);
-                wh.setY(points.get(i).y);
+                wh.setX(points.get(i).x());
+                wh.setY(points.get(i).y());
 
                 holeList.add(wh);
             }
@@ -201,8 +197,8 @@ public class Wall extends AbstractWayModel {
         modelBuilder.addMesh(meshBorder);
 
         if (points.size() > 0) {
-            Point2d start = points.get(0);
-            MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Point3d(start.x, 3, -start.y));
+            Vector2dc start = points.get(0);
+            MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Vector3d(start.x(), 3, -start.y()));
 
             modelBuilder.addMesh(cubeMesh);
         }
@@ -215,10 +211,10 @@ public class Wall extends AbstractWayModel {
     }
 
     enum WallHoleType {
-        box;
-    };
+        box
+    }
 
-    class WallHole {
+    static class WallHole {
         WallHoleType wallHoleType;
         double height;
         double width;
@@ -318,16 +314,16 @@ public class Wall extends AbstractWayModel {
 
     }
 
-    private MeshFactory buildWallModelWithHoles(List<Point2d> points, List<WallHole> holeList, double min_height,
-            double height, double width) {
+    private MeshFactory buildWallModelWithHoles(List<Vector2dc> points, List<WallHole> holeList, double min_height, double height,
+            double width) {
 
         MeshFactory wallMesh = new MeshFactory();
 
         buildWallModel(this.points, width, wallMesh);
 
-        List<MeshFactory> holes = new ArrayList<MeshFactory>();
+        List<MeshFactory> holes = new ArrayList<>();
         for (WallHole wh : holeList) {
-            MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Point3d(wh.x, wh.height, -wh.y));
+            MeshFactory cubeMesh = MeshFactoryUtil.cubeMesh(new Vector3d(wh.x, wh.height, -wh.y));
             holes.add(cubeMesh);
         }
 
@@ -359,7 +355,7 @@ public class Wall extends AbstractWayModel {
         // }
     }
 
-    private void buildWallModel(List<Point2d> points, double width, MeshFactory meshBorder) {
+    private void buildWallModel(List<Vector2dc> points, double width, MeshFactory meshBorder) {
 
         if (points == null || points.size() < 2) {
             return;
@@ -368,7 +364,7 @@ public class Wall extends AbstractWayModel {
         double min_height = 1;
         double max_height = 3;
 
-        Point2d[] simpleOutLine = simpleOutLine(points, width);
+        Vector2dc[] simpleOutLine = simpleOutLine(points, width);
 
         FaceFactory face = meshBorder.addFace(FaceType.QUADS);
 
@@ -378,30 +374,28 @@ public class Wall extends AbstractWayModel {
 
         int size = points.size();
 
-        Point2d segmentStart = points.get(0);
-        Point2d segmentEnd = points.get(1);
-        Vector2d segmentVec = new Vector2d(segmentEnd);
-        segmentVec.sub(segmentStart);
-        segmentVec.normalize();
+        Vector2dc segmentStart = points.get(0);
+        Vector2dc segmentEnd = points.get(1);
+        Vector2dc segmentVec = new Vector2d(segmentEnd).sub(segmentStart).normalize();
 
-        Point2d ps1 = points.get(0);
-        Point2d ps2 = simpleOutLine[0];
+        Vector2dc ps1 = points.get(0);
+        Vector2dc ps2 = simpleOutLine[0];
 
-        int niStart = meshBorder.addNormal(new Vector3d(-segmentVec.x, 0, segmentVec.y));
+        int niStart = meshBorder.addNormal(new Vector3d(-segmentVec.x(), 0, segmentVec.y()));
 
-        int ps1it = meshBorder.addVertex(new Point3d(ps1.x, max_height, -ps1.y));
-        int ps2it = meshBorder.addVertex(new Point3d(ps2.x, max_height, -ps2.y));
-        int ps1ib = meshBorder.addVertex(new Point3d(ps1.x, min_height, -ps1.y));
-        int ps2ib = meshBorder.addVertex(new Point3d(ps2.x, min_height, -ps2.y));
+        int ps1it = meshBorder.addVertex(new Vector3d(ps1.x(), max_height, -ps1.y()));
+        int ps2it = meshBorder.addVertex(new Vector3d(ps2.x(), max_height, -ps2.y()));
+        int ps1ib = meshBorder.addVertex(new Vector3d(ps1.x(), min_height, -ps1.y()));
+        int ps2ib = meshBorder.addVertex(new Vector3d(ps2.x(), min_height, -ps2.y()));
 
-        // int pf1it = meshBorder.addVertex(new Point3d(pe1.x, max_height,
-        // pe1.y));
-        // int pf2it = meshBorder.addVertex(new Point3d(pe2.x, max_height,
-        // pe2.y));
-        // int pf1ib = meshBorder.addVertex(new Point3d(pe1.x, min_height,
-        // pe1.y));
-        // int pf2ib = meshBorder.addVertex(new Point3d(pe2.x, min_height,
-        // pe2.y));
+        // int pf1it = meshBorder.addVertex(new Point3d(pe1.x(), max_height,
+        // pe1.y()));
+        // int pf2it = meshBorder.addVertex(new Point3d(pe2.x(), max_height,
+        // pe2.y()));
+        // int pf1ib = meshBorder.addVertex(new Point3d(pe1.x(), min_height,
+        // pe1.y()));
+        // int pf2ib = meshBorder.addVertex(new Point3d(pe2.x(), min_height,
+        // pe2.y()));
 
         face.addVert(ps1it, 0, niStart);
         face.addVert(ps2it, 0, niStart);
@@ -411,20 +405,18 @@ public class Wall extends AbstractWayModel {
         for (int i = 1; i < size; i++) {
 
             segmentEnd = points.get(i);
-            segmentVec = new Vector2d(segmentEnd);
-            segmentVec.sub(segmentStart);
-            segmentVec.normalize();
+            segmentVec = new Vector2d(segmentEnd).sub(segmentStart).normalize();
 
-            Point2d pe1 = points.get(i);
-            Point2d pe2 = simpleOutLine[i];
+            Vector2dc pe1 = points.get(i);
+            Vector2dc pe2 = simpleOutLine[i];
 
-            int pe1it = meshBorder.addVertex(new Point3d(pe1.x, max_height, -pe1.y));
-            int pe2it = meshBorder.addVertex(new Point3d(pe2.x, max_height, -pe2.y));
-            int pe1ib = meshBorder.addVertex(new Point3d(pe1.x, min_height, -pe1.y));
-            int pe2ib = meshBorder.addVertex(new Point3d(pe2.x, min_height, -pe2.y));
+            int pe1it = meshBorder.addVertex(new Vector3d(pe1.x(), max_height, -pe1.y()));
+            int pe2it = meshBorder.addVertex(new Vector3d(pe2.x(), max_height, -pe2.y()));
+            int pe1ib = meshBorder.addVertex(new Vector3d(pe1.x(), min_height, -pe1.y()));
+            int pe2ib = meshBorder.addVertex(new Vector3d(pe2.x(), min_height, -pe2.y()));
 
-            int niLeft = meshBorder.addNormal(new Vector3d(-segmentVec.y, 0, -segmentVec.x));
-            int niRight = meshBorder.addNormal(new Vector3d(segmentVec.y, 0, segmentVec.x));
+            int niLeft = meshBorder.addNormal(new Vector3d(-segmentVec.y(), 0, -segmentVec.x()));
+            int niRight = meshBorder.addNormal(new Vector3d(segmentVec.y(), 0, segmentVec.x()));
 
             face.addVert(pe1it, 0, niTop);
             face.addVert(pe2it, 0, niTop);
@@ -457,7 +449,7 @@ public class Wall extends AbstractWayModel {
             segmentStart = segmentEnd;
         }
 
-        int niEnd = meshBorder.addNormal(new Vector3d(segmentVec.x, 0, -segmentVec.y));
+        int niEnd = meshBorder.addNormal(new Vector3d(segmentVec.x(), 0, -segmentVec.y()));
 
         face.addVert(ps2it, 0, niEnd);
         face.addVert(ps1it, 0, niEnd);
@@ -472,51 +464,41 @@ public class Wall extends AbstractWayModel {
 
     public static void main(String[] args) {
 
-        List<Point2d> points = new ArrayList<Point2d>();
-        points.add(new Point2d(0, 0));
-        points.add(new Point2d(1, 0));
-        points.add(new Point2d(1, 1));
-        Point2d[] simpleOutLine = simpleOutLine(points, 2d);
+        List<Vector2dc> points = new ArrayList<>();
+        points.add(new Vector2d(0, 0));
+        points.add(new Vector2d(1, 0));
+        points.add(new Vector2d(1, 1));
+        Vector2dc[] simpleOutLine = simpleOutLine(points, 2d);
 
-        for (Point2d p : simpleOutLine) {
+        for (Vector2dc p : simpleOutLine) {
             System.out.println(p);
         }
     }
 
-    private static Point2d[] simpleOutLine(List<Point2d> points, double width) {
+    private static Vector2dc[] simpleOutLine(List<Vector2dc> points, double width) {
 
         int size = points.size();
 
-        Point2d[] ret = new Point2d[size];
+        Vector2dc[] ret = new Vector2d[size];
         if (size < 2) {
-            return new Point2d[0];
+            return new Vector2d[0];
         }
         {
-            Point2d p1 = points.get(0);
-            Point2d p2 = points.get(1);
+            Vector2dc p1 = points.get(0);
+            Vector2dc p2 = points.get(1);
 
-            Vector2d v1 = new Vector2d(p2);
-            v1.sub(p1);
-            Vector2d n1 = new Vector2d(-v1.y, v1.x);
+            Vector2dc v1 = new Vector2d(p2).sub(p1);
+            Vector2dc n1 = new Vector2d(-v1.y(), v1.x()).normalize().mul(width);
 
-            n1.normalize();
-            n1.scale(width);
-
-            Point2d start = new Point2d(p1);
-            start.add(n1);
+            Vector2dc start = new Vector2d(p1).add(n1);
             ret[0] = start;
             p1 = points.get(size - 2);
             p2 = points.get(size - 1);
 
-            v1 = new Vector2d(p2);
-            v1.sub(p1);
-            n1 = new Vector2d(-v1.y, v1.x);
+            v1 = new Vector2d(p2).sub(p1);
+            n1 = new Vector2d(-v1.y(), v1.x()).normalize().mul(width);
 
-            n1.normalize();
-            n1.scale(width);
-
-            Point2d end = new Point2d(p2);
-            end.add(n1);
+            Vector2dc end = new Vector2d(p2).add(n1);
 
             ret[size - 1] = end;
         }
@@ -525,37 +507,30 @@ public class Wall extends AbstractWayModel {
             int pi2 = i;
             int pi3 = i + 1;
 
-            Point2d p1 = points.get(pi1);
-            Point2d p2 = points.get(pi2);
-            Point2d p3 = points.get(pi3);
+            Vector2dc p1 = points.get(pi1);
+            Vector2dc p2 = points.get(pi2);
+            Vector2dc p3 = points.get(pi3);
 
-            Vector2d v1 = new Vector2d(p2);
-            v1.sub(p1);
+            Vector2dc v1 = new Vector2d(p2).sub(p1).normalize();
 
-            Vector2d v2 = new Vector2d(p3);
-            v2.sub(p2);
+            Vector2dc v2 = new Vector2d(p3).sub(p2).normalize();
 
-            v1.normalize();
-            v2.normalize();
+            Vector2d n1 = new Vector2d(-v1.y(), v1.x());
+            Vector2d n2 = new Vector2d(-v2.y(), v2.x());
 
-            Vector2d n1 = new Vector2d(-v1.y, v1.x);
-            Vector2d n2 = new Vector2d(-v2.y, v2.x);
+            Vector2dc bisectorNormalized = Vector2dUtil.bisectorNormalized(v1, v2);
 
-            Vector2d bisectorNormalized = Vector2dUtil.bisectorNormalized(v1, v2);
+            n1.mul(width);
+            n2.mul(width);
 
-            n1.scale(width);
-            n2.scale(width);
-
-            Point2d p1n = new Point2d(p1);
-            p1n.add(n1);
-            Point2d p2n = new Point2d(p2);
-            p2n.add(n2);
+            Vector2dc p1n = new Vector2d(p1).add(n1);
+            Vector2dc p2n = new Vector2d(p2).add(n2);
 
             LineLinear2d l1 = new LineParametric2d(p1n, v1).getLinearForm();
             // LineLinear2d l2 = new LineParametric2d(p2n, v2).getLinearForm();
             LineLinear2d l3 = new LineParametric2d(p2, bisectorNormalized).getLinearForm();
 
-            Point2d collide = l1.collide(l3);
+            Vector2dc collide = l1.collide(l3);
 
             if (collide == null) {
                 ret[i] = p2;
@@ -569,7 +544,7 @@ public class Wall extends AbstractWayModel {
     }
 
     private CSG meshToSolid(MeshFactory solidModel) {
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
         for (FaceFactory ff : solidModel.faceFactory) {
 
             if (FaceType.QUADS.equals(ff.type)) {
@@ -585,12 +560,12 @@ public class Wall extends AbstractWayModel {
                         int ti = ff.coordIndexLayers.get(0).get(index);
                         int ni = ff.normalIndex.get(index);
 
-                        Point3d v = solidModel.vertices.get(vi);
+                        Vector3dc v = solidModel.vertices.get(vi);
                         TextCoord t = solidModel.textCoords.get(ti);
-                        Vector3d n = solidModel.normals.get(ni);
+                        Vector3dc n = solidModel.normals.get(ni);
 
-                        Vector point = new Vector(v.x, v.y, v.z);
-                        Vector normal = new Vector(n.x, n.y, n.z);
+                        Vector point = new Vector(v.x(), v.y(), v.z());
+                        Vector normal = new Vector(n.x(), n.y(), n.z());
 
                         Vertex vertex = new Vertex(point, normal);
 
@@ -626,7 +601,7 @@ public class Wall extends AbstractWayModel {
             for (Vertex vertex : vertices) {
                 kendzi.math.geometry.Bool.CSG.Vector pos = vertex.getPos();
                 Vector normal = vertex.getNormal();
-                int vi = meshBorder.addVertex(new Point3d(pos.x, pos.y, pos.z));
+                int vi = meshBorder.addVertex(new Vector3d(pos.x, pos.y, pos.z));
                 int ni = meshBorder.addNormal(new Vector3d(normal.x, normal.y, normal.z));
 
                 faceRight.addVert(vi, 0, ni);
@@ -635,58 +610,58 @@ public class Wall extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 pGl, Camera pCamera) {
+    public void draw(Camera pCamera) {
         // if (true) {
         // return;
         // }
 
         // do not draw the transparent parts of the texture
-        pGl.glEnable(GL.GL_BLEND);
-        pGl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         // don't show source alpha parts in the destination
 
         // determine which areas of the polygon are to be rendered
-        pGl.glEnable(GL2ES1.GL_ALPHA_TEST);
-        pGl.glAlphaFunc(GL.GL_GREATER, 0); // only render if alpha > 0
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0); // only render if alpha > 0
 
         // replace the quad colors with the texture
-        // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-        // GL2.GL_REPLACE);
-        pGl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+        // GL11.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        pGl.glEnable(GL.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_CULL_FACE);
 
-        pGl.glPushMatrix();
-        pGl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
-        // pGl.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
+        // GL11.glColor3f((float) 188 / 255, (float) 169 / 255, (float) 169 /
         // 255);
 
         try {
-            modelRender.render(pGl, model);
+            modelRender.render(model);
 
             // for (RelationCloneHeight cloner : this.heightClone) {
             // for (Double height : cloner) {
             //
-            // pGl.glPushMatrix();
-            // pGl.glTranslated(0, height, 0);
+            // GL11.glPushMatrix();
+            // GL11.glTranslated(0, height, 0);
             //
             // this.modelRender.render(pGl, this.model);
-            // pGl.glPopMatrix();
+            // GL11.glPopMatrix();
             //
             // }
             // }
 
         } finally {
 
-            pGl.glPopMatrix();
+            GL11.glPopMatrix();
 
-            pGl.glDisable(GL.GL_CULL_FACE);
+            GL11.glDisable(GL11.GL_CULL_FACE);
         }
     }
 
@@ -696,8 +671,8 @@ public class Wall extends AbstractWayModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -706,7 +681,7 @@ public class Wall extends AbstractWayModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

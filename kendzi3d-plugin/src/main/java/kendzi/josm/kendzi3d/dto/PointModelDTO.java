@@ -74,7 +74,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param key the key to set
+     * @param key
+     *            the key to set
      */
     public void setKey(String key) {
         this.key = key;
@@ -88,7 +89,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param enabled the enabled to set
+     * @param enabled
+     *            the enabled to set
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -102,7 +104,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param matcher the matcher to set
+     * @param matcher
+     *            the matcher to set
      */
     public void setMatcher(String matcher) {
         this.matcher = matcher;
@@ -116,7 +119,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param scale the scale to set
+     * @param scale
+     *            the scale to set
      */
     public void setScale(String scale) {
         this.scale = scale;
@@ -130,7 +134,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param translateX the translateX to set
+     * @param translateX
+     *            the translateX to set
      */
     public void setTranslateX(String translateX) {
         this.translateX = translateX;
@@ -144,7 +149,8 @@ public class PointModelDTO {
     }
 
     /**
-     * @param translateY the translateY to set
+     * @param translateY
+     *            the translateY to set
      */
     public void setTranslateY(String translateY) {
         this.translateY = translateY;
@@ -158,12 +164,11 @@ public class PointModelDTO {
     }
 
     /**
-     * @param translateZ the translateZ to set
+     * @param translateZ
+     *            the translateZ to set
      */
     public void setTranslateZ(String translateZ) {
         this.translateZ = translateZ;
     }
-
-
 
 }

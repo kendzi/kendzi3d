@@ -11,5 +11,5 @@ package kendzi.swing.ui.panel.equation;
 
 public interface MapChangeListener {
 
-	public abstract void dispatchMapChange();
+    void dispatchMapChange();
 }

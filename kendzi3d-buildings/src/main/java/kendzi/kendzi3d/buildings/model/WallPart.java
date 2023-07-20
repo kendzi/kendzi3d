@@ -5,7 +5,7 @@ import java.util.List;
 
 public class WallPart {
 
-//    private TextureData facadeTextureData;
+    // private TextureData facadeTextureData;
 
     private String facadeMaterialType;
 
@@ -15,13 +15,12 @@ public class WallPart {
 
     private Color roofColor;
 
-
-//    // XXX move to set in Building! (to chose best match);
-//    private TextureData windowsColumnsTextureData;
+    // // XXX move to set in Building! (to chose best match);
+    // private TextureData windowsColumnsTextureData;
 
     private List<WallNode> nodes;
 
-    //List<BuildingElementGrid> buildingElementGrids;
+    // List<BuildingElementGrid> buildingElementGrids;
 
     private List<BuildingWallElement> buildingElements;
 
@@ -33,7 +32,8 @@ public class WallPart {
     }
 
     /**
-     * @param nodes the nodes to set
+     * @param nodes
+     *            the nodes to set
      */
     public void setNodes(List<WallNode> nodes) {
         this.nodes = nodes;
@@ -47,12 +47,12 @@ public class WallPart {
     }
 
     /**
-     * @param buildingElements the buildingElements to set
+     * @param buildingElements
+     *            the buildingElements to set
      */
     public void setBuildingElements(List<BuildingWallElement> buildingElements) {
         this.buildingElements = buildingElements;
     }
-
 
     /**
      * @return the facadeMaterialType
@@ -62,7 +62,8 @@ public class WallPart {
     }
 
     /**
-     * @param facadeMaterialType the facadeMaterialType to set
+     * @param facadeMaterialType
+     *            the facadeMaterialType to set
      */
     public void setFacadeMaterialType(String facadeMaterialType) {
         this.facadeMaterialType = facadeMaterialType;
@@ -76,7 +77,8 @@ public class WallPart {
     }
 
     /**
-     * @param roofMaterialType the roofMaterialType to set
+     * @param roofMaterialType
+     *            the roofMaterialType to set
      */
     public void setRoofMaterialType(String roofMaterialType) {
         this.roofMaterialType = roofMaterialType;
@@ -90,7 +92,8 @@ public class WallPart {
     }
 
     /**
-     * @param facadeColor the facadeColor to set
+     * @param facadeColor
+     *            the facadeColor to set
      */
     public void setFacadeColor(Color facadeColor) {
         this.facadeColor = facadeColor;
@@ -104,14 +107,11 @@ public class WallPart {
     }
 
     /**
-     * @param roofColor the roofColor to set
+     * @param roofColor
+     *            the roofColor to set
      */
     public void setRoofColor(Color roofColor) {
         this.roofColor = roofColor;
     }
-
-
-
-
 
 }

@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
@@ -28,6 +24,10 @@ import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Roof type 5.0.
@@ -40,7 +40,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight() / 2d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight() / 2d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());
@@ -96,7 +96,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
      * @return
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double pRecHeight, double pRecWidth,
-            Point2d[] pRectangleContur, double height, RoofMaterials roofTextureData) {
+            Vector2dc[] pRectangleContur, double height, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -104,7 +104,7 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
         TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> pBorderList = buildingPolygon.getOuter().getPoints();
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
         int segments = 16;
@@ -124,12 +124,11 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
 
         double[] offsets = RoofType5v2.createTextureOffsets(crossSection);
 
-        Vector3d roofLineVector = new Vector3d(pRecWidth, 0, 0);
+        Vector3dc roofLineVector = new Vector3d(pRecWidth, 0, 0);
 
         for (int i = 0; i < mps.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0,
-                    offsets[i]);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
@@ -142,16 +141,16 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
         return rto;
     }
 
-    List<Point2d> createRound(double recHeight, double r, double h, double maxTeta, int segments) {
+    List<Vector2dc> createRound(double recHeight, double r, double h, double maxTeta, int segments) {
 
         double cx = recHeight / 2d;
         double cy = h - r;
 
-        List<Point2d> ret = new ArrayList<Point2d>();
-        ret.add(new Point2d());
+        List<Vector2dc> ret = new ArrayList<>();
+        ret.add(new Vector2d());
 
         if (segments <= 0) {
-            ret.add(new Point2d(recHeight, 0));
+            ret.add(new Vector2d(recHeight, 0));
             return ret;
         }
 
@@ -164,9 +163,9 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
             double px = -Math.cos(teta) * r + cx;
             double py = Math.sin(teta) * r + cy;
 
-            ret.add(new Point2d(px, py));
+            ret.add(new Vector2d(px, py));
         }
-        ret.add(new Point2d(recHeight, 0));
+        ret.add(new Vector2d(recHeight, 0));
 
         return ret;
     }
@@ -179,19 +178,19 @@ public class RoofType5v0 extends RectangleRoofTypeBuilder {
         double r = calcR(h, c);
         double teta = calcTeta(c, r);
 
-        List<Point2d> round = createRound(pRecHeight, r, height, teta, segments);
+        List<Vector2dc> round = createRound(pRecHeight, r, height, teta, segments);
 
-        List<RoofType5v2.CrossSectionElement> split = new ArrayList<RoofType5v2.CrossSectionElement>();
+        List<RoofType5v2.CrossSectionElement> split = new ArrayList<>();
 
-        for (Point2d p : round) {
-            double x = p.x;
-            double y = p.y;
+        for (Vector2dc p : round) {
+            double x = p.x();
+            double y = p.y();
 
-            split.add(new RoofType5v2.CrossSectionElement(new Point2d(x, y), new Vector2d(p.x - 1d, p.y)));
+            split.add(new RoofType5v2.CrossSectionElement(new Vector2d(x, y), new Vector2d(p.x() - 1d, p.y())));
         }
 
         if (height < pRecHeight) {
-            split.add(new RoofType5v2.CrossSectionElement(new Point2d(pRecHeight, height), new Vector2d(0, 1)));
+            split.add(new RoofType5v2.CrossSectionElement(new Vector2d(pRecHeight, height), new Vector2d(0, 1)));
         }
 
         return split;

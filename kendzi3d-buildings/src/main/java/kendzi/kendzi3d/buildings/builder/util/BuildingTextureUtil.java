@@ -14,8 +14,8 @@ import kendzi.kendzi3d.buildings.model.element.EntranceBuildingElement;
 import kendzi.kendzi3d.buildings.model.element.WindowBuildingElement;
 
 public class BuildingTextureUtil {
-    public static TextureData takeWindowsColumnsTextureData(BuildingModel buildingModel, BuildingPart bp, Wall w,
-            WallPart wp, BuildingElementsTextureManager tm) {
+    public static TextureData takeWindowsColumnsTextureData(BuildingModel buildingModel, BuildingPart bp, Wall w, WallPart wp,
+            BuildingElementsTextureManager tm) {
 
         String mt = null;
 
@@ -92,20 +92,19 @@ public class BuildingTextureUtil {
         return td;
     }
 
-    public static TextureData findWindowTextureData(BuildingNodeElement be,
-            BuildingElementsTextureManager pTextureMenager) {
+    public static TextureData findWindowTextureData(BuildingNodeElement be, BuildingElementsTextureManager pTextureMenager) {
 
         TextureData td = null;
         if (be instanceof WindowBuildingElement) {
             WindowBuildingElement wbe = (WindowBuildingElement) be;
 
-            td = pTextureMenager.findTexture(new TextureFindCriteria(Type.WINDOW, wbe.getWindowType(), null, wbe
-                    .getWidth(), wbe.getHeight(), false));
+            td = pTextureMenager.findTexture(
+                    new TextureFindCriteria(Type.WINDOW, wbe.getWindowType(), null, wbe.getWidth(), wbe.getHeight(), false));
         } else if (be instanceof EntranceBuildingElement) {
             EntranceBuildingElement wbe = (EntranceBuildingElement) be;
 
-            td = pTextureMenager.findTexture(new TextureFindCriteria(Type.ENTERENCE, wbe.getEntranceType(), null, wbe
-                    .getWidth(), wbe.getHeight(), false));
+            td = pTextureMenager.findTexture(
+                    new TextureFindCriteria(Type.ENTERENCE, wbe.getEntranceType(), null, wbe.getWidth(), wbe.getHeight(), false));
         } else {
             throw new RuntimeException("unsuported buidlding element " + be);
         }

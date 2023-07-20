@@ -10,11 +10,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.geometry.Bounds;
 import kendzi.jogl.model.geometry.Model;
@@ -31,8 +26,11 @@ import kendzi.josm.kendzi3d.service.MetadataCacheService;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
@@ -44,7 +42,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 public class Tree extends AbstractPointModel implements DLODSuport {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Tree.class);
+    private static final Logger log = LogManager.getLogger(Tree.class);
 
     /**
      * Renderer of model.
@@ -84,12 +82,12 @@ public class Tree extends AbstractPointModel implements DLODSuport {
      * @param pModelCacheService
      *            model cache service
      */
-    public Tree(Node node, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, ModelCacheService pModelCacheService) {
+    public Tree(Node node, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            ModelCacheService pModelCacheService) {
 
         super(node, perspective);
 
-        modelLod = new EnumMap<LOD, Model>(LOD.class);
+        modelLod = new EnumMap<>(LOD.class);
 
         scale = new Vector3d(1d, 1d, 1d);
 
@@ -153,8 +151,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     }
 
     /**
-     * Finds simple model for tree. Order of finding is: - species - genus -
-     * type
+     * Finds simple model for tree. Order of finding is: - species - genus - type
      * 
      * @param species
      *            tree specius
@@ -174,14 +171,10 @@ public class Tree extends AbstractPointModel implements DLODSuport {
         // let go
         String model = null;
 
-        String spacesModel = metadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, species,
-                "" + pLod);
-        String genusModel = metadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, genus, ""
-                + pLod);
-        String typeModel = metadataCacheService
-                .getPropertites("models.trees.type.{0}.{1}.model", null, type, "" + pLod);
-        String unknownModel = metadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, null, ""
-                + pLod);
+        String spacesModel = metadataCacheService.getPropertites("models.trees.species.{0}.{1}.model", null, species, "" + pLod);
+        String genusModel = metadataCacheService.getPropertites("models.trees.genus.{0}.{1}.model", null, genus, "" + pLod);
+        String typeModel = metadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, type, "" + pLod);
+        String unknownModel = metadataCacheService.getPropertites("models.trees.type.{0}.{1}.model", null, null, "" + pLod);
 
         // XXX add StringUtil
         if (spacesModel != null) {
@@ -228,12 +221,10 @@ public class Tree extends AbstractPointModel implements DLODSuport {
 
         Double nodeHeight = ModelUtil.getObjHeight(node, null);
 
-        Double spacesHeight = metadataCacheService.getPropertitesDouble("models.trees.species.{0}.height", null,
-                species);
+        Double spacesHeight = metadataCacheService.getPropertitesDouble("models.trees.species.{0}.height", null, species);
         Double genusHeight = metadataCacheService.getPropertitesDouble("models.trees.genus.{0}.height", null, genus);
         Double typeHeight = metadataCacheService.getPropertitesDouble("models.trees.type.{0}.height", null, type);
-        Double unknownHeight = metadataCacheService.getPropertitesDouble("models.trees.type.{0}.height", null,
-                (String) null);
+        Double unknownHeight = metadataCacheService.getPropertitesDouble("models.trees.type.{0}.height", null, (String) null);
 
         // XXX add StringUtil
         if (nodeHeight != null) {
@@ -268,10 +259,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     @Override
     public boolean isModelBuild(LOD pLod) {
 
-        if (modelLod.get(pLod) != null) {
-            return true;
-        }
-        return false;
+        return modelLod.get(pLod) != null;
     }
 
     private static void setAmbientColor(Model pModel) {
@@ -284,35 +272,35 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, LOD pLod) {
+    public void draw(Camera camera, LOD pLod) {
         Model model2 = modelLod.get(pLod);
         if (model2 != null) {
 
-            gl.glPushMatrix();
-            gl.glTranslated(getGlobalX(), minHeight, -getGlobalY());
+            GL11.glPushMatrix();
+            GL11.glTranslated(getGlobalX(), minHeight, -getGlobalY());
 
-            gl.glEnable(GLLightingFunc.GL_NORMALIZE);
-            gl.glScaled(scale.x, scale.y, scale.z);
+            GL11.glEnable(GL11.GL_NORMALIZE);
+            GL11.glScaled(scale.x, scale.y, scale.z);
 
-            modelRender.render(gl, model2);
+            modelRender.render(model2);
 
-            gl.glDisable(GLLightingFunc.GL_NORMALIZE);
+            GL11.glDisable(GL11.GL_NORMALIZE);
 
             // rotate in the opposite direction to the camera
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
 
         }
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
-        draw(gl, camera, LOD.LOD1);
+    public void draw(Camera camera) {
+        draw(camera, LOD.LOD1);
     }
 
     @Override
@@ -321,8 +309,8 @@ public class Tree extends AbstractPointModel implements DLODSuport {
             buildModel(LOD.LOD1);
         }
 
-        return Collections.singletonList(new ExportItem(modelLod.get(LOD.LOD1), new Point3d(getGlobalX(), 0,
-                -getGlobalY()), new Vector3d(1, 1, 1)));
+        return Collections.singletonList(
+                new ExportItem(modelLod.get(LOD.LOD1), new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -331,7 +319,7 @@ public class Tree extends AbstractPointModel implements DLODSuport {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

@@ -2,13 +2,11 @@ package kendzi.jogl.model.factory;
 
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.TextCoord;
 import kendzi.jogl.texture.dto.TextureData;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
 
 /**
  * Factory utility for creating strip mesh.
@@ -33,9 +31,8 @@ public class StripMeshFactoryUtil {
      * @param isCounterClockwise
      *            the direction of normals
      */
-    public static void verticalStripMesh(List<Point2d> stripPoints, HeightProvider minHeights,
-            HeightProvider maxHeights, MeshFactory mesh, TextureData textureData, boolean closed,
-            boolean isCounterClockwise) {
+    public static void verticalStripMesh(List<Vector2dc> stripPoints, HeightProvider minHeights, HeightProvider maxHeights,
+            MeshFactory mesh, TextureData textureData, boolean closed, boolean isCounterClockwise) {
 
         int size = stripPoints.size();
         if (!closed) {
@@ -54,8 +51,8 @@ public class StripMeshFactoryUtil {
             int index1 = i;
             int index2 = (i + 1) % size;
 
-            Point2d point1 = stripPoints.get(index1);
-            Point2d point2 = stripPoints.get(index2);
+            Vector2dc point1 = stripPoints.get(index1);
+            Vector2dc point2 = stripPoints.get(index2);
 
             double height1 = maxHeights.getHeight(index1);
             double height2 = maxHeights.getHeight(index2);
@@ -69,8 +66,7 @@ public class StripMeshFactoryUtil {
             int point1BottomIndex = cachePointIndex(point1, index1, minHeight1, bottomPointsIndex, mesh);
             int point2BottomIndex = cachePointIndex(point2, index2, minHeight2, bottomPointsIndex, mesh);
 
-            Vector3d n = new Vector3d(-(point2.y - point1.y), 0, -(point2.x - point1.x));
-            n.normalize();
+            Vector3d n = new Vector3d(-(point2.y() - point1.y()), 0, -(point2.x() - point1.x())).normalize();
 
             if (isCounterClockwise) {
                 n.negate();
@@ -117,11 +113,11 @@ public class StripMeshFactoryUtil {
         }
     }
 
-    private static int cachePointIndex(Point2d point, int pointIndex, double height, Integer[] pointsIndexCache,
+    private static int cachePointIndex(Vector2dc point, int pointIndex, double height, Integer[] pointsIndexCache,
             MeshFactory meshBorder) {
 
         if (pointsIndexCache[pointIndex] == null) {
-            pointsIndexCache[pointIndex] = meshBorder.addVertex(new Point3d(point.x, height, -point.y));
+            pointsIndexCache[pointIndex] = meshBorder.addVertex(new Vector3d(point.x(), height, -point.y()));
         }
 
         return pointsIndexCache[pointIndex];

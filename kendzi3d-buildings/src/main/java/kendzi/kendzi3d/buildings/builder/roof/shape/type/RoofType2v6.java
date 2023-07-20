@@ -6,7 +6,6 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-
 /**
  * Roof type 2.6.
  * 

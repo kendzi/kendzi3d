@@ -1,11 +1,10 @@
 package kendzi.josm.kendzi3d.ui;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.camera.Viewport;
@@ -23,6 +22,8 @@ import kendzi.kendzi3d.editor.drawer.HighlightDrawer;
 import kendzi.kendzi3d.editor.ui.BaseEditorGLEventListener;
 import kendzi.kendzi3d.world.StaticModelWorldObject;
 import kendzi3d.light.render.LightRender;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 
 public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
 
@@ -53,7 +54,7 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     /**
      * Axis labels.
      */
-    private final AxisLabels axisLabels = new AxisLabels();;
+    private final AxisLabels axisLabels = new AxisLabels();
 
     /**
      * Drawer for tiles floor.
@@ -77,68 +78,58 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     private final DrawableModelDrawer highlightModelDrawer = new DrawableModelDrawer();
 
     @Override
-    public void init(GLAutoDrawable drawable) {
-        super.init(drawable);
-
-        GL2 gl = drawable.getGL().getGL2();
+    public void init() {
+        super.init();
 
         axisLabels.init();
-        compass.init(gl);
-        lightRender.init(gl);
+        compass.init();
+        lightRender.init();
     }
 
     @Override
-    protected void drawBeforeSetCamera(GL2 gl, Viewport viewport) {
-        lightRender.draw(gl);
+    protected void drawBeforeSetCamera(Viewport viewport) {
+        lightRender.draw();
     }
 
     @Override
-    protected void drawBeforeEditorObjects(GL2 gl, Viewport viewport2) {
+    protected void drawBeforeEditorObjects(Viewport viewport2) {
 
         modelRender.resetMaterials();
-        modelRender.setupDefaultMaterial(gl);
+        modelRender.setupDefaultMaterial();
 
-        skyBox.draw(gl, viewport2.getPosition());
+        skyBox.draw(viewport2.getPosition());
 
-        ground.draw(gl, viewport2.getPosition());
+        ground.draw(viewport2.getPosition());
 
         if (modelRender.isDebugging()) {
 
-            axisLabels.draw(gl);
+            axisLabels.draw();
 
-            floor.draw(gl);
+            floor.draw();
 
             // drawTextInfo(gl, simpleMoveAnimator.info());
         }
 
-        compass.drawAtLeftBottom(gl, viewport2);
+        compass.drawAtLeftBottom(viewport2);
     }
 
     /**
      * Check if all required openGl extensions are available.
      *
-     * @param gl
-     *            gl
+     * @param capabilities
+     *            The capabilities of the current context
      * @return if there is no required extension
      */
     @Override
-    protected boolean checkRequiredExtensions(GL2 gl) {
-
-        if (!gl.isExtensionAvailable("GL_ARB_multitexture")) {
+    protected boolean checkRequiredExtensions(GLCapabilities capabilities) {
+        if (!Optional.ofNullable(capabilities).orElseGet(GL::getCapabilities).GL_ARB_multitexture) {
 
             /*
-             * Check if the extension ARB_multitexture is supported by the
-             * Graphic card
+             * Check if the extension ARB_multitexture is supported by the Graphic card
              */
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-
-                    JOptionPane.showMessageDialog(null,
-                            "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
-                            "Extension not supported", JOptionPane.ERROR_MESSAGE);
-                }
-            });
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
+                    "GL_ARB_multitexture OpenGL extension is not supported. Install correct graphic drivers!",
+                    "Extension not supported", JOptionPane.ERROR_MESSAGE));
 
             return false;
         }
@@ -147,19 +138,19 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     }
 
     @Override
-    protected void drawEditorObject(GL2 gl, EditableObject editableObject, Viewport viewport) {
+    protected void drawEditorObject(EditableObject editableObject, Viewport viewport) {
 
         if (editableObject instanceof StaticModelWorldObject) {
-            staticModelWorldObjectDrawer.draw(gl, (StaticModelWorldObject) editableObject, false);
+            staticModelWorldObjectDrawer.draw((StaticModelWorldObject) editableObject, false);
 
         } else if (editableObject instanceof DrawableModel) {
             DrawableModel drawable = (DrawableModel) editableObject;
             // XXX Viewprot should be used. Need to be refactored.
-            drawable.draw(gl, camera);
+            drawable.draw(camera);
         }
         if (editableObject instanceof WorldObjectDebugDrawable) {
             WorldObjectDebugDrawable drawable = (WorldObjectDebugDrawable) editableObject;
-            drawable.drawDebug(gl, camera);
+            drawable.drawDebug(camera);
         }
     }
 
@@ -167,16 +158,16 @@ public class Kendzi3dGLEventListener extends BaseEditorGLEventListener {
     private StaticModelWorldObjectDrawer staticModelWorldObjectDrawer;
 
     @Override
-    protected void drawHighlightEditorObject(GL2 gl, Object editableObject) {
+    protected void drawHighlightEditorObject(Object editableObject) {
 
         if (editableObject instanceof StaticModelWorldObject) {
-            staticModelWorldObjectDrawer.draw(gl, (StaticModelWorldObject) editableObject, true);
+            staticModelWorldObjectDrawer.draw((StaticModelWorldObject) editableObject, true);
 
         } else if (editableObject instanceof DrawableModel) {
 
             highlightModelDrawer.set((DrawableModel) editableObject, camera);
 
-            HighlightDrawer.drawHighlight(highlightModelDrawer, gl);
+            HighlightDrawer.drawHighlight(highlightModelDrawer);
         }
     }
 

@@ -6,10 +6,10 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofTypeOutput;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Roof type 1.0.
@@ -21,12 +21,12 @@ public class RoofType1v0 extends RoofType1v1 {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType1v0.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofType1v0.class);
 
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, conf.getRecHeight(), 20d);
+        double h1 = getHeightDegreesMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 0, conf.getRecHeight(), 20d);
 
         if (h1 < 0) {
             h1 = 0d;

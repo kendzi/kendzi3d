@@ -7,27 +7,26 @@ import java.util.List;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 
 public class RelationCloneLevel implements java.lang.Iterable<Double> {
 
-    private double offset = 0;
+    private double offset;
 
     private int from = 1;
 
-    private int repeat = 0;
+    private int repeat;
 
     private int every = 1;
 
     private double levelHeight = 2.5d;
 
     private Integer to = 1;
-//    private double offset =0;
+    // private double offset =0;
 
     public static List<RelationCloneLevel> buildHeightClone(OsmPrimitive pOsmPrimitive, double pLevelHeight) {
-        List<RelationCloneLevel> ret = new ArrayList<RelationCloneLevel>();
+        List<RelationCloneLevel> ret = new ArrayList<>();
 
         if (pOsmPrimitive == null) {
             return ret;
@@ -56,8 +55,7 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
         }
 
         RelationCloneLevel clone = new RelationCloneLevel();
-        clone.setOffset(
-                ModelUtil.parseHeight(pRelation.get("offset"), 0d));
+        clone.setOffset(ModelUtil.parseHeight(pRelation.get("offset"), 0d));
 
         clone.setRepeat(parseInt(pRelation.get("repeat"), 0));
 
@@ -90,7 +88,8 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param offset the offset to set
+     * @param offset
+     *            the offset to set
      */
     public void setOffset(double offset) {
         this.offset = offset;
@@ -104,7 +103,8 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param repeat the repeat to set
+     * @param repeat
+     *            the repeat to set
      */
     public void setRepeat(int repeat) {
         this.repeat = repeat;
@@ -118,7 +118,8 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param every the every to set
+     * @param every
+     *            the every to set
      */
     public void setEvery(int every) {
         this.every = every;
@@ -144,7 +145,7 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
                     return null;
                 }
                 this.loop++;
-                return this.loop * (RelationCloneLevel.this.every * levelHeight) + RelationCloneLevel.this.offset ;
+                return this.loop * (RelationCloneLevel.this.every * levelHeight) + RelationCloneLevel.this.offset;
             }
 
             @Override
@@ -165,7 +166,8 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param from the from to set
+     * @param from
+     *            the from to set
      */
     public void setFrom(int from) {
         this.from = from;
@@ -179,7 +181,8 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param levelHeight the levelHeight to set
+     * @param levelHeight
+     *            the levelHeight to set
      */
     public void setLevelHeight(double levelHeight) {
         this.levelHeight = levelHeight;
@@ -193,12 +196,11 @@ public class RelationCloneLevel implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param to the to to set
+     * @param to
+     *            the to to set
      */
     public void setTo(Integer to) {
         this.to = to;
     }
-
-
 
 }

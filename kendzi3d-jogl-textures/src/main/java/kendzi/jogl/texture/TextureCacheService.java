@@ -11,9 +11,7 @@ package kendzi.jogl.texture;
 
 import java.awt.image.BufferedImage;
 
-import com.jogamp.opengl.GL;
-
-import com.jogamp.opengl.util.texture.Texture;
+import kendzi.jogl.util.texture.Texture;
 
 /**
  * Textures cache.
@@ -25,38 +23,40 @@ public interface TextureCacheService {
     /**
      * Undefined texture.
      */
-    public static final String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
+    String TEXTURES_UNDEFINED_PNG = "/textures/undefined.png";
 
     /**
      * Get texture from cache or load it to cache.
      * 
-     * @param pGl OpenGl context
-     * @param pFileName file name from
+     * @param pFileName
+     *            file name from
      * 
      * @return texture texture object
      */
-    public Texture getTexture(GL pGl, String pFileName);
+    Texture getTexture(String pFileName);
 
     /**
      * Test if texture exist in cache.
      * 
-     * @param pFileName name of texture
+     * @param pFileName
+     *            name of texture
      * @return if texture exist
      */
-    public boolean isTexture(String pFileName);
+    boolean isTexture(String pFileName);
 
     /**
      * Clean up all textures from cache.
      */
-    public void clear();
+    void clear();
 
     /**
      * Get texture image from cache.
      *
-     * @param pFileName file name from
+     * @param pFileName
+     *            file name from
      * 
      * @return texture
      */
-    public BufferedImage getImage(String pFileName);
+    BufferedImage getImage(String pFileName);
 
 }

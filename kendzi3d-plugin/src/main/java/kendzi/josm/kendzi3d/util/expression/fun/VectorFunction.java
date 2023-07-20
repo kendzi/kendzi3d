@@ -9,14 +9,14 @@
 
 package kendzi.josm.kendzi3d.util.expression.fun;
 
-import javax.vecmath.Vector3d;
-
 import kendzi.josm.kendzi3d.util.expression.CompileContext;
 import kendzi.josm.kendzi3d.util.expression.Context;
 import kendzi.josm.kendzi3d.util.expression.SimpleDoubleExpressionParser;
 import kendzi.josm.kendzi3d.util.expression.Vector3dContext;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
-public class VectorFunction implements SimpleFunction<Vector3d> {
+public class VectorFunction implements SimpleFunction<Vector3dc> {
 
     Vector3dContext context;
 
@@ -30,15 +30,12 @@ public class VectorFunction implements SimpleFunction<Vector3d> {
     @Override
     public Vector3d eval(Context context) {
 
-
         if (this.args == null || this.args.length != 3) {
             return new Vector3d();
         }
 
-        return new Vector3d(
-                SimpleDoubleExpressionParser.evalueDouble(this.args[0]),
-                SimpleDoubleExpressionParser.evalueDouble(this.args[1]),
-                SimpleDoubleExpressionParser.evalueDouble(this.args[2]));
+        return new Vector3d(SimpleDoubleExpressionParser.evalueDouble(this.args[0]),
+                SimpleDoubleExpressionParser.evalueDouble(this.args[1]), SimpleDoubleExpressionParser.evalueDouble(this.args[2]));
 
     }
 

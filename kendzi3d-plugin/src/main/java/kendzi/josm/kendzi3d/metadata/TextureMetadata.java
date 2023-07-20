@@ -33,29 +33,39 @@ public class TextureMetadata {
      */
     boolean noBreakV;
 
-    /** (X).
+    /**
+     * (X).
+     * 
      * @return the sizeU
      */
     public double getSizeU() {
         return sizeU;
     }
 
-    /** (X).
-     * @param sizeU the sizeU to set
+    /**
+     * (X).
+     * 
+     * @param sizeU
+     *            the sizeU to set
      */
     public void setSizeU(double sizeU) {
         this.sizeU = sizeU;
     }
 
-    /** (Y).
+    /**
+     * (Y).
+     * 
      * @return the sizeV
      */
     public double getSizeV() {
         return sizeV;
     }
 
-    /** (Y).
-     * @param sizeV the sizeV to set
+    /**
+     * (Y).
+     * 
+     * @param sizeV
+     *            the sizeV to set
      */
     public void setSizeV(double sizeV) {
         this.sizeV = sizeV;
@@ -69,7 +79,8 @@ public class TextureMetadata {
     }
 
     /**
-     * @param noBreakU the noBreakU to set
+     * @param noBreakU
+     *            the noBreakU to set
      */
     public void setNoBreakU(boolean noBreakU) {
         this.noBreakU = noBreakU;
@@ -83,7 +94,8 @@ public class TextureMetadata {
     }
 
     /**
-     * @param noBreakV the noBreakV to set
+     * @param noBreakV
+     *            the noBreakV to set
      */
     public void setNoBreakV(boolean noBreakV) {
         this.noBreakV = noBreakV;

@@ -12,18 +12,18 @@ package kendzi.jogl.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.geometry.TextCoord;
+import org.joml.Vector3dc;
 
 public class MeshFactory {
 
-    public List<FaceFactory> faceFactory = new ArrayList<FaceFactory>();
-    public List<Point3d> vertices = new ArrayList<Point3d>();
-    public List<Vector3d> normals = new ArrayList<Vector3d>();
-    public List<TextCoord> textCoords = new ArrayList<TextCoord>();
+    public List<FaceFactory> faceFactory = new ArrayList<>();
+    /** A list of vertex points */
+    public List<Vector3dc> vertices = new ArrayList<>();
+    /** A list of normal vectors */
+    public List<Vector3dc> normals = new ArrayList<>();
+    public List<TextCoord> textCoords = new ArrayList<>();
 
     public int materialID;
 
@@ -48,9 +48,6 @@ public class MeshFactory {
         return new MeshFactory(string);
     }
 
-
-
-
     public FaceFactory addFace(FaceType faceType, int numOfTextures) {
         FaceFactory ff = new FaceFactory(faceType, numOfTextures);
         this.faceFactory.add(ff);
@@ -63,13 +60,13 @@ public class MeshFactory {
         return ff;
     }
 
-    public int addVertex(Point3d p) {
+    public int addVertex(Vector3dc p) {
         this.vertices.add(p);
         // XXX
         return this.vertices.size() - 1;
     }
 
-    public int addNormal(Vector3d v) {
+    public int addNormal(Vector3dc v) {
         this.normals.add(v);
         // XXX
         return this.normals.size() - 1;
@@ -81,7 +78,7 @@ public class MeshFactory {
         return this.textCoords.size() - 1;
     }
 
-    public Point3d getVertex(int i) {
+    public Vector3dc getVertex(int i) {
 
         return this.vertices.get(i);
     }

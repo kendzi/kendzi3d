@@ -10,26 +10,21 @@ import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
-import com.jogamp.opengl.glu.GLU;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
+import kendzi.jogl.GLAutoDrawable;
+import kendzi.jogl.animator.AnimatorBase;
+import kendzi.jogl.animator.FPSAnimator;
 import kendzi.jogl.camera.CameraMoveListener;
 import kendzi.jogl.camera.SimpleMoveAnimator;
 import kendzi.jogl.drawer.AxisLabels;
 import kendzi.jogl.drawer.TilesSurface;
+import kendzi.jogl.glu.GLU;
+import kendzi.jogl.util.GLEventListener;
 import kendzi.math.geometry.point.PointUtil;
-
-import com.jogamp.opengl.util.Animator;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.awt.GLData;
 
 /**
  * Base for test jogl applications.
@@ -39,19 +34,19 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * Position of sun. XXX
      */
-    private float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
+    private final float[] lightPos = new float[] { 0.0f, 1.0f, 1.0f, 0f };
 
     /**
      * Drawer for axis labels.
      */
-    private AxisLabels axisLabels = new AxisLabels();
+    private final AxisLabels axisLabels = new AxisLabels();
 
     /**
      * Drawer for tiles floor.
      */
-    private TilesSurface floor = new TilesSurface();
+    private final TilesSurface floor = new TilesSurface();
 
-    private SimpleMoveAnimator simpleMoveAnimator = new SimpleMoveAnimator();
+    private final SimpleMoveAnimator simpleMoveAnimator = new SimpleMoveAnimator();
 
     CameraMoveListener cameraMoveListener = new CameraMoveListener(this.simpleMoveAnimator);
 
@@ -63,33 +58,27 @@ public class BaseJoglFrame implements GLEventListener {
     }
 
     /**
-     * @param frame
-     * @param sj
      */
     public void initUi() {
         Frame frame = new Frame("Simple JOGL Application");
 
-        GLCanvas canvas = createCanvas();
+        GLAutoDrawable canvas = createCanvas();
 
         canvas.addGLEventListener(this);
         frame.add(canvas);
         frame.setSize(640, 480);
-        final Animator animator = new Animator(canvas);
+        final AnimatorBase animator = new FPSAnimator(canvas, 60);
         frame.addWindowListener(new WindowAdapter() {
 
             @Override
             public void windowClosing(WindowEvent e) {
                 /*
-                 * Run this on another thread than the AWT event queue to make
-                 * sure the call to Animator.stop() completes before exiting.
+                 * Run this on another thread than the AWT event queue to make sure the call to
+                 * Animator.stop() completes before exiting.
                  */
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        animator.stop();
-                        System.exit(0);
-                    }
+                new Thread(() -> {
+                    animator.stop();
+                    System.exit(0);
                 }).start();
             }
         });
@@ -107,27 +96,27 @@ public class BaseJoglFrame implements GLEventListener {
     /**
      * @return
      */
-    public static GLCanvas createCanvas() {
-        // create a profile, in this case OpenGL 2 or later
-        GLProfile profile = GLProfile.get(GLProfile.GL2);
+    public static GLAutoDrawable createCanvas() {
 
+        // create a profile, in this case OpenGL 2 or later
         // configure context
-        GLCapabilities capabilities = new GLCapabilities(profile);
+        GLData glData = new GLData();
+        glData.majorVersion = 2;
 
         // setup z-buffer
-        capabilities.setDepthBits(16);
+        glData.depthSize = 16;
 
         // for anti-aliasing
         // FIXME enabling sample buffers on dual screen ubuntu cause problems...
         // capabilities.setSampleBuffers(true);
         // capabilities.setNumSamples(2);
+        glData.samples = 2;
 
         // initialize a GLDrawable of your choice
-        GLCanvas canvas = new GLCanvas(capabilities);
-        return canvas;
+        return new GLAutoDrawable(glData);
     }
 
-    private static void addSimpleMover(GLCanvas canvas, final BaseJoglFrame sj) {
+    private static void addSimpleMover(GLAutoDrawable canvas, final BaseJoglFrame sj) {
         canvas.addKeyListener(sj.cameraMoveListener);
 
         canvas.addMouseMotionListener(sj.cameraMoveListener);
@@ -136,146 +125,132 @@ public class BaseJoglFrame implements GLEventListener {
     }
 
     @Override
-    public void init(GLAutoDrawable drawable) {
+    public void init() {
         // Use debug pipeline
         // drawable.setGL(new DebugGL(drawable.getGL()));
 
-        GL2 gl = drawable.getGL().getGL2();
-        System.err.println("INIT GL IS: " + gl.getClass().getName());
-
         // Enable VSync
-        gl.setSwapInterval(1);
+        // TODO FIXME gl.setSwapInterval(1);
 
         // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        gl.glClearDepth(1.0);
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
+        GL11.glClearDepth(1.0);
+        GL11.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); // sky blue color
 
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         int[] depth_bits = new int[1];
-        gl.glGetIntegerv(GL.GL_DEPTH_BITS, depth_bits, 0);
+        GL11.glGetIntegerv(GL11.GL_DEPTH_BITS, depth_bits);
 
-        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // try setting this to
+        GL11.glShadeModel(GL11.GL_SMOOTH); // try setting this to
         // GL_FLAT and see what
         // happens.
 
-        addLight(gl);
+        addLight();
 
         float[] grayCol = { 0.8f, 0.8f, 0.8f, 1.0f };
         // float[] blueCol = {0.0f, 0.0f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, grayCol, 0);
+        GL11.glMaterialfv(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE, grayCol);
 
         axisLabels.init();
     }
 
     @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL2 gl = drawable.getGL().getGL2();
-        GLU glu = new GLU();
-
+    public void reshape(int x, int y, int width, int height) {
         if (height <= 0) { // avoid a divide by zero error!
 
             height = 1;
         }
 
-        gl.glViewport(0, 0, width, height); // size of drawing area
+        GL11.glViewport(0, 0, width, height); // size of drawing area
 
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 1500.0); // 5
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GLU.gluPerspective(45.0f, (float) width / (float) height, 1.0f, 1500.0f); // 5
     }
 
     @Override
-    public void display(GLAutoDrawable drawable) {
-
+    public void display() {
         this.simpleMoveAnimator.updateState();
 
-        GL2 gl = drawable.getGL().getGL2();
-        // System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        GLU glu = new GLU();
-
         // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, this.lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPos);
 
         // clear color and depth buffers
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        // gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        // GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glLoadIdentity();
 
-        setCamera(glu);
+        setCamera();
 
-        gl.glEnable(GL.GL_MULTISAMPLE);
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
 
-        // String versionStr = gl.glGetString( GL2.GL_VERSION );
+        // String versionStr = GL11.glGetString( GL11.GL_VERSION );
         // log.info( "GL version:"+versionStr );
 
-        floor.draw(gl);
+        floor.draw();
 
-        axisLabels.draw(gl);
+        axisLabels.draw();
 
         // drawTextInfo(gl, this.simpleMoveAnimator.info());
 
         // Flush all drawing operations to the graphics card
-        gl.glFlush();
+        GL11.glFlush();
     }
 
     /**
      * Sets camera position and rotation.
      *
-     * @param pGlu
-     *            GLU
      */
-    private void setCamera(GLU pGlu) {
+    private void setCamera() {
 
-        Point3d pos = this.simpleMoveAnimator.getPoint();
+        Vector3dc pos = this.simpleMoveAnimator.getPoint();
         Vector3d posLookAt = new Vector3d(100, 0, 0);
-        Vector3d rotate = this.simpleMoveAnimator.getAngle();
+        Vector3dc rotate = this.simpleMoveAnimator.getAngle();
 
-        posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z);
-        posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y);
+        posLookAt = PointUtil.rotateZ3d(posLookAt, rotate.z());
+        posLookAt = PointUtil.rotateY3d(posLookAt, rotate.y());
 
         posLookAt.add(pos);
 
-        pGlu.gluLookAt(pos.x, pos.y, pos.z, posLookAt.x, posLookAt.y, posLookAt.z, 0, 1, 0);
+        GLU.gluLookAt((float) pos.x(), (float) pos.y(), (float) pos.z(), (float) posLookAt.x(), (float) posLookAt.y(),
+                (float) posLookAt.z(), 0, 1, 0);
     }
 
     @Override
-    public void dispose(GLAutoDrawable drawable) {
+    public void dispose() {
     }
 
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+    public void displayChanged(boolean modeChanged, boolean deviceChanged) {
     }
 
     /**
-     * Set up a point source with ambient, diffuse, and specular color.
-     * components
+     * Set up a point source with ambient, diffuse, and specular color. components
      */
-    private void addLight(GL2 gl) {
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+    private void addLight() {
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
         // enable a single light source
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glEnable(GLLightingFunc.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
 
         float gray = 0.5f;
         float[] grayLight = { gray, gray, gray, 1.0f }; // weak gray ambient
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, grayLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_AMBIENT, grayLight);
 
         float[] whiteLight = { 1.0f, 1.0f, 1.0f, 1.0f }; // bright white diffuse
         // & specular
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, whiteLight, 0);
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, whiteLight, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, whiteLight);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_SPECULAR, whiteLight);
 
         // float lightPos[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // top right front
         float[] lightPos = { 0.0f, 2.0f, 2.0f, 1.0f };
         // _direction_
-        gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, lightPos);
 
-        // gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+        // GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
 
         // float [] lmodel_ambient = { 1f, 1f, 1f, 1.0f };
-        // gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
+        // GL11.glLightModelfv(GL11.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
     }
 }

@@ -6,8 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,8 +18,8 @@ import javax.swing.border.EmptyBorder;
 public class ExportUi extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
-    private JTextField txtFilePattern;
-    private JTextField txtNumOfModels;
+    private final JTextField txtFilePattern;
+    private final JTextField txtNumOfModels;
 
     /**
      * Launch the application.
@@ -46,10 +44,10 @@ public class ExportUi extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         GridBagLayout gbl_contentPanel = new GridBagLayout();
-        gbl_contentPanel.columnWidths = new int[]{131, 290, 30, 0};
-        gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0};
-        gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-        gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_contentPanel.columnWidths = new int[] { 131, 290, 30, 0 };
+        gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+        gbl_contentPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+        gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         contentPanel.setLayout(gbl_contentPanel);
         {
             JLabel lblExport = new JLabel("Export");
@@ -132,24 +130,14 @@ public class ExportUi extends JDialog {
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
             {
                 JButton okButton = new JButton("Export");
-                okButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        onExportAction();
-                    }
-                });
+                okButton.addActionListener(e -> onExportAction());
                 okButton.setActionCommand("OK");
                 buttonPane.add(okButton);
                 getRootPane().setDefaultButton(okButton);
             }
             {
                 JButton cancelButton = new JButton("Cancel");
-                cancelButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        dispose();
-                    }
-                });
+                cancelButton.addActionListener(e -> dispose());
                 cancelButton.setActionCommand("Cancel");
                 buttonPane.add(cancelButton);
             }

@@ -15,7 +15,6 @@ import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.RoofDormerTypeOutput;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 
-
 public class PolygonRoofHooksSpaces implements RoofHooksSpaces {
 
     @Override

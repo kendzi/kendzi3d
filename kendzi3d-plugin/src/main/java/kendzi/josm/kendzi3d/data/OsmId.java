@@ -54,6 +54,7 @@ public class OsmId implements PrimitiveId {
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -67,6 +68,7 @@ public class OsmId implements PrimitiveId {
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -84,14 +86,12 @@ public class OsmId implements PrimitiveId {
         if (type != other.type) {
             return false;
         }
-        if (uniqueId != other.uniqueId) {
-            return false;
-        }
-        return true;
+        return uniqueId == other.uniqueId;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

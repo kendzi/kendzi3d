@@ -9,15 +9,13 @@ import kendzi.kendzi3d.models.library.dao.LibraryResourcesMemoryDao;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.NodeModelListFrame;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NodeModelListFrameAction extends NodeModelListFrame {
 
-
     /** Log. */
-    private static final Logger log = Logger.getLogger(NodeModelListFrameAction.class);
-
+    private static final Logger log = LoggerFactory.getLogger(NodeModelListFrameAction.class);
 
     /**
      * Point model service.
@@ -28,32 +26,25 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
 
     private boolean readOnly;
 
-
-
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NodeModelListFrameAction frame = new NodeModelListFrameAction();
-                    ResourceService urlReciverService = new UrlReciverServiceTest();
-                    ModelsLibraryService temp = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
-                    temp.init();
+        EventQueue.invokeLater(() -> {
+            try {
+                NodeModelListFrameAction frame = new NodeModelListFrameAction();
+                ResourceService urlReciverService = new UrlReciverServiceTest();
+                ModelsLibraryService temp = new ModelsLibraryService(urlReciverService, new LibraryResourcesMemoryDao());
+                temp.init();
 
-                    frame.setNodeModelService(temp);
-                    frame.loadTableData();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    log.error(e);
-                }
+                frame.setNodeModelService(temp);
+                frame.loadTableData();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                log.error(String.join(" ", args), e);
             }
         });
     }
-
-
 
     public void loadTableData() {
         List<NodeModel> all = this.modelsLibraryService.findNodeModels(fileKey);
@@ -98,7 +89,6 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
         frame.load(id);
         frame.setVisible(true);
 
-
         loadTableData();
     }
 
@@ -117,23 +107,25 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
     @Override
     protected void removeNodeModel() {
 
-        //        NodeModel pointModel = getSelected();
-        //        if (pointModel == null) {
-        //            return;
-        //        }
-        //        this.modelsLibraryService.remove(fileKey, pointModel);
+        // NodeModel pointModel = getSelected();
+        // if (pointModel == null) {
+        // return;
+        // }
+        // this.modelsLibraryService.remove(fileKey, pointModel);
 
         loadTableData();
     }
 
     /**
-     * @param modelsLibraryService the modelsLibraryService to set
+     * @param modelsLibraryService
+     *            the modelsLibraryService to set
      */
     public void setNodeModelService(ModelsLibraryService modelsLibraryService) {
         this.modelsLibraryService = modelsLibraryService;
     }
 
-    public static NodeModelListFrameAction buildFrame(String fileKey, boolean readOnly, ModelsLibraryService modelsLibraryService) {
+    public static NodeModelListFrameAction buildFrame(String fileKey, boolean readOnly,
+            ModelsLibraryService modelsLibraryService) {
 
         NodeModelListFrameAction frame = new NodeModelListFrameAction();
         frame.setNodeModelService(modelsLibraryService);
@@ -145,8 +137,6 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
         return frame;
     }
 
-
-
     /**
      * @return the fileKey
      */
@@ -154,20 +144,18 @@ public class NodeModelListFrameAction extends NodeModelListFrame {
         return fileKey;
     }
 
-
-
     /**
-     * @param fileKey the fileKey to set
+     * @param fileKey
+     *            the fileKey to set
      */
     public void setFileKey(String fileKey) {
         this.fileKey = fileKey;
         this.getLblFileKey().setText(fileKey);
     }
 
-
-
     /**
-     * @param readOnly the readOnly to set
+     * @param readOnly
+     *            the readOnly to set
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;

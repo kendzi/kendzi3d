@@ -2,11 +2,11 @@ package kendzi.kendzi3d.buildings.model;
 
 import kendzi.kendzi3d.buildings.model.element.WindowBuildingElement;
 
-public class WindowGridBuildingElement extends WindowBuildingElement implements BuildingWallElement{
+public class WindowGridBuildingElement extends WindowBuildingElement implements BuildingWallElement {
 
     private int numOfCols;
 
-    //int numOfRows;
+    // int numOfRows;
 
     /**
      * @param numOfCols
@@ -24,11 +24,11 @@ public class WindowGridBuildingElement extends WindowBuildingElement implements 
     }
 
     /**
-     * @param numOfCols the numOfCols to set
+     * @param numOfCols
+     *            the numOfCols to set
      */
     public void setNumOfCols(int numOfCols) {
         this.numOfCols = numOfCols;
     }
-
 
 }

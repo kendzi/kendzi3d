@@ -8,14 +8,13 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.JosmAction;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.models.library.ui.action.ModelLibraryResourcesListFrameAction;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * Point model list action.
@@ -33,7 +32,7 @@ public class PointModelListAction extends JosmAction {
     /**
      * Point model service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     /**
      * Constructor.

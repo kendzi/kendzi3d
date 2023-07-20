@@ -6,19 +6,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.DataSource;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.ProjectionRegistry;
-import org.openstreetmap.josm.gui.MainApplication;
-
 import kendzi.josm.kendzi3d.data.DataSetFilterUtil;
 import kendzi.josm.kendzi3d.data.Kendzi3dCore;
 import kendzi.josm.kendzi3d.data.OsmId;
@@ -31,6 +18,19 @@ import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.BuildableWorldObject;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openstreetmap.josm.data.DataSource;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Monitor JOSM data change events and produce new editable objects for 3d view.
@@ -38,7 +38,7 @@ import kendzi.kendzi3d.world.quad.layer.Layer;
  */
 public class EditorObjectsProducer implements Runnable, DataEventListener {
 
-    private static final Logger LOG = Logger.getLogger(EditorObjectsProducer.class);
+    private static final Logger LOG = LogManager.getLogger(EditorObjectsProducer.class);
 
     private final DataEventQueue eventQueue;
 
@@ -280,9 +280,9 @@ public class EditorObjectsProducer implements Runnable, DataEventListener {
 
         // Set<OsmId> currentIdsSet = new HashSet<OsmId>(currentIds);
 
-        Set<OsmId> newIds = new HashSet<OsmId>(filteredIds);
-        Set<OsmId> updateIds = new HashSet<OsmId>(filteredIds.size());
-        Set<OsmId> removeIds = new HashSet<OsmId>(filteredIds.size());
+        Set<OsmId> newIds = new HashSet<>(filteredIds);
+        Set<OsmId> updateIds = new HashSet<>(filteredIds.size());
+        Set<OsmId> removeIds = new HashSet<>(filteredIds.size());
 
         // find all ids which are not in filtered set
         for (OsmId osmId : currentIds) {

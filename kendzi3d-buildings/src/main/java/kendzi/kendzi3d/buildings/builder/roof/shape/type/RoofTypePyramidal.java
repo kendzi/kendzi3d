@@ -6,15 +6,11 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import com.dreizak.miniball.highdim.Miniball;
 import com.dreizak.miniball.model.ArrayPointSet;
+
+import java.util.Arrays;
+import java.util.List;
 
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.MeshFactoryUtil;
@@ -32,6 +28,10 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonUtil;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Roof type Pyramidal.
@@ -44,7 +44,7 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, 2.5d);
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());
@@ -67,35 +67,34 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      * @return the roof output
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double recHeight, double recWidth,
-            Point2d[] rectangleContur, double h1, RoofMaterials roofTextureData) {
+            Vector2dc[] rectangleContur, double h1, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
 
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        List<Point2d> outlineList = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> outlineList = buildingPolygon.getOuter().getPoints();
 
         if (PolygonUtil.isClockwisePolygon(outlineList)) {
             outlineList = PolygonList2d.reverse(outlineList);
         }
 
-        List<Point2d> outlineConvexHull = Graham.grahamScan(outlineList);
+        List<Vector2dc> outlineConvexHull = Graham.grahamScan(outlineList);
 
-        Point2d middlePoint = findMiddlePoint(outlineConvexHull);
+        Vector2dc middlePoint = findMiddlePoint(outlineConvexHull);
 
         LinePoints2d[] lines = createLines(outlineConvexHull, middlePoint);
         MultiPolygonList2d[] mp = createMP(outlineConvexHull, outlineList, middlePoint);
         Plane3d[] planes = createPlanes(outlineConvexHull, h1, middlePoint);
 
-        Vector3d[] roofLine = createRoofLines(outlineConvexHull);
+        Vector3dc[] roofLine = createRoofLines(outlineConvexHull);
 
         double[] textureOffset = createTextureOffset(outlineConvexHull);
 
         for (int i = 0; i < mp.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i],
-                    0);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mp[i], planes[i], roofLine[i], roofTexture, textureOffset[i], 0);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
@@ -115,21 +114,21 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      *            the list of points to calculate center
      * @return the center point of outline
      */
-    public static Point2d findMiddlePoint(List<Point2d> points) {
+    public static Vector2d findMiddlePoint(List<Vector2dc> points) {
 
         final ArrayPointSet pts = new ArrayPointSet(2, points.size());
 
         for (int i = 0; i < points.size(); i++) {
-            Point2d point2d = points.get(i);
-            pts.set(i, 0, point2d.x);
-            pts.set(i, 1, point2d.y);
+            Vector2dc point2d = points.get(i);
+            pts.set(i, 0, point2d.x());
+            pts.set(i, 1, point2d.y());
         }
 
         Miniball mb = new Miniball(pts);
 
         double[] center = mb.center();
 
-        return new Point2d(center);
+        return new Vector2d(center);
     }
 
     /**
@@ -139,7 +138,7 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      *            the list of points in polygon
      * @return the array of offsets for texture in given point
      */
-    public static double[] createTextureOffset(List<Point2d> polygon) {
+    public static double[] createTextureOffset(List<Vector2dc> polygon) {
         int size = polygon.size();
         double[] ret = new double[size];
 
@@ -148,8 +147,8 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
         for (int i = 0; i < size; i++) {
             ret[i] = distance;
 
-            Point2d p1 = polygon.get(i);
-            Point2d p2 = polygon.get((i + 1) % size);
+            Vector2dc p1 = polygon.get(i);
+            Vector2dc p2 = polygon.get((i + 1) % size);
 
             distance += p1.distance(p2);
         }
@@ -164,25 +163,25 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      *            the polygon
      * @return the array of vectors for each edge in polygon
      */
-    public static Vector3d[] createRoofLines(List<Point2d> polygon) {
+    public static Vector3dc[] createRoofLines(List<Vector2dc> polygon) {
 
         int size = polygon.size();
-        Vector3d[] ret = new Vector3d[size];
+        Vector3dc[] ret = new Vector3d[size];
         for (int i = 0; i < size; i++) {
-            Point2d p1 = polygon.get(i);
-            Point2d p2 = polygon.get((i + 1) % size);
+            Vector2dc p1 = polygon.get(i);
+            Vector2dc p2 = polygon.get((i + 1) % size);
 
-            ret[i] = new Vector3d(p2.x - p1.x, 0, -(p2.y - p1.y));
+            ret[i] = new Vector3d(p2.x() - p1.x(), 0, -(p2.y() - p1.y()));
         }
 
         return ret;
     }
 
-    private LinePoints2d[] createLines(List<Point2d> polygon, Point2d middlePoint) {
+    private LinePoints2d[] createLines(List<Vector2dc> polygon, Vector2dc middlePoint) {
         int size = polygon.size();
         LinePoints2d[] ret = new LinePoints2d[size];
         for (int i = 0; i < size; i++) {
-            Point2d p1 = polygon.get(i);
+            Vector2dc p1 = polygon.get(i);
 
             LinePoints2d l = new LinePoints2d(middlePoint, p1);
 
@@ -203,23 +202,20 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      *            the middle point
      * @return the planes for each polygon edge
      */
-    public static Plane3d[] createPlanes(List<Point2d> polygon, double height, Point2d m) {
+    public static Plane3d[] createPlanes(List<Vector2dc> polygon, double height, Vector2dc m) {
 
         int size = polygon.size();
         Plane3d[] ret = new Plane3d[size];
-        // Point3d center = new Point3d(m.x, height, -m.y);
+        // Point3d center = new Point3d(m.x(), height, -m.y());
         for (int i = 0; i < size; i++) {
-            Point2d p1 = polygon.get(i);
-            Point2d p2 = polygon.get((i + 1) % size);
+            Vector2dc p1 = polygon.get(i);
+            Vector2dc p2 = polygon.get((i + 1) % size);
 
-            Vector3d v1 = new Vector3d(p1.x - m.x, -height, -(p1.y - m.y));
-            Vector3d v2 = new Vector3d(p2.x - m.x, -height, -(p2.y - m.y));
+            Vector3dc v2 = new Vector3d(p2.x() - m.x(), -height, -(p2.y() - m.y()));
+            Vector3dc v1 = new Vector3d(p1.x() - m.x(), -height, -(p1.y() - m.y())).cross(v2).normalize();
 
-            v1.cross(v1, v2);
-            v1.normalize();
-
-            Point3d point = new Point3d(p1.x, 0, -p1.y);
-            // Point3d point = new Point3d(p2.x, 0, -p2.y);
+            Vector3dc point = new Vector3d(p1.x(), 0, -p1.y());
+            // Point3d point = new Point3d(p2.x(), 0, -p2.y());
 
             Plane3d p = new Plane3d(point, v1);
 
@@ -238,8 +234,7 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
      * @param middlePoint
      * @return
      */
-    private MultiPolygonList2d[] createMP(List<Point2d> outlineConvexHull, List<Point2d> outlineList,
-            Point2d middlePoint) {
+    private MultiPolygonList2d[] createMP(List<Vector2dc> outlineConvexHull, List<Vector2dc> outlineList, Vector2dc middlePoint) {
 
         MultiPolygonList2d outlineMultiPolygon = new MultiPolygonList2d(new PolygonList2d(outlineList));
 
@@ -247,8 +242,8 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
         MultiPolygonList2d[] ret = new MultiPolygonList2d[size];
 
         for (int i = 0; i < size; i++) {
-            Point2d p1 = outlineConvexHull.get(i);
-            Point2d p2 = outlineConvexHull.get((i + 1) % size);
+            Vector2dc p1 = outlineConvexHull.get(i);
+            Vector2dc p2 = outlineConvexHull.get((i + 1) % size);
 
             ret[i] = intersectionOfLeftSideOfMultipleCuts(outlineMultiPolygon, p2, middlePoint, p1);
         }
@@ -256,8 +251,7 @@ public class RoofTypePyramidal extends RectangleRoofTypeBuilder {
         return ret;
     }
 
-    private static MultiPolygonList2d intersectionOfLeftSideOfMultipleCuts(MultiPolygonList2d polygons,
-            Point2d... lines) {
+    private static MultiPolygonList2d intersectionOfLeftSideOfMultipleCuts(MultiPolygonList2d polygons, Vector2dc... lines) {
         return PolygonSplitHelper.intersectionOfLeftSideOfMultipleCuts(polygons,
                 PolygonSplitHelper.polygonalChaniToLineArray(lines));
     }

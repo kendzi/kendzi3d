@@ -1,43 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<artifactId>kendzi3d-jogl-model</artifactId>
-
-	<url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
-
-	<dependencies>
-				
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-	     
-		<dependency>
-			<groupId>org.jogamp.gluegen</groupId>
-			<artifactId>gluegen-rt-main</artifactId>
-			<version>${gluegen.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jogamp.jogl</groupId>
-			<artifactId>jogl-all-main</artifactId>
-			<version>${jogl.version}</version>
-		</dependency>
-		    
-	    <dependency>
-	      <groupId>java3d</groupId>
-	      <artifactId>vecmath</artifactId>
-	      <version>${vecmath.version}</version>
-	    </dependency>
-		
-	</dependencies>
-		
-	<parent>
-		<groupId>kendzi.kendzi3d</groupId>
-		<artifactId>kendzi3d-parent</artifactId>
-		<version>1.0.206-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>	
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>kendzi3d-jogl-model</artifactId>
+  <url>http://www.openstreetmap.org.pl/kendzi/Kendzi3d/</url>
+  <dependencies>
+    <dependency>
+      <groupId>org.joml</groupId>
+      <artifactId>joml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+      <version>${lwjgl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+  </dependencies>
+  <parent>
+    <groupId>kendzi.kendzi3d</groupId>
+    <artifactId>kendzi3d-parent</artifactId>
+    <version>1.0.206-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 </project>

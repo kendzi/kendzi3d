@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point2d;
-
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
@@ -25,8 +23,9 @@ import kendzi.math.geometry.polygon.CircleInsidePolygon;
 import kendzi.math.geometry.polygon.CircleInsidePolygon.Circle;
 import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
-
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
 
 /**
  * Roof type 8.0.
@@ -37,12 +36,12 @@ import org.ejml.simple.SimpleMatrix;
 public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
+    public RoofTypeOutput buildRoof(Vector2dc pStartPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel pRoof,
             double height, RoofMaterials roofTextureData) {
 
-        List<Point2d> pPolygon = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> pPolygon = buildingPolygon.getOuter().getPoints();
 
-        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x, -pStartPoint.y);
+        SimpleMatrix transformLocal = TransformationMatrix2d.tranA(-pStartPoint.x(), -pStartPoint.y());
 
         pPolygon = TransformationMatrix2d.transformList(pPolygon, transformLocal);
 
@@ -60,14 +59,14 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         RoofTypeOutput rto = build(pPolygon, circle.getPoint(), bends, isection, soft, roofTextureData);
 
-        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x, height - rto.getHeight(), -pStartPoint.y);
+        SimpleMatrix transformGlobal = TransformationMatrix3d.tranA(pStartPoint.x(), height - rto.getHeight(), -pStartPoint.y());
         rto.setTransformationMatrix(transformGlobal);
 
         return rto;
 
     }
 
-    protected RoofTypeOutput build(List<Point2d> borderList, Point2d point, Bend[] bends, int sectionCount, boolean pSoft,
+    protected RoofTypeOutput build(List<Vector2dc> borderList, Vector2dc point, Bend[] bends, int sectionCount, boolean pSoft,
             RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
@@ -81,12 +80,12 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         double height = bends[bends.length - 1].getHeight();
 
-        Point2d[] crossSection = new Point2d[bends.length];
-        crossSection[0] = new Point2d(bends[0].getRadius(), 0);
-        crossSection[crossSection.length - 1] = new Point2d(0, height);
+        Vector2dc[] crossSection = new Vector2d[bends.length];
+        crossSection[0] = new Vector2d(bends[0].getRadius(), 0);
+        crossSection[crossSection.length - 1] = new Vector2d(0, height);
 
         for (int i = 1; i < bends.length; i++) {
-            crossSection[i] = new Point2d(bends[i].getRadius(), bends[i].getHeight());
+            crossSection[i] = new Vector2d(bends[i].getRadius(), bends[i].getHeight());
         }
 
         RoofType5v6.buildRotaryShape(meshRoof, point, sectionCount, crossSection, pSoft);
@@ -111,32 +110,32 @@ public class RoofType8v0 extends AbstractRoofTypeBuilder {
 
         double ratius = circle.getRadius();
 
-        Double h1 = getHeightDegreesMeters(measurements, MeasurementKey.HEIGHT_1, 0, ratius, 60);
-        Double l1 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_1, ratius, ratius);
+        double h1 = getHeightDegreesMeters(measurements, MeasurementKey.HEIGHT_1, 0, ratius, 60);
+        double l1 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_1, ratius, ratius);
 
         bends[0] = new Bend(0, l1);
         bends[bends.length - 1] = new Bend(h1, 0);
 
         if (numOfBend > 1) {
-            Double h2 = getHeightMeters(measurements, MeasurementKey.HEIGHT_2, h1 * 1 / numOfBend);
-            Double l2 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_2, ratius, ratius * (numOfBend - 1)
-                    / numOfBend);
+            double h2 = getHeightMeters(measurements, MeasurementKey.HEIGHT_2, h1 * 1 / numOfBend);
+            double l2 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_2, ratius,
+                    ratius * (numOfBend - 1) / numOfBend);
 
             bends[1] = new Bend(h2, l2);
         }
 
         if (numOfBend > 2) {
-            Double h3 = getHeightMeters(measurements, MeasurementKey.HEIGHT_3, h1 * 2 / numOfBend);
-            Double l3 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_3, ratius, ratius * (numOfBend - 2)
-                    / numOfBend);
+            double h3 = getHeightMeters(measurements, MeasurementKey.HEIGHT_3, h1 * 2 / numOfBend);
+            double l3 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_3, ratius,
+                    ratius * (numOfBend - 2) / numOfBend);
 
             bends[2] = new Bend(h3, l3);
         }
 
         if (numOfBend > 3) {
-            Double h4 = getHeightMeters(measurements, MeasurementKey.HEIGHT_4, h1 * 3 / numOfBend);
-            Double l4 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_4, ratius, ratius * (numOfBend - 3)
-                    / numOfBend);
+            double h4 = getHeightMeters(measurements, MeasurementKey.HEIGHT_4, h1 * 3 / numOfBend);
+            double l4 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_4, ratius,
+                    ratius * (numOfBend - 3) / numOfBend);
 
             bends[3] = new Bend(h4, l4);
         }

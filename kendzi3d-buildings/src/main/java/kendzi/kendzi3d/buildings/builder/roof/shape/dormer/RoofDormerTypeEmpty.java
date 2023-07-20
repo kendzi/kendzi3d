@@ -11,18 +11,18 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space.RoofHooksSpace;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RoofDormerTypeEmpty implements RoofDormerType {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RoofDormerTypeEmpty.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofDormerTypeEmpty.class);
 
     @Override
     public DormerType getType() {
@@ -30,12 +30,8 @@ public class RoofDormerTypeEmpty implements RoofDormerType {
     }
 
     @Override
-    public RoofDormerTypeOutput buildRoof(
-            RoofHookPoint pRoofHookPoint,
-            RoofHooksSpace space,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofMaterials pRoofTextureData) {
-
+    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
+            Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData) {
 
         return null;
     }

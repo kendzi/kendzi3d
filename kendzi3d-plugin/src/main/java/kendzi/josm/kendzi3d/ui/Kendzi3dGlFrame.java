@@ -1,9 +1,9 @@
 package kendzi.josm.kendzi3d.ui;
 
 import javax.inject.Inject;
-import com.jogamp.opengl.GLEventListener;
 
 import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.util.GLEventListener;
 import kendzi.josm.kendzi3d.data.event.NewDataEvent;
 import kendzi.josm.kendzi3d.data.producer.DataConsumersMonitor;
 import kendzi.josm.kendzi3d.data.producer.DataEventListener;
@@ -33,23 +33,25 @@ public class Kendzi3dGlFrame extends BaseEditorFrame {
 
     @Override
     protected void onOpenWindow() {
+        super.onOpenWindow();
         dataConsumersMonitor.addDataConsumer();
 
         /*
-         * OpenGl context is stored per window, if we open new one we need to
-         * clean up old textures.
+         * OpenGl context is stored per window, if we open new one we need to clean up
+         * old textures.
          */
         textureCacheService.clear();
 
         /*
-         * Data updates ware turn off after window closes. We need to rebuild
-         * whole dataset.
+         * Data updates ware turn off after window closes. We need to rebuild whole
+         * dataset.
          */
         dataEventListener.add(new NewDataEvent());
     }
 
     @Override
     protected void onCloseWindow() {
+        super.onCloseWindow();
         dataConsumersMonitor.removeDataConsumer();
     }
 

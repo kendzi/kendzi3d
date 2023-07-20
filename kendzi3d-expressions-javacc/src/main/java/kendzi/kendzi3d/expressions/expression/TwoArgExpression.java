@@ -1,6 +1,5 @@
 package kendzi.kendzi3d.expressions.expression;
 
-
 public abstract class TwoArgExpression<T> extends ArgExpression<T> {
 
     protected Expression arg1;
@@ -8,7 +7,7 @@ public abstract class TwoArgExpression<T> extends ArgExpression<T> {
 
     public TwoArgExpression(Expression arg1, Expression arg2, Class<T> expectedParamType) {
         super(expectedParamType);
-        this.arg1= arg1;
-        this.arg2= arg2;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
     }
 }

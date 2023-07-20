@@ -8,7 +8,7 @@
  */
 package kendzi.kendzi3d.josm.model.direction;
 
-import javax.vecmath.Vector2d;
+import org.joml.Vector2d;
 
 /**
  * Direction in angle.
@@ -16,7 +16,7 @@ import javax.vecmath.Vector2d;
  * @author Tomasz Kędziora (kendzi)
  */
 public class AngleDirection implements Direction {
-    private double angle;
+    private final double angle;
 
     AngleDirection(double pAngle) {
         this.angle = pAngle;

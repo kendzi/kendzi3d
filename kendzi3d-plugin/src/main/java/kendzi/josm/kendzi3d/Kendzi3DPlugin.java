@@ -9,10 +9,11 @@ package kendzi.josm.kendzi3d;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -20,18 +21,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.ToggleAction;
-import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.spi.preferences.Config;
-import org.openstreetmap.josm.tools.ImageProvider;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
-import kendzi.josm.jogl.JoglPlugin;
 import kendzi.josm.kendzi3d.action.AutostartToggleAction;
 import kendzi.josm.kendzi3d.action.CleanUpAction;
 import kendzi.josm.kendzi3d.action.DebugPointModelToggleAction;
@@ -51,8 +40,16 @@ import kendzi.josm.kendzi3d.data.producer.EditorObjectsProducer;
 import kendzi.josm.kendzi3d.module.Kendzi3dModule;
 import kendzi.josm.kendzi3d.ui.Kendzi3dGlFrame;
 import kendzi.josm.kendzi3d.ui.layer.CameraLayer;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.tools.ImageProvider;
 
-public class Kendzi3DPlugin extends NativeLibPlugin {
+public class Kendzi3DPlugin extends Plugin {
 
     /**
      * Menu in JOSM.
@@ -72,17 +69,6 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
      */
     public Kendzi3DPlugin(PluginInformation pInfo) {
         super(pInfo);
-
-        ExceptionHandler.registerExceptionHandler();
-
-        try {
-
-            JoglPlugin.addJoglToClassPath();
-
-            loadLibrary();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Injector injector = Guice.createInjector(new Kendzi3dModule(getPluginDirs().getUserDataDirectory(false).getPath()));
 
@@ -108,10 +94,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         return new File(pluginDir, pFileName).exists();
     }
 
-    private String getPluginDir() {		 
-  		return getPluginDirs().getUserDataDirectory(false).getPath();
-  	}
-    
+    private String getPluginDir() {
+        return getPluginDirs().getUserDataDirectory(false).getPath();
+    }
+
     /**
      * Refreshing menu.
      *
@@ -130,17 +116,17 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         view3dJMenu.addSeparator();
 
         view3dJMenu
-        .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
+                .add(new JMenuItem(new JosmAction(tr("Kendzi 3D View"), "stock_3d-effects24", tr("Open 3D View"), null, false) {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                putValue("toolbar", "3dView_run");
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        putValue("toolbar", "3dView_run");
 
-                openKendzi3dWindow(injector);
+                        openKendzi3dWindow(injector);
 
-            }
+                    }
 
-        }));
+                }));
 
         AutostartToggleAction autostartToggleAction = new AutostartToggleAction();
         registerCheckBoxAction(autostartToggleAction, view3dJMenu);
@@ -175,7 +161,10 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
 
         view3dJMenu.addSeparator();
 
-        /* only serves to override a per-model setting, i.e. enables two sided lighting for each model globally */
+        /*
+         * only serves to override a per-model setting, i.e. enables two sided lighting
+         * for each model globally
+         */
         ForceTwoSidedToggleAction doubleSidedLightingToggleAction = injector.getInstance(ForceTwoSidedToggleAction.class);
         registerCheckBoxAction(doubleSidedLightingToggleAction, view3dJMenu);
 
@@ -215,15 +204,11 @@ public class Kendzi3DPlugin extends NativeLibPlugin {
         checkBox.setAccelerator(action.getShortcut().getKeyStroke());
 
         action.addButtonModel(checkBox.getModel());
-        action.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("enabled")) {
-                    checkBox.setVisible((Boolean) evt.getNewValue());
-                }
-
+        action.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals("enabled")) {
+                checkBox.setVisible((Boolean) evt.getNewValue());
             }
+
         });
 
         menu.add(checkBox);

@@ -10,12 +10,11 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.Map;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
+import org.joml.Vector2dc;
 
 /**
  * Rectangle roof builder parameters.
@@ -24,14 +23,14 @@ import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
  */
 public class RectangleRoofTypeConf {
     private PolygonWithHolesList2d buildingPolygon;
-    private Point2d[] rectangleContur;
+    private Vector2dc[] rectangleContur;
     private double recHeight;
     private double recWidth;
     private Integer roofTypeParameter;
     private Map<MeasurementKey, Measurement> measurements;
     private RoofMaterials roofTextureData;
 
-    public RectangleRoofTypeConf(PolygonWithHolesList2d transfBuildingPolygon, Point2d[] rectangleContur, double recHeight,
+    public RectangleRoofTypeConf(PolygonWithHolesList2d transfBuildingPolygon, Vector2dc[] rectangleContur, double recHeight,
             double recWidth, Integer roofTypeParameter, Map<MeasurementKey, Measurement> measurements,
             RoofMaterials roofTextureData) {
         super();
@@ -47,14 +46,15 @@ public class RectangleRoofTypeConf {
     /**
      * @return the rectangleContur
      */
-    public Point2d[] getRectangleContur() {
+    public Vector2dc[] getRectangleContur() {
         return rectangleContur;
     }
 
     /**
-     * @param rectangleContur the rectangleContur to set
+     * @param rectangleContur
+     *            the rectangleContur to set
      */
-    public void setRectangleContur(Point2d[] rectangleContur) {
+    public void setRectangleContur(Vector2dc[] rectangleContur) {
         this.rectangleContur = rectangleContur;
     }
 
@@ -66,7 +66,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param recHeight the recHeight to set
+     * @param recHeight
+     *            the recHeight to set
      */
     public void setRecHeight(double recHeight) {
         this.recHeight = recHeight;
@@ -80,7 +81,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param recWidth the recWidth to set
+     * @param recWidth
+     *            the recWidth to set
      */
     public void setRecWidth(double recWidth) {
         this.recWidth = recWidth;
@@ -94,7 +96,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param roofTypeParameter the roofTypeParameter to set
+     * @param roofTypeParameter
+     *            the roofTypeParameter to set
      */
     public void setRoofTypeParameter(Integer roofTypeParameter) {
         this.roofTypeParameter = roofTypeParameter;
@@ -108,7 +111,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param measurements the measurements to set
+     * @param measurements
+     *            the measurements to set
      */
     public void setMeasurements(Map<MeasurementKey, Measurement> measurements) {
         this.measurements = measurements;
@@ -122,7 +126,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param roofTextureData the roofTextureData to set
+     * @param roofTextureData
+     *            the roofTextureData to set
      */
     public void setRoofTextureData(RoofMaterials roofTextureData) {
         this.roofTextureData = roofTextureData;
@@ -136,7 +141,8 @@ public class RectangleRoofTypeConf {
     }
 
     /**
-     * @param buildingPolygon the buildingPolygon to set
+     * @param buildingPolygon
+     *            the buildingPolygon to set
      */
     public void setBuildingPolygon(PolygonWithHolesList2d buildingPolygon) {
         this.buildingPolygon = buildingPolygon;

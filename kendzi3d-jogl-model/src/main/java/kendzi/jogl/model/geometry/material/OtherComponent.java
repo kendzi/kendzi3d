@@ -4,17 +4,16 @@ import java.awt.Color;
 
 public class OtherComponent {
 
-    private Color specularColor;
+    private final Color specularColor;
     private Color emissive = Color.BLACK;
-    private float shininess;
+    private final float shininess;
 
-
-//  public float shininess2;
-//  public float transparency;
-//  public float uTile;
-//  public float vTile;
-//  public float uOffset;
-//  public float vOffset;
+    // public float shininess2;
+    // public float transparency;
+    // public float uTile;
+    // public float vTile;
+    // public float uOffset;
+    // public float vOffset;
 
     /**
      *
@@ -63,7 +62,5 @@ public class OtherComponent {
     public float getShininess() {
         return this.shininess;
     }
-
-
 
 }

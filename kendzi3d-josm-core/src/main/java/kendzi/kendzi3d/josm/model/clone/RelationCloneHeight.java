@@ -7,20 +7,19 @@ import java.util.List;
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeValues;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 
 public class RelationCloneHeight implements java.lang.Iterable<Double> {
 
-    private double offset = 0;
+    private double offset;
 
-    private int repeat = 0;
+    private int repeat;
 
-    private double every = 0;
+    private double every;
 
     public static List<RelationCloneHeight> buildHeightClone(OsmPrimitive pOsmPrimitive) {
-        List<RelationCloneHeight> ret = new ArrayList<RelationCloneHeight>();
+        List<RelationCloneHeight> ret = new ArrayList<>();
 
         if (pOsmPrimitive == null) {
             return ret;
@@ -49,18 +48,15 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
         }
 
         RelationCloneHeight clone = new RelationCloneHeight();
-        clone.setOffset(
-                ModelUtil.parseHeight(pRelation.get("offset"), 0d));
+        clone.setOffset(ModelUtil.parseHeight(pRelation.get("offset"), 0d));
 
         clone.setRepeat(0);
         try {
-            clone.setRepeat(
-                    Integer.parseInt(pRelation.get("repeat")));
+            clone.setRepeat(Integer.parseInt(pRelation.get("repeat")));
         } catch (Exception e) {
             //
         }
-        clone.setEvery(
-                ModelUtil.parseHeight(pRelation.get("every"), 0d));
+        clone.setEvery(ModelUtil.parseHeight(pRelation.get("every"), 0d));
 
         return clone;
 
@@ -74,7 +70,8 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param offset the offset to set
+     * @param offset
+     *            the offset to set
      */
     public void setOffset(double offset) {
         this.offset = offset;
@@ -88,7 +85,8 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param repeat the repeat to set
+     * @param repeat
+     *            the repeat to set
      */
     public void setRepeat(int repeat) {
         this.repeat = repeat;
@@ -102,7 +100,8 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
     }
 
     /**
-     * @param every the every to set
+     * @param every
+     *            the every to set
      */
     public void setEvery(double every) {
         this.every = every;
@@ -112,7 +111,7 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
     public Iterator<Double> iterator() {
         Iterator<Double> ret = new Iterator<Double>() {
 
-            int loop = 0;
+            int loop;
 
             @Override
             public boolean hasNext() {
@@ -125,7 +124,7 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
                     return null;
                 }
                 this.loop++;
-                return this.loop * RelationCloneHeight.this.every + RelationCloneHeight.this.offset ;
+                return this.loop * RelationCloneHeight.this.every + RelationCloneHeight.this.offset;
             }
 
             @Override
@@ -137,7 +136,5 @@ public class RelationCloneHeight implements java.lang.Iterable<Double> {
 
         return ret;
     }
-
-
 
 }

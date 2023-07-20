@@ -3,9 +3,9 @@ package kendzi.jogl.model.geometry.material;
 import java.awt.Color;
 
 public class AmbientDiffuseComponent {
-    private Color ambientColor;
+    private final Color ambientColor;
 
-    private Color diffuseColor;
+    private final Color diffuseColor;
 
     public AmbientDiffuseComponent() {
         this(new Color(0.5f, 0.5f, 0.5f, 1.0f), new Color(0.8f, 0.8f, 0.8f, 1.0f));
@@ -38,6 +38,5 @@ public class AmbientDiffuseComponent {
     public Color getDiffuseColor() {
         return this.diffuseColor;
     }
-
 
 }

@@ -3,8 +3,7 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jogamp.opengl.GL2;
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 public class SelectableGround {
 
@@ -22,7 +21,7 @@ public class SelectableGround {
         selectedGroundType = groundType;
     }
 
-    public void init(GL2 gl) {
+    public void init() {
         for (GroundType key : grounds.keySet()) {
             GroundDrawer ground = grounds.get(selectedGroundType);
 
@@ -32,16 +31,16 @@ public class SelectableGround {
         }
     }
 
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(Vector3dc cameraPosition) {
 
         GroundDrawer ground = grounds.get(selectedGroundType);
 
         if (ground != null) {
-            ground.draw(gl, cameraPosition);
+            ground.draw(cameraPosition);
         }
     }
 
-    public static enum GroundType {
+    public enum GroundType {
         SINGLE_TEXTURE, STYLED_TITLE
     }
 

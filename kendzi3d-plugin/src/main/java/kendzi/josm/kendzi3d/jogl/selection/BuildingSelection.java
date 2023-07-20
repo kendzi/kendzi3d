@@ -8,15 +8,14 @@
  */
 package kendzi.josm.kendzi3d.jogl.selection;
 
-import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.SphereSelection;
+import org.joml.Vector3dc;
 
 public abstract class BuildingSelection extends SphereSelection {
 
     long wayId;
 
-    public BuildingSelection(long wayId, Point3d center, double radius) {
+    public BuildingSelection(long wayId, Vector3dc center, double radius) {
         super(center, radius);
 
         this.wayId = wayId;

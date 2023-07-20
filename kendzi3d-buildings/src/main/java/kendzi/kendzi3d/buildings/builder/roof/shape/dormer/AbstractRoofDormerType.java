@@ -11,17 +11,17 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementParserUtil;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractRoofDormerType implements RoofDormerType {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(AbstractRoofDormerType.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractRoofDormerType.class);
 
     protected static double getWidth(MeasurementKey pMeasurementKey, Map<MeasurementKey, Measurement> pMeasurements,
             double pDefaultValue) {
@@ -62,8 +62,7 @@ public abstract class AbstractRoofDormerType implements RoofDormerType {
         }
     }
 
-    protected static Measurement getMeasurement(MeasurementKey pDormerWidth1,
-            Map<MeasurementKey, Measurement> pMeasurements) {
+    protected static Measurement getMeasurement(MeasurementKey pDormerWidth1, Map<MeasurementKey, Measurement> pMeasurements) {
         if (pMeasurements == null) {
             return null;
         }
@@ -74,10 +73,7 @@ public abstract class AbstractRoofDormerType implements RoofDormerType {
         if (pMeasurement == null) {
             return false;
         }
-        if (pMeasurementUnit.equals(pMeasurement.getUnit())) {
-            return true;
-        }
-        return false;
+        return pMeasurementUnit.equals(pMeasurement.getUnit());
     }
 
 }

@@ -13,19 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
@@ -47,6 +34,16 @@ import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 
 /**
  * Fence for shapes defined as relation.
@@ -57,7 +54,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(BarrierFenceRelation.class);
+    private static final Logger log = LogManager.getLogger(BarrierFenceRelation.class);
 
     private static final java.lang.Double FENCE_HEIGHT = 1d;
 
@@ -91,7 +88,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
      */
     private Model model;
 
-    private final List<Point2d> points;
+    private final List<Vector2dc> points;
 
     private final List<Double> heights;
 
@@ -116,8 +113,8 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         super(pRelation, pers);
 
-        List<Double> heights = new ArrayList<Double>();
-        List<Node> nodes = new ArrayList<Node>();
+        List<Double> heights = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < pRelation.getMembersCount(); i++) {
             RelationMember member = pRelation.getMember(i);
 
@@ -134,9 +131,9 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         calcModelCenter(nodes);
 
-        List<Point2d> points = new ArrayList<Point2d>();
+        List<Vector2dc> points = new ArrayList<>();
         for (Node node : nodes) {
-            Point2d point2d = toModelFrame(node);
+            Vector2dc point2d = toModelFrame(node);
             points.add(point2d);
         }
 
@@ -156,7 +153,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     @Override
     public Set<OsmPrimitive> getOsmPrimitives() {
 
-        HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+        HashSet<OsmPrimitive> set = new HashSet<>();
 
         set.addAll(nodes);
 
@@ -175,8 +172,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
 
         String fenceType = getFenceType(relation);
 
-        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT,
-                fenceType);
+        double fenceHeight = metadataCacheService.getPropertitesDouble("barrier.fence_{0}.height", FENCE_HEIGHT, fenceType);
 
         hight = ModelUtil.getHeight(relation, fenceHeight);
 
@@ -239,21 +235,21 @@ public class BarrierFenceRelation extends AbstractRelationModel {
      * @param pWallTexture
      *            texture
      */
-    public static void buildWallModel(List<Point2d> pPoints, List<Double> pHeights, double pMinHeight, double pHeight,
+    public static void buildWallModel(List<Vector2dc> pPoints, List<Double> pHeights, double pMinHeight, double pHeight,
             double pWidth, MeshFactory pMeshBorder, TextureData pWallTexture
 
-            ) {
+    ) {
         FaceFactory faceRight = pMeshBorder.addFace(FaceType.QUADS);
         FaceFactory faceLeft = null;
         if (!PREFER_TWO_SIDED.get()) {
             faceLeft = pMeshBorder.addFace(FaceType.QUADS);
         }
 
-        Point2d start = pPoints.get(0);
+        Vector2dc start = pPoints.get(0);
         Double startHeight = getHeight(0, pHeights);
 
-        int startMi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pMinHeight, -start.y));
-        int startHi = pMeshBorder.addVertex(new Point3d(start.x, startHeight + pHeight, -start.y));
+        int startMi = pMeshBorder.addVertex(new Vector3d(start.x(), startHeight + pMinHeight, -start.y()));
+        int startHi = pMeshBorder.addVertex(new Vector3d(start.x(), startHeight + pHeight, -start.y()));
 
         TextCoord bm = new TextCoord(0, 0);
         TextCoord bh = new TextCoord(0, 1);
@@ -262,14 +258,13 @@ public class BarrierFenceRelation extends AbstractRelationModel {
         int bhi = pMeshBorder.addTextCoord(bh);
 
         for (int i = 1; i < pPoints.size(); i++) {
-            Point2d end = pPoints.get(i);
+            Vector2dc end = pPoints.get(i);
             Double endHeight = getHeight(i, pHeights);
 
-            int endMi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pMinHeight, -end.y));
-            int endHi = pMeshBorder.addVertex(new Point3d(end.x, endHeight + pHeight, -end.y));
+            int endMi = pMeshBorder.addVertex(new Vector3d(end.x(), endHeight + pMinHeight, -end.y()));
+            int endHi = pMeshBorder.addVertex(new Vector3d(end.x(), endHeight + pHeight, -end.y()));
 
-            Vector3d normal = new Vector3d(end.y - start.y, 0, end.x - start.x);
-            normal.normalize();
+            Vector3dc normal = new Vector3d(end.y() - start.y(), 0, end.x() - start.x()).normalize();
 
             int n1i = pMeshBorder.addNormal(normal);
 
@@ -289,7 +284,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             faceRight.addVert(endHi, ehi, n1i);
 
             if (faceLeft != null) {
-                Vector3d normal2 = new Vector3d(-normal.x, -normal.y, -normal.z);
+                Vector3dc normal2 = new Vector3d(-normal.x(), -normal.y(), -normal.z());
 
                 int n2i = pMeshBorder.addNormal(normal2);
 
@@ -371,27 +366,27 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
         // replace the quad colors with the texture
-        // gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-        // GL2.GL_REPLACE);
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        // GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+        // GL11.GL_REPLACE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        gl.glPushMatrix();
-        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
 
-            modelRender.render(gl, model);
+            modelRender.render(model);
         } finally {
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -401,8 +396,8 @@ public class BarrierFenceRelation extends AbstractRelationModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -411,7 +406,7 @@ public class BarrierFenceRelation extends AbstractRelationModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

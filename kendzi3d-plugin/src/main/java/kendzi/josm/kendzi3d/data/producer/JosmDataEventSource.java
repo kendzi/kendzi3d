@@ -1,14 +1,13 @@
 package kendzi.josm.kendzi3d.data.producer;
 
+import kendzi.josm.kendzi3d.data.event.NewDataEvent;
+import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.MainApplication;
-
-import kendzi.josm.kendzi3d.data.event.NewDataEvent;
-import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 
 public class JosmDataEventSource implements DataSetListenerAdapter.Listener {
 

@@ -8,15 +8,14 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
+import com.google.inject.Inject;
+
 import java.awt.event.ActionEvent;
 
+import kendzi.jogl.model.render.ModelRender;
 import org.openstreetmap.josm.actions.ToggleAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.spi.preferences.Config;
-
-import com.google.inject.Inject;
-
-import kendzi.jogl.model.render.ModelRender;
 
 /**
  * Enable/disable display texture on models toggle action.
@@ -32,7 +31,8 @@ public class TextureToggleAction extends ToggleAction {
     /**
      * Constructor of texture toggle action.
      *
-     * @param pModelRender ModelRender
+     * @param pModelRender
+     *            ModelRender
      */
     @Inject
     public TextureToggleAction(ModelRender pModelRender) {

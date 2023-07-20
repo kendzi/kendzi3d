@@ -10,11 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.MeshFactoryUtil;
 import kendzi.jogl.texture.dto.TextureData;
@@ -30,6 +25,10 @@ import kendzi.math.geometry.polygon.PolygonList2d;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper;
 import kendzi.math.geometry.polygon.split.PolygonSplitHelper.MultiPolygonSplitResult;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Roof type 5.2.
@@ -44,7 +43,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     @Override
     public RoofTypeOutput buildRectangleRoof(RectangleRoofTypeConf conf) {
 
-        Double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight());
+        double h1 = getHeightMeters(conf.getMeasurements(), MeasurementKey.HEIGHT_1, conf.getRecHeight());
 
         return build(conf.getBuildingPolygon(), conf.getRecHeight(), conf.getRecWidth(), conf.getRectangleContur(), h1,
                 conf.getRoofTextureData());
@@ -53,7 +52,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     List<Double> calcSplitPoint(boolean half, int segments) {
 
         if (half) {
-            List<Double> ret = new ArrayList<Double>();
+            List<Double> ret = new ArrayList<>();
             double step = Math.toRadians(90d / segments);
             ret.add(0d);
             for (int i = 0; i < segments; i++) {
@@ -63,7 +62,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
             return ret;
         }
 
-        List<Double> ret = new ArrayList<Double>();
+        List<Double> ret = new ArrayList<>();
         double step = Math.toRadians(180d / segments);
         ret.add(0d);
         for (int i = 0; i < segments; i++) {
@@ -83,7 +82,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
      * @return
      */
     protected RoofTypeOutput build(PolygonWithHolesList2d buildingPolygon, double recHeight, double recWidth,
-            Point2d[] rectangleContur, double height, RoofMaterials roofTextureData) {
+            Vector2dc[] rectangleContur, double height, RoofMaterials roofTextureData) {
 
         MeshFactory meshBorder = createFacadeMesh(roofTextureData);
         MeshFactory meshRoof = createRoofMesh(roofTextureData);
@@ -91,7 +90,7 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
         TextureData facadeTexture = roofTextureData.getFacade().getTextureData();
         TextureData roofTexture = roofTextureData.getRoof().getTextureData();
 
-        List<Point2d> pBorderList = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> pBorderList = buildingPolygon.getOuter().getPoints();
         PolygonList2d borderPolygon = new PolygonList2d(pBorderList);
 
         int segments = 6;
@@ -108,12 +107,11 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
 
         double[] offsets = createTextureOffsets(crossSection);
 
-        Vector3d roofLineVector = new Vector3d(recWidth, 0, 0);
+        Vector3dc roofLineVector = new Vector3d(recWidth, 0, 0);
 
         for (int i = 0; i < mps.length; i++) {
 
-            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0,
-                    offsets[i]);
+            MeshFactoryUtil.addPolygonToRoofMesh(meshRoof, mps[i], planes[i], roofLineVector, roofTexture, 0, offsets[i]);
         }
 
         HeightCalculator hc = new BetweenLinesHeightCalculator(lines, planes);
@@ -142,8 +140,8 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
         double[] ret = new double[crossSection.size()];
         ret[0] = 0;
         for (int i = 1; i < crossSection.size(); i++) {
-            Point2d p1 = crossSection.get(i - 1).getP();
-            Point2d p2 = crossSection.get(i).getP();
+            Vector2dc p1 = crossSection.get(i - 1).getP();
+            Vector2dc p2 = crossSection.get(i).getP();
 
             ret[i] = ret[i - 1] + p1.distance(p2);
         }
@@ -167,26 +165,26 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
         return mps;
     }
 
-    List<Point2d> createRound(int segments) {
+    List<Vector2dc> createRound(int segments) {
 
-        List<Point2d> ret = new ArrayList<Point2d>();
+        List<Vector2dc> ret = new ArrayList<>();
         double step = Math.toRadians(90d / segments);
-        ret.add(new Point2d());
+        ret.add(new Vector2d());
         for (int i = 0; i < segments; i++) {
-            ret.add(new Point2d(1 - Math.cos((i + 1) * step), Math.sin((i + 1) * step)));
+            ret.add(new Vector2d(1 - Math.cos((i + 1) * step), Math.sin((i + 1) * step)));
         }
         return ret;
 
     }
 
     static class CrossSectionElement {
-        Point2d p;
-        Vector2d v;
+        Vector2dc p;
+        Vector2dc v;
 
         /**
          * @return the p
          */
-        public Point2d getP() {
+        public Vector2dc getP() {
             return p;
         }
 
@@ -194,14 +192,14 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
          * @param p
          *            the p to set
          */
-        public void setP(Point2d p) {
+        public void setP(Vector2dc p) {
             this.p = p;
         }
 
         /**
          * @return the v
          */
-        public Vector2d getV() {
+        public Vector2dc getV() {
             return v;
         }
 
@@ -209,11 +207,11 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
          * @param v
          *            the v to set
          */
-        public void setV(Vector2d v) {
+        public void setV(Vector2dc v) {
             this.v = v;
         }
 
-        public CrossSectionElement(Point2d p, Vector2d v) {
+        public CrossSectionElement(Vector2dc p, Vector2dc v) {
             super();
             this.p = p;
             this.v = v;
@@ -232,19 +230,19 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     }
 
     private List<CrossSectionElement> createCrossSection(double height, double recHeight) {
-        List<Point2d> round = createRound(6);
+        List<Vector2dc> round = createRound(6);
 
-        List<CrossSectionElement> split = new ArrayList<CrossSectionElement>();
+        List<CrossSectionElement> split = new ArrayList<>();
 
-        for (Point2d p : round) {
-            double x = p.x * height;
-            double y = p.y * height;
+        for (Vector2dc p : round) {
+            double x = p.x() * height;
+            double y = p.y() * height;
 
-            split.add(new CrossSectionElement(new Point2d(x, y), new Vector2d(p.x - 1d, p.y)));
+            split.add(new CrossSectionElement(new Vector2d(x, y), new Vector2d(p.x() - 1d, p.y())));
         }
 
         if (height < recHeight) {
-            split.add(new CrossSectionElement(new Point2d(recHeight, height), new Vector2d(0, 1)));
+            split.add(new CrossSectionElement(new Vector2d(recHeight, height), new Vector2d(0, 1)));
         }
 
         return split;
@@ -258,10 +256,9 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
             CrossSectionElement first = crossSection.get(i - 1);
             CrossSectionElement second = crossSection.get(i);
 
-            Point3d p = new Point3d(0, first.p.y, -first.p.x);
+            Vector3dc p = new Vector3d(0, first.p.y(), -first.p.x());
 
-            Vector3d v = new Vector3d(0, second.p.x - first.p.x, second.p.y - first.p.y);
-            v.normalize();
+            Vector3dc v = new Vector3d(0, second.p.x() - first.p.x(), second.p.y() - first.p.y()).normalize();
             Plane3d plane3d = new Plane3d(p, v);
 
             seg[i - 1] = plane3d;
@@ -276,9 +273,9 @@ public class RoofType5v2 extends RectangleRoofTypeBuilder {
     public static LinePoints2d[] createLines(List<CrossSectionElement> crossSection) {
         LinePoints2d[] lines = new LinePoints2d[crossSection.size()];
         for (int i = 0; i < crossSection.size(); i++) {
-            Point2d p = crossSection.get(i).p;
+            Vector2dc p = crossSection.get(i).p;
 
-            LinePoints2d l = new LinePoints2d(new Point2d(0, p.x), new Point2d(1, p.x));
+            LinePoints2d l = new LinePoints2d(new Vector2d(0, p.x()), new Vector2d(1, p.x()));
             lines[i] = l;
         }
         return lines;

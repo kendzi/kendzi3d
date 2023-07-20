@@ -2,17 +2,13 @@ package kendzi.josm.kendzi3d.jogl.compas;
 
 import java.awt.Color;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.kendzi3d.editor.drawer.ArrowDrawUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Drawer for compass.
@@ -50,62 +46,43 @@ public class CompassDrawer {
     private static final float[] Z_AXIS_COLOR_ARRAY = ColorUtil.colorToArray(Z_AXIS_COLOR);
 
     /**
-     * Storage For Our Quadratic Objects
-     */
-    private GLUquadric quadratic;
-    private GLU glu = new GLU();
-
-    /**
      * Initiate compass drawer.
      *
-     * @param gl
-     *            gl
      */
-    public void init(GL2 gl) {
-        quadratic = glu.gluNewQuadric();
-        // Create Smooth Normals
-        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+    public void init() {
+        // do nothing -- GLU_SMOOTH is the default normal
     }
 
     /**
      * Draws compass at left bottom corner of viewport.
      *
-     * @param gl
-     *            gl
      * @param viewport
      *            viewport
      */
-    public void drawAtLeftBottom(GL2 gl, Viewport viewport) {
+    public void drawAtLeftBottom(Viewport viewport) {
         int distance = 70;
 
         Ray3d ray3d = viewport.picking(distance, viewport.getHeight() - distance);
 
-        Point3d point = ray3d.getPoint();
+        Vector3dc vector = ray3d.getVector().normalize(new Vector3d()).mul(1.5);
+        Vector3d point = ray3d.getPoint().add(vector, new Vector3d());
 
-        Vector3d vector = ray3d.getVector();
-        vector.normalize();
-        vector.scale(1.5);
-
-        point.add(vector);
-
-        draw(gl, point);
+        draw(point);
     }
 
     /**
      * Draws compass.
      *
-     * @param gl
-     *            gl
      * @param point
      *            location
      *
      */
-    public void draw(GL2 gl, Point3d point) {
+    public void draw(Vector3dc point) {
 
-        gl.glPushMatrix();
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_LIGHTING);
 
-        gl.glTranslated(point.x, point.y, point.z);
+        GL11.glTranslated(point.x(), point.y(), point.z());
 
         double camDistanceRatio = 0.07d;
         int section = 8;
@@ -115,17 +92,17 @@ public class CompassDrawer {
         double baseRadius = 0.05d * camDistanceRatio;
         double arrowRadius = 0.2d * camDistanceRatio;
 
-        gl.glColor3fv(Y_AXIS_COLOR_ARRAY, 0);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        GL11.glColor3fv(Y_AXIS_COLOR_ARRAY);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glRotated(-90d, 0d, 0d, 1d);
-        gl.glColor3fv(X_AXIS_COLOR_ARRAY, 0);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        GL11.glRotated(-90d, 0d, 0d, 1d);
+        GL11.glColor3fv(X_AXIS_COLOR_ARRAY);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glRotated(90d, 1d, 0d, 0d);
-        gl.glColor3fv(Z_AXIS_COLOR_ARRAY, 0);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, lenght, arrowLenght, baseRadius, arrowRadius, section);
+        GL11.glRotated(90d, 1d, 0d, 0d);
+        GL11.glColor3fv(Z_AXIS_COLOR_ARRAY);
+        ArrowDrawUtil.drawArrow(null, lenght, arrowLenght, baseRadius, arrowRadius, section);
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 }
