@@ -9,7 +9,8 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.measurement;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Tomasz Kędziora (Kendzi)
@@ -17,9 +18,8 @@ import org.apache.log4j.Logger;
  */
 public class MeasurementParserUtil {
 
-
     /** Log. */
-    private static final Logger log = Logger.getLogger(MeasurementParserUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(MeasurementParserUtil.class);
 
     public static Measurement parse(String pValue) {
 
@@ -62,6 +62,5 @@ public class MeasurementParserUtil {
 
         return "util: " + utilStr + " for key: " + pMeasurementKey;
     }
-
 
 }

@@ -2,8 +2,6 @@ package kendzi.josm.kendzi3d.jogl.model;
 
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.kendzi3d.editor.selection.Selection;
@@ -48,16 +46,16 @@ public abstract class DrawableMultipleWorldObject extends MultipleWorldObject im
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
         List<WorldObject> worldObjects2 = getWorldObjects();
         for (WorldObject worldObject : worldObjects2) {
             if (worldObject instanceof DrawableModel) {
-                ((DrawableModel) worldObject).draw(gl, camera);
+                ((DrawableModel) worldObject).draw(camera);
             }
         }
     }

@@ -11,7 +11,7 @@ public class LatLonUtil {
     /**
      * Radius of earth.
      */
-    private static double R = 6371000d;
+    private static final double R = 6371000d;
 
     /**
      * Calculate delta of lon for move of point for a distance.

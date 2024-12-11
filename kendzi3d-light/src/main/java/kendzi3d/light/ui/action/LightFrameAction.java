@@ -28,7 +28,7 @@ public class LightFrameAction extends LightFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private LightService lightService;
+    private final LightService lightService;
 
     @Inject
     public LightFrameAction(LightService lightService) {
@@ -107,15 +107,12 @@ public class LightFrameAction extends LightFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    LightFrame frame = new LightFrameAction(new kendzi3d.light.service.impl.LightService(new MemoryLightDao()));
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                LightFrame frame = new LightFrameAction(new LightService(new MemoryLightDao()));
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

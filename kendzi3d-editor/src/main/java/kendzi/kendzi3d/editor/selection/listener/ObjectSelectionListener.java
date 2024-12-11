@@ -18,9 +18,9 @@ import kendzi.kendzi3d.editor.selection.event.SelectionChangeEvent;
 
 public abstract class ObjectSelectionListener extends MouseSelectionListener {
 
-    private final List<EditorChangeListener> editorChangeListeners = new LinkedList<EditorChangeListener>();
-    private final List<SelectEditorListener> selectEditorListeners = new LinkedList<SelectEditorListener>();
-    private final List<SelectionChangeListener> selectionChangeListeners = new LinkedList<SelectionChangeListener>();
+    private final List<EditorChangeListener> editorChangeListeners = new LinkedList<>();
+    private final List<SelectEditorListener> selectEditorListeners = new LinkedList<>();
+    private final List<SelectionChangeListener> selectionChangeListeners = new LinkedList<>();
 
     public final void addEditorChangeListener(EditorChangeListener listener) {
         this.editorChangeListeners.add(listener);
@@ -37,7 +37,7 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
     }
 
     public interface EditorChangeListener extends EventListener {
-        public void onEditorChange(EditorChangeEvent event);
+        void onEditorChange(EditorChangeEvent event);
     }
 
     public final void addSelectEditorListener(SelectEditorListener listener) {
@@ -69,11 +69,11 @@ public abstract class ObjectSelectionListener extends MouseSelectionListener {
     }
 
     public interface SelectEditorListener extends EventListener {
-        public void onSelectEditor(SelectEditorEvent args);
+        void onSelectEditor(SelectEditorEvent args);
     }
 
     public interface SelectionChangeListener extends EventListener {
-        public void onSelectionChange(SelectionChangeEvent args);
+        void onSelectionChange(SelectionChangeEvent args);
     }
 
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.vecmath.Point3d;
 
 import kendzi.jogl.camera.Viewport;
 import kendzi.jogl.camera.ViewportPicker;
@@ -26,8 +25,9 @@ import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
-
-import org.apache.log4j.Logger;
+import org.joml.Vector3dc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 public class ObjectSelectionManager extends ObjectSelectionListener {
 
     /** Log. */
-    private static final Logger LOG = Logger.getLogger(ObjectSelectionManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectSelectionManager.class);
 
     private transient Editor lastActiveEditor;
 
@@ -46,7 +46,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
 
     private transient Selection lastSelection;
 
-    private transient Point3d lastClosestPointOnBaseRay;
+    private transient Vector3dc lastClosestPointOnBaseRay;
 
     private final ViewportPicker viewportPicker;
 
@@ -101,9 +101,9 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     }
 
     /**
-     * Translates 2d mouse coordinates in window space into 3d ray inside 3d
-     * screen. Ray position and direction depends on mouse location and current
-     * viewport settings.
+     * Translates 2d mouse coordinates in window space into 3d ray inside 3d screen.
+     * Ray position and direction depends on mouse location and current viewport
+     * settings.
      *
      * @param x
      *            mouse x location in window space
@@ -159,7 +159,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             raiseEditorChange(event);
 
             Ray3d arrowRay = new Ray3d(arrow.getEditorOrigin(), arrow.getVector());
-            Point3d closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
+            Vector3dc closestPointOnBaseRay = Ray3dUtil.closestPointOnBaseRay(moveRay, arrowRay);
 
             lastClosestPointOnBaseRay = closestPointOnBaseRay;
 
@@ -234,7 +234,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
             return;
         }
 
-        List<Selection> selections = new ArrayList<Selection>();
+        List<Selection> selections = new ArrayList<>();
         for (EditableObject editableObject : editableObjects) {
             if (criteria.match(editableObject)) {
 
@@ -308,7 +308,7 @@ public class ObjectSelectionManager extends ObjectSelectionListener {
     /**
      * @return the lastClosestPointOnBaseRay
      */
-    public Point3d getLastClosestPointOnBaseRay() {
+    public Vector3dc getLastClosestPointOnBaseRay() {
         return lastClosestPointOnBaseRay;
     }
 

@@ -30,7 +30,7 @@ public class LibraryResourcesJosmDao implements LibraryResourcesDao {
      */
     @Override
     public List<String> loadResourcesPath() {
-        List<String> paths = new ArrayList<String>(Config.getPref().getList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS));
+        List<String> paths = new ArrayList<>(Config.getPref().getList(KENDZI_3D_MODELS_LIBRARY_RESOURCES_URLS));
         if (paths == null | paths.isEmpty()) {
             return defaultResources();
         }
@@ -53,7 +53,7 @@ public class LibraryResourcesJosmDao implements LibraryResourcesDao {
     }
 
     private static List<String> defaultResources() {
-        return new ArrayList<String>(Arrays.asList("plugin:/models/modelsLibraryInternalLayer.xml",
+        return new ArrayList<>(Arrays.asList("plugin:/models/modelsLibraryInternalLayer.xml",
                 "plugin:/models/modelsLibraryLayer.xml", "plugin:/models/trafficSignsLibraryInternalLayer.xml"));
     }
 }

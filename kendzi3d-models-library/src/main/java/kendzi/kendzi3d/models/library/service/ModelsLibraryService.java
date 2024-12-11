@@ -15,24 +15,23 @@ import kendzi.kendzi3d.models.library.dao.LibraryResourcesDao;
 import kendzi.kendzi3d.models.library.dao.ModelLibraryXmlDao;
 import kendzi.kendzi3d.models.library.exception.ModelLibraryLoadException;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelsLibraryService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelsLibraryService.class);
+    private static final Logger log = LoggerFactory.getLogger(ModelsLibraryService.class);
 
     public static final String GLOBAL = "global";
 
-    private ResourceService urlReciverService;
+    private final ResourceService urlReciverService;
 
-    private ModelLibraryXmlDao modelLibraryXmlDao;
+    private final ModelLibraryXmlDao modelLibraryXmlDao;
 
-    private LibraryResourcesDao libraryResourcesDao;
+    private final LibraryResourcesDao libraryResourcesDao;
 
-    private List<ModelsLibraryDataChangeEvent> pointModelDataChange = new ArrayList<ModelsLibraryDataChangeEvent>();
-
+    private final List<ModelsLibraryDataChangeEvent> pointModelDataChange = new ArrayList<>();
 
     public void addPointModelDataChangeListener(ModelsLibraryDataChangeEvent pointModelDataChange) {
         this.pointModelDataChange.add(pointModelDataChange);
@@ -50,8 +49,11 @@ public class ModelsLibraryService {
         }
     }
 
-    /** Constructor.
-     * @param urlReciverService url reciver service
+    /**
+     * Constructor.
+     * 
+     * @param urlReciverService
+     *            url reciver service
      */
     @Inject
     public ModelsLibraryService(ResourceService urlReciverService, LibraryResourcesDao libraryResourcesMemoryDao) {
@@ -64,11 +66,11 @@ public class ModelsLibraryService {
         init();
     }
 
-    private Map<String,ModelsLibrary> modelLibrary = new HashMap<String, ModelsLibrary>();
+    private final Map<String, ModelsLibrary> modelLibrary = new HashMap<>();
 
     public List<NodeModel> findAllNodeModels() {
 
-        List<NodeModel> ret = new ArrayList<NodeModel>();
+        List<NodeModel> ret = new ArrayList<>();
 
         for (String fileKey : modelLibrary.keySet()) {
             ret.addAll(modelLibrary.get(fileKey).getNodeModel());
@@ -78,7 +80,7 @@ public class ModelsLibraryService {
 
     public List<NodeModel> findAllNodeModels(String configurationFile) {
 
-        List<NodeModel> ret = new ArrayList<NodeModel>();
+        List<NodeModel> ret = new ArrayList<>();
 
         ModelsLibrary modelsLibrary = modelLibrary.get(configurationFile);
         if (modelsLibrary != null) {
@@ -89,7 +91,7 @@ public class ModelsLibraryService {
 
     public List<WayNodeModel> findAllWayNodeModels() {
 
-        List<WayNodeModel> ret = new ArrayList<WayNodeModel>();
+        List<WayNodeModel> ret = new ArrayList<>();
 
         for (String fileKey : modelLibrary.keySet()) {
             ret.addAll(modelLibrary.get(fileKey).getWayNodeModel());
@@ -99,7 +101,7 @@ public class ModelsLibraryService {
 
     public List<WayNodeModel> findAllWayNodeModels(String configurationFile) {
 
-        List<WayNodeModel> ret = new ArrayList<WayNodeModel>();
+        List<WayNodeModel> ret = new ArrayList<>();
 
         ModelsLibrary modelsLibrary = modelLibrary.get(configurationFile);
         if (modelsLibrary != null) {
@@ -109,7 +111,7 @@ public class ModelsLibraryService {
     }
 
     public List<String> findAllConfigurationFiles() {
-        return new ArrayList<String>(modelLibrary.keySet());
+        return new ArrayList<>(modelLibrary.keySet());
     }
 
     private void saveModelLibrary(String fileKey, ModelsLibrary models) {
@@ -174,7 +176,6 @@ public class ModelsLibraryService {
         }
         return modelLibrary.get(fileKey).getNodeModel();
     }
-
 
     public void setDefaultResourcesPaths() {
         libraryResourcesDao.setDefaultResourcesPaths();

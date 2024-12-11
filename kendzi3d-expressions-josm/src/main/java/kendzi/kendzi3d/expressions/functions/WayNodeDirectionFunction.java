@@ -1,10 +1,9 @@
 package kendzi.kendzi3d.expressions.functions;
 
-import javax.vecmath.Vector2d;
-
 import kendzi.kendzi3d.expressions.Context;
 import kendzi.math.geometry.AngleUtil;
 import kendzi.math.geometry.point.Vector2dUtil;
+import org.joml.Vector2d;
 
 public class WayNodeDirectionFunction extends ZeroParamFunction implements NamedFunction {
 

@@ -6,13 +6,11 @@
 
 package kendzi.jogl.drawer;
 
-import java.awt.Color;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import java.awt.*;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.util.DrawUtil;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Draws tiles surface in two colors.
@@ -29,12 +27,12 @@ public class TilesSurface implements Gl2Draw {
     /**
      * Odd tiles color.
      */
-    private float[] firstColor;
+    private final float[] firstColor;
 
     /**
      * Not odd tiles color.
      */
-    private float[] secondColor;
+    private final float[] secondColor;
 
     /**
      * Creates tiles surface drawer with blue and green tiles colors.
@@ -63,22 +61,20 @@ public class TilesSurface implements Gl2Draw {
     /**
      * Draws tiles surface in two colors.
      *
-     * @param gl
-     *            gl context
      */
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
-        // gl.glColor3f(0.0f, 0.1f, 0.4f);
-        gl.glColor3fv(firstColor, 0);
-        DrawUtil.drawTiles(gl, 50, true);
-        // gl.glColor3f(0.0f, 0.5f, 0.1f);
-        gl.glColor3fv(secondColor, 0);
-        DrawUtil.drawTiles(gl, 50, false);
+        // GL11.glColor3f(0.0f, 0.1f, 0.4f);
+        GL11.glColor3fv(firstColor);
+        DrawUtil.drawTiles(50, true);
+        // GL11.glColor3f(0.0f, 0.5f, 0.1f);
+        GL11.glColor3fv(secondColor);
+        DrawUtil.drawTiles(50, false);
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 }

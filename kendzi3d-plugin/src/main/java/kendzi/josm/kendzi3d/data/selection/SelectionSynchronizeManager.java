@@ -2,13 +2,6 @@ package kendzi.josm.kendzi3d.data.selection;
 
 import java.util.Collection;
 
-import org.openstreetmap.josm.data.osm.DataSelectionListener;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
-import org.openstreetmap.josm.gui.MainApplication;
-
 import kendzi.josm.kendzi3d.data.OsmPrimitiveWorldObject;
 import kendzi.kendzi3d.editor.EditableObject;
 import kendzi.kendzi3d.editor.selection.ObjectSelectionManager;
@@ -16,12 +9,18 @@ import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.editor.selection.SelectionCriteria;
 import kendzi.kendzi3d.editor.selection.event.SelectionEventSource;
 import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.SelectionChangeListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class SelectionSynchronizeManager implements DataSelectionListener, SelectionChangeListener {
 
     private final ObjectSelectionManager objectSelectionManager;
 
-    private long previewSelectionTime = 0;
+    private long previewSelectionTime;
 
     public SelectionSynchronizeManager(ObjectSelectionManager objectSelectionManager) {
         this.objectSelectionManager = objectSelectionManager;
@@ -57,9 +56,9 @@ public class SelectionSynchronizeManager implements DataSelectionListener, Selec
     private boolean isOriginIn3dView(Collection<? extends OsmPrimitive> primitives) {
 
         /*
-         * If event from JOSM come in time slot smaller then 500ms this indicate
-         * that it could start in 3d view. This is work-around because JOSM
-         * don't kept sources of selection event.
+         * If event from JOSM come in time slot smaller then 500ms this indicate that it
+         * could start in 3d view. This is work-around because JOSM don't kept sources
+         * of selection event.
          */
         return System.currentTimeMillis() - previewSelectionTime < 500;
     }
@@ -130,7 +129,7 @@ public class SelectionSynchronizeManager implements DataSelectionListener, Selec
         DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         if (currentDataSet != null) {
-        	currentDataSet.setSelected(primitiveId);
+            currentDataSet.setSelected(primitiveId);
         }
     }
 }

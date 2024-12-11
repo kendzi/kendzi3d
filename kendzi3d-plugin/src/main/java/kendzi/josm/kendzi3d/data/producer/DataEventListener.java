@@ -13,5 +13,5 @@ public interface DataEventListener {
      * @param dataEvent
      *            data event
      */
-    public void add(DataEvent dataEvent);
+    void add(DataEvent dataEvent);
 }

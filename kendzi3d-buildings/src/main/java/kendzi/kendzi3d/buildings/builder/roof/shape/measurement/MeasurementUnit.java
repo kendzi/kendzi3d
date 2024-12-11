@@ -38,12 +38,15 @@ public enum MeasurementUnit {
     /**
      * Key value.
      */
-    private String key;
+    private final String key;
 
-    /** Constructor for enum.
-     * @param pKey key value
+    /**
+     * Constructor for enum.
+     * 
+     * @param pKey
+     *            key value
      */
-    private MeasurementUnit(String pKey) {
+    MeasurementUnit(String pKey) {
 
         this.key = pKey;
 

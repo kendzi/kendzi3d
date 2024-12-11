@@ -18,9 +18,13 @@ public class FpsChangeEvent {
     int fps;
     long time;
 
-    /** Constructor.
-     * @param fps fps
-     * @param time time when application is run
+    /**
+     * Constructor.
+     * 
+     * @param fps
+     *            fps
+     * @param time
+     *            time when application is run
      */
     public FpsChangeEvent(int fps, long time) {
         super();
@@ -34,26 +38,33 @@ public class FpsChangeEvent {
     public int getFps() {
         return this.fps;
     }
+
     /**
-     * @param fps the fps to set
+     * @param fps
+     *            the fps to set
      */
     public void setFps(int fps) {
         this.fps = fps;
     }
+
     /**
      * @return the time
      */
     public long getTime() {
         return this.time;
     }
+
     /**
-     * @param time the time to set
+     * @param time
+     *            the time to set
      */
     public void setTime(long time) {
         this.time = time;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

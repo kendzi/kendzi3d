@@ -12,13 +12,13 @@ import javax.swing.WindowConstants;
 
 import kendzi.kendzi3d.models.library.ui.LocalModelsDict;
 import kendzi.kendzi3d.resource.inter.ResourceService;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalModelsDictAction extends LocalModelsDict {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(LocalModelsDictAction.class);
+    private static final Logger log = LoggerFactory.getLogger(LocalModelsDictAction.class);
 
     private ResourceService urlReciverService;
 
@@ -30,19 +30,14 @@ public class LocalModelsDictAction extends LocalModelsDict {
 
         File pluginDir = new File(pluginDirStr + "/models");
 
-        FileFilter fileFilter = new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.getName().endsWith(".obj");
-            }
-        };
+        FileFilter fileFilter = file -> file.getName().endsWith(".obj");
         log.info("pluginDir: " + pluginDir);
         return findRelativeFilesPath(pluginDir, "/models", fileFilter);
     }
 
     private List<String> findRelativeFilesPath(File dir, String parent, FileFilter pFileFilter) {
 
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
 
         File[] files = dir.listFiles(pFileFilter);
 
@@ -50,12 +45,7 @@ public class LocalModelsDictAction extends LocalModelsDict {
             ret.add(parent + "/" + file.getName());
         }
 
-        FileFilter directoryFilter = new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.isDirectory();
-            }
-        };
+        FileFilter directoryFilter = File::isDirectory;
 
         File[] dirs = dir.listFiles(directoryFilter);
         for (File subdir : dirs) {
@@ -77,14 +67,14 @@ public class LocalModelsDictAction extends LocalModelsDict {
         ((FileListModel) this.listModel).setValues(models);
     }
 
-    class FileListModel extends AbstractListModel {
+    static class FileListModel extends AbstractListModel {
 
         /**
          *
          */
         private static final long serialVersionUID = 1L;
 
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
 
         @Override
         public int getSize() {
@@ -173,17 +163,16 @@ public class LocalModelsDictAction extends LocalModelsDict {
         return new FileListModel();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see kendzi.josm.kendzi3d.ui.pointModel.LocalModelsDict#selectValue()
      */
     @Override
     protected boolean selectValueAndClose() {
         String val = (String) this.listModels.getSelectedValue();
         if (val == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Error row is not selected!",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error row is not selected!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -197,6 +186,5 @@ public class LocalModelsDictAction extends LocalModelsDict {
     public String getModel() {
         return this.model;
     }
-
 
 }

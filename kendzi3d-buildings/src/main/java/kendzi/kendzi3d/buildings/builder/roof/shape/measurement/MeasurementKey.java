@@ -63,7 +63,7 @@ public enum MeasurementKey {
     /**
      * Dormer height 2.
      */
-     DORMER_HEIGHT_2("3dr:dormer:height2"),
+    DORMER_HEIGHT_2("3dr:dormer:height2"),
 
     /**
      * Dormer height 3.
@@ -88,12 +88,15 @@ public enum MeasurementKey {
     /**
      * Key value.
      */
-    private String key;
+    private final String key;
 
-    /** Constructor for enum.
-     * @param pKey key value
+    /**
+     * Constructor for enum.
+     * 
+     * @param pKey
+     *            key value
      */
-    private MeasurementKey(String pKey) {
+    MeasurementKey(String pKey) {
 
         this.key = pKey;
 

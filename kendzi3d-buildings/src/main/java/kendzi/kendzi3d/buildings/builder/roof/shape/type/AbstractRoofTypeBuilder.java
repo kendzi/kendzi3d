@@ -8,13 +8,13 @@ import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementParserUtil;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementUnit;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(RectangleRoofTypeBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(RectangleRoofTypeBuilder.class);
 
     public AbstractRoofTypeBuilder() {
         super();
@@ -129,10 +129,7 @@ public abstract class AbstractRoofTypeBuilder implements RoofTypeBuilder {
         if (measurement == null) {
             return false;
         }
-        if (measurementUnit.equals(measurement.getUnit())) {
-            return true;
-        }
-        return false;
+        return measurementUnit.equals(measurement.getUnit());
     }
 
     protected MeshFactory createRoofMesh(RoofMaterials roofTextureData) {

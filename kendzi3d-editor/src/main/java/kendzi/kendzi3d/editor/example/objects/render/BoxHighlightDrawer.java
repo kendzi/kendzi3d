@@ -1,7 +1,5 @@
 package kendzi.kendzi3d.editor.example.objects.render;
 
-import com.jogamp.opengl.GL2;
-
 import kendzi.jogl.Gl2Draw;
 import kendzi.kendzi3d.editor.example.objects.Box;
 
@@ -14,7 +12,7 @@ public class BoxHighlightDrawer implements Gl2Draw {
     }
 
     @Override
-    public void draw(GL2 gl) {
-        BoxDrawUtil.draw(box, gl);
+    public void draw() {
+        BoxDrawUtil.draw(box);
     }
 }

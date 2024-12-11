@@ -29,49 +29,58 @@ public class RoofTextureData {
     public TextureData getFacadeTexture() {
         return this.facadeTexture;
     }
+
     /**
-     * @param facadeTexture the facadeTexture to set
+     * @param facadeTexture
+     *            the facadeTexture to set
      */
     public void setFacadeTexture(TextureData facadeTexture) {
         this.facadeTexture = facadeTexture;
     }
+
     /**
      * @return the roofTexture
      */
     public TextureData getRoofTexture() {
         return this.roofTexture;
     }
+
     /**
-     * @param roofTexture the roofTexture to set
+     * @param roofTexture
+     *            the roofTexture to set
      */
     public void setRoofTexture(TextureData roofTexture) {
         this.roofTexture = roofTexture;
     }
+
     /**
      * @return the facadeColor
      */
     public Color getFacadeColor() {
         return this.facadeColor;
     }
+
     /**
-     * @param facadeColor the facadeColor to set
+     * @param facadeColor
+     *            the facadeColor to set
      */
     public void setFacadeColor(Color facadeColor) {
         this.facadeColor = facadeColor;
     }
+
     /**
      * @return the roofColor
      */
     public Color getRoofColor() {
         return this.roofColor;
     }
+
     /**
-     * @param roofColor the roofColor to set
+     * @param roofColor
+     *            the roofColor to set
      */
     public void setRoofColor(Color roofColor) {
         this.roofColor = roofColor;
     }
-
-
 
 }

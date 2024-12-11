@@ -29,7 +29,8 @@ public class UrlTextureLibrary {
     }
 
     /**
-     * @param url the url to set
+     * @param url
+     *            the url to set
      */
     public void setUrl(URL url) {
         this.url = url;
@@ -43,7 +44,8 @@ public class UrlTextureLibrary {
     }
 
     /**
-     * @param overwrite the overwrite to set
+     * @param overwrite
+     *            the overwrite to set
      */
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;

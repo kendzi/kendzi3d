@@ -64,7 +64,7 @@ public class RoofParserUtil {
 
     public static List<List<DormerType>> parseMultipleDormers(String key) {
 
-        List<List<DormerType>> ret = new ArrayList<List<DormerType>>();
+        List<List<DormerType>> ret = new ArrayList<>();
 
         if (key == null) {
             return ret;
@@ -85,7 +85,7 @@ public class RoofParserUtil {
      * @return
      */
     public static List<DormerType> dormers(String sideKeys) {
-        List<DormerType> site = new ArrayList<DormerType>();
+        List<DormerType> site = new ArrayList<>();
 
         for (int i = 0; i < sideKeys.length(); i++) {
             String dormerKey = sideKeys.substring(i, i + 1);
@@ -98,7 +98,7 @@ public class RoofParserUtil {
 
     public static Map<DormerRow, List<DormerType>> parseSiteDormers(String site, Map<String, String> keys) {
 
-        Map<DormerRow, List<DormerType>> ret = new HashMap<DormerRow, List<DormerType>>();
+        Map<DormerRow, List<DormerType>> ret = new HashMap<>();
 
         for (DormerRow dr : DormerRow.values()) {
 
@@ -126,7 +126,7 @@ public class RoofParserUtil {
      */
     public static Map<MeasurementKey, Measurement> parseMeasurements(Map<String, String> keys) {
 
-        Map<MeasurementKey, Measurement> ret = new HashMap<MeasurementKey, Measurement>();
+        Map<MeasurementKey, Measurement> ret = new HashMap<>();
 
         for (MeasurementKey key : MeasurementKey.values()) {
 

@@ -10,7 +10,7 @@ import kendzi.kendzi3d.expressions.jj.ExpressionCalc;
 import kendzi.kendzi3d.expressions.jj.TokenMgrError;
 
 public class ExpressiongBuilder {
-    public static void main(String args[]) throws ExpressionExeption {
+    public static void main(String[] args) throws ExpressionExeption {
         Expression exp = build("1 + 2 * 3");
 
         System.out.println(exp.evaluate(null));
@@ -29,9 +29,7 @@ public class ExpressiongBuilder {
             Expression res = parser.expr();
 
             return res;
-        } catch (TokenMgrError e) {
-            throw new ExpressionExeption("can't parse expression: " + in, e);
-        } catch (Exception e) {
+        } catch (TokenMgrError | Exception e) {
             throw new ExpressionExeption("can't parse expression: " + in, e);
         }
     }
@@ -59,6 +57,7 @@ public class ExpressiongBuilder {
         if (res.getClass().isInstance(defaultValue)) {
             return (T) res;
         }
-        throw new RuntimeException("expression result is wrong class: " + res.getClass() + " but expected is class: " + defaultValue.getClass());
+        throw new RuntimeException(
+                "expression result is wrong class: " + res.getClass() + " but expected is class: " + defaultValue.getClass());
     }
 }

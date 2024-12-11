@@ -8,7 +8,7 @@
  */
 package kendzi.kendzi3d.josm.model.direction;
 
-import javax.vecmath.Vector2d;
+import org.joml.Vector2d;
 
 /**
  * Direction in Cardinal.
@@ -20,7 +20,9 @@ public class CardinalDirection implements Direction {
 
     /**
      * Direction in Cardinal.
-     * @param pCardinalEnum Cardinal enum
+     * 
+     * @param pCardinalEnum
+     *            Cardinal enum
      */
     public CardinalDirection(CardinalEnum pCardinalEnum) {
         this.direction = pCardinalEnum;

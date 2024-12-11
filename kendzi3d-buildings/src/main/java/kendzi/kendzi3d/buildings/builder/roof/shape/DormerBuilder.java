@@ -26,26 +26,19 @@ import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
 
 public class DormerBuilder {
 
-    public static RoofDormerType [] dormerTypeBuilders = {
-        new RoofDormerTypeA(),
-        new RoofDormerTypeB(),
-        new RoofDormerTypeEmpty(),
-    };
+    public static RoofDormerType[] dormerTypeBuilders = { new RoofDormerTypeA(), new RoofDormerTypeB(),
+            new RoofDormerTypeEmpty(), };
 
-    public static List<RoofDormerTypeOutput> build(
-            RoofHooksSpaces pRoofHooksSpaces,
-            DormerRoofModel roof,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofMaterials pRoofTextureData) {
+    public static List<RoofDormerTypeOutput> build(RoofHooksSpaces pRoofHooksSpaces, DormerRoofModel roof,
+            Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData) {
 
-        List<RoofDormerTypeOutput> ret = new ArrayList<RoofDormerTypeOutput>();
+        List<RoofDormerTypeOutput> ret = new ArrayList<>();
 
         if (pRoofHooksSpaces == null) {
             return ret;
         }
 
-
-        List<RoofDormerTypeOutput> buildRoof  = pRoofHooksSpaces.buildDormers(roof, pRoofTextureData);
+        List<RoofDormerTypeOutput> buildRoof = pRoofHooksSpaces.buildDormers(roof, pRoofTextureData);
 
         return buildRoof;
     }

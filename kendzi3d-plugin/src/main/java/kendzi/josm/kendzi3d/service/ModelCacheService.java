@@ -9,6 +9,8 @@
 
 package kendzi.josm.kendzi3d.service;
 
+import com.google.inject.Inject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -19,8 +21,6 @@ import kendzi.jogl.model.loader.ModelLoadException;
 import kendzi.jogl.model.loader.ModelLoader;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 
-import com.google.inject.Inject;
-
 public class ModelCacheService {
 
     private static final String MATERIAL = "material.";
@@ -28,7 +28,7 @@ public class ModelCacheService {
     @Inject
     ResourceService urlReciverService;
 
-    private Map<String, Model> modelCache = new HashMap<String, Model>();
+    private final Map<String, Model> modelCache = new HashMap<>();
 
     public Model getModel(String pId) {
         return this.modelCache.get(pId);
@@ -39,7 +39,7 @@ public class ModelCacheService {
 
         Model model = this.modelCache.get(cacheKey);
         if (model == null) {
-//            model = ModelLoader.load(key, urlReciverService);
+            // model = ModelLoader.load(key, urlReciverService);
 
             model = generateParameters(key, parameter);
 
@@ -94,14 +94,15 @@ public class ModelCacheService {
 
     }
 
-//    private List<Material> replaceMapKd(String materialName, String map_Kd, List<Material> materials) {
-//        List<Material> ret = new ArrayList<Material>();
-//        for (Material material : materials) {
-//            if (materialName.equals(material.get)
-//        }
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
+    // private List<Material> replaceMapKd(String materialName, String map_Kd,
+    // List<Material> materials) {
+    // List<Material> ret = new ArrayList<Material>();
+    // for (Material material : materials) {
+    // if (materialName.equals(material.get)
+    // }
+    // // TODO Auto-generated method stub
+    // return null;
+    // }
 
     public Model loadModel(String key) throws ModelLoadException {
         Model model = this.modelCache.get(key);

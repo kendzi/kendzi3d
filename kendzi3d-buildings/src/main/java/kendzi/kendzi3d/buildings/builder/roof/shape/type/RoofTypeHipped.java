@@ -8,8 +8,6 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.buildings.builder.dto.RoofMaterials;
 import kendzi.kendzi3d.buildings.builder.dto.RoofTypeOutput;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerRoofModel;
@@ -17,6 +15,7 @@ import kendzi.math.geometry.RectangleUtil;
 import kendzi.math.geometry.polygon.PolygonUtil;
 import kendzi.math.geometry.polygon.PolygonWithHolesList2d;
 import kendzi.math.geometry.rectangle.RectanglePointVector2d;
+import org.joml.Vector2dc;
 
 /**
  * Roof type hipped automated chose between complex and square like roof shape.
@@ -27,7 +26,7 @@ import kendzi.math.geometry.rectangle.RectanglePointVector2d;
 public class RoofTypeHipped extends AbstractRoofTypeBuilder {
 
     @Override
-    public RoofTypeOutput buildRoof(Point2d startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
+    public RoofTypeOutput buildRoof(Vector2dc startPoint, PolygonWithHolesList2d buildingPolygon, DormerRoofModel roof,
             double height, RoofMaterials roofTextureData) {
 
         if (isComplex(buildingPolygon, roof)) {
@@ -52,7 +51,7 @@ public class RoofTypeHipped extends AbstractRoofTypeBuilder {
             return true;
         }
 
-        List<Point2d> points = buildingPolygon.getOuter().getPoints();
+        List<Vector2dc> points = buildingPolygon.getOuter().getPoints();
 
         RectanglePointVector2d orientedBBox = RectangleUtil.findRectangleContur(points);
         double orientedBBoxArea = orientedBBox.getHeight() * orientedBBox.getWidth();

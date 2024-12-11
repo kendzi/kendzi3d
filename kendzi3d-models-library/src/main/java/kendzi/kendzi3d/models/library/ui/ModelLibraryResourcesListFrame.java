@@ -3,8 +3,6 @@ package kendzi.kendzi3d.models.library.ui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,12 +17,11 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
-
 import kendzi.kendzi3d.models.library.messages.Messages;
 
 public class ModelLibraryResourcesListFrame extends JFrame {
 
-    private JPanel contentPane;
+    private final JPanel contentPane;
 
     protected JTable table;
 
@@ -34,15 +31,12 @@ public class ModelLibraryResourcesListFrame extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ModelLibraryResourcesListFrame frame = new ModelLibraryResourcesListFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                ModelLibraryResourcesListFrame frame = new ModelLibraryResourcesListFrame();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -57,7 +51,8 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
-        dataModel = new ModelsFilesTableModel() {};
+        dataModel = new ModelsFilesTableModel() {
+        };
 
         JScrollPane scrollPane = new JScrollPane();
         contentPane.add(scrollPane, BorderLayout.CENTER);
@@ -65,7 +60,6 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         table = new JTable();
         scrollPane.setViewportView(table);
         table.setModel(dataModel);
-
 
         JPanel panel_top = new JPanel();
         contentPane.add(panel_top, BorderLayout.NORTH);
@@ -79,57 +73,27 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         contentPane.add(panel_buttons, BorderLayout.SOUTH);
 
         JButton btnAddUrl = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnEdit.text"));
-        btnAddUrl.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onAddResourceUrl();
-            }
-        });
+        btnAddUrl.addActionListener(e -> onAddResourceUrl());
 
         JButton btnView = new JButton(Messages.getString("NodeModelListFrame.btnView.text")); //$NON-NLS-1$
-        btnView.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewResourceDetails();
-            }
-        });
+        btnView.addActionListener(e -> viewResourceDetails());
 
         JButton btnViewAll = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnViewAll.text")); //$NON-NLS-1$
-        btnViewAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewFinalLibrary();
-            }
-        });
+        btnViewAll.addActionListener(e -> viewFinalLibrary());
         panel_buttons.add(btnViewAll);
         panel_buttons.add(btnView);
 
         JButton btnAdd = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnAdd.text"));
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onAddResourceFile();
-            }
-        });
+        btnAdd.addActionListener(e -> onAddResourceFile());
         panel_buttons.add(btnAdd);
         panel_buttons.add(btnAddUrl);
 
         JButton btnDelete = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDelete.text"));
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onRemoveResourceFile();
-            }
-        });
+        btnDelete.addActionListener(e -> onRemoveResourceFile());
         panel_buttons.add(btnDelete);
 
         JButton btnDefault = new JButton(Messages.getString("ModelLibraryResourcesListFrame.btnDefault.text")); //$NON-NLS-1$
-        btnDefault.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onDefaultResources();
-            }
-        });
+        btnDefault.addActionListener(e -> onDefaultResources());
         panel_buttons.add(btnDefault);
 
         JPanel panel_empty = new JPanel();
@@ -139,12 +103,7 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         panel_buttons.add(panel_empty2);
 
         JButton btnOk = new JButton("Ok");
-        btnOk.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnOk.addActionListener(e -> dispose());
         panel_buttons.add(btnOk);
     }
 
@@ -172,18 +131,17 @@ public class ModelLibraryResourcesListFrame extends JFrame {
         //
     }
 
-    public class ModelsFilesTableModel extends AbstractTableModel {
+    public static class ModelsFilesTableModel extends AbstractTableModel {
 
         /**
          *
          */
         private static final long serialVersionUID = 1L;
 
-        private List<String> data =
-                Collections.unmodifiableList(new ArrayList<String>());
+        private List<String> data = Collections.unmodifiableList(new ArrayList<>());
 
         public void setData(List<String> data) {
-            this.data = Collections.unmodifiableList(new ArrayList<String>(data));
+            this.data = Collections.unmodifiableList(new ArrayList<>(data));
             fireTableStructureChanged();
         }
 

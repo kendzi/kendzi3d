@@ -10,16 +10,6 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
-
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-
 import kendzi.jogl.camera.Camera;
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.jogl.model.factory.ModelFactory;
@@ -39,6 +29,13 @@ import kendzi.kendzi3d.josm.model.attribute.OsmAttributeKeys;
 import kendzi.kendzi3d.josm.model.clone.RelationCloneHeight;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.util.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Fence for shapes defined as way.
@@ -49,7 +46,7 @@ public class BarrierWall extends AbstractWayModel {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(BarrierWall.class);
+    private static final Logger log = LogManager.getLogger(BarrierWall.class);
 
     private static final java.lang.Double WALL_HEIGHT = 1d;
 
@@ -102,8 +99,8 @@ public class BarrierWall extends AbstractWayModel {
      * @param pTextureLibraryStorageService
      *            texture library service
      */
-    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender,
-            MetadataCacheService pMetadataCacheService, TextureLibraryStorageService pTextureLibraryStorageService) {
+    public BarrierWall(Way pWay, Perspective perspective, ModelRender pModelRender, MetadataCacheService pMetadataCacheService,
+            TextureLibraryStorageService pTextureLibraryStorageService) {
         super(pWay, perspective);
 
         modelRender = pModelRender;
@@ -134,8 +131,7 @@ public class BarrierWall extends AbstractWayModel {
 
         ModelFactory modelBuilder = ModelFactory.modelBuilder();
 
-        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border",
-                modelBuilder);
+        MeshFactory meshBorder = BarrierFenceRelation.createMesh(wallTexture.getTex0(), wallColor, "wall_border", modelBuilder);
 
         BarrierFenceRelation.buildWallModel(points, null, minHeight, hight, 0, meshBorder, wallTexture);
 
@@ -203,36 +199,36 @@ public class BarrierWall extends AbstractWayModel {
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera, boolean selected) {
-        draw(gl, camera);
+    public void draw(Camera camera, boolean selected) {
+        draw(camera);
     }
 
     @Override
-    public void draw(GL2 gl, Camera camera) {
+    public void draw(Camera camera) {
 
-        gl.glTexEnvi(GL2ES1.GL_TEXTURE_ENV, GL2ES1.GL_TEXTURE_ENV_MODE, GL2ES1.GL_MODULATE);
+        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        gl.glPushMatrix();
-        gl.glTranslated(getGlobalX(), 0, -getGlobalY());
+        GL11.glPushMatrix();
+        GL11.glTranslated(getGlobalX(), 0, -getGlobalY());
 
         try {
-            modelRender.render(gl, model);
+            modelRender.render(model);
 
             for (RelationCloneHeight cloner : heightClone) {
                 for (Double height : cloner) {
 
-                    gl.glPushMatrix();
-                    gl.glTranslated(0, height, 0);
+                    GL11.glPushMatrix();
+                    GL11.glTranslated(0, height, 0);
 
-                    modelRender.render(gl, model);
-                    gl.glPopMatrix();
+                    modelRender.render(model);
+                    GL11.glPopMatrix();
 
                 }
             }
 
         } finally {
 
-            gl.glPopMatrix();
+            GL11.glPopMatrix();
         }
 
     }
@@ -243,8 +239,8 @@ public class BarrierWall extends AbstractWayModel {
             buildWorldObject();
         }
 
-        return Collections.singletonList(new ExportItem(model, new Point3d(getGlobalX(), 0, -getGlobalY()),
-                new Vector3d(1, 1, 1)));
+        return Collections
+                .singletonList(new ExportItem(model, new Vector3d(getGlobalX(), 0, -getGlobalY()), new Vector3d(1, 1, 1)));
     }
 
     @Override
@@ -253,7 +249,7 @@ public class BarrierWall extends AbstractWayModel {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         return getPoint();
     }
 }

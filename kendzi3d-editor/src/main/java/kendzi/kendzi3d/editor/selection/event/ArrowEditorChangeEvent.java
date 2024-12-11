@@ -5,15 +5,14 @@
  */
 package kendzi.kendzi3d.editor.selection.event;
 
-import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.editor.ArrowEditor;
+import org.joml.Vector3dc;
 
 public class ArrowEditorChangeEvent extends EditorChangeEvent {
-    private double length;
-    private Point3d closestPointOnBaseRay;
+    private final double length;
+    private final Vector3dc closestPointOnBaseRay;
 
-    public ArrowEditorChangeEvent(boolean end, ArrowEditor editor, double length, Point3d closestPointOnBaseRay) {
+    public ArrowEditorChangeEvent(boolean end, ArrowEditor editor, double length, Vector3dc closestPointOnBaseRay) {
         super(end, editor);
         this.length = length;
         this.closestPointOnBaseRay = closestPointOnBaseRay;
@@ -29,7 +28,7 @@ public class ArrowEditorChangeEvent extends EditorChangeEvent {
     /**
      * @return the closestPointOnBaseRay
      */
-    public Point3d getClosestPointOnBaseRay() {
+    public Vector3dc getClosestPointOnBaseRay() {
         return this.closestPointOnBaseRay;
     }
 

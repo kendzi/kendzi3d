@@ -11,13 +11,11 @@ package kendzi.kendzi3d.buildings.builder.dto;
 
 import kendzi.jogl.texture.dto.TextureData;
 
-
 public class RoofTextureIndex {
 
     int materialIndexInModel;
 
     TextureData textureData;
-
 
     public RoofTextureIndex(int materialIndexInModel, TextureData textureData) {
         super();
@@ -33,7 +31,8 @@ public class RoofTextureIndex {
     }
 
     /**
-     * @param materialIndexInModel the materialIndexInModel to set
+     * @param materialIndexInModel
+     *            the materialIndexInModel to set
      */
     public void setMaterialIndexInModel(int materialIndexInModel) {
         this.materialIndexInModel = materialIndexInModel;
@@ -47,7 +46,8 @@ public class RoofTextureIndex {
     }
 
     /**
-     * @param textureData the textureData to set
+     * @param textureData
+     *            the textureData to set
      */
     public void setTextureData(TextureData textureData) {
         this.textureData = textureData;

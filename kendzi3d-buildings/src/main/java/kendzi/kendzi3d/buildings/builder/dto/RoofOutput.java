@@ -48,7 +48,8 @@ public class RoofOutput {
     }
 
     /**
-     * @param height the height to set
+     * @param height
+     *            the height to set
      */
     public void setHeight(double height) {
         this.height = height;
@@ -62,7 +63,8 @@ public class RoofOutput {
     }
 
     /**
-     * @param debug the debug to set
+     * @param debug
+     *            the debug to set
      */
     public void setDebug(RoofDebugOutput debug) {
         this.debug = debug;
@@ -76,7 +78,8 @@ public class RoofOutput {
     }
 
     /**
-     * @param heightCalculator the heightCalculator to set
+     * @param heightCalculator
+     *            the heightCalculator to set
      */
     public void setHeightCalculator(HeightCalculator heightCalculator) {
         this.heightCalculator = heightCalculator;

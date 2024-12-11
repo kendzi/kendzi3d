@@ -14,7 +14,7 @@ import kendzi.josm.kendzi3d.util.expression.Context;
 
 public class DoubleFunction extends AbstractSimpleFunction<Double> {
 
-    public DoubleFunction(CompileContext context, String [] args) {
+    public DoubleFunction(CompileContext context, String[] args) {
         super(context, args);
     }
 

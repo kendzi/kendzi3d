@@ -27,11 +27,11 @@ import javax.xml.bind.Unmarshaller;
 import kendzi.jogl.texture.dto.TextureData;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.util.UrlUtil;
-
-import org.apache.log4j.Logger;
 import org.kendzi3d.ObjectFactory;
 import org.kendzi3d.TextureLibrary;
 import org.kendzi3d.TextureSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TextureLibraryService implements TextureLibraryStorageService {
 
@@ -39,15 +39,15 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     public static final String TEXTURE_LIBRARY_WIKI_XML = "/textures/textureLibraryWiki.xml";
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(TextureLibraryService.class);
+    private static final Logger log = LoggerFactory.getLogger(TextureLibraryService.class);
 
-    Map<String, ArrayList<TextureData>> textureMap = new HashMap<String, ArrayList<TextureData>>();
+    Map<String, ArrayList<TextureData>> textureMap = new HashMap<>();
 
-    private ResourceService urlReciverService;
+    private final ResourceService urlReciverService;
 
-    private Random randomNumberGenerator = new Random();
+    private final Random randomNumberGenerator = new Random();
 
-    private UrlTextureLibrary userTextureLibraryUrl = null;
+    private UrlTextureLibrary userTextureLibraryUrl;
 
     /**
      * Constructor.
@@ -71,10 +71,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
      */
     public boolean isTexture(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
-        if (set == null || set.size() == 0) {
-            return false;
-        }
-        return true;
+        return set != null && set.size() != 0;
     }
 
     /**
@@ -115,7 +112,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     public List<TextureData> findTextureData(String key) {
         ArrayList<TextureData> set = this.textureMap.get(key);
         if (set == null) {
-            return new ArrayList<TextureData>();
+            return new ArrayList<>();
         }
 
         return set;
@@ -176,20 +173,20 @@ public class TextureLibraryService implements TextureLibraryStorageService {
             // load internal
             load(TEXTURE_LIBRARY_INTERNAL_XML);
         } catch (Exception e) {
-            log.error(e, e);
+            log.error(TEXTURE_LIBRARY_INTERNAL_XML, e);
         }
         try {
             // load wiki
             load(TEXTURE_LIBRARY_WIKI_XML);
         } catch (Exception e) {
-            log.error(e, e);
+            log.error(TEXTURE_LIBRARY_WIKI_XML, e);
         }
 
         try {
             // load wiki
             loadUserFile(this.userTextureLibraryUrl);
         } catch (Exception e) {
-            log.error(e, e);
+            log.error("User texture library URL", e);
         }
     }
 
@@ -220,8 +217,8 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     @Override
-    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary) throws FileNotFoundException, JAXBException,
-            MalformedURLException {
+    public void loadUserFile(UrlTextureLibrary pUrlTextureLibrary)
+            throws FileNotFoundException, JAXBException, MalformedURLException {
 
         if (pUrlTextureLibrary == null) {
             return;
@@ -243,12 +240,7 @@ public class TextureLibraryService implements TextureLibraryStorageService {
     }
 
     private void addTexture(String key, TextureData data) {
-        ArrayList<TextureData> set = this.textureMap.get(key);
-
-        if (set == null) {
-            set = new ArrayList<TextureData>();
-            this.textureMap.put(key, set);
-        }
+        ArrayList<TextureData> set = this.textureMap.computeIfAbsent(key, k -> new ArrayList<>());
 
         set.add(data);
     }

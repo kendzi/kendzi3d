@@ -104,7 +104,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param floorMaterialType the floorMaterialType to set
+     * @param floorMaterialType
+     *            the floorMaterialType to set
      */
     public void setFloorMaterialType(String floorMaterialType) {
         this.floorMaterialType = floorMaterialType;
@@ -118,7 +119,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param floorColor the floorColor to set
+     * @param floorColor
+     *            the floorColor to set
      */
     public void setFloorColor(Color floorColor) {
         this.floorColor = floorColor;
@@ -132,7 +134,8 @@ public class BuildingModel {
     }
 
     /**
-     * @param nodeParts the nodeParts to set
+     * @param nodeParts
+     *            the nodeParts to set
      */
     public void setNodeParts(List<NodeBuildingPart> nodeParts) {
         this.nodeParts = nodeParts;

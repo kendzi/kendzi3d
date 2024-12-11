@@ -1,5 +1,7 @@
 package kendzi.josm.kendzi3d.service;
 
+import com.google.inject.Inject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,8 +29,8 @@ import kendzi.jogl.texture.library.TextureLibraryService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.module.binding.Kendzi3dPluginDirectory;
 import kendzi.util.StringUtil;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.kendzi3d.TextureData;
 import org.kendzi3d.TextureLibrary;
 import org.kendzi3d.TextureSet;
@@ -36,8 +38,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.google.inject.Inject;
 
 /**
  * Downloads and setup textures and metadata from wiki page.
@@ -47,7 +47,7 @@ import com.google.inject.Inject;
 public class WikiTextureLoaderService {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(WikiTextureLoaderService.class);
+    private static final Logger log = LogManager.getLogger(WikiTextureLoaderService.class);
 
     /**
      * Plugin directory.
@@ -77,7 +77,7 @@ public class WikiTextureLoaderService {
     /**
      * Wiki page with textures and metadata.
      */
-    private final static String wikiUrl = "http://wiki.openstreetmap.org/wiki/Special:Export/Kendzi3d/textures";
+    private static final String wikiUrl = "http://wiki.openstreetmap.org/wiki/Special:Export/Kendzi3d/textures";
 
     /**
      * Constructor.
@@ -126,7 +126,7 @@ public class WikiTextureLoaderService {
         return ret;
     }
 
-    public class LoadRet {
+    public static class LoadRet {
 
         List<String> errors;
         String timestamp;
@@ -135,7 +135,7 @@ public class WikiTextureLoaderService {
          * Constructor.
          */
         public LoadRet() {
-            this.errors = new ArrayList<String>();
+            this.errors = new ArrayList<>();
         }
 
         /**
@@ -169,7 +169,7 @@ public class WikiTextureLoaderService {
         }
     }
 
-    private void saveProperties(Properties prop) throws FileNotFoundException, IOException {
+    private void saveProperties(Properties prop) throws IOException {
 
         File textureProp = new File(getTexturesPath() + "/wikimetadata.properties");
 
@@ -201,7 +201,7 @@ public class WikiTextureLoaderService {
 
     private TextureLibrary createWikiTextureLiblary(List<WikiTextures> wikiTextures) {
 
-        Map<String, ArrayList<TextureData>> textureMap = new HashMap<String, ArrayList<TextureData>>();
+        Map<String, ArrayList<TextureData>> textureMap = new HashMap<>();
 
         for (WikiTextures wt : wikiTextures) {
             String key = wt.getKey();
@@ -236,18 +236,13 @@ public class WikiTextureLoaderService {
     }
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
-        List<T> list = new ArrayList<T>(c);
+        List<T> list = new ArrayList<>(c);
         java.util.Collections.sort(list);
         return list;
     }
 
     private void addTextureToMap(String key, TextureData data, Map<String, ArrayList<TextureData>> textureMap) {
-        ArrayList<TextureData> set = textureMap.get(key);
-
-        if (set == null) {
-            set = new ArrayList<TextureData>();
-            textureMap.put(key, set);
-        }
+        ArrayList<TextureData> set = textureMap.computeIfAbsent(key, k -> new ArrayList<>());
 
         set.add(data);
     }
@@ -268,9 +263,9 @@ public class WikiTextureLoaderService {
         }
     }
 
-    private List<String> downloadTexturesFiles(List<WikiTextures> parseWiki) throws FileNotFoundException, IOException {
+    private List<String> downloadTexturesFiles(List<WikiTextures> parseWiki) throws IOException {
 
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
 
         for (WikiTextures wt : parseWiki) {
             String fileUrl = wt.getFileUrl();
@@ -321,7 +316,7 @@ public class WikiTextureLoaderService {
 
     private static List<WikiTextures> parseWikiTextures(String wikiText) {
 
-        List<WikiTextures> ret = new ArrayList<WikiTextures>();
+        List<WikiTextures> ret = new ArrayList<>();
 
         if (wikiText == null) {
             return ret;
@@ -520,12 +515,8 @@ public class WikiTextureLoaderService {
                 }
             }
 
-        } catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException | IOException | SAXException pce) {
             pce.printStackTrace();
-        } catch (SAXException se) {
-            se.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
         return ret;
     }
@@ -566,7 +557,7 @@ public class WikiTextureLoaderService {
 
     }
 
-    public static StringBuffer readWikiStream(String wikiUrl) throws MalformedURLException, IOException {
+    public static StringBuffer readWikiStream(String wikiUrl) throws IOException {
         URL url = new URL(wikiUrl);
 
         // URL oracle = new URL("http://www.oracle.com/");

@@ -11,7 +11,7 @@ package kendzi.kendzi3d.buildings.output;
 
 import java.util.List;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 /**
  * Debug information for roof.
@@ -22,17 +22,17 @@ public class RoofDebugOutput {
     /**
      * Starting point of roof outline polygon.
      */
-    private Point3d startPoint;
+    private Vector3dc startPoint;
 
     /**
      * Bounding box for roof.
      */
-    private List<Point3d> bbox;
+    private List<Vector3dc> bbox;
 
     /**
      * @return the startPoint
      */
-    public Point3d getStartPoint() {
+    public Vector3dc getStartPoint() {
         return this.startPoint;
     }
 
@@ -40,14 +40,14 @@ public class RoofDebugOutput {
      * @param startPoint
      *            the startPoint to set
      */
-    public void setStartPoint(Point3d startPoint) {
+    public void setStartPoint(Vector3dc startPoint) {
         this.startPoint = startPoint;
     }
 
     /**
      * @return the bbox
      */
-    public List<Point3d> getBbox() {
+    public List<Vector3dc> getBbox() {
         return this.bbox;
     }
 
@@ -55,7 +55,7 @@ public class RoofDebugOutput {
      * @param bbox
      *            the bbox to set
      */
-    public void setBbox(List<Point3d> bbox) {
+    public void setBbox(List<Vector3dc> bbox) {
         this.bbox = bbox;
     }
 }

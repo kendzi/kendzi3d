@@ -26,8 +26,8 @@ public class RoofTypeOnion extends RoofType8v0 {
 
         double ratius = circle.getRadius();
 
-        Double h1 = getHeightMeters(measurements, MeasurementKey.HEIGHT_1, ratius * 2.25);
-        Double l1 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_1, ratius, ratius);
+        double h1 = getHeightMeters(measurements, MeasurementKey.HEIGHT_1, ratius * 2.25);
+        double l1 = getLenghtMetersPersent(measurements, MeasurementKey.LENGTH_1, ratius, ratius);
 
         return scaleBends(this.bendsShape, h1, l1);
     }

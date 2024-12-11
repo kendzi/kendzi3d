@@ -1,6 +1,6 @@
 package kendzi.kendzi3d.editor.selection.editor;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3d;
 
 /**
  * Simple wrapper for Point3d class. Point3d don't have setters and getters so
@@ -8,7 +8,7 @@ import javax.vecmath.Point3d;
  */
 public class Point3dProvider {
 
-    private final Point3d point;
+    private final Vector3d point;
 
     /**
      * Constructor.
@@ -16,7 +16,7 @@ public class Point3dProvider {
      * @param point
      *            provided point
      */
-    public Point3dProvider(Point3d point) {
+    public Point3dProvider(Vector3d point) {
         this.point = point;
     }
 
@@ -25,7 +25,7 @@ public class Point3dProvider {
      * 
      * @return point
      */
-    public Point3d provide() {
+    public Vector3d provide() {
         return point;
-    };
+    }
 }

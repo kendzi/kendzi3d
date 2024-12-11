@@ -8,7 +8,7 @@
  */
 package kendzi.kendzi3d.josm.model.direction;
 
-import javax.vecmath.Vector2d;
+import org.joml.Vector2d;
 
 /**
  * Direction.
@@ -19,20 +19,23 @@ public interface Direction {
 
     /**
      * If direction is cardinal.
+     * 
      * @return direction is cardinal
      */
-    public abstract boolean isCardinal();
+    boolean isCardinal();
 
     /**
      * Direction angle.
+     * 
      * @return Direction angle
      */
-    public abstract double getAngle();
+    double getAngle();
 
     /**
      * Direction vector.
+     * 
      * @return Direction vector
      */
-    public abstract Vector2d getVector();
+    Vector2d getVector();
 
 }

@@ -3,14 +3,14 @@ package kendzi.kendzi3d.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 public abstract class MultipleWorldObject implements WorldObject {
 
-    private List<WorldObject> worldObjects = new ArrayList<WorldObject>();
+    private List<WorldObject> worldObjects = new ArrayList<>();
 
     @Override
-    public Point3d getPoint() {
+    public Vector3dc getPoint() {
         if (!worldObjects.isEmpty()) {
             return worldObjects.get(0).getPoint();
         }
@@ -18,13 +18,13 @@ public abstract class MultipleWorldObject implements WorldObject {
     }
 
     @Override
-    public Point3d getPosition() {
+    public Vector3dc getPosition() {
         // FIXME it is wrong!
         return getPoint();
     }
 
     @Override
-    public void setPoint(Point3d point) {
+    public void setPoint(Vector3dc point) {
         throw new IllegalAccessError();
     }
 

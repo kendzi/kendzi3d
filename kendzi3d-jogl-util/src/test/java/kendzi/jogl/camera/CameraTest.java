@@ -1,25 +1,24 @@
 package kendzi.jogl.camera;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import org.joml.Vector3dc;
 
 public class CameraTest implements Camera {
-    private Point3d point;
-    private Vector3d vector;
+    private final Vector3dc point;
+    private final Vector3dc vector;
 
-    public CameraTest(Point3d point, Vector3d vector) {
+    public CameraTest(Vector3dc point, Vector3dc vector) {
         super();
         this.point = point;
         this.vector = vector;
     }
 
     @Override
-    public Point3d getPoint() {
+    public Vector3dc getPoint() {
         return point;
     }
 
     @Override
-    public Vector3d getAngle() {
+    public Vector3dc getAngle() {
         return vector;
     }
 }

@@ -6,10 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import kendzi.jogl.util.awt.TextureRenderer;
+import kendzi.jogl.util.texture.Texture;
 import kendzi.josm.kendzi3d.util.ColorUtil;
-
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
 
 /**
  * Color texture builder.
@@ -43,8 +42,7 @@ public class ColorTextureBuilder implements TextureBuilder {
     }
 
     public static BufferedImage imageToBufferedImage(Image im) {
-        BufferedImage bi = new BufferedImage
-                (im.getWidth(null),im.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi = new BufferedImage(im.getWidth(null), im.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Graphics bg = bi.getGraphics();
         bg.drawImage(im, 0, 0, null);
         bg.dispose();
@@ -70,7 +68,5 @@ public class ColorTextureBuilder implements TextureBuilder {
 
         return img;
     }
-
-
 
 }

@@ -2,36 +2,28 @@ package kendzi.kendzi3d.editor.drawer;
 
 import java.awt.Color;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
-
+import kendzi.jogl.MatrixMath;
+import kendzi.jogl.glu.GLU;
 import kendzi.jogl.util.ColorUtil;
 import kendzi.jogl.util.DrawUtil;
+import kendzi.jogl.util.VertexArrayObject;
 import kendzi.kendzi3d.editor.selection.editor.EditorType;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Util for drawing editor active spots.
  */
-public class ActiveSpotDrawer {
+public class ActiveSpotDrawer implements AutoCloseable {
 
     private static final int NUMBER_OF_SECTIONS = 16;
 
-    /**
-     * Storage For Our Quadratic Objects
-     */
-    private GLUquadric quadratic;
+    private final float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
 
-    private final GLU glu = new GLU();
+    private final float[] highlightFillColor1 = ColorUtil.colorToArray(Color.RED.darker().darker());
 
-    private float[] highlightOutlineColor = ColorUtil.colorToArray(Color.BLACK.brighter());
+    private final float[] highlightFillColor2 = ColorUtil.colorToArray(Color.GRAY.darker().darker().darker());
 
-    private float[] highlightFillColor1 = ColorUtil.colorToArray(Color.RED.darker().darker());
-
-    private float[] highlightFillColor2 = ColorUtil.colorToArray(Color.GRAY.darker().darker().darker());
-
-    private float[] normalColor = ColorUtil.colorToArray(Color.GRAY.brighter());
+    private final float[] normalColor = ColorUtil.colorToArray(Color.GRAY.brighter());
 
     /**
      * Type of editor highlighting.
@@ -43,21 +35,14 @@ public class ActiveSpotDrawer {
     /**
      * Initiate drawer.
      *
-     * @param gl
-     *            gl
      */
-    public void init(GL2 gl) {
-        // Quadric for geometry
-        quadratic = glu.gluNewQuadric();
-        // Create smooth normals quadric
-        glu.gluQuadricNormals(quadratic, GLU.GLU_SMOOTH);
+    public void init() {
+        // do nothing right now -- GLU_SMOOTH is default
     }
 
     /**
      * Draws editor. Editor center point is at origin.
      *
-     * @param gl
-     *            gl
      * @param editorRadius
      *            editor radius
      * @param type
@@ -65,64 +50,72 @@ public class ActiveSpotDrawer {
      * @param mode
      *            editor mode
      */
-    public void drawEditor(GL2 gl, double editorRadius, EditorType type, EditorMode mode) {
+    public void drawEditor(double editorRadius, EditorType type, EditorMode mode) {
 
         switch (mode) {
         case HIGHLIGHT_2:
 
-            drawHighlightEditor(gl, type, editorRadius, highlightFillColor2);
+            drawHighlightEditor(type, editorRadius, highlightFillColor2);
             break;
 
         case HIGHLIGHT_1:
 
-            drawHighlightEditor(gl, type, editorRadius, highlightFillColor1);
+            drawHighlightEditor(type, editorRadius, highlightFillColor1);
             break;
 
         case NORMAL:
 
-            gl.glColor3fv(normalColor, 0);
-            drawEditor(gl, editorRadius, type);
+            GL11.glColor3fv(normalColor);
+            drawEditor(editorRadius, type);
             break;
 
         default:
             throw new IllegalArgumentException("Unknown editor mode: " + mode);
         }
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
 
     }
 
-    private void drawHighlightEditor(GL2 gl, EditorType type, double editorRadius, float[] fillColor) {
-        gl.glColor3fv(highlightOutlineColor, 0);
-
-        SimpleOutlineDrawUtil.beginSimpleOutlineLine(gl);
-        drawEditor(gl, editorRadius, type);
-
-        SimpleOutlineDrawUtil.beginSimpleOutlinePoint(gl);
-        drawEditor(gl, editorRadius, type);
-        SimpleOutlineDrawUtil.endSimpleOutline(gl);
-
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
-        gl.glColor3fv(fillColor, 0);
-        drawEditor(gl, editorRadius, type);
+    @Override
+    public void close() {
+        // Close cached items
     }
 
-    private void drawEditor(GL2 gl, double editorRadius, EditorType type) {
+    private void drawHighlightEditor(EditorType type, double editorRadius, float[] fillColor) {
+        GL11.glColor3fv(highlightOutlineColor);
 
+        SimpleOutlineDrawUtil.beginSimpleOutlineLine();
+        drawEditor(editorRadius, type);
+
+        SimpleOutlineDrawUtil.beginSimpleOutlinePoint();
+        drawEditor(editorRadius, type);
+        SimpleOutlineDrawUtil.endSimpleOutline();
+
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glColor3fv(fillColor);
+        drawEditor(editorRadius, type);
+    }
+
+    private void drawEditor(double editorRadius, EditorType type) {
         switch (type) {
         case ARROW:
-            drawArrow(gl, glu, quadratic, editorRadius);
+            drawArrow(editorRadius);
             break;
         case ARROW_HEAD:
-            drawArrowhead(gl, glu, quadratic, editorRadius);
+            drawArrowhead(editorRadius);
             break;
         case SPHERE:
-            drawSphere(glu, quadratic, editorRadius);
+            drawSphere(editorRadius);
             break;
         case BOX:
-            DrawUtil.drawBox(gl, editorRadius);
+            try (VertexArrayObject vao = DrawUtil.drawBox(editorRadius)) {
+                vao.draw();
+            }
             break;
         case BOX_SMALL:
-            DrawUtil.drawBox(gl, editorRadius / 2d);
+            try (VertexArrayObject vao = DrawUtil.drawBox(editorRadius / 2)) {
+                vao.draw();
+            }
             break;
 
         default:
@@ -131,22 +124,22 @@ public class ActiveSpotDrawer {
 
     }
 
-    private static void drawSphere(GLU glu, GLUquadric quadratic, double editorRadius) {
-        glu.gluSphere(quadratic, editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
+    private static void drawSphere(double editorRadius) {
+        GLU.gluSphere((float) editorRadius, NUMBER_OF_SECTIONS, NUMBER_OF_SECTIONS);
     }
 
-    private static void drawArrowhead(GL2 gl, GLU glu, GLUquadric quadratic, double editorRadius) {
+    private static void drawArrowhead(double editorRadius) {
 
         double length = 2d * editorRadius;
 
-        gl.glPushMatrix();
-        gl.glTranslated(0, -editorRadius, 0);
+        MatrixMath.glPushMatrix();
+        MatrixMath.glTranslated(0, -editorRadius, 0);
 
-        ArrowDrawUtil.drawArrowheadSimple(gl, glu, quadratic, length, editorRadius, NUMBER_OF_SECTIONS);
-        gl.glPopMatrix();
+        ArrowDrawUtil.drawArrowheadSimple(length, editorRadius, NUMBER_OF_SECTIONS);
+        MatrixMath.glPopMatrix();
     }
 
-    private static void drawArrow(GL2 gl, GLU glu, GLUquadric quadratic, double editorRadius) {
+    private static void drawArrow(double editorRadius) {
 
         double length = 2d * editorRadius;
 
@@ -154,9 +147,9 @@ public class ActiveSpotDrawer {
         double baseRadius = 0.1d * editorRadius;
         double arrowheadRadius = 0.6d * editorRadius;
 
-        gl.glPushMatrix();
-        gl.glTranslated(0, -length / 2d, 0);
-        ArrowDrawUtil.drawArrow(gl, glu, quadratic, length, arrowheadLength, baseRadius, arrowheadRadius, NUMBER_OF_SECTIONS);
-        gl.glPopMatrix();
+        MatrixMath.glPushMatrix();
+        MatrixMath.glTranslated(0, -length / 2d, 0);
+        ArrowDrawUtil.drawArrow(length, arrowheadLength, baseRadius, arrowheadRadius, NUMBER_OF_SECTIONS);
+        MatrixMath.glPopMatrix();
     }
 }

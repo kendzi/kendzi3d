@@ -6,10 +6,8 @@
 
 package kendzi.josm.kendzi3d.data.perspective;
 
-import javax.vecmath.Point2d;
-
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
-
+import org.joml.Vector2d;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 
@@ -26,9 +24,9 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public class Perspective3D implements Perspective {
 
-    private double scale;
-    private double centerX;
-    private double centerY;
+    private final double scale;
+    private final double centerX;
+    private final double centerY;
 
     public Perspective3D(double scale, double centerX, double centerY) {
         this.scale = scale;
@@ -50,13 +48,13 @@ public class Perspective3D implements Perspective {
      * @see kendzi.josm.kendzi3d.data.perspective.Perspective3D#calcPoint(org.openstreetmap.josm.data.osm.Node)
      */
     @Override
-    public Point2d calcPoint(Node node) {
+    public Vector2d calcPoint(Node node) {
         EastNorth eastNorth = node.getEastNorth();
         return calcPoint(eastNorth);
     }
 
-    public Point2d calcPoint(EastNorth eastNorth) {
-        return new Point2d(calcX(eastNorth.getX()), calcY(eastNorth.getY()));
+    public Vector2d calcPoint(EastNorth eastNorth) {
+        return new Vector2d(calcX(eastNorth.getX()), calcY(eastNorth.getY()));
     }
 
     @Override
@@ -65,8 +63,8 @@ public class Perspective3D implements Perspective {
     }
 
     /**
-     * Backward projection from local camera coordinate system to global
-     * EastNorth coordinate system.
+     * Backward projection from local camera coordinate system to global EastNorth
+     * coordinate system.
      * 
      * @param x
      *            coordinate x

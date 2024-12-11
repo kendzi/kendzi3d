@@ -2,14 +2,13 @@ package kendzi.kendzi3d.editor.selection;
 
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.geometry.Mesh;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.util.MeshTriangleUtil;
 import kendzi.math.geometry.intersection.IntersectionUtil;
 import kendzi.math.geometry.ray.Ray3d;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /**
  * Implementation of selectable model.
@@ -24,7 +23,7 @@ public abstract class ModelSelection extends SphereSelection {
      * @param radius
      *            radius for intersection prediction
      */
-    public ModelSelection(Point3d center, double radius) {
+    public ModelSelection(Vector3dc center, double radius) {
         super(center, radius);
     }
 
@@ -40,19 +39,18 @@ public abstract class ModelSelection extends SphereSelection {
 
         Model model = getModel();
 
-        Point3d point = ray.getPoint();
-        Vector3d vector = new Vector3d(ray.getVector());
-        vector.normalize();
+        Vector3dc point = ray.getPoint();
+        Vector3dc vector = new Vector3d(ray.getVector()).normalize();
 
         double minDistance = Double.MAX_VALUE;
 
         for (Mesh mesh : model.mesh) {
-            List<Point3d> triangles = MeshTriangleUtil.toTriangles(mesh);
+            List<Vector3dc> triangles = MeshTriangleUtil.toTriangles(mesh);
 
             for (int i = 0; i < triangles.size(); i = i + 3) {
-                Point3d v0 = triangles.get(i);
-                Point3d v1 = triangles.get(i + 1);
-                Point3d v2 = triangles.get(i + 2);
+                Vector3dc v0 = triangles.get(i);
+                Vector3dc v1 = triangles.get(i + 1);
+                Vector3dc v2 = triangles.get(i + 2);
 
                 Double distance = IntersectionUtil.rayIntersectsTriangleDistance(point, vector, v0, v1, v2);
                 if (distance != null && distance < minDistance) {

@@ -1,8 +1,7 @@
 package kendzi.kendzi3d.world;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.model.geometry.Model;
+import org.joml.Vector3dc;
 
 /**
  * Represents object in world.
@@ -15,7 +14,7 @@ public abstract class AbstractWorldObject implements WorldObject, StaticModelWor
     /**
      * Object location inside world.
      */
-    private Point3d point;
+    private Vector3dc point;
 
     /**
      * Gets static model for world object.
@@ -29,7 +28,7 @@ public abstract class AbstractWorldObject implements WorldObject, StaticModelWor
      * @return the point
      */
     @Override
-    public Point3d getPoint() {
+    public Vector3dc getPoint() {
         return point;
     }
 
@@ -38,7 +37,7 @@ public abstract class AbstractWorldObject implements WorldObject, StaticModelWor
      *            the point to set
      */
     @Override
-    public void setPoint(Point3d point) {
+    public void setPoint(Vector3dc point) {
         this.point = point;
     }
 

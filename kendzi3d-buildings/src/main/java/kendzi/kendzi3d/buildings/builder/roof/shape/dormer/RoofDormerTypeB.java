@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.factory.FaceFactory;
 import kendzi.jogl.model.factory.FaceFactory.FaceType;
 import kendzi.jogl.model.factory.MeshFactory;
@@ -28,9 +25,11 @@ import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
 import kendzi.kendzi3d.buildings.model.roof.shape.DormerType;
 import kendzi.math.geometry.point.TransformationMatrix3d;
-
-import org.apache.log4j.Logger;
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Dormer type B.
@@ -41,7 +40,7 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofDormerTypeB.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofDormerTypeB.class);
 
     @Override
     public DormerType getType() {
@@ -49,15 +48,10 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
     }
 
     @Override
-    public RoofDormerTypeOutput buildRoof(
-            RoofHookPoint pRoofHookPoint,
-            RoofHooksSpace space,
-            Map<MeasurementKey, Measurement> pMeasurements,
-            RoofMaterials pRoofTextureData) {
+    public RoofDormerTypeOutput buildRoof(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
+            Map<MeasurementKey, Measurement> pMeasurements, RoofMaterials pRoofTextureData) {
 
         RoofDormerTypeOutput out = new RoofDormerTypeOutput();
-
-
 
         double width1 = getWidth(MeasurementKey.DORMER_WIDTH_1, pMeasurements, 1.5d);
         double height1 = getHeight(MeasurementKey.DORMER_HEIGHT_1, pMeasurements, 1.5d);
@@ -68,9 +62,8 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         return buildMesh(pRoofHookPoint, space, out, pRoofTextureData, width1, height1, depth);
     }
 
-    private RoofDormerTypeOutput buildMesh(RoofHookPoint pRoofHookPoint, RoofHooksSpace space,
-            RoofDormerTypeOutput out, RoofMaterials pRoofTextureData, double width1, double h1,
-            double d) {
+    private RoofDormerTypeOutput buildMesh(RoofHookPoint pRoofHookPoint, RoofHooksSpace space, RoofDormerTypeOutput out,
+            RoofMaterials pRoofTextureData, double width1, double h1, double d) {
 
         TextureData facadeTexture = pRoofTextureData.getFacade().getTextureData();
         TextureData roofTexture = pRoofTextureData.getRoof().getTextureData();
@@ -85,22 +78,20 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         border.materialID = facadeMaterialIndex;
         border.hasTexture = true;
 
-        int b01 = border.addVertex(new Point3d(-0.5 * width1, 0, 0));
-        int b12 = border.addVertex(new Point3d(0, h1, 0));
-        int b03 = border.addVertex(new Point3d(0.5 * width1, 0, 0));
+        int b01 = border.addVertex(new Vector3d(-0.5 * width1, 0, 0));
+        int b12 = border.addVertex(new Vector3d(0, h1, 0));
+        int b03 = border.addVertex(new Vector3d(0.5 * width1, 0, 0));
 
-        int b04 = border.addVertex(new Point3d(0.5 * width1, 0, -d));
-        int b15 = border.addVertex(new Point3d(0, h1, -d));
-        int b06 = border.addVertex(new Point3d(-0.5 * width1, 0, -d));
-
+        int b04 = border.addVertex(new Vector3d(0.5 * width1, 0, -d));
+        int b15 = border.addVertex(new Vector3d(0, h1, -d));
+        int b06 = border.addVertex(new Vector3d(-0.5 * width1, 0, -d));
 
         int nb1 = border.addNormal(new Vector3d(0, 0, 1));
         int nb2 = border.addNormal(new Vector3d(0, 0, -1));
 
         int t_0_0 = border.addTextCoord(new TextCoord(0, 0));
-        int t_u15_v1 = border.addTextCoord(new TextCoord(u1/2, v1));
+        int t_u15_v1 = border.addTextCoord(new TextCoord(u1 / 2, v1));
         int t_u1_0 = border.addTextCoord(new TextCoord(u1, 0));
-
 
         FaceFactory face = border.addFace(FaceType.TRIANGLES);
         // wall 1
@@ -118,13 +109,13 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         top.materialID = topMaterialIndex;
         top.hasTexture = true;
 
-        Point3d p1 = new Point3d(-0.5 * width1, 0, 0);
-        Point3d p25 = new Point3d(0, h1, 0);
-        Point3d p38 = new Point3d(0, h1, -d);
-        Point3d p4 = new Point3d(-0.5 * width1, 0, -d);
+        Vector3dc p1 = new Vector3d(-0.5 * width1, 0, 0);
+        Vector3dc p25 = new Vector3d(0, h1, 0);
+        Vector3dc p38 = new Vector3d(0, h1, -d);
+        Vector3dc p4 = new Vector3d(-0.5 * width1, 0, -d);
 
-        Point3d p6 = new Point3d(0.5 * width1, 0, 0);
-        Point3d p7 = new Point3d(0.5 * width1, 0, -d);
+        Vector3dc p6 = new Vector3d(0.5 * width1, 0, 0);
+        Vector3dc p7 = new Vector3d(0.5 * width1, 0, -d);
 
         int t1 = top.addVertex(p1);
         int t25 = top.addVertex(p25);
@@ -133,16 +124,14 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         int t6 = top.addVertex(p6);
         int t7 = top.addVertex(p7);
 
-        Vector3d tn1 = new Vector3d(-h1, 0.5 * width1, 0);
-        tn1.normalize();
+        Vector3dc tn1 = new Vector3d(-h1, 0.5 * width1, 0).normalize();
         int tn1i = top.addNormal(tn1);
 
-        Vector3d tn2 = new Vector3d(h1, 0.5 * width1, 0);
-        tn2.normalize();
+        Vector3dc tn2 = new Vector3d(h1, 0.5 * width1, 0).normalize();
         int tn2i = top.addNormal(tn2);
 
-        Vector3d roofLineVector1 = new Vector3d(0, 0, 1);
-        Vector3d roofLineVector2 = new Vector3d(0, 0, -1);
+        Vector3dc roofLineVector1 = new Vector3d(0, 0, 1);
+        Vector3dc roofLineVector2 = new Vector3d(0, 0, -1);
 
         int tc1 = top.addTextCoord(calcUV(p1, tn1, roofLineVector1, p1, roofTexture));
         int tc2 = top.addTextCoord(calcUV(p25, tn1, roofLineVector1, p1, roofTexture));
@@ -167,30 +156,36 @@ public class RoofDormerTypeB extends AbstractRoofDormerType {
         topFace.addVert(t7, tc7, tn2i);
         topFace.addVert(t38, tc8, tn2i);
 
-        List<MeshFactory> ret = new ArrayList<MeshFactory>();
+        List<MeshFactory> ret = new ArrayList<>();
         ret.add(border);
         ret.add(top);
 
         out.setMesh(ret);
 
-        Point3d extPoint = pRoofHookPoint.getPoint();
-        SimpleMatrix tranA = TransformationMatrix3d.tranA(extPoint.x, extPoint.y, extPoint.z);
+        Vector3dc extPoint = pRoofHookPoint.getPoint();
+        SimpleMatrix tranA = TransformationMatrix3d.tranA(extPoint.x(), extPoint.y(), extPoint.z());
 
         out.setTransformationMatrix(space.getTransformationMatrix().mult(tranA));
 
         return out;
     }
 
-
-    /** XXX
-     * @param pPointToCalc to calculates texture coordinates
-     * @param pPlaneNormal normal vector of surface plane
-     * @param pLineVector vector laying on the plane (texture is parallel to this vector)
-     * @param pStartPoint point when texture starts, laying on surface
-     * @param pTexture texture
+    /**
+     * XXX
+     * 
+     * @param pPointToCalc
+     *            to calculates texture coordinates
+     * @param pPlaneNormal
+     *            normal vector of surface plane
+     * @param pLineVector
+     *            vector laying on the plane (texture is parallel to this vector)
+     * @param pStartPoint
+     *            point when texture starts, laying on surface
+     * @param pTexture
+     *            texture
      * @return uv cordinates for texture
      */
-    private TextCoord calcUV(Point3d pPointToCalc, Vector3d pPlaneNormal, Vector3d pLineVector, Point3d pStartPoint,
+    private TextCoord calcUV(Vector3dc pPointToCalc, Vector3dc pPlaneNormal, Vector3dc pLineVector, Vector3dc pStartPoint,
             TextureData pTexture) {
 
         return TextCordFactory.calcFlatSurfaceUV(pPointToCalc, pPlaneNormal, pLineVector, pStartPoint, pTexture);

@@ -30,7 +30,7 @@ public class AutostartToggleAction extends ToggleAction {
     /**
      * Autostart property key.
      */
-    public final static String KENDZI_3D_AUTOSTART = "kendzi3d.autostart";
+    public static final String KENDZI_3D_AUTOSTART = "kendzi3d.autostart";
 
     /**
      * Constructor of debug toggle action.

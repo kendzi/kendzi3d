@@ -6,7 +6,7 @@ package kendzi.josm.kendzi3d.data.producer;
  */
 public class DataConsumersMonitor {
 
-    private transient int numOfConsumers = 0;
+    private transient int numOfConsumers;
 
     public synchronized void addDataConsumer() {
         numOfConsumers++;

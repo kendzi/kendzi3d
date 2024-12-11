@@ -2,22 +2,22 @@ package kendzi.kendzi3d.buildings.model;
 
 import java.awt.Color;
 
-import javax.vecmath.Point2d;
+import org.joml.Vector2dc;
 
 public interface NodeBuildingPart {
 
     /**
      * @return the point
      */
-    public abstract Point2d getPoint();
+    Vector2dc getPoint();
 
     /**
      * @return the height
      */
-    public abstract double getHeight();
+    double getHeight();
 
-    public abstract String getFacadeMaterialType();
+    String getFacadeMaterialType();
 
-    public abstract Color getFacadeColor();
+    Color getFacadeColor();
 
 }

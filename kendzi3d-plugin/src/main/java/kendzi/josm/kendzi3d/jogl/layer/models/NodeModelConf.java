@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import kendzi.kendzi3d.expressions.expression.Expression;
-
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
@@ -42,7 +41,6 @@ public class NodeModelConf {
      */
     private Expression translate;
 
-
     /**
      * @return the model
      */
@@ -51,7 +49,8 @@ public class NodeModelConf {
     }
 
     /**
-     * @param model the model to set
+     * @param model
+     *            the model to set
      */
     public void setModel(String model) {
         this.model = model;
@@ -65,7 +64,8 @@ public class NodeModelConf {
     }
 
     /**
-     * @param matcher the matcher to set
+     * @param matcher
+     *            the matcher to set
      */
     public void setMatcher(Match matcher) {
         this.matcher = matcher;
@@ -79,7 +79,8 @@ public class NodeModelConf {
     }
 
     /**
-     * @param simpleFunction the scale to set
+     * @param simpleFunction
+     *            the scale to set
      */
     public void setScale(Expression simpleFunction) {
         this.scale = simpleFunction;
@@ -93,7 +94,8 @@ public class NodeModelConf {
     }
 
     /**
-     * @param direction the direction to set
+     * @param direction
+     *            the direction to set
      */
     public void setDirection(Expression direction) {
         this.direction = direction;
@@ -107,7 +109,8 @@ public class NodeModelConf {
     }
 
     /**
-     * @param modelParameter the modelParameter to set
+     * @param modelParameter
+     *            the modelParameter to set
      */
     public void setModelParameter(String modelParameter) {
         this.modelParameter = modelParameter;

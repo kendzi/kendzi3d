@@ -2,7 +2,6 @@ package kendzi.kendzi3d.world.quad.layer;
 
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.WorldObject;
-
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;

@@ -13,25 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.polygon.MultiPolygonList2d;
 import kendzi.math.geometry.polygon.PolygonList2d;
+import org.joml.Vector2dc;
 
 public class SplitPolygon {
 
-    List<Point2d> polygonExtanded = new ArrayList<Point2d>();
-    List<List<Integer>> polygonsLeft = new ArrayList<List<Integer>>();
-    List<List<Integer>> polygonsRight = new ArrayList<List<Integer>>();
-
+    /** Polygon points */
+    List<Vector2dc> polygonExtanded = new ArrayList<>();
+    List<List<Integer>> polygonsLeft = new ArrayList<>();
+    List<List<Integer>> polygonsRight = new ArrayList<>();
 
     @Deprecated
-    public List<List<Point2d>> getLeftPolygons() {
+    public List<List<Vector2dc>> getLeftPolygons() {
 
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         for (List<Integer> p : this.polygonsLeft) {
-            List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
+            List<Vector2dc> polygon = makeListFromIndex(this.polygonExtanded, p);
             ret.add(polygon);
         }
         return ret;
@@ -44,8 +43,7 @@ public class SplitPolygon {
         Set<PolygonList2d> polygons = mp.getPolygons();
 
         for (List<Integer> p : this.polygonsLeft) {
-            List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
-
+            List<Vector2dc> polygon = makeListFromIndex(this.polygonExtanded, p);
 
             PolygonList2d polygonList = new PolygonList2d(polygon);
             polygons.add(polygonList);
@@ -54,25 +52,25 @@ public class SplitPolygon {
     }
 
     @Deprecated
-    public List<List<Point2d>> getRightPolygons() {
+    public List<List<Vector2dc>> getRightPolygons() {
 
-        List<List<Point2d>> ret = new ArrayList<List<Point2d>>();
+        List<List<Vector2dc>> ret = new ArrayList<>();
 
         for (List<Integer> p : this.polygonsRight) {
-            List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
+            List<Vector2dc> polygon = makeListFromIndex(this.polygonExtanded, p);
             ret.add(polygon);
         }
         return ret;
 
     }
+
     public MultiPolygonList2d getTopMultiPolygons() {
 
         MultiPolygonList2d mp = new MultiPolygonList2d();
         Set<PolygonList2d> polygons = mp.getPolygons();
 
         for (List<Integer> p : this.polygonsRight) {
-            List<Point2d> polygon = makeListFromIndex(this.polygonExtanded, p);
-
+            List<Vector2dc> polygon = makeListFromIndex(this.polygonExtanded, p);
 
             PolygonList2d polygonList = new PolygonList2d(polygon);
             polygons.add(polygonList);
@@ -80,49 +78,55 @@ public class SplitPolygon {
         return mp;
     }
 
-    private List<Point2d> makeListFromIndex(List<Point2d> borderExtanded,
-            List<Integer> polyIndex) {
+    private List<Vector2dc> makeListFromIndex(List<Vector2dc> borderExtanded, List<Integer> polyIndex) {
 
-        List<Point2d> ret = new ArrayList<Point2d>(polyIndex.size());
+        List<Vector2dc> ret = new ArrayList<>(polyIndex.size());
         for (Integer i : polyIndex) {
             ret.add(borderExtanded.get(i));
         }
         return ret;
     }
 
-
     /**
      * @return the polygonExtanded
      */
-    public List<Point2d> getPolygonExtanded() {
+    public List<Vector2dc> getPolygonExtanded() {
         return this.polygonExtanded;
     }
+
     /**
-     * @param polygonExtanded the polygonExtanded to set
+     * @param polygonExtanded
+     *            the polygonExtanded to set
      */
-    public void setPolygonExtanded(List<Point2d> polygonExtanded) {
+    public void setPolygonExtanded(List<Vector2dc> polygonExtanded) {
         this.polygonExtanded = polygonExtanded;
     }
+
     /**
      * @return the polygonsLeft
      */
     public List<List<Integer>> getPolygonsLeft() {
         return this.polygonsLeft;
     }
+
     /**
-     * @param polygonsLeft the polygonsLeft to set
+     * @param polygonsLeft
+     *            the polygonsLeft to set
      */
     public void setPolygonsLeft(List<List<Integer>> polygonsLeft) {
         this.polygonsLeft = polygonsLeft;
     }
+
     /**
      * @return the polygonsRight
      */
     public List<List<Integer>> getPolygonsRight() {
         return this.polygonsRight;
     }
+
     /**
-     * @param polygonsRight the polygonsRight to set
+     * @param polygonsRight
+     *            the polygonsRight to set
      */
     public void setPolygonsRight(List<List<Integer>> polygonsRight) {
         this.polygonsRight = polygonsRight;

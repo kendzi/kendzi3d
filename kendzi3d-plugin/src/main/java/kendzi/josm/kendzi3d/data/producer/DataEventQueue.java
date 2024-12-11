@@ -8,7 +8,7 @@ import kendzi.josm.kendzi3d.data.event.UpdateDataEvent;
 
 public class DataEventQueue {
     // FIXME rewrite it
-    private final LinkedBlockingQueue<DataEvent> eventQueue = new LinkedBlockingQueue<DataEvent>();
+    private final LinkedBlockingQueue<DataEvent> eventQueue = new LinkedBlockingQueue<>();
 
     public synchronized void add(DataEvent dataEvent) {
         addDbEvent(dataEvent);

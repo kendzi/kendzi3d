@@ -22,10 +22,10 @@ public class ModelMetadata {
      * Default width. If not determinate
      */
     Double defaultWidth;
-//    /**
-//     *
-//     */
-//    boolean keepRatio;
+    // /**
+    // *
+    // */
+    // boolean keepRatio;
 
     /**
      * @return the file
@@ -33,32 +33,40 @@ public class ModelMetadata {
     public String getFile() {
         return this.file;
     }
+
     /**
-     * @param pFile the file to set
+     * @param pFile
+     *            the file to set
      */
     public void setFile(String pFile) {
         this.file = pFile;
     }
+
     /**
      * @return the defaultHeight
      */
     public double getDefaultHeight() {
         return this.defaultHeight;
     }
+
     /**
-     * @param pDefaultHeight the defaultHeight to set
+     * @param pDefaultHeight
+     *            the defaultHeight to set
      */
     public void setDefaultHeight(double pDefaultHeight) {
         this.defaultHeight = pDefaultHeight;
     }
+
     /**
      * @return the defaultWidth
      */
     public Double getDefaultWidth() {
         return this.defaultWidth;
     }
+
     /**
-     * @param pDefaultWidth the defaultWidth to set
+     * @param pDefaultWidth
+     *            the defaultWidth to set
      */
     public void setDefaultWidth(Double pDefaultWidth) {
         this.defaultWidth = pDefaultWidth;

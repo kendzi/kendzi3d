@@ -6,17 +6,14 @@
 
 package kendzi.jogl.drawer;
 
-import java.awt.Font;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-
 import kendzi.jogl.Gl2Draw;
-
-import com.jogamp.opengl.util.awt.TextRenderer;
+import kendzi.jogl.util.texture.awt.TextRenderer;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Draws axis labels.
@@ -49,17 +46,17 @@ public class AxisLabels implements Gl2Draw {
     /**
      * Length of x axis labels.
      */
-    private int lenghtX;
+    private final int lenghtX;
 
     /**
      * Length of y axis labels.
      */
-    private int lenghtY;
+    private final int lenghtY;
 
     /**
      * Length of z axis labels.
      */
-    private int lenghtZ;
+    private final int lenghtZ;
 
     private List<TextToRender> textToRender;
 
@@ -97,22 +94,20 @@ public class AxisLabels implements Gl2Draw {
     /**
      * Place numbers along the x- and z-axes at the integer positions.
      *
-     * @param gl
-     *            gl2
      */
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw() {
 
-        gl.glDisable(GLLightingFunc.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         if (textToRender == null) {
             textToRender = createLabels();
         }
 
-        drawAxisText(gl, textToRender);
+        drawAxisText(textToRender);
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 
     /**
@@ -120,18 +115,18 @@ public class AxisLabels implements Gl2Draw {
      */
     private List<TextToRender> createLabels() {
 
-        List<TextToRender> textToRender = new ArrayList<AxisLabels.TextToRender>();
+        List<TextToRender> textToRender = new ArrayList<>();
 
         for (int i = -this.lenghtX / 2; i <= this.lenghtX / 2; i++) {
             // along x-axis
             // drawAxisText(pGl, "x: " + i, i, 0.0f, 0.0f);
-            textToRender.add(new TextToRender("x: " + i, i, 0.0f, 0.0f));
+            textToRender.add(new TextToRender("x: " + i, i, 0.25f, i == 0 ? -0.25f : 0.0f));
         }
 
         for (int i = -this.lenghtY / 2; i <= this.lenghtY / 2; i++) {
             // along z-axis
             // drawAxisText(pGl, "z: " + i, 0.0f, 0.0f, i);
-            textToRender.add(new TextToRender("z: " + i, 0.0f, 0.0f, i));
+            textToRender.add(new TextToRender("z: " + i, i == 0 ? 0.25f : 0.0f, 0.25f, i));
         }
 
         for (int i = -this.lenghtZ / 2; i <= this.lenghtZ / 2; i++) {
@@ -144,11 +139,9 @@ public class AxisLabels implements Gl2Draw {
     }
 
     /**
-     * Draw text at (x,y,z), with the text centered in the x-direction, facing
-     * along the +z axis.
+     * Draw text at (x,y,z), with the text centered in the x-direction, facing along
+     * the +z axis.
      *
-     * @param gl
-     *            gl2
      * @param text
      *            text to draw
      * @param x
@@ -158,7 +151,7 @@ public class AxisLabels implements Gl2Draw {
      * @param z
      *            coordinate z
      */
-    private void drawAxisText(GL2 gl, String text, float x, float y, float z) {
+    private void drawAxisText(String text, float x, float y, float z) {
 
         Rectangle2D dim = this.axisLabelRenderer.getBounds(text);
         float width = (float) dim.getWidth() * SCALE_FACTOR;
@@ -169,15 +162,13 @@ public class AxisLabels implements Gl2Draw {
     }
 
     /**
-     * Draw list of texts described by pText. Each text have (x,y,z), with the
-     * text centered in the x-direction, facing along the +z axis.
+     * Draw list of texts described by pText. Each text have (x,y,z), with the text
+     * centered in the x-direction, facing along the +z axis.
      *
-     * @param gl
-     *            gl2
      * @param text
      *            text to draw
      */
-    private void drawAxisText(GL2 gl, List<TextToRender> text) {
+    private void drawAxisText(List<TextToRender> text) {
 
         this.axisLabelRenderer.begin3DRendering();
 
@@ -193,7 +184,7 @@ public class AxisLabels implements Gl2Draw {
         this.axisLabelRenderer.end3DRendering();
     }
 
-    class TextToRender {
+    static class TextToRender {
         private String text;
         private float x;
         private float y;

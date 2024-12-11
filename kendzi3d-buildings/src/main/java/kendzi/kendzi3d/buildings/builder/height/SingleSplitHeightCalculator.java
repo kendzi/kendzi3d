@@ -3,12 +3,11 @@ package kendzi.kendzi3d.buildings.builder.height;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
 import kendzi.math.geometry.Plane3d;
 import kendzi.math.geometry.line.LinePoints2d;
 import kendzi.math.geometry.line.LineUtil;
 import kendzi.math.geometry.polygon.split.EnrichPolygonalChainUtil;
+import org.joml.Vector2dc;
 
 /**
  * Calculates segments height of walls for roof with only single splitting line
@@ -54,20 +53,19 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
     }
 
     @Override
-    public List<SegmentHeight> height(Point2d p1, Point2d p2) {
+    public List<SegmentHeight> height(Vector2dc p1, Vector2dc p2) {
 
-        List<Point2d> chain = new ArrayList<Point2d>();
+        List<Vector2dc> chain = new ArrayList<>();
         chain.add(p1);
         chain.add(p2);
 
-        List<Point2d> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain,
-                splittingLine);
+        List<Vector2dc> enrichedChain = EnrichPolygonalChainUtil.enrichOpenPolygonalChainByLineCrossing(chain, splittingLine);
 
-        List<SegmentHeight> ret = new ArrayList<SegmentHeight>();
+        List<SegmentHeight> ret = new ArrayList<>();
 
         for (int i = 0; i < enrichedChain.size() - 1; i++) {
-            Point2d begin = enrichedChain.get(i);
-            Point2d end = enrichedChain.get(i + 1);
+            Vector2dc begin = enrichedChain.get(i);
+            Vector2dc end = enrichedChain.get(i + 1);
 
             Plane3d plane = bottomPlane;
             if (isSegmentInFrontOfLine(begin, end, splittingLine)) {
@@ -90,16 +88,16 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
      *            the surface plane
      * @return the height of point where it intersect with the plane
      */
-    private double calcHeight(Point2d point, Plane3d plane) {
+    private double calcHeight(Vector2dc point, Plane3d plane) {
 
-        double x = point.x;
-        double z = -point.y;
+        double x = point.x();
+        double z = -point.y();
 
         return plane.calcYOfPlane(x, z);
 
     }
 
-    private boolean isSegmentInFrontOfLine(Point2d begin, Point2d end, LinePoints2d line) {
+    private boolean isSegmentInFrontOfLine(Vector2dc begin, Vector2dc end, LinePoints2d line) {
 
         double beginDet = LineUtil.matrixDet(line.getP1(), line.getP2(), begin);
         double endDet = LineUtil.matrixDet(line.getP1(), line.getP2(), end);
@@ -115,10 +113,7 @@ public class SingleSplitHeightCalculator implements HeightCalculator {
         if (beginDet > 0 && (endDet >= 0)) {
             return true;
         }
-        if (endDet > 0 && (beginDet >= 0)) {
-            return true;
-        }
-        return false;
+        return endDet > 0 && (beginDet >= 0);
     }
 
     private static boolean equalZero(double number, double epsilon) {

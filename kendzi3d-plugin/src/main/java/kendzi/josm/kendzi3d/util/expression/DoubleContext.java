@@ -26,16 +26,14 @@ import kendzi.josm.kendzi3d.util.expression.fun.WayNodeDirectionFunction;
  */
 public class DoubleContext implements CompileContext, FunctionBuilder {
 
-
     @Override
     public Set<String> getFunctionsNames() {
-        Set<String> fun = new HashSet<String>();
+        Set<String> fun = new HashSet<>();
         fun.add("scaleHeight");
         fun.add("normalHeight");
         fun.add("wayNodeDirection");
         return fun;
     }
-
 
     @Override
     public SimpleFunction build(String pName, String[] args) {

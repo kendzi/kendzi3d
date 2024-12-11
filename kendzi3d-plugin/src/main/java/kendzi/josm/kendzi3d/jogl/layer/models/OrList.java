@@ -2,8 +2,8 @@ package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import java.util.List;
 
-import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
  * Or match on list.
@@ -15,7 +15,8 @@ public class OrList extends Match {
     private final List<Match> lhs;
 
     /**
-     * @param lhs list of match
+     * @param lhs
+     *            list of match
      */
     public OrList(List<Match> lhs) {
         this.lhs = lhs;
@@ -33,11 +34,11 @@ public class OrList extends Match {
 
     @Override
     public String toString() {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (Match m : this.lhs) {
-            ret += " || " + m;
+            ret.append(" || ").append(m);
         }
-        return ret;
+        return ret.toString();
     }
 
     /**

@@ -8,10 +8,10 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.type;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.Measurement;
 import kendzi.kendzi3d.buildings.builder.roof.shape.measurement.MeasurementKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Roof type 2.2.
@@ -23,7 +23,7 @@ public class RoofType2v2 extends RoofType2v3 {
 
     /** Log. */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(RoofType2v2.class);
+    private static final Logger log = LoggerFactory.getLogger(RoofType2v2.class);
 
     @Override
     protected double getHeight2(Map<MeasurementKey, Measurement> pMeasurements) {

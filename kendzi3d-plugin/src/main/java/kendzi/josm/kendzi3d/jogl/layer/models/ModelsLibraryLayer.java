@@ -6,6 +6,7 @@
 
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
+import com.google.inject.Inject;
 import generated.NodeModel;
 import generated.WayNodeModel;
 
@@ -24,16 +25,14 @@ import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
 import kendzi.kendzi3d.resource.inter.ResourceService;
 import kendzi.kendzi3d.world.WorldObject;
 import kendzi.kendzi3d.world.quad.layer.Layer;
-
-import org.apache.log4j.Logger;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler;
-import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-
-import com.google.inject.Inject;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
  * Layer allow loading custom models.
@@ -44,12 +43,12 @@ import com.google.inject.Inject;
 public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(ModelsLibraryLayer.class);
+    private static final Logger log = LogManager.getLogger(ModelsLibraryLayer.class);
 
     /**
      * List of model definitions.
      */
-    private List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
+    private List<NodeModelConf> nodeModelsList = new ArrayList<>();
 
     /**
      * Model renderer.
@@ -91,7 +90,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
     }
 
     private void loadData() {
-        List<NodeModelConf> nodeModelsList = new ArrayList<NodeModelConf>();
+        List<NodeModelConf> nodeModelsList = new ArrayList<>();
         for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
             List<NodeModel> nodeModels = modelsLibraryService.findAllNodeModels(configurationFile);
 
@@ -109,7 +108,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
         this.nodeModelsList = nodeModelsList;
 
-        List<WayNodeModelConf> wayNodeModelsList = new ArrayList<WayNodeModelConf>();
+        List<WayNodeModelConf> wayNodeModelsList = new ArrayList<>();
 
         for (String configurationFile : modelsLibraryService.findAllConfigurationFiles()) {
             List<WayNodeModel> wayNodeModels = modelsLibraryService.findAllWayNodeModels(configurationFile);
@@ -126,11 +125,11 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
             }
         }
 
-        wayNodeModelsMap = new HashMap<String, List<WayNodeModelConf>>();
+        wayNodeModelsMap = new HashMap<>();
         for (WayNodeModelConf wayNodeModelConf : wayNodeModelsList) {
             String key = wayNodeModelConf.getMatcher().toString();
             if (!wayNodeModelsMap.containsKey(key)) {
-                wayNodeModelsMap.put(key, new ArrayList<WayNodeModelConf>());
+                wayNodeModelsMap.put(key, new ArrayList<>());
             }
             wayNodeModelsMap.get(key).add(wayNodeModelConf);
         }
@@ -138,7 +137,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
     @Override
     public Match getNodeMatcher() {
-        List<Match> matchersList = new ArrayList<SearchCompiler.Match>();
+        List<Match> matchersList = new ArrayList<>();
         for (NodeModelConf nodeModel : nodeModelsList) {
 
             matchersList.add(nodeModel.getMatcher());
@@ -175,9 +174,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
                     if (nodeModel.getMatcher().match(primitive)) {
 
-                        getWorldObjects().add(
-                                new kendzi.josm.kendzi3d.jogl.model.PointModel((Node) primitive, nodeModel, perspective,
-                                        modelRender, modelCacheService));
+                        getWorldObjects().add(new kendzi.josm.kendzi3d.jogl.model.PointModel((Node) primitive, nodeModel,
+                                perspective, modelRender, modelCacheService));
                     }
                 }
 
@@ -211,9 +209,8 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
 
                             List<Integer> selectedNodes = nodeFilter(nodeModel.getFilter(), (Way) primitive);
                             if (!selectedNodes.isEmpty()) {
-                                getWorldObjects().add(
-                                        new kendzi.josm.kendzi3d.jogl.model.WayNodeModel((Way) primitive, selectedNodes,
-                                                nodeModel, perspective, modelRender, modelCacheService));
+                                getWorldObjects().add(new kendzi.josm.kendzi3d.jogl.model.WayNodeModel((Way) primitive,
+                                        selectedNodes, nodeModel, perspective, modelRender, modelCacheService));
                             }
                         }
                     }
@@ -241,7 +238,7 @@ public class ModelsLibraryLayer implements Layer, ModelsLibraryDataChangeEvent {
      * @return indexes of nodes on way
      */
     private List<Integer> nodeFilter(Match filter, Way way) {
-        List<Integer> n = new ArrayList<Integer>();
+        List<Integer> n = new ArrayList<>();
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);

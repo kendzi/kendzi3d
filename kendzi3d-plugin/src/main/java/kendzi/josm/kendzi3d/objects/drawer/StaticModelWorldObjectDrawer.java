@@ -1,16 +1,14 @@
 package kendzi.josm.kendzi3d.objects.drawer;
 
 import javax.inject.Inject;
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import javax.vecmath.Point3d;
 
 import kendzi.jogl.Gl2Draw;
 import kendzi.jogl.model.geometry.Model;
 import kendzi.jogl.model.render.ModelRender;
 import kendzi.kendzi3d.editor.drawer.HighlightDrawer;
 import kendzi.kendzi3d.world.StaticModelWorldObject;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 
 public class StaticModelWorldObjectDrawer {
 
@@ -19,33 +17,33 @@ public class StaticModelWorldObjectDrawer {
     @Inject
     private ModelRender modelRender;
 
-    public void draw(GL2 gl, StaticModelWorldObject modelObject, boolean selected) {
+    public void draw(StaticModelWorldObject modelObject, boolean selected) {
 
-        gl.glPushMatrix();
+        GL11.glPushMatrix();
 
         // global position
-        Point3d position = modelObject.getPosition();
+        Vector3dc position = modelObject.getPosition();
         Model model = modelObject.getModel();
 
         // move to global space
-        gl.glTranslated(position.x, position.y, position.z);
+        GL11.glTranslated(position.x(), position.y(), position.z());
 
         if (selected) {
             modelGl2Draw.setModel(model);
             modelGl2Draw.setModelRender(modelRender);
 
             modelRender.resetMaterials();
-            // gl.glColor4f(0.8f, 0.8f, 0.8f, 1);
-            gl.glEnable(GLLightingFunc.GL_LIGHTING);
-            gl.glEnable(GL.GL_TEXTURE_2D);
+            // GL11.glColor4f(0.8f, 0.8f, 0.8f, 1);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-            HighlightDrawer.drawHighlight(modelGl2Draw, gl);
+            HighlightDrawer.drawHighlight(modelGl2Draw);
 
         } else {
-            modelRender.render(gl, model);
+            modelRender.render(model);
         }
 
-        gl.glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     private static class ColoredModelGl2Draw implements Gl2Draw {
@@ -55,8 +53,8 @@ public class StaticModelWorldObjectDrawer {
         private Model model;
 
         @Override
-        public void draw(GL2 gl) {
-            modelRender.renderRaw(gl, model);
+        public void draw() {
+            modelRender.renderRaw(model);
         }
 
         /**

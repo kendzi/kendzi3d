@@ -28,7 +28,7 @@ public class ColorUtil {
 
         if (color != null) {
             color = brighter(color);
-            //color = color.brighter().brighter().brighter().brighter();
+            // color = color.brighter().brighter().brighter().brighter();
         }
 
         if (color == null) {
@@ -55,8 +55,9 @@ public class ColorUtil {
     }
 
     /**
-     * Returns a Color based on 'colorName' which must be one of the predefined colors in
-     * java.awt.Color. Returns null if colorName is not valid.
+     * Returns a Color based on 'colorName' which must be one of the predefined
+     * colors in java.awt.Color. Returns null if colorName is not valid.
+     * 
      * @param colorName
      * @return
      */

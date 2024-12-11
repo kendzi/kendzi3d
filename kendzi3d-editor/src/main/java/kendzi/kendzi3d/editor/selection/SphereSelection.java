@@ -7,12 +7,11 @@ package kendzi.kendzi3d.editor.selection;
 
 import java.util.List;
 
-import javax.vecmath.Point3d;
-
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 import kendzi.kendzi3d.editor.selection.event.SelectEvent;
 import kendzi.math.geometry.ray.Ray3d;
 import kendzi.math.geometry.ray.Ray3dUtil;
+import org.joml.Vector3dc;
 
 /**
  * Implementation of selectable element in shape of sphere.
@@ -22,7 +21,7 @@ public abstract class SphereSelection implements Selection {
     /**
      * Sphere center.
      */
-    private final Point3d center;
+    private final Vector3dc center;
 
     /**
      * Sphere radius.
@@ -37,13 +36,13 @@ public abstract class SphereSelection implements Selection {
      * @param radius
      *            sphere radius
      */
-    public SphereSelection(Point3d center, double radius) {
+    public SphereSelection(Vector3dc center, double radius) {
         super();
         this.center = center;
         this.radius = radius;
     }
 
-    public Point3d getCenter() {
+    public Vector3dc getCenter() {
         return center;
     }
 

@@ -12,20 +12,18 @@ package kendzi.jogl.model.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import kendzi.jogl.model.geometry.material.Material;
-
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class Model {
 
     /**
      * Model meshs.
      */
-    public Mesh [] mesh;
+    public Mesh[] mesh;
 
-    public List<Material> materials = new ArrayList<Material>();
+    public List<Material> materials = new ArrayList<>();
 
     /**
      * Model use textures.
@@ -65,11 +63,11 @@ public class Model {
     /** FIXME Bounds of the model */
     protected Bounds bounds = new Bounds();
     /** FIXME Center point of the model */
-    private Point3d centerPoint = new Point3d (0.0f, 0.0f, 0.0f);
+    private Vector3dc centerPoint = new Vector3d(0.0f, 0.0f, 0.0f);
 
-    public Vector3d scale = new Vector3d(1d, 1d, 1d);
+    public Vector3dc scale = new Vector3d(1d, 1d, 1d);
 
-    //FIXME
+    // FIXME
     int numberOfMaterials;
 
     /**
@@ -87,8 +85,8 @@ public class Model {
      */
     public boolean drawEdges;
 
-    //TODO drawObjectBounds
-    //TODO drawModelBounds
+    // TODO drawObjectBounds
+    // TODO drawModelBounds
 
     /**
      * Default constructor.
@@ -100,7 +98,8 @@ public class Model {
     /**
      * Constructor.
      *
-     * @param pName model name
+     * @param pName
+     *            model name
      */
     public Model(String pName) {
         // FIXME !
@@ -115,7 +114,8 @@ public class Model {
     }
 
     /**
-     * @param pSource the source to set
+     * @param pSource
+     *            the source to set
      */
     public void setSource(String pSource) {
         this.source = pSource;
@@ -129,7 +129,8 @@ public class Model {
     }
 
     /**
-     * @param pBounds the bounds to set
+     * @param pBounds
+     *            the bounds to set
      */
     public void setBounds(Bounds pBounds) {
         this.bounds = pBounds;
@@ -138,14 +139,15 @@ public class Model {
     /**
      * @return the centerPoint
      */
-    public Point3d getCenterPoint() {
+    public Vector3dc getCenterPoint() {
         return this.centerPoint;
     }
 
     /**
-     * @param pCenterPoint the centerPoint to set
+     * @param pCenterPoint
+     *            the centerPoint to set
      */
-    public void setCenterPoint(Point3d pCenterPoint) {
+    public void setCenterPoint(Vector3dc pCenterPoint) {
         this.centerPoint = pCenterPoint;
     }
 
@@ -153,6 +155,7 @@ public class Model {
     public void addMaterial(Material pMaterial) {
         this.materials.add(pMaterial);
     }
+
     // FIXME Get material
     public Material getMaterial(int pIndex) {
         return this.materials.get(pIndex);
@@ -162,7 +165,7 @@ public class Model {
      * @return the numberOfMaterials
      */
     public int getNumberOfMaterials() {
-        return this.materials.size(); //this.numberOfMaterials;
+        return this.materials.size(); // this.numberOfMaterials;
     }
 
     /**
@@ -173,7 +176,8 @@ public class Model {
     }
 
     /**
-     * @param pUseTexture the useTexture to set
+     * @param pUseTexture
+     *            the useTexture to set
      */
     public void setUseTexture(boolean pUseTexture) {
         this.useTexture = pUseTexture;
@@ -187,7 +191,8 @@ public class Model {
     }
 
     /**
-     * @param pUseTexture the useTextureAlpha to set
+     * @param pUseTextureAlpha
+     *            the useTextureAlpha to set
      */
     public void setUseTextureAlpha(boolean pUseTextureAlpha) {
         this.useTextureAlpha = pUseTextureAlpha;
@@ -201,7 +206,8 @@ public class Model {
     }
 
     /**
-     * @param pUseCullFaces the useCullFaces to set
+     * @param pUseCullFaces
+     *            the useCullFaces to set
      */
     public void setUseCullFaces(boolean pUseCullFaces) {
         this.useCullFaces = pUseCullFaces;
@@ -215,7 +221,8 @@ public class Model {
     }
 
     /**
-     * @param pUseTwoSidedLighting the useTwoSidedLighting to set
+     * @param pUseTwoSidedLighting
+     *            the useTwoSidedLighting to set
      */
     public void setUseTwoSidedLighting(boolean pUseTwoSidedLighting) {
         this.useTwoSided = pUseTwoSidedLighting;
@@ -229,7 +236,8 @@ public class Model {
     }
 
     /**
-     * @param pUseLight the useLight to set
+     * @param pUseLight
+     *            the useLight to set
      */
     public void setUseLight(boolean pUseLight) {
         this.useLight = pUseLight;
@@ -243,7 +251,8 @@ public class Model {
     }
 
     /**
-     * @param pUseScale the useScale to set
+     * @param pUseScale
+     *            the useScale to set
      */
     public void setUseScale(boolean pUseScale) {
         this.useScale = pUseScale;
@@ -257,7 +266,8 @@ public class Model {
     }
 
     /**
-     * @param pDrawNormals the drawNormals to set
+     * @param pDrawNormals
+     *            the drawNormals to set
      */
     public void setDrawNormals(boolean pDrawNormals) {
         this.drawNormals = pDrawNormals;
@@ -271,7 +281,8 @@ public class Model {
     }
 
     /**
-     * @param pDrawVertex the drawVertex to set
+     * @param pDrawVertex
+     *            the drawVertex to set
      */
     public void setDrawVertex(boolean pDrawVertex) {
         this.drawVertex = pDrawVertex;
@@ -285,13 +296,11 @@ public class Model {
     }
 
     /**
-     * @param pDrawEdges the drawEdges to set
+     * @param pDrawEdges
+     *            the drawEdges to set
      */
     public void setDrawEdges(boolean pDrawEdges) {
         this.drawEdges = pDrawEdges;
     }
-
-
-
 
 }

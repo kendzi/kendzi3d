@@ -4,9 +4,10 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point2d;
-
-import org.apache.log4j.Logger;
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Based on:
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
 public class Triangulate {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(Triangulate.class);
+    private static final Logger log = LoggerFactory.getLogger(Triangulate.class);
 
     public static final float EPSILON = 0.0000000001f;
 
@@ -30,15 +31,14 @@ public class Triangulate {
      * @return area of polygon
      * @see kendzi.math.geometry.polygon.PolygonUtil#area(List)
      */
-    public static float area(List<Point2d> polygon) {
+    public static float area(List<Vector2dc> polygon) {
 
         int n = polygon.size();
 
         float A = 0.0f;
 
         for (int p = n - 1, q = 0; q < n; p = q++) {
-            A += polygon.get(p).x * polygon.get(q).y
-                    - polygon.get(q).x * polygon.get(p).y;
+            A += polygon.get(p).x() * polygon.get(q).y() - polygon.get(q).x() * polygon.get(p).y();
         }
         return A * 0.5f;
     }
@@ -50,25 +50,23 @@ public class Triangulate {
      *            the polygon
      * @return area of polygon
      */
-    public static float area(Point2D.Double [] polygon) {
+    public static float area(Point2D.Double[] polygon) {
 
         int n = polygon.length;
 
         float A = 0.0f;
 
         for (int p = n - 1, q = 0; q < n; p = q++) {
-            A += polygon[p].x * polygon[q].y
-                    - polygon[q].x * polygon[p].y;
+            A += polygon[p].x * polygon[q].y - polygon[q].x * polygon[p].y;
         }
         return A * 0.5f;
     }
 
     /*
-     * InsideTriangle decides if a point P is Inside of the triangle defined by
-     * A, B, C.
+     * InsideTriangle decides if a point P is Inside of the triangle defined by A,
+     * B, C.
      */
-    static boolean insideTriangle(double Ax, double Ay, double Bx, double By,
-            double Cx, double Cy, double Px, double Py)
+    static boolean insideTriangle(double Ax, double Ay, double Bx, double By, double Cx, double Cy, double Px, double Py)
 
     {
         double ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
@@ -92,21 +90,21 @@ public class Triangulate {
         bCROSScp = bx * cpy - by * cpx;
 
         return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
-    };
+    }
 
-    static boolean snip(List<Point2d> contour, int u, int v, int w, int n,/* ??? */
+    static boolean snip(List<Vector2dc> contour, int u, int v, int w, int n, /* ??? */
             int[] V) {
         int p;
         double Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
-        Ax = contour.get(V[u]).x;
-        Ay = contour.get(V[u]).y;
+        Ax = contour.get(V[u]).x();
+        Ay = contour.get(V[u]).y();
 
-        Bx = contour.get(V[v]).x;
-        By = contour.get(V[v]).y;
+        Bx = contour.get(V[v]).x();
+        By = contour.get(V[v]).y();
 
-        Cx = contour.get(V[w]).x;
-        Cy = contour.get(V[w]).y;
+        Cx = contour.get(V[w]).x();
+        Cy = contour.get(V[w]).y();
 
         if (EPSILON > (Bx - Ax) * (Cy - Ay) - (By - Ay) * (Cx - Ax)) {
             return false;
@@ -116,8 +114,8 @@ public class Triangulate {
             if (p == u || p == v || p == w) {
                 continue;
             }
-            Px = contour.get(V[p]).x;
-            Py = contour.get(V[p]).y;
+            Px = contour.get(V[p]).x();
+            Py = contour.get(V[p]).y();
             if (insideTriangle(Ax, Ay, Bx, By, Cx, Cy, Px, Py)) {
                 return false;
             }
@@ -126,23 +124,19 @@ public class Triangulate {
         return true;
     }
 
-    public List<Point2d> removeClosePoints1(List<Point2d> pPoints) {
+    public List<Vector2dc> removeClosePoints1(List<Vector2dc> pPoints) {
 
         return removeClosePoints(pPoints, EPSILON);
     }
 
-
-
-    public static List<Point2d> removeClosePoints(List<Point2d> points) {
+    public static List<Vector2dc> removeClosePoints(List<Vector2dc> points) {
         // XXX change to point2d !
         return removeClosePoints(points, EPSILON);
     }
 
-
-    public static List<Point2d> removeClosePoints(List<Point2d> points,
-            double epsilon) {
+    public static List<Vector2dc> removeClosePoints(List<Vector2dc> points, double epsilon) {
         // XXX change to point2d
-        ArrayList<Point2d> ret = new ArrayList<Point2d>();
+        ArrayList<Vector2dc> ret = new ArrayList<>();
 
         if (points.size() == 0) {
             return ret;
@@ -156,13 +150,13 @@ public class Triangulate {
 
         double sqrtEpsilon = epsilon * epsilon;
 
-        Point2d lastPoint = points.get(0);
+        Vector2dc lastPoint = points.get(0);
         int max = points.size();
         for (int i = 1; i < max; i++) {
-            Point2d p = points.get(i);
+            Vector2dc p = points.get(i);
 
-            double px = p.x - lastPoint.x;
-            double py = p.y - lastPoint.y;
+            double px = p.x() - lastPoint.x();
+            double py = p.y() - lastPoint.y();
 
             double sqrtDistance = px * px + py * py;
 
@@ -174,11 +168,11 @@ public class Triangulate {
             }
         }
         // last point we have to chack from both sides
-        Point2d firstPoint = points.get(0);
+        Vector2dc firstPoint = points.get(0);
         lastPoint = points.get(ret.size() - 1);
 
-        double px = firstPoint.x - lastPoint.x;
-        double py = firstPoint.y - lastPoint.y;
+        double px = firstPoint.x() - lastPoint.x();
+        double py = firstPoint.y() - lastPoint.y();
 
         double sqrtDistance = px * px + py * py;
 
@@ -188,19 +182,15 @@ public class Triangulate {
         return ret;
     }
 
+    public static List<Vector2dc> process(List<Vector2dc> contour) {
 
-
-
-    public static List<Point2d> process(List<Point2d> contour) {
-
-        List<Point2d> result = new ArrayList<Point2d>();
+        List<Vector2dc> result = new ArrayList<>();
         process(contour, result);
 
         return result;
     }
 
-    public static boolean process(List<Point2d> contour,
-            List<Point2d> result) {
+    public static boolean process(List<Vector2dc> contour, List<Vector2dc> result) {
         /* allocate and initialize list of Vertices in polygon */
 
         int n = contour.size();
@@ -280,25 +270,23 @@ public class Triangulate {
         return true;
     }
 
-    private static void logBadPolygon(List<Point2d> contour) {
-        String msg = " Bad polygon triangulation faild: \n";
-        for (Point2d point2d : contour) {
-            msg += "points.add(new Point2d("+point2d.x+", " + point2d.y+"); \n";
+    private static void logBadPolygon(List<Vector2dc> contour) {
+        StringBuilder msg = new StringBuilder(" Bad polygon triangulation faild: \n");
+        for (Vector2dc point2d : contour) {
+            msg.append("points.add(new Vector2d(").append(point2d.x()).append(", ").append(point2d.y()).append("); \n");
         }
 
-        log.error(msg);
+        log.error(msg.toString());
     }
 
-    public List<Integer> processIndex(List<Point2d> pContour
-            ) {
+    public List<Integer> processIndex(List<Vector2dc> pContour) {
 
-
-        List<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ArrayList<>();
 
         int size = pContour.size();
         if (size > 1) {
 
-            if (pContour.get(0).equals(pContour.get(pContour.size()-1))) {
+            if (pContour.get(0).equals(pContour.get(pContour.size() - 1))) {
                 // removing dubled point.
                 log.error("triangulation error start and end point is dubled");
                 size--;
@@ -306,17 +294,15 @@ public class Triangulate {
         }
 
         /* allocate and initialize list of Vertices in polygon */
-        List<Point2d> contour = new ArrayList<Point2d>();
+        List<Vector2dc> contour = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            Point2d p = pContour.get(i);
-            contour.add(new Point2d(p.x, p.y));
+            Vector2dc p = pContour.get(i);
+            contour.add(new Vector2d(p.x(), p.y()));
         }
-
-
 
         int n = contour.size();
         if (n < 3) {
-            //			return false;
+            // return false;
             throw new RuntimeException("not enouth vertex. Put at last 3");
         }
 
@@ -343,11 +329,12 @@ public class Triangulate {
             /* if we loop, it is probably a non-simple polygon */
             if (0 >= count--) {
                 // ** Triangulate: ERROR - probable bad polygon!
-                //XXX	throw new RuntimeException(" Triangulate: ERROR - probable bad polygon!");
-                //FIXME
+                // XXX throw new RuntimeException(" Triangulate: ERROR - probable bad
+                // polygon!");
+                // FIXME
                 logBadPolygon(contour);
                 return null;
-                //				return false;
+                // return false;
             }
 
             /* three consecutive vertices in current polygon, <u,v,w> */
@@ -373,13 +360,12 @@ public class Triangulate {
                 c = V[w];
 
                 /* output Triangle */
-                //				result.add(contour.get(a));
-                //				result.add(contour.get(b));
-                //				result.add(contour.get(c));
+                // result.add(contour.get(a));
+                // result.add(contour.get(b));
+                // result.add(contour.get(c));
                 result.add(a);
                 result.add(b);
                 result.add(c);
-
 
                 m++;
 

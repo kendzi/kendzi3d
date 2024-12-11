@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class Context {
 
-    private Map<String, Object> variables = new HashMap<String, Object>();
+    private final Map<String, Object> variables = new HashMap<>();
 
     /**
      * @return variables
@@ -29,16 +29,23 @@ public class Context {
         return this.variables;
     }
 
-    /** Add variable.
-     * @param pName variable name
-     * @param pValue variable value
+    /**
+     * Add variable.
+     * 
+     * @param pName
+     *            variable name
+     * @param pValue
+     *            variable value
      */
     public void putVariable(String pName, Object pValue) {
         this.variables.put(pName, pValue);
     }
 
-    /** Get variable.
-     * @param pName variable name
+    /**
+     * Get variable.
+     * 
+     * @param pName
+     *            variable name
      * @return variable value
      */
     public Object getVariable(String pName) {

@@ -10,9 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-
 import kendzi.josm.kendzi3d.data.RebuildableWorldObject;
 import kendzi.josm.kendzi3d.jogl.model.export.ExportModel;
 import kendzi.josm.kendzi3d.jogl.model.frame.GlobalFrame;
@@ -22,7 +19,9 @@ import kendzi.kendzi3d.editor.selection.Selectable;
 import kendzi.kendzi3d.editor.selection.Selection;
 import kendzi.kendzi3d.josm.model.perspective.Perspective;
 import kendzi.kendzi3d.world.AbstractWorldObject;
-
+import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector3d;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -34,11 +33,11 @@ import org.openstreetmap.josm.data.preferences.BooleanProperty;
  * @author Tomasz Kedziora (Kendzi)
  *
  */
-public abstract class AbstractModel extends AbstractWorldObject implements Selectable, DrawableModel, ModelFrame, GlobalFrame,
-OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
+public abstract class AbstractModel extends AbstractWorldObject
+        implements Selectable, DrawableModel, ModelFrame, GlobalFrame, OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
-    protected static final BooleanProperty PREFER_TWO_SIDED =
-            new BooleanProperty("kendzi3d.models.preferTwoSidedLightingOverFaceCulling", true);
+    protected static final BooleanProperty PREFER_TWO_SIDED = new BooleanProperty(
+            "kendzi3d.models.preferTwoSidedLightingOverFaceCulling", true);
 
     protected double radius;
 
@@ -53,13 +52,13 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     public AbstractModel(Perspective perspective) {
         this.perspective = perspective;
-        setPoint(new Point3d());
+        setPoint(new Vector3d());
     }
 
     @Deprecated
     public AbstractModel(Way way, Perspective perspective) {
         this.perspective = perspective;
-        setPoint(new Point3d());
+        setPoint(new Vector3d());
 
         calcModelCenter(way);
         calcModelRadius(way);
@@ -67,7 +66,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
     }
 
     public AbstractModel() {
-        setPoint(new Point3d());
+        setPoint(new Vector3d());
     }
 
     /**
@@ -81,13 +80,13 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
         double centerY = 0;
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
-            Point2d point = perspective.calcPoint(node);
+            Vector2dc point = perspective.calcPoint(node);
 
-            centerX += point.x;
-            centerY += point.y;
+            centerX += point.x();
+            centerY += point.y();
         }
 
-        setPoint(new Point3d(centerX / way.getNodesCount(), 0, -(centerY / way.getNodesCount())));
+        setPoint(new Vector3d(centerX / way.getNodesCount(), 0, -(centerY / way.getNodesCount())));
     }
 
     /**
@@ -100,11 +99,11 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
         double centerX = 0;
         double centerY = 0;
         for (Node node : pNodes) {
-            Point2d point = perspective.calcPoint(node);
-            centerX += point.x;
-            centerY += point.y;
+            Vector2dc point = perspective.calcPoint(node);
+            centerX += point.x();
+            centerY += point.y();
         }
-        setPoint(new Point3d(centerX / pNodes.size(), 0, -(centerY / pNodes.size())));
+        setPoint(new Vector3d(centerX / pNodes.size(), 0, -(centerY / pNodes.size())));
 
     }
 
@@ -118,15 +117,15 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
         double maxRadius = 0;
 
-        double x = getPoint().x;
-        double y = -getPoint().z;
+        double x = getPoint().x();
+        double y = -getPoint().z();
 
         for (int i = 0; i < way.getNodesCount(); i++) {
             Node node = way.getNode(i);
-            Point2d point = perspective.calcPoint(node);
+            Vector2dc point = perspective.calcPoint(node);
 
-            double dx = x - point.x;
-            double dy = y - point.y;
+            double dx = x - point.x();
+            double dy = y - point.y();
 
             double radius = dx * dx + dy * dy;
             if (radius > maxRadius) {
@@ -139,13 +138,13 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
     @Override
     @Deprecated
     public double getX() {
-        return getPoint().x;
+        return getPoint().x();
     }
 
     @Override
     @Deprecated
     public double getY() {
-        return -getPoint().z;
+        return -getPoint().z();
     }
 
     @Override
@@ -187,6 +186,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalX()
      */
     @Override
@@ -197,6 +197,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see kendzi.josm.kendzi3d.jogl.model.tmp.GlobalFrame#getGlobalY()
      */
     @Override
@@ -207,13 +208,14 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     /*
      * (non-Javadoc)
+     * 
      * @see
      * kendzi.josm.kendzi3d.jogl.model.tmp.ModelFrame#toModelFrame(javax.vecmath
      * .Point2d)
      */
     @Override
-    public Point2d toModelFrame(Node pNode) {
-        Point2d calcPoint = perspective.calcPoint(pNode);
+    public Vector2d toModelFrame(Node pNode) {
+        Vector2d calcPoint = perspective.calcPoint(pNode);
         calcPoint.x -= getGlobalX();
         calcPoint.y -= getGlobalY();
         return calcPoint;
@@ -227,7 +229,7 @@ OsmPrimitiveRender, ExportModel, RebuildableWorldObject {
 
     @Override
     public List<Selection> getSelection() {
-        return Collections.<Selection> emptyList();
+        return Collections.emptyList();
     }
 
 }

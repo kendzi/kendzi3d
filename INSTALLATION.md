@@ -51,7 +51,7 @@ Right click on project kendzi3d-parent > Maven > Update project... > Select All 
 ```
 Menu > Run > Run Configurations... > Java Application > New
 ```
- 
+
 ```
 Project: kendzi3d-plugin
 Main class: org.openstreetmap.josm.gui.MainApplication
@@ -73,6 +73,3 @@ F12 > Plugins > Kendzi3d
 
 * optional sources for JOSM and kendzi-math can be download. But they are not required to compile and run application
 * optional check if egit is correctly attached to project if not right click on project team > git and follow wizard
-
-
-

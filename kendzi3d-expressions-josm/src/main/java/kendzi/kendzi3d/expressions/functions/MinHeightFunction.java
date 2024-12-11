@@ -2,7 +2,6 @@ package kendzi.kendzi3d.expressions.functions;
 
 import kendzi.josm.kendzi3d.util.ModelUtil;
 import kendzi.kendzi3d.expressions.Context;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class MinHeightFunction extends OneParamFunction implements NamedFunction {

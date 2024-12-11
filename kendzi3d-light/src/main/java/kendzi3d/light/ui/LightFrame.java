@@ -11,8 +11,6 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,25 +25,22 @@ import javax.swing.border.LineBorder;
 
 public class LightFrame extends JFrame {
 
-    private JPanel contentPane;
-    private JTextField directionText;
-    private JTextField angleText;
-    private JLabel lblAmbientColor;
-    private JLabel lblDiffuseColor;
+    private final JPanel contentPane;
+    private final JTextField directionText;
+    private final JTextField angleText;
+    private final JLabel lblAmbientColor;
+    private final JLabel lblDiffuseColor;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    LightFrame frame = new LightFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                LightFrame frame = new LightFrame();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -65,31 +60,15 @@ public class LightFrame extends JFrame {
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
         JButton btnOk = new JButton("Save");
-        btnOk.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onOk();
-            }
-
-        });
+        btnOk.addActionListener(e -> onOk());
 
         JButton btnDefault = new JButton("Default");
-        btnDefault.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onDefault();
-            }
-        });
+        btnDefault.addActionListener(e -> onDefault());
         buttonPanel.add(btnDefault);
         buttonPanel.add(btnOk);
 
         JButton btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(e -> dispose());
         buttonPanel.add(btnCancel);
 
         JPanel imagePanel = new JPanel();
@@ -111,13 +90,7 @@ public class LightFrame extends JFrame {
         panel.setLayout(gbl_panel);
 
         JButton btnAmbientColor = new JButton("Select ambient");
-        btnAmbientColor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onSelectAmbientColor();
-            }
-
-        });
+        btnAmbientColor.addActionListener(e -> onSelectAmbientColor());
 
         JLabel lblDirection = new JLabel("Direction");
         GridBagConstraints gbc_lblDirection = new GridBagConstraints();
@@ -177,12 +150,7 @@ public class LightFrame extends JFrame {
         panel.add(lblAmbientColor, gbc_lblAmbientColor);
 
         JButton btnSelectDiffuseColor = new JButton("Select diffuse");
-        btnSelectDiffuseColor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onSelectDiffuseColor();
-            }
-        });
+        btnSelectDiffuseColor.addActionListener(e -> onSelectDiffuseColor());
         GridBagConstraints gbc_btnSelectDiffuseColor = new GridBagConstraints();
         gbc_btnSelectDiffuseColor.anchor = GridBagConstraints.NORTH;
         gbc_btnSelectDiffuseColor.fill = GridBagConstraints.HORIZONTAL;

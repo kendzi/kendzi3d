@@ -15,11 +15,7 @@ public class StringUtil {
             return true;
         }
 
-        if (!"".equals(pString.trim())) {
-            return false;
-        }
-
-        return true;
+        return "".equals(pString.trim());
     }
 
     public static String blankOnNull(String pStr) {

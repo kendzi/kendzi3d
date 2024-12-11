@@ -8,17 +8,16 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.JosmAction;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.jogl.texture.TextureCacheService;
 import kendzi.jogl.texture.library.TextureLibraryStorageService;
 import kendzi.josm.kendzi3d.jogl.layer.models.ModelsLibraryLayer;
 import kendzi.josm.kendzi3d.service.ModelCacheService;
 import kendzi.kendzi3d.models.library.service.ModelsLibraryService;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * Clean up action.
@@ -36,27 +35,27 @@ public class CleanUpAction extends JosmAction {
     /**
      * Texture cache service.
      */
-    private TextureCacheService textureCacheService;
+    private final TextureCacheService textureCacheService;
 
     /**
      * Texture library service.
      */
-    private TextureLibraryStorageService textureLibraryStorageService;
+    private final TextureLibraryStorageService textureLibraryStorageService;
 
     /**
      * Model cache service.
      */
-    private ModelCacheService modelCacheService;
+    private final ModelCacheService modelCacheService;
 
     /**
      * Model library service.
      */
-    private ModelsLibraryService modelsLibraryService;
+    private final ModelsLibraryService modelsLibraryService;
 
     /**
      * Models library layer.
      */
-    private ModelsLibraryLayer modelsLibraryLayer;
+    private final ModelsLibraryLayer modelsLibraryLayer;
 
     /**
      * Constructor.

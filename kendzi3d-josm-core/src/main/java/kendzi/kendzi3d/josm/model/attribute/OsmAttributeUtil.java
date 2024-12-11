@@ -1,9 +1,7 @@
 package kendzi.kendzi3d.josm.model.attribute;
 
 import kendzi.util.StringUtil;
-
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-
 
 public class OsmAttributeUtil {
 
@@ -21,17 +19,14 @@ public class OsmAttributeUtil {
         }
         String valu = primitive.get(key.getKey());
 
-        if (StringUtil.isBlankOrNull(valu)) {
-            return false;
-        }
-        return true;
+        return !StringUtil.isBlankOrNull(valu);
     }
 
-    //    public String parsePrimitive(OsmPrimitive primitive) {
-    //        if (this.key == null || primitive == null) {
-    //            return null;
-    //        }
+    // public String parsePrimitive(OsmPrimitive primitive) {
+    // if (this.key == null || primitive == null) {
+    // return null;
+    // }
     //
-    //        return primitive.get(this.key);
-    //    }
+    // return primitive.get(this.key);
+    // }
 }

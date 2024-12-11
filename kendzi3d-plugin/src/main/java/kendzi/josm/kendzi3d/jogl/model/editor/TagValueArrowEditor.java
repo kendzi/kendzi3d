@@ -8,11 +8,15 @@ package kendzi.josm.kendzi3d.jogl.model.editor;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.AbstractMap;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import kendzi.josm.kendzi3d.jogl.model.building.Building;
+import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
+import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -20,17 +24,13 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.MainApplication;
 
-import kendzi.josm.kendzi3d.jogl.model.building.Building;
-import kendzi.kendzi3d.editor.selection.editor.ArrowEditorImp;
-import kendzi.kendzi3d.editor.selection.event.ArrowEditorChangeEvent;
-
 /**
  * The simple arrow like editor for primitives.
  */
 public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
     /** Log. */
-    private static final Logger LOG = Logger.getLogger(Building.class);
+    private static final Logger LOG = LogManager.getLogger(Building.class);
 
     private PrimitiveId primitiveId;
 
@@ -144,7 +144,7 @@ public abstract class TagValueArrowEditor extends ArrowEditorImp {
 
         OsmPrimitive primitive = dataSet.getPrimitiveById(primitiveId);
 
-        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(Arrays.asList(primitive), tags));
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(Collections.singletonList(primitive), tags));
         LOG.info("primitive value was saved, id: " + primitiveId);
     }
 }

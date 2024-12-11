@@ -8,20 +8,18 @@ package kendzi.kendzi3d.buildings.builder.dto;
 
 import java.util.List;
 
-import javax.vecmath.Point3d;
-
 import kendzi.jogl.model.factory.MeshFactory;
 import kendzi.kendzi3d.buildings.builder.height.HeightCalculator;
 import kendzi.kendzi3d.buildings.builder.roof.shape.dormer.space.RoofHooksSpaces;
-
 import org.ejml.simple.SimpleMatrix;
+import org.joml.Vector3dc;
 
 public class RoofTypeOutput {
 
     /**
      * XXX this should by changed!
      */
-    List<Point3d> rectangle;
+    List<Vector3dc> rectangle;
 
     // ModelFactory model;
     List<MeshFactory> mesh;
@@ -70,7 +68,7 @@ public class RoofTypeOutput {
     /**
      * @return the rectangle
      */
-    public List<Point3d> getRectangle() {
+    public List<Vector3dc> getRectangle() {
         return rectangle;
     }
 
@@ -78,7 +76,7 @@ public class RoofTypeOutput {
      * @param rectangle
      *            the rectangle to set
      */
-    public void setRectangle(List<Point3d> rectangle) {
+    public void setRectangle(List<Vector3dc> rectangle) {
         this.rectangle = rectangle;
     }
 

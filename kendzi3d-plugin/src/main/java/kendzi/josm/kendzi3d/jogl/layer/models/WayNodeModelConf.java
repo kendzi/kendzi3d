@@ -1,7 +1,6 @@
 package kendzi.josm.kendzi3d.jogl.layer.models;
 
 import kendzi.kendzi3d.expressions.expression.Expression;
-
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 /**
@@ -52,7 +51,6 @@ public class WayNodeModelConf {
      */
     private Expression translate;
 
-
     /**
      * @return the model
      */
@@ -61,7 +59,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param model the model to set
+     * @param model
+     *            the model to set
      */
     public void setModel(String model) {
         this.model = model;
@@ -75,7 +74,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param matcher the matcher to set
+     * @param matcher
+     *            the matcher to set
      */
     public void setMatcher(Match matcher) {
         this.matcher = matcher;
@@ -89,7 +89,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param simpleFunction the scale to set
+     * @param simpleFunction
+     *            the scale to set
      */
     public void setScale(Expression expression) {
         this.scale = expression;
@@ -103,7 +104,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param filter the filter to set
+     * @param filter
+     *            the filter to set
      */
     public void setFilter(Match filter) {
         this.filter = filter;
@@ -117,7 +119,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param direction the direction to set
+     * @param direction
+     *            the direction to set
      */
     public void setDirection(Expression direction) {
         this.direction = direction;
@@ -131,7 +134,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param offset the offset to set
+     * @param offset
+     *            the offset to set
      */
     public void setOffset(Expression offset) {
         this.offset = offset;
@@ -145,7 +149,8 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param translate the translate to set
+     * @param translate
+     *            the translate to set
      */
     public void setTranslate(Expression translate) {
         this.translate = translate;
@@ -159,11 +164,11 @@ public class WayNodeModelConf {
     }
 
     /**
-     * @param modelParameter the modelParameter to set
+     * @param modelParameter
+     *            the modelParameter to set
      */
     public void setModelParameter(String modelParameter) {
         this.modelParameter = modelParameter;
     }
-
 
 }

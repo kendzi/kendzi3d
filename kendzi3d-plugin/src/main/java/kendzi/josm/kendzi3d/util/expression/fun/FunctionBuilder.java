@@ -9,7 +9,6 @@
 
 package kendzi.josm.kendzi3d.util.expression.fun;
 
-
 public interface FunctionBuilder {
     SimpleFunction build(String pName, String[] args);
 }

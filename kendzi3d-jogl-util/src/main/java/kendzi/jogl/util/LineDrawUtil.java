@@ -1,11 +1,11 @@
 package kendzi.jogl.util;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import java.util.stream.IntStream;
 
 import kendzi.math.geometry.point.Vector3dUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11C;
 
 /**
  * Util for drawing lines.
@@ -15,8 +15,6 @@ public class LineDrawUtil {
     /**
      * Draw dotted line, which segments size depends on distance from camera.
      *
-     * @param gl
-     *            gl
      * @param begin
      *            begin point
      * @param end
@@ -24,40 +22,54 @@ public class LineDrawUtil {
      * @param segmentLength
      *            length of line segment
      */
-    public static void drawDottedLine(GL2 gl, Point3d begin, Point3d end, double segmentLength) {
+    public static void drawDottedLine(Vector3dc begin, Vector3dc end, double segmentLength) {
 
         double distance = begin.distance(end);
+        // No line to draw
+        if (distance == 0d) {
+            return;
+        }
 
-        Vector3d segmentVector = Vector3dUtil.fromTo(begin, end);
-        segmentVector.normalize();
-        segmentVector.scale(segmentLength);
+        Vector3dc segmentVector = new Vector3d(end).sub(begin).normalize().mul(segmentLength);
 
         boolean fill = true;
         double drawedDistance = 0;
 
-        Point3d drawPoint = new Point3d(begin);
+        Vector3d drawPoint = new Vector3d(begin);
+        Vector3d nextPoint = drawPoint.add(segmentVector, new Vector3d());
 
-        gl.glBegin(GL.GL_LINES);
-
+        final double[] lines = new double[6
+                * ((int) (distance / (2 /* Divide by two, as we are skipping every other */ * segmentLength))
+                        + (distance % segmentLength != 0 ? 1 : 0))];
+        int index = 0;
         while (distance > drawedDistance + segmentLength) {
             drawedDistance += segmentLength;
-
             if (fill) {
-                gl.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-                gl.glVertex3d(drawPoint.x + segmentVector.x, //
-                        drawPoint.y + segmentVector.y, //
-                        drawPoint.z + segmentVector.z);
+                fillArray(index, lines, drawPoint, nextPoint);
+                index++;
             }
             fill = !fill;
-            drawPoint.add(segmentVector);
+            drawPoint.set(nextPoint);
+            nextPoint.add(segmentVector);
         }
 
         if (fill) {
-            gl.glVertex3d(drawPoint.x, drawPoint.y, drawPoint.z);
-            gl.glVertex3d(end.x, end.y, end.z);
-
+            fillArray(index, lines, drawPoint, end);
         }
 
-        gl.glEnd();
+        try (VertexArrayObject vao = VertexArrayObject.createVertexArrayObject(IntStream.of(0, lines.length / 3).toArray(), lines,
+                null, null, null)) {
+            vao.draw(GL11C.GL_LINES);
+        }
+    }
+
+    private static void fillArray(int index, double[] array, Vector3dc start, Vector3dc end) {
+        int i = 6 * index;
+        array[i++] = start.x();
+        array[i++] = start.y();
+        array[i++] = start.z();
+        array[i++] = end.x();
+        array[i++] = end.y();
+        array[i] = end.z();
     }
 }

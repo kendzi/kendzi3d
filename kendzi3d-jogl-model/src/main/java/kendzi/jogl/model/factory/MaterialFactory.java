@@ -15,30 +15,32 @@ import kendzi.jogl.model.geometry.material.Material;
 
 public class MaterialFactory {
 
-//    @Deprecated
-//    public static Material emptyMaterial() {
-//        Material m = new Material();
-////        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
-////        m.ambientColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-////        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-////        m.shininess = 0;
-////        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-//
-//        return m;
-//    }
+    // @Deprecated
+    // public static Material emptyMaterial() {
+    // Material m = new Material();
+    //// m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+    //// m.ambientColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+    //// m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+    //// m.shininess = 0;
+    //// m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+    //
+    // return m;
+    // }
 
-    /** Create default material.
+    /**
+     * Create default material.
+     * 
      * @return default material
      */
     public static Material getDefaultMaterial() {
 
         Material m = new Material();
-//        m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
-//        m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
-//        m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-//
-//        m.shininess = 0.0f;
-//        m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        // m.diffuseColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+        // m.ambientColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+        // m.specularColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        //
+        // m.shininess = 0.0f;
+        // m.emissive = new Color(0.0f, 0.0f, 0.0f, 1.0f);
         return m;
     }
 
@@ -51,17 +53,17 @@ public class MaterialFactory {
      */
     public static Material createTextureMaterial(String pTexId) {
         Material m = getDefaultMaterial();
-//        m.strFile = pTexId;
-//        m.strName = pTexId;
+        // m.strFile = pTexId;
+        // m.strName = pTexId;
         m.setTexture0(pTexId);
         return m;
     }
 
     public static Material createTextureColorMaterial(String pTexId, Color pColor) {
         Material m = getDefaultMaterial();
-//        if (pColor != null) {
-//            m.setAmbientDiffuse(new AmbientDiffuseComponent(pColor, pColor));
-//        }
+        // if (pColor != null) {
+        // m.setAmbientDiffuse(new AmbientDiffuseComponent(pColor, pColor));
+        // }
         m.setTexture0(pTexId);
         m.setTexture0Color(pColor);
         return m;

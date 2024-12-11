@@ -10,7 +10,7 @@ import kendzi.jogl.texture.library.TextureLibraryStorageService;
 
 public class CacheOsmBuildingElementsTextureMenager extends OsmBuildingElementsTextureMenager {
 
-    private final Map<TextureFindCriteria, TextureData> cache = new HashMap<TextureFindCriteria, TextureData>();
+    private final Map<TextureFindCriteria, TextureData> cache = new HashMap<>();
 
     public CacheOsmBuildingElementsTextureMenager(TextureLibraryStorageService textureLibraryStorageService) {
         super(textureLibraryStorageService);

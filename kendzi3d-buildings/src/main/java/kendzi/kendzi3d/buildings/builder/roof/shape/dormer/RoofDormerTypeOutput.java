@@ -12,7 +12,6 @@ package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 import java.util.List;
 
 import kendzi.jogl.model.factory.MeshFactory;
-
 import org.ejml.simple.SimpleMatrix;
 
 public class RoofDormerTypeOutput {
@@ -20,8 +19,6 @@ public class RoofDormerTypeOutput {
     List<MeshFactory> mesh;
 
     SimpleMatrix transformationMatrix;
-
-
 
     /**
      * @return the transformationMatrix
@@ -31,7 +28,8 @@ public class RoofDormerTypeOutput {
     }
 
     /**
-     * @param transformationMatrix the transformationMatrix to set
+     * @param transformationMatrix
+     *            the transformationMatrix to set
      */
     public void setTransformationMatrix(SimpleMatrix transformationMatrix) {
         this.transformationMatrix = transformationMatrix;
@@ -45,7 +43,8 @@ public class RoofDormerTypeOutput {
     }
 
     /**
-     * @param mesh the mesh to set
+     * @param mesh
+     *            the mesh to set
      */
     public void setMesh(List<MeshFactory> mesh) {
         this.mesh = mesh;

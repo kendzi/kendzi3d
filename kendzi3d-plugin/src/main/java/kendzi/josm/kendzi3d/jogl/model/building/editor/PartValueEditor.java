@@ -2,7 +2,6 @@ package kendzi.josm.kendzi3d.jogl.model.building.editor;
 
 import kendzi.josm.kendzi3d.jogl.model.editor.TagValueArrowEditor;
 import kendzi.kendzi3d.buildings.model.BuildingPart;
-
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 
 public abstract class PartValueEditor extends TagValueArrowEditor {

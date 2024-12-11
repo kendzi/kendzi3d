@@ -20,7 +20,9 @@ import kendzi.josm.kendzi3d.util.expression.Context;
  */
 public interface SimpleFunction<T> {
 
-    /** Take default function name.
+    /**
+     * Take default function name.
+     * 
      * @return default function name
      */
     String getDefaultName();
@@ -31,7 +33,8 @@ public interface SimpleFunction<T> {
     CompileContext getContext();
 
     /**
-     * @param context local context
+     * @param context
+     *            local context
      * @return function value in context.
      */
     T eval(Context context);

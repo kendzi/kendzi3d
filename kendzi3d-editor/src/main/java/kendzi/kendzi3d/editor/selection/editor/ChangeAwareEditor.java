@@ -4,6 +4,6 @@ import kendzi.kendzi3d.editor.selection.listener.ObjectSelectionListener.EditorC
 
 public interface ChangeAwareEditor {
 
-    public void addChangeListener(EditorChangeListener listener);
+    void addChangeListener(EditorChangeListener listener);
 
 }

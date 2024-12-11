@@ -10,8 +10,6 @@ package kendzi.kendzi3d.editor.selection.event;
 
 import kendzi.kendzi3d.editor.selection.editor.Editor;
 
- 
-
 public class EditorChangeEvent {
     private boolean end;
     private Editor editor;

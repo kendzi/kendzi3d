@@ -12,14 +12,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CameraMoveListener implements KeyListener, MouseMotionListener, MouseListener {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(CameraMoveListener.class);
+    private static final Logger log = LoggerFactory.getLogger(CameraMoveListener.class);
 
-    private SimpleMoveAnimator kinematicsSimpleAnimator;
+    private final SimpleMoveAnimator kinematicsSimpleAnimator;
 
     public CameraMoveListener(SimpleMoveAnimator kinematicsSimpleAnimator) {
         super();
@@ -39,10 +40,11 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
     int lastX;
     int lastY;
     boolean move;
-    private boolean isRunning = true;
+    private final boolean isRunning = true;
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
      */
     @Override
@@ -55,6 +57,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
      */
     @Override
@@ -65,6 +68,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseExited(java.awt.event.MouseEvent)
      */
     @Override
@@ -75,6 +79,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseMoved(java.awt.event.MouseEvent)
      */
     @Override
@@ -84,6 +89,7 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.awt.event.MouseAdapter#mouseDragged(java.awt.event.MouseEvent)
      */
     @Override
@@ -120,7 +126,6 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
 
             moveAction(pEvent, start);
         }
-
     }
 
     @Override
@@ -161,35 +166,21 @@ public class CameraMoveListener implements KeyListener, MouseMotionListener, Mou
         } else if (keyCode == KeyEvent.VK_D) {
             // translate right
             kinematicsSimpleAnimator.translateRight(start);
-
         } else if (keyCode == KeyEvent.VK_A) {
             // translate left
             kinematicsSimpleAnimator.translateLeft(start);
-
-        } else if (keyCode == KeyEvent.VK_W) {
+        } else if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
             // move forward
             kinematicsSimpleAnimator.moveForward(start);
-
-        } else if (keyCode == KeyEvent.VK_S) {
+        } else if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
             // move backwards
             kinematicsSimpleAnimator.moveBackwards(start);
-
-        } else if (keyCode == KeyEvent.VK_UP) {
-            // move forward
-            kinematicsSimpleAnimator.moveForward(start);
-
-        } else if (keyCode == KeyEvent.VK_DOWN) {
-            // move backwards
-            kinematicsSimpleAnimator.moveBackwards(start);
-
-        } else if (keyCode == KeyEvent.VK_PAGE_UP || keyCode == KeyEvent.VK_E) {
+        } else if (keyCode == KeyEvent.VK_PAGE_UP || keyCode == KeyEvent.VK_E || keyCode == KeyEvent.VK_SPACE) {
             // move up
             kinematicsSimpleAnimator.moveUp(start);
-
-        } else if (keyCode == KeyEvent.VK_PAGE_DOWN || keyCode == KeyEvent.VK_Q) {
+        } else if (keyCode == KeyEvent.VK_PAGE_DOWN || keyCode == KeyEvent.VK_Q || keyCode == KeyEvent.VK_SHIFT) {
             // move down
             kinematicsSimpleAnimator.moveDown(start);
-
         }
     }
 

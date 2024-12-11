@@ -3,7 +3,6 @@ package kendzi.josm.kendzi3d.ui.validate;
 import java.awt.Color;
 
 import javax.swing.JTextField;
-
 import kendzi.util.StringUtil;
 
 public class ValidateUtil {
@@ -82,6 +81,5 @@ public class ValidateUtil {
     public static boolean isInteger(String pStr) {
         return parseInteger(pStr) != null;
     }
-
 
 }

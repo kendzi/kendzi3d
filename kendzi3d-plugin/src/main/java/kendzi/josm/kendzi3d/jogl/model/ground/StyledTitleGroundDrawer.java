@@ -9,9 +9,16 @@ package kendzi.josm.kendzi3d.jogl.model.ground;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import javax.vecmath.Point3d;
-
-import org.apache.log4j.Logger;
+import kendzi.jogl.texture.TextureCacheService;
+import kendzi.jogl.texture.TextureCacheServiceImpl;
+import kendzi.jogl.util.awt.TextureRenderer;
+import kendzi.jogl.util.texture.Texture;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
+import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3dc;
+import org.lwjgl.opengl.GL11;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -21,22 +28,10 @@ import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES3;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.util.awt.TextureRenderer;
-import com.jogamp.opengl.util.texture.Texture;
-
-import kendzi.jogl.texture.TextureCacheService;
-import kendzi.jogl.texture.TextureCacheServiceImpl;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3D;
-import kendzi.josm.kendzi3d.data.perspective.Perspective3dProvider;
-
 public class StyledTitleGroundDrawer extends GroundDrawer {
 
     /** Log. */
-    private static final Logger log = Logger.getLogger(StyledTitleGroundDrawer.class);
+    private static final Logger log = LogManager.getLogger(StyledTitleGroundDrawer.class);
 
     /**
      * Title size in meters.
@@ -61,7 +56,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     /**
      * Total count of frames.
      */
-    private int totalTitleCount = 0;
+    private int totalTitleCount;
 
     /**
      * How many titles was created per frame.
@@ -87,14 +82,14 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     }
 
     @Override
-    public void draw(GL2 gl, Point3d cameraPosition) {
+    public void draw(Vector3dc cameraPosition) {
 
         Perspective3D perspective = perspective3dProvider.getPerspective3d();
         if (perspective == null) {
             return;
         }
 
-        EastNorth en = perspective.toEastNorth(cameraPosition.x, -cameraPosition.z);
+        EastNorth en = perspective.toEastNorth(cameraPosition.x(), -cameraPosition.z());
 
         double east = en.east();
         double north = en.north();
@@ -107,7 +102,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
         int titlesRows = 2;
         for (int ie = -titlesRows; ie <= titlesRows; ie++) {
             for (int in = -titlesRows; in <= titlesRows; in++) {
-                drawTitle(gl, e + ie, n + in, perspective);
+                drawTitle(e + ie, n + in, perspective);
             }
         }
     }
@@ -115,8 +110,6 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
     /**
      * Draws title.
      *
-     * @param gl
-     *            gl
      * @param e
      *            east title key
      * @param n
@@ -124,7 +117,7 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
      * @param perspective3d
      *            perspective
      */
-    private void drawTitle(GL2 gl, int e, int n, Perspective3D perspective3d) {
+    private void drawTitle(int e, int n, Perspective3D perspective3d) {
 
         double xCenter = e * TITLE_LENGTH;
         double yCenter = n * TITLE_LENGTH;
@@ -173,35 +166,35 @@ public class StyledTitleGroundDrawer extends GroundDrawer {
                 }
 
             } else {
-                texture = textureCacheService.getTexture(gl, TextureCacheService.TEXTURES_UNDEFINED_PNG);
+                texture = textureCacheService.getTexture(TextureCacheService.TEXTURES_UNDEFINED_PNG);
             }
 
         } else {
-            texture = textureCacheService.getTexture(gl, textName);
+            texture = textureCacheService.getTexture(textName);
         }
 
-        gl.glEnable(GLLightingFunc.GL_LIGHTING);
-        gl.glEnable(GL.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-        texture.enable(gl);
-        texture.bind(gl);
+        texture.enable();
+        texture.bind();
 
-        gl.glBegin(GL2ES3.GL_QUADS);
-        gl.glNormal3d(0d, 1d, 0d);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glNormal3d(0d, 1d, 0d);
 
         double h = -0.1d;
 
-        gl.glTexCoord2d(0, 1);
-        gl.glVertex3d(x1, h, z1);
-        gl.glTexCoord2d(1, 1);
-        gl.glVertex3d(x2, h, z2);
-        gl.glTexCoord2d(1, 0);
-        gl.glVertex3d(x3, h, z3);
-        gl.glTexCoord2d(0, 0);
-        gl.glVertex3d(x4, h, z4);
-        gl.glEnd();
+        GL11.glTexCoord2d(0, 1);
+        GL11.glVertex3d(x1, h, z1);
+        GL11.glTexCoord2d(1, 1);
+        GL11.glVertex3d(x2, h, z2);
+        GL11.glTexCoord2d(1, 0);
+        GL11.glVertex3d(x3, h, z3);
+        GL11.glTexCoord2d(0, 0);
+        GL11.glVertex3d(x4, h, z4);
+        GL11.glEnd();
 
-        texture.disable(gl);
+        texture.disable();
     }
 
     /**

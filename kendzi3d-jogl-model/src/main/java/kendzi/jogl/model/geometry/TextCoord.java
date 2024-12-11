@@ -10,22 +10,22 @@
 package kendzi.jogl.model.geometry;
 
 public class TextCoord {
-	public double u;
-	public double v;
+    public double u;
+    public double v;
 
+    /**
+     * @param u
+     *            x
+     * @param v
+     *            y
+     */
+    public TextCoord(double u, double v) {
+        this.u = u;
+        this.v = v;
+    }
 
-	/**
-	 * @param u x
-	 * @param v y
-	 */
-	public TextCoord(double u, double v) {
-		this.u = u;
-		this.v = v;
-	}
-
-	public TextCoord() {
-		this(0, 0);
-	}
-
+    public TextCoord() {
+        this(0, 0);
+    }
 
 }

@@ -8,16 +8,15 @@ package kendzi.josm.kendzi3d.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.actions.ToggleAction;
-import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.spi.preferences.Config;
-
 import com.google.inject.Inject;
+
+import java.awt.event.ActionEvent;
 
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround;
 import kendzi.josm.kendzi3d.jogl.model.ground.SelectableGround.GroundType;
+import org.openstreetmap.josm.actions.ToggleAction;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Enable/disable display texture on ground toggle action.

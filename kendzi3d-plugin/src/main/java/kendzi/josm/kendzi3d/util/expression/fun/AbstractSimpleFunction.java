@@ -6,7 +6,7 @@ import kendzi.josm.kendzi3d.util.expression.Context;
 public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
 
     String[] args;
-    private CompileContext context;
+    private final CompileContext context;
 
     public AbstractSimpleFunction(CompileContext context2, String[] args) {
         this.args = args;
@@ -39,12 +39,11 @@ public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
     @SuppressWarnings("unchecked")
     public <W> W getRequiredArgument(int num, Class<W> type) {
         if (args == null || args.length < num) {
-            throw new RuntimeException("there is no required argument: " + num + " type "+ type);
+            throw new RuntimeException("there is no required argument: " + num + " type " + type);
         }
 
         return getArgument(num, type);
     }
-
 
     public <W> W getRequiredContextVariable(String string, Context context, Class<W> class1) {
         Object obj = context.getVariable("bisector");
@@ -53,12 +52,12 @@ public abstract class AbstractSimpleFunction<T> implements SimpleFunction<T> {
 
         }
         if (!class1.isAssignableFrom(obj.getClass())) {
-             throw new RuntimeException(String.format("can't take required variable %s of type %s from context, wrong class", string, class1));
+            throw new RuntimeException(
+                    String.format("can't take required variable %s of type %s from context, wrong class", string, class1));
         }
 
         return (W) obj;
     }
-
 
     @Override
     public CompileContext getContext() {

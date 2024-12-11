@@ -9,40 +9,43 @@
 
 package kendzi.kendzi3d.buildings.builder.roof.shape.dormer;
 
-import javax.vecmath.Point3d;
+import org.joml.Vector3dc;
 
 public class RoofHookPoint {
 
     /**
      * Hook point.
      */
-    private Point3d point;
+    private Vector3dc point;
 
     /**
      * Extenstion start angle.
      */
     private double startAngle;
 
-    /** XXX
-     * Extenstion depth.
+    /**
+     * XXX Extenstion depth.
      */
     private double depth;
 
-    /** XXX
-     * Extenstion end angle.
+    /**
+     * XXX Extenstion end angle.
      */
     private double endAngle;
-
 
     /**
      * Default constructor.
      *
-     * @param pPoint hook point
-     * @param pStartAngle extenstion start angle.
-     * @param pDepth extenstion depth.
-     * @param pEndAngle extenstion end angle.
+     * @param pPoint
+     *            hook point
+     * @param pStartAngle
+     *            extenstion start angle.
+     * @param pDepth
+     *            extenstion depth.
+     * @param pEndAngle
+     *            extenstion end angle.
      */
-    public RoofHookPoint(Point3d pPoint, double pStartAngle, double pDepth, double pEndAngle) {
+    public RoofHookPoint(Vector3dc pPoint, double pStartAngle, double pDepth, double pEndAngle) {
         super();
         this.point = pPoint;
         this.startAngle = pStartAngle;
@@ -53,17 +56,19 @@ public class RoofHookPoint {
     /**
      * @return the point
      */
-    public Point3d getPoint() {
+    public Vector3dc getPoint() {
         return this.point;
     }
+
     /**
-     * @param pPoint the point to set
+     * @param pPoint
+     *            the point to set
      */
-    public void setPoint(Point3d pPoint) {
+    public void setPoint(Vector3dc pPoint) {
         this.point = pPoint;
     }
 
-       /**
+    /**
      * @return the depth
      */
     public double getDepth() {
@@ -71,7 +76,8 @@ public class RoofHookPoint {
     }
 
     /**
-     * @param pDepth the depth to set
+     * @param pDepth
+     *            the depth to set
      */
     public void setDepth(double pDepth) {
         this.depth = pDepth;
@@ -85,7 +91,8 @@ public class RoofHookPoint {
     }
 
     /**
-     * @param pStartAngle the startAngle to set
+     * @param pStartAngle
+     *            the startAngle to set
      */
     public void setStartAngle(double pStartAngle) {
         this.startAngle = pStartAngle;
@@ -99,7 +106,8 @@ public class RoofHookPoint {
     }
 
     /**
-     * @param pEndAngle the endAngle to set
+     * @param pEndAngle
+     *            the endAngle to set
      */
     public void setEndAngle(double pEndAngle) {
         this.endAngle = pEndAngle;
